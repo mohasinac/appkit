@@ -59,7 +59,7 @@ export function AppShell({
   const sidebar = renderSidebar ? renderSidebar(ctx) : slotSidebar;
 
   return (
-    <Stack className={`appkit-app-shell min-h-screen ${className ?? ""}`}>
+    <Stack className={`min-h-screen ${className ?? ""}`}>
       {header ? (
         <BlockHeader className="sticky top-0 z-30 w-full" data-appshell-slot="header">
           {header}

@@ -62,7 +62,6 @@ export function DetailPageGallery({
     return (
       <Div
         className={[
-          "appkit-detail-gallery",
           "w-full overflow-hidden rounded-2xl bg-[var(--appkit-color-surface)]",
           ASPECT_CLASS[aspect],
           className,
@@ -80,7 +79,6 @@ export function DetailPageGallery({
   return (
     <Div
       className={[
-        "appkit-detail-gallery",
         "w-full space-y-2",
         className,
       ]

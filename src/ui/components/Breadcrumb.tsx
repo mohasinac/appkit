@@ -32,7 +32,7 @@ export function Breadcrumb({ items, className = "", tone = "default" }: Breadcru
   return (
     <Nav
       aria-label="Breadcrumb"
-      className={`appkit-breadcrumb ${tone === "on-media" ? "appkit-breadcrumb--on-media" : ""} ${className}`}
+      className={`${tone === "on-media" ? "appkit-breadcrumb--on-media" : ""} ${className}`}
     >
       <Ol className="appkit-breadcrumb__list">
         {items.map((item, i) => {

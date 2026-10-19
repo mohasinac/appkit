@@ -21,7 +21,7 @@ export function Divider({
   if (orientation === "vertical") {
     return (
       <div
-        className={`appkit-divider appkit-divider--vertical ${className}`}
+        className={`appkit-divider--vertical ${className}`}
         role="separator"
         aria-orientation="vertical"
       />
@@ -31,7 +31,7 @@ export function Divider({
   if (label) {
     return (
       <div
-        className={`appkit-divider appkit-divider--labeled ${className}`}
+        className={`appkit-divider--labeled ${className}`}
         role="separator"
        data-section="divider-div-479">
         <div className="appkit-divider__line" />
@@ -43,7 +43,7 @@ export function Divider({
 
   return (
     <div
-      className={`appkit-divider appkit-divider--horizontal ${className}`}
+      className={`appkit-divider--horizontal ${className}`}
       role="separator"
       aria-orientation="horizontal"
     />

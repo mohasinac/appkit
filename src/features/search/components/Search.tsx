@@ -756,7 +756,7 @@ export function Search({
           <Button rounded="xl" 
             variant="ghost"
             onClick={() => onClose?.()}
- className="p-[var(--appkit-space-2-5)] md:p-[var(--appkit-space-3)] transition-colors text-[var(--appkit-color-text-muted)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
+ className="p-[var(--appkit-space-2-5)] md:p-[var(--appkit-space-3)] transition-colors text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-[var(--appkit-color-text)] flex-shrink-0"
             aria-label={labels.closeAriaLabel}
           >
             <svg

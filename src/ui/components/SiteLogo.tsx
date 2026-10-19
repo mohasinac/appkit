@@ -42,6 +42,9 @@ export interface SiteLogoProps {
 
 // Gradient ID prefix — made unique per instance via useId() to prevent
 // cross-SVG id conflicts when multiple SiteLogo components share the page.
+// An SVG <linearGradient> ID prefix, not a class — suffixed with useId()
+// and referenced as fill="url(#…)".
+// audit-dead-css-ok: SVG gradient id, not a class
 const GRADIENT_ID_PREFIX = "appkit-logo-gradient";
 
 const SIZE_HEIGHTS: Record<SiteLogoSize, string> = {

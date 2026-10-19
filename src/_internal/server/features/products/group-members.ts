@@ -63,6 +63,22 @@ export interface PublicGroupMember {
    *  snapshot it for per-member GST proration at checkout. */
   gstRate?: 0 | 5 | 12 | 18 | 28;
   hsnCode?: string;
+  /**
+   * The group's OWN selection rules — present only on the PARENT row, since
+   * that is the only document that carries them.
+   *
+   * 🛑 Projected so `readGroupRules` has something real to read client-side.
+   * Without these the picker would silently see no rules on every page that
+   * derives them from this endpoint's own response (`ShowGroupSection`),
+   * which is a client-only regression of the exact kind E3 exists to close —
+   * a server-only rule reads as a broken button, and here it would be the
+   * reverse: a client that never finds out a rule exists at all.
+   */
+  groupMinMembers?: number;
+  groupMaxMembers?: number;
+  groupMaxUnitsPerMember?: number;
+  groupRequiredMemberIds?: string[];
+  groupDiscountPercent?: number;
 }
 
 export function toPublicGroupMember(doc: ProductDocument): PublicGroupMember {
@@ -85,6 +101,11 @@ export function toPublicGroupMember(doc: ProductDocument): PublicGroupMember {
     isSold: doc.isSold,
     gstRate: doc.gstRate,
     hsnCode: doc.hsnCode,
+    groupMinMembers: doc.groupMinMembers,
+    groupMaxMembers: doc.groupMaxMembers,
+    groupMaxUnitsPerMember: doc.groupMaxUnitsPerMember,
+    groupRequiredMemberIds: doc.groupRequiredMemberIds,
+    groupDiscountPercent: doc.groupDiscountPercent,
   };
 }
 

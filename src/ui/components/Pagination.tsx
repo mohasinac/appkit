@@ -190,7 +190,6 @@ export function Pagination({
           onValueChange={(next) => onPageSizeChange!(Number(next))}
           options={resolved.pageSizeOptions.map((n) => ({ label: `${n} / page`, value: String(n) }))}
           disabled={disabled}
-          className="appkit-pagination__page-size"
         />
       )}
     </nav>

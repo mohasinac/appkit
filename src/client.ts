@@ -1063,6 +1063,8 @@ export { SellerArtView } from "./features/seller/components/SellerArtView";
 export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
 export { SellerStickersView } from "./features/seller/components/SellerStickersView";
 export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
+export { SellerSparesView } from "./features/seller/components/SellerSparesView";
+export type { SellerSparesViewProps } from "./features/seller/components/SellerSparesView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";

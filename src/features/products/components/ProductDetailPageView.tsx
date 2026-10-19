@@ -27,6 +27,8 @@ const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-spac
 const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
+import { PART_SLOT_LABEL } from "../../parts/schemas/firestore";
+import { getModelsUsingPart } from "../../../_internal/server/features/parts/data";
 import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
@@ -251,6 +253,46 @@ export async function ProductDetailPageView({
   const p = product as unknown as FirestoreDocument;
   const currency =
     (p.currency as string | undefined) || getDefaultCurrency();
+
+  /*
+   * The REVERSE link: a spare names a glossary entry, so the glossary entry's
+   * page should name it back. Fetched only when both conditions hold — most
+   * listings carry no `partGlossaryId` at all, and this must not become an
+   * extra read on every product page in the catalogue.
+   *
+   * `getModelsUsingPart` does its own `safeRead`-equivalent internally
+   * (catches and logs, returns `[]`), and this wraps it in `safeRead` again
+   * anyway — belt-and-braces costs nothing against a function that is already
+   * `cache()`-wrapped and this page is the only caller that would ever see a
+   * throw from a future change to it.
+   */
+  const partGlossaryId =
+    typeof p.partGlossaryId === "string" ? p.partGlossaryId : undefined;
+  const fitsModels = partGlossaryId
+    ? await safeRead(() => getModelsUsingPart(partGlossaryId), {
+        route: "/products/[slug]",
+        key: "products.fitsModels",
+        fallback: [],
+      })
+    : [];
+  /*
+   * `(slot, tail)` from the id's OWN composition, `${slot}--${tail}` —
+   * mirrors `ModelCompositionPanel`'s private `tailOf`, duplicated rather than
+   * imported because that helper is a component-internal detail, not a public
+   * export, and pulling in the whole panel module for one split would be the
+   * heavier dependency.
+   */
+  const partHref = (() => {
+    if (!partGlossaryId) return undefined;
+    const i = partGlossaryId.indexOf("--");
+    if (i < 0) return undefined;
+    const slot = partGlossaryId.slice(0, i);
+    const tail = partGlossaryId.slice(i + 2);
+    return String(ROUTES.PUBLIC.PART_DETAIL(slot, tail));
+  })();
+  const partSlotLabel = partGlossaryId
+    ? PART_SLOT_LABEL[partGlossaryId.slice(0, partGlossaryId.indexOf("--")) as keyof typeof PART_SLOT_LABEL]
+    : undefined;
 
   // -- Derived values ---------------------------------------------------------
   const title = String(p.title ?? p.name ?? "");
@@ -816,6 +858,38 @@ export async function ProductDetailPageView({
                   {madeToOrder && (
                     <Text className="mt-1" color="muted" size="xs">
                       Made to order — printed when you order, so it never runs out.
+                    </Text>
+                  )}
+                  {/* The reverse link. Rendered whenever the listing names a
+                    * glossary entry at all — not gated on listingType, since a
+                    * generated catalogue row carries the same field and the
+                    * link is equally true of it. */}
+                  {partHref && (
+                    <Text className="mt-1" color="muted" size="xs">
+                      {partSlotLabel ?? "Part"}.{" "}
+                      <Link href={partHref} className="text-primary-600 hover:underline">
+                        See what else fits →
+                      </Link>
+                      {fitsModels.length > 0 && (
+                        <>
+                          {" "}Fits:{" "}
+                          {fitsModels.slice(0, 6).map((m, i) => (
+                            <Text key={m.id} as="span">
+                              {i > 0 ? ", " : ""}
+                              {m.categoryId ? (
+                                <Link
+                                  href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(m.categoryId))}
+                                  className="text-primary-600 hover:underline"
+                                >
+                                  {m.name}
+                                </Link>
+                              ) : (
+                                m.name
+                              )}
+                            </Text>
+                          ))}
+                        </>
+                      )}
                     </Text>
                   )}
                 </Div>

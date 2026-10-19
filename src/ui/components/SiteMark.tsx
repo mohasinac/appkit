@@ -35,6 +35,9 @@ export interface SiteMarkProps {
   src?: string;
 }
 
+// An SVG <linearGradient> ID prefix, not a class — suffixed with useId()
+// and referenced as fill="url(#…)".
+// audit-dead-css-ok: SVG gradient id, not a class
 const GRADIENT_ID_PREFIX = "appkit-mark-gradient";
 
 const SIZE_HEIGHTS: Record<SiteMarkSize, string> = {

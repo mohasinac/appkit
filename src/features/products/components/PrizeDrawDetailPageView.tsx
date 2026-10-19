@@ -223,13 +223,13 @@ export async function PrizeDrawDetailPageView({
             aria-label="Breadcrumb"
             className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] flex-wrap"
           >
-            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
+            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Home
             </Link>
             <Span aria-hidden>/</Span>
             <Link
               href={String(ROUTES.PUBLIC.PRIZE_DRAWS)}
-              className="hover:text-primary-600 transition-colors"
+              className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Prize Draws
             </Link>

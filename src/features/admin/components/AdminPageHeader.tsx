@@ -93,7 +93,7 @@ export function AdminPageHeader({
               {crumb.href && themeConfig.TextLink ? (
                 <themeConfig.TextLink
                   href={crumb.href}
-                  className="hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] transition-colors"
+                  className="hover:text-[var(--appkit-color-text)] transition-colors"
                 >
                   {crumb.label}
                 </themeConfig.TextLink>

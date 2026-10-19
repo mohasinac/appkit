@@ -143,7 +143,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProductLink && (
             <Link
               href={productHref!}
-              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
+              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
             >
               <Span aria-hidden="true">📦</Span>
               <Span truncate>
@@ -155,7 +155,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProfileLink && (
             <Link
               href={profileHref!}
-              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
+              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
             >
               <Span aria-hidden="true">👤</Span>
               <Span truncate>{displayName}</Span>

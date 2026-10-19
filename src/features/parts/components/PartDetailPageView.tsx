@@ -59,6 +59,19 @@ export interface PartDetailPageViewProps {
   listingsTruncated?: boolean;
   /** Where "see all listings" goes — a real search, not a fabricated filter. */
   allListingsHref: string;
+  /**
+   * Listings naming THIS exact glossary entry, via `partGlossaryId` — spares
+   * and any other individually-sold component carrying it.
+   *
+   * 🛑 A SEPARATE section from `listings` above, not a narrower version of it.
+   * `listings` is a fuzzy name search across the GENERAL catalogue
+   * (`GENERIC_PRODUCT_LISTING_TYPES`), which `spares` is deliberately excluded
+   * from (`inGeneralCatalogue: false`) — so a spare of this exact part could
+   * never appear there no matter how precisely it was titled. This section is
+   * the one place that gap is closed.
+   */
+  exactListings?: readonly PartListingRow[];
+  exactListingsTruncated?: boolean;
   /** A model's own page, when the composition resolved to a category. */
   hrefForModel: (categoryId: string) => string;
   hrefForClassification: (slot: string) => string;
@@ -70,6 +83,8 @@ export function PartDetailPageView({
   listings,
   listingsTruncated,
   allListingsHref,
+  exactListings = [],
+  exactListingsTruncated,
   hrefForModel,
   hrefForClassification,
 }: PartDetailPageViewProps) {
@@ -157,6 +172,45 @@ export function PartDetailPageView({
               </Stack>
             )}
           </Stack>
+
+          {/* ── buy this exact part ──────────────────────────────────────────
+            * 🛑 NO MONEY on this page — it stays a Server Component, and a
+            * gated price would make it a client one. Rows carry only title,
+            * condition and a link; the price is on the listing's own page,
+            * where the gate already applies.
+            */}
+          {exactListings.length > 0 && (
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                Buy this part
+                {exactListingsTruncated && (
+                  <Span size="sm" color="muted">
+                    {" "}
+                    ({exactListings.length}+)
+                  </Span>
+                )}
+              </Heading>
+              <Stack gap="xs" className="min-w-0">
+                {exactListings.map((l) => (
+                  <Div
+                    key={l.id}
+                    surface="card"
+                    padding="sm"
+                    rounded="md"
+                    border="subtle"
+                    className="min-w-0"
+                  >
+                    <TextLink href={l.href}>{l.title}</TextLink>
+                    {l.condition && (
+                      <Text size="xs" color="muted">
+                        {l.condition}
+                      </Text>
+                    )}
+                  </Div>
+                ))}
+              </Stack>
+            </Stack>
+          )}
 
           {/* ── live listings ─────────────────────────────────────────────── */}
           <Stack gap="sm" className="min-w-0">

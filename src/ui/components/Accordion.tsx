@@ -64,7 +64,7 @@ function renderLegacyAccordion({
   return (
     <details
       open={open}
-      className={`appkit-accordion appkit-accordion--legacy ${className}`}
+      className={`appkit-accordion ${className}`}
     >
       <summary className={`appkit-accordion__summary ${titleClassName}`}>
         {title}

@@ -10,7 +10,7 @@ import {
   type CategoryTabKey,
 } from "../constants/category-tabs";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, OverflowRow, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -255,34 +255,41 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
 
   const activeSearch = table.get(TABLE_KEYS.QUERY) || "";
 
-  const TABS = CATEGORY_TABS;
+  /*
+   * 🛑 `<OverflowRow>`, not a hand-rolled row of ghost Buttons.
+   *
+   * This was five `<Button variant="ghost">`s in a `<Row>` with a hand-written
+   * underline — no `role="tablist"`, no `role="tab"`, and no overflow
+   * behaviour at all, so on a narrow viewport the last tabs simply ran past
+   * the right edge with no scrollbar and no affordance. The Known-TS-Patterns
+   * table bans exactly that shape ("A hand-rolled overflow-x-auto row of
+   * pills/tabs → <OverflowRow>"), and the primitive built for it had shipped
+   * three weeks earlier without this surface being migrated.
+   *
+   * `variant="tabs"` because these swap a panel in place — they rewrite the
+   * `tab` URL param and re-partition one already-cached payload; they do not
+   * navigate. That is also why the items carry `onSelect` rather than `href`,
+   * and therefore why `linkProps`/`scroll` do not apply here.
+   */
+  const tabItems = CATEGORY_TABS.map((tab) => ({
+    id: tab.key,
+    label: tab.label,
+    onSelect: () => switchTab(tab.key),
+  }));
 
   return (
     <Div className="min-h-screen">
       {/* ── Tab bar — only shown on the combined /categories page ──────── */}
       {!brandsOnly && (
-        <Row gap="xs" border="default" className="border-b mb-2">
-          {TABS.map((tab) => (
-            <Button
-              variant="ghost"
-              key={tab.key}
-              type="button"
-              onClick={() => switchTab(tab.key)}
-              paddingX="md"
-              paddingY="y-xs-tall"
-              textSize="sm"
-              weight="medium"
-              className={[
-                "transition-colors border-b-2 -mb-px rounded-none",
-                activeTab === tab.key
-                  ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
-                  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]",
-              ].join(" ")}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </Row>
+        <Div className="mb-2">
+          <OverflowRow
+            items={tabItems}
+            activeId={activeTab}
+            variant="tabs"
+            ariaLabel="Category index sections"
+            searchPlaceholder="Search sections…"
+          />
+        </Div>
       )}
 
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}

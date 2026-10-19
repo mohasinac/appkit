@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { getLiveItemForDetail } from "../../../_internal/server/features/live/data";
 
-const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 dark:hover:text-primary-400 transition-colors";
 const CLS_LIVE_ITEM_BADGE = "inline-block rounded-full bg-lime-100 dark:bg-lime-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-lime-700 dark:text-lime-300";
 const CLS_WARN_BOX = "rounded-lg border border-warning bg-warning-surface p-[var(--appkit-space-4)] text-[length:var(--appkit-text-sm)]";
 const CLS_WARN_TITLE = "font-medium text-warning";

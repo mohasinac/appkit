@@ -278,7 +278,7 @@ function renderNotificationListContent(props: {
             <Text size="sm" className={`mt-0.5`} truncate={2} color="muted">{notification.message}</Text>
             <Row gap="3" className="mt-1.5">
               {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-[length:var(--appkit-text-xs)] text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}
-              {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] hover:underline p-[var(--appkit-space-0)] h-auto">{labels.markRead}</Button>}
+              {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)] hover:underline p-[var(--appkit-space-0)] h-auto">{labels.markRead}</Button>}
             </Row>
           </Div>
         </Li>

@@ -35,7 +35,6 @@ export function SettingsSection({
   return (
     <section
       className={[
-        "appkit-settings-section",
         "space-y-3 rounded-lg border border-[var(--appkit-color-border)] p-4",
         className,
       ]
@@ -97,7 +96,6 @@ export function ToggleRow({
   return (
     <div
       className={[
-        "appkit-toggle-row",
         "flex items-start justify-between gap-3 py-1",
         className,
       ]

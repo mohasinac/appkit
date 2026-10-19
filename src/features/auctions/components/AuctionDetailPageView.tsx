@@ -10,7 +10,7 @@ const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
 
-const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 dark:hover:text-primary-400 transition-colors";
 const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";

@@ -173,4 +173,43 @@ export const authored: Record<string, AuthoredCase> = {
     expectedData: { bundleCards: 5, cardsWithCollage: 5 },
     endResult: "Nothing is changed; this case only reads.",
   },
+
+  "checklist-content-discovery-category-tabs-franchise-bundles-tabs-collapse-on-narrow-viewport": {
+    roles: ["guest"],
+    startPage: "/categories",
+    steps: [
+      "Resize the viewport to a phone width, around 390px.",
+      "Open /categories.",
+      "Look at the tab row that used to read Categories / Brands / Franchises / Parts / Bundles.",
+      "BEFORE a fix landed 2026-10-19: this was five `<Button variant=\"ghost\">`s in a plain row with a hand-written underline — no `role=\"tablist\"`, no overflow handling, and on a narrow viewport the later tabs ran past the right edge with no scrollbar and no visible way to reach them.",
+      "AFTER: the row is `<OverflowRow>`. Confirm it has collapsed into a single trigger button showing the active tab's name plus a chevron.",
+      "Click the trigger. Confirm a searchable dropdown opens listing all five tabs.",
+      "Pick a different tab from the dropdown and confirm the page re-filters to it.",
+    ],
+    expectedBehaviour:
+      "A row of controls that does not fit its container must become a trigger that opens a searchable list, not a row the visitor has to discover can be scrolled. `<OverflowRow>` is the one primitive this project built for exactly this shape (see CLAUDE.md § Overflowing Pill & Tab Rows) — the old row predates it and was never migrated.",
+    expectedUiState:
+      "At 390px: one trigger button, not five separate tab buttons. Opening it shows all five tabs in a dropdown, each clickable, with the active one marked.",
+    expectedData: { tabsVisibleAsRowAt390px: false, collapsedTriggerPresent: true },
+    endResult: "Nothing is changed; this case only reads.",
+  },
+
+  "checklist-content-discovery-category-tabs-franchise-bundles-tabs-hover-changes-ink": {
+    roles: ["guest"],
+    startPage: "/categories",
+    steps: [
+      "Open /categories on a desktop-width viewport (at least 1024px, so the tabs render as a row rather than a collapsed trigger).",
+      "Pick a tab that is NOT currently active.",
+      "BEFORE a fix landed 2026-10-19: this row (and several others — the notification bell, the admin sidebar/nav/header, the mobile bottom-nav item) carried two competing `hover:text-*` classes on one element, one of which resolved to the element's own RESTING colour. Hovering therefore changed nothing, which reads as 'hover is broken' rather than as a styling bug.",
+      "Hover the mouse pointer over the inactive tab's label without clicking.",
+      "Compare its text colour before and during the hover.",
+      "Move the pointer away and confirm the colour returns to the resting shade.",
+    ],
+    expectedBehaviour:
+      "Every hover state must visibly differ from the resting state. A hover ink that equals the resting ink is indistinguishable from no hover handler at all.",
+    expectedUiState:
+      "The inactive tab's text colour visibly changes while hovered, and reverts when the pointer leaves.",
+    expectedData: { hoverChangesTextColor: true },
+    endResult: "Nothing is changed; this case only reads.",
+  },
 };

@@ -37,6 +37,13 @@ interface GroupMember {
   storeName?: string;
   isSold?: boolean;
   status?: string;
+  madeToOrder?: boolean;
+  /** The parent's own rules. Read via `readGroupRules`, never accessed directly. */
+  groupMinMembers?: number;
+  groupMaxMembers?: number;
+  groupMaxUnitsPerMember?: number;
+  groupRequiredMemberIds?: string[];
+  groupDiscountPercent?: number;
 }
 
 interface ApiResponse {

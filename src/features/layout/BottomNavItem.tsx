@@ -48,7 +48,7 @@ export function BottomNavItem({
         className={`relative flex flex-col items-center justify-center gap-[var(--appkit-space-0-5)] h-full w-full min-h-[44px] transition-colors ${
  isActive
  ? "text-primary-600 dark:text-secondary-400"
- : "text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]"
+ : "text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
  }${className ? ` ${className}` : ""}`}
       >
         <Span className="relative">

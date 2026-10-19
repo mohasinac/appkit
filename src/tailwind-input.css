@@ -37,23 +37,37 @@
   --default-ring-color: var(--color-blue-500);
 }
 
-/* Hand-written compensating rules for responsive-prefixed (`sm:`/`md:`/`lg:`/
-   `xl:`) utility classes that Tailwind v4's CLI genuinely never generates in
-   this build — confirmed 2026-08-16 via isolated CLI tests (both the
-   root-level and appkit-local tailwindcss v4.3.3 binaries, with and without
-   `@config`, with and without `@source`/`@source inline(...)`): unprefixed
-   utilities like `.hidden` or `.text-6xl` generate correctly, but NO
-   variant-prefixed utility of any kind was ever emitted, regardless of
-   scanning or explicit safelisting. This is the same underlying gap the
-   consumer's globals.css already works around by hand-writing its own
-   `.hidden`/`.block`/`.flex` breakpoint rules directly instead of relying on
-   Tailwind to generate them. This block covers the specific responsive
-   text-size classes `ui/components/Typography.tsx`'s
-   RESPONSIVE_TEXT_SIZE_CLASS map emits for the 6xl/7xl/8xl tier (used by the
-   homepage hero heading), using the exact same rem values Tailwind's own
-   default theme defines for text-6xl/7xl/8xl. Add further rules here only
-   for the specific variant-prefixed classes appkit components actually use
-   and Tailwind fails to generate — this is not a blanket escape hatch. */
+/* Hand-written rules for the responsive 6xl/7xl/8xl text sizes that
+   `ui/components/Typography.tsx`'s RESPONSIVE_TEXT_SIZE_CLASS map emits for
+   the homepage hero heading, using the exact rem values Tailwind's own
+   default theme defines.
+
+   🛑 THE REASON ORIGINALLY GIVEN FOR THIS BLOCK IS FALSE — corrected
+   2026-10-19 (Root Cause #106). It read:
+
+     "...utility classes that Tailwind v4's CLI genuinely never generates in
+      this build — confirmed 2026-08-16 via isolated CLI tests: unprefixed
+      utilities like `.hidden` or `.text-6xl` generate correctly, but NO
+      variant-prefixed utility of any kind was ever emitted, regardless of
+      scanning or explicit safelisting."
+
+   Measured against the current `dist/tailwind-utilities.css`, every one of
+   these generates — none of them is hand-written anywhere:
+
+     .lg\:grid-cols-3  .md\:flex-row  .sm\:items-center
+     .lg\:hidden       .hover\:bg-surface-hover  .group-hover\:block
+
+   So appkit's build DOES emit variant-prefixed utilities, and this block is
+   very likely redundant. It is kept for now only because the hero heading is
+   the one surface that would regress silently if the assumption were wrong in
+   some narrower way, and removing it belongs with a real before/after render
+   check rather than being bundled into an unrelated change.
+
+   🛑 Do NOT add rules here on the strength of the old claim. If a variant
+   class appears to be missing, confirm it against the built CSS first — and
+   remember a class starting with a digit is hex-escaped (`2xl:hidden` ships as
+   `.\32 xl\:hidden`, trailing space included), so grepping the obvious
+   spelling finds zero and reads as a total breakage. */
 @media (min-width: 40rem) {
   .sm\:text-6xl { font-size: 3.75rem !important; line-height: 1 !important; }
   .sm\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }

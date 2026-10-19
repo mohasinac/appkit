@@ -33,8 +33,8 @@ export function RatingDisplay({
             className={classNames(
               starSize,
               star <= rating
-                ? "appkit-rating-display__star appkit-rating-display__star--active"
-                : "appkit-rating-display__star appkit-rating-display__star--inactive",
+                ? "appkit-rating-display__star--active"
+                : "appkit-rating-display__star--inactive",
             )}
             fill="currentColor"
             viewBox="0 0 20 20"

@@ -84,7 +84,7 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" showCloseButton={false} className="appkit-command-palette">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg" showCloseButton={false}>
       <Stack gap="sm">
         <Row align="center" gap="sm">
           <Input

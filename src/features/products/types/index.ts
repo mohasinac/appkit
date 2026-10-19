@@ -136,6 +136,18 @@ export interface ProductItem {
    * `baseAvailable` keeps the row in the default scope at quantity 0.
    */
   madeToOrder?: boolean;
+  /**
+   * Self-assembled-selection rules, present only on a group PARENT. See
+   * `_internal/shared/features/products/group-rules.ts` for the shape, the
+   * resolver and the single enforcement point — these fields exist here only
+   * so the admin editor (`GroupSettingsPanel`'s `groupRules` prop) can seed its
+   * form from the product it is already showing, with no second fetch.
+   */
+  groupMinMembers?: number;
+  groupMaxMembers?: number;
+  groupMaxUnitsPerMember?: number;
+  groupRequiredMemberIds?: string[];
+  groupDiscountPercent?: number;
   inStock?: boolean;
   stockCount?: number;
   rating?: number;

@@ -67,7 +67,7 @@ export function SummaryCard({
         <Span className="appkit-summary-card__total-value">{total.value}</Span>
       </Div>
 
-      {action && <Div className="appkit-summary-card__action">{action}</Div>}
+      {action && <Div>{action}</Div>}
     </Div>
   );
 }

@@ -3445,6 +3445,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "unstocked-franchise-page-resolves", label: "An unstocked franchise page loads and says so, rather than 404ing or showing an empty grid" },
         { key: "franchise-detail-lists-its-products", label: "The Beyblade franchise page lists its listings, with a nonsense slug as the control" },
         { key: "bundle-card-shows-a-collage", label: "A bundle card shows a collage of its members, not its placeholder cover" },
+        { key: "tabs-collapse-on-narrow-viewport", label: "On a phone-width viewport the five tabs collapse into a searchable dropdown, not a row running off-screen" },
+        { key: "tabs-hover-changes-ink", label: "On desktop, hovering an inactive tab visibly changes its text colour" },
       ],
     },
     {

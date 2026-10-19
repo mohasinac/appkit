@@ -1,0 +1,81 @@
+/*
+ * Media source/segment tab strips — MediaPickerModal and MediaUploadField.
+ *
+ * 🛑 Both strips shipped with NO rules at all. `MediaPickerModal` ("Upload file"
+ * / "Choose existing") and `MediaUploadField` ("Upload" / "YouTube" /
+ * "External URL") each render raw `<button>`s carrying `appkit-media-*` class
+ * names, and no stylesheet ever defined them — so the one control that tells a
+ * seller which media SOURCE they are using rendered as bare browser buttons,
+ * with no indication of which was active. Found 2026-10-19 by
+ * `audit-dead-css-classes` once the blanket `appkit-` exemption came off.
+ *
+ * The two families are kept DISTINCT rather than collapsed into one
+ * `appkit-tab-strip`: renaming would mean editing both components plus any
+ * consumer override keyed on the old names, for no behavioural gain. They
+ * share declarations through the selector lists below instead, so the two
+ * strips cannot drift apart visually.
+ *
+ * Colours come from tokens, never a palette literal — a hardcoded `zinc-100`
+ * fill is the same near-white in every theme (Recurrent Root Cause #79).
+ */
+
+.appkit-media-picker__tabs,
+.appkit-media-upload__source-tabs {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-lg);
+  background: var(--appkit-color-surface-input);
+  padding: 2px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.appkit-media-picker__tab-btn,
+.appkit-media-upload__source-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: var(--appkit-space-1-5) var(--appkit-space-3);
+  border-radius: var(--appkit-radius-md);
+  font-size: var(--appkit-text-sm);
+  font-weight: 500;
+  line-height: 1.25rem;
+  color: var(--appkit-color-text-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.appkit-media-picker__tab-btn:hover:not(:disabled),
+.appkit-media-upload__source-tab:hover:not(:disabled) {
+  background: var(--appkit-color-surface-hover);
+  color: var(--appkit-color-text);
+}
+
+.appkit-media-picker__tab-btn:focus-visible,
+.appkit-media-upload__source-tab:focus-visible {
+  outline: 2px solid var(--appkit-color-focus-ring);
+  outline-offset: -2px;
+}
+
+/*
+ * The active tab is the only one that gets a raised surface. `--active` must
+ * win over `:hover` for the selected tab, so it is declared after the hover
+ * rule rather than relying on specificity.
+ */
+.appkit-media-picker__tab-btn--active,
+.appkit-media-upload__source-tab--active,
+.appkit-media-picker__tab-btn--active:hover,
+.appkit-media-upload__source-tab--active:hover {
+  background: var(--appkit-color-surface);
+  color: var(--appkit-color-text);
+  box-shadow: var(--appkit-shadow-sm);
+}
+
+.appkit-media-picker__tab-btn:disabled,
+.appkit-media-upload__source-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

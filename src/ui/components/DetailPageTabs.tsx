@@ -49,7 +49,7 @@ export function DetailPageTabs({
       value={activeTab}
       defaultValue={defaultTab ?? tabs[0]?.id ?? ""}
       onChange={onTabChange}
-      className={["appkit-detail-tabs", "space-y-4", className].filter(Boolean).join(" ")}
+      className={["space-y-4", className].filter(Boolean).join(" ")}
     >
       <TabsList>
         {tabs.map((tab) => {

@@ -20,6 +20,10 @@ import { useCanSeePrices } from "../../react/hooks/useCanSeePrices";
  * It is rendered in EVERY state — signed in, signed out and resolving — because
  * the markup describes the region, not the refusal.
  */
+// A SELECTOR TARGET, not a style — gatedPriceWebPageJsonLd names it in
+// `hasPart.cssSelector` so a crawler can see the gate is declared. It must
+// stay rule-less: styling it would change what the markup describes.
+// audit-dead-css-ok: selector target for the paywall JSON-LD, never styled
 export const GATED_PRICE_CLASS = "appkit-gated-price";
 
 export interface GatedPriceProps {
@@ -131,7 +135,7 @@ export function GatedPrice({
       : "appkit-price-display__original appkit-price-display__original--compact";
 
   return (
-    <Row wrap align="baseline" gap="xs" className={`appkit-price-display ${rootClass}`}>
+    <Row wrap align="baseline" gap="xs" className={rootClass}>
       <Span className={priceClass}>{formatCurrency(amount, currency)}</Span>
       {hasDiscount && (
         <>

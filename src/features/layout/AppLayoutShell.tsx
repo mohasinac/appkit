@@ -755,7 +755,7 @@ function SidebarContent({
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-surface hover:text-primary-800"
+              className="flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-surface hover:text-primary-800 dark:hover:text-primary-200"
             >
               <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
               {activeThemeName}

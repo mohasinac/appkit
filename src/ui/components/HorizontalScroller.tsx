@@ -246,7 +246,6 @@ export function HorizontalScroller<T = unknown>({
         return (
           <div
             key={`slide-${slideIndex}`}
-            className="appkit-hscroller__slide"
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${gridCols}, 1fr)`,

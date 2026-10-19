@@ -35,7 +35,6 @@ export function SortDropdown({
         <Span
           variant="secondary"
           size="sm"
-          className="appkit-sort-dropdown__count"
         >
           {countText}
         </Span>

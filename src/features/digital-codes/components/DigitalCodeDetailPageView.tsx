@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { getDigitalCodeForDetail } from "../../../_internal/server/features/digital-code/data";
 
-const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 dark:hover:text-primary-400 transition-colors";
 const CLS_DIGITALCODE_BADGE = "inline-block rounded-full bg-violet-100 dark:bg-violet-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-violet-700 dark:text-violet-300";
 
 import { ROUTES } from "../../../next/routing/route-map";

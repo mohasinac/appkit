@@ -49,7 +49,6 @@ export function DetailPageHero({
       gap="lg"
       align="start"
       className={[
-        "appkit-detail-hero",
         "flex-col md:flex-row",
         className,
       ]

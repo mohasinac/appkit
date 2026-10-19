@@ -50,7 +50,8 @@ export type ProductListingMode =
   | "digital-code"
   | "live"
   | "art"
-  | "stickers";
+  | "stickers"
+  | "spares";
 
 export interface SellerProductDraft {
   title?: string;

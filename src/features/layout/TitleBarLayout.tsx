@@ -341,9 +341,13 @@ export function TitleBarLayout({
             44px avatar. No breakpoint can answer "does this fit"; only layout
             can. */}
         <Row gap="none" reverse="hand" className="relative h-14">
-          {/* Left: #1 — wordmark, always shown. Mobile also gets the icon
-              mark prefixed before the text (md:hidden) since the centred
-              mark below has no room on narrow viewports.
+          {/* Left: #1 — the wordmark, always shown, at every width.
+
+              🛑 It used to prefix a SECOND copy of the icon mark here below
+              `md`, because the centred mark in track #2 was `hidden md:flex`.
+              That is no longer true — the centred mark now renders at every
+              width (see #2) — so the prefix was removed: two marks in one
+              header is not a brand, it is a bug.
 
               `reverse="hand"` is required now that this row is a wide `flex-1`
               track rather than an auto-width item: `justify-content:flex-start`
@@ -356,9 +360,6 @@ export function TitleBarLayout({
               aria-label={brandName}
               className="flex items-center gap-[var(--appkit-space-2)] transition-opacity hover:opacity-80"
             >
-              <Div className="flex md:hidden">
-                <SiteMark title={brandShortName ?? brandName} size="sm" />
-              </Div>
               <SiteLogo title={brandName} size="md" />
             </Link>
           </Row>
@@ -372,17 +373,37 @@ export function TitleBarLayout({
               swap; a centred brand mark must not move with hand mode. It holds
               one child, so reversing would be a no-op on its contents anyway.
 
-              `hidden` below `md` removes it as a flex item entirely
-              (`display:none`), so the two side tracks split the full width and
-              the row is byte-identical to the old `justify="between"` layout
-              on narrow viewports. */}
-          <Row className="hidden md:flex flex-none" align="center">
+              🛑 It was `hidden md:flex` until 2026-10-19, i.e. the brand mark
+              was absent from the header on every phone — reported as "in mobile
+              this gets hidden, can we make it visible". It is now shown at
+              every width, one size smaller below `md`.
+
+              Showing it on a narrow viewport is safe BY CONSTRUCTION and does
+              not reopen the overlap this three-track layout was built to fix:
+              the mark is an in-flow flex item, not `absolute left-1/2`, so when
+              the action cluster needs the room the centre track is PUSHED
+              aside rather than drawn over. That is the whole point of the
+              comment above — the old absolute version is what could be
+              overlapped, and the only reason this track was hidden on mobile
+              was the duplicate prefix mark in track #1, now removed. */}
+          <Row className="flex flex-none" align="center">
             <Link
               href={logoHref}
               aria-label={brandName}
               className="flex items-center transition-opacity hover:opacity-80"
             >
-              <SiteMark src={siteLogoUrl} title={brandName} size="lg" />
+              {/* `size="lg"` is unchanged and already responsive —
+                  `h-9 md:h-11 lg:h-12`, so the mark is 36px inside the 56px
+                  bar on a phone and grows from `md` exactly as before. No new
+                  prop was needed; only the `hidden` had to go. */}
+              {/* `brandShortName` keeps its reader here — it belonged to the
+                  removed mobile prefix mark, and the icon-only mark is exactly
+                  where a short brand name is the right accessible title. */}
+              <SiteMark
+                src={siteLogoUrl}
+                title={brandShortName ?? brandName}
+                size="lg"
+              />
             </Link>
           </Row>
 

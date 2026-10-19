@@ -74,9 +74,9 @@ export function PublicCatalogueItemDetailView({ ownerSlug, itemId }: PublicCatal
     <Main>
       <Container size="lg" padding="y-lg">
         <Row className="mb-4" align="center" gap="xs" textSize="xs" color="muted">
-          <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</Link>
           <Span aria-hidden>/</Span>
-          <Link href={`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`} className="hover:text-primary-600 transition-colors">
+          <Link href={`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
             {owner.displayName ?? "Catalogue"}
           </Link>
           <Span aria-hidden>/</Span>

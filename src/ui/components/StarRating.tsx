@@ -39,9 +39,7 @@ export function StarRating({
       className={[
         "appkit-star-rating",
         `appkit-star-rating--${size}`,
-        readOnly
-          ? "appkit-star-rating--readonly"
-          : "appkit-star-rating--interactive",
+        readOnly ? "" : "appkit-star-rating--interactive",
         className,
       ]
         .filter(Boolean)
