@@ -71,6 +71,7 @@ import {
   GENERATED_CATEGORY_IMAGE_COUNT,
 } from "./_helpers/category-images-generated";
 import { productsStandardSeedData } from "./products-standard-seed-data";
+import { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -245,8 +246,22 @@ const franchiseRows: Partial<CategoryDocument>[] = buildFranchiseRows({
  * Deriving from the members' own chains means the union cannot disagree with
  * them, and a member whose chain moves updates every bundle holding it.
  */
+/*
+ * Both real-product arrays, not just the standard one.
+ *
+ * `productsBeybladeXSeedData` was added 2026-10-19 as a separate file (real,
+ * wiki-verified Beyblade X listings under store-letitrip-official). A bundle
+ * may legitimately hold one of those, and resolving only the standard array
+ * would make `bundleCategorySlugsFor` throw "not in productsStandardSeedData"
+ * for a product that genuinely exists — which is exactly what happened when
+ * the two fictional X fixtures this file's bundles used to reference were
+ * removed in favour of real ones.
+ */
 const PRODUCT_CHAINS = new Map<string, string[]>(
-  productsStandardSeedData.map((p) => [String(p.id), (p.categorySlugs ?? []) as string[]]),
+  [...productsStandardSeedData, ...productsBeybladeXSeedData].map((p) => [
+    String(p.id),
+    (p.categorySlugs ?? []) as string[],
+  ]),
 );
 
 function bundleCategorySlugsFor(productIds: string[]): string[] {
@@ -254,12 +269,18 @@ function bundleCategorySlugsFor(productIds: string[]): string[] {
   for (const id of productIds) {
     const chain = PRODUCT_CHAINS.get(id);
     /*
-     * A member missing from the standard seed is a BUG, not something to shrug
-     * past: the bundle would silently lose that member's categories and the
-     * Bundles tab would under-report. All eight current members are standard
-     * products; if that changes, widen the map rather than softening this.
+     * A member missing from the real-product seeds is a BUG, not something to
+     * shrug past: the bundle would silently lose that member's categories and
+     * the Bundles tab would under-report. The map was widened (rather than
+     * this check softened) on 2026-10-19 to cover
+     * `productsBeybladeXSeedData` as well — if another real-product file is
+     * added, widen it again.
      */
-    if (!chain) throw new Error(`bundle member ${id} is not in productsStandardSeedData`);
+    if (!chain) {
+      throw new Error(
+        `bundle member ${id} is in neither productsStandardSeedData nor productsBeybladeXSeedData`,
+      );
+    }
     for (const c of chain) if (!out.includes(c)) out.push(c);
   }
   return out;
@@ -285,8 +306,14 @@ function withBundleMosaic(row: Partial<CategoryDocument>): Partial<CategoryDocum
   // bundle row declares one; a row without is left untouched rather than
   // half-built.
   if (ids.length === 0 || !row.display) return row;
+  // Both real-product arrays, for the same reason as PRODUCT_CHAINS above —
+  // otherwise a bundle holding a Beyblade X member silently loses that tile.
   const images = ids
-    .map((id) => productsStandardSeedData.find((p) => p.id === id)?.mainImage)
+    .map(
+      (id) =>
+        [...productsStandardSeedData, ...productsBeybladeXSeedData].find((p) => p.id === id)
+          ?.mainImage,
+    )
     .filter((src): src is string => typeof src === "string" && src.length > 0);
   if (images.length === 0) return row;
   return { ...row, display: { ...row.display, mosaicImages: images } };
@@ -404,18 +431,21 @@ const bundleRows: Partial<CategoryDocument>[] = [
     id: "bundle-x-series-starter",
     name: "X-Series Starter Set",
     slug: "bundle-x-series-starter",
-    description: "Wizard Arrow and Knife Shinobi — the newest X-series tops for new battlers.",
+    description: "WizardArrow and KnightShield Ver.2.0 — the re-tuned Stamina and Defense tops from the BX-53 set, paired with a Burst-era Valkyrie.",
     categoryType: "bundle",
     bundleKind: "special",
     brandSlug: "brand-takara-tomy",
     bundlePrice: 2499,
     bundleQueryRule: {
       type: "static",
-      productIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
+      productIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"],
     },
-    bundleProductIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"]),
-    bundleOriginalTotal: 2847, // 899 + 949 + 999
+    bundleProductIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"]),
+    // 1500 + 1500 + 999. Recomputed 2026-10-19 when the two fictional X
+    // fixtures (899 + 949) were replaced by the real BX-53 component
+    // listings — a stale total here drives a wrong discount-% badge.
+    bundleOriginalTotal: 3999,
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-x-series-starter-20260101", 1200, 900), showInFooter: false },
     isActive: true,
@@ -453,17 +483,20 @@ const bundleRows: Partial<CategoryDocument>[] = [
         "product-beyblade-original-driger-v",
         "product-beyblade-metal-storm-pegasus",
         "product-beyblade-burst-valkyrie",
-        "product-beyblade-x-wizard-arrow",
+        "product-beyblade-x-bx-53-wizardarrow-v2",
       ],
     },
     bundleProductIds: [
       "product-beyblade-original-driger-v",
       "product-beyblade-metal-storm-pegasus",
       "product-beyblade-burst-valkyrie",
-      "product-beyblade-x-wizard-arrow",
+      "product-beyblade-x-bx-53-wizardarrow-v2",
     ],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus", "product-beyblade-burst-valkyrie", "product-beyblade-x-wizard-arrow"]),
-    bundleOriginalTotal: 4996, // 1799 + 1299 + 999 + 899
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus", "product-beyblade-burst-valkyrie", "product-beyblade-x-bx-53-wizardarrow-v2"]),
+    // 1799 + 1299 + 999 + 1500. Recomputed 2026-10-19 — the X member changed
+    // from the fictional "wizard-arrow" (899) to the real BX-53 WizardArrow
+    // 4-80B Ver.2.0 (1500).
+    bundleOriginalTotal: 5597,
     bundleStockStatus: "in_stock",
     display: { coverImage: seedPhoto("bundle-every-generation-starter-pack-20260101", 1200, 900), showInFooter: false },
     isActive: true,

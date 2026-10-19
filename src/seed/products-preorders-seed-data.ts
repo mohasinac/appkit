@@ -4,13 +4,14 @@
  *      enum values ("upcoming"/"ready_to_ship"), a sold-out reservation, and a
  *      non-cancellable pre-order were structurally impossible to test against permanent
  *      data (see CLAUDE.md seed-data blandness sweep, 2026-08-20 session).
- * WHAT: Exports 7 pre-order products with listingType:"pre-order" — the original fixture
- *       (now with multiple images + customFields/customSections populated) plus 6 new
- *       ones covering every production-status value, a sold-out reservation, and a
- *       non-cancellable deposit-only pre-order.
+ * WHAT: Exports 8 pre-order products with listingType:"pre-order" — the original fixture
+ *       (now with multiple images + customFields/customSections populated) plus 6 covering
+ *       every production-status value, a sold-out reservation, and a non-cancellable
+ *       deposit-only pre-order — plus 1 real CX-20 Customize Set C added 2026-10-19,
+ *       genuinely unreleased (confirmed via the wiki's own {{Unreleased}} tag).
  *
  * EXPORTS:
- *   productsPreordersSeedData — Array of 7 pre-order products with listingType:"pre-order"
+ *   productsPreordersSeedData — Array of 8 pre-order products with listingType:"pre-order"
  *
  * @tag domain:products,pre-orders
  * @tag layer:seed
@@ -303,6 +304,60 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     preOrderCancellable: false,
     createdAt: new Date("2026-08-24"),
     updatedAt: new Date("2026-08-24"),
+  },
+
+  /*
+   * Added 2026-10-19 — CX-20 "Customize Set C", a GENUINELY unreleased real
+   * product. The wiki marks it {{Unreleased}} with a confirmed Japan release
+   * date of 21 Nov 2026 — this is why it is a pre-order rather than a
+   * standard listing, not a stylistic choice. Listed as one SKU for now ("for
+   * now whole set") rather than broken into its 11 named components the way
+   * the BX-53 set was; see docs/research for the real contents list captured
+   * from the wiki's own infobox.
+   */
+  {
+    id: "preorder-beyblade-x-customize-set-c-cx-20",
+    isLot: false,
+    storeId: "store-letitrip-official",
+    brandSlug: "brand-takara-tomy",
+    title: "Beyblade X Customize Set C (CX-20)",
+    slug: "preorder-beyblade-x-customize-set-c-cx-20",
+    description:
+      "Customize Set C (CX-20) — a Custom Line kit confirmed for Japan release 21 November 2026, not yet available. Contains the complete PhoenixForce WHM-65MT top plus three extra Blades (HellsScythe Ver.2.0, WizardRod in Metal Coat: Blue, SharkScale), two Ratchets (1-70, 8-80) and five Bits (Kick, Low Rush, High Needle, Low Orb, Under Flat) — enough parts to build several distinct combinations from one box. Reserve now; ships on Japan release.",
+    price: 7500,
+    currency: "INR",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    listingType: "pre-order" as const,
+    categorySlugs: ["category-x-customize-sets"],
+    brand: "Takara-Tomy",
+    images: ["/media/product-customize-set-c-cx-20-image"],
+    isSold: false,
+    availableQuantity: 10,
+    tags: ["custom-line", "cx", "unreleased"],
+    customFields: [
+      { key: "Includes complete top", type: "text", value: "PhoenixForce WHM-65MT" },
+      { key: "Extra Blades", type: "text", value: "HellsScythe (Ver.2.0), WizardRod (Metal Coat: Blue), SharkScale" },
+      { key: "Ratchets", type: "text", value: "1-70, 8-80" },
+      { key: "Bits", type: "text", value: "Kick, Low Rush, High Needle, Low Orb, Under Flat" },
+    ],
+    featured: true,
+    isOnSale: false,
+    preOrderDeliveryDate: new Date("2026-11-21"),
+    preOrderProductionStatus: "upcoming",
+    preOrderDepositPercent: 30,
+    preOrderMaxQuantity: 10,
+    preOrderCurrentCount: 0,
+    preOrderCancellable: true,
+    createdAt: new Date("2026-10-19"),
+    updatedAt: new Date("2026-10-19"),
+    /*
+     * 🛑 Real content, so `permanent` — the `products` collection defaults to
+     * `test` and `appkit-seed purge` deletes everything resolving `test`.
+     * Every OTHER row in this file is a demo fixture and correctly keeps the
+     * default; this one is a genuine listing and must survive a purge.
+     */
+    seedPurpose: "permanent" as const,
   },
 ];
 

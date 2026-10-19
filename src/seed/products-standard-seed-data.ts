@@ -1,6 +1,6 @@
 /*
  * WHY: Seeds a minimal, Beyblade-focused catalog of standard product listings — 2 products per
- *      generation (Original, Metal Fight, Burst, X), all from the Beyblade Arena store, plus
+ *      generation (Original, Metal Fight, Burst), all from the Beyblade Arena store, plus
  *      4 video-demo products so the product gallery's video slide (theater-mode playback,
  *      zoom/rotate, fullscreen) has real, playable fixtures covering every supported video
  *      source: a raw file from Google's public sample-video bucket (x2, one per Original/X),
@@ -9,11 +9,19 @@
  *      2026-08-21). A real MediaUploadField file-upload video can't be reproduced from seed
  *      data (no Storage object actually exists for a seeded URL to point at) — that path is
  *      covered by a tester-checklist manual test case instead, not a fixture here.
- * WHAT: Exports 14 standard products with listingType:"standard", covering all 4 generation
- *       leaf categories (tagged with both leaf + root category slugs).
+ *
+ *      🛑 The Beyblade X pair (2 of the original "2 per generation") was REMOVED 2026-10-19 —
+ *      both were fictional (one named itself "Wizard Arrow 4-60F" while filed under the real
+ *      `category-wizardarrow-4-80b`, a different model; the other, "CrimsonGaruda 4-70TP",
+ *      matches nothing in the research corpus). Real, wiki-verified Beyblade X products —
+ *      including a real WizardArrow 4-80B — now live in `products-beyblade-x-seed-data.ts`.
+ *
+ * WHAT: Exports 13 standard products with listingType:"standard", covering the Original,
+ *       Metal Fight and Burst generation leaf categories (tagged with both leaf + root
+ *       category slugs). Beyblade X real content is a separate file — see above.
  *
  * EXPORTS:
- *   productsStandardSeedData — Array of 14 standard products with listingType:"standard"
+ *   productsStandardSeedData — Array of 13 standard products with listingType:"standard"
  *
  * @tag domain:products,catalog
  * @tag layer:seed
@@ -397,70 +405,19 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     updatedAt: new Date("2026-05-03"),
   },
 
-  // ===== Beyblade X =====
-  {
-    id: "product-beyblade-x-wizard-arrow",
-    slug: "product-beyblade-x-wizard-arrow",
-    barcodeId: "LIR-BEY-X-001",
-    title: "Beyblade X BX-01 Wizard Arrow",
-    description: "Wizard Arrow 4-60F, a starter top from the Beyblade X Xtreme Gear generation.",
-    categorySlugs: ["category-wizardarrow-4-80b","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
-    brandSlug: "brand-takara-tomy",
-    brand: "Takara-Tomy",
-    price: 899,
-    allowOffers: true,
-    minOfferPercent: 70,
-    currency: "INR",
-    stockQuantity: 12,
-    availableQuantity: 12,
-    isSold: false,
-    mainImage: seedPhoto("product-image-beyblade-x-wizard-arrow-1-20260101", 900, 900),
-    images: [
-      seedPhoto("product-image-beyblade-x-wizard-arrow-1-20260101", 900, 900),
-      seedPhoto("product-image-beyblade-x-wizard-arrow-2-20260101", 900, 900),
-      seedPhoto("product-image-beyblade-x-wizard-arrow-3-20260101", 900, 900),
-    ],
-    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
-    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    featured: true,
-    tags: ["attack-type", "starter-set"],
-    storeId: "store-beyblade-arena",
-    storeName: "Beyblade Arena",
-    createdAt: new Date("2026-04-22"),
-    updatedAt: new Date("2026-05-04"),
-  },
-  {
-    id: "product-beyblade-x-knife-shinobi",
-    slug: "product-beyblade-x-knife-shinobi",
-    barcodeId: "LIR-BEY-X-002",
-    title: "Beyblade X CrimsonGaruda 4-70TP",
-    description: "CrimsonGaruda 4-70TP, a balance-type top with tournament-grade stamina parts.",
-    categorySlugs: ["category-crimsongaruda-4-70tp","category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
-    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
-    brandSlug: "brand-takara-tomy",
-    brand: "Takara-Tomy",
-    price: 949,
-    allowOffers: true,
-    minOfferPercent: 70,
-    currency: "INR",
-    stockQuantity: 7,
-    availableQuantity: 7,
-    isSold: false,
-    mainImage: seedPhoto("product-image-beyblade-x-knife-shinobi-1-20260101", 900, 900),
-    images: [
-      seedPhoto("product-image-beyblade-x-knife-shinobi-1-20260101", 900, 900),
-      seedPhoto("product-image-beyblade-x-knife-shinobi-2-20260101", 900, 900),
-      seedPhoto("product-image-beyblade-x-knife-shinobi-3-20260101", 900, 900),
-    ],
-    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
-    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    tags: ["balance-type", "tournament-grade"],
-    storeId: "store-beyblade-arena",
-    storeName: "Beyblade Arena",
-    createdAt: new Date("2026-04-24"),
-    updatedAt: new Date("2026-05-04"),
-  },
+  /*
+   * ===== Beyblade X ===== — REMOVED 2026-10-19.
+   *
+   * Two fictional fixtures lived here: "Beyblade X BX-01 Wizard Arrow"
+   * (described as "Wizard Arrow 4-60F" while its own categorySlugs pointed at
+   * `category-wizardarrow-4-80b` — a different real model, 4-80B not 4-60F)
+   * and "Beyblade X CrimsonGaruda 4-70TP" (no such model exists in the
+   * research corpus at all). Both predate the real Beyblade X product seed
+   * (`products-beyblade-x-seed-data.ts`), which now occupies
+   * `category-wizardarrow-4-80b` with the real WizardArrow 4-80B Ver.2.0 —
+   * leaving the old entry in place would have put two differently-named
+   * "WizardArrow" products in the same category, one of them fictional.
+   */
 
   // ===== Video-demo fixtures — real playable video field for gallery testing =====
   {

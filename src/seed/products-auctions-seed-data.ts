@@ -7,13 +7,14 @@
  *      Also fixes a real field-name bug: the two original fixtures set `buyItNowPrice`
  *      (a distinct, no-bids-yet-only BIN field) but AuctionDetailPageView.tsx reads
  *      `buyNowPrice` — so neither auction's Buy Now button/price ever rendered.
- * WHAT: Exports 9 auction products with listingType:"auction" — 2 original fixtures
- *       (field-bug fixed, specs/tags added) + 6 new: a Buy-Now-only auction (zero bids,
+ * WHAT: Exports 10 auction products with listingType:"auction" — 2 original fixtures
+ *       (field-bug fixed, specs/tags added) + 6 more: a Buy-Now-only auction (zero bids,
  *       bidsHaveStarted:false), a reserve-not-met auction, a closed/won auction with a
- *       winning bidder, and 3 more active auctions with varied end dates/bid activity.
+ *       winning bidder, and 3 more active auctions with varied end dates/bid activity —
+ *       plus 1 real AeroPegasus 3-70A auction added 2026-10-19, starting bid ₹0.
  *
  * EXPORTS:
- *   productsAuctionsSeedData — Array of 9 auction products with listingType:"auction"
+ *   productsAuctionsSeedData — Array of 10 auction products with listingType:"auction"
  *
  * @tag domain:auctions,products
  * @tag layer:seed
@@ -471,6 +472,48 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     storeName: "Beyblade Arena",
     createdAt: new Date("2026-08-10"),
     updatedAt: new Date("2026-08-24"),
+  },
+
+  /*
+   * Added 2026-10-19 — real AeroPegasus 3-70A, new in box, started at ₹0 per
+   * explicit request. Under `store-letitrip-official`, matching the other
+   * real Beyblade X listings added the same day
+   * (`products-beyblade-x-seed-data.ts`) rather than `store-beyblade-arena`,
+   * which the rest of this file uses — this is real content, not a curated
+   * demo fixture, so it belongs to the real store.
+   */
+  {
+    id: "auction-beyblade-x-aeropegasus-3-70a-nib",
+    slug: "auction-beyblade-x-aeropegasus-3-70a-nib",
+    title: "Beyblade X AeroPegasus 3-70A (NIB) — Auction",
+    description:
+      "AeroPegasus 3-70A, new in box — the Rare Bey Get Battle mobile-app prize colourway. Starting bid ₹0; this is the same real top also listed at a fixed price under 'Beyblade X AeroPegasus 3-70A', offered here as an auction instead.",
+    categorySlugs: ["category-aeropegasus-3-70a"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 0,
+    currentBid: 0,
+    currency: "INR",
+    auctionEndDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    bidCount: 0,
+    bidsHaveStarted: false,
+    isSold: false,
+    mainImage: "/media/product-aeropegasus-3-70a-image",
+    images: ["/media/product-aeropegasus-3-70a-image"],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["attack-type", "rare-bey", "prize-exclusive"],
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    createdAt: new Date("2026-10-19"),
+    updatedAt: new Date("2026-10-19"),
+    /*
+     * 🛑 Real content, so `permanent` — the `products` collection defaults to
+     * `test` and `appkit-seed purge` deletes everything resolving `test`.
+     * Every OTHER row in this file is a demo fixture and correctly keeps the
+     * default; this one is a genuine listing and must survive a purge.
+     */
+    seedPurpose: "permanent" as const,
   },
 ]
   .map((a) => ({ ...a, listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION }))

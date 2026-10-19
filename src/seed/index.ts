@@ -145,6 +145,7 @@ export { storesSeedData } from "./stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { categoriesSeedData, categoriesP1SeedData } from "./categories-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
+export { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
 /*
  * 🛑 `productsCatalogueSeedData` DELETED (I6, 2026-10-13) — 968 generated
  * listings, one per tier-4 leaf. "I do not need products ... rest is either

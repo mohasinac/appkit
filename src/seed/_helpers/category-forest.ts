@@ -352,6 +352,19 @@ const BEYBLADE_X: CategoryTreeNode = {
       node("category-x-xtreme-stadiums", "Xtreme Stadiums", "X-format stadiums with the Xtreme Line rail — the feature the whole generation is designed around.", stadiumDefaults("category-x-xtreme-stadiums", "Beyblade X"), SEALED_TEMPLATES),
       node("category-x-standard-stadiums", "Standard X Stadiums", "Plain round X dishes without the rail, for casual play and practice.", stadiumDefaults("category-x-standard-stadiums", "Beyblade X"), SEALED_TEMPLATES),
     ]),
+    /*
+     * Added 2026-10-19 for the real CX-20 "Customize Set C" pre-order fixture.
+     * A Customize Set is its own retail concept, distinct from both a complete
+     * top (`category-x-tops`) and a single loose part (`category-x-parts`):
+     * it bundles one complete top with several loose Blades/Ratchets/Bits, so
+     * neither existing leaf is the right home. `partDefaults` is still the
+     * closer fit of the two existing helpers — the commercial character is
+     * "components for a custom build," which is what its FAQ templates
+     * (fit/compatibility, not authenticity) already speak to — and it carries
+     * `taxCodeId: TAX_TOY` (HSN 9503 0020, 5%), the same rate every other
+     * Beyblade/part/launcher/stadium in this catalogue already uses.
+     */
+    node("category-x-customize-sets", "Customize Sets", "CX-line Customize Sets — a complete top plus extra Blades, Ratchets and Bits for building several distinct combinations from one box.", partDefaults("category-x-customize-sets", "Customize Set"), PART_TEMPLATES),
   ],
 };
 

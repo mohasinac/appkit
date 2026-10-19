@@ -2143,6 +2143,8 @@ export { catalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
 export { productsStandardSeedData } from "./seed/index";
+// productsBeybladeXSeedData - Real, wiki-verified Beyblade X listings under store-letitrip-official (4 tops, 1 stadium, 1 Product Group of 7).
+export { productsBeybladeXSeedData } from "./seed/index";
 // 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsAuctionsSeedData - Seed data for auction product listings.
