@@ -7,9 +7,11 @@
  * a third-party URL (Root Cause #104 — that adds an upstream fetch to every
  * single render).
  *
- * Covers BOTH complete-model leaves and PART leaves — they share one id space
- * (`category-*`), so one map serves the category cover and, through
- * `gen-catalogue-listings.mjs`, that leaf's product listing image too.
+ * Covers model leaves, PART leaves and taxonomy BRANCH rows (generation roots
+ * and waves, retail lines, brand rows, franchise rows) — they share one id
+ * space (`category-*` / `brand-*` / `franchise-*`), so one map serves the
+ * category cover and, through `gen-catalogue-listings.mjs`, a leaf's product
+ * listing image too.
  *
  * A hand-authored `display.coverImage` always wins over this map; a row absent
  * from it keeps no image rather than being given a placeholder. See
@@ -31,8 +33,10 @@
  * versioning and soft-delete are both OFF, so a deleted object leaves no
  * recoverable copy and no residual billing.
  *
- * Source and licensing for every file:
- * `docs/research/bey-corpus-2026-10/image-provenance.json`.
+ * Source and licensing for every file — TWO manifests, because the leaves and
+ * the branches were fetched by different scripts from different sources:
+ *   `docs/research/bey-corpus-2026-10/image-provenance.json`      (model/part leaves)
+ *   `docs/research/taxonomy-images-2026-10/image-provenance.json` (branch wordmarks)
  */
 export const GENERATED_CATEGORY_IMAGES: Readonly<Record<string, string>> = {
   "category-ace-dragon-sting-charge-zan": "/media/category-ace-dragon-sting-charge-zan-image",
@@ -165,6 +169,7 @@ export const GENERATED_CATEGORY_IMAGES: Readonly<Record<string, string>> = {
   "category-obelisk-odin-triple-xtreme": "/media/category-obelisk-odin-triple-xtreme-image",
   "category-phantom-fox-ms": "/media/category-phantom-fox-ms-image",
   "category-phantom-orion-b-d": "/media/category-phantom-orion-b-d-image",
+  "category-phoenixforce-whm-65mt": "/media/category-phoenixforce-whm-65mt-image",
   "category-poison-serpent-sw145sd": "/media/category-poison-serpent-sw145sd-image",
   "category-prominence-phoenix-tapered-metal-universe-10": "/media/category-prominence-phoenix-tapered-metal-universe-10-image",
   "category-proto-nemesis-ad145d": "/media/category-proto-nemesis-ad145d-image",
@@ -539,6 +544,52 @@ export const GENERATED_CATEGORY_IMAGES: Readonly<Record<string, string>> = {
   "category-ten-heavy": "/media/category-ten-heavy-image",
   "category-ten-wide": "/media/category-ten-wide-image",
   "category-wing-attacker": "/media/category-wing-attacker-image",
+  "brand-beyblade": "/media/brand-beyblade-image",
+  "brand-hasbro": "/media/brand-hasbro-image",
+  "brand-sonokong": "/media/brand-sonokong-image",
+  "category-beyblade-burst": "/media/category-beyblade-burst-image",
+  "category-beyblade-metal": "/media/category-beyblade-metal-image",
+  "category-beyblade-original": "/media/category-beyblade-original-image",
+  "category-beyblade-x": "/media/category-beyblade-x-image",
+  "category-burst-cho-z": "/media/category-burst-cho-z-image",
+  "category-burst-classic": "/media/category-burst-classic-image",
+  "category-burst-db": "/media/category-burst-db-image",
+  "category-burst-god": "/media/category-burst-god-image",
+  "category-burst-gt": "/media/category-burst-gt-image",
+  "category-burst-superking": "/media/category-burst-superking-image",
+  "category-metal-fury-4d": "/media/category-metal-fury-4d-image",
+  "category-metal-fusion": "/media/category-metal-fusion-image",
+  "category-metal-masters": "/media/category-metal-masters-image",
+  "category-metal-shogun-steel": "/media/category-metal-shogun-steel-image",
+  "category-original-engine-gear": "/media/category-original-engine-gear-image",
+  "category-original-magnacore": "/media/category-original-magnacore-image",
+  "category-x-basic": "/media/category-x-basic-image",
+  "category-x-custom-cx": "/media/category-x-custom-cx-image",
+  "category-x-unique-ux": "/media/category-x-unique-ux-image",
+  "franchise-beyblade": "/media/franchise-beyblade-image",
 };
 
-export const GENERATED_CATEGORY_IMAGE_COUNT = 504;
+export const GENERATED_CATEGORY_IMAGE_COUNT = 528;
+
+/**
+ * The REGIONAL-VARIANT logo, keyed on the same category id.
+ *
+ * 🛑 A separate map rather than more entries in the one above, because this is
+ * a SECOND image for the SAME category — `category-burst-god` has both a
+ * Takara-Tomy "God" wordmark and a Hasbro "Evolution" one. Merging them would
+ * mean one silently overwriting the other, and the loser would be whichever
+ * the directory listing happened to reach second.
+ *
+ * Applied by `withGeneratedHasbroCover` to `hasbroCoverImage`, and rendered
+ * beside the "Also known as" name. Only populated for a category that also
+ * carries `hasbroName` — an image with no name to label it has nothing to say.
+ */
+export const GENERATED_CATEGORY_HASBRO_IMAGES: Readonly<Record<string, string>> = {
+  "category-burst-cho-z": "/media/category-burst-cho-z-hasbro-image",
+  "category-burst-db": "/media/category-burst-db-hasbro-image",
+  "category-burst-god": "/media/category-burst-god-hasbro-image",
+  "category-burst-gt": "/media/category-burst-gt-hasbro-image",
+  "category-burst-superking": "/media/category-burst-superking-hasbro-image",
+};
+
+export const GENERATED_CATEGORY_HASBRO_IMAGE_COUNT = 5;
