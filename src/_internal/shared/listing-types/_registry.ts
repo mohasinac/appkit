@@ -219,8 +219,44 @@ export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   spares: spares.config,
 };
 
+/*
+ * 🛑 TOTAL BY CONSTRUCTION — this was a bare index lookup and it crashed pages.
+ *
+ * The signature says `(type: ListingType) => ListingTypePlugin`, and for a
+ * value the compiler has actually checked that is true. But most callers get
+ * their `listingType` from a Firestore document, which crosses into the app
+ * as untyped data: a row written before a type existed, a row whose field was
+ * stripped by a `z.object()` schema, or a mapper that forgot to copy the
+ * field (Root Cause #48) all arrive as `undefined`. The lookup then returned
+ * `undefined` while TypeScript still believed it held a plugin, so the very
+ * next property access threw.
+ *
+ * Measured in production over 24h: 18 server-side crashes reading
+ * `.detailRoute` of undefined, across FIVE route families
+ * (`products/[slug]`, `classified/[slug]`, `pre-orders/[id]`,
+ * `digital-codes/[slug]`, `prize-draws/[slug]`), plus client-side copies of
+ * the same throw and one on `.badge` from `franchise/[slug]`. Each one is a
+ * whole detail page replaced by an error boundary.
+ *
+ * Falling back to `standard` is right because it is what the rest of the
+ * codebase ALREADY assumes: `normalizeListingType` is defined as
+ * `p.listingType ?? "standard"`, so a missing field is a standard listing
+ * everywhere else. Callers that pass through it were always safe; this makes
+ * the ones that do not safe as well.
+ *
+ * 🛑 It WARNS rather than falling back silently. A silent default is how a
+ * tenth listing type goes missing from the catalogue for weeks (Root Cause
+ * #58, where an unmapped alias returned "" and the filter simply vanished).
+ * The page renders; the gap is still reported.
+ */
 export function pluginFor(type: ListingType): ListingTypePlugin {
-  return LISTING_TYPE_REGISTRY[type];
+  const plugin = LISTING_TYPE_REGISTRY[type];
+  if (plugin) return plugin;
+  console.warn(
+    `[listing-types] no plugin for listingType ${JSON.stringify(type)} — ` +
+      `falling back to "standard". Expected one of: ${Object.keys(LISTING_TYPE_REGISTRY).join(", ")}.`,
+  );
+  return LISTING_TYPE_REGISTRY.standard;
 }
 
 /**
