@@ -17,9 +17,11 @@ import {
 } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
 import {
+  DEFAULT_SECTION_SURFACE,
   HOMEPAGE_SECTIONS_COLLECTION,
   type HomepageSectionCreateInput,
   type HomepageSectionDocument,
+  type SectionSurface,
   type SectionType,
   createHomepageSectionId,
 } from "../schemas";
@@ -32,6 +34,14 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     type: { canFilter: true, canSort: false },
     enabled: { canFilter: true, canSort: false },
+    /*
+     * 🛑 Required, not optional polish. `sieve.ts` sets
+     * `throwExceptions: false`, so a field absent from this allowlist does not
+     * raise — `findField()` returns undefined and the clause is silently
+     * DROPPED. `?filters=surface==category` would then return every section on
+     * every surface while looking like it had filtered. Root Cause #62.
+     */
+    surface: { canFilter: true, canSort: false },
     order: { canFilter: true, canSort: true },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
@@ -50,7 +60,9 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
   override async create(
     input: HomepageSectionCreateInput,
   ): Promise<HomepageSectionDocument> {
-    const id = createHomepageSectionId(input.type);
+    // Surface participates in the id, or a category `products` section would
+    // overwrite the homepage's — same type, same slug, one document.
+    const id = createHomepageSectionId(input.type, input.surface);
 
     const sectionData: Omit<HomepageSectionDocument, "id"> = {
       ...input,
@@ -112,7 +124,27 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     });
   }
 
-  async getEnabledSections(): Promise<HomepageSectionDocument[]> {
+  /**
+   * Enabled sections for one surface, in `order`.
+   *
+   * 🛑 The parameter DEFAULTS to `"homepage"`, and that default is the safety
+   * property, not a convenience. This method previously returned every enabled
+   * row regardless of surface — so the moment a category-surface row exists,
+   * an unfiltered homepage would render it. Defaulting here means the existing
+   * homepage call site is correct with no change at all, and a caller that
+   * wants another surface has to say so.
+   *
+   * 🛑 The surface is matched IN MEMORY, deliberately. The only composite index
+   * on this collection is `(enabled, order)`;
+   * `where(enabled).where(surface).orderBy(order)` is a three-field composite it
+   * does not cover, and Firestore throws FAILED_PRECONDITION at RUNTIME rather
+   * than at build time. `MarketplaceHomepageView` already filters sections in
+   * memory for the listing-type gate — this follows that precedent. Section
+   * counts are tens, so the read is unchanged in cost.
+   */
+  async getEnabledSections(
+    surface: SectionSurface = DEFAULT_SECTION_SURFACE,
+  ): Promise<HomepageSectionDocument[]> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
@@ -120,9 +152,11 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
         .orderBy(HOMEPAGE_SECTION_FIELDS.ORDER, "asc")
         .get();
 
-      return snapshot.docs.map((doc) =>
-        this.mapDoc<HomepageSectionDocument>(doc),
-      );
+      return snapshot.docs
+        .map((doc) => this.mapDoc<HomepageSectionDocument>(doc))
+        // Absent means "homepage" — every row written before `surface` existed
+        // was a homepage row, so this keeps all 23 of them on the homepage.
+        .filter((row) => (row.surface ?? DEFAULT_SECTION_SURFACE) === surface);
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(
@@ -150,20 +184,39 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     }
   }
 
+  /**
+   * 🛑 `surface` is NOT optional in spirit, even though it defaults.
+   *
+   * This was `where(type == X).limit(1)`, which assumed ONE document per type.
+   * With surfaces that assumption is false — a `products` section can exist on
+   * the homepage AND on a category page — and `limit(1)` would return whichever
+   * Firestore happened to order first. An arbitrary-but-plausible answer is the
+   * worst failure shape available here, because nothing errors.
+   *
+   * The surface is matched IN MEMORY rather than added as a second `where`: the
+   * only composite index on this collection is `(enabled, order)`, and
+   * `where(type).where(surface)` needs one that does not exist. Fetching the few
+   * rows of a type and picking by surface costs nothing at these counts.
+   */
   async getSectionByType(
     type: SectionType,
+    surface: SectionSurface = DEFAULT_SECTION_SURFACE,
   ): Promise<HomepageSectionDocument | null> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
         .where(HOMEPAGE_SECTION_FIELDS.TYPE, "==", type)
-        .limit(1)
         .get();
 
       if (snapshot.empty) return null;
 
-      const doc = snapshot.docs[0];
-      return this.mapDoc<HomepageSectionDocument>(doc);
+      const match = snapshot.docs.find((d) => {
+        const rowSurface =
+          (d.data() as { surface?: SectionSurface }).surface ?? DEFAULT_SECTION_SURFACE;
+        return rowSurface === surface;
+      });
+      if (!match) return null;
+      return this.mapDoc<HomepageSectionDocument>(match);
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(

@@ -12,6 +12,7 @@ export * from "./firestore";
 // the section-builder schemas validate it at the form boundary.
 
 import { z } from "zod";
+import { SECTION_SURFACE_VALUES } from "./firestore";
 import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
 import type { JsonValue } from "../../../schemas/types";
 
@@ -79,10 +80,27 @@ export const homepageSectionFirestoreSchema = z.object({
  * `type` comes from `homepageSectionTypeSchema`, which is derived from the
  * union, so that gap cannot reopen.
  */
+/*
+ * 🛑 Derived from SECTION_SURFACE_VALUES, not restated as a literal list.
+ *
+ * `homepageSectionTypeSchema` above is a hand-written duplicate of the
+ * `SectionType` union whose own docstring claims it is "derived from the union,
+ * so that gap cannot reopen" — it is not, and nothing enforces parity, so
+ * adding a section type without editing it produces a 400 on save. This one is
+ * genuinely derived, so it cannot drift the same way.
+ */
+export const sectionSurfaceSchema = z.enum(SECTION_SURFACE_VALUES);
+
 export const homepageSectionCreateSchema = z.object({
   type: homepageSectionTypeSchema,
   enabled: z.boolean().optional().default(true),
   order: z.number().int().optional(),
+  /*
+   * A plain `z.object()` STRIPS unknown keys silently, so without this line a
+   * caller's `surface` vanishes between the request and the handler with no
+   * error anywhere — Root Cause #76. Absent still means "homepage".
+   */
+  surface: sectionSurfaceSchema.optional(),
   // Deliberately open. Every section type carries a different config shape,
   // and a closed schema here would silently STRIP the builder's output for any
   // type it did not enumerate — the `productBaseSchema` failure, one domain

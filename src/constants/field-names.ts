@@ -1136,6 +1136,8 @@ export const HOMEPAGE_SECTION_FIELDS = {
   ORDER: "order",
   ENABLED: "enabled",
   CONFIG: "config",
+  /** Which page the row belongs to. Absent on a row means "homepage". */
+  SURFACE: "surface",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 

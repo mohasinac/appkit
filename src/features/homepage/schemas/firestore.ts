@@ -881,11 +881,47 @@ export type SectionConfig =
   | EventRafflesSectionConfig
   | CollectionCardsSectionConfig;
 
+/**
+ * Which page a section row belongs to.
+ *
+ * One collection, one owner per surface. This does NOT reintroduce the
+ * `siteSettings.homepageLayout` that `sectionTemplates.ts` deliberately refuses
+ * — that note forbids a SECOND owner of the homepage's layout, and this keeps
+ * `homepageSections` the single source of truth while letting a category or a
+ * brand page own its own ordered list.
+ */
+export const SECTION_SURFACE_VALUES = [
+  "homepage",
+  "category",
+  "brand",
+  "product",
+  "store",
+] as const;
+export type SectionSurface = (typeof SECTION_SURFACE_VALUES)[number];
+
+/** Absent means `"homepage"`. See the field comment below. */
+export const DEFAULT_SECTION_SURFACE: SectionSurface = "homepage";
+
 export interface HomepageSectionDocument extends BaseDocument {
   type: SectionType;
   order: number;
   enabled: boolean;
   config: SectionConfig;
+  /**
+   * 🛑 OPTIONAL, and that is load-bearing. Every other field on this document
+   * is required, so a non-optional `surface` would make every one of the 23
+   * existing rows fail the type on read. Absent therefore means
+   * `DEFAULT_SECTION_SURFACE` — which is also the honest reading of history,
+   * since every row written before this existed was a homepage row.
+   *
+   * 🛑 Filter it IN MEMORY, never as a Firestore clause. The only composite
+   * index on this collection is `(enabled, order)`;
+   * `where(enabled).where(surface).orderBy(order)` is a three-field composite
+   * it does not cover and Firestore throws FAILED_PRECONDITION at RUNTIME, not
+   * at build time. `MarketplaceHomepageView` already filters sections in memory
+   * for the listing-type gate — follow that precedent. Section counts are tens.
+   */
+  surface?: SectionSurface;
 }
 
 export const HOMEPAGE_SECTIONS_COLLECTION = "homepageSections" as const;
@@ -935,7 +971,10 @@ export type HomepageSectionCreateInput = Omit<
   "id" | "createdAt" | "updatedAt"
 >;
 export type HomepageSectionUpdateInput = Partial<
-  Pick<HomepageSectionDocument, "order" | "enabled" | "config">
+  // `surface` included deliberately: PATCH builds its input from this Pick, so
+  // a field missing here is silently dropped by the spread in the route even
+  // after the route's own Zod schema accepts it (Root Cause #76).
+  Pick<HomepageSectionDocument, "order" | "enabled" | "config" | "surface">
 >;
 
 export const homepageSectionQueryHelpers = {
@@ -943,6 +982,18 @@ export const homepageSectionQueryHelpers = {
   byType: (type: SectionType) => ["type", "==", type] as const,
 } as const;
 
-export function createHomepageSectionId(type: SectionType): string {
-  return generateHomepageSectionId({ type });
+/**
+ * 🛑 The surface is part of the id, or a category's `products` section collides
+ * with the homepage's — same type, same generated slug, one document.
+ *
+ * `"homepage"` is omitted from the id so every existing row keeps the exact id
+ * it already has. A migration here would be a rename of 23 live documents to
+ * gain nothing.
+ */
+export function createHomepageSectionId(
+  type: SectionType,
+  surface: SectionSurface = DEFAULT_SECTION_SURFACE,
+): string {
+  const base = generateHomepageSectionId({ type });
+  return surface === DEFAULT_SECTION_SURFACE ? base : `${base}-${surface}`;
 }
