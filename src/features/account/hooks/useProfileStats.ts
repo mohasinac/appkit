@@ -13,7 +13,10 @@ export function useProfileStats(enabled: boolean): ProfileStats {
   const { data: ordersData, isLoading: ordersLoading } = useQuery({
     queryKey: ["user-orders-count"],
     queryFn: () =>
-      apiClient.get<{ orders: JsonValue[]; total: number }>(
+      // `items`, not `orders` — GET /api/user/orders emits the shared list
+      // envelope. Only `total` is read below, so the wrong key never threw
+      // here; it was a false declaration waiting for someone to read it.
+      apiClient.get<{ items: JsonValue[]; total: number }>(
         ACCOUNT_ENDPOINTS.ORDERS,
       ),
     enabled,
