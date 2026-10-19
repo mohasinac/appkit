@@ -2189,6 +2189,12 @@ export {
   type TraceRunListRow,
 } from "./_internal/server/features/sticker-trace/actions";
 export {
+  promoteStickerTraceRun,
+  isRunPromoted,
+  type PromoteRunInput,
+  type PromoteRunResult,
+} from "./_internal/server/features/sticker-trace/promote";
+export {
   createStickerSheet,
   attachStickerSheetScan,
   resolveStickerAssetUrl,

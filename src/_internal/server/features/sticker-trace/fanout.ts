@@ -45,12 +45,37 @@ import {
   type StickerTraceTaskDocument,
 } from "../../../../features/sticker-trace/schemas/firestore";
 
-export function shardTaskId(runId: string, shardIndex: number): string {
-  return `${runId}__part__${shardIndex}`;
+/**
+ * 🛑 THE MODE IS PART OF THE ID, and leaving it out is a silent no-op.
+ *
+ * A trace run and a later promote of the SAME run both fan out, and both write
+ * their tasks with `batch.set()`. Without the mode in the id, the promote would
+ * target `{runId}__part__{i}` — documents the trace already created — and
+ * `set()` on an existing document is an UPDATE, which does NOT fire
+ * `documentCreated`. The tasks would be written, nothing would error, and not
+ * one promote shard would ever run: the exact "succeeds and does nothing"
+ * shape this codebase keeps paying for.
+ *
+ * `thumb` deliberately keeps the historical `__part__` spelling so any task
+ * already in flight keeps its identity.
+ */
+function modeSegment(mode: StickerTraceTaskDocument["mode"]): string {
+  return mode === "full" ? "promote" : "part";
 }
 
-export function finalizeTaskId(runId: string): string {
-  return `${runId}__finalize`;
+export function shardTaskId(
+  runId: string,
+  shardIndex: number,
+  mode: StickerTraceTaskDocument["mode"] = "thumb",
+): string {
+  return `${runId}__${modeSegment(mode)}__${shardIndex}`;
+}
+
+export function finalizeTaskId(
+  runId: string,
+  mode: StickerTraceTaskDocument["mode"] = "thumb",
+): string {
+  return mode === "full" ? `${runId}__promote_finalize` : `${runId}__finalize`;
 }
 
 /**
@@ -92,7 +117,7 @@ export async function createShardTasks(input: {
   input.shards.forEach((partOrdinals, shardIndex) => {
     const ref = db
       .collection(STICKER_TRACE_TASKS_COLLECTION)
-      .doc(shardTaskId(input.runId, shardIndex));
+      .doc(shardTaskId(input.runId, shardIndex, input.mode));
     // fanout-idempotent-ok: fixed doc id derived from runId + shardIndex, so a
     // redelivered coordinator overwrites the same task rather than adding one.
     batch.set(ref, {
@@ -166,7 +191,7 @@ export async function completeShardAndMaybeElectFinalizer(input: {
    */
   const finalizeRef = db
     .collection(STICKER_TRACE_TASKS_COLLECTION)
-    .doc(finalizeTaskId(input.runId));
+    .doc(finalizeTaskId(input.runId, input.mode));
   const now = new Date();
 
   try {
