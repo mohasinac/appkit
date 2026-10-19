@@ -36,3 +36,14 @@ export {
   type RunGeometry,
 } from "../../_internal/server/features/sticker-trace/storage";
 export { rasterisePartToBox } from "../../_internal/shared/features/sticker-trace/math/rasterize-path";
+
+/*
+ * The cut-file exporter, for the finalizer binding.
+ *
+ * 🛑 `buildCutFileBytes` and not `buildExportSet`: the Function has a runId and
+ * a sheetId, not geometry and a pixels-per-mm figure. Exporting the pure
+ * function here would make every binding re-implement the artifact read and the
+ * working-raster-to-original dpi bridge — and that bridge is exactly where a
+ * silent factor-of-N millimetre error lives.
+ */
+export { buildCutFileBytes, buildCutFileForRun } from "../../_internal/server/features/sticker-trace/build-cut-file";
