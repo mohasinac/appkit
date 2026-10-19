@@ -61,6 +61,72 @@ export const PART_SLOT_VALUES = {
   BLADE: "blade",
   RATCHET: "ratchet",
   BIT: "bit",
+
+  /*
+   * ── 🛑 THE OTHER 39, ADDED 2026-10-20 FROM THE WIKI RE-CRAWL ─────────────
+   *
+   * The original 20 predate Gatinko, Sparking, Dynamite Battle, QuadDrive,
+   * QuadStrike, Burst Ultimate and the whole Beyblade X Custom line. These are
+   * not wiki noise — `case study/BEYBLADE MASTER REFERENCE.md` documents the
+   * STACK of each system, and every key below is a slot in one of them:
+   *
+   *   GT / Gatinko  GT Chip -> Layer Base -> Forge Disc -> Driver
+   *   SK / Sparking  Sparking Chip -> Layer Base -> Forge Disc -> Driver
+   *   DB             DB Core -> Armor -> Layer Ring -> Forge Disc -> Driver
+   *   CX             Lock Chip + Main Blade + Assist Blade -> Ratchet -> Bit
+   *   CX Expand      Lock Chip + Over Blade + Metal Blade + Assist Blade -> …
+   *
+   * Measured: the live `Category:Parts` holds 2,261 English pages against our
+   * 752 rows, and 569 of them carried a classification this union could not
+   * express — so they were unrepresentable rather than merely absent.
+   *
+   * 🛑 MAPPED, NOT DUPLICATED. `Forge Disc` is `disc`, `Armor` is `armour`,
+   * `Energy Layer` is `layer`, `Layer Base` is `base`, `Sparking Chip` is
+   * `superking-chip`. A second key for any of them would split one part
+   * family in half: the existing 752 rows in one, every new row in the other.
+   * The alias map lives in `scripts/lib/part-slot-vocab.mjs`, which is the
+   * SOURCE this union mirrors — the same contract the 20 above already have
+   * with `extract-part-composition.mjs`.
+   */
+  GT_CHIP: "gt-chip",
+  GATINKO_CHIP: "gatinko-chip",
+  BASE: "base",
+  SUPERKING_CHIP: "superking-chip",
+  DB_CORE: "db-core",
+  RING: "ring",
+  ARMOR_TIP: "armor-tip",
+  FRAME: "frame",
+  CHASSIS: "chassis",
+  BU_BLADE: "bu-blade",
+  QS_BLADE: "qs-blade",
+  DRIVE_CHIP: "drive-chip",
+  STORM_CHIP: "storm-chip",
+  STRIKE_CHIP: "strike-chip",
+  GRAVITY_RING: "gravity-ring",
+  SPIRIT_SHIELD: "spirit-shield",
+  SPIRIT_AXLE: "spirit-axle",
+  DISC_INTEGRATED_DRIVER: "disc-integrated-driver",
+  LOCK_CHIP: "lock-chip",
+  MAIN_BLADE: "main-blade",
+  ASSIST_BLADE: "assist-blade",
+  OVER_BLADE: "over-blade",
+  METAL_BLADE: "metal-blade",
+  RATCHET_INTEGRATED_BLADE: "ratchet-integrated-blade",
+  RATCHET_INTEGRATED_BIT: "ratchet-integrated-bit",
+  WARRIOR_WHEEL: "warrior-wheel",
+  ELEMENT_WHEEL: "element-wheel",
+  LIGHT_WHEEL: "light-wheel",
+  WHEEL: "wheel",
+  SHOGUN_FACE_BOLT: "shogun-face-bolt",
+  DOME_SPIN_TRACK: "dome-spin-track",
+  EVOLUTION_GEAR: "evolution-gear",
+  BIT_PROTECTOR: "bit-protector",
+  WEIGHT: "weight",
+  CORE: "core",
+  SUPPORT_PARTS: "support-parts",
+  SUB_ATTACK_RING: "sub-attack-ring",
+  CEW: "cew",
+  GEAR_CHIP: "gear-chip",
 } as const;
 
 export type PartSlot = (typeof PART_SLOT_VALUES)[keyof typeof PART_SLOT_VALUES];
@@ -99,6 +165,48 @@ export const PART_SLOT_LABEL: Record<PartSlot, string> = {
   blade: "Blade",
   ratchet: "Ratchet",
   bit: "Bit",
+
+  // The 39 added 2026-10-20. Labels are the wiki's own `Classification=`
+  // spelling, which is also what a buyer sees printed in product listings.
+  "gt-chip": "GT Chip",
+  "gatinko-chip": "Gatinko Chip",
+  base: "Layer Base",
+  "superking-chip": "Superking Chip",
+  "db-core": "DB Core",
+  ring: "Layer Ring",
+  "armor-tip": "Armor Tip",
+  frame: "Frame",
+  chassis: "Chassis",
+  "bu-blade": "BU Blade",
+  "qs-blade": "QS Blade",
+  "drive-chip": "Drive Chip",
+  "storm-chip": "Storm Chip",
+  "strike-chip": "Strike Chip",
+  "gravity-ring": "Gravity Ring",
+  "spirit-shield": "Spirit Shield",
+  "spirit-axle": "Spirit Axle",
+  "disc-integrated-driver": "Disc-Integrated Driver",
+  "lock-chip": "Lock Chip",
+  "main-blade": "Main Blade",
+  "assist-blade": "Assist Blade",
+  "over-blade": "Over Blade",
+  "metal-blade": "Metal Blade",
+  "ratchet-integrated-blade": "Ratchet-Integrated Blade",
+  "ratchet-integrated-bit": "Ratchet-Integrated Bit",
+  "warrior-wheel": "Warrior Wheel",
+  "element-wheel": "Element Wheel",
+  "light-wheel": "Light Wheel",
+  wheel: "Wheel",
+  "shogun-face-bolt": "Shogun Face Bolt",
+  "dome-spin-track": "Dome Spin Track",
+  "evolution-gear": "Evolution Gear",
+  "bit-protector": "Bit Protector",
+  weight: "Weight",
+  core: "Core",
+  "support-parts": "Support Parts",
+  "sub-attack-ring": "Sub Attack Ring",
+  cew: "Customize Engine Weight",
+  "gear-chip": "Gear Chip",
 };
 
 /**
@@ -161,6 +269,73 @@ export const PART_SLOT_CATEGORY: Record<PartSlot, string> = {
   blade: "category-x-blades",
   ratchet: "category-x-ratchets",
   bit: "category-x-bits",
+
+  /*
+   * ── The 39 added 2026-10-20 ──────────────────────────────────────────────
+   *
+   * 🛑 EVERY TARGET ALREADY EXISTS IN `category-forest.ts`. Verified against
+   * it rather than assumed: no new parent node is created here, so the forest
+   * is untouched, `buildCategoryTree` derives the same shape it already does,
+   * and the only change is which parent a part leaf nests under. Minting 39
+   * new nodes would be a taxonomy restructure — and the parts layer is moving
+   * out of categories in a follow-up plan anyway, so adding nodes to it now
+   * would be churn with a known expiry.
+   *
+   * Grouped by what the part IS, not by when we learned about it: the Burst
+   * chip/armour node already collects "small Burst component that is not a
+   * layer, disc or driver", which is exactly what GT/Gatinko/Superking/DB/
+   * QuadDrive chips are.
+   */
+
+  // Burst — layer stack components.
+  base: "category-burst-layers",
+  ring: "category-burst-layers",
+  frame: "category-burst-layers",
+  chassis: "category-burst-layers",
+  "bu-blade": "category-burst-layers",
+  "qs-blade": "category-burst-layers",
+  "gravity-ring": "category-burst-layers",
+  // Burst — chips, armour and the small bits that bolt onto a layer.
+  "gt-chip": "category-burst-chips-armour",
+  "gatinko-chip": "category-burst-chips-armour",
+  "superking-chip": "category-burst-chips-armour",
+  "db-core": "category-burst-chips-armour",
+  "armor-tip": "category-burst-chips-armour",
+  "drive-chip": "category-burst-chips-armour",
+  "storm-chip": "category-burst-chips-armour",
+  "strike-chip": "category-burst-chips-armour",
+  "spirit-shield": "category-burst-chips-armour",
+  "spirit-axle": "category-burst-chips-armour",
+  weight: "category-burst-chips-armour",
+  core: "category-burst-chips-armour",
+  // Burst — a driver with the disc moulded in is still a driver.
+  "disc-integrated-driver": "category-burst-drivers",
+
+  // Beyblade X — the CX Custom line, which has its own node.
+  "lock-chip": "category-x-custom-cx",
+  "main-blade": "category-x-custom-cx",
+  "assist-blade": "category-x-custom-cx",
+  "over-blade": "category-x-custom-cx",
+  "metal-blade": "category-x-custom-cx",
+  "gear-chip": "category-x-custom-cx",
+  // Beyblade X — integrated parts file under the half a buyer shops for.
+  "ratchet-integrated-blade": "category-x-blades",
+  "ratchet-integrated-bit": "category-x-bits",
+
+  // Metal Fight / Shogun Steel.
+  "warrior-wheel": "category-metal-fusion-wheels",
+  "element-wheel": "category-metal-fusion-wheels",
+  "light-wheel": "category-metal-fusion-wheels",
+  wheel: "category-metal-fusion-wheels",
+  "shogun-face-bolt": "category-metal-face-bolts",
+  "dome-spin-track": "category-metal-spin-tracks",
+
+  // Plastic Generation / HMS.
+  "sub-attack-ring": "category-original-attack-rings",
+  "evolution-gear": "category-original-engine-gears",
+  "bit-protector": "category-original-bit-chips",
+  cew: "category-original-weight-disks",
+  "support-parts": "category-original-parts",
 };
 
 /** Every slot key, for an index page that must not hand-write the list. */
@@ -179,6 +354,59 @@ export function partSlotFromSegment(segment: string): PartSlot | null {
 }
 
 /** One part. */
+/**
+ * How much a given spec value is to be trusted, in the corpus's own
+ * vocabulary so nothing is lost in translation.
+ *
+ * `confirmed` — `FACT(PDB)`, verified against PlasticsDB's own part page, or
+ *               a `[CONFIRMED CSn Case m]` citation in the case study.
+ * `fact`      — a bare `FACT` tag, or a wiki infobox value.
+ * `inferred`  — the source flags it as an inference.
+ * `estimated` — the source marks it approximate. 🛑 A `~` in a COLUMN HEADER
+ *               marks the whole column, which is how gen3/gen4 write it; a
+ *               per-cell check alone would publish 300+ estimates as facts.
+ */
+export type PartSpecConfidence = "confirmed" | "fact" | "inferred" | "estimated";
+
+/** One labelled specification row. */
+export interface PartSpec {
+  /** "Weight", "Material", "Full width", "Stats", "WBO legality". */
+  label: string;
+  /** Verbatim from the source. Multi-valued cells are never resolved. */
+  value: string;
+  /** "g", "mm". Absent for a non-dimensional value. */
+  unit?: string;
+  /** Which extractor produced it, for the provenance footnote. */
+  source?: string;
+  confidence?: PartSpecConfidence;
+}
+
+/** One release of a part: which box, which bey, which vendor, which colour. */
+export interface PartRelease {
+  /** "Takara Tomy", "Hasbro", "Sonokong", "Youngtoys". */
+  vendor: string;
+  /** The box code. `BX-00` is the wiki's marker for "no retail number". */
+  code?: string;
+  /** The Beyblade it came in. */
+  bey: string;
+  /** The set or multipack, when the bey shipped inside one. */
+  set?: string;
+  colourway?: string;
+  /** "G1 Prize", "CoroCoro Exclusive" — the channel, not the colour. */
+  distribution?: string[];
+}
+
+/** A distinct colourway, deduped on (colour, channel). */
+export interface PartColourway {
+  /** "Red Ver.", "Bronze Ver.", "Supreme Dragon Ver.". */
+  colourway: string;
+  vendor: string;
+  code?: string;
+  distribution?: string;
+  /** The bey this colourway was released in. */
+  inBey: string;
+}
+
 export interface PartGlossaryDocument extends BaseDocument {
   /** `${slot}--${codeOrSlug}` — both halves, because a code is not unique. */
   id: string;
@@ -205,10 +433,87 @@ export interface PartGlossaryDocument extends BaseDocument {
    * than a lookup table.
    */
   usedBy?: string[];
-  /** Code, name and the spoken form of the code — feeds `searchTxt`. */
+  /** Code, name and the spoken form of the code. */
   aliases?: string[];
   /** Which extractor source contributed the row. */
   source?: string;
+
+  /*
+   * ── I10 — what the wiki re-crawl added, 2026-10-20 ───────────────────────
+   *
+   * Before this, a part page showed a name, a `code` badge and a weight that
+   * 87% of rows did not have. The 2026-05 crawl had fetched ZERO per-part
+   * pages for the legacy slots, so "fandom has no legacy parts" was a fact
+   * about that crawl rather than about the wiki: the live `Category:Parts`
+   * carries 2,261 English pages with `Weight=` on 2,023 of them.
+   */
+
+  /**
+   * Labelled specification rows, ready to render.
+   *
+   * 🛑 ONE array rather than a dozen typed fields. Material, dimensions, spin
+   * direction, JP name, romaji, product code, release date, WBO legality and
+   * the 0–6 stat grid all render as "a labelled row" and none has a query, a
+   * sort, a filter or a format of its own. Twelve typed fields would be twelve
+   * projection-triage entries for zero behaviour; promote one the day a reader
+   * is named for it.
+   *
+   * 🛑 NEVER carries a `Weight` row when `weightG` is set. The page renders
+   * the weight as a badge, so a row too would show it twice and the two could
+   * disagree the moment either is edited. The generator enforces this and
+   * `verify-part-specs` asserts it.
+   */
+  specs?: PartSpec[];
+
+  /**
+   * One sentence per part, generated from the facts above.
+   *
+   * 🛑 GENERATED, NEVER COPIED. Every source page has an `== Description ==`
+   * section and lifting it is both a CC-BY-SA problem and the precise
+   * anti-pattern the competitor crawl recorded of a rival store — wiki bodies
+   * lifted verbatim, one shipping with the literal UI string "Add to
+   * Wishlist". What this replaces is worse than nothing SEO-wise: a template
+   * reading "{name} is a Beyblade {label}. See which models use it", identical
+   * across 752 pages, which made them compete with each other.
+   */
+  seoDescription?: string;
+
+  /**
+   * Which Beyblades and sets this part shipped in, first-seen order.
+   *
+   * Distinct from `usedBy`, and both are worth having: `usedBy` holds
+   * `modelComposition` IDS that resolve to our own category leaves, while this
+   * holds the wiki's PRODUCT names including sets and multipacks we have no
+   * leaf for. 10,723 references extracted across 2,008 pages.
+   */
+  shippedIn?: string[];
+
+  /** The per-release rows `shippedIn` and `colourways` are derived from. */
+  releases?: PartRelease[];
+
+  /**
+   * Colourways, with the channel each was released through.
+   *
+   * 🛑 Absent and empty mean different things. Absent = "we have not looked";
+   * `[]` with `colourwaysDocumented: true` = "a source asserts there are
+   * none". Without that distinction a part with one release and a part we
+   * never checked render identically, which is Root Cause #57's exact symptom.
+   */
+  colourways?: PartColourway[];
+  colourwaysDocumented?: boolean;
+
+  /**
+   * A mould revision changes the physical part — weight, burst resistance — so
+   * it is a DIFFERENT axis from colour and must not be folded into it.
+   */
+  hasMoldVariations?: boolean;
+
+  /** `/media/<slug>`. 🛑 Never a raw Storage host URL. */
+  image?: string;
+  /** The wiki page the photo came from — the CC-BY-SA attribution target. */
+  imageSourceUrl?: string;
+  /** "Read more on the Beyblade Wiki". Facts taken, prose theirs, link out. */
+  sourceUrl?: string;
   /*
    * 🛑 `searchTxt?: string[]` was REMOVED here, and must not come back.
    *
