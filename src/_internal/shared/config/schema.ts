@@ -200,6 +200,13 @@ export interface AppkitBusinessPolicy {
 export interface AppkitBusinessBank {
   name?: PendingString;
   accountName?: PendingString;
+  /**
+   * Home branch, e.g. "Koramangala, Bangalore". Buyer-facing and NOT private:
+   * it identifies a public bank location, carries no account identifier, and
+   * some transfer forms still ask for it. Contrast `accountNumber`/`ifsc`
+   * below, which do identify the account and are withheld.
+   */
+  branchName?: PendingString;
   /** 🛑 PRIVATE. Never on the public GET /api/site-settings. */
   accountNumber?: PendingString;
   /** 🛑 PRIVATE. Never on the public GET /api/site-settings. */

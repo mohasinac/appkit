@@ -44,6 +44,7 @@ import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { normalizeListingType } from "../utils/listing-type";
+import { resolveGroupMemberImage } from "./ShowGroupSection";
 import {
   checkGroupRules,
   describeGroupRules,
@@ -99,9 +100,7 @@ export interface GroupMemberPickerProps {
   onAuthRequired?: () => void;
 }
 
-function memberImage(m: GroupPickerMember): string {
-  return m.image ?? m.images?.[0] ?? "";
-}
+const memberImage = resolveGroupMemberImage;
 
 function memberHref(m: GroupPickerMember): string {
   return pluginFor(normalizeListingType(m)).detailRoute(m.slug ?? m.id);
