@@ -39,9 +39,21 @@ import {
 
 export interface PartsIndexPageViewProps {
   hrefForClassification: (slot: string) => string;
+  /**
+   * The search box, as a SLOT.
+   *
+   * 🛑 Not rendered directly, because this view is a Server Component and
+   * the box is a Client Component that fetches. Keeping it a slot also keeps
+   * the page's "ZERO Firestore reads" property literally true — the box
+   * reads a CDN object, never Firestore, and the index page stays static.
+   */
+  renderSearch?: () => React.ReactNode;
 }
 
-export function PartsIndexPageView({ hrefForClassification }: PartsIndexPageViewProps) {
+export function PartsIndexPageView({
+  hrefForClassification,
+  renderSearch,
+}: PartsIndexPageViewProps) {
   return (
     <Section padding="y-lg">
       <Container size="lg">
@@ -55,6 +67,7 @@ export function PartsIndexPageView({ hrefForClassification }: PartsIndexPageView
               classification rather than by code.
             </Text>
           </Stack>
+          {renderSearch?.()}
           <Grid cols="navTiles" gap="sm" className="min-w-0">
             {ALL_PART_SLOTS.map((slot) => (
               <Div
