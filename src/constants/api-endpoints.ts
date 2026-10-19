@@ -537,8 +537,17 @@ export const FAQ_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 
 export const HOMEPAGE_ENDPOINTS = {
-  GET: "/api/homepage",
-  SECTIONS: "/api/homepage-sections",
+  /*
+   * 🛑 `GET` and `SECTIONS` were both removed 2026-10-19 — `/api/homepage` was
+   * NEVER mounted (only a dead hook referenced it), and `/api/homepage-sections`
+   * was a mounted generic-starter-kit stub writing/reading the real
+   * `homepageSections` collection through an incompatible schema. See the
+   * deletion note in `features/homepage/types/index.ts` for the full writeup.
+   * The real, single section API is `/api/admin/sections` (admin CRUD);
+   * public rendering reads `homepageSectionsRepository` directly, server-side,
+   * in `MarketplaceHomepageView` — no public GET endpoint for sections exists
+   * or is needed.
+   */
   CAROUSEL: "/api/carousel",
   NEWSLETTER_SUBSCRIBE: "/api/newsletter/subscribe",
 } as const;
