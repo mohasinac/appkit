@@ -43,6 +43,26 @@ export interface GroupedListingDocument extends BaseDocument {
   /** Computed from activeMemberCount < minActiveMembers. */
   visibilityStatus: GroupVisibility;
   isActive: boolean;
+  /*
+   * ── Self-assembled-selection rules ─────────────────────────────────────
+   *
+   * The SAME five a product group stores on its parent product. Read through
+   * `readGroupRules` and enforced by `checkGroupRules`
+   * (`_internal/shared/features/products/group-rules.ts`) — never directly, or
+   * the two homes drift and the picker permits what the server refuses.
+   *
+   * 🛑 Distinct from `minActiveMembers` above, which is close enough in name to
+   * confuse. That one hides the WHOLE GROUP when too few members are in stock
+   * (a visibility rule, maintained by `onProductStockChange`).
+   * `groupMinMembers` constrains what ONE BUYER'S SELECTION may contain. A
+   * group can legitimately require 2 in a selection while needing 4 active
+   * members to show at all.
+   */
+  groupMinMembers?: number;
+  groupMaxMembers?: number;
+  groupMaxUnitsPerMember?: number;
+  groupRequiredMemberIds?: string[];
+  groupDiscountPercent?: number;
   isFeatured: boolean;
   storeId?: string;
   brandSlug?: string;

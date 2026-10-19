@@ -109,11 +109,13 @@ import {
   runSyncPreflight,
   assertPaymentMethodAllowed,
 } from "../../../shared/checkout/rules";
+import { revalidateGroupLines } from "./group-rule-revalidation";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { processRefundAction } from "../refunds/actions";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { resolveDisplayedUpiId } from "./upi-resolution";
+import { resolveSupplierIdentity } from "./supplier-identity";
 import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
 import { isCheckoutValueOtpVerified } from "../../../../features/checkout/actions/checkout-value-otp-actions";
 
@@ -332,6 +334,18 @@ export async function resolveShippingCost(
   /** C5b — the resolved policy, so a caller can quote with the cart in hand. */
   shippingPolicy: StoreShippingPolicy;
   /**
+   * The seller's own tax registration, from the store read this function
+   * already performs.
+   *
+   * Returned here rather than re-fetched in `createOrderForGroup` so the
+   * checkout path pays no extra Firestore read for data already in scope
+   * (Rule #6). Raw fields, not a resolved identity — the seller-vs-platform
+   * decision belongs to `resolveSupplierIdentity` alone.
+   */
+  storeTaxIdentity:
+    | { gstin?: string; legalName?: string; registeredAddress?: string }
+    | undefined;
+  /**
    * 🛑 True when the mode is `estimate` and no carrier rate was supplied.
    *
    * The caller MUST act on this rather than trusting `shippingFee: 0` — a
@@ -363,6 +377,9 @@ export async function resolveShippingCost(
       shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
       shippingUnavailable: false,
       storeProtections: { shipping: false, sale: false },
+      // No store, so no seller registration — the caller falls back to the
+      // platform's via resolveSupplierIdentity.
+      storeTaxIdentity: undefined,
     };
   }
   const store = await storeRepository.findById(storeId);
@@ -419,6 +436,25 @@ export async function resolveShippingCost(
       shipping: store?.supportsShippingProtection === true,
       sale: store?.supportsSaleProtection === true,
     },
+    /*
+     * The seller's own tax registration, returned from the store read this
+     * function ALREADY does.
+     *
+     * Deliberately not a second `storeRepository.findById` in
+     * `createOrderForGroup`: that would add one Firestore read per order group
+     * to the checkout path for data already sitting in this scope, against
+     * Rule #6's round-trip budget. Returning the three raw fields rather than
+     * the resolved identity keeps the decision in one place —
+     * `resolveSupplierIdentity` — instead of splitting it across a shipping
+     * helper and a checkout action.
+     */
+    storeTaxIdentity: store
+      ? {
+          gstin: store.gstin,
+          legalName: store.legalName,
+          registeredAddress: store.registeredAddress,
+        }
+      : undefined,
   };
 }
 
@@ -822,8 +858,22 @@ async function createOrderForGroup(
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
-  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections } =
+  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity } =
     await resolveShippingCost(firstItem.storeId);
+
+  /*
+   * Who issues this invoice — the seller if they have their own GSTIN, the
+   * platform otherwise. ONE function decides, and it is the only place that
+   * knows the order (Root Cause #75: a money rule reachable by copy-paste
+   * gets copied, and the copies miss branches added later).
+   *
+   * Snapshot below and never recomputed: `OrderDocument`'s own comment is
+   * that these are the registration "as it stood at the moment of supply".
+   */
+  const supplier = resolveSupplierIdentity(
+    storeTaxIdentity,
+    gstSettings ? { gst: gstSettings } : undefined,
+  );
 
   // P-8 GST — sum per-line-item tax (each product may carry its own gstRate),
   // then split the group total into a single cgst/sgst/igst breakdown for the
@@ -1048,12 +1098,17 @@ async function createOrderForGroup(
      * `taxableAmount` so the taxed base stays the base the tax was charged on,
      * and recorded here so the invoice's columns can reconcile. */
     exemptAmount: gstBreakdown?.exemptAmount || undefined,
-    /* Our registration AS IT STANDS NOW. A tax invoice without the supplier's
-     * GSTIN is not a tax invoice, and the invoice page cannot read it from
-     * site settings — `gst` is in PRIVATE_SITE_FIELDS. See the schema. */
-    supplierGstin: gstSettings?.enabled ? gstSettings.gstin || undefined : undefined,
-    supplierLegalName: gstSettings?.enabled ? gstSettings.legalName || undefined : undefined,
-    supplierAddress: gstSettings?.enabled ? gstSettings.address || undefined : undefined,
+    /* The supplier of record AS IT STANDS NOW. A tax invoice without the
+     * supplier's GSTIN is not a tax invoice, and the invoice page cannot read
+     * it from site settings — `gst` is in PRIVATE_SITE_FIELDS. See the schema.
+     *
+     * 🛑 This was `gstSettings.gstin` unconditionally — the PLATFORM's
+     * registration on every order ever placed, with no way for a seller to
+     * invoice under their own, while the seeded FAQ told buyers otherwise.
+     * It now resolves seller-first via `resolveSupplierIdentity`. */
+    supplierGstin: supplier.gstin,
+    supplierLegalName: supplier.legalName,
+    supplierAddress: supplier.address,
     /* Per-rate, for Rule 46. Computed by `sumGroupGst` rather than re-derived
      * downstream — a mixed 5%+18% order cannot produce a compliant invoice
      * from the aggregate triple alone. */
@@ -1465,6 +1520,35 @@ export async function createCheckoutOrderAction(
 
   const { coupons: appliedCoupons, dropped: droppedCoupons } =
     await revalidateAppliedCoupons(cart.appliedCoupons ?? [], available, uid);
+
+  /*
+   * The THIRD group-rule enforcement point: the picker mirrors the rules,
+   * `addGroupLineToCart` enforces them at add time, and this re-checks them at
+   * placement. Without it a rule edited after a line was already in a cart is
+   * never re-checked at all, and a quoted discount percentage outlives the rule
+   * it was copied from.
+   *
+   * 🛑 Runs AFTER the stock bucketing, over `available` rather than the whole
+   * cart — a line already dropped for being out of stock does not need its
+   * group rules adjudicated too, and reporting both about one line would be two
+   * explanations for one outcome.
+   *
+   * A blocked line THROWS: its selection is no longer valid and no price is
+   * right for it. A repriced one is surfaced, which is `droppedCoupons`'
+   * discipline — the buyer is on the payment step and cannot fix a seller's
+   * rule change from there.
+   */
+  const groupRecheck = await revalidateGroupLines(available.map(({ item }) => item));
+  if (groupRecheck.blocked.length > 0) {
+    const first = groupRecheck.blocked[0];
+    throw Object.assign(
+      new ValidationError(
+        `"${first.groupTitle}" can no longer be bought as selected. ${first.reason} Update that line in your cart and try again.`,
+      ),
+      { code: "GROUP_RULES_CHANGED" },
+    );
+  }
+
   const orderGroups = splitCartIntoOrderGroups(available);
 
   // Admin-bypass orders are immediately paid and processing; generate a shared
@@ -1540,6 +1624,15 @@ export async function createCheckoutOrderAction(
     itemCount: orderIds.length,
     ...(unavailable.length > 0 ? { unavailableItems: unavailable } : {}),
     ...(droppedCoupons.length > 0 ? { droppedCoupons } : {}),
+    ...(groupRecheck.repriced.length > 0
+      ? {
+          repricedGroupLines: groupRecheck.repriced.map((r) => ({
+            groupTitle: r.groupTitle,
+            previousPercent: r.previousPercent,
+            currentPercent: r.currentPercent,
+          })),
+        }
+      : {}),
   };
 }
 
@@ -2156,7 +2249,18 @@ async function createPhonePeGroupOrder(
   // Reuses the same store/seller lookup as the COD/UPI path above instead
   // of re-implementing it inline — was two sequential findById calls per
   // seller group here, duplicated from resolveShippingCost.
-  const { shippingFee, storeOwnerId, storeState } = await resolveShippingCost(firstItem.storeId);
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity } = await resolveShippingCost(firstItem.storeId);
+
+  /*
+   * Same supplier-of-record rule as `createOrderForGroup`, through the same
+   * function. This path (PhonePe verify / webhook) is the SECOND place an
+   * order is created, and the two have drifted before — add-on fees, and the
+   * whole tax breakdown, were both missing here until C0c defect 1.
+   */
+  const supplier = resolveSupplierIdentity(
+    storeTaxIdentity,
+    siteSettings ? { gst: siteSettings.gst } : undefined,
+  );
 
   const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
   const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
@@ -2340,9 +2444,9 @@ async function createPhonePeGroupOrder(
     exemptAmount: phonepeGst?.exemptAmount || undefined,
     // Our registration at the moment of supply — see the schema. Mirrors the
     // COD/UPI path so both produce an invoiceable order.
-    supplierGstin: siteSettings?.gst?.enabled ? siteSettings.gst.gstin || undefined : undefined,
-    supplierLegalName: siteSettings?.gst?.enabled ? siteSettings.gst.legalName || undefined : undefined,
-    supplierAddress: siteSettings?.gst?.enabled ? siteSettings.gst.address || undefined : undefined,
+    supplierGstin: supplier.gstin,
+    supplierLegalName: supplier.legalName,
+    supplierAddress: supplier.address,
     gstByRate: phonepeGst?.byRate.length ? phonepeGst.byRate : undefined,
     gstAmount: (phonepeGst?.gstAmount ?? 0) + platformFeeGst || undefined,
     cgst: phonepeGst?.cgst || undefined,

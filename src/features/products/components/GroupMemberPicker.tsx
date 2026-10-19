@@ -44,6 +44,12 @@ import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { normalizeListingType } from "../utils/listing-type";
+import {
+  checkGroupRules,
+  describeGroupRules,
+  EMPTY_GROUP_RULES,
+  type GroupRules,
+} from "../../../_internal/shared/features/products/group-rules";
 import type { ListingType } from "../types";
 
 const __O = { xAuto: "overflow-x-auto", hidden: "overflow-hidden" } as const;
@@ -78,6 +84,15 @@ export interface GroupMemberPickerProps {
   groupId: string;
   groupSource: "product-group" | "grouped-listing";
   members: GroupPickerMember[];
+  /**
+   * The group's own selection rules, from whichever home owns them.
+   *
+   * 🛑 Absent means UNRESTRICTED, which is what every group that exists today
+   * is. The server enforces the same rules through `checkGroupRules` whatever
+   * is passed here, so omitting them costs correctness nothing — the buyer just
+   * finds out on submit instead of while choosing.
+   */
+  rules?: GroupRules;
   /** Called after a successful add so the host can close its overlay. */
   onAdded?: () => void;
   /** Called when the API reports the caller isn't signed in. */
@@ -110,6 +125,7 @@ export function GroupMemberPicker({
   groupId,
   groupSource,
   members,
+  rules = EMPTY_GROUP_RULES,
   onAdded,
   onAuthRequired,
 }: GroupMemberPickerProps) {
@@ -139,6 +155,42 @@ export function GroupMemberPicker({
   );
   const selectedUnits = selected.reduce((sum, s) => sum + s.quantity, 0);
   const currency = members[0]?.currency ?? "INR";
+
+  /*
+   * The SAME predicate the server applies, so the button's enabled state and
+   * the API's answer cannot disagree about what a valid selection is. A
+   * server-only rule reads as a broken button; a client-only one is not a rule.
+   */
+  const violations = useMemo(
+    () =>
+      checkGroupRules(
+        rules,
+        selected.map((s) => ({
+          productId: s.member.id,
+          quantity: s.quantity,
+          title: s.member.title,
+        })),
+      ),
+    [rules, selected],
+  );
+
+  /*
+   * The discount, shown but NOT the number charged.
+   *
+   * 🛑 This is display arithmetic over a quoted percentage; the authoritative
+   * price is computed server-side inside `deriveLinePrice`, the single writer
+   * of a grouped line's `price`. Showing it here is honest (it is the figure
+   * the buyer is being offered) and computing it here is unavoidable (there is
+   * no cart line yet) — but it must never become a second money rule. The 2dp
+   * rounding deliberately matches `deriveLinePrice`'s so the two agree to the
+   * paisa rather than drifting by a rounding step.
+   */
+  const discountPercent = Math.min(100, Math.max(0, rules.groupDiscountPercent ?? 0));
+  const discountedTotal =
+    discountPercent > 0
+      ? Math.round(selectedTotal * (1 - discountPercent / 100) * 100) / 100
+      : selectedTotal;
+  const ruleNotes = useMemo(() => describeGroupRules(rules), [rules]);
 
   const handleAdd = async () => {
     setError(null);
@@ -262,19 +314,49 @@ export function GroupMemberPicker({
 
       {!isCrossStore && (
         <>
+          {/* The rules, stated BEFORE the buyer chooses. A "pick at least 3"
+            * discovered only on submit is a rule they have to re-do their
+            * selection around. Renders nothing when nothing is restricted. */}
+          {ruleNotes.length > 0 && (
+            <Text size="xs" color="muted">
+              {ruleNotes.join(" · ")}
+            </Text>
+          )}
+
           {error && <Alert variant="error">{error}</Alert>}
+
+          {/* Every violation at once, unlike the server, which throws on the
+            * first. A form lists what to fix; an API answers one reason. Shown
+            * only once something is selected — an empty selection violating
+            * "pick at least 3" is not a mistake, it is the starting state. */}
+          {selectedUnits > 0 && violations.length > 0 && (
+            <Alert variant="warning">
+              <Stack gap="dense">
+                {violations.map((v) => (
+                  <Text key={v.code + v.message} size="sm">
+                    {v.message}
+                  </Text>
+                ))}
+              </Stack>
+            </Alert>
+          )}
+
           <Row justify="between" align="center" gap="sm" className="min-w-0">
             <Text size="sm" color="muted">
               {selectedUnits > 0
                 ? `${selectedUnits} item${selectedUnits === 1 ? "" : "s"}`
                 : "Nothing selected yet"}
               {selectedUnits > 0 && (
-                <PricesOnly>{` · ${formatCurrency(selectedTotal, currency)}`}</PricesOnly>
+                <PricesOnly>
+                  {discountPercent > 0
+                    ? ` · ${formatCurrency(discountedTotal, currency)} (${discountPercent}% off ${formatCurrency(selectedTotal, currency)})`
+                    : ` · ${formatCurrency(selectedTotal, currency)}`}
+                </PricesOnly>
               )}
             </Text>
             <Button
               action={ACTIONS.CART["add-group-to-cart"]}
-              disabled={selectedUnits === 0}
+              disabled={selectedUnits === 0 || violations.length > 0}
               isLoading={isSaving}
               onClick={handleAdd}
             />

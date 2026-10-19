@@ -1,7 +1,7 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
-import { increment, serverTimestamp } from "../../../contracts/field-ops";
+import { arrayUnion, increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 // 🛑 `../../../errors` re-exports the REAL ValidationError (errors/validation-error),
 // which is the one `mapToHttpError` instanceof-checks to produce a 400. The
@@ -1378,15 +1378,65 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     await batch.commit();
   }
 
+  /**
+   * Link ONE child into a parent's group.
+   *
+   * 🛑 `arrayUnion`, not a spread of the in-memory `parent.groupChildSlugs`.
+   *
+   * The spread read a snapshot the CALLER was holding, so linking N children in
+   * a loop produced exactly ONE entry: every iteration computed
+   * `[...(stale ?? []), child]` from the same pre-loop document and the last
+   * write won. Nothing errored — each child got its own `groupId` correctly, so
+   * `findAllByGroupId` found them all while the parent's own
+   * `groupChildSlugs` claimed one member, which is what the group picker's
+   * fallback path and `GroupSettingsPanel` read.
+   *
+   * `arrayUnion` is also idempotent, so re-linking an existing child is a
+   * no-op instead of a duplicate id.
+   *
+   * For a known set, prefer `linkChildrenToGroup` below — one batch instead of
+   * N, which matters against Rule #6's round-trip budget when promoting a
+   * 60-part sticker sheet.
+   */
   async linkChildToGroup(parent: ProductDocument, child: ProductDocument): Promise<void> {
+    await this.linkChildrenToGroup(parent, [child]);
+  }
+
+  /**
+   * Link SEVERAL children into a parent's group in one batch.
+   *
+   * Built for `promoteStickerSheetToListings`, which links every unique part of
+   * a sheet at once — N calls to `linkChildToGroup` would be N batch commits
+   * for work that is one logical change.
+   */
+  async linkChildrenToGroup(
+    parent: ProductDocument,
+    children: readonly ProductDocument[],
+  ): Promise<void> {
+    if (children.length === 0) return;
     const batch = this.db.batch();
-    batch.update(this.getCollection().doc(child.id), {
-      groupId: parent.groupId!,
-      groupParentSlug: parent.slug ?? parent.id,
-      groupTitle: parent.groupTitle ?? null,
-    });
+    for (const child of children) {
+      batch.update(this.getCollection().doc(child.id), {
+        groupId: parent.groupId!,
+        groupParentSlug: parent.slug ?? parent.id,
+        groupTitle: parent.groupTitle ?? null,
+      });
+    }
     batch.update(this.getCollection().doc(parent.id), {
-      groupChildSlugs: [...(parent.groupChildSlugs ?? []), child.id],
+      /*
+       * Ids, matching `unlinkChildFromGroup`'s filter, which removes by id OR
+       * slug. These are pure slugs for products (`id === slug`), so the two
+       * agree — but the field name says "slugs" and the stored values are ids,
+       * which is worth knowing before writing a reader that assumes either.
+       */
+      /*
+       * 🛑 `arrayUnion` from the CONTRACTS layer, not `firebase-admin`
+       * directly. Two sibling repositories import `FieldValue` from
+       * firebase-admin and this one deliberately does not — its own imports go
+       * through `contracts/field-ops`, which is what keeps the admin SDK out of
+       * this module's static import graph (Root Cause #24/#6).
+       */
+      groupChildSlugs: arrayUnion(...children.map((c) => c.id)),
     });
     await batch.commit();
   }
@@ -1485,6 +1535,42 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     await this.syncCategoryCounts(prior, null);
   }
 
+  /**
+   * Every live listing OF one glossary part, across all stores.
+   *
+   * 🛑 NOT filtered by `listingType`, deliberately. Both `spares` and the
+   * 972 generated per-leaf catalogue rows (which are `standard`) carry
+   * `partGlossaryId`, and a buyer on `/parts/{slot}/{code}` wants any listing
+   * of that part — not only the ones that happen to be filed under the newer
+   * type. Narrowing to `spares` would hide most of the real inventory.
+   *
+   * 🛑 `orderBy` is `createdAt`, which EVERY document carries
+   * (`BaseRepository.create` writes it). Ordering by an optional field silently
+   * excludes every row lacking it — Root Cause #100, where `itemsSold` on zero
+   * of 95 products made a store`s whole review endpoint return nothing.
+   *
+   * Availability is filtered IN MEMORY rather than in the query: "available" is
+   * negation-shaped and no query expresses it, which is the asymmetry
+   * `baseAvailable` exists for. The window is bounded, so the cost is a few
+   * rows read and discarded.
+   */
+  async findByPartGlossaryId(
+    partGlossaryId: string,
+    limit = 12,
+  ): Promise<ProductDocument[]> {
+    if (!partGlossaryId) return [];
+    const snap = await this.getCollection()
+      .where(PRODUCT_FIELDS.PART_GLOSSARY_ID, "==", partGlossaryId)
+      .where(PRODUCT_FIELDS.STATUS, "==", PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED)
+      .orderBy(PRODUCT_FIELDS.CREATED_AT, "desc")
+      // Over-fetch, because the availability filter below removes rows. Taking
+      // exactly `limit` here would return fewer than `limit` buyable listings
+      // whenever any of them were sold.
+      .limit(Math.min(60, limit * 3))
+      .get();
+    return snap.docs.map((d) => this.mapDoc(d)).slice(0, limit);
+  }
+
   static readonly SIEVE_FIELDS = {
     id: { canFilter: true, canSort: false },
     title: { canFilter: true, canSort: true },
@@ -1503,6 +1589,20 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // admin and seller product lists.
     featured: { canFilter: true, canSort: true },
     listingType: { canFilter: true, canSort: false },
+    /*
+     * 🛑 Filterable so a `partGlossaryId` filter is not SILENTLY DROPPED.
+     * `sieve.ts` sets `throwExceptions: false`, so a field absent from this map
+     * does not raise — `findField` returns undefined and the clause vanishes,
+     * which on a page scoped to one part means the ENTIRE catalogue comes back
+     * (Root Cause #62). Both of these are real `ProductDocument` fields, so
+     * neither is the orphan half of that pattern.
+     *
+     * `canSort: false` on both: they are identity, not an ordering anyone wants
+     * — and a sort option whose field is `canSort: false` is dropped just as
+     * silently (Root Cause #63).
+     */
+    partGlossaryId: { canFilter: true, canSort: false },
+    colourway: { canFilter: true, canSort: false },
     isPromoted: { canFilter: true, canSort: true },
     isOnSale: { canFilter: true, canSort: false },
     price: { canFilter: true, canSort: true },

@@ -3,8 +3,10 @@ import { normalizeError } from "../../../errors/normalize";
 
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
-import { Button, Code, ConfirmDeleteModal, Div, FormField, Heading, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
+import { Button, Checkbox, Code, ConfirmDeleteModal, Div, FormField, Grid, Heading, Input, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
 import { FormShellContext, useFormShellState, FormErrorSummary } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import type { GroupRules } from "../../../_internal/shared/features/products/group-rules";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -66,6 +68,15 @@ export interface GroupSettingsPanelProps {
   groupParentSlug?: string;
   groupChildSlugs?: string[];
   groupTitle?: string;
+  /**
+   * The group's current selection rules, for seeding the form.
+   *
+   * 🛑 Seeded from the PARENT PRODUCT the editor is already showing — not
+   * re-fetched. The rules live on the parent and this panel is mounted from the
+   * parent's own editor, so the values are already in hand; a second read would
+   * be a second source of truth for the same five fields.
+   */
+  groupRules?: GroupRules;
   isAuction?: boolean;
   storeProductsEndpoint: string;
   onGroupChanged: () => void;
@@ -77,6 +88,16 @@ interface ChildInfo {
   price: number;
   images?: string[];
   condition?: string;
+  /*
+   * Both come from `toPublicGroupMember`, the allow-list projection the group
+   * endpoint already returns — so the shared-stock editor needs no second
+   * request. `availableQuantity` rather than `stockQuantity` because that is
+   * the field availability actually reads and the one the projection carries.
+   */
+  availableQuantity?: number;
+  madeToOrder?: boolean;
+  /** Present on a draft child, which only the staff scope returns. */
+  status?: string;
 }
 
 interface ChildrenResponse {
@@ -105,6 +126,7 @@ export function GroupSettingsPanel({
   groupParentSlug,
   groupChildSlugs,
   groupTitle,
+  groupRules,
   isAuction,
   storeProductsEndpoint,
   onGroupChanged,
@@ -122,6 +144,21 @@ export function GroupSettingsPanel({
   });
   const [linkTargets, setLinkTargets] = useState<string[]>([]);
   const [children, setChildren] = useState<ChildInfo[] | null>(null);
+  /*
+   * Rule drafts as STRINGS, not numbers. An empty input has to be
+   * distinguishable from zero — "" means "no limit" and `0` would mean "pick at
+   * most none" — and a numeric state cannot express the empty case without a
+   * separate null, which is the same thing with extra steps.
+   */
+  const [ruleDraft, setRuleDraft] = useState({
+    min: groupRules?.groupMinMembers?.toString() ?? "",
+    max: groupRules?.groupMaxMembers?.toString() ?? "",
+    perMember: groupRules?.groupMaxUnitsPerMember?.toString() ?? "",
+    discount: groupRules?.groupDiscountPercent?.toString() ?? "",
+  });
+  /** Per-member stock edits, keyed by product id. Only touched rows are sent. */
+  const [stockDraft, setStockDraft] = useState<Record<string, string>>({});
+  const [motDraft, setMotDraft] = useState<Record<string, boolean>>({});
   const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
   const titleSections = React.useMemo(
     () => buildSectionsFromSchema<GroupTitleValues>(groupTitleSchema),
@@ -154,6 +191,78 @@ export function GroupSettingsPanel({
     } catch (_err) {
       void normalizeError(_err);
       setChildren([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /**
+   * Save the selection rules.
+   *
+   * 🛑 An empty input sends `null`, not an omitted key — "no limit" has to be
+   * expressible. The route writes only keys PRESENT in the body, so omitting
+   * one means "leave it alone", which is the opposite of what clearing a field
+   * means. Those are two different intents and the body has to carry both.
+   */
+  async function saveRules() {
+    setLoading(true);
+    try {
+      const n = (v: string): number | null => (v.trim() === "" ? null : Number(v));
+      await apiClient.patch(groupEndpoint, {
+        groupMinMembers: n(ruleDraft.min),
+        groupMaxMembers: n(ruleDraft.max),
+        groupMaxUnitsPerMember: n(ruleDraft.perMember),
+        groupDiscountPercent: n(ruleDraft.discount),
+      });
+      showToast("Group rules saved.", "success");
+      onGroupChanged();
+    } catch (e: unknown) {
+      void normalizeError(e);
+      showToast((e as Error)?.message ?? "Failed to save group rules.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /**
+   * Save stock and made-to-order across the group.
+   *
+   * 🛑 Sends ONLY the rows the admin touched. Sending every member would make
+   * an untouched draft child's stock a write on every save — and the route
+   * refuses an entry that names neither field anyway, so a blanket send would
+   * 400 as soon as one row was left alone.
+   */
+  async function saveGroupStock() {
+    const touched = new Set([...Object.keys(stockDraft), ...Object.keys(motDraft)]);
+    if (touched.size === 0) {
+      showToast("Nothing changed.", "info");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = (await apiClient.patch(`${groupEndpoint}/stock`, {
+        members: [...touched].map((productId) => ({
+          productId,
+          ...(stockDraft[productId] !== undefined && stockDraft[productId].trim() !== ""
+            ? { stockQuantity: Number(stockDraft[productId]) }
+            : {}),
+          ...(motDraft[productId] !== undefined ? { madeToOrder: motDraft[productId] } : {}),
+        })),
+      })) as { data?: { updated?: string[]; rejected?: { productId: string }[] } };
+      const rejected = res.data?.rejected?.length ?? 0;
+      showToast(
+        rejected > 0
+          ? `Saved, but ${rejected} listing${rejected === 1 ? "" : "s"} could not be updated.`
+          : "Group stock saved.",
+        rejected > 0 ? "warning" : "success",
+      );
+      setStockDraft({});
+      setMotDraft({});
+      void loadChildren();
+      onGroupChanged();
+    } catch (e: unknown) {
+      void normalizeError(e);
+      showToast((e as Error)?.message ?? "Failed to save group stock.", "error");
     } finally {
       setLoading(false);
     }
@@ -381,9 +490,77 @@ export function GroupSettingsPanel({
                 />
               </FormShellContext.Provider>
 
+              {/* ── Selection rules ────────────────────────────
+                * "Create your own bundle, with restrictions set by
+                * seller/admin". The picker mirrors these and the server
+                * enforces them, all three through `checkGroupRules`.
+                *
+                * 🛑 Blank means NO LIMIT, which is why every hint says so
+                * explicitly: an admin who reads an empty "Max items" box as
+                * "zero allowed" would never leave it empty, and every group
+                * would acquire limits nobody wanted.
+                */}
+              <Div>
+                <Text className="mb-2" color="muted" size="xs" weight="semibold">
+                  Selection rules
+                </Text>
+                <Grid cols={2} gap="sm">
+                  <FieldInput
+                    name="groupMinMembers"
+                    label="Min items in a selection"
+                    type="number"
+                    value={ruleDraft.min}
+                    onChange={(v) => setRuleDraft((d) => ({ ...d, min: v }))}
+                    hint="Blank = no minimum"
+                  />
+                  <FieldInput
+                    name="groupMaxMembers"
+                    label="Max items in a selection"
+                    type="number"
+                    value={ruleDraft.max}
+                    onChange={(v) => setRuleDraft((d) => ({ ...d, max: v }))}
+                    hint="Blank = no maximum"
+                  />
+                  <FieldInput
+                    name="groupMaxUnitsPerMember"
+                    label="Max units of any one item"
+                    type="number"
+                    value={ruleDraft.perMember}
+                    onChange={(v) => setRuleDraft((d) => ({ ...d, perMember: v }))}
+                    hint="Blank = no per-item cap"
+                  />
+                  <FieldInput
+                    name="groupDiscountPercent"
+                    label="Group discount (%)"
+                    type="number"
+                    value={ruleDraft.discount}
+                    onChange={(v) => setRuleDraft((d) => ({ ...d, discount: v }))}
+                    hint="Off the selection subtotal. Applies to new cart lines; a line already in a cart keeps the price it was quoted and is re-checked at checkout."
+                  />
+                </Grid>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => void saveRules()}
+                  isLoading={loading}
+                >
+                  Save rules
+                </Button>
+              </Div>
+
               <Div>
                 <Text className="mb-2" color="muted" size="xs" weight="semibold">
                   Members ({childSlugsCount + 1} — including this listing)
+                </Text>
+                {/* 🛑 STOCK IS INDEPENDENT PER LISTING. This is a shared
+                  * EDITING surface, not a pool and not a bill of materials —
+                  * selling one spare must not decrement another. All it saves is
+                  * N independent numbers without opening N editors. */}
+                <Text className="mb-2" color="faint" size="xs">
+                  Each listing has its own stock. Editing here saves them together — it does not
+                  pool them.
                 </Text>
                 {loading && !children ? (
                   <Text size="xs" color="faint">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
@@ -404,6 +581,45 @@ export function GroupSettingsPanel({
                           <Div className="w-8 h-8" surface="subtle" rounded="full" />
                         )}
                         <Text className="flex-1 truncate" color="primary" size="sm">{child.title}</Text>
+                        {child.status && child.status !== "published" ? (
+                          <Span
+                            size="xs"
+                            surface="warning-surface"
+                            className="text-warning"
+                            padding="pill-2xs"
+                            rounded="default"
+                          >
+                            {child.status}
+                          </Span>
+                        ) : null}
+                        {/* The stock input is HIDDEN when made-to-order, matching
+                          * ProductForm: a disabled field still shows a number, so a
+                          * seller reads "0" on something they can sell indefinitely
+                          * and concludes it is broken. */}
+                        {(motDraft[child.id] ?? child.madeToOrder) === true ? (
+                          <Text size="xs" color="muted">Made to order</Text>
+                        ) : (
+                          <Input
+                            type="number"
+                            aria-label={`Stock for ${child.title}`}
+                            className="w-20"
+                            value={
+                              stockDraft[child.id] ??
+                              (child.availableQuantity ?? 0).toString()
+                            }
+                            onChange={(e) =>
+                              setStockDraft((d) => ({ ...d, [child.id]: e.target.value }))
+                            }
+                          />
+                        )}
+                        <Checkbox
+                          label="MTO"
+                          aria-label={`Made to order for ${child.title}`}
+                          checked={motDraft[child.id] ?? child.madeToOrder === true}
+                          onChange={(e) =>
+                            setMotDraft((d) => ({ ...d, [child.id]: e.target.checked }))
+                          }
+                        />
                         <Button
                           type="button"
                           variant="ghost"
@@ -417,6 +633,18 @@ export function GroupSettingsPanel({
                       </Row>
                     ))}
                   </Div>
+                )}
+                {(children ?? []).length > 0 && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => void saveGroupStock()}
+                    isLoading={loading}
+                  >
+                    Save group stock
+                  </Button>
                 )}
               </Div>
 

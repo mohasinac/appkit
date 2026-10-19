@@ -2237,6 +2237,17 @@ export {
   type SheetUsageRow,
   type StickerStorageUsage,
 } from "./_internal/server/features/sticker-trace/sheet-actions";
+/*
+ * 🛑 A different module from `sheet-actions` on purpose. `promoteRun` there is
+ * run → sheet (render the full-res parts); this is sheet → marketplace (create
+ * the products). The names are close enough that keeping them in one file is
+ * how someone calls the wrong one.
+ */
+export {
+  promoteStickerSheetToListings,
+  type PromoteToListingsInput,
+  type PromoteToListingsResult,
+} from "./_internal/server/features/sticker-trace/promote-to-listings";
 export {
   toClientStickerSheet,
   toClientTraceRun,

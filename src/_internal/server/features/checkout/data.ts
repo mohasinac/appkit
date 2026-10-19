@@ -52,4 +52,26 @@ export interface CheckoutOrderResult {
     code: string;
     reason: string;
   }[];
+  /**
+   * Grouped lines whose group DISCOUNT had changed since they were added. The
+   * order is priced at the group's current rule and the change surfaced here,
+   * for the same reason `droppedCoupons` exists: honouring the stale percent
+   * would charge less than the seller now offers, and changing a total the
+   * buyer has read without telling them is worse than either.
+   */
+  repricedGroupLines?: {
+    groupTitle: string;
+    previousPercent: number;
+    currentPercent: number;
+  }[];
+  /**
+   * Grouped lines whose selection no longer satisfies the group's rules — the
+   * seller tightened them after the line was added. REPORTED rather than
+   * repriced: "this group now requires item X" cannot be fixed by adjusting a
+   * number, so the line is not silently bought.
+   */
+  blockedGroupLines?: {
+    groupTitle: string;
+    reason: string;
+  }[];
 }

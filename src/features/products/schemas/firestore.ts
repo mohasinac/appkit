@@ -562,6 +562,23 @@ export interface ProductDocument extends BaseDocument {
    * made-to-order rows or every one of them dies on its first order.
    */
   madeToOrder?: boolean;
+  /**
+   * The `stickerSheets` document this listing was promoted from.
+   *
+   * Set on BOTH the parent (the whole sheet) and every child (one cut), so the
+   * relationship is answerable from either end without a query — "which sheet
+   * is this sticker off" and "has this sheet already been promoted" are both
+   * questions the admin UI asks.
+   */
+  sourceStickerSheetId?: string;
+  /**
+   * Which cut of that sheet, by `SheetPart.ordinal`.
+   *
+   * 🛑 The ordinal, never an array index — `parts[]` is not guaranteed dense or
+   * ordered and a re-promote rewrites it, so an index would silently point at a
+   * different sticker. Absent on the parent, which is the whole sheet.
+   */
+  sourceStickerPartOrdinal?: number;
   /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
   allowShipBeforeEmiComplete?: boolean;
   /**
@@ -625,6 +642,38 @@ export interface ProductDocument extends BaseDocument {
   groupParentSlug?: string;
   groupChildSlugs?: string[];
   groupTitle?: string;
+  /*
+   * ── Self-assembled-selection rules, set on the GROUP PARENT ─────────────
+   *
+   * "Create your own bundle, with restrictions set by seller/admin". The shape,
+   * the resolver and the single enforcement point all live in
+   * `_internal/shared/features/products/group-rules.ts`; these are just where a
+   * product group stores them. A `groupedListing` stores the same five on its
+   * own document, which is why nothing reads them directly — both homes go
+   * through `readGroupRules`.
+   *
+   * 🛑 All optional, and ABSENT MEANS UNRESTRICTED. Every group that exists
+   * today has none of them, so any default that restricted something would
+   * silently change what is buyable on live records.
+   *
+   * 🛑 These limit the SELECTION, never stock. Stock stays independent per
+   * listing — no pool, no bill of materials — because a spare attack ring is
+   * one object the seller happens to have.
+   */
+  groupMinMembers?: number;
+  groupMaxMembers?: number;
+  groupMaxUnitsPerMember?: number;
+  groupRequiredMemberIds?: string[];
+  /**
+   * Percentage off a self-assembled selection's subtotal, 0–100.
+   *
+   * 🛑 Applied in exactly ONE place: the repository's private
+   * `deriveLinePrice`, which runs on every `groupMembers` write and feeds
+   * `expandCartLineToOrderRows`' per-member GST proration through
+   * `allocateAcrossMembers`. A second application anywhere makes the cart total
+   * disagree with the invoice (Root Cause #75).
+   */
+  groupDiscountPercent?: number;
   /**
    * W1-45 — optional icon shown as an overlay badge on every card whose
    * product belongs to this group. Set once on the group parent; cards
@@ -971,6 +1020,11 @@ export const PRODUCT_PUBLIC_FIELDS = [
    * instead of a stock line, and the group picker has to uncap that member's
    * stepper. Both are client-side reads. */
   "madeToOrder",
+  /* Public: provenance a buyer should see — "this is one cut off that sheet" —
+   * and neither value is a path or a private id. The sheet document itself is
+   * admin-only; this is just its id, same shape as `sourceCatalogueItemId`. */
+  "sourceStickerSheetId",
+  "sourceStickerPartOrdinal",
   "slug",
   "seoTitle",
   "seoDescription",
@@ -984,6 +1038,14 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "groupParentSlug",
   "groupChildSlugs",
   "groupTitle",
+  /* The group's own rules. Public because the PICKER enforces them too — a
+   * server-only rule reads as a broken button — and none of them is sensitive:
+   * they are merchandising limits a buyer is about to be told anyway. */
+  "groupMinMembers",
+  "groupMaxMembers",
+  "groupMaxUnitsPerMember",
+  "groupRequiredMemberIds",
+  "groupDiscountPercent",
   "createdAt",
 ] as const;
 
@@ -1056,6 +1118,12 @@ export const PRODUCT_UPDATABLE_FIELDS = [
    * reaches Firestore while the write still returns 200 (Root Cause #101). The
    * seller checkbox would appear to save and change nothing. */
   "madeToOrder",
+  /* Updatable so `promoteStickerSheetToListings` can set them through the same
+   * `create`/`update` path every other write uses — and so a re-promote can
+   * correct them — rather than needing a raw collection write that would also
+   * skip `deriveTaxonomy`. */
+  "sourceStickerSheetId",
+  "sourceStickerPartOrdinal",
   "allowShipBeforeEmiComplete",
   /*
    * B3 — these three were MISSING, so the fields existed on the document
@@ -1078,6 +1146,14 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "groupParentSlug",
   "groupChildSlugs",
   "groupTitle",
+  /* The group's own rules. Public because the PICKER enforces them too — a
+   * server-only rule reads as a broken button — and none of them is sensitive:
+   * they are merchandising limits a buyer is about to be told anyway. */
+  "groupMinMembers",
+  "groupMaxMembers",
+  "groupMaxUnitsPerMember",
+  "groupRequiredMemberIds",
+  "groupDiscountPercent",
   "barcodeId",
 ] as const;
 

@@ -158,6 +158,24 @@ export interface CartItemDocument {
   /** Display snapshot of the group/bundle name. */
   groupTitle?: string;
   /**
+   * The group discount, as a percentage, AS QUOTED WHEN THIS LINE WAS ADDED.
+   *
+   * 🛑 Stored on the line rather than resolved at read time, and that is not
+   * the mirror-drift mistake it resembles (Root Cause #42). It has to be here
+   * for a mechanical reason — `updateGroupMembers` recomputes `price` from
+   * `groupMembers` and holds only the CART, so with nothing on the line a
+   * buyer changing a quantity would silently lose the discount — and for a
+   * commercial one: this is the basis of the price the buyer was shown.
+   *
+   * 🛑 Because it is a snapshot it is RE-VALIDATED at checkout against the
+   * group's current rule, and a disagreement is REPORTED, never silently
+   * resolved either way. Honouring a stale percent would charge less than the
+   * seller now offers; re-deriving silently would change a total the buyer has
+   * already read. Same discipline as `revalidateAppliedCoupons`, which drops a
+   * lapsed coupon and tells the caller.
+   */
+  groupDiscountPercent?: number;
+  /**
    * The members of a multi-member line, AUTHORITATIVE over `bundleProductIds`.
    * See `CartLineMember` for the quantity invariant.
    *
@@ -328,6 +346,8 @@ export type AddToCartInput = {
   groupId?: string;
   groupSlug?: string;
   groupTitle?: string;
+  /** See `CartItemDocument.groupDiscountPercent` — a quoted-at-add snapshot. */
+  groupDiscountPercent?: number;
   groupMembers?: CartLineMember[];
 };
 

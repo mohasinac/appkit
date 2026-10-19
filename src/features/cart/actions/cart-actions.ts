@@ -25,6 +25,11 @@ import {
 } from "../../../_internal/server/features/checkout/bundle-expansion";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { safeRead } from "../../../errors/safe-read";
+import {
+  checkGroupRules,
+  readGroupRules,
+  type GroupRules,
+} from "../../../_internal/shared/features/products/group-rules";
 import type {
   AddToCartInput,
   CartDocument,
@@ -275,6 +280,29 @@ export async function addGroupLineToCart(
 
   const groupTitle = await resolveGroupTitle(groupId, groupSource, first ?? null);
 
+  /*
+   * 🛑 SERVER-SIDE ENFORCEMENT OF THE GROUP'S OWN RULES.
+   *
+   * `GroupMemberPicker` mirrors this so a buyer is not told "no" only after
+   * submitting — but the picker is a convenience and this is the boundary. The
+   * two share `checkGroupRules`, so they cannot disagree about what a valid
+   * selection is; only about WHEN the buyer finds out.
+   *
+   * It throws on the FIRST violation while the picker shows all of them
+   * together, which is each surface doing the right thing for its own job: a
+   * form lists everything to fix, an API answers one reason.
+   */
+  const rules = await resolveGroupRules(groupId, groupSource, first ?? null);
+  const violations = checkGroupRules(
+    rules,
+    resolved.map((r) => ({ productId: r.productId, quantity: r.quantity, title: r.title })),
+  );
+  if (violations.length > 0) {
+    throw Object.assign(new ValidationError(violations[0].message), {
+      code: violations[0].code,
+    });
+  }
+
   return cartRepository.addGroupLine(userId, {
     productId: groupId,
     productTitle: groupTitle,
@@ -291,8 +319,57 @@ export async function addGroupLineToCart(
     groupId,
     groupSlug: groupSource === "product-group" ? groupId : undefined,
     groupTitle,
+    /*
+     * Snapshotted at add time — see `CartItemDocument.groupDiscountPercent`.
+     * Omitted entirely when there is no discount, so a line with no group
+     * pricing carries no field rather than a zero that reads as "0% off".
+     */
+    ...(rules.groupDiscountPercent !== undefined && rules.groupDiscountPercent > 0
+      ? { groupDiscountPercent: rules.groupDiscountPercent }
+      : {}),
     groupMembers: resolved,
   });
+}
+
+/**
+ * The group's selection rules, from whichever of the two homes owns them.
+ *
+ * 🛑 ONE resolver, because there are TWO homes: a product group keeps them on
+ * its PARENT PRODUCT (identified by the parent's slug, which IS the groupId),
+ * while a `groupedListing` keeps them on its own document. Reading them at each
+ * call site is how the picker and the server come to disagree.
+ *
+ * Fails OPEN — an unreadable group yields no rules rather than refusing the
+ * add. A transient Firestore error must not look like "your selection is
+ * invalid", which is a statement about the buyer's choice and would send them
+ * to change something that was already correct.
+ */
+async function resolveGroupRules(
+  groupId: string,
+  groupSource: CartGroupSource,
+  sample: ProductDocument | null,
+): Promise<GroupRules> {
+  if (groupSource === "grouped-listing") {
+    const { groupedListingsRepository } = await import(
+      "../../grouped/repository/grouped-listings.repository"
+    );
+    const group = await safeRead(() => groupedListingsRepository.findById(groupId), {
+      route: "/cart", key: "groupedListings.rules", fallback: null,
+    });
+    return readGroupRules(group);
+  }
+
+  /*
+   * A product group's rules live on the PARENT, and `sample` is an arbitrary
+   * member — so the parent has to be fetched unless the sample happens to BE
+   * it. `groupId` is the parent's slug and products are pure slugs
+   * (`id === slug`), so `findById` resolves it directly.
+   */
+  if (sample?.isGroupParent && sample.id === groupId) return readGroupRules(sample);
+  const parent = await safeRead(() => productRepository.findById(groupId), {
+    route: "/cart", key: "products.groupParentRules", fallback: null,
+  });
+  return readGroupRules(parent);
 }
 
 /** Is this product listed on that `groupedListings` document? */

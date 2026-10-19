@@ -233,6 +233,15 @@ export const STICKER_ASSET_KINDS = [
   "geometry",
   "cutSvg",
   "thumbAtlas",
+  /*
+   * One promoted part's full-resolution PNG, by `ordinal`.
+   *
+   * 🛑 Absent until the producing run is PROMOTED — `SheetPart.assetPath` is
+   * only written by the `mode: "full"` shard path. Resolving to `null` before
+   * then is correct and must not read as an error: it is the normal state of
+   * every traced-but-unpromoted sheet.
+   */
+  "part",
 ] as const;
 export type StickerAssetKind = (typeof STICKER_ASSET_KINDS)[number];
 
@@ -251,11 +260,35 @@ export async function resolveStickerAssetUrl(input: {
   sheetId: string;
   kind: StickerAssetKind;
   runId?: string;
+  /** Required for `kind: "part"`. Matched against `SheetPart.ordinal`. */
+  ordinal?: number;
 }): Promise<{ url: string; expiresAt: Date } | null> {
   const sheet = await stickerSheetsRepository.findByIdOrFail(input.sheetId);
 
   if (input.kind === "scan") {
     return sheet.sourceScan?.assetPath ? signedReadUrl(sheet.sourceScan.assetPath) : null;
+  }
+
+  if (input.kind === "part") {
+    if (typeof input.ordinal !== "number") return null;
+    /*
+     * 🛑 Matched on `ordinal`, NEVER on array index — the same rule
+     * `updatePart` already states. `parts[]` is not guaranteed to be dense or
+     * ordered: a part can be removed, and a re-promote rewrites the array. An
+     * index lookup would silently serve a DIFFERENT sticker's PNG, which is
+     * indistinguishable from a correct response.
+     */
+    const part = (sheet.parts ?? []).find((pt) => pt.ordinal === input.ordinal);
+    if (!part?.assetPath) return null;
+    /*
+     * Still a signed-URL mint, like every other kind here —
+     * `audit-sticker-trace-egress` forbids a route under this feature
+     * returning bytes, and this is the unwatermarked printable original, which
+     * is the one thing that must not be served through a public path.
+     */
+    return signedReadUrl(part.assetPath, {
+      downloadAs: `part-${String(input.ordinal).padStart(3, "0")}.png`,
+    });
   }
 
   let path: string | undefined;

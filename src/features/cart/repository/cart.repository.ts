@@ -213,10 +213,37 @@ export class CartRepository extends BaseRepository<CartDocument> {
    * subtotals all compute `price × quantity`, and a grouped line pins
    * `quantity` to 1, so all four stay correct with no changes of their own.
    */
-  private deriveLinePrice(members: CartLineMember[]): number {
+  private deriveLinePrice(
+    members: CartLineMember[],
+    discountPercent?: number,
+  ): number {
     const raw = members.reduce((sum, m) => sum + m.unitPrice * m.quantity, 0);
+
+    /*
+     * 🛑 THE GROUP DISCOUNT IS APPLIED HERE AND NOWHERE ELSE.
+     *
+     * This function is the only writer of `item.price` on a multi-member line,
+     * and `item.price` is what `getSubtotal`, the cart page's per-seller
+     * subtotal, both lane subtotals, `unitPriceFor` and
+     * `expandCartLineToOrderRows`' per-member GST proration (via
+     * `allocateAcrossMembers`) all read. So discounting here reaches every one
+     * of them with no change of their own — and discounting anywhere else means
+     * the cart total and the invoice are computed from two different numbers,
+     * which is exactly what Root Cause #75 cost.
+     *
+     * In particular `allocateAcrossMembers` prorates the LOCKED line price
+     * across members for tax, so a discount applied after it would under- or
+     * over-report GST against the amount actually charged.
+     *
+     * Clamped 0–100 rather than trusted: the percent is a snapshot copied off a
+     * seller-editable rule, and a negative value would silently INFLATE the
+     * line while a value over 100 would make it negative.
+     */
+    const pct = Math.min(100, Math.max(0, discountPercent ?? 0));
+    const discounted = pct > 0 ? raw * (1 - pct / 100) : raw;
+
     // audit-money-units-ok: decimal rupees throughout; rounding to 2dp, not paise conversion.
-    return Math.round(raw * 100) / 100;
+    return Math.round(discounted * 100) / 100;
   }
 
   /**
@@ -235,7 +262,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         productId: input.productId,
         productTitle: input.productTitle,
         productImage: input.productImage,
-        price: this.deriveLinePrice(input.groupMembers),
+        price: this.deriveLinePrice(input.groupMembers, input.groupDiscountPercent),
         currency: input.currency,
         quantity: input.quantity,
         storeId: input.storeId,
@@ -328,7 +355,12 @@ export class CartRepository extends BaseRepository<CartDocument> {
       items[itemIndex] = {
         ...target,
         groupMembers: nextMembers,
-        price: this.deriveLinePrice(nextMembers),
+        /*
+         * The line's OWN stored percent, so changing a member quantity
+         * preserves the discount the buyer was quoted. Re-resolving the rule
+         * here would silently reprice a line mid-edit.
+         */
+        price: this.deriveLinePrice(nextMembers, target.groupDiscountPercent),
         updatedAt: new Date(),
       };
 

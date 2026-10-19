@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Div, PricesOnly, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker } from "./GroupMemberPicker";
+import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
@@ -120,6 +121,17 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
       groupId={groupId}
       groupSource="product-group"
       members={members}
+      /*
+       * A product group's rules live on the PARENT, and the parent is one of
+       * the members this component already fetched — found by `isGroupParent`
+       * rather than by position, because the endpoint makes no ordering
+       * promise and the parent is not reliably first.
+       *
+       * 🛑 This is why the five rule fields are in `PRODUCT_PUBLIC_FIELDS`: they
+       * reach `toPublicGroupMember` through that allow-list, and without it the
+       * picker would silently see no rules and permit what the server refuses.
+       */
+      rules={readGroupRules(members.find((m) => m.isGroupParent))}
       onAdded={() => setShowAll(false)}
       onAuthRequired={() => setShowAll(false)}
     />

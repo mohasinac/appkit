@@ -67,6 +67,8 @@ export const PRODUCT_FIELDS = {
   AVAILABLE_QUANTITY: "availableQuantity",
   IS_SOLD: "isSold",
   MADE_TO_ORDER: "madeToOrder",
+  PART_GLOSSARY_ID: "partGlossaryId",
+  COLOURWAY: "colourway",
   MAIN_IMAGE: "mainImage",
   IMAGES: "images",
   VIDEO: "video",

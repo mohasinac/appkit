@@ -26,6 +26,7 @@ import {
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker, type GroupPickerMember } from "../../products/components/GroupMemberPicker";
 import type { GroupedListingDocument } from "../schemas/firestore";
+import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
 
 const __O = { hidden: "overflow-hidden" } as const;
 
@@ -79,6 +80,13 @@ export function GroupedListingDetailView({ group, members }: GroupedListingDetai
                 groupId={group.id}
                 groupSource="grouped-listing"
                 members={members}
+                /*
+                 * Off the group document this view already loaded. The picker
+                 * and `addGroupLineToCart` run the SAME `checkGroupRules`, so
+                 * passing them here only changes WHEN the buyer learns a
+                 * selection is invalid — not whether it is refused.
+                 */
+                rules={readGroupRules(group)}
               />
             </Stack>
           ) : (

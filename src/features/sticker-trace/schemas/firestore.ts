@@ -166,6 +166,25 @@ export interface SheetPart {
    * on these sheets.
    */
   duplicateOf?: number;
+  /**
+   * The `/media/{shortId}` slug of this part's PUBLIC, WATERMARKED copy.
+   *
+   * 🛑 ZERO BYTES ARE DUPLICATED. The `mediaAssets` row points at the SAME
+   * `assetPath` above — the clean original under `private/sticker-sheets/` —
+   * and is written with `watermarkedAt` deliberately ABSENT, so
+   * `/api/media/[...slug]` composites the mark on read. Clean original for the
+   * cut file, watermarked copy for the marketplace, one object.
+   *
+   * Object COUNT is metered separately from bytes (that is the whole reason the
+   * thumb atlas exists), so a second uploaded copy per part would spend Class A
+   * writes 60× faster per sheet for pixels we already have.
+   *
+   * Stored back here so re-promoting a sheet REUSES the row rather than minting
+   * a second slug for the same object and orphaning the first.
+   *
+   * Absent until the sheet has been promoted to listings.
+   */
+  mediaShortId?: string;
 }
 
 /**
