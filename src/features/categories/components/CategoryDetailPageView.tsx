@@ -67,7 +67,27 @@ const __W = "max-w-7xl mx-auto";
  */
 function toSubcategoryItems(children: readonly CategoryItem[]): OverflowRowItem[] {
   return children.map((child) => {
-    const count = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
+    /*
+     * 🛑 products + auctions, SUMMED.
+     *
+     * `metrics.productCount` EXCLUDES auctions — `Tally` keeps `productIds` and
+     * `auctionIds` as separate arrays and writes `auctionCount` /
+     * `totalAuctionCount` alongside, so the comparable "how much is in here"
+     * figure is the sum of both. Reading only the product half understated every
+     * subcategory holding an auction, and understated it silently: the chip
+     * showed a plausible smaller number rather than anything that looked wrong.
+     *
+     * This page already derives its own header figures correctly that way
+     * (`productCount` and `auctionCount` resolved separately further down); the
+     * chip mapper was the one place that took the product half for the whole.
+     *
+     * Prefer the rollup (`total*`) over the own-count for both halves, because a
+     * chip is a navigational promise about the whole subtree you are about to
+     * enter, not about what happens to be filed at that exact node.
+     */
+    const products = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
+    const auctions = child.metrics?.totalAuctionCount ?? child.metrics?.auctionCount ?? 0;
+    const count = products + auctions;
     return {
       id: child.id,
       label: child.name,

@@ -10,6 +10,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { Anchor, Container, Div, Dl, Dt, Dd, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
+import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
@@ -46,8 +47,24 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   // The brand IS this page's subject — a read failure must surface rather than
   // render an anonymous, empty brand page. `undefined` still means "no such
   // brand slug".
-  const brand = (initialBrand ?? (await categoriesRepository
-    .getCategoryBySlug(slug)) ?? undefined) as CategoryItem | undefined;
+  const brandDoc = initialBrand ?? (await categoriesRepository.getCategoryBySlug(slug)) ?? undefined;
+  const brand = (brandDoc ?? undefined) as CategoryItem | undefined;
+  /*
+   * 🛑 Read from the DOCUMENT, not from the `CategoryItem` cast — the same rule
+   * `CategoryDetailPageView` states for this exact field.
+   *
+   * `contentBody` is deliberately PRIVATE on the list projection: it is 400-900
+   * chars of HTML per row and `CategoryInlineSelect` fetches 200 rows on every
+   * seller-form open, so publishing it there would be the Fast-Origin-Transfer
+   * shape of Root Cause #104. Widening `CategoryItem` to satisfy one render site
+   * is exactly the invitation that comment warns about — and it is what the
+   * first attempt at this did, which `tsc` caught.
+   *
+   * No extra read: this page already holds the whole document (`initialBrand`,
+   * or the fetch above). Only the local cast hid it.
+   */
+  const brandContentBody =
+    typeof brandDoc?.contentBody === "string" ? brandDoc.contentBody : null;
 
   const brandName = brand?.name;
 
@@ -330,6 +347,30 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 )}
               </Dl>
             </Stack>
+          </Container>
+        </Section>
+      )}
+
+      {/* ── The brand's OWN content ──────────────────────────────────────────
+          🛑 A brand IS a `CategoryDocument` (discriminated by
+          `categoryType: "brand"`), so it can carry `contentBody`, an admin can
+          author one through the brand editor, and the public projection already
+          lists the field. It had no render site on THIS page — only
+          `CategoryDetailPageView` grew one. So brand body copy was authorable,
+          storable and invisible, which is the same defect that page's own
+          comment records fixing for categories, left half-done one document
+          type over. Root Cause #52: the data was already fetched and the UI was
+          never wired to it.
+
+          Mirrors `CategoryDetailPageView` exactly — `RichTextRenderer` (what
+          the field's docstring specifies, SSR-safe because `RichTextEditor`
+          sanitises at save time), inside the same `Section`/`Container`, and
+          omitted entirely when absent rather than rendering an empty prose
+          block that reads as a broken page. */}
+      {brandContentBody && brandContentBody.trim().length > 0 && (
+        <Section padding="y-lg">
+          <Container size="xl">
+            <RichTextRenderer html={brandContentBody} />
           </Container>
         </Section>
       )}
