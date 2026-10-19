@@ -1826,6 +1826,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Instant Release",
         "partId": "blade-base--instant-release"
+      },
+      {
+        "slotKey": "cew",
+        "slotLabel": "CUSTOMIZE ENGINE WEIGHT (CEW)",
+        "partName": "Metal Grip",
+        "partId": "cew--metal-grip"
       }
     ],
     "source": "gen1/plastic/dragoon-gt.md",
@@ -1940,6 +1946,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Magne Weight Disk",
         "partId": "weight-disk--magne-weight-disk"
+      },
+      {
+        "slotKey": "support-parts",
+        "slotLabel": "SUPPORT PARTS (SP)",
+        "partName": "Reverse Attack",
+        "partId": "support-parts--reverse-attack"
       },
       {
         "slotKey": "spin-gear",
@@ -2122,7 +2134,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--spiral-change-base"
       }
     ],
-    "source": "gen1/plastic/dranzer-s.md"
+    "source": "gen1/plastic/dranzer-s.md",
+    "categoryId": "category-dranzer-s"
   },
   {
     "id": "gen1-plastic-dranzer-v",
@@ -2197,6 +2210,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
         "partId": "spin-gear--neo-right-sg"
+      },
+      {
+        "slotKey": "support-parts",
+        "slotLabel": "SUPPORT PARTS (SP)",
+        "partName": "Cross Survivor",
+        "partId": "support-parts--cross-survivor"
       },
       {
         "slotKey": "blade-base",
@@ -3405,6 +3424,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Engine Stopper Base",
         "partId": "blade-base--engine-stopper-base"
+      },
+      {
+        "slotKey": "cew",
+        "slotLabel": "CUSTOMIZE ENGINE WEIGHT (CEW)",
+        "partName": "Metal Sharp",
+        "partId": "cew--metal-sharp"
       }
     ],
     "source": "gen1/plastic/thunder-pegasus.md",
@@ -5130,6 +5155,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "face-bolt--leone"
       },
       {
+        "slotKey": "wheel",
+        "slotLabel": "WHEEL",
+        "partName": "Leone FIRST DEFENSE-TYPE WHEEL",
+        "partId": "wheel--leone-first-defense-type-wheel"
+      },
+      {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
         "partName": "145",
@@ -6338,6 +6369,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "productCode": "BBG-16 (Takara Tomy Starter); SS-16 (Hasbro Starter Pack)",
     "slots": [
       {
+        "slotKey": "shogun-face-bolt",
+        "slotLabel": "SHOGUN FACE BOLT",
+        "partName": "Dragoon",
+        "partId": "shogun-face-bolt--dragoon"
+      },
+      {
         "slotKey": "energy-ring",
         "slotLabel": "CRYSTAL / ELEMENT WHEEL",
         "partName": "Ronin",
@@ -6408,6 +6445,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "series": "Beyblade: Shogun Steel / Zero-G",
     "productCode": "BBG-26 (Takara Tomy Starter); SS-26 (Hasbro Starter Pack)",
     "slots": [
+      {
+        "slotKey": "shogun-face-bolt",
+        "slotLabel": "SHOGUN FACE BOLT",
+        "partName": "Pegasus",
+        "partId": "shogun-face-bolt--pegasus"
+      },
       {
         "slotKey": "energy-ring",
         "slotLabel": "CRYSTAL / ELEMENT WHEEL",
@@ -6503,6 +6546,24 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "productCode": "F6804 (Hasbro) / TT Fortress Yard'-6 (separate TT release)",
     "slots": [
       {
+        "slotKey": "strike-chip",
+        "slotLabel": "STRIKE CHIP",
+        "partName": "Kerbeus K8",
+        "partId": "strike-chip--kerbeus-k8"
+      },
+      {
+        "slotKey": "qs-blade",
+        "slotLabel": "QS BLADE",
+        "partName": "Chain",
+        "partId": "qs-blade--chain"
+      },
+      {
+        "slotKey": "gravity-ring",
+        "slotLabel": "GRAVITY RING",
+        "partName": "6",
+        "partId": "gravity-ring--6"
+      },
+      {
         "slotKey": "disc",
         "slotLabel": "DISC",
         "partName": "Aquilon-Q",
@@ -6515,10 +6576,10 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--revolve-q"
       },
       {
-        "slotKey": "armour",
+        "slotKey": "armor-tip",
         "slotLabel": "ARMOR TIP",
         "partName": "Yard",
-        "partId": "armour--yard"
+        "partId": "armor-tip--yard"
       }
     ],
     "source": "gen3/bu/chain-kerbeus.md",
@@ -6623,6 +6684,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "productCode": "B-177",
     "slots": [
       {
+        "slotKey": "superking-chip",
+        "slotLabel": "SUPERKING CHIP",
+        "partName": "Wyvern",
+        "partId": "superking-chip--wyvern"
+      },
+      {
         "slotKey": "armour",
         "slotLabel": "CHASSIS",
         "partName": "1D",
@@ -6668,6 +6735,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "series": "Beyblade Burst QuadDrive",
     "productCode": "B-187",
     "slots": [
+      {
+        "slotKey": "db-core",
+        "slotLabel": "DB CORE",
+        "partName": "Valkyrie 1",
+        "partId": "db-core--valkyrie-1"
+      },
       {
         "slotKey": "blade",
         "slotLabel": "BLADE",
@@ -6802,7 +6875,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--q"
       }
     ],
-    "source": "gen3/burst/spryzen-s2.md"
+    "source": "gen3/burst/spryzen-s2.md",
+    "categoryId": "category-spryzen-s2-0q"
   },
   {
     "id": "gen3-burst-storm-spriggan-ku",
@@ -6930,6 +7004,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotLabel": "FORGE DISC",
         "partName": "0",
         "partId": "disc--0"
+      },
+      {
+        "slotKey": "frame",
+        "slotLabel": "FRAME",
+        "partName": "Wall",
+        "partId": "frame--wall"
       },
       {
         "slotKey": "performance-tip",
@@ -7273,6 +7353,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "series": "Beyblade Burst Surge / Beyblade Burst: Pro Series (Hasbro)",
     "productCode": "B-173 (Takara Tomy) / F7803 (Hasbro)",
     "slots": [
+      {
+        "slotKey": "superking-chip",
+        "slotLabel": "SUPERKING CHIP",
+        "partName": "Achilles",
+        "partId": "superking-chip--achilles"
+      },
       {
         "slotKey": "armour",
         "slotLabel": "CHASSIS",
@@ -7942,6 +8028,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "disc--cn"
       },
       {
+        "slotKey": "frame",
+        "slotLabel": "FRAME",
+        "partName": "Xt+",
+        "partId": "frame--xt"
+      },
+      {
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Retsu",
@@ -7981,10 +8073,16 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "productCode": "B-145",
     "slots": [
       {
-        "slotKey": "layer",
+        "slotKey": "gatinko-chip",
+        "slotLabel": "GATINKO CHIP",
+        "partName": "Diabolos 1",
+        "partId": "gatinko-chip--diabolos-1"
+      },
+      {
+        "slotKey": "base",
         "slotLabel": "LAYER BASE",
         "partName": "Venom",
-        "partId": "layer--venom"
+        "partId": "base--venom"
       },
       {
         "slotKey": "disc",
@@ -8827,6 +8925,24 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
     "generationNote": "Beyblade X",
     "system": "BX Custom Line (Lock Chip + Main Blade + Assist Blade + Ratchet + Bit)",
     "slots": [
+      {
+        "slotKey": "lock-chip",
+        "slotLabel": "LOCK CHIP",
+        "partName": "Valkyrie",
+        "partId": "lock-chip--valkyrie"
+      },
+      {
+        "slotKey": "main-blade",
+        "slotLabel": "MAIN BLADE",
+        "partName": "Volt",
+        "partId": "main-blade--volt"
+      },
+      {
+        "slotKey": "assist-blade",
+        "slotLabel": "ASSIST BLADE",
+        "partName": "Slash",
+        "partId": "assist-blade--slash"
+      },
       {
         "slotKey": "ratchet",
         "slotLabel": "RATCHET",

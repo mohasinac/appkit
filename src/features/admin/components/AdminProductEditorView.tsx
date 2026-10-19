@@ -387,6 +387,20 @@ export function AdminProductEditorView({
                             groupParentSlug={p.groupParentSlug}
                             groupChildSlugs={p.groupChildSlugs}
                             groupTitle={p.groupTitle}
+                            /*
+                             * Read straight off the product the editor is
+                             * already showing — the rules live on the group
+                             * PARENT and this panel is only mounted from the
+                             * parent's own editor, so a second fetch would be a
+                             * second source of truth for the same five fields.
+                             */
+                            groupRules={{
+                              groupMinMembers: p.groupMinMembers,
+                              groupMaxMembers: p.groupMaxMembers,
+                              groupMaxUnitsPerMember: p.groupMaxUnitsPerMember,
+                              groupRequiredMemberIds: p.groupRequiredMemberIds,
+                              groupDiscountPercent: p.groupDiscountPercent,
+                            }}
                             isAuction={modeFromProduct(p) === "auction"}
                             storeProductsEndpoint={ADMIN_ENDPOINTS.PRODUCTS}
                             onGroupChanged={() => productQuery.refetch()}

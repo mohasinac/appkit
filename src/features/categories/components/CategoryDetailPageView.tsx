@@ -11,8 +11,8 @@ import {
 import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
-import { OverflowRow, type OverflowRowItem } from "../../../ui";
 import { resolveTaxonomyVisual } from "../utils/taxonomy-visual";
+import { SubcategoryCardRow, type SubcategoryCardItem } from "./SubcategoryCardRow";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";
 import { CategoryHighlightsAndFaqSection } from "./CategoryHighlightsAndFaqSection";
@@ -91,17 +91,49 @@ function listingCountFor(child: CategoryItem): number {
   return products + auctions;
 }
 
-function toSubcategoryItems(children: readonly CategoryItem[]): OverflowRowItem[] {
+/**
+ * Direct children → the Subcategory card row's items.
+ *
+ * `descendants` is the SAME array the page already fetched, passed in so each
+ * card can carry its own direct children's names for the filter. One level
+ * only — see `SubcategoryCardRow`'s header for why matching the whole subtree
+ * would surface cards for names the visitor never sees.
+ */
+function toSubcategoryItems(
+  children: readonly CategoryItem[],
+  descendants: readonly CategoryItem[],
+): SubcategoryCardItem[] {
+  /*
+   * Grandchildren indexed by parent in ONE pass. The alternative — filtering
+   * `descendants` inside the map — is O(children x descendants), and on the
+   * spinning-tops root that is 5 x ~1,200 per render for a list that never
+   * changes.
+   *
+   * 🛑 Keyed on `parentIds[last]`, the IMMEDIATE parent. `parentIds` holds the
+   * full ancestor chain, so testing `.includes(child.id)` would match every
+   * descendant at any depth and quietly turn the one-level rule into a
+   * whole-subtree match.
+   */
+  const childNamesByParent = new Map<string, string[]>();
+  for (const d of descendants) {
+    const parent = d.parentIds?.[d.parentIds.length - 1];
+    if (!parent) continue;
+    const list = childNamesByParent.get(parent);
+    if (list) list.push(d.name);
+    else childNamesByParent.set(parent, [d.name]);
+  }
+
   return children.map((child) => {
     const count = listingCountFor(child);
     return {
       id: child.id,
-      label: child.name,
+      name: child.name,
       // Omitted rather than rendered as 0 — `count` is "not counted" when
-      // undefined, and a chip reading "0" invites a click that lands on an
+      // undefined, and a card reading "0" invites a click that lands on an
       // empty page.
       count: count > 0 ? count : undefined,
       href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug)),
+      childNames: childNamesByParent.get(child.id) ?? [],
       ...resolveTaxonomyVisual(child),
     };
   });
@@ -818,25 +850,24 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               * added to paper over.
               */}
             <Div padding="b-2xs">
-              <Text size="xs" color="muted" weight="medium" className="mb-[var(--appkit-space-1-5)]">
-                Subcategories
-              </Text>
               {/*
-                * `variant="nav"` — these navigate to another page rather than
-                * swapping a panel in place, so they are links with
-                * `aria-current`, not tabs. The row collapses to a searchable
-                * dropdown when the pills measure wider than the container:
-                * this category tree routinely has 12+ direct children (the
-                * screenshot that prompted this had 12, with the last four
-                * unreachable off the right edge).
+                * Small CARDS in the shared `<HorizontalScroller>`, not pills.
+                *
+                * A pill carries a name and a count and nothing else, so on a
+                * wide tree every child looked identical and the row read as a
+                * wall of words. A card shows the category's own artwork, which
+                * is the fastest way to tell "Beyblade Burst" from "Beyblade X"
+                * at a glance.
+                *
+                * 🛑 This gives up `OverflowRow`'s collapse-to-dropdown, which
+                * existed because a bare scroller hid items past the right edge
+                * with no affordance. Two things replace it: the scroller's own
+                * arrows, and a filter box that matches ONE LEVEL deeper than
+                * the cards — so an off-screen subcategory is reachable by
+                * typing the name of something inside it, not only by scrolling.
                 */}
-              <OverflowRow
-                items={toSubcategoryItems(directChildrenWithListings)}
-                ariaLabel="Subcategories"
-                variant="nav"
-                placeholder="Browse subcategories"
-                searchPlaceholder="Search subcategories…"
-                noResultsText="No matching subcategory"
+              <SubcategoryCardRow
+                items={toSubcategoryItems(directChildrenWithListings, childCategories)}
               />
             </Div>
           </Div>

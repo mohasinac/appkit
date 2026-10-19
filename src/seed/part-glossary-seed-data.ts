@@ -3,7 +3,7 @@
  * Source: `docs/research/part-composition-2026-10/` (E4a/E4b), itself
  * extracted from the LOCAL corpus with no network crawl.
  *
- * The part glossary, keyed (slot, code|name) — 752 rows.
+ * The part glossary, keyed (slot, code|name) — 771 rows.
  *
  * 🛑 Facts only. Fandom is CC-BY-SA, so names, codes, weights and slot
  * structure are taken and the PROSE is not — our own descriptions come from
@@ -14,6 +14,83 @@
 import type { PartGlossaryDocument } from "../features/parts/schemas/firestore";
 
 export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
+  {
+    "id": "armor-tip--yard",
+    "classification": "Armor Tip",
+    "slot": "armor-tip",
+    "code": null,
+    "name": "Yard",
+    "usedBy": [
+      "gen3-bu-chain-kerbeus"
+    ],
+    "aliases": [
+      "yard"
+    ],
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Armor Tip"
+      },
+      {
+        "label": "System",
+        "value": "QuadDrive System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadStrike"
+      },
+      {
+        "label": "Product code",
+        "value": "F6804"
+      },
+      {
+        "label": "Released (US)",
+        "value": "November 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "December 2022"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Yard is a Beyblade armor tip from the QuadDrive System. Released as F6804 for Beyblade Burst QuadStrike. It shipped with Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6, Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0, Ultimate Evo Valtryek V8 and Divine Xcalius X8 Dual Pack. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6",
+      "Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0",
+      "Ultimate Evo Valtryek V8 and Divine Xcalius X8 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6",
+        "colourway": "green"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0",
+        "set": "Ultimate Evo Valtryek V8 and Divine Xcalius X8 Dual Pack",
+        "colourway": "blue"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "green",
+        "vendor": "Hasbro",
+        "inBey": "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6"
+      },
+      {
+        "colourway": "blue",
+        "vendor": "Hasbro",
+        "inBey": "Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Yard"
+  },
   {
     "id": "armour--1b",
     "classification": "Armour",
@@ -117,18 +194,144 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_7"
   },
   {
-    "id": "armour--yard",
-    "classification": "Armour",
-    "slot": "armour",
+    "id": "assist-blade--slash",
+    "classification": "Assist Blade",
+    "slot": "assist-blade",
     "code": null,
-    "name": "Yard",
+    "name": "Slash",
     "usedBy": [
-      "gen3-bu-chain-kerbeus"
+      "gen4-bx-valkyrielvolt-s4-70v"
     ],
     "aliases": [
-      "yard"
+      "slash"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 4.7,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Assist Blade"
+      },
+      {
+        "label": "System",
+        "value": "Custom Line"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade X"
+      },
+      {
+        "label": "Product code",
+        "value": "CX-01 (Takara Tomy) · G1677 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "スラッシュ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Surasshu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "March 29th, 2025"
+      },
+      {
+        "label": "Released (US)",
+        "value": "June 2025"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "May 21st, 2025"
+      },
+      {
+        "label": "Released (AU)",
+        "value": "May 2025"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 20 · Defense 10 · Stamina 10"
+      }
+    ],
+    "seoDescription": "Slash is a Beyblade assist blade from the Custom Line, weighing 4.7 g. Released March 29th, 2025 as CX-01 (Takara Tomy) and G1677 (Hasbro) for Beyblade X. It shipped with DranBrave S6-60V, Battle Entry Set C, ValkyrieVolt S4-70V and 7 other releases.",
+    "shippedIn": [
+      "DranBrave S6-60V",
+      "Battle Entry Set C",
+      "ValkyrieVolt S4-70V",
+      "DranArc S2-70K",
+      "Courage Dran S 6-60V",
+      "Wriggle Kraken S 3-85O",
+      "Hurricane Enlil IS 7-55T",
+      "Rival Rumble Pack",
+      "AFC 6-70H",
+      "NFL CX Top Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-01",
+        "bey": "DranBrave S6-60V"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-04",
+        "bey": "DranBrave S6-60V",
+        "set": "Battle Entry Set C"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "DranArc S2-70K"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "DranBrave S6-60V"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V",
+        "colourway": "Gunmetal Version"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Courage Dran S 6-60V"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wriggle Kraken S 3-85O"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Hurricane Enlil IS 7-55T"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wriggle Kraken S 3-85O",
+        "set": "Rival Rumble Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "AFC 6-70H",
+        "set": "NFL CX Top Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gunmetal Version",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "inBey": "ValkyrieVolt S4-70V"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Slash"
   },
   {
     "id": "attack-ring--advance-attacker-dm",
@@ -14269,6 +14472,149 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       "zero artemis"
     ],
     "source": "composition"
+  },
+  {
+    "id": "cew--metal-grip",
+    "classification": "Customize Engine Weight",
+    "slot": "cew",
+    "code": null,
+    "name": "Metal Grip",
+    "usedBy": [
+      "gen1-plastic-dragoon-gt"
+    ],
+    "aliases": [
+      "metal grip"
+    ],
+    "source": "composition"
+  },
+  {
+    "id": "cew--metal-sharp",
+    "classification": "Customize Engine Weight",
+    "slot": "cew",
+    "code": null,
+    "name": "Metal Sharp",
+    "usedBy": [
+      "gen1-plastic-thunder-pegasus"
+    ],
+    "aliases": [
+      "metal sharp"
+    ],
+    "source": "composition"
+  },
+  {
+    "id": "db-core--valkyrie-1",
+    "classification": "DB Core",
+    "slot": "db-core",
+    "code": null,
+    "name": "Valkyrie 1",
+    "usedBy": [
+      "gen3-bu-savior-valkyrie-s7"
+    ],
+    "aliases": [
+      "valkyrie 1"
+    ],
+    "source": "composition",
+    "weightG": 7.7,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "DB Core"
+      },
+      {
+        "label": "System",
+        "value": "Dynamite Battle Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadDrive"
+      },
+      {
+        "label": "Product code",
+        "value": "B-187"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ヴァルキリー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Varukirī"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 17th, 2021"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 1 · Stamina 0 · Weight 1 · Speed 0 · Burst 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Valkyrie 1 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.7 g. Released July 17th, 2021 as B-187 for Beyblade Burst QuadDrive. It shipped with Savior Valkyrie Shot-7, Dynamite Valkyrie Over Just-6, Random Booster Vol. 27 and 1 other release.",
+    "shippedIn": [
+      "Savior Valkyrie Shot-7",
+      "Dynamite Valkyrie Over Just-6",
+      "Random Booster Vol. 27",
+      "Prominence Valkyrie Over Atomic'-0"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-187",
+        "bey": "Savior Valkyrie Shot-7",
+        "colourway": "blue and gold"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-187",
+        "bey": "Savior Valkyrie Shot-7",
+        "colourway": "Rashad Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-194",
+        "bey": "Dynamite Valkyrie Over Just-6",
+        "set": "Random Booster Vol. 27",
+        "colourway": "yellow and gold"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-195",
+        "bey": "Prominence Valkyrie Over Atomic'-0",
+        "colourway": "Black and silver"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "blue and gold",
+        "vendor": "Takara Tomy",
+        "code": "B-187",
+        "inBey": "Savior Valkyrie Shot-7"
+      },
+      {
+        "colourway": "Rashad Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-187",
+        "inBey": "Savior Valkyrie Shot-7"
+      },
+      {
+        "colourway": "yellow and gold",
+        "vendor": "Takara Tomy",
+        "code": "B-194",
+        "inBey": "Dynamite Valkyrie Over Just-6"
+      },
+      {
+        "colourway": "Black and silver",
+        "vendor": "Takara Tomy",
+        "code": "B-195",
+        "inBey": "Prominence Valkyrie Over Atomic'-0"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Valkyrie_1"
   },
   {
     "id": "disc--0",
@@ -28761,6 +29107,158 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Zurafa"
   },
   {
+    "id": "frame--wall",
+    "classification": "Frame",
+    "slot": "frame",
+    "code": null,
+    "name": "Wall",
+    "usedBy": [
+      "gen3-choz-cho-z-spriggan-0wz"
+    ],
+    "aliases": [
+      "wall"
+    ],
+    "source": "composition",
+    "weightG": 4.1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Frame"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-128 (Takara Tomy) · E4739 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ウォール"
+      },
+      {
+        "label": "Romaji",
+        "value": "Uōru"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "November 17th, 2018"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2019"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 1 · Stamina 1 · Weight 0 · Speed 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Wall is a Beyblade frame from the Cho-Z Layer System, weighing 4.1 g. Released November 17th, 2018 as B-128 (Takara Tomy) and E4739 (Hasbro) for Beyblade Burst Turbo. It shipped with Cho-Z Spriggan 0Wall Zeta', Cho-Z Customize Set, Dread Bahamut 7Wall Orbit Metal Gen and 7 other releases.",
+    "shippedIn": [
+      "Cho-Z Spriggan 0Wall Zeta'",
+      "Cho-Z Customize Set",
+      "Dread Bahamut 7Wall Orbit Metal Gen",
+      "GT Triple Booster Set",
+      "Draciel Fortress 00Wall Charge",
+      "Random Booster Vol. 18",
+      "Draciel Viper 00Wall High Defense",
+      "Random Booster Vol. 23",
+      "Turbo Spryzen S4 0Wall Zeta-S",
+      "Poison Cobra 7Wall Keep Gen"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-128",
+        "bey": "Cho-Z Spriggan 0Wall Zeta'",
+        "set": "Cho-Z Customize Set",
+        "colourway": "black"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-149",
+        "bey": "Dread Bahamut 7Wall Orbit Metal Gen",
+        "set": "GT Triple Booster Set",
+        "colourway": "purple"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-156",
+        "bey": "Draciel Fortress 00Wall Charge",
+        "set": "Random Booster Vol. 18",
+        "colourway": "blue"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-176",
+        "bey": "Draciel Viper 00Wall High Defense",
+        "set": "Random Booster Vol. 23",
+        "colourway": "red"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Turbo Spryzen S4 0Wall Zeta-S",
+        "colourway": "black"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Poison Cobra 7Wall Keep Gen",
+        "colourway": "black"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "black",
+        "vendor": "Takara Tomy",
+        "code": "B-128",
+        "inBey": "Cho-Z Spriggan 0Wall Zeta'"
+      },
+      {
+        "colourway": "purple",
+        "vendor": "Takara Tomy",
+        "code": "B-149",
+        "inBey": "Dread Bahamut 7Wall Orbit Metal Gen"
+      },
+      {
+        "colourway": "blue",
+        "vendor": "Takara Tomy",
+        "code": "B-156",
+        "inBey": "Draciel Fortress 00Wall Charge"
+      },
+      {
+        "colourway": "red",
+        "vendor": "Takara Tomy",
+        "code": "B-176",
+        "inBey": "Draciel Viper 00Wall High Defense"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Wall"
+  },
+  {
+    "id": "frame--xt",
+    "classification": "Frame",
+    "slot": "frame",
+    "code": null,
+    "name": "Xt+",
+    "usedBy": [
+      "gen3-superking-union-achilles-r"
+    ],
+    "aliases": [
+      "xt+"
+    ],
+    "source": "composition"
+  },
+  {
     "id": "fusion-wheel--4d-metal-wheel-big-bang",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -31724,6 +32222,255 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
+    "id": "gatinko-chip--diabolos-1",
+    "classification": "Gatinko Chip",
+    "slot": "gatinko-chip",
+    "code": null,
+    "name": "Diabolos 1",
+    "usedBy": [
+      "gen3-superking-venom-diabolos-vb"
+    ],
+    "aliases": [
+      "diabolos 1"
+    ],
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Gatinko Chip"
+      },
+      {
+        "label": "System",
+        "value": "Gatinko Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Rise"
+      },
+      {
+        "label": "Product code",
+        "value": "B-145 (Takara Tomy) · F4558 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ディアボロス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Diaborosu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 6th, 2019"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "September 2022"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 2 · Stamina 2 · Weight 3 · Speed 0 · Burst 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Diabolos 1 is a Beyblade gatinko chip from the Gatinko Layer System. Released July 6th, 2019 as B-145 (Takara Tomy) and F4558 (Hasbro) for Beyblade Burst Rise. It shipped with Venom Diabolos Vanguard Bullet, Union Diabolos 00Expand Bearing, Venom Devolos Outer Variable'.",
+    "shippedIn": [
+      "Venom Diabolos Vanguard Bullet",
+      "Union Diabolos 00Expand Bearing",
+      "Venom Devolos Outer Variable'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "bey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Gold Turbo Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Red Dragon Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Blue Dragon Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Silver Dragon Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Union Diabolos 00Expand Bearing",
+        "colourway": "Super King Dragon Ver.",
+        "distribution": [
+          "wbba. Store Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Venom Devolos Outer Variable'",
+        "distribution": [
+          "as '''Devolos'''"
+        ]
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Turbo Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Red Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Blue Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Silver Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Super King Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "wbba. Store Exclusive",
+        "inBey": "Union Diabolos 00Expand Bearing"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Diabolos_1"
+  },
+  {
+    "id": "gravity-ring--6",
+    "classification": "Gravity Ring",
+    "slot": "gravity-ring",
+    "code": null,
+    "name": "6",
+    "usedBy": [
+      "gen3-bu-chain-kerbeus"
+    ],
+    "aliases": [
+      "6"
+    ],
+    "source": "composition",
+    "weightG": 1.5,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Gravity Ring"
+      },
+      {
+        "label": "System",
+        "value": "QuadDrive System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadDrive"
+      },
+      {
+        "label": "Product code",
+        "value": "F3963"
+      },
+      {
+        "label": "Released (US)",
+        "value": "January 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "February 2022"
+      },
+      {
+        "label": "Released (AU)",
+        "value": "February 2022"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "6' is a Beyblade gravity ring from the QuadDrive System, weighing 1.5 g. Released as F3963 for Beyblade Burst QuadDrive. It shipped with Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6', Quantum Pulse 3-Pack, Magma Roktavor R7 and Gilded Balderov B7 Dual Pack and 8 other releases.",
+    "shippedIn": [
+      "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
+      "Quantum Pulse 3-Pack",
+      "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack",
+      "Ultimate Evo Valtryek V7 Karma-Q Revolve-Q+Hunter-6'",
+      "Gilded Nemesis N7 Aquilon'-Q Fusion-Q+Press-6'",
+      "Salvage Valtryek Rashad V7 and Gilded Nemesis N7 Dual Pack",
+      "Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6'",
+      "Quad Creature Battle Set",
+      "Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6'",
+      "Komet Helios H8 and Tidal Pandora Epic P8 Dual Pack",
+      "Energy Uprising 4-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
+        "set": "Quantum Pulse 3-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
+        "set": "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Ultimate Evo Valtryek V7 Karma-Q Revolve-Q+Hunter-6'"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Gilded Nemesis N7 Aquilon'-Q Fusion-Q+Press-6'",
+        "set": "Salvage Valtryek Rashad V7 and Gilded Nemesis N7 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6'",
+        "set": "Quad Creature Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6'",
+        "set": "Komet Helios H8 and Tidal Pandora Epic P8 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6'",
+        "set": "Energy Uprising 4-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_6'"
+  },
+  {
     "id": "layer--4d-clear-wheel-kronos",
     "classification": "Layer",
     "slot": "layer",
@@ -33275,20 +34022,6 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spriggan"
   },
   {
-    "id": "layer--venom",
-    "classification": "Layer",
-    "slot": "layer",
-    "code": null,
-    "name": "Venom",
-    "usedBy": [
-      "gen3-superking-venom-diabolos-vb"
-    ],
-    "aliases": [
-      "venom"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "layer--victory-valkyrie",
     "classification": "Layer",
     "slot": "layer",
@@ -33818,6 +34551,295 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalibur"
+  },
+  {
+    "id": "base--venom",
+    "classification": "Layer Base",
+    "slot": "base",
+    "code": null,
+    "name": "Venom",
+    "usedBy": [
+      "gen3-superking-venom-diabolos-vb"
+    ],
+    "aliases": [
+      "venom"
+    ],
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Base"
+      },
+      {
+        "label": "System",
+        "value": "Gatinko Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Rise"
+      },
+      {
+        "label": "Product code",
+        "value": "B-145 (Takara Tomy) · F4558 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ベノム"
+      },
+      {
+        "label": "Romaji",
+        "value": "Benomu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 6th, 2019"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "September 2022"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 1 · Stamina 0 · Weight 3 · Speed 1 · Burst 3"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Venom is a Beyblade layer base from the Gatinko Layer System. Released July 6th, 2019 as B-145 (Takara Tomy) and F4558 (Hasbro) for Beyblade Burst Rise. It shipped with Venom Diabolos Vanguard Bullet, Random Layer Vol. 3 Knockout Odin Gen, Venom Devolos Outer Variable'.",
+    "shippedIn": [
+      "Venom Diabolos Vanguard Bullet",
+      "Random Layer Vol. 3 Knockout Odin Gen",
+      "Venom Devolos Outer Variable'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "bey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Gold Turbo Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-152",
+        "bey": "Random Layer Vol. 3 Knockout Odin Gen"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Red Dragon Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Blue Dragon Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Venom Diabolos Vanguard Bullet",
+        "colourway": "Silver Dragon Ver."
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Venom Devolos Outer Variable'"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Turbo Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-145",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Red Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Blue Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      },
+      {
+        "colourway": "Silver Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Venom Diabolos Vanguard Bullet"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Venom"
+  },
+  {
+    "id": "lock-chip--valkyrie",
+    "classification": "Lock Chip",
+    "slot": "lock-chip",
+    "code": null,
+    "name": "Valkyrie",
+    "usedBy": [
+      "gen4-bx-valkyrielvolt-s4-70v"
+    ],
+    "aliases": [
+      "valkyrie"
+    ],
+    "source": "composition",
+    "weightG": 5.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Lock Chip"
+      },
+      {
+        "label": "System",
+        "value": "Custom Line"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade X"
+      },
+      {
+        "label": "Product code",
+        "value": "CX-00"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ワルキューレ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Warukyūre"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 17th, 2025"
+      }
+    ],
+    "seoDescription": "Valkyrie is a Beyblade lock chip from the Custom Line, weighing 5.6 g. Released July 17th, 2025 as CX-00 for Beyblade X. It shipped with ValkyrieVolt S4-70V. One alternate colourway is recorded: Gunmetal Version.",
+    "shippedIn": [
+      "ValkyrieVolt S4-70V"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V",
+        "colourway": "Gunmetal Version"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gunmetal Version",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "inBey": "ValkyrieVolt S4-70V"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Lock_Chip_-_Valkyrie"
+  },
+  {
+    "id": "main-blade--volt",
+    "classification": "Main Blade",
+    "slot": "main-blade",
+    "code": null,
+    "name": "Volt",
+    "usedBy": [
+      "gen4-bx-valkyrielvolt-s4-70v"
+    ],
+    "aliases": [
+      "volt"
+    ],
+    "source": "composition",
+    "weightG": 31,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Main Blade"
+      },
+      {
+        "label": "System",
+        "value": "Custom Line"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade X"
+      },
+      {
+        "label": "Product code",
+        "value": "CX-00"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ボルト"
+      },
+      {
+        "label": "Romaji",
+        "value": "Boruto"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 17th, 2025"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 45 · Defense 15 · Stamina 15"
+      }
+    ],
+    "seoDescription": "Volt is a Beyblade main blade from the Custom Line, weighing 31 g. Released July 17th, 2025 as CX-00 for Beyblade X. It shipped with ValkyrieVolt S4-70V. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "ValkyrieVolt S4-70V"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V",
+        "colourway": "Metal Coat: Gold"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "ValkyrieVolt S4-70V",
+        "colourway": "Gunmetal Version"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Metal Coat: Gold",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "inBey": "ValkyrieVolt S4-70V"
+      },
+      {
+        "colourway": "Gunmetal Version",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "inBey": "ValkyrieVolt S4-70V"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Volt"
   },
   {
     "id": "performance-tip--4d-bottom-b-d-bearing-drive",
@@ -37137,6 +38159,77 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       "zeta"
     ],
     "source": "composition"
+  },
+  {
+    "id": "qs-blade--chain",
+    "classification": "QS Blade",
+    "slot": "qs-blade",
+    "code": null,
+    "name": "Chain",
+    "usedBy": [
+      "gen3-bu-chain-kerbeus"
+    ],
+    "aliases": [
+      "chain"
+    ],
+    "source": "composition",
+    "weightG": 9.9,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "QS Blade"
+      },
+      {
+        "label": "System",
+        "value": "QuadDrive System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadStrike"
+      },
+      {
+        "label": "Product code",
+        "value": "F6804"
+      },
+      {
+        "label": "Released (US)",
+        "value": "November 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "December 2022"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Chain is a Beyblade qs blade from the QuadDrive System, weighing 9.9 g. Released as F6804 for Beyblade Burst QuadStrike. It shipped with Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6', Quad Creature Battle Set, Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6 and 2 other releases.",
+    "shippedIn": [
+      "Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6'",
+      "Quad Creature Battle Set",
+      "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6",
+      "Chain Poseidon P8 Diagron-Q Needle-Q+Stay-6",
+      "Ambush Nyddhog N8 and Chain Poseidon P8 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6'",
+        "set": "Quad Creature Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Poseidon P8 Diagron-Q Needle-Q+Stay-6",
+        "set": "Ambush Nyddhog N8 and Chain Poseidon P8 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Chain"
   },
   {
     "id": "ratchet--0-80",
@@ -40922,6 +42015,182 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       "tornado change core"
     ],
     "source": "composition"
+  },
+  {
+    "id": "shogun-face-bolt--dragoon",
+    "classification": "Shogun Face Bolt",
+    "slot": "shogun-face-bolt",
+    "code": null,
+    "name": "Dragoon",
+    "usedBy": [
+      "gen2-zerog-ronin-dragoon-lw160bsf"
+    ],
+    "aliases": [
+      "dragoon"
+    ],
+    "source": "composition",
+    "weightG": 1.2,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Shogun Face Bolt"
+      },
+      {
+        "label": "System",
+        "value": "Synchrome System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Shogun Steel"
+      },
+      {
+        "label": "Product code",
+        "value": "BBG-16 (Takara Tomy) · SS-16 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ドラグーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Doragūn"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 21, 2012"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2013"
+      }
+    ],
+    "seoDescription": "Dragoon is a Beyblade shogun face bolt from the Synchrome System, weighing 1.2 g. Released July 21, 2012 as BBG-16 (Takara Tomy) and SS-16 (Hasbro) for Beyblade: Shogun Steel. It shipped with Dark Knight Dragooon LW160BSF, Ronin Dragoon LW160BSF, Ronin Dragoon SA165WSF and 1 other release.",
+    "shippedIn": [
+      "Dark Knight Dragooon LW160BSF",
+      "Ronin Dragoon LW160BSF",
+      "Ronin Dragoon SA165WSF",
+      "Griffin Dragoon Air Synchrome 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-16",
+        "bey": "Dark Knight Dragooon LW160BSF"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-16",
+        "bey": "Dark Knight Dragooon LW160BSF",
+        "colourway": "Gold Dragon Model",
+        "distribution": [
+          "World Hobby Fair 2012 Event Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "SS-16",
+        "bey": "Ronin Dragoon LW160BSF"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "SS-103",
+        "bey": "Ronin Dragoon SA165WSF",
+        "set": "Griffin Dragoon Air Synchrome 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Dragon Model",
+        "vendor": "Takara Tomy",
+        "code": "BBG-16",
+        "distribution": "World Hobby Fair 2012 Event Exclusive",
+        "inBey": "Dark Knight Dragooon LW160BSF"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Dragoon"
+  },
+  {
+    "id": "shogun-face-bolt--pegasus",
+    "classification": "Shogun Face Bolt",
+    "slot": "shogun-face-bolt",
+    "code": null,
+    "name": "Pegasus",
+    "usedBy": [
+      "gen2-zerog-samurai-pegasis-w105r2f"
+    ],
+    "aliases": [
+      "pegasus"
+    ],
+    "source": "composition",
+    "weightG": 1.2,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Shogun Face Bolt"
+      },
+      {
+        "label": "System",
+        "value": "Synchrome System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Shogun Steel"
+      },
+      {
+        "label": "Product code",
+        "value": "BBG-26 (Takara Tomy) · SS-26 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ペガシス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Pegashisu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "December 1, 2012"
+      },
+      {
+        "label": "Released (US)",
+        "value": "March 2014"
+      }
+    ],
+    "seoDescription": "Pegasus is a Beyblade shogun face bolt from the Synchrome System, weighing 1.2 g. Released December 1, 2012 as BBG-26 (Takara Tomy) and SS-26 (Hasbro) for Beyblade: Shogun Steel. It shipped with Samurai Pegasis W105R²F, Metal Fight Beyblade 4DxZero-G: Ultimate Tournament, Samurai Pegasus W105R2F.",
+    "shippedIn": [
+      "Samurai Pegasis W105R²F",
+      "Metal Fight Beyblade 4DxZero-G: Ultimate Tournament",
+      "Samurai Pegasus W105R2F"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-26",
+        "bey": "Samurai Pegasis W105R²F"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Samurai Pegasis W105R²F",
+        "set": "Metal Fight Beyblade 4DxZero-G: Ultimate Tournament",
+        "colourway": "Brave Ver."
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "SS-26",
+        "bey": "Samurai Pegasus W105R2F"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Brave Ver.",
+        "vendor": "Takara Tomy",
+        "inBey": "Samurai Pegasis W105R²F"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Pegasus"
   },
   {
     "id": "spin-gear--heavy-metal-core",
@@ -44835,6 +46104,307 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
+    "id": "strike-chip--kerbeus-k8",
+    "classification": "Strike Chip",
+    "slot": "strike-chip",
+    "code": null,
+    "name": "Kerbeus K8",
+    "usedBy": [
+      "gen3-bu-chain-kerbeus"
+    ],
+    "aliases": [
+      "kerbeus k8"
+    ],
+    "source": "composition",
+    "weightG": 4.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Strike Chip"
+      },
+      {
+        "label": "System",
+        "value": "QuadDrive System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadStrike"
+      },
+      {
+        "label": "Product code",
+        "value": "F6804"
+      },
+      {
+        "label": "Released (US)",
+        "value": "November 2022"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "December 2022"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Kerbeus K8 is a Beyblade strike chip from the QuadDrive System, weighing 4.6 g. Released as F6804 for Beyblade Burst QuadStrike. It shipped with Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6, Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3, Fierce Bazilisk B8 and Hydra Kerbeus K8 Dual Pack.",
+    "shippedIn": [
+      "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6",
+      "Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3",
+      "Fierce Bazilisk B8 and Hydra Kerbeus K8 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3",
+        "set": "Fierce Bazilisk B8 and Hydra Kerbeus K8 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Kerbeus_K8"
+  },
+  {
+    "id": "superking-chip--achilles",
+    "classification": "Superking Chip",
+    "slot": "superking-chip",
+    "code": null,
+    "name": "Achilles",
+    "usedBy": [
+      "gen3-db-infinite-achilles-d1b"
+    ],
+    "aliases": [
+      "achilles"
+    ],
+    "source": "composition",
+    "weightG": 3.1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Superking Chip"
+      },
+      {
+        "label": "System",
+        "value": "Superking Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Surge"
+      },
+      {
+        "label": "Product code",
+        "value": "B-173 (Takara Tomy) · F7803 (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アキレス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Akiresu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "October 24th, 2020"
+      },
+      {
+        "label": "Released (US)",
+        "value": "July 2023"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "July 2023"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 1 · Stamina 1 · Weight 0 · Speed 0 · Burst 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Achilles is a Beyblade superking chip from the Superking Layer System, weighing 3.1 g. Released October 24th, 2020 as B-173 (Takara Tomy) and F7803 (Hasbro) for Beyblade Burst Surge. It shipped with Infinite Achilles Dimension' 1B, Random Booster Vol.",
+    "shippedIn": [
+      "Infinite Achilles Dimension' 1B",
+      "Random Booster Vol. 22",
+      "Infinite Achilles 7 Loop 1D",
+      "Tempest Achilles Xceed'+Z 1B",
+      "Random Booster Vol. 28"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-173",
+        "bey": "Infinite Achilles Dimension' 1B",
+        "set": "Random Booster Vol. 22"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-173",
+        "bey": "Infinite Achilles 7 Loop 1D",
+        "set": "Random Booster Vol. 22"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-196",
+        "bey": "Tempest Achilles Xceed'+Z 1B",
+        "set": "Random Booster Vol. 28",
+        "colourway": "Demon King Color Ver."
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Infinite Achilles Dimension' 1B"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Demon King Color Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-196",
+        "inBey": "Tempest Achilles Xceed'+Z 1B"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Achilles"
+  },
+  {
+    "id": "superking-chip--wyvern",
+    "classification": "Superking Chip",
+    "slot": "superking-chip",
+    "code": null,
+    "name": "Wyvern",
+    "usedBy": [
+      "gen3-bu-jet-wyvern-aj1d"
+    ],
+    "aliases": [
+      "wyvern"
+    ],
+    "source": "composition",
+    "weightG": 3.1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Superking Chip"
+      },
+      {
+        "label": "System",
+        "value": "Superking Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Surge"
+      },
+      {
+        "label": "Product code",
+        "value": "B-177"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ワイバーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Waibān"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "January 23rd, 2021"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 1 · Stamina 1 · Weight 0 · Speed 0 · Burst 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Wyvern is a Beyblade superking chip from the Superking Layer System, weighing 3.1 g. Released January 23rd, 2021 as B-177 for Beyblade Burst Surge. It shipped with Jet Wyvern Around Just 1D, Brave Wyvern 10 Never 4A, Random Booster Vol. 25.",
+    "shippedIn": [
+      "Jet Wyvern Around Just 1D",
+      "Brave Wyvern 10 Never 4A",
+      "Random Booster Vol. 25"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-177",
+        "bey": "Jet Wyvern Around Just 1D"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-181",
+        "bey": "Brave Wyvern 10 Never 4A",
+        "set": "Random Booster Vol. 25"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Wyvern"
+  },
+  {
+    "id": "support-parts--cross-survivor",
+    "classification": "Support Parts",
+    "slot": "support-parts",
+    "code": null,
+    "name": "Cross Survivor",
+    "usedBy": [
+      "gen1-plastic-dranzer-v2"
+    ],
+    "aliases": [
+      "cross survivor"
+    ],
+    "source": "composition",
+    "weightG": 2.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Support Parts"
+      },
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 0 · Stamina 2"
+      }
+    ],
+    "seoDescription": "Cross Survivor is a Beyblade support parts from the Magnacore System, weighing 2.6 g. It shipped with Dranzer V2.",
+    "shippedIn": [
+      "Dranzer V2"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "bey": "Dranzer V2"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dranzer V2"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Parts_-_Cross_Survivor"
+  },
+  {
+    "id": "support-parts--reverse-attack",
+    "classification": "Support Parts",
+    "slot": "support-parts",
+    "code": null,
+    "name": "Reverse Attack",
+    "usedBy": [
+      "gen1-plastic-dragoon-v2"
+    ],
+    "aliases": [
+      "reverse attack"
+    ],
+    "source": "composition"
+  },
+  {
     "id": "weight-disk--circle-balance",
     "classification": "Weight Disk",
     "slot": "weight-disk",
@@ -45910,6 +47480,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ],
     "aliases": [
       "wing attacker"
+    ],
+    "source": "composition"
+  },
+  {
+    "id": "wheel--leone-first-defense-type-wheel",
+    "classification": "Wheel",
+    "slot": "wheel",
+    "code": null,
+    "name": "Leone FIRST DEFENSE-TYPE WHEEL",
+    "usedBy": [
+      "gen2-mfb-leone-145d"
+    ],
+    "aliases": [
+      "leone first defense-type wheel"
     ],
     "source": "composition"
   }

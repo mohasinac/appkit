@@ -132,6 +132,17 @@ export interface ClientSheetPart {
   areaMm2: number | null;
   /** Whether a full-resolution render exists, NOT where it is. */
   hasAsset: boolean;
+  /**
+   * The PUBLIC `/media/{shortId}` slug, when the part has been promoted.
+   *
+   * 🛑 Public on purpose and NOT a path. A `mediaShortId` is already a public
+   * URL by construction — a `mediaAssets` row IS what mints `/media/{id}`, and
+   * `/api/media/[...slug]` serves it to anyone, watermarked. So the thing it
+   * names is public whether or not this field is projected, and the admin
+   * review UI genuinely needs it to show the marketplace copy beside the clean
+   * one. `assetPath` stays private: that is the unwatermarked original.
+   */
+  mediaShortId?: string;
   duplicateOf?: number;
 }
 
@@ -205,6 +216,7 @@ function toClientPart(part: SheetPart): ClientSheetPart {
     bboxMm: part.bboxMm,
     areaMm2: part.areaMm2,
     hasAsset: Boolean(part.assetPath),
+    ...(part.mediaShortId !== undefined ? { mediaShortId: part.mediaShortId } : {}),
     ...(part.duplicateOf !== undefined ? { duplicateOf: part.duplicateOf } : {}),
   };
 }
