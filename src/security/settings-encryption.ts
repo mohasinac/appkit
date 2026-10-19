@@ -160,8 +160,12 @@ export function encryptBuffer(plaintext: Buffer): Buffer {
  */
 export function decryptBuffer(encrypted: Buffer): Buffer {
   if (!isBufferEncrypted(encrypted)) {
+    // Interpolates PREFIX rather than writing "enc:v1:" a second time —
+    // audit-pii-crypto's ENC_PREFIX_REDECLARED rule exists because two
+    // independent copies of that literal are how two incompatible formats
+    // came to look identical to every "is this encrypted" check.
     throw new Error(
-      "Buffer is not settings-encrypted — expected an 'enc:v1:' binary envelope",
+      `Buffer is not settings-encrypted — expected a '${PREFIX}' binary envelope`,
     );
   }
 

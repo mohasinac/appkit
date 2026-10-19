@@ -116,6 +116,22 @@ export const PRIVATE_STORE_FIELDS = [
   "vacationReturnDate", // not rendered by StoreAboutView; add to PUBLIC when a reader exists
   "isTestData", // tester-sandbox tagging; filtered by filterTestDataForViewer
   "testDataExpiresAt", // ditto
+  /*
+   * Tax identity (2026-10-19). Read today by exactly two server-side
+   * consumers: `resolveSupplierIdentity` (checkout, to decide whose
+   * registration an order invoices under) and the seller's own authenticated
+   * payout-settings form. Neither is a public store-profile reader.
+   *
+   * A GSTIN is not secret in the way a bank account number is — it is
+   * legally published on an invoice — but "may be disclosed" and "has a
+   * reader that needs it published on /stores/{slug}" are different
+   * questions, and only the first is true today. Move to PUBLIC_STORE_FIELDS
+   * together, with the literal in `toStoreListItem()`, once a storefront
+   * surface actually needs to show a seller's registration.
+   */
+  "gstin",
+  "legalName",
+  "registeredAddress",
 ] as const;
 
 /**
