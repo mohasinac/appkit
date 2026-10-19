@@ -25,7 +25,6 @@ export const prizeDrawRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
   orderType: "prize-draw",
   nonRefundable: true,
-  maxQuantityPerLine: 1,
   canMergeWithSameProduct: false,
   maxLinesPerOrder: PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },

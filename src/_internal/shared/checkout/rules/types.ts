@@ -67,8 +67,6 @@ export interface ListingCheckoutRule {
    * Set true for prize-draw entries.
    */
   nonRefundable: boolean;
-  /** Hard qty cap per single cart line. Auction/offer/prize-draw-per-line = 1. */
-  maxQuantityPerLine: number;
   /**
    * When false the checkout pipeline issues one order per cart line (even when
    * multiple lines share the same product).  Auctions and offers set this to

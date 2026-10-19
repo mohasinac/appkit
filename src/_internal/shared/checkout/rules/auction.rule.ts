@@ -7,7 +7,6 @@ export const auctionRule: ListingCheckoutRule = {
   orderType: "auction",
   cartEligible: false, // bid-only; add-to-cart is blocked at the action layer
   cartIneligibleHint: "Place a bid on the auction page instead.",
-  maxQuantityPerLine: 1,
   canMergeWithSameProduct: false,
   refundPolicy: { full: true, partial: false, partialGranularity: "none" },
   splitKey: (item: CartItemDocument) => `auction:${item.itemId}`,

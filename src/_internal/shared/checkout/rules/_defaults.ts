@@ -16,7 +16,6 @@ export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
   cartIneligibleHint: "This listing type cannot be added to the cart.",
   requiresShippingAddress: true,
   nonRefundable: false,
-  maxQuantityPerLine: STANDARD_MAX_QTY_PER_LINE,
   canMergeWithSameProduct: true,
   maxLinesPerOrder: Infinity,
   refundPolicy: { full: true, partial: true, partialGranularity: "item" },

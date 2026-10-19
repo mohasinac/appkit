@@ -34,5 +34,18 @@ export const PRIZE_DRAW_DURATION_DAYS_MAX = 15;
 /** Maximum qty per bundle purchase (bundles are always single-shot direct buys). */
 export const BUNDLE_MAX_QTY_PER_TX = 1;
 
-/** Standard / pre-order max qty per cart line (enforced at addToCart). */
+/**
+ * Max quantity on a single cart line.
+ *
+ * 🛑 It now IS the enforcement. It used to say "enforced at addToCart" while
+ * the actual limit was four hand-written `.max(99)` literals that never
+ * referenced it — so the constant was documentation nobody read and the rule
+ * was a magic number in four places. The cart schemas import it.
+ *
+ * Its other reader, `ListingCheckoutRule.maxQuantityPerLine`, was DELETED in
+ * the same change: that field was set by auction, offer and prize-draw and read
+ * by nothing at all, and it contradicted the feature it appeared to govern —
+ * prize-draw set it to 1 while `splitMultipleOrders` right beside it existed
+ * only to chunk a quantity of 7 into [3,3,1].
+ */
 export const STANDARD_MAX_QTY_PER_LINE = 99;

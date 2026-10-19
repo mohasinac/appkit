@@ -1,7 +1,19 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Anchor, Button, GatedPrice, Stack, Text, LoginRequiredModal } from "../../../ui";
+import {
+  Anchor,
+  Button,
+  GatedPrice,
+  QuantityStepper,
+  Row,
+  Stack,
+  Text,
+  LoginRequiredModal,
+} from "../../../ui";
+import { useAddToCart } from "../../cart/hooks/useAddToCart";
+import { useToast } from "../../../ui/components/Toast";
+import { normalizeError } from "../../../errors/normalize";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
@@ -24,8 +36,22 @@ export interface PrizeDrawEntryActionsProps {
  * Client buy panel for a prize-draw detail page (SB4-G).
  *
  * - Enter Draw → NonRefundableConsentModal (listingType="prize-draw")
- * - On confirm → add 1 entry to guest cart and route to /user/cart
+ * - On confirm → add the chosen number of entries to the cart, then /user/cart
  * - "View RNG source" link → prizeGithubFileUrl
+ *
+ * 🛑 THIS FLOW DID NOT WORK AT ALL UNTIL 2026-10-19, and the docstring above
+ * described the behaviour it was supposed to have. `handleConfirm` pushed to
+ * `/checkout?directItem=<slug>&type=prize-draw` — and NOTHING anywhere reads
+ * `directItem` (CheckoutRouteClient reads only `coupon` and `lane`), and
+ * nothing added to the cart. A buyer pressing "Enter draw" landed on a
+ * checkout of whatever was already in their basket, with no entry in it.
+ * Buying an entry was impossible.
+ *
+ * 🛑 MULTI-ENTRY NEEDED NO SERVER WORK. `prizeDrawRule.splitMultipleOrders`
+ * already chunks a quantity into batches of PRIZE_DRAW_MAX_REVEALS_PER_ORDER
+ * (7 entries → [3,3,1]), `enforceMaxPerUserForCart` already caps per buyer, and
+ * the rule's preflight already checks `prizeMaxEntries`. The whole server half
+ * was written and unreachable because the client never sent a quantity.
  */
 export function PrizeDrawEntryActions({
   productId,
@@ -41,19 +67,62 @@ export function PrizeDrawEntryActions({
   const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
     useAuthGate();
   const [consentOpen, setConsentOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const { showToast } = useToast();
+  const { mutate: addToCart, isLoading: adding } = useAddToCart();
 
   const closed = revealStatus === "closed" || remainingEntries === 0;
+
+  /*
+   * Capped by what is LEFT, not by maxPerUser.
+   *
+   * `remainingEntries` is a fact about the draw and is already on screen.
+   * `maxPerUser` is an async per-buyer check (`enforceMaxPerUserForCart` counts
+   * their existing orders), so mirroring it here would mean a second, slower
+   * source of truth that disagrees with the server whenever an order is in
+   * flight — and the server's refusal already names the cap.
+   */
+  const maxQuantity = Math.max(1, Math.min(99, remainingEntries || 1));
 
   const handleEnter = useCallback(() => {
     if (closed) return;
     requireAuth(ACTION_ID.ENTER_PRIZE_DRAW, () => setConsentOpen(true));
   }, [closed, requireAuth]);
 
-  const handleConfirm = useCallback(() => {
+  const handleConfirm = useCallback(async () => {
     setConsentOpen(false);
-    const slug = productSlug ?? productId;
-    router.push(`${String(ROUTES.USER.CHECKOUT)}?directItem=${encodeURIComponent(slug)}&type=prize-draw`);
-  }, [productSlug, productId, router]);
+    /*
+     * ADD, then route. The previous version only routed — and to a parameter
+     * nobody reads. `useAddToCart` falls back to the guest cart on a 401, so
+     * this works signed-out too and the entry survives the login merge.
+     */
+    try {
+      await addToCart({
+        productId,
+        quantity,
+        productTitle: title,
+        price: pricePerEntry,
+      });
+    } catch (err) {
+      const n = normalizeError(err);
+      /*
+       * 🛑 Surfaced, and the ROUTE IS SKIPPED. The add can legitimately fail —
+       * the draw sold out between render and confirm, or this buyer is over
+       * `maxPerUser`, which is an async per-buyer check the stepper cannot
+       * mirror. Routing to the cart anyway would show an empty basket and make
+       * a correct refusal look like the same silent nothing this flow did
+       * before it was repaired.
+       */
+      showToast(n.message, "error");
+      return;
+    }
+    router.push(String(ROUTES.USER.CART));
+  }, [addToCart, productId, quantity, title, pricePerEntry, router, showToast]);
+
+  const totalLabel = useMemo(
+    () => formatCurrency(pricePerEntry * quantity, currency),
+    [pricePerEntry, quantity, currency],
+  );
 
   return (
     <Stack gap="md">
@@ -66,15 +135,41 @@ export function PrizeDrawEntryActions({
         </GatedPrice>
       </Text>
 
+      {!closed ? (
+        <Row align="center" justify="between" gap="sm" wrap>
+          <Text size="sm" color="muted">Entries</Text>
+          <QuantityStepper
+            value={quantity}
+            onChange={setQuantity}
+            min={1}
+            max={maxQuantity}
+          />
+        </Row>
+      ) : null}
+
+      {!closed && quantity > 1 ? (
+        <Text size="sm" color="muted">
+          <GatedPrice label="Sign in to see the total">
+            {quantity} entries · {totalLabel}
+          </GatedPrice>
+        </Text>
+      ) : null}
+
       <Button
         action={closed ? undefined : ACTIONS.PRIZE_DRAW["buy-now"]}
         variant="primary"
         size="md"
         className="w-full"
-        disabled={closed || isAuthResolving}
+        disabled={closed || isAuthResolving || adding}
         onClick={handleEnter}
       >
-        {closed ? "Draw closed" : isAuthResolving ? "Checking…" : undefined}
+        {closed
+          ? "Draw closed"
+          : isAuthResolving
+            ? "Checking…"
+            : adding
+              ? "Adding…"
+              : undefined}
       </Button>
 
       {prizeGithubFileUrl ? (
@@ -101,7 +196,7 @@ export function PrizeDrawEntryActions({
         itemTitle={title}
         priceLabel={formatCurrency(pricePerEntry, currency)}
         onCancel={() => setConsentOpen(false)}
-        onConfirm={handleConfirm}
+        onConfirm={() => void handleConfirm()}
       />
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </Stack>

@@ -1,3 +1,4 @@
+import { STANDARD_MAX_QTY_PER_LINE } from "../../checkout/rules/_limits";
 import { z } from "zod";
 
 const cartItemBaseSchema = z.object({
@@ -8,7 +9,7 @@ const cartItemBaseSchema = z.object({
   currency: z.string().default("INR"),
   storeId: z.string(),
   storeName: z.string().default(""),
-  quantity: z.number().int().min(1).max(99).default(1),
+  quantity: z.number().int().min(1).max(STANDARD_MAX_QTY_PER_LINE).default(1),
   // SB1-G Phase 4 — canonical listing-kind snapshot.
   // SB-UNI-D — "bundle" removed from the listing-kind enum.
   /*
@@ -44,7 +45,7 @@ export const addToCartSchema = cartItemBaseSchema;
 
 export const updateCartItemSchema = z.object({
   productId: z.string().min(1),
-  quantity: z.number().int().min(1).max(99),
+  quantity: z.number().int().min(1).max(STANDARD_MAX_QTY_PER_LINE),
 });
 
 export const removeFromCartSchema = z.object({

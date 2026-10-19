@@ -11,7 +11,6 @@ import { DEFAULT_LISTING_RULE } from "./_defaults";
 export const offerRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
   orderType: "offer",
-  maxQuantityPerLine: 1,
   canMergeWithSameProduct: false,
   refundPolicy: { full: true, partial: false, partialGranularity: "none" },
   splitKey: (item: CartItemDocument) => `offer:${item.itemId}`,
