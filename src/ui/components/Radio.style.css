@@ -242,7 +242,9 @@
 .appkit-radio-item__text {
   padding-top: 2px;
   font-size: 0.875rem;
-  color: var(--appkit-color-zinc-700);
+  /* `--appkit-color-text-muted` inverts per theme — no `.dark` override is
+     needed, unlike the raw zinc-700/zinc-200 pair this was copied from. */
+  color: var(--appkit-color-text-muted);
 }
 
 .appkit-radio-item__error {
@@ -267,7 +269,4 @@
 }
 .dark .appkit-radio-item__input--error {
   border-color: var(--appkit-color-error);
-}
-.dark .appkit-radio-item__text {
-  color: var(--appkit-color-zinc-200);
 }
