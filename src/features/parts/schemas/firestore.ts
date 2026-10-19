@@ -607,6 +607,19 @@ export interface PartGlossaryDocument extends BaseDocument {
   owner?: string;
   /** The episode this part appeared in. 22 rows. */
   appearAnime?: string;
+  /**
+   * The Japanese name, the romanisation, and the kanji where the source gives
+   * one.
+   *
+   * 🛑 Top-level fields AS WELL AS `specs[]` rows, which is not duplication for
+   * its own sake: a `<title>`, an `og:title`, an hreflang alternate and a
+   * JSON-LD `alternateName` all need a FIELD. None of them can scan an array
+   * of label/value pairs for one whose label happens to read "Japanese name",
+   * and that is where these 1,068 values previously lived and died.
+   */
+  jpName?: string;
+  romaji?: string;
+  kanjiName?: string;
 
   /** `/media/<slug>`. 🛑 Never a raw Storage host URL. */
   image?: string;
