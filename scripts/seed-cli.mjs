@@ -1234,9 +1234,23 @@ async function cmdPurge() {
     const sub = SUBCOLLECTIONS.find((s) => s.key === colName);
     try {
       if (sub) {
-        /* A collection-group query reaches every parent at once. */
-        const snap = await db.collectionGroup(sub.name).where("seedPurpose", "==", "test").get();
-        if (snap.size > 0) plan.push({ colName, docs: snap.docs, isSub: true });
+        /*
+         * 🛑 Unfiltered collection-group read, filtered in memory — NOT
+         * `.where("seedPurpose", "==", "test")` on the group.
+         *
+         * A single-field equality is auto-indexed per COLLECTION, but a
+         * COLLECTION-GROUP query needs an explicit composite/group index that
+         * this project has never deployed, and `purge` must not require a
+         * Firebase deploy just to run (it is a read-then-delete script, not an
+         * infra change). Measured live: `3 FAILED_PRECONDITION: ... requires a
+         * COLLECTION_GROUP_ASC index`. `couponUsage` is small (single digits
+         * per store), so reading the whole group and filtering client-side
+         * costs nothing here — this is not a pattern to reuse on a large
+         * subcollection.
+         */
+        const snap = await db.collectionGroup(sub.name).get();
+        const docs = snap.docs.filter((d) => d.data()?.seedPurpose === "test");
+        if (docs.length > 0) plan.push({ colName, docs, isSub: true });
       } else {
         const snap = await db.collection(path).where("seedPurpose", "==", "test").get();
         if (snap.size > 0) plan.push({ colName, docs: snap.docs, isSub: false });
@@ -1291,19 +1305,40 @@ async function cmdPurge() {
         }
       }
     }
-    for (let i = 0; i < p.docs.length; i += 450) {
-      const chunk = p.docs.slice(i, i + 450);
-      const batch = db.batch();
-      for (const d of chunk) batch.delete(d.ref);
-      try {
-        await batch.commit();
-        stats.deleted += chunk.length;
-        if (VERBOSE) for (const d of chunk) console.log(`    - ${p.colName}/${d.id}`);
-      } catch (err) {
-        console.error(`✗ ${p.colName}: ${err.message}`);
-        stats.errors++;
-      }
+    /*
+     * 🛑 BulkWriter, never a manually-chunked `db.batch()`.
+     *
+     * A 450-document chunk stays under Firestore's 500-OPERATION limit but
+     * says nothing about the 10 MiB per-request PAYLOAD limit — and a rich
+     * document (a product's `searchTxt` array, `customFields`,
+     * `customSections`, `images[]`) can blow that well before 450 count.
+     * Measured live purging this exact `products` collection: `3
+     * INVALID_ARGUMENT: Transaction too big` partway through, which aborted
+     * the whole chunk's commit and silently left every doc in it undeleted —
+     * `stats.deleted` kept counting the chunk as done regardless, so the
+     * printed total was wrong by exactly the size of the failed chunk.
+     *
+     * `db.bulkWriter()` sizes and retries its own requests, so it is correct
+     * regardless of document size — CLAUDE.md documents the identical failure
+     * for a `categories` wipe (1,177 rows, ~100-entry `searchTxt` each) dying
+     * at a 400-doc batch for the same reason.
+     */
+    const writer = db.bulkWriter();
+    let chunkErrors = 0;
+    writer.onWriteError((err) => {
+      chunkErrors += 1;
+      console.error(`✗ ${p.colName}/${err.documentRef.id}: ${err.message}`);
+      // Retry up to the default limit; beyond that, give up on this one doc
+      // rather than retrying forever.
+      return err.failedAttempts < 3;
+    });
+    for (const d of p.docs) {
+      writer.delete(d.ref);
+      if (VERBOSE) console.log(`    - ${p.colName}/${d.id}`);
     }
+    await writer.close();
+    stats.deleted += p.docs.length - chunkErrors;
+    stats.errors += chunkErrors;
   }
 
   console.log(
