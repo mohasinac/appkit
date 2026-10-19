@@ -66,6 +66,7 @@ import {
   type SearchIndexManifestPublic,
 } from "../../../_internal/shared/search/artifact-url";
 import { prepareIndex, type PreparedIndex } from "../../../_internal/shared/search/match";
+import { normalizeError } from "../../../errors/normalize";
 
 /**
  * Read at module scope, exactly as `utils/media-url.ts` does for the same
@@ -163,7 +164,15 @@ async function load(): Promise<LoadedSearchIndex | null> {
       builtAt: artifact.builtAt,
     };
   } catch (err) {
-    failureReason = err instanceof Error ? err.message : String(err);
+    const n = normalizeError(err);
+    /*
+     * normalizeError FIRST, before the body touches the value — the project-wide
+     * rule, and what audit-catch-normalize is strict-zero about. It also removes
+     * the hand-rolled `err instanceof Error ? … : String(err)` narrowing that
+     * every catch otherwise reinvents slightly differently, which is the whole
+     * reason the helper exists (Root Cause #31).
+     */
+    failureReason = n.message;
     return null;
   }
 }
