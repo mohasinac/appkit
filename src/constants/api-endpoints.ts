@@ -386,6 +386,14 @@ export const TOOL_ENDPOINTS = {
    */
   PRICE_INDEX_BANDS: (ids: readonly string[]) =>
     `/api/tools/price-index/bands?ids=${ids.map(encodeURIComponent).join(",")}`,
+  /**
+   * The competitor-crawl market band for the same leaves — SIGNED-IN ONLY, and
+   * therefore a separate request from `PRICE_INDEX_BANDS` rather than more
+   * fields on it. That route is public and edge-cached; this one must not be,
+   * or one signed-in lookup populates an entry every guest reads.
+   */
+  PRICE_INDEX_MARKET: (ids: readonly string[]) =>
+    `/api/tools/price-index/market?ids=${ids.map(encodeURIComponent).join(",")}`,
 } as const;
 
 /**

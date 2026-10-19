@@ -8,13 +8,20 @@ import { Badge } from "../../../ui/components/Badge";
 import { Button } from "../../../ui/components/Button";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
+import { PaginatedSelect, type PaginatedSelectOption } from "../../../ui/components/PaginatedSelect";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { TOOL_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http/ApiClient";
 import { useSiteSearch } from "../../search/hooks/useSiteSearch";
+import { useSearchIndex } from "../../search/hooks/useSearchIndex";
+import { searchIndex } from "../../../_internal/shared/search/match";
+import { useOptionalSession } from "../../../react/contexts/SessionContext";
+import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { PRICE_LOOKUP_INDEX_TYPES, priceLookupTargetFor } from "../lookup-target";
 
 /**
  * The realised-price lookup — a SEARCH tool, not a list.
@@ -94,6 +101,28 @@ export interface PriceIndexToolResponse {
   minConfidentSamples: number;
 }
 
+/**
+ * The competitor-crawl band for one leaf. Mirrors `PriceIndexMarketRow`.
+ *
+ * Every field but `median` and `categoryId` is optional because the crawl
+ * genuinely did not measure them everywhere, and an absent figure must render
+ * as absent. See `price-bands.md`: "a band with `n=2` is not evidence".
+ */
+export interface PriceIndexMarketRowView {
+  categoryId: string;
+  median: number;
+  p25?: number;
+  p75?: number;
+  sampleSize?: number;
+  asOf?: string;
+  soldOutShare?: number;
+  source?: string;
+  inherited: boolean;
+  viaCategoryId?: string;
+  viaName?: string;
+  taxBasis: string;
+}
+
 /** Human labels. Falls back to the raw value so a new condition still renders. */
 const CONDITION_LABEL: Record<string, string> = {
   new: "New",
@@ -128,6 +157,15 @@ const __O = {
   xAuto: "overflow-x-auto",
   hidden: "overflow-hidden",
 } as const;
+
+/**
+ * How many options the dropdown offers.
+ *
+ * Larger than `PRICE_INDEX_SEARCH_LIMIT`'s 8 because this is a PICK list rather
+ * than a result set — the cost of an extra row is a line of text, not a
+ * Firestore document, so the bound that matters is what a person will read.
+ */
+const DROPDOWN_LIMIT = 20;
 
 const money = (v: number) => formatCurrency(v, "INR");
 
@@ -279,7 +317,122 @@ function BandCard({ band, threshold }: { band: PriceIndexBandRow; threshold: num
   );
 }
 
-function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: number }) {
+/**
+ * The competitor-crawl band: what this thing is typically ASKED for.
+ *
+ * ## 🛑 Side by side with the sold band, never averaged with it
+ *
+ * `price-bands.md` states the rule this component exists to honour: "They are
+ * rendered side by side and never averaged. The gap between them is the most
+ * useful thing we can tell a seller." An ask and a sale are different events,
+ * and a blended figure would be a statistic describing neither.
+ *
+ * ## 🛑 "Sold out" is not "sold"
+ *
+ * 76–93% of the crawled catalogues are sold out, and a sold-out row proves the
+ * item is GONE, not that it changed hands at that price. So `soldOutShare` is
+ * rendered as prose rather than dropped — without it, a reader takes the median
+ * for a clearing price, which is the single wrong conclusion this data invites.
+ *
+ * ## 🛑 An inherited band says whose band it is
+ *
+ * `MARKET_BANDS` is keyed on era and part-group leaves, never on the ~216
+ * named-model leaves — the crawl measured a generation, not a bey. So a model
+ * lookup resolves its era's band, and the card must attribute it: "typical for
+ * Burst DB" is true, "typical for Rage Longinus" is not.
+ */
+function MarketCard({ market }: { market: PriceIndexMarketRowView }) {
+  const hasRange = market.p25 !== undefined && market.p75 !== undefined;
+  const soldOutPct =
+    market.soldOutShare === undefined ? null : Math.round(market.soldOutShare * 100);
+
+  return (
+    <Stack gap="sm" padding="sm" rounded="lg" border="default" className="min-w-0">
+      <Row align="center" justify="between" gap="sm" wrap className="min-w-0">
+        <Badge variant="secondary">Typical asking price</Badge>
+        {/*
+          🛑 Absent `sampleSize` renders as nothing at all. The Beyblade-top
+          table carries no per-leaf n, and printing "0 listings" or inventing a
+          figure to fill the row is exactly what the research doc forbids.
+        */}
+        {market.sampleSize !== undefined && (
+          <Text size="xs" color="muted">
+            {market.sampleSize} {market.sampleSize === 1 ? "listing" : "listings"}
+          </Text>
+        )}
+      </Row>
+
+      <Row gap="lg" wrap className="min-w-0">
+        {hasRange && <Figure label="Usual low" value={money(market.p25 as number)} />}
+        <Figure label="Typical ask" value={money(market.median)} />
+        {hasRange && <Figure label="Usual high" value={money(market.p75 as number)} />}
+      </Row>
+
+      {market.inherited && (
+        <Text size="sm" color="muted">
+          Measured for{" "}
+          <Span weight="semibold">{market.viaName ?? market.viaCategoryId}</Span> as a
+          whole — the crawl priced the generation, not this exact item.
+        </Text>
+      )}
+
+      {soldOutPct !== null && (
+        <Text size="sm" color="muted">
+          These are asking prices from other shops, and about {soldOutPct}% of
+          listings at this level are sold out — so an ask is not proof anything
+          changed hands at it.
+        </Text>
+      )}
+
+      <Text size="xs" color="muted" className="min-w-0 break-words">
+        {market.source ? `Source: ${market.source}. ` : ""}
+        Tax-inclusive
+        {market.asOf
+          ? ` · measured ${new Date(market.asOf).toLocaleDateString("en-IN")}`
+          : ""}
+      </Text>
+    </Stack>
+  );
+}
+
+/**
+ * What a signed-out visitor sees where the market band would be.
+ *
+ * 🛑 This is NOT the guest price gate. The sold band above it is public by
+ * decision (see this file's header). The market band is withheld for a
+ * different reason, already settled at
+ * `categories/api/[id]/price-guidance/route.ts`: it is competitor-derived, and
+ * publishing it on an unauthenticated, cacheable surface is the "neighbouring
+ * surface publishes the range" leak. The copy therefore says what is behind
+ * sign-in and why it is worth having, rather than implying no data exists.
+ */
+function MarketSignInPrompt() {
+  return (
+    <Stack gap="xs" padding="sm" rounded="lg" surface="muted" className="min-w-0">
+      <Text size="sm" weight="semibold">Asking prices elsewhere</Text>
+      <Text size="sm" color="muted">
+        We measured what other Indian shops ask for this, from a crawl of
+        fifteen catalogues.{" "}
+        <TextLink href={String(ROUTES.AUTH.LOGIN)}>Sign in</TextLink> to see the
+        range.
+      </Text>
+    </Stack>
+  );
+}
+
+function ResultCard({
+  row,
+  threshold,
+  market,
+  canSeeMarket,
+}: {
+  row: PriceIndexResultRow;
+  threshold: number;
+  /** The crawl band for this leaf, when one exists AND the viewer may see it. */
+  market?: PriceIndexMarketRowView;
+  /** Signed in. Decides prompt-vs-nothing when `market` is absent. */
+  canSeeMarket: boolean;
+}) {
   return (
     <Stack gap="md" padding="card" rounded="lg" surface="card" border="subtle" className="min-w-0">
       <Row gap="md" align="start" className="min-w-0">
@@ -298,6 +451,17 @@ function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: n
         </Stack>
       </Row>
 
+      {/*
+        🛑 MARKET FIRST when we have no sales of our own, and that ordering is
+        the point of this change. The tool used to answer every lookup with
+        "No completed sales recorded here yet" while a measured competitor band
+        sat on the taxonomy unread — the crawl was paid for and never reached
+        the surface it was crawled for. With no sold band, the ask IS the
+        answer; with one, the sold band leads and the ask is context.
+      */}
+      {(!row.bands || row.bands.length === 0) &&
+        (market ? <MarketCard market={market} /> : canSeeMarket ? null : <MarketSignInPrompt />)}
+
       {row.bands && row.bands.length > 0 ? (
         <>
           <Stack gap="sm" className="min-w-0">
@@ -305,6 +469,7 @@ function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: n
               <BandCard key={b.listingType} band={b} threshold={threshold} />
             ))}
           </Stack>
+          {market ? <MarketCard market={market} /> : canSeeMarket ? null : <MarketSignInPrompt />}
           {/*
             🛑 "As of" is not decoration. The index is computed once a day and
             is deliberately a day stale, so a reader who is not told that will
@@ -322,10 +487,17 @@ function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: n
          * 🛑 "No sales recorded yet" — never ₹0, and never a blank card. The
          * absence of a band means nothing has sold here, which is a fact about
          * our marketplace and not a failure of the lookup.
+         *
+         * 🛑 The wording is DIFFERENT when a market band is showing above it.
+         * "Prices appear once something sells" was written for a card that had
+         * nothing else on it; printed under a real asking-price band it reads
+         * as though the band were not a price, which is the opposite of what
+         * this card now says.
          */
         <Text size="sm" color="muted">
-          No completed sales recorded here yet. Prices appear once something
-          sells on LetItRip.
+          {market
+            ? "Nothing has sold here on LetItRip yet, so the figures above are asking prices elsewhere rather than our own sales."
+            : "No completed sales recorded here yet. Prices appear once something sells on LetItRip."}
         </Text>
       )}
     </Stack>
@@ -334,12 +506,6 @@ function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: n
 
 /** Stable identity — a `useMemo` dependency inside `useSiteSearch`. */
 const identityLabel = (typeKey: string) => typeKey;
-
-/** `/categories/{slug}` -> `{slug}`. Category documents are pure slugs (id === slug). */
-function categoryIdFromHref(href: string): string | null {
-  const m = /^\/categories\/([^/?#]+)/.exec(href);
-  return m ? m[1] : null;
-}
 
 export interface PriceIndexToolViewProps {
   /** Seeded from `?q=` so a shared link reproduces the lookup. */
@@ -363,25 +529,119 @@ export function PriceIndexToolView({
    * keystroke against a route that holds a Firestore query plus a multi-get —
    * which is Root Cause #94's recurring server bill, and `audit-client-poll-cost`
    * exists because of it. The query key only moves when somebody submits.
+   *
+   * 🛑 Still here after the dropdown landed, because it drives the FALLBACK
+   * path: the dropdown's options come from the local search artifact, so when
+   * that artifact is disabled or fails to load there is nothing to pick from
+   * and the tool must still work. Deleting this would have made a kill-switch
+   * flip turn the whole page into an empty combobox.
    */
   const [term, setTerm] = useState(initialQuery.trim());
 
-  /*
-   * 🛑 TIER 1 ADOPTION. `searchPriceIndex` (the fallback below) pays a
-   * `searchTxt` push-down query to turn `term` into category leaves —
-   * exactly the resolution `useSiteSearch` already does in the browser, at
-   * zero reads, for every other search surface on the site. Resolving here
-   * removes that query from the HOT path; the server is left with only the
-   * one multi-get it cannot avoid.
+  /**
+   * What the dropdown picked: the category id to price, plus its label.
    *
-   * `active` mirrors `term`'s own gate (2+ chars) rather than firing on
-   * mount — consistent with every other `useSiteSearch` caller, which loads
-   * the ~420 KB artifact only once intent is shown.
+   * 🛑 The LABEL is kept alongside the id, not looked up again. The option list
+   * is rebuilt per keystroke inside `loadOptions`, so by the time results
+   * arrive the option that produced the selection may no longer be in the list
+   * — and `PaginatedSelect` renders the trigger from the value it was given.
+   * Without this the chosen item's name would vanish from the control the
+   * moment the query that found it changed.
+   */
+  const [picked, setPicked] = useState<{ id: string; label: string } | null>(null);
+
+  /** Signed in? Decides whether the market half is requested at all. */
+  const session = useOptionalSession();
+  const canSeeMarket = Boolean(session?.user?.uid);
+
+  /*
+   * The artifact, for the dropdown. `active` is true as soon as the control is
+   * on the page: unlike the old submit-driven flow there is no "intent"
+   * threshold to wait for — a combobox the user has just clicked must have
+   * options, and the artifact is a one-time ~420 KB load with a module-scope
+   * singleton behind it, not a per-keystroke cost.
+   */
+  const dropdownIndex = useSearchIndex({
+    active: true,
+    indexEnabled: searchIndexEnabled,
+  });
+
+  /**
+   * Options for the dropdown, resolved LOCALLY on every keystroke.
+   *
+   * 🛑 `async` only to satisfy `loadOptions`' signature — nothing here awaits.
+   * `searchIndex` is a linear scan over ~3,700 prepared records, measured at
+   * 0.76 ms by `verify-search-local.mjs`, so there is no network round trip to
+   * debounce and no Firestore read to bill. This is the whole reason the
+   * dropdown can be a dropdown.
+   *
+   * 🛑 Hits that cannot be priced are DROPPED, not shown disabled. An option
+   * that selects to a card reading "no data" is worse than an absent one — it
+   * looks like the tool failed rather than like the item is not priceable. See
+   * `priceLookupTargetFor` for which types resolve and why.
+   */
+  const loadOptions = useCallback(
+    async (query: string, page: number) => {
+      const idx = dropdownIndex.index;
+      if (!idx || !query.trim()) return { items: [], hasMore: false };
+
+      const hits = searchIndex(idx.artifact, idx.prepared, query, {
+        types: PRICE_LOOKUP_INDEX_TYPES,
+        limit: DROPDOWN_LIMIT,
+      });
+
+      const seen = new Set<string>();
+      const items: PaginatedSelectOption<string>[] = [];
+      for (const hit of hits) {
+        const target = priceLookupTargetFor(hit.href);
+        if (!target || seen.has(target)) continue;
+        seen.add(target);
+        items.push({
+          value: target,
+          /*
+           * The type and the detail both earn their place: `detail` is the
+           * taxonomy path for a category and the classification for a part,
+           * which is how a reader tells three results named "105" apart.
+           */
+          label: `${hit.title}${hit.detail ? ` — ${hit.detail}` : ""}`,
+        });
+      }
+
+      // One page: the matcher already ranked and capped. Paging a ranked list
+      // would invite scrolling past the answer rather than refining the query.
+      return { items, hasMore: false, nextPage: page };
+    },
+    [dropdownIndex.index],
+  );
+
+  /**
+   * 🛑 The dropdown is only usable with an artifact behind it. On `disabled` or
+   * `failed` the page falls back to the original text box, which hits the
+   * server-side `searchTxt` path. Reported as a state rather than silently
+   * degrading, because an empty combobox is indistinguishable from an empty
+   * catalogue.
+   */
+  const dropdownUsable =
+    dropdownIndex.status === "ready" || dropdownIndex.status === "loading" ||
+    dropdownIndex.status === "idle";
+
+  /*
+   * 🛑 TIER 1 ADOPTION, kept for the FALLBACK path only.
+   *
+   * `searchPriceIndex` pays a `searchTxt` push-down query to turn a free-text
+   * term into category leaves — the resolution the local artifact does for
+   * free. When the dropdown is driving, no term is ever submitted and this
+   * stays idle; it matters when somebody lands on a shared `?q=` link.
+   *
+   * 🛑 Its `types` now come from `PRICE_LOOKUP_INDEX_TYPES`, not a hand-written
+   * `["model", "category"]`. That literal is why spares were unreachable: the
+   * index has had a `part` type the whole time and this call never asked for
+   * it, so no amount of typing a part name could surface one.
    */
   const local = useSiteSearch(term, {
     active: term.length >= 2,
     indexEnabled: searchIndexEnabled,
-    types: ["model", "category"],
+    types: PRICE_LOOKUP_INDEX_TYPES,
     label: identityLabel,
   });
 
@@ -390,7 +650,13 @@ export function PriceIndexToolView({
     const ids = new Set<string>();
     for (const group of local.result.groups) {
       for (const hit of group.hits) {
-        const id = categoryIdFromHref(hit.href);
+        /*
+         * 🛑 `priceLookupTargetFor`, not a bare `/categories/` regex. The old
+         * `categoryIdFromHref` matched that one shape and returned `null` for
+         * everything else, so a part hit was discarded here even on the rare
+         * occasion one arrived.
+         */
+        const id = priceLookupTargetFor(hit.href);
         if (id) ids.add(id);
       }
     }
@@ -399,6 +665,18 @@ export function PriceIndexToolView({
 
   const localReady = local.status === "ready";
 
+  /**
+   * The ids actually being looked up.
+   *
+   * A dropdown pick wins outright: it is an explicit choice of ONE thing, and
+   * mixing it with the term-resolved set would answer a question the user
+   * stopped asking the moment they picked.
+   */
+  const lookupIds = React.useMemo(
+    () => (picked ? [picked.id] : localReady ? localIds : []),
+    [picked, localReady, localIds],
+  );
+
   /*
    * The bands-only request. Enabled ONLY once local resolution has actually
    * produced something — an empty `localIds` with the gate open would be a
@@ -406,13 +684,48 @@ export function PriceIndexToolView({
    * but which is still a request worth not making.
    */
   const bandsQuery = useQuery({
-    queryKey: ["tool", "price-index", "bands", localIds],
+    queryKey: ["tool", "price-index", "bands", lookupIds],
     queryFn: () =>
-      apiClient.get<{ results: PriceIndexResultRow[] }>(TOOL_ENDPOINTS.PRICE_INDEX_BANDS(localIds)),
-    enabled: localReady && localIds.length > 0,
+      apiClient.get<{ results: PriceIndexResultRow[] }>(TOOL_ENDPOINTS.PRICE_INDEX_BANDS(lookupIds)),
+    enabled: lookupIds.length > 0,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+
+  /**
+   * The MARKET half — a separate request, on purpose.
+   *
+   * 🛑 `enabled: canSeeMarket && …`. A guest never issues it, so the gate costs
+   * a signed-out visitor nothing and cannot 401-spam the console. The server
+   * enforces it too (`auth: true`); this is the client half of one decision,
+   * not the decision itself.
+   *
+   * 🛑 A separate request rather than two more fields on `bandsQuery`, because
+   * that route is PUBLIC and edge-cached: folding viewer-dependent content into
+   * it would let one signed-in lookup populate the entry every guest then
+   * reads. The full argument is in `price-index/market.ts`.
+   *
+   * 🛑 Its failure is deliberately NOT surfaced as the page's error. The sold
+   * band is the page; the ask is context. A 401 or a cold-start blip on the
+   * context must not replace a working result with "could not look that up".
+   */
+  const marketQuery = useQuery({
+    queryKey: ["tool", "price-index", "market", lookupIds],
+    queryFn: () =>
+      apiClient.get<{ results: PriceIndexMarketRowView[] }>(
+        TOOL_ENDPOINTS.PRICE_INDEX_MARKET(lookupIds),
+      ),
+    enabled: canSeeMarket && lookupIds.length > 0,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  /** `categoryId` -> its market band, for the per-card join. */
+  const marketById = React.useMemo(() => {
+    const m = new Map<string, PriceIndexMarketRowView>();
+    for (const row of marketQuery.data?.results ?? []) m.set(row.categoryId, row);
+    return m;
+  }, [marketQuery.data]);
 
   /*
    * The FALLBACK. Fires only when the local index is off, failed, or
@@ -420,7 +733,8 @@ export function PriceIndexToolView({
    * working index never pays for both. Same cache posture as it always had.
    */
   const fallbackEnabled =
-    term.length >= 2 && (local.status === "failed" || local.status === "disabled" ||
+    !picked && term.length >= 2 &&
+    (local.status === "failed" || local.status === "disabled" ||
       (localReady && localIds.length === 0));
   const fallbackQuery = useQuery({
     queryKey: ["tool", "price-index", term],
@@ -439,11 +753,11 @@ export function PriceIndexToolView({
    * how many ids were resolved, so there is nothing left uncounted the way
    * the query-based path's search step could leave behind.
    */
-  const query = localReady && localIds.length > 0
+  const query = lookupIds.length > 0
     ? {
         data: bandsQuery.data
           ? {
-              query: term,
+              query: picked ? picked.label : term,
               results: bandsQuery.data.results,
               truncated: false,
               /*
@@ -493,31 +807,70 @@ export function PriceIndexToolView({
               <Heading level={1}>What it sold for</Heading>
             </Row>
             <Text color="muted">
-              Search any model, part or set to see what it actually sold for on
+              Pick any bey, part or set to see what it actually sold for on
               LetItRip — the range, the median, the average and the most recent
-              sale, broken down by condition.
+              sale, broken down by condition — alongside what other Indian shops
+              are asking for the same thing.
             </Text>
           </Stack>
 
-          <Form onSubmit={(e) => e.preventDefault()}>
-            {() => (
-              <Row gap="sm" align="end" wrap className="min-w-0">
-                <Div className="flex-1 min-w-[16rem]">
-                  <FieldInput
-                    name="q"
-                    label="Search"
-                    value={draft}
-                    onChange={setDraft}
-                    placeholder="e.g. Dragoon G, Storm Pegasus, rubber flat…"
-                  />
-                </Div>
-                <Button type="submit" isLoading={loading} onClick={() => run(draft)}>
-                  <Search className="w-4 h-4" aria-hidden="true" />
-                  Look up
-                </Button>
-              </Row>
-            )}
-          </Form>
+          {/*
+            🛑 A SEARCHABLE DROPDOWN, not a text box, and the reason is a
+            reported bug rather than taste. A free-text box let a query like
+            "dragoon g" through to a matcher where a one-character term matched
+            almost everything, so the page answered with eight near-identical
+            cards. A combobox makes the user pick one real taxonomy node, which
+            removes the ambiguity at the source instead of ranking around it.
+
+            CLAUDE.md § "Select / Dropdown Rules" also requires it: any
+            selection over five options goes through `<PaginatedSelect>`, and
+            this one spans ~1,185 categories, 216 models and 753 parts.
+          */}
+          {dropdownUsable ? (
+            <Stack gap="xs" className="min-w-0">
+              <PaginatedSelect<string>
+                value={picked?.id ?? null}
+                onChange={(value, option) =>
+                  setPicked(value && option ? { id: value, label: option.label } : null)
+                }
+                loadOptions={loadOptions}
+                placeholder="Pick a bey, part or set…"
+                searchPlaceholder="Type a name, code or part — e.g. Dragoon G, 1B, rubber flat"
+                noResultsText="Nothing in our catalogue matches that."
+                ariaLabel="Search the catalogue for a price lookup"
+              />
+              <Text size="xs" color="muted">
+                Models, parts and spares, eras and brands — straight from our own
+                catalogue, so what you pick is a real thing we can price.
+              </Text>
+            </Stack>
+          ) : (
+            /*
+             * 🛑 The fallback, for a disabled or failed search artifact. Without
+             * it a kill-switch flip would leave an empty combobox and no way to
+             * search at all — the dropdown has no options without the artifact,
+             * but the server-side `searchTxt` path still works.
+             */
+            <Form onSubmit={(e) => e.preventDefault()}>
+              {() => (
+                <Row gap="sm" align="end" wrap className="min-w-0">
+                  <Div className="flex-1 min-w-[16rem]">
+                    <FieldInput
+                      name="q"
+                      label="Search"
+                      value={draft}
+                      onChange={setDraft}
+                      placeholder="e.g. Dragoon G, Storm Pegasus, rubber flat…"
+                    />
+                  </Div>
+                  <Button type="submit" isLoading={loading} onClick={() => run(draft)}>
+                    <Search className="w-4 h-4" aria-hidden="true" />
+                    Look up
+                  </Button>
+                </Row>
+              )}
+            </Form>
+          )}
 
           {error && (
             <Text size="sm" color="error" role="alert">
@@ -527,12 +880,25 @@ export function PriceIndexToolView({
 
           {!hasQuery && !loading && !error && (
             <Stack gap="xs" padding="card" rounded="lg" surface="muted" className="min-w-0">
-              <Text weight="semibold">Why these prices are different</Text>
+              <Text weight="semibold">Two numbers, and the gap matters</Text>
               <Text size="sm" color="muted">
-                Everything here is a completed sale on LetItRip — not an asking
-                price, and not a guess. We publish a figure only once{" "}
-                {threshold} or more sales support it, and the index is
-                recomputed once a day, so it is deliberately a day behind.
+                <Span weight="semibold">Sold</Span> is a completed sale on
+                LetItRip — not an asking price and not a guess. We publish a
+                figure only once {threshold} or more sales support it, and the
+                index is recomputed once a day, so it is deliberately a day
+                behind.
+              </Text>
+              {/*
+                🛑 Says the asks exist even to a guest who cannot see them. The
+                alternative is a page that silently has less on it when signed
+                out, which reads as missing data rather than as a gate.
+              */}
+              <Text size="sm" color="muted">
+                <Span weight="semibold">Asked</Span> is what other Indian shops
+                list the same thing for, measured across fifteen catalogues.
+                {canSeeMarket
+                  ? " Shown beside our own sales — never averaged with them, because an ask is not a sale."
+                  : " Sign in to see it beside our own sales."}
               </Text>
             </Stack>
           )}
@@ -547,7 +913,13 @@ export function PriceIndexToolView({
           {data && data.results.length > 0 && (
             <Stack gap="md" className="min-w-0">
               {data.results.map((row) => (
-                <ResultCard key={row.categoryId} row={row} threshold={threshold} />
+                <ResultCard
+                  key={row.categoryId}
+                  row={row}
+                  threshold={threshold}
+                  market={marketById.get(row.categoryId)}
+                  canSeeMarket={canSeeMarket}
+                />
               ))}
               {data.truncated && (
                 <Text size="sm" color="muted">

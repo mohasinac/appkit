@@ -387,6 +387,67 @@ const COLLECTION_MAP = {
  * A root with no mapping yields NO franchise (living collectibles are not an
  * IP) — see `FRANCHISE_BY_CATEGORY_ROOT`.
  */
+/**
+ * The real, sellable catalogue — everything else in the product seed is demo
+ * furniture and is DROPPED HERE, before anything is written.
+ *
+ * ── 🛑 WHY A FILTER AND NOT A DELETION ────────────────────────────────────
+ *
+ * The fixtures stay in their files on purpose: they are the only coverage
+ * several features have (every `preOrderProductionStatus` value, a sold-out
+ * reservation, a depleted digital-code pool, an ended-unsold auction), and
+ * the tester checklist deep-links to them by id. Deleting them would silently
+ * remove that coverage. Not LOADING them is the part that was wanted.
+ *
+ * ── 🛑 WHY THIS HAD TO EXIST ──────────────────────────────────────────────
+ *
+ * `appkit-seed load` writes every registered row and `purge` deletes
+ * `seedPurpose: "test"` afterwards — so the demo listings came BACK on every
+ * reseed, and anyone who ran `load` to fix imagery silently republished 76
+ * fake products to the live storefront. That happened twice in one session.
+ * The owner's instruction was "delete them from the seed itself and make sure
+ * they do not return"; this is the point where that can be guaranteed, since
+ * every write path funnels through here.
+ *
+ * ── The discriminator is the STORE, not the listing type ──────────────────
+ *
+ * `store-beyblade-arena` is the fictional demo seller; `store-letitrip-
+ * official` is the real one. Keying on the store rather than on a per-file
+ * allow-list means a fixture added to ANY product seed file later is excluded
+ * automatically, which is the failure mode this is replacing — a list that
+ * has to be remembered is a list that drifts.
+ *
+ * Set `SEED_INCLUDE_DEMO=1` to load them anyway, for local demo work.
+ */
+const REAL_STORE_IDS = new Set(["store-letitrip-official"]);
+
+function realListingsOnly(products) {
+  if (process.env.SEED_INCLUDE_DEMO === "1") {
+    console.log("▌ SEED_INCLUDE_DEMO=1 — demo listings INCLUDED");
+    return products;
+  }
+  /*
+   * 🛑 TWO rules, because the store alone is not enough. Six prize-draw
+   * fixtures live under the REAL store and are still demo furniture — their
+   * imagery is a 460-byte generated colour tile from /images/seed-tiles/,
+   * which is the giveaway: a listing nobody photographed is a listing nobody
+   * intends to sell. Measured before writing this: every one of the six, and
+   * nothing real, matches.
+   */
+  const isPlaceholder = (p) => {
+    const urls = [p?.mainImage, ...(Array.isArray(p?.images) ? p.images : [])]
+      .map((v) => (typeof v === "string" ? v : v?.url))
+      .filter(Boolean);
+    return urls.length > 0 && urls.every((u) => String(u).includes("/images/seed-tiles/"));
+  };
+  const kept = products.filter((p) => REAL_STORE_IDS.has(p?.storeId) && !isPlaceholder(p));
+  const dropped = products.length - kept.length;
+  if (dropped > 0) {
+    console.log(`  • ${dropped} demo listing(s) not loaded (set SEED_INCLUDE_DEMO=1 to include)`);
+  }
+  return kept;
+}
+
 function withFranchise(products) {
   let stamped = 0;
   const out = products.map((p) => {
@@ -494,7 +555,7 @@ const SEED_DATA_MAP = {
   // standalone brands collection/seed exists anymore.
   categories: categoriesSeedData,
   stores: storesSeedData,
-  products: withFranchise(withDerivedCategoryFields([
+  products: withFranchise(withDerivedCategoryFields(realListingsOnly([
     ...(productsStandardSeedData || []),
     // Real, wiki-verified Beyblade X listings under store-letitrip-official —
     // added 2026-10-19 for PhonePe merchant registration, which requires at
@@ -536,7 +597,7 @@ const SEED_DATA_MAP = {
      * what should happen to a leaf that now has BOTH a real listing and a
      * generated one.
      */
-  ])),
+  ]))),
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,

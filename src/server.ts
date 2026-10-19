@@ -1045,6 +1045,15 @@ export type {
   PriceIndexSearchResult,
   PriceIndexSearchResultBand,
 } from "./_internal/server/features/price-index/search";
+/*
+ * The MARKET half of the same tool, and a separate export because it is a
+ * separate AUTHENTICATED endpoint — the competitor-derived band must not ride
+ * the public, edge-cached sold response. The full argument is in that module's
+ * own header; the short version is that merging them would either poison a
+ * public cache with viewer-dependent content or cost the sold half its cache.
+ */
+export { getPriceIndexMarketForIds } from "./_internal/server/features/price-index/market";
+export type { PriceIndexMarketRow } from "./_internal/server/features/price-index/market";
 export {
   protectionAvailability,
   computeProtectionFees,

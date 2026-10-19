@@ -174,13 +174,40 @@ export function prepareIndex(artifact: SearchIndexArtifact): readonly Prepared[]
   });
 }
 
+/**
+ * The shortest term allowed to match MID-WORD.
+ *
+ * 🛑 This exists because of a reported bug, and the mechanism is worth stating:
+ * the substring tier is `flat.includes(term)`, and for a one-character term
+ * that is satisfied by almost every record in the artifact. A category's
+ * `detail` is its " › "-joined path, so `"g"` matches
+ * `"Spinning Tops › Beyblade Original › Dragoon Line"` on the `g` in
+ * "Spinning". AND semantics then cannot narrow anything: `"dragoon g"` scored
+ * identically to `"dragoon"` and returned every Dragoon in the catalogue —
+ * which is the "even if I type dragoon g the results show everything"
+ * complaint, and it was never the AND logic's fault.
+ *
+ * 🛑 It does NOT reintroduce a minimum query length. This module's header is
+ * explicit that typing `"d"` and seeing something is what a local index is FOR,
+ * and it still does: the EXACT and PREFIX tiers are untouched, so a
+ * one-character term still matches any word starting with it. Only the mid-word
+ * tier is gated, because one character appearing somewhere inside a string is
+ * not evidence of intent.
+ *
+ * Two rather than three: `"cx"`, `"bu"`, `"gt"` and `"1b"` are real product
+ * vocabulary a collector types, and they discriminate.
+ */
+const MIN_SUBSTRING_TERM = 2;
+
 /** Best match quality for one term against one field. 0 means no match. */
 function fieldScore(term: string, words: readonly string[], flat: string): number {
   if (!flat) return 0;
   for (const w of words) if (w === term) return S_EXACT;
   for (const w of words) if (w.startsWith(term)) return S_PREFIX;
-  // Mid-word. The capability the token index cannot have.
-  if (flat.includes(term)) return S_SUBSTRING;
+  // Mid-word. The capability the token index cannot have — but see
+  // MIN_SUBSTRING_TERM: for a single character it is not a capability, it is a
+  // match against everything.
+  if (term.length >= MIN_SUBSTRING_TERM && flat.includes(term)) return S_SUBSTRING;
   return 0;
 }
 

@@ -43,42 +43,14 @@ import { createRouteHandler } from "../../../../../next/api/routeHandler";
 import { getProviders } from "../../../../../contracts";
 import { categoriesRepository } from "../../../repository/categories.repository";
 import { isAdminUser } from "../../../../auth/role-predicates";
-import type { CategoryPriceGuidance } from "../../../schemas/category-content";
 import {
   priceGuidanceOnSellerBasis,
   describePriceGuidanceBasis,
 } from "../../../../../_internal/shared/features/categories/price-guidance";
-
-const MAX_ANCESTORS = 8;
-
-interface CategoryDoc {
-  parentIds?: string[];
-  productDefaults?: { priceGuidance?: CategoryPriceGuidance };
-}
-
-/**
- * Nearest-first ancestor walk for `priceGuidance`, same shape as
- * `description-template/route.ts`'s `resolveInherited` — the leaf's own band
- * wins, and only a leaf with none falls back to the nearest ancestor that has
- * one. ONE bounded `findByIds`, not a sequential walk: a seller form hitting
- * this on every category change should not pay up to eight round trips for it.
- */
-async function resolveInheritedGuidance(
-  leaf: CategoryDoc,
-): Promise<CategoryPriceGuidance | undefined> {
-  if (leaf.productDefaults?.priceGuidance) return leaf.productDefaults.priceGuidance;
-  const parentIds = (leaf.parentIds ?? []).slice(0, MAX_ANCESTORS);
-  if (parentIds.length === 0) return undefined;
-
-  const nearestFirst = [...parentIds].reverse();
-  const ancestors = await categoriesRepository.findByIds(nearestFirst);
-  const byId = new Map(ancestors.map((a) => [a.id, a as CategoryDoc]));
-  for (const pid of nearestFirst) {
-    const guidance = byId.get(pid)?.productDefaults?.priceGuidance;
-    if (guidance) return guidance;
-  }
-  return undefined;
-}
+import {
+  resolveInheritedGuidance,
+  type GuidanceLeafDoc,
+} from "../../../../../_internal/server/features/categories/price-guidance-resolve";
 
 export const GET = createRouteHandler<unknown, { id: string }>({
   roles: ["seller", "admin", "moderator"],
@@ -94,7 +66,7 @@ export const GET = createRouteHandler<unknown, { id: string }>({
         return NextResponse.json({ success: false, error: "Category not found" }, { status: 404 });
       }
 
-      const guidance = await resolveInheritedGuidance(leafDoc as CategoryDoc);
+      const guidance = await resolveInheritedGuidance(leafDoc as GuidanceLeafDoc);
       if (!guidance) {
         return NextResponse.json({ success: true, data: { guidance: null, basisNote: null } });
       }
