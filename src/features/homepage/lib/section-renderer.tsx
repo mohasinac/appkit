@@ -43,6 +43,7 @@ import { CollectionCardsSection } from "../components/CollectionCardsSection";
 import type { CarouselSlide } from "../types/index";
 import type {
   HomepageSectionDocument,
+  SectionType,
   WelcomeSectionConfig,
   StatsSectionConfig,
   CarouselSectionConfig,
@@ -121,19 +122,61 @@ const AD_SLOT_MAP: Record<string, keyof MarketplaceHomepageViewAdSlots> = {
   faq: "afterFAQ",
 };
 
-function renderSectionElement(
-  section: HomepageSectionDocument,
-  newsletterFormSlot: React.ReactNode,
-  faqItems: FaqItem[],
-  slides: CarouselSlide[],
-  liveStats: LiveStatsMap,
-  sectionData: SectionData,
-  brand: HomepageBrand | undefined,
-): React.ReactNode {
-  const { type, config } = section;
+/**
+ * Every surface a `SectionDef` may be mounted on.
+ *
+ * `"homepage"` is the only one any renderer currently receives data for — see
+ * the note on `SectionDef.surfaces` below. The others are declared now so a
+ * reuse decision has somewhere reviewable to live, ahead of the data-loading
+ * work that would make them real.
+ */
+export type SectionSurface = "homepage" | "category" | "brand" | "product" | "store";
 
-  switch (type) {
-    case "carousel": {
+interface SectionRenderCtx {
+  config: unknown;
+  newsletterFormSlot: React.ReactNode;
+  faqItems: FaqItem[];
+  slides: CarouselSlide[];
+  liveStats: LiveStatsMap;
+  sectionData: SectionData;
+  brand: HomepageBrand | undefined;
+}
+
+interface SectionDef {
+  /**
+   * Surfaces this section type is fit to render on, by domain semantics —
+   * e.g. `stats` is a platform-wide counter and has no meaning scoped to one
+   * category, so it is `["homepage"]` only.
+   *
+   * 🛑 Declared, not yet CONSUMED. `MarketplaceHomepageView`'s data pre-fetch
+   * (the `Promise.all` keyed on `activeTypes`) is still homepage-only, so
+   * mounting a `category`-tagged section on an actual category page would
+   * render with no `sectionData` and fall back to empty-state. Wiring a
+   * second host page's data loader is real work this field does not do by
+   * itself — it is the reviewable DECISION of where a type belongs, so that
+   * decision does not have to be re-litigated per call site the day someone
+   * builds the loader.
+   */
+  surfaces: readonly SectionSurface[];
+  render: (ctx: SectionRenderCtx) => React.ReactNode;
+}
+
+/**
+ * One entry per `SectionType`, replacing the 25-arm `switch` this registry is
+ * carved from verbatim — every case body below is byte-identical to its
+ * switch arm, only re-homed into an object property.
+ *
+ * `Record<SectionType, SectionDef>` is EXHAUSTIVE: a `SectionType` added to
+ * the union without an entry here is a compile error, where the switch's
+ * `default: return null` let a listed-but-unhandled type render nothing with
+ * no signal anywhere. `audit-homepage-config-coverage` still passes with zero
+ * changes — it does a bare name-presence `test()` against this file as a flat
+ * string, and every config field name below is exactly where it always was.
+ */
+const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
+  carousel: {
+    surfaces: ["homepage"],
+    render: ({ config, slides }) => {
       const cfg = config as CarouselSectionConfig;
       return (
         <HeroCarousel
@@ -146,9 +189,12 @@ function renderSectionElement(
           showArrows={cfg?.showArrows}
         />
       );
-    }
+    },
+  },
 
-    case "welcome": {
+  welcome: {
+    surfaces: ["homepage"],
+    render: ({ config, brand }) => {
       const cfg = config as WelcomeSectionConfig;
       return (
         <WelcomeSection
@@ -166,9 +212,12 @@ function renderSectionElement(
           brandLogoText={brand?.shortName}
         />
       );
-    }
+    },
+  },
 
-    case "categories": {
+  categories: {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as CategoriesSectionConfig;
       return (
         <ShopByCategorySection
@@ -184,9 +233,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "stats": {
+  stats: {
+    surfaces: ["homepage"],
+    render: ({ config, liveStats }) => {
       const cfg = config as StatsSectionConfig;
       const stats = Array.isArray(cfg?.stats)
         ? cfg.stats
@@ -217,9 +269,12 @@ function renderSectionElement(
         : [];
       if (stats.length === 0) return null;
       return <StatsCounterSection stats={stats} title={cleanTitle(cfg?.title)} />;
-    }
+    },
+  },
 
-    case "products": {
+  products: {
+    surfaces: ["homepage", "category", "brand", "product"],
+    render: ({ config, sectionData }) => {
       const cfg = config as ProductsSectionConfig;
       return (
         <FeaturedProductsSection
@@ -239,9 +294,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "auctions": {
+  auctions: {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as AuctionsSectionConfig;
       return (
         <FeaturedAuctionsSection
@@ -258,9 +316,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "pre-orders": {
+  "pre-orders": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as PreOrdersSectionConfig;
       return (
         <FeaturedPreOrdersSection
@@ -277,9 +338,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "stores": {
+  stores: {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as StoresSectionConfig;
       return (
         <FeaturedStoresSection
@@ -294,9 +358,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "events": {
+  events: {
+    surfaces: ["homepage"],
+    render: ({ config, sectionData }) => {
       const cfg = config as EventsSectionConfig;
       return (
         <EventsSection
@@ -311,9 +378,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "reviews": {
+  reviews: {
+    surfaces: ["homepage", "category", "brand", "product"],
+    render: ({ config }) => {
       const cfg = config as ReviewsSectionConfig;
       return (
         <HomepageCustomerReviewsSection
@@ -328,9 +398,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "banner": {
+  banner: {
+    surfaces: ["homepage", "category", "brand", "product"],
+    render: ({ config }) => {
       const cfg = config as BannerSectionConfig;
       // CTAs come from the configured buttons; the component's own neutral
       // defaults fill in when none are set. Previously both labels and both
@@ -349,9 +422,12 @@ function renderSectionElement(
           secondaryHref={secondaryBtn?.link}
         />
       );
-    }
+    },
+  },
 
-    case "trust-indicators": {
+  "trust-indicators": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, brand }) => {
       const cfg = config as TrustIndicatorsSectionConfig;
       const configured = (cfg?.indicators ?? [])
         .filter((ind) => ind?.title?.trim())
@@ -370,9 +446,12 @@ function renderSectionElement(
           items={configured.length > 0 ? configured : DEFAULT_TRUST_FEATURES}
         />
       );
-    }
+    },
+  },
 
-    case "features": {
+  features: {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
       const cfg = config as FeaturesSectionConfig;
       // `items` is the real shape; `features: string[]` is the legacy one and
       // becomes title-only cards. Neither reached the component before — it
@@ -392,9 +471,12 @@ function renderSectionElement(
           learnMoreLabel={cfg?.learnMoreLabel || SECTION_COPY.featuresLearnMore}
         />
       );
-    }
+    },
+  },
 
-    case "whatsapp-community": {
+  "whatsapp-community": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
       const cfg = config as WhatsAppCommunitySectionConfig;
       return (
         <WhatsAppCommunitySection
@@ -409,9 +491,12 @@ function renderSectionElement(
           buttonText={cfg?.buttonText}
         />
       );
-    }
+    },
+  },
 
-    case "faq": {
+  faq: {
+    surfaces: ["homepage", "category", "brand", "product"],
+    render: ({ config, faqItems }) => {
       const cfg = config as FAQSectionConfig;
       if (!cfg?.showOnHomepage || faqItems.length === 0) return null;
 
@@ -450,9 +535,12 @@ function renderSectionElement(
           moreCount={readSaturated ? 0 : totalFaqs - slicedItems.length}
         />
       );
-    }
+    },
+  },
 
-    case "blog-articles": {
+  "blog-articles": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as BlogArticlesSectionConfig;
       return (
         <BlogArticlesSection
@@ -466,9 +554,12 @@ function renderSectionElement(
           showThumbnails={cfg?.showThumbnails}
         />
       );
-    }
+    },
+  },
 
-    case "newsletter": {
+  newsletter: {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, newsletterFormSlot }) => {
       const cfg = config as NewsletterSectionConfig;
       return (
         <NewsletterSection
@@ -479,9 +570,16 @@ function renderSectionElement(
           renderForm={() => newsletterFormSlot ?? null}
         />
       );
-    }
+    },
+  },
 
-    case "brands": {
+  brands: {
+    // Homepage-only, not category/brand: a rail of OTHER brands reads as
+    // intended cross-sell on the homepage, but on a BRAND's own detail page it
+    // would compete with that brand's reason for being there. A category page
+    // has `BrandsSection` reachable via its own tabs/grid already.
+    surfaces: ["homepage"],
+    render: ({ config, sectionData }) => {
       const cfg = config as BrandsSectionConfig;
       return (
         <BrandsSection
@@ -498,9 +596,12 @@ function renderSectionElement(
           loop={cfg?.loop}
         />
       );
-    }
+    },
+  },
 
-    case "social-feed": {
+  "social-feed": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
       const cfg = config as SocialFeedSectionConfig;
       const hasStaticPosts = Array.isArray(cfg?.posts) && cfg.posts.length > 0;
       if (!cfg?.platform || (!cfg?.handle && !hasStaticPosts)) return null;
@@ -518,9 +619,12 @@ function renderSectionElement(
           posts={cfg.posts}
         />
       );
-    }
+    },
+  },
 
-    case "custom-cards": {
+  "custom-cards": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config }) => {
       const cfg = config as CustomCardsSectionConfig;
       if (!cfg?.cards?.length) return null;
       return (
@@ -534,9 +638,12 @@ function renderSectionElement(
           loop={cfg.loop}
         />
       );
-    }
+    },
+  },
 
-    case "google-reviews": {
+  "google-reviews": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
       const cfg = config as GoogleReviewsSectionConfig;
       return (
         <GoogleReviewsSection
@@ -550,9 +657,12 @@ function renderSectionElement(
           googleMapsUrl={cfg?.googleMapsUrl}
         />
       );
-    }
+    },
+  },
 
-    case "featured-bundles": {
+  "featured-bundles": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config, sectionData }) => {
       const cfg = config as FeaturedBundlesSectionConfig;
       return (
         <FeaturedBundlesSection
@@ -564,30 +674,62 @@ function renderSectionElement(
           viewMoreLabel={cfg?.viewMoreLabel}
         />
       );
-    }
+    },
+  },
 
-    case "prize-draws": {
+  "prize-draws": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config }) => {
       const cfg = config as PrizeDrawsSectionConfig;
       return <PrizeDrawsSection config={cfg ?? {}} />;
-    }
+    },
+  },
 
-    case "event-raffles": {
+  "event-raffles": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
       const cfg = config as EventRafflesSectionConfig;
       return <EventRafflesSection config={cfg ?? {}} />;
-    }
+    },
+  },
 
-    case "collection-cards": {
+  "collection-cards": {
+    surfaces: ["homepage", "category", "brand"],
+    render: ({ config }) => {
       const cfg = config as CollectionCardsSectionConfig;
       return (
         <CollectionCardsSection
           config={cfg ?? { collections: [] }}
         />
       );
-    }
+    },
+  },
+};
 
-    default:
-      return null;
-  }
+function renderSectionElement(
+  section: HomepageSectionDocument,
+  newsletterFormSlot: React.ReactNode,
+  faqItems: FaqItem[],
+  slides: CarouselSlide[],
+  liveStats: LiveStatsMap,
+  sectionData: SectionData,
+  brand: HomepageBrand | undefined,
+): React.ReactNode {
+  const def = SECTION_REGISTRY[section.type];
+  // No `default` arm left to fall through to — an unmapped `SectionType` is a
+  // compile error on the registry object above, not a runtime `null`. This
+  // branch only guards a value that bypassed the type system (a raw Firestore
+  // read of a document whose `type` predates the current union).
+  if (!def) return null;
+  return def.render({
+    config: section.config,
+    newsletterFormSlot,
+    faqItems,
+    slides,
+    liveStats,
+    sectionData,
+    brand,
+  });
 }
 
 export function renderSection(
