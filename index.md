@@ -2,7 +2,7 @@
 
 Auto-generated inventory of code/config files with detected exported and internal symbols.
 
-Generated: 2026-10-19T11:16:14.810Z
+Generated: 2026-10-19T12:42:30.574Z
 Total indexed files: 2687
 
 | Name | Path | Usage / What Is Inside | Symbols (Exported + Internal) |
@@ -1833,7 +1833,7 @@ Total indexed files: 2687
 | SearchView.tsx | src/features/search/components/SearchView.tsx | Feature-level UI/view composition | const hasQuery, fn SearchView, interface SearchViewProps |
 | useNavSuggestions.ts | src/features/search/hooks/useNavSuggestions.ts | Feature module logic, hooks, types, or schemas | const abortRef, const body, const ctrl, const DEFAULT_MIN_CHARS, const items, const mappedType, const params, const res, const SUGGESTION_TYPE_PARAM_MAP, const SUGGESTIONS_ENDPOINT, const timerRef, const trimmed, fn useNavSuggestions, interface NavSuggestionRecord, type value |
 | useSearch.ts | src/features/search/hooks/useSearch.ts | Feature module logic, hooks, types, or schemas | const categoriesEndpoint, const searchEndpoint, fn useSearch, interface UseSearchOptions |
-| useSearchIndex.ts | src/features/search/hooks/useSearchIndex.ts | Feature module logic, hooks, types, or schemas | const artifact, const BUCKET, const enabled, const manifest, const res, const status, fn __resetSearchIndexForTests, fn ensureSearchIndex, fn load, fn useSearchIndex, interface LoadedSearchIndex, interface SearchIndexState, interface UseSearchIndexOptions, let alive, let failureReason, let inflight, type PreparedIndex, type SearchIndexArtifact, type SearchIndexManifestPublic, type SearchIndexStatus |
+| useSearchIndex.ts | src/features/search/hooks/useSearchIndex.ts | Feature module logic, hooks, types, or schemas | const artifact, const BUCKET, const enabled, const manifest, const n, const res, const status, fn __resetSearchIndexForTests, fn ensureSearchIndex, fn load, fn useSearchIndex, interface LoadedSearchIndex, interface SearchIndexState, interface UseSearchIndexOptions, let alive, let failureReason, let inflight, type PreparedIndex, type SearchIndexArtifact, type SearchIndexManifestPublic, type SearchIndexStatus |
 | index.ts | src/features/search/index.ts | Feature module logic, hooks, types, or schemas | export manifest |
 | manifest.ts | src/features/search/manifest.ts | Feature module logic, hooks, types, or schemas | const manifest |
 | en.json | src/features/search/messages/en.json | Feature module logic, hooks, types, or schemas | - |
