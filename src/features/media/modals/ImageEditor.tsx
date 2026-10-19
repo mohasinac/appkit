@@ -9,6 +9,11 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Cropper, CropperRef } from "react-advanced-cropper";
+import {
+  IMAGE_DOWNSCALE_FORMAT,
+  IMAGE_DOWNSCALE_MAX_EDGE,
+  IMAGE_DOWNSCALE_QUALITY,
+} from "../upload/downscale-image";
 /*
  * 🛑 NO `import "react-advanced-cropper/dist/style.css"` HERE.
  *
@@ -44,9 +49,11 @@ export function ImageEditor({
   onClose,
   onSave,
   aspectRatio,
-  outputFormat = "image/webp",
-  outputQuality = 0.9,
-  maxOutputWidth = 2048,
+  // Shared with the always-on upload downscaler so the crop path and the
+  // non-crop path cannot produce differently-sized masters.
+  outputFormat = IMAGE_DOWNSCALE_FORMAT,
+  outputQuality = IMAGE_DOWNSCALE_QUALITY,
+  maxOutputWidth = IMAGE_DOWNSCALE_MAX_EDGE,
 }: ImageEditorProps) {
   const t = useTranslations("mediaEditor");
   const { showToast } = useToast();

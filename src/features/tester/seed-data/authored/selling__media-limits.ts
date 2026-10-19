@@ -19,6 +19,7 @@
  * @tag sideEffects:none
  */
 
+import { PRODUCT_MAX_IMAGES } from "../../../../_internal/shared/media/limits";
 import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
@@ -47,43 +48,41 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "Leave the editor without saving so no draft product is created.",
   },
-  "checklist-selling-media-limits-media-tenth-image-uploads": {
+  "checklist-selling-media-limits-media-last-allowed-image-uploads": {
     roles: ["seller"],
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and type 'QA Product media-tenth' as the title.",
+      "Open /store/products/new and type 'QA Product media-boundary' as the title.",
       "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
-      "Upload public/test-media/sample-image.png to the gallery nine times, counting the previews after each.",
-      "Upload it a tenth time.",
-      "Read the preview count and any message about the limit.",
+      `Read the counter under the gallery and note the cap it advertises. It must read ${PRODUCT_MAX_IMAGES}. 🛑 Do NOT assume a number here — the cap is one constant (\`PRODUCT_MAX_IMAGES\`) and this case is written against whatever it currently is.`,
+      "Upload public/test-media/sample-image.png to the gallery repeatedly, one at a time, counting the previews after each, until the control refuses one.",
+      "Record the preview count reached at the moment of the first refusal.",
     ],
-    inputs: { title: "QA Product media-tenth", uploadCount: 10, cap: 10 },
-    expectedBehaviour:
-      "The tenth image is accepted, because the cap is ten and a cap is inclusive of its own number. An off-by-one that refuses the tenth is the most likely error and the least likely to be noticed, since nine images look like plenty.",
-    expectedUiState:
-      "Ten previews are present after the tenth upload. Any limit message reads as 'you have reached the limit' rather than as a rejection of the tenth file.",
-    expectedData: { imageCount: 10 },
+    inputs: { title: "QA Product media-boundary", cap: PRODUCT_MAX_IMAGES },
+    expectedBehaviour: `Every upload up to and including the ${PRODUCT_MAX_IMAGES}th is accepted, because a cap is inclusive of its own number. An off-by-one that refuses the last one is the most likely error and the least likely to be noticed, since one short of the cap still looks like plenty.`,
+    expectedUiState: `The preview count reached before the first refusal is exactly ${PRODUCT_MAX_IMAGES}. The counter's own advertised cap and the count actually reachable must be the SAME number — a form that says ${PRODUCT_MAX_IMAGES} and allows ${PRODUCT_MAX_IMAGES - 1} is the failure, whichever number it says.`,
+    expectedData: { imageCount: PRODUCT_MAX_IMAGES },
     endResult: "Leave the editor without saving.",
   },
-  "checklist-selling-media-limits-media-eleventh-image-refused-client-side": {
+  "checklist-selling-media-limits-media-over-cap-image-refused-client-side": {
     roles: ["seller"],
     startPage: "/store/products/new",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123!.",
-      "Open /store/products/new and upload public/test-media/sample-image.png ten times.",
+      "Open /store/products/new.",
       "Click 'Show all fields (advanced)' before touching any media. 🛑 /store/products/new opens the QUICK form by default for a create of a standard listing, and it has ONE field — 'Product Image' — with no gallery and no video field at all. Every media step below needs the advanced form.",
+      `Fill the gallery to its cap with public/test-media/sample-image.png (${PRODUCT_MAX_IMAGES} uploads).`,
       "Open the browser's Network panel.",
-      "Attempt an eleventh upload of the same file.",
+      "Attempt one more upload of the same file.",
       "Read the message shown and count the previews.",
-      "Check the Network panel for any upload request made by that eleventh attempt.",
+      "Check the Network panel for any signed-URL or upload request made by that over-cap attempt.",
     ],
-    inputs: { cap: 10, attemptCount: 11 },
+    inputs: { cap: PRODUCT_MAX_IMAGES, attemptCount: PRODUCT_MAX_IMAGES + 1 },
     expectedBehaviour:
-      "The eleventh is refused in the browser, before any signed URL is requested. Refusing it only after the bytes have reached storage leaves an orphaned object behind and spends the seller's upload time on a file that was never going to be kept.",
-    expectedUiState:
-      "A readable message names the ten-image limit, the preview count stays at ten, and the Network panel shows NO upload request for the eleventh attempt. A refusal that appears only after a round trip is the failure.",
-    expectedData: { imageCount: 10, uploadRequestsForEleventh: 0 },
+      "The over-cap file is refused in the browser, before any signed URL is requested. Refusing it only after the bytes have reached storage leaves an orphaned object behind and spends the seller's upload time on a file that was never going to be kept.",
+    expectedUiState: `A readable message NAMES the limit as ${PRODUCT_MAX_IMAGES}, the preview count stays at ${PRODUCT_MAX_IMAGES}, and the Network panel shows NO upload request for the over-cap attempt. A refusal that appears only after a round trip is the failure, and so is a refusal that does not say what the limit is.`,
+    expectedData: { imageCount: PRODUCT_MAX_IMAGES, uploadRequestsForOverCap: 0 },
     endResult: "Leave the editor without saving.",
   },
   "checklist-selling-media-limits-media-second-video-refused-first-kept": {

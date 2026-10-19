@@ -19,6 +19,10 @@
  * @tag sideEffects:none
  */
 
+import {
+  PRODUCT_MAX_IMAGES,
+  PRODUCT_MAX_VIDEOS,
+} from "../../../_internal/shared/media/limits";
 import type { TesterCaseRole, TesterChecklistItemDocument } from "../schemas";
 import { assignDefaultPhases } from "../utils/phases";
 import { happyPathPages } from "./_happy-path";
@@ -2431,20 +2435,21 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         /*
          * REMOVED 2026-09-11 — `media-upload-images-capped-at-5`.
          *
-         * It asserted the gallery caps at "5 images (not 10)". The cap was
-         * raised to 10 (`PRODUCT_MAX_IMAGES`, shared/media/limits.ts:37) and the
-         * `selling/media-limits` page asserts the opposite in its own label:
-         * "The 10th gallery image uploads — the 5th used to fail with a 400".
-         *
-         * So this case documented the OLD behaviour as the expectation. It
-         * would fail against correct code, and anyone "fixing" the product to
-         * satisfy it would re-break ten-image support. Its id encoded the wrong
-         * number too, so correcting the label alone would still mislead.
+         * It asserted the gallery caps at "5 images (not 10)". The cap had been
+         * raised (`PRODUCT_MAX_IMAGES`), so the case documented the OLD
+         * behaviour as the expectation: it would fail against correct code, and
+         * anyone "fixing" the product to satisfy it would re-break multi-image
+         * support. Its id encoded the wrong number too, so correcting the label
+         * alone would still mislead.
          *
          * The invariant it really tested — the stated limit equals the enforced
-         * limit — survives in `media-eleventh-image-refused-client-side`, which
-         * requires the refusal to name the limit ("You can upload up to 10
-         * images."). Nothing was lost.
+         * limit — survives in `media-over-cap-image-refused-client-side`, which
+         * requires the refusal to NAME the limit. Nothing was lost.
+         *
+         * 🛑 And the lesson got applied rather than just recorded: the cap moved
+         * again on 2026-10-19 (10 -> 24), and the two cases that would have gone
+         * stale now interpolate `PRODUCT_MAX_IMAGES` and carry no number in
+         * their ids. See the note on the `media-limits` page below.
          */
         {
           key: "media-upload-video-duration",
@@ -3052,28 +3057,44 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       pageKey: "media-limits",
-      pageLabel: "Media \u2014 ten images and one video, on every listing type",
+      pageLabel: `Media \u2014 ${PRODUCT_MAX_IMAGES} images and ${PRODUCT_MAX_VIDEOS} video, on every listing type`,
       href: "/store/products/new",
       cases: [
         {
           key: "media-gallery-accepts-images-and-video",
           label: "The gallery takes BOTH images and a video, and shows a live per-type count",
-          description:
-            "Changed 2026-09-04. BEFORE the single-media control on the listing form was video-only (`kind=\"video\"`), so the one \"add media\" affordance a seller saw refused photos. AFTER: the gallery accepts image files and a video file in the same control, and a counter under it reads \"N/10 images \u00b7 N/1 video\" as you add them.",
+          description: `Changed 2026-09-04. BEFORE the single-media control on the listing form was video-only (\`kind="video"\`), so the one "add media" affordance a seller saw refused photos. AFTER: the gallery accepts image files and a video file in the same control, and a counter under it reads "N/${PRODUCT_MAX_IMAGES} images \u00b7 N/${PRODUCT_MAX_VIDEOS} video" as you add them.`,
+          href: "/store/products/new",
+        },
+        /*
+         * \ud83d\uded1 These two cases state the cap by INTERPOLATING `PRODUCT_MAX_IMAGES`,
+         * and their keys no longer encode a number.
+         *
+         * The pair they replace (`media-tenth-image-uploads`,
+         * `media-eleventh-image-refused-client-side`) hard-coded 10 in the key,
+         * the label, the description and the authored procedure's `inputs` \u2014
+         * so raising the cap to 24 on 2026-10-19 would have left four cases
+         * asserting the OLD number and failing against correct code. That is
+         * exactly what the removal note above this page records happening the
+         * last time the cap moved, including its warning that "its id encoded
+         * the wrong number too, so correcting the label alone would still
+         * mislead".
+         *
+         * What is actually under test is the BOUNDARY, not the number: that the
+         * last allowed image succeeds (the off-by-one), and that the first one
+         * over is refused client-side. Both are stated cap-agnostically, so the
+         * next change to the cap needs no edit here at all.
+         */
+        {
+          key: "media-last-allowed-image-uploads",
+          label: "The LAST allowed gallery image uploads \u2014 the cap is inclusive of its own number",
+          description: `Add images one at a time, counting previews, until the control refuses one. BEFORE: the gallery sent its Nth image as index N+1 while the server's signed-URL guard rejected any index above the cap \u2014 so the LAST slot of every product form returned a 400 that read as a random upload failure. AFTER: the count you reach before any refusal must be exactly ${PRODUCT_MAX_IMAGES}, not ${PRODUCT_MAX_IMAGES - 1}. An off-by-one here is the most likely error and the least likely to be noticed, because one short of the cap still looks like plenty.`,
           href: "/store/products/new",
         },
         {
-          key: "media-tenth-image-uploads",
-          label: "The 10th gallery image uploads \u2014 the 5th used to fail with a 400",
-          description:
-            "BEFORE: the gallery was capped at 5 and sent its Nth image as index N+1, while the server's signed-URL guard rejected any index above 5 \u2014 so the LAST slot of every product form returned a 400 that read as a random upload failure. AFTER: add ten images one at a time. All ten must succeed, including the tenth.",
-          href: "/store/products/new",
-        },
-        {
-          key: "media-eleventh-image-refused-client-side",
-          label: "The 11th image is refused by the FORM with a clear message, not by the server",
-          description:
-            "Try to add an 11th image. The control must refuse it before uploading, naming the limit (\"You can upload up to 10 images.\"). A server-side 400 arriving after the bytes have gone up is the wrong behaviour \u2014 the user has already waited.",
+          key: "media-over-cap-image-refused-client-side",
+          label: "The first image OVER the cap is refused by the FORM, not by the server",
+          description: `With ${PRODUCT_MAX_IMAGES} images already added, attempt one more with the browser's Network panel open. The control must refuse it before requesting a signed URL, and the message must NAME the limit ("You can upload up to ${PRODUCT_MAX_IMAGES} images."). A server-side 400 arriving after the bytes have gone up is the wrong behaviour twice over \u2014 the seller has already waited, and an orphaned object is left in storage.`,
           href: "/store/products/new",
         },
         {
@@ -3085,9 +3106,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "media-caps-flat-across-types",
-          label: "The same 10 + 1 applies to an auction and a pre-order \u2014 there is no per-type table",
-          description:
-            "Repeat the ten-image check on /store/auctions/new and /store/pre-orders/new. Both must allow ten. BEFORE the server carried separate AUCTION_IMAGE_MAX and PREORDER_IMAGE_MAX constants, both 5, disagreeing with everything else.",
+          label: `The same ${PRODUCT_MAX_IMAGES} + ${PRODUCT_MAX_VIDEOS} applies to an auction and a pre-order \u2014 there is no per-type table`,
+          description: `Repeat the boundary check on /store/auctions/new and /store/pre-orders/new. Both must allow ${PRODUCT_MAX_IMAGES}. BEFORE the server carried separate AUCTION_IMAGE_MAX and PREORDER_IMAGE_MAX constants, both 5, disagreeing with everything else.`,
           href: "/store/auctions/new",
         },
         {
@@ -7293,6 +7313,52 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
    * tester reporting "I did the actions" as if it were "the outcome was right".
    * ══════════════════════════════════════════════════════════════════════════ */
   ...group("money-flows", "Money Flows (end to end)", moneyFlowsPages),
+
+  /*
+   * The sticker-sheet kiss-cut tracer. Admin-only, under a PUBLIC prefix.
+   *
+   * 🛑 `adminOnly` is a presentation flag for the checklist, not the gate. The
+   * real boundary is the layout's server-side session read, which redirects a
+   * non-admin before any HTML exists — which is exactly what the buyer and
+   * guest cases below assert. Marking it admin-only here only keeps it out of a
+   * non-admin tester's list.
+   *
+   * Every case is an explicit BEFORE -> AFTER, because almost every defect this
+   * feature can have returns 200 with plausible content: a wrong part count, a
+   * watermarked original, a millimetre derived from a DPI nobody confirmed. A
+   * case reading "check the tracer works" would pass against all three.
+   */
+  ...group(
+    "tools",
+    "Tools",
+    [
+      {
+        pageKey: "sticker-tracer",
+        pageLabel: "Sticker sheet tracer",
+        href: "/tools/sticker-tracer",
+        cases: [
+          { key: "enclosed-region-opaque", label: "An enclosed region matching the paper colour stays OPAQUE inside its sticker" },
+          { key: "white-on-white-edge", label: "A white sticker edge on white paper is found with no per-sticker parameter" },
+          { key: "background-model-named", label: "The result names which background model ran (paper vs art)" },
+          { key: "name-required", label: "A run cannot be committed without a name" },
+          { key: "no-watermark-on-original", label: "A downloaded original carries NO watermark and comes from a signed GCS URL" },
+          { key: "progress-names-stage", label: "Live progress names the current STAGE, not just a percentage" },
+          { key: "failure-names-stage", label: "A failed run names the stage it died in and survives a reload" },
+          { key: "runs-never-overwrite", label: "A second run never overwrites the first — both stay in history" },
+          { key: "accepted-differs-from-succeeded", label: "'accepted' and 'succeeded' are distinct, and exactly one run is accepted" },
+          { key: "fullres-only-after-accept", label: "Full-resolution parts and the export surface appear only after accepting" },
+          { key: "no-dpi-no-mm", label: "With no confirmed DPI the export REFUSES rather than inventing a scale" },
+          { key: "oversized-named-not-scaled", label: "A part too wide for the machine is NAMED before export, never scaled" },
+          { key: "node-budget-reported", label: "The export node budget reports its cost in millimetres of deviation" },
+          { key: "retry-shows-clamp", label: "A retry SHOWS the resume clamp before it is applied" },
+          { key: "buyer-redirected", label: "A signed-in buyer is redirected and sees no Tools entry for it" },
+          { key: "guest-redirected", label: "A signed-out visitor is redirected; /tools itself is unaffected" },
+          { key: "storage-meter-honest", label: "The storage meter reports object COUNT beside bytes, and says when it truncated" },
+        ],
+      },
+    ],
+    { adminOnly: true },
+  ),
 ];
 
 const defaultPhases = assignDefaultPhases(

@@ -22,6 +22,25 @@ export interface MediaAssetDocument {
    * any other upload without parsing filename strings.
    */
   contextType?: string;
+  /**
+   * When the watermark was composited INTO the stored bytes, at upload time.
+   *
+   * 🛑 Absent means "legacy" and is the load-bearing default. Until 2026-10-19
+   * `/api/media/[...slug]` sharp-decoded, composited and re-encoded EVERY image
+   * response — the cost profile behind the HTTP 402 Fast Origin Transfer
+   * suspension (Root Cause #104). Now `/api/media/finalize` bakes the mark once
+   * and stamps this field, and the proxy skips the composite when it is set.
+   *
+   * So an asset uploaded before this existed has no field, the proxy watermarks
+   * it on read exactly as it always did, and **no backfill is required** for the
+   * 504 rows that predate it. A backfill can run later via the Async Job
+   * Primitive, or never.
+   *
+   * It is written in the SAME operation that stores the watermarked bytes, so a
+   * row can never claim a mark the object does not carry — which would show an
+   * unwatermarked image, or double-watermark it the other way round.
+   */
+  watermarkedAt?: Date;
   createdAt: Date;
 }
 

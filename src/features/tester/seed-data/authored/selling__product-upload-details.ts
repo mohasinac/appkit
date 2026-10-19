@@ -7,13 +7,18 @@
  *
  *   Main image    ImageUpload,      label "Main Image", enableAdvancedCrop,
  *                                   cropAspectRatio 1, max 10 MB, index 1
- *   Gallery       MediaUploadList,  label "Gallery (up to 10 images + 1 video)",
- *                                   maxItems 11, maxImages 10, maxVideos 1,
- *                                   maxSizeMB 50, indices 2..11
+ *   Gallery       MediaUploadList,  label "Gallery (up to N images + 1 video)",
+ *                                   maxItems PRODUCT_MAX_IMAGES + PRODUCT_MAX_VIDEOS,
+ *                                   maxSizeMB 50, indices 2..PRODUCT_IMAGE_INDEX_MAX
  *   Video panel   MediaUploadField, YouTube / external URL / trim / poster
  *
- * The existing pages already cover the CAPS (selling/media-limits: 10th uploads,
- * 11th refused, second video refused) and the basics (selling/listing-a-product:
+ * 🛑 The caps are deliberately named here rather than numbered. They are one
+ * constant (`_internal/shared/media/limits.ts`) and they MOVE — 5 -> 10 -> 24 so
+ * far — and every previous revision of this comment pinned the number of the day.
+ *
+ * The existing pages already cover the CAPS (selling/media-limits: the last
+ * allowed image uploads, the first over the cap is refused client-side, a second
+ * video is refused) and the basics (selling/listing-a-product:
  * upload, preview, remove, crop, multiple). This page covers what neither does:
  * refusal copy, type refusal, ordering, index collision, and the video path that
  * was returning a 500 until 2026-09.

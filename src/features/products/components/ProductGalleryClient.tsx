@@ -81,8 +81,20 @@ export function ProductGalleryClient({ images, video, productName }: ProductGall
   return (
     <Stack gap="3">
       {/* Main slide — click to open theater-mode lightbox */}
+      {/*
+       * `aspect-square` + `objectFit="contain"`, deliberately — a square box so the
+       * grid stays uniform, letterboxed so nothing is ever cropped away.
+       *
+       * Measured 2026-10-19 (docs/research/competitor-crawl-2026-10/images.md): the
+       * single most common stored shape in this market is 1280x1706 — portrait 3:4,
+       * 134 of 306 images on toycollectorsindia. Under the previous `cover` default
+       * a square box removed ~25% of such an image's height, and on a pre-owned
+       * listing that is the end where wear shows. `surface="muted"` makes the
+       * letterbox read as a frame rather than a gap.
+       */}
       <Div
         rounded="xl"
+        surface="muted"
         className="overflow-hidden border border-[var(--appkit-color-border-subtle)] cursor-zoom-in aspect-square w-full relative"
         onClick={() => setLightboxIndex(activeIndex)}
         role="button"
@@ -108,6 +120,7 @@ export function ProductGalleryClient({ images, video, productName }: ProductGall
                 : `Product image ${activeIndex + 1}`
           }
           size="gallery"
+          objectFit="contain"
           className="transition-transform duration-300 hover:scale-105"
         />
         {activeSlide.kind === "video" && (

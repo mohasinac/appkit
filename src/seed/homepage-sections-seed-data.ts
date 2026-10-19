@@ -1,12 +1,28 @@
 /*
  * WHY: Seeds the homepage layout — which sections render, in what order, with what copy.
- * WHAT: 22 sections (21 enabled + 1 deliberately disabled), ordered 1..21 contiguously.
+ * WHAT: 23 sections (22 enabled + 1 deliberately disabled), ordered 1..23 contiguously.
+ *
+ * 🛑 That count and range are ASSERTED, not described — `order` must stay unique
+ * and contiguous. Until 2026-10-19 this header read "22 sections … 1..21" while
+ * the file held 23 documents numbered 1..22, and `section-systems-matrix` and
+ * `section-featured-products` BOTH claimed `order: 5`. `MarketplaceHomepageView`
+ * tie-breaks on `updatedAt` (identical for both) and then `id.localeCompare`, so
+ * the live running order of the homepage was decided alphabetically — a silent
+ * accident, not a layout decision.
  *
  * ORDER follows current marketplace-homepage research rather than the previous
- * arbitrary arrangement: hero → trust → orient (categories) → shop (products,
- * auctions, pre-orders, bundles) → supply (stores) → social proof (reviews) →
- * engage (events, raffles, prize draws) → editorial (blog) → convert (seller
- * banner, newsletter) → reassure (stats, security, community, FAQ, brands).
+ * arbitrary arrangement: hero → trust → orient (categories, systems matrix) →
+ * shop (products, auctions, pre-orders, bundles) → supply (stores) → social
+ * proof (reviews) → engage (events, raffles, prize draws) → editorial (blog) →
+ * convert (seller banner, newsletter) → reassure (stats, security, community,
+ * FAQ, brands).
+ *
+ * The systems matrix sits at 5, between the generation tiles and the first
+ * product rail, because that is where the measured leader puts it: on
+ * worldhobbyshop "Browse Beyblade Systems & Series" (25 text links) follows
+ * "Shop Beyblades by Generation" (6 image tiles) and precedes the one product
+ * rail — taxonomy routing before merchandising. See
+ * docs/research/competitor-crawl-2026-10/layout.md.
  *
  * Baymard's finding drives the top: a static hero outperforms a carousel, and
  * the one documented carousel win came from demoting it BELOW a static hero.
@@ -154,7 +170,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-featured-products",
     type: "products",
-    order: 5,
+    order: 6,
     enabled: true,
     config: {
       title: "Featured Products",
@@ -173,7 +189,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-live-auctions",
     type: "auctions",
-    order: 6,
+    order: 7,
     enabled: true,
     config: {
       title: "Live Auctions",
@@ -192,7 +208,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-pre-orders",
     type: "pre-orders",
-    order: 7,
+    order: 8,
     enabled: true,
     config: {
       title: "Reserve Before It Ships",
@@ -211,7 +227,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-featured-bundles",
     type: "featured-bundles",
-    order: 8,
+    order: 9,
     enabled: true,
     config: {
       title: "Curated Bundles",
@@ -228,7 +244,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-featured-stores",
     type: "stores",
-    order: 9,
+    order: 10,
     enabled: true,
     config: {
       title: "Featured Stores",
@@ -247,7 +263,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-collector-reviews",
     type: "reviews",
-    order: 10,
+    order: 11,
     enabled: true,
     config: {
       title: "What Buyers Say",
@@ -267,7 +283,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-upcoming-events",
     type: "events",
-    order: 11,
+    order: 12,
     enabled: true,
     config: {
       title: "Events & Offers",
@@ -285,7 +301,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-event-raffles",
     type: "event-raffles",
-    order: 12,
+    order: 13,
     enabled: true,
     config: {
       title: "Raffles & Spin Wheels",
@@ -302,7 +318,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-prize-draws",
     type: "prize-draws",
-    order: 13,
+    order: 14,
     enabled: true,
     config: {
       title: "Prize Draws",
@@ -322,7 +338,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-collector-blog",
     type: "blog-articles",
-    order: 14,
+    order: 15,
     enabled: true,
     config: {
       title: "From Our Blog",
@@ -343,7 +359,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-beyblade-banner",
     type: "banner",
-    order: 15,
+    order: 16,
     enabled: true,
     config: {
       height: "md",
@@ -369,7 +385,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-newsletter",
     type: "newsletter",
-    order: 16,
+    order: 17,
     enabled: true,
     config: {
       title: "Get new listings first",
@@ -389,7 +405,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-platform-stats",
     type: "stats",
-    order: 17,
+    order: 18,
     enabled: true,
     config: {
       title: "By the numbers",
@@ -407,7 +423,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-platform-features",
     type: "features",
-    order: 18,
+    order: 19,
     enabled: true,
     config: {
       title: "Security You Can Trust",
@@ -444,7 +460,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-whatsapp-community",
     type: "whatsapp-community",
-    order: 19,
+    order: 20,
     enabled: true,
     config: {
       title: "Join the community",
@@ -466,7 +482,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-homepage-faq",
     type: "faq",
-    order: 20,
+    order: 21,
     enabled: true,
     config: {
       title: "Frequently Asked Questions",
@@ -536,7 +552,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-top-brands",
     type: "brands",
-    order: 21,
+    order: 22,
     enabled: true,
     config: {
       title: "Top Brands",
@@ -558,7 +574,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-social-feed-instagram",
     type: "social-feed",
-    order: 22,
+    order: 23,
     enabled: false,
     config: {
       title: "Follow along",

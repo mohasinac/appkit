@@ -33,8 +33,18 @@ export type MediaKind = "image" | "video" | "pdf";
 // array — raising it is a schema change, not a constant change.
 // ---------------------------------------------------------------------------
 
-/** Gallery images per listing. */
-export const PRODUCT_MAX_IMAGES = 10;
+/**
+ * Gallery images per listing.
+ *
+ * 24, raised from 10 on 2026-10-19 against measured competitor data
+ * (docs/research/competitor-crawl-2026-10/images.md): sampled maxima are
+ * raikagesbeybladestore 21, hobsoncollectibles 20, toycollectorsindia 31.
+ * 24 covers a pre-owned lot with headroom; 31 is a single outlier and sizing
+ * for it would be sizing for one listing.
+ *
+ * The market MEDIAN is 1-4, so this is a ceiling, not a target.
+ */
+export const PRODUCT_MAX_IMAGES = 24;
 
 /** Videos per listing. Bounded by `ProductDocument.video` being singular. */
 export const PRODUCT_MAX_VIDEOS = 1;

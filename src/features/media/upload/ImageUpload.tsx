@@ -1,5 +1,10 @@
 "use client"
-import { IMAGE_ACCEPT_ATTR } from "../../../_internal/shared/media/limits";
+import {
+  IMAGE_ACCEPT_ATTR,
+  MAX_IMAGE_BYTES,
+  MEGABYTE,
+} from "../../../_internal/shared/media/limits";
+import { downscaleImageFile } from "./downscale-image";
 import { normalizeError } from "../../../errors/normalize";
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
@@ -87,8 +92,12 @@ export function ImageUpload({
   currentImage,
   onUpload,
   onChange,
-  accept = "image/*",
-  maxSizeMB = 10,
+  // 🛑 Never `image/*` — that wildcard matches `image/svg+xml`, which
+  // `ALLOWED_IMAGE_MIMES` deliberately excludes as an XSS surface and which the
+  // server 422s only after the crop editor has already opened on it. See
+  // `IMAGE_ACCEPT_ATTR`'s own docstring in `_internal/shared/media/limits.ts`.
+  accept = IMAGE_ACCEPT_ATTR,
+  maxSizeMB = MAX_IMAGE_BYTES / MEGABYTE,
   label = "Upload Image",
   helperText,
   captureSource = "both",
@@ -127,7 +136,22 @@ export function ImageUpload({
     try {
       setUploading(true);
       setProgress(30);
-      const url = await onUpload(file);
+      /*
+       * The single choke point for all six upload paths (direct, crop-save,
+       * crop-close, advanced-save, advanced-close, camera), so bounding the
+       * master here covers every one.
+       *
+       * 🛑 Safe to apply even when `cropData` is present: `ImageCropData` is
+       * `{ position, zoom }` in CSS PERCENTAGES — the modal's own header says
+       * "Returns CSS position/zoom percentages" and applies them as
+       * `left: ${position.x}%` — so it is scale-invariant and a uniform
+       * downscale cannot misalign a crop. Pixel-rect crop data would not be.
+       *
+       * A file already produced by `ImageEditor` comes back untouched (it is
+       * webp within 2048 already), so there is no double re-encode.
+       */
+      const prepared = await downscaleImageFile(file);
+      const url = await onUpload(prepared);
       setProgress(100);
       setPreview(url);
       onChange?.(url);

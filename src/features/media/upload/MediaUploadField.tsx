@@ -32,7 +32,18 @@ import dynamic from "next/dynamic";
 import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { extractVideoPosterFrame, posterBlobAsFile } from "./video-poster";
+import { downscaleImageFile } from "./downscale-image";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
+import {
+  ALLOWED_DOC_MIMES,
+  ALLOWED_MIMES,
+  ALLOWED_VIDEO_MIMES,
+  IMAGE_ACCEPT_ATTR,
+  MAX_IMAGE_BYTES,
+  MAX_PDF_BYTES,
+  MAX_VIDEO_BYTES,
+  MEGABYTE,
+} from "../../../_internal/shared/media/limits";
 
 import { normalizeError } from "../../../errors/normalize";
 
@@ -55,18 +66,39 @@ const CLS_PDF_BADGE = "flex h-8 w-8 shrink-0 items-center justify-center rounded
 const CLS_PDF_NAME = "text-[length:var(--appkit-text-sm)] font-medium text-info underline break-all dark:text-info";
 const CLS_PDF_LINK = "text-[length:var(--appkit-text-sm)] underline break-all text-info dark:text-info";
 
+/*
+ * 🛑 DERIVED from the canonical registry, not restated.
+ *
+ * The `kind` docstring above has always claimed these "auto-derive … from the
+ * canonical media-limits registry". They did not — they were hand-written, and
+ * every one of them was MORE PERMISSIVE than the server, which enforces
+ * `MAX_BYTES[kind]` in BOTH `/api/media/sign` and `/api/media/finalize`. So the
+ * picker accepted work the upload could never complete:
+ *
+ *   image  25 MB  →  server 10 MB
+ *   video 200 MB  →  server 50 MB
+ *   accept "image/*" → matches `image/svg+xml`, which `ALLOWED_IMAGE_MIMES`
+ *                      deliberately excludes as an XSS surface, and which the
+ *                      server 422s only AFTER the crop editor has opened on it
+ *                      (limits.ts's own `IMAGE_ACCEPT_ATTR` docstring).
+ *
+ * Deriving makes the refusal happen in the file picker, where it is a rule,
+ * rather than at the end, where it reads as a failure.
+ */
 const KIND_DEFAULTS: Record<
   Exclude<MediaUploadFieldKind, "auto">,
   { accept: string; maxSizeMB: number }
 > = {
-  image: { accept: "image/*", maxSizeMB: 25 },
-  video: { accept: "video/*", maxSizeMB: 200 },
-  pdf: { accept: "application/pdf", maxSizeMB: 10 },
+  image: { accept: IMAGE_ACCEPT_ATTR, maxSizeMB: MAX_IMAGE_BYTES / MEGABYTE },
+  video: { accept: ALLOWED_VIDEO_MIMES.join(","), maxSizeMB: MAX_VIDEO_BYTES / MEGABYTE },
+  pdf: { accept: ALLOWED_DOC_MIMES.join(","), maxSizeMB: MAX_PDF_BYTES / MEGABYTE },
 };
 
 const AUTO_KIND_DEFAULTS = {
-  accept: "image/*,video/*,application/pdf",
-  maxSizeMB: 200,
+  accept: ALLOWED_MIMES.join(","),
+  // The most permissive of the three, because `auto` genuinely does not know
+  // the kind yet — the per-kind cap is re-checked server-side once it does.
+  maxSizeMB: Math.max(MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, MAX_PDF_BYTES) / MEGABYTE,
 };
 
 export interface MediaUploadFieldProps {
@@ -561,14 +593,24 @@ export function MediaUploadField({
   };
 
   const uploadSingleFile = async (file: File) => {
-    const fileSizeMB = file.size / 1024 / 1024;
+    /*
+     * Bound the pixel dimensions BEFORE the byte check, deliberately.
+     *
+     * The cap is about what we STORE, and a 9 MB phone photo becomes a few
+     * hundred KB here — so checking first would refuse an upload we were about
+     * to make acceptable. Non-images and anything undecodable come back
+     * untouched (see `downscale-image.ts`), so the check below still does its
+     * job for video and PDF.
+     */
+    const prepared = await downscaleImageFile(file);
+    const fileSizeMB = prepared.size / 1024 / 1024;
     if (fileSizeMB > maxSizeMB) {
-      setError(`${file.name}: exceeds ${maxSizeMB}MB limit`);
+      setError(`${prepared.name}: exceeds ${maxSizeMB}MB limit`);
       return null;
     }
-    const url = await onUpload(file);
+    const url = await onUpload(prepared);
     stageUrl(url);
-    return { url, type: file.type };
+    return { url, type: prepared.type };
   };
 
   /**
@@ -654,10 +696,16 @@ export function MediaUploadField({
     setError(null);
     setIsLoading(true);
     try {
-      const url = await onUpload(file);
-      stageUrl(url);
+      /*
+       * Routed through `uploadSingleFile` rather than calling `onUpload`
+       * directly, which is what this did until 2026-10-19 — so a camera capture
+       * skipped BOTH the `maxSizeMB` check and (once added) the downscale. A
+       * full-sensor capture is precisely the large image both exist for.
+       */
+      const result = await uploadSingleFile(file);
+      if (!result) return;
       const poster = await maybeCaptureVideoPoster(file);
-      afterUpload(url, blob.type || mimeType, poster?.posterUrl, poster?.duration);
+      afterUpload(result.url, result.type, poster?.posterUrl, poster?.duration);
     } catch (err) {
       void normalizeError(err);
       setError("Upload failed");
