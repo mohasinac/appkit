@@ -4249,6 +4249,61 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "header-brand-mark-centring",
+      pageLabel: "Header — Centred Brand Mark Never Collides With the Icons",
+      href: "/products",
+      cases: [
+        {
+          key: "mark-clear-of-icons-across-the-lg-band",
+          label:
+            "Sweeping the window from 1024px to 1280px, the centred leaf mark never overlaps the notification, messages, wishlist or cart icons",
+          description:
+            "Fixed 2026-10-19. BEFORE: the mark was `position: absolute; left: 50%` inside the title row, so the row's `justify-between` reserved no space for it and the right-hand cluster grew leftward straight over it. The mark reveals at md (768px) and those four icons reveal at lg (1024px), so from 1024px to roughly 1150px the cluster's left edge crossed the row midpoint and the leaf painted across the bell and the heart. AFTER: resize in ~32px steps from 1024px to 1280px and watch the gap between the wordmark and the first icon. The leaf must sit in clear space at every single step — no part of it may touch an icon's 44px box.",
+          href: "/products",
+        },
+        {
+          key: "mark-clear-signed-out-worst-case",
+          label:
+            "SIGNED OUT at ~1100px — where 'Sign in' and 'Register' make the cluster widest — the mark is still clear of everything",
+          description:
+            "Signed out is the worst case, not the easiest: the two auth buttons (~160px together) stand in for a single 44px avatar, so the cluster reaches ~120px further left than it does signed in. This is the exact width and session the original screenshot was taken at. Compare the same width signed in and signed out; both must be clean, and if only one fails say which.",
+          href: "/products",
+        },
+        {
+          key: "mark-shifts-rather-than-overlapping",
+          label:
+            "When the cluster is too wide to leave room, the mark moves off-centre — it never ends up underneath an icon, and no control is clipped at the window edge",
+          description:
+            "The mark is now one of three in-flow tracks, so a crowded row makes it YIELD. Narrow past the point where a perfectly centred mark would no longer fit and confirm the degradation: the leaf slides toward the wordmark and stays fully visible, the icons keep their full 44px boxes, and nothing is cut off at the right edge. A leaf that vanishes under an icon, or a hamburger sliced by the edge, are both failures — record which.",
+          href: "/products",
+        },
+        {
+          key: "mark-centred-at-wide-widths",
+          label:
+            "At 1440px and wider the leaf is centred in the header, not nudged to one side",
+          description:
+            "With room to spare the two side tracks split the free space evenly, which should put the leaf on the header's midpoint. Maximise the window and eyeball it against the centre of the page — a mark that is visibly off-centre at a wide width means the tracks are no longer balanced, which is a different fault from the collision and should be reported separately.",
+          href: "/products",
+        },
+        {
+          key: "mark-absent-below-md",
+          label:
+            "At 767px and below there is no centred leaf, the wordmark keeps its own small leaf prefix, and the header has no odd empty gap",
+          description:
+            "The centred mark is `hidden` below md, which removes it as a layout item entirely — so the header should look exactly as it always has on mobile. Check 767px, 640px and 320px: no centred leaf, a small leaf immediately left of the 'LetItRip' wordmark, the action cluster still flush to the right edge with no stray gap, and the hamburger fully visible and tappable at 320px.",
+          href: "/products",
+        },
+        {
+          key: "mark-centred-in-left-hand-mode",
+          label:
+            "In left-hand mode the wordmark and the icons swap sides, the leaf stays centred, and it still overlaps nothing",
+          description:
+            "Hand mode mirrors the row, so this is where a layout fix most easily half-works. Turn on left-hand mode, then repeat the 1024px–1280px sweep: the wordmark must sit flush against the RIGHT edge with no gap, the icon cluster flush against the LEFT edge with the hamburger outermost, and the leaf still centred and untouched. A wordmark floating away from its edge means a side track lost its mirrored alignment.",
+          href: "/products",
+        },
+      ],
+    },
+    {
       pageKey: "nav-reachability",
       pageLabel: "Navigation — Every Item Reachable at Every Width",
       href: "/products",

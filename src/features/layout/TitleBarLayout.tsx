@@ -321,13 +321,36 @@ export function TitleBarLayout({
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         {/* TB1 — primary row, always visible.
             `reverse="hand"` swaps the wordmark and the action cluster in
-            left-hand mode. The centred mark below is `position: absolute`, so
-            it is out of flow and unaffected — see its own note. */}
-        <Row justify="between" gap="none" reverse="hand" className="relative h-14">
+            left-hand mode.
+
+            🛑 THREE IN-FLOW TRACKS — do not take the centre mark out of flow.
+            The two side rows are `flex-1` with NO `min-w-0`, so each is at
+            least its own min-content and they otherwise split the free space
+            evenly: the centre track therefore sits at the row's midpoint
+            whenever there is room, and the mark is exactly centred without
+            `left-1/2`. When the action cluster outgrows its half, the left
+            track yields and the mark SHIFTS — it can never be overlapped.
+
+            It used to be `absolute left-1/2 -translate-x-1/2`, i.e. out of
+            flex flow, so `justify="between"` reserved no space for it and the
+            right-hand cluster grew straight over it. The two sides also reveal
+            at different breakpoints — the mark at `md`, the bell/messages/
+            wishlist/cart at `lg` — so from `lg` to ~1150px the cluster's left
+            edge crossed the midpoint and sat on top of the first icons in it.
+            Signed out was worse: "Sign in + Register" (~160px) stands in for a
+            44px avatar. No breakpoint can answer "does this fit"; only layout
+            can. */}
+        <Row gap="none" reverse="hand" className="relative h-14">
           {/* Left: #1 — wordmark, always shown. Mobile also gets the icon
               mark prefixed before the text (md:hidden) since the centred
-              mark below has no room on narrow viewports. */}
-          <Row gap="3">
+              mark below has no room on narrow viewports.
+
+              `reverse="hand"` is required now that this row is a wide `flex-1`
+              track rather than an auto-width item: `justify-content:flex-start`
+              under `row-reverse` packs at the RIGHT edge, which is where the
+              wordmark belongs in left-hand mode. Without it the content would
+              hug the track's left edge and leave a gap at the viewport edge. */}
+          <Row gap="3" reverse="hand" className="flex-1">
             <Link
               href={logoHref}
               aria-label={brandName}
@@ -345,10 +368,15 @@ export function TitleBarLayout({
               configured, and swaps to the admin's raster upload when one is.
 
               Hand-neutral by design — do NOT add `reverse="hand"` here. It is
-              absolutely positioned (out of flex flow, so `flex-direction` can't
-              reach it) and `left-1/2 -translate-x-1/2` centres it independent of
-              its own width. A centred brand mark must not move with hand mode. */}
-          <Row className="hidden md:flex absolute inset-y-0 left-1/2 -translate-x-1/2" align="center">
+              the middle of three tracks, so it stays put when the two sides
+              swap; a centred brand mark must not move with hand mode. It holds
+              one child, so reversing would be a no-op on its contents anyway.
+
+              `hidden` below `md` removes it as a flex item entirely
+              (`display:none`), so the two side tracks split the full width and
+              the row is byte-identical to the old `justify="between"` layout
+              on narrow viewports. */}
+          <Row className="hidden md:flex flex-none" align="center">
             <Link
               href={logoHref}
               aria-label={brandName}
@@ -360,8 +388,20 @@ export function TitleBarLayout({
 
           {/* Right: #3 — all action buttons (left edge in left-hand mode).
               wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile.
-              Mirrored so the hamburger stays in the outermost corner. */}
-          <Row gap="xs" reverse="hand">
+              Mirrored so the hamburger stays in the outermost corner.
+
+              `justify="end"` is CORRECT alongside `reverse="hand"` — the same
+              reasoning as TB2 below. `row-reverse` inverts the main axis, so
+              main-end IS the left edge, and one declaration pins this cluster
+              to the outer edge in both hand modes. It is load-bearing now that
+              the track is `flex-1` rather than an auto-width item sized by the
+              container's `justify="between"`.
+
+              No `min-w-0`: `min-width:auto` keeps this track at least its own
+              min-content, so a wide cluster pushes the centre mark aside
+              instead of shrinking under it and clipping (the shell is
+              `overflow-x-clip`, so clipped is gone, not scrollable). */}
+          <Row gap="xs" reverse="hand" justify="end" className="flex-1">
             {devSlot}
             {navSlot}
             {compareEl}
