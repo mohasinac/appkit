@@ -1,11 +1,21 @@
 /**
  * D2 Fix 4 — CROSS-RESOURCE search.
  *
- * 🛑 `/search` is a pure REDIRECT today: it maps each of 15
- * `SearchResourceType` values to a browse route and `redirect()`s, `noindex`.
- * So there is **no cross-resource search at all** — the dropdown picks which
- * single listing page to send you to, and a buyer searching "dranzer" cannot
- * see that we have a product, an auction, a blog post and an FAQ about it.
+ * 🛑 CORRECTED 2026-10-19 — this header asserted the opposite of the truth.
+ *
+ * It read: "`/search` is a pure REDIRECT today … there is no cross-resource
+ * search at all." That described the state this module was WRITTEN to fix,
+ * and it stayed on the file after the fix shipped — so the one document
+ * explaining the feature told every later reader the feature did not exist.
+ *
+ * What is true now: `/search` is a real grouped results page, the header
+ * reaches it, and this module is TIER 2 — the authenticated, server-side
+ * half. The public half is a prebuilt artifact searched in the browser at
+ * zero Firestore reads, and this one is what serves a viewer's OWN records
+ * (`scoped-sources.ts`) and what the kill switch falls back to when the
+ * artifact is unavailable.
+ *
+ * That fallback is the reason this file is not deleted.
  *
  * ── WHY THIS IS AFFORDABLE ─────────────────────────────────────────────────
  *

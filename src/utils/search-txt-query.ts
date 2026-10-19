@@ -127,6 +127,18 @@ export interface SearchWindowModel {
  *
  * `refineSearchTxt` grew a real-pagination mode, and `products` was the only
  * caller converted — deliberately, so the other eleven stayed byte-identical.
+ *
+ * 🛑 That sentence is now HISTORY, not status. Measured 2026-10-19: ELEVEN
+ * repositories use `beginSearchWindow`, and `audit-listing-search-intact`
+ * (C6) enforces all three parts of the conversion on each of them — doing
+ * parts 1 and 3 without 2 "reads exactly like a working conversion and is
+ * the half that no-ops", which is why the audit checks the triple rather
+ * than the presence of the call.
+ *
+ * `faqs` is the deliberate holdout: it hand-rolls the refine and returns the
+ * legacy page-only shape, which this file's own docstring describes as
+ * "preserved verbatim for unconverted callers". That is a known limitation,
+ * not a defect — do not "fix" it as a bug (Rule #4).
  * The conversion is mechanical and has THREE parts that must all happen:
  *
  *   1. fetch a bounded WINDOW instead of the requested page;
