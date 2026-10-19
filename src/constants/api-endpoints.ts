@@ -352,6 +352,15 @@ export const CATEGORY_ENDPOINTS = {
    */
   DESCRIPTION_TEMPLATE: (id: string, variant?: string) =>
     `/api/categories/${id}/description-template${variant ? `?variant=${variant}` : ""}`,
+  /**
+   * The inherited `priceGuidance` band, restated on the calling seller's own
+   * tax basis — seller/admin/moderator only. Deliberately a SEPARATE
+   * endpoint from `DESCRIPTION_TEMPLATE`: that one is public and edge-cached
+   * so anyone can fetch it, and `priceGuidance` is withheld from that
+   * response for the same reason a listing's own price is hidden from guests
+   * (CLAUDE.md § "Guest price gating").
+   */
+  PRICE_GUIDANCE: (id: string) => `/api/categories/${id}/price-guidance`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -370,6 +379,13 @@ export const TOOL_ENDPOINTS = {
    * its invocation allowance.
    */
   PRICE_INDEX_SEARCH: (q: string) => `/api/tools/price-index?q=${encodeURIComponent(q)}`,
+  /**
+   * Tier 1 adoption — the client resolved these ids LOCALLY, from the
+   * public search artifact, at zero Firestore reads. This route's only job
+   * is the multi-get `searchPriceIndex` otherwise pays for every lookup.
+   */
+  PRICE_INDEX_BANDS: (ids: readonly string[]) =>
+    `/api/tools/price-index/bands?ids=${ids.map(encodeURIComponent).join(",")}`,
 } as const;
 
 /**
@@ -666,6 +682,8 @@ export const SEARCH_ENDPOINTS = {
   SUGGESTIONS: "/api/search/suggestions",
   /** @param params — pre-built querystring (no leading `?`) from a caller-owned URLSearchParams */
   RAW: (params: string) => `/api/search?${params}`,
+  /** Tier 2 — the viewer's own orders/offers/drafts/addresses. `private, no-store`. */
+  SCOPED: (q: string) => `/api/search/scoped?q=${encodeURIComponent(q)}`,
 } as const;
 
 // ---------------------------------------------------------------------------

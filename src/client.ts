@@ -1237,6 +1237,8 @@ export type { FAQCategory, FAQCategoryItem, FAQSortOption } from "./features/faq
 export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
 export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
 export type { CategoryTemplatePickerProps, CategoryTemplateApply } from "./features/categories/components/CategoryTemplatePicker";
+export { PriceGuidanceHint } from "./features/categories/components/PriceGuidanceHint";
+export type { PriceGuidanceHintProps } from "./features/categories/components/PriceGuidanceHint";
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
 export { API_ENDPOINTS } from "./constants/index";
 

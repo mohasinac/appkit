@@ -9565,6 +9565,11 @@ export type {
 // picker (C2c). Fills SellerProductShell's `renderTemplateSelector` slot.
 export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
 export type { CategoryTemplatePickerProps, CategoryTemplateApply } from "./features/categories/components/CategoryTemplatePicker";
+// [CLIENT] PriceGuidanceHint — the seller form's market-price hint, fills
+// ProductForm's `renderPriceGuidance` slot. Same reasoning as the sibling
+// above: seller-facing, never public (CLAUDE.md § "Guest price gating").
+export { PriceGuidanceHint } from "./features/categories/components/PriceGuidanceHint";
+export type { PriceGuidanceHintProps } from "./features/categories/components/PriceGuidanceHint";
 // [CLIENT] BrandInlineSelect â€" searchable brand selector with inline quick-create (default: allowCreate=true).
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
 export type { BrandInlineSelectProps } from "./features/seller/components/BrandInlineSelect";

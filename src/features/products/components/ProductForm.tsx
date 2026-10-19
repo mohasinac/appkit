@@ -162,6 +162,16 @@ export interface ProductFormProps {
   /** Render app-specific category selector. */
   renderCategorySelector?: (args: CategorySelectorRenderArgs) => React.ReactNode;
   /**
+   * Render the seller-facing price hint (`<PriceGuidanceHint categoryId>`)
+   * beside the price field. Omitted when absent — this form has no
+   * data-fetching of its own (every app-specific concern is a render-prop),
+   * and the hint is seller/admin-only, never mounted for a buyer/public
+   * context. The admin path passes nothing here on purpose: pricing an
+   * entire category's catalog from one editor is a different workflow than
+   * a seller pricing their own single listing.
+   */
+  renderPriceGuidance?: (args: { categorySlug: string | undefined }) => React.ReactNode;
+  /**
    * Render app-specific brand selector (select existing or create new).
    * Receives `multi=true` when brandMode is "mixed".
    * If omitted, falls back to a plain text input.
@@ -211,6 +221,7 @@ export function ProductForm({
   canEditTax = false,
   renderDescriptionEditor,
   renderCategorySelector,
+  renderPriceGuidance,
   renderBrandSelector,
   renderStoreAddressSelector,
   onMediaAbort,
@@ -475,6 +486,10 @@ export function ProductForm({
           />
         )}
       </FormGroup>
+
+      {renderPriceGuidance?.({
+        categorySlug: (product.categorySlugs?.[0] ?? product.category) || undefined,
+      })}
 
       {/*
         * Made to order — a per-LISTING flag.

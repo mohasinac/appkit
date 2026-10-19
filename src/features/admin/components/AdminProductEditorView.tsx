@@ -50,6 +50,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
 import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
+import { PriceGuidanceHint } from "../../categories/components/PriceGuidanceHint";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import type { ListingType } from "../../products/types";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
@@ -372,6 +373,9 @@ export function AdminProductEditorView({
                    * let `deriveTaxonomy` resolve it from the category.
                    */
                   canEditTax
+                  renderPriceGuidance={({ categorySlug }) =>
+                    categorySlug ? <PriceGuidanceHint categoryId={categorySlug} /> : null
+                  }
                   renderGroupSettings={
                     isEdit && productId
                       ? (p) => (

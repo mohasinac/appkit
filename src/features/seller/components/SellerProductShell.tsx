@@ -8,6 +8,7 @@ import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary }
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast, Row } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
+import { PriceGuidanceHint } from "../../categories/components/PriceGuidanceHint";
 import type { MediaField } from "../../media/types";
 import { QuickProductForm } from "./QuickProductForm";
 import { BarcodeField } from "./BarcodeField";
@@ -1437,6 +1438,9 @@ function StepPricing({
           helpText="Original price shown as strikethrough"
         />
       </FormGroup>
+      {(values.categoryIds?.[0] ?? values.category) && (
+        <PriceGuidanceHint categoryId={(values.categoryIds?.[0] ?? values.category) as string} />
+      )}
       {listingPlugin.showsStockQuantity && (
         <FormField
           name="stockQuantity"
