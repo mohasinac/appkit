@@ -21,7 +21,7 @@
  * 🛑 The prose is ours, composed from facts (name, classification, printed
  *    code, weight, model count). No corpus sentence is reproduced.
  *
- * 752 parts -> 752 leaves across 20 part-type nodes.
+ * 760 parts -> 760 leaves across 20 part-type nodes.
  * 129 needed a classification-qualified slug because the bare name
  * collides across classifications; the rest keep the short URL.
  *
@@ -4986,11 +4986,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Hexa","hexa"] },
     },
     {
+      id: "category-high-needle",
+      name: "High Needle",
+      description:
+        "High Needle — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["High Needle","high-needle"] },
+    },
+    {
+      id: "category-kick",
+      name: "Kick",
+      description:
+        "Kick — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Kick","kick"] },
+    },
+    {
       id: "category-bit-lf",
       name: "LF",
       description:
         "LF — a bit (used by 2 models). Loose examples, spares and pre-owned bits of this part are listed here.",
       extra: { aliases: ["LF","lf"] },
+    },
+    {
+      id: "category-low-orb",
+      name: "Low Orb",
+      description:
+        "Low Orb — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Orb","low-orb"] },
+    },
+    {
+      id: "category-low-rush",
+      name: "Low Rush",
+      description:
+        "Low Rush — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Rush","low-rush"] },
     },
     {
       id: "category-n",
@@ -5061,6 +5089,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Trans Point — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
       extra: { aliases: ["Trans Point","trans point"] },
+    },
+    {
+      id: "category-under-flat",
+      name: "Under Flat",
+      description:
+        "Under Flat — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Under Flat","under-flat"] },
     },
     {
       id: "category-vortex",
@@ -5191,6 +5226,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SharkEdge","sharkedge"] },
     },
     {
+      id: "category-sharkscale",
+      name: "SharkScale",
+      description:
+        "SharkScale — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SharkScale","sharkscale"] },
+    },
+    {
       id: "category-silverwolf",
       name: "SilverWolf",
       description:
@@ -5254,6 +5296,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "1-60 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["1-60"] },
+    },
+    {
+      id: "category-1-70",
+      name: "1-70",
+      description:
+        "1-70 — a ratchet. Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["1-70"] },
     },
     {
       id: "category-2",
@@ -5326,6 +5375,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["5-80"] },
     },
     {
+      id: "category-8-80",
+      name: "8-80",
+      description:
+        "8-80 — a ratchet. Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["8-80"] },
+    },
+    {
       id: "category-9",
       name: "9",
       description:
@@ -5347,4 +5403,4 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
  * SAME string by construction, so this map exists only to let a reader see that
  * stated rather than inferred.
  */
-export const PART_LEAF_COUNT = 752;
+export const PART_LEAF_COUNT = 760;

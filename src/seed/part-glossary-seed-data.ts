@@ -10740,5 +10740,101 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       "wing attacker"
     ],
     "source": "composition"
+  },
+  {
+    "id": "blade--sharkscale",
+    "classification": "Blade",
+    "slot": "blade",
+    "code": null,
+    "name": "SharkScale",
+    "usedBy": [],
+    "aliases": [
+      "sharkscale"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "ratchet--1-70",
+    "classification": "Ratchet",
+    "slot": "ratchet",
+    "code": null,
+    "name": "1-70",
+    "usedBy": [],
+    "aliases": [
+      "1-70"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "ratchet--8-80",
+    "classification": "Ratchet",
+    "slot": "ratchet",
+    "code": null,
+    "name": "8-80",
+    "usedBy": [],
+    "aliases": [
+      "8-80"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "bit--kick",
+    "classification": "Bit",
+    "slot": "bit",
+    "code": null,
+    "name": "Kick",
+    "usedBy": [],
+    "aliases": [
+      "kick"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "bit--low-rush",
+    "classification": "Bit",
+    "slot": "bit",
+    "code": null,
+    "name": "Low Rush",
+    "usedBy": [],
+    "aliases": [
+      "low-rush"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "bit--high-needle",
+    "classification": "Bit",
+    "slot": "bit",
+    "code": null,
+    "name": "High Needle",
+    "usedBy": [],
+    "aliases": [
+      "high-needle"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "bit--low-orb",
+    "classification": "Bit",
+    "slot": "bit",
+    "code": null,
+    "name": "Low Orb",
+    "usedBy": [],
+    "aliases": [
+      "low-orb"
+    ],
+    "source": "cx-20-contents"
+  },
+  {
+    "id": "bit--under-flat",
+    "classification": "Bit",
+    "slot": "bit",
+    "code": null,
+    "name": "Under Flat",
+    "usedBy": [],
+    "aliases": [
+      "under-flat"
+    ],
+    "source": "cx-20-contents"
   }
 ];

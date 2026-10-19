@@ -78,6 +78,7 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-anime-secondary", name: "Anime-secondary", beyCount: 1 },
   { slug: "blader-blader-dj", name: "Blader DJ", beyCount: 1 },
   { slug: "blader-brooklyn", name: "Brooklyn", beyCount: 1 },
+  { slug: "blader-burn-fujiwara", name: "Burn Fujiwara", beyCount: 1 },
   { slug: "blader-chris", name: "Chris", beyCount: 1 },
   { slug: "blader-claude", name: "Claude", beyCount: 1 },
   { slug: "blader-clio-delon", name: "Clio Delon", beyCount: 1 },
@@ -127,4 +128,4 @@ export const CHARACTER_SEEDS: CharacterSeed[] = [
   { slug: "blader-zyro-kurogane", name: "Zyro Kurogane", beyCount: 1 },
 ];
 
-export const CHARACTER_SEED_COUNT = 94;
+export const CHARACTER_SEED_COUNT = 95;

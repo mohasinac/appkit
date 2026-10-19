@@ -1546,6 +1546,13 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
   ],
   "category-x-custom-cx": [
     {
+      id: "category-phoenixforce-whm-65mt",
+      name: "PhoenixForce WHM-65MT",
+      description:
+        "PhoenixForce WHM-65MT — a Balance-type, right-spin Custom Line (CX) release, product code CX-20, released by TT Customize Set. Release note: Released only as part of the CX-20 Customize Set C. Complete tops, loose parts, sticker sheets and pre-owned examples of this model are listed here.",
+      extra: { aliases: ["CX-20", "PhoenixForce Weight Heavy M-65 Metal Taper", "Phoenix Force (manga, English)"], productDefaults: { defaultFeatures: ["feature-blader-burn-fujiwara", "feature-type-balance", "feature-right-spin"] } },
+    },
+    {
       id: "category-valkyrievolt-s4-70v",
       name: "ValkyrieVolt S4-70V",
       description:
@@ -1609,4 +1616,4 @@ export const MODEL_LEAVES: Record<string, CategoryTreeNode[]> = {
 };
 
 /** Total named-model leaves — asserted by the seed so a silent drop is loud. */
-export const MODEL_LEAF_COUNT = 220;
+export const MODEL_LEAF_COUNT = 221;
