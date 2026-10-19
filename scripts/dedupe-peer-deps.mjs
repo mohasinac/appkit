@@ -44,6 +44,24 @@ const TRANSITIVE_RUNTIME_DUPS = [
   // query-core and a parallel QueryClientContext instance ships in the SSR
   // bundle, producing the "No QueryClient set" crash on every page (2026-06-11).
   "@tanstack/query-core",
+  /*
+   * firebase-admin (peer) bundles @google-cloud/storage, which does NOT own a
+   * React context — so the 2026-06-11 runtime crash class does not apply here.
+   * It still has to be pruned, for a different reason: TYPE IDENTITY.
+   *
+   * `Bucket` carries a private member, so TypeScript compares the two copies
+   * nominally and refuses to pass a root-resolved Bucket into a function typed
+   * against appkit's copy. Any appkit module that accepts a Bucket from a
+   * caller is then uncompilable from the consumer, which includes appkit/src
+   * under the file: pin.
+   *
+   * MEASURED rather than assumed: removing the directory fixes it and
+   * restoring it brings the error straight back, with the tsbuildinfo cleared
+   * both times — the first attempt cleared a stale cache in the same step and
+   * could not tell which change was responsible.
+   */
+  "@google-cloud/storage",
+  "@google-cloud/firestore",
 ];
 
 // Peer deps that have NO React context / module-scope singleton and that the
