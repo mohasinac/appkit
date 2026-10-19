@@ -43,6 +43,16 @@ const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
   [pluginFor("digital-code").tabSlug]: ["digital-code"],
   [pluginFor("live").tabSlug]: ["live"],
   [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
+  /*
+   * Spares render generically — a product grid is the whole story, unlike an
+   * auction (countdown, bid history) or a prize draw (entries remaining).
+   *
+   * 🛑 Hand-written map; a missing entry is a tab you can CLICK that renders an
+   * empty panel. `audit-tab-body-coverage` exists for exactly this, after this
+   * file silently DROPPED four types while its `CategoryDetailTabs` twin
+   * rendered them as blank panels — two spellings of one gap.
+   */
+  [pluginFor("spares").tabSlug]: ["spares"],
 };
 
 export interface BrandDetailTabsProps {

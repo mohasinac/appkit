@@ -49,6 +49,25 @@ export interface ListingTypeCapability {
 }
 
 export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapability> = {
+  /*
+   * Standard physical-goods behaviour, with ONE deliberate difference:
+   * `canMakeOffer` is true.
+   *
+   * A loose part has no catalogue price — what a spare attack ring is worth
+   * depends on the colour, the wear and how badly the buyer needs that exact
+   * one. It is the archetypal haggled item here, which is the whole reason the
+   * seller is listing it instead of leaving it in a drawer, so the type that
+   * most needs Make-an-Offer is this one.
+   */
+  spares: {
+    canAddToCart: true,
+    canBid: false,
+    supportsShipping: true,
+    requiresVendorVerified: false,
+    requiresJurisdictionCheck: false,
+    hasInstantFulfillment: false,
+    canMakeOffer: true,
+  },
   standard: {
     canAddToCart: true,
     canBid: false,

@@ -57,6 +57,13 @@ export const DEFAULT_ROUTE_MAP = {
     // `standard` — so the tab showed a real non-zero count and then landed on
     // a page containing none of those items.
     STORE_ART: (storeSlug: string) => `/stores/${storeSlug}/art`,
+    /*
+     * 🛑 `STORE_PAGE_TABS` is DERIVED from the plugin registry, so this tab
+     * appears the moment the plugin exists — and a missing
+     * `stores/[storeSlug]/spares/page.tsx` is then a clickable 404 that no
+     * audit covers. The folder lands in the same commit as this key.
+     */
+    STORE_SPARES: (storeSlug: string) => `/stores/${storeSlug}/spares`,
     CATEGORIES: "/categories",
     CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
     BRANDS: "/brands",
@@ -203,6 +210,21 @@ export const DEFAULT_ROUTE_MAP = {
     // detail page stays PRODUCT_DETAIL (`/products/{slug}`), already wired in
     // `_internal/shared/listing-types/{art,stickers}/config.ts`.
     ART: "/art",
+    /*
+     * Part Two — loose components off disassembled items.
+     *
+     * 🛑 A REAL page, not a redirect shim like `/live`. Its plugin sets
+     * `inGeneralCatalogue: false`, and the rule for that flag is nav
+     * reachability: a type kept out of `/products` must own a page that
+     * `MAIN_NAV_ITEMS` links, or it is reachable from nowhere at all (Root
+     * Cause #61). A shim pointing back at `/products` would re-open exactly
+     * that hole while looking like it had closed it.
+     *
+     * Detail route stays `PRODUCT_DETAIL` — a spare checks out like any
+     * standard item, so it needs no bespoke detail page, same reasoning as
+     * art/stickers above.
+     */
+    SPARES: "/spares",
     // Personal catalogue (Feature B) — a user's own photo inventory of owned
     // items, distinct from marketplace listings. Public when the owner sets
     // an item's visibility to "public". The owner's full catalogue listing
@@ -334,6 +356,10 @@ export const DEFAULT_ROUTE_MAP = {
     STICKERS: "/store/stickers",
     STICKERS_NEW: "/store/stickers/new",
     STICKERS_EDIT: (id: string) => `/store/stickers/${id}/edit`,
+    // Part Two — spares
+    SPARES: "/store/spares",
+    SPARES_NEW: "/store/spares/new",
+    SPARES_EDIT: (id: string) => `/store/spares/${id}/edit`,
     PRINT_CENTER: "/store/print-center",
     FULFILLMENT: "/store/fulfillment",
     // S-STORE Tier — new extension routes
@@ -427,6 +453,8 @@ export const DEFAULT_ROUTE_MAP = {
     // EMI/art-stickers session — art / stickers
     ART: "/admin/art",
     STICKERS: "/admin/stickers",
+    // Part Two — spares
+    SPARES: "/admin/spares",
     GROUPED_LISTINGS: "/admin/grouped-listings",
     GROUPED_LISTINGS_NEW: "/admin/grouped-listings/new",
     GROUPED_LISTINGS_EDIT: (id: string) => `/admin/grouped-listings/${id}/edit`,

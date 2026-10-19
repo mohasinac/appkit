@@ -63,6 +63,7 @@ export function isCategoryTypeEnabled(
  */
 const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
   standard: true,
+  spares: true,
   auction: true,
   "pre-order": true,
   "prize-draw": true,

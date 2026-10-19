@@ -30,6 +30,7 @@ import { digitalCodeRule } from "./digital-code.rule";
 import { liveRule } from "./live.rule";
 import { artRule } from "./art.rule";
 import { stickersRule } from "./stickers.rule";
+import { sparesRule } from "./spares.rule";
 
 export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   standard: standardRule,
@@ -41,6 +42,7 @@ export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   live: liveRule,
   art: artRule,
   stickers: stickersRule,
+  spares: sparesRule,
 };
 
 export const CATEGORY_CHECKOUT_RULES: Record<string, CategoryCheckoutRule> = {

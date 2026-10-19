@@ -218,6 +218,7 @@ export const PRODUCT_FIELDS = {
     LIVE: "live",
     ART: "art",
     STICKERS: "stickers",
+    SPARES: "spares",
   },
 } as const;
 

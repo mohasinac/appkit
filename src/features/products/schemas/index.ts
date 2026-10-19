@@ -1,6 +1,8 @@
 export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import type { ListingType } from "../types/index";
 import {
   PRIZE_DRAW_DURATION_DAYS_MIN,
   PRIZE_DRAW_DURATION_DAYS_MAX,
@@ -44,6 +46,28 @@ export const printMetaSchema = z.object({
  * });
  * type MyProduct = z.infer<typeof myProductSchema>;
  */
+/**
+ * The `ListingType` union as a Zod enum, DERIVED.
+ *
+ * 🛑 Two hand-written copies of this lived in this file and BOTH had drifted to
+ * seven of nine — `art` and `stickers` were missing from the item schema and
+ * from the query schema. Consequence: `productItemSchema.parse()` stripped
+ * `listingType` off every art and sticker row (the field is `.optional()`, so a
+ * value outside the enum is a parse FAILURE, and a caller using `safeParse` or
+ * `.partial()` loses it silently), and `?listingType=art` on any route
+ * validating against the query schema was rejected as an invalid value.
+ *
+ * `z.enum` needs a non-empty literal tuple, hence the cast — `ALL_LISTING_TYPES`
+ * is derived from `Record<ListingType, true>`, so its CONTENTS are
+ * compile-checked against the union even though its length is not.
+ *
+ * Registered in `audit-listing-type-tab-coverage`'s STAYS_DERIVED so nobody
+ * re-expands it into a literal for readability.
+ */
+const LISTING_TYPE_ENUM = z.enum(
+  ALL_LISTING_TYPES as [ListingType, ...ListingType[]],
+);
+
 export const productItemSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -87,9 +111,7 @@ export const productItemSchema = z.object({
     ])
     .optional(),
   // SB1-G Phase 4 — canonical discriminator (legacy `isAuction`/`isPreOrder` booleans removed).
-  listingType: z
-    .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live"])
-    .optional(),
+  listingType: LISTING_TYPE_ENUM.optional(),
   // SB1-C — prize-draw + bundle fields. All optional.
   maxPerUser: z.number().int().positive().optional(),
   partOfBundleIds: z.array(z.string()).optional(),
@@ -255,9 +277,7 @@ export const productListParamsSchema = z.object({
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
   inStock: z.coerce.boolean().optional(),
-  listingType: z
-    .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live"])
-    .optional(),
+  listingType: LISTING_TYPE_ENUM.optional(),
   storeId: z.string().optional(),
   sort: z.string().optional(),
   page: z.coerce.number().optional(),

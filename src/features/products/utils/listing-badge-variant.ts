@@ -25,6 +25,10 @@ export type ListingBadgeVariant =
  */
 export const LISTING_BADGE_VARIANT: Record<ListingType, ListingBadgeVariant> = {
   standard: "default",
+  // Shares `primary` with art/stickers: all three are "a thing we make or
+  // salvage ourselves" rather than a mechanism (auction) or a promise
+  // (pre-order), and the badge LABEL is what distinguishes them.
+  spares: "primary",
   auction: "warning",
   "pre-order": "secondary",
   "prize-draw": "primary",

@@ -108,6 +108,7 @@ function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
 // "bundle" is a categoryType, not a ListingType — falls through to "bundle" below.
 const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
   standard: "standard",
+  spares: "spares",
   auction: "auction",
   "pre-order": "preorder",
   "prize-draw": "prize-draw",

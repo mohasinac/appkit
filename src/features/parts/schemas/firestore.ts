@@ -328,6 +328,22 @@ export const LISTING_TYPE_HAS_COMPOSITION: Record<
 > = {
   standard: true,
   auction: true,
+  /*
+   * 🛑 FALSE, and this is the one entry worth arguing for.
+   *
+   * `spares` is tempting to set true — it is the most part-shaped type in the
+   * union — and it would be a worse version of the exact defect this map's
+   * docblock records. A spare attack ring IS a part; it is not the assembly
+   * the composition describes. True would give an attack ring a "Parts" tab
+   * whose contents are an attack ring, a weight disk and a blade base: one
+   * level deeper into wrong than the poster was.
+   *
+   * The reverse direction is the useful one and it is phase F: a spare links
+   * UP to its glossary entry via `sparePartGlossaryId`, and that entry lists
+   * the models the part fits. "What is this a part of" is a real question; "what
+   * parts is this part made of" is not.
+   */
+  spares: false,
   "pre-order": true,
   "prize-draw": true,
   classified: true,

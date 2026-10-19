@@ -46,6 +46,18 @@ const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
   [pluginFor("live").tabSlug]: ["live"],
   // The combined Art & Stickers tab spans both types under the `art` slug.
   [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
+  /*
+   * Spares render generically — there is nothing type-specific to show beyond
+   * a product grid, unlike an auction (countdown, bid history) or a prize draw
+   * (entries remaining).
+   *
+   * 🛑 This map is hand-written and a missing entry is a tab you can CLICK that
+   * renders an empty panel. It is covered — `audit-tab-body-coverage` exists
+   * for precisely this, after `CategoryDetailTabs` showed a blank panel for
+   * four types while `BrandDetailTabs` silently dropped the same four — so the
+   * eleventh type will be caught rather than discovered.
+   */
+  [pluginFor("spares").tabSlug]: ["spares"],
 };
 
 export interface CategoryDetailTabsProps {

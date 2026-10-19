@@ -14,6 +14,8 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import {
   SITE_SETTINGS_TABS,
   isSiteSettingsTabId,
@@ -918,7 +920,22 @@ export function AdminSiteSettingsView({
     { label: "Sandbox (test)", value: "sandbox" },
     { label: "Production (live)", value: "production" },
   ];
-  const LISTING_TYPE_KEYS = ["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"] as const;
+  /*
+   * 🛑 DERIVED. This was a hand-written literal and it had drifted in both
+   * directions at once: `art` and `stickers` were MISSING — so an admin had no
+   * way to disable either, and the panel's own promise ("disabled types are
+   * hidden from listings and reject create/add-to-cart") simply did not apply
+   * to two of the nine — while a dead `"bundle"` was still listed, rendering a
+   * toggle for a value that stopped being a `listingType` in SB-UNI-D and that
+   * `useListingTypeFlags` cannot read. Toggling it did nothing, forever.
+   *
+   * `CATEGORY_TYPE_KEYS` below is a SEPARATE block that correctly owns
+   * `bundle`, which is what makes dropping it here safe rather than a
+   * regression.
+   *
+   * Registered in `audit-listing-type-tab-coverage`'s STAYS_DERIVED.
+   */
+  const LISTING_TYPE_KEYS = ALL_LISTING_TYPES;
   const CATEGORY_TYPE_KEYS = ["category", "sublisting", "brand", "bundle"] as const;
   const NOTIF_TYPE_OPTIONS = NOTIFICATION_TYPE_TABS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label }));
 
@@ -1562,7 +1579,10 @@ export function AdminSiteSettingsView({
                   {LISTING_TYPE_KEYS.map((key) => (
                     <Toggle
                       key={key}
-                      label={key}
+                      // The plugin's own display label, not the raw key — the
+                      // literal version rendered "pre-order" and
+                      // "digital-code" at an admin.
+                      label={pluginFor(key).typeLabel}
                       checked={listingTypeFlags[key] ?? true}
                       onChange={(v) => setListingTypeFlags((prev) => ({ ...prev, [key]: v }))}
                     />

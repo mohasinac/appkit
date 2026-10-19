@@ -64,6 +64,14 @@ const PRIZE_REVEAL_MODE_OPTIONS: { value: "instant" | "scheduled"; label: string
 // (classified/digital-code/live/prize-draw/art/stickers) to "product".
 const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeatureProductType> = {
   standard: "product",
+  /*
+   * 🛑 "product", not a new `ProductFeatureProductType` member. That union is
+   * the FEATURE-badge vocabulary ("free shipping", "authenticity checked") and
+   * a spare earns the same badges a standard physical item does. Minting a
+   * value here would mean every existing feature row stopped matching spares —
+   * i.e. a brand-new type with no features at all, which reads as a bug.
+   */
+  spares: "product",
   auction: "auction",
   "pre-order": "preorder",
   "prize-draw": "prize-draw",

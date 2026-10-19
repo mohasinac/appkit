@@ -115,6 +115,7 @@ type ProductListingKind =
   | "live"
   | "art"
   | "stickers"
+  | "spares"
   // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
   | "preorder"
   | "product"
@@ -130,6 +131,21 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   live: LISTING_TYPE_VALUES.LIVE,
   art: LISTING_TYPE_VALUES.ART,
   stickers: LISTING_TYPE_VALUES.STICKERS,
+  /*
+   * 🛑 Root Cause #58 lives here, and it is the single most expensive line to
+   * omit in this whole change. The alias returns `""` for an unrecognised
+   * token and `expandFilterAliases` then DROPS the empty clause — so a missing
+   * entry does not error, it deletes the `listingType` filter from the query.
+   * `art` and `stickers` were added to the union, the registry and the
+   * capability map and not to this map, and every art/sticker browse page
+   * silently returned the entire catalogue until someone reported it.
+   *
+   * `Record<ProductListingKind, string>` makes it compile-checked against THAT
+   * union — but `ProductListingKind` is itself hand-written above and is not
+   * checked against `ListingType`, which is why this is still on the unchecked
+   * list.
+   */
+  spares: LISTING_TYPE_VALUES.SPARES,
   // Legacy → canonical.
   product: LISTING_TYPE_VALUES.STANDARD,
   preorder: LISTING_TYPE_VALUES.PRE_ORDER,

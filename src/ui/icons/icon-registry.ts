@@ -95,6 +95,7 @@ import {
   KeyRound,
   Palette,
   Sticker,
+  Puzzle,
   PawPrint,
   type LucideIcon,
 } from "lucide-react";
@@ -185,6 +186,14 @@ export const ICONS = {
   digitalCode: KeyRound,
   art: Palette,
   stickers: Sticker,
+  /*
+   * Nothing in the registry meant "a part", so this is minted rather than
+   * reused. `Puzzle` over `Cog`/`Wrench` because the semantic is "a piece that
+   * fits into something" — which is exactly what the spares feature is about,
+   * right down to the glossary's "Fits: …" cross-sell. A cog reads as
+   * machinery or settings, and `settings` already owns that glyph.
+   */
+  spares: Puzzle,
   live: PawPrint,
 } as const;
 

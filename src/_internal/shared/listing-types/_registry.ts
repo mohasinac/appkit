@@ -33,6 +33,8 @@ import * as live from "./live/config";
 // EMI/art-stickers session — printed-only physical-goods types.
 import * as art from "./art/config";
 import * as stickers from "./stickers/config";
+// Part Two 2026-10-19 — one component off a disassembled item, sold alone.
+import * as spares from "./spares/config";
 
 import { LISTING_TYPE_CAPABILITIES } from "./capabilities";
 import {
@@ -214,6 +216,7 @@ export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   live: live.config,
   art: art.config,
   stickers: stickers.config,
+  spares: spares.config,
 };
 
 export function pluginFor(type: ListingType): ListingTypePlugin {

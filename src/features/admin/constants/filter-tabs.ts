@@ -64,6 +64,7 @@ export const ADMIN_PRODUCT_LISTING_TYPE_TABS = [
   { id: "live", label: "Live Items" },
   { id: "art", label: "Art" },
   { id: "stickers", label: "Stickers" },
+  { id: "spares", label: "Spares" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Blog — post status filter chip set. */

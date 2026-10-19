@@ -34,6 +34,21 @@ export type ProductCondition =
 // instant-fulfills. Live requires vendor verification + jurisdiction check.
 // EMI/art-stickers session — additive extension: art | stickers. Both are
 // printed-only physical goods (standard-like cart/checkout behavior).
+// Part Two 2026-10-19 — additive extension: spares. A single component off a
+// disassembled Beyblade (an attack ring, a spin gear, a weight disk), sold on
+// its own. Standard-like cart/checkout behaviour, but kept OUT of the general
+// catalogue and given its own `/spares` page: a catalogue full of loose parts
+// buries the complete items, and a buyer hunting one part wants a page where
+// everything is a part. It is also the archetypal haggled item, so
+// `canMakeOffer` is true.
+//
+// 🛑 Adding a member here is 21 named sites and only 11 are compile-checked.
+// CLAUDE.md's "5-place change, TypeScript catches three" is stale — the live
+// list is in the Part Two plan, and two of the unchecked sites were ALREADY
+// drifted when it was written (`AdminSiteSettingsView.LISTING_TYPE_KEYS` was
+// missing art+stickers and still carried a dead `bundle`;
+// `productItemSchema.listingType` carried 7 of 9). Start here and let `tsc`
+// enumerate what it can, then work the unchecked list deliberately.
 export type ListingType =
   | "standard"
   | "auction"
@@ -43,7 +58,8 @@ export type ListingType =
   | "digital-code"
   | "live"
   | "art"
-  | "stickers";
+  | "stickers"
+  | "spares";
 
 export interface ProductImage {
   url: string;
