@@ -75,6 +75,14 @@ export interface CategoryItem {
   brandCountry?: string;
   /** Brand founded year — only set when categoryType==="brand". */
   brandFounded?: number;
+  /**
+   * Hasbro / international-market name for this generation or wave (TT "God" →
+   * Hasbro "Evolution"; TT "Cho-Z" → Hasbro "Turbo"). Rendered as "Also known
+   * as" — unlike `aliases`, which only feeds search.
+   */
+  hasbroName?: string;
+  /** Cover for the Hasbro-named variant, shown beside the primary cover. */
+  hasbroCoverImage?: string;
   /** Short bullet points — "why shop this category/brand." */
   highlights?: string[];
   /** A handful of Q&A pairs shown on the category/brand detail page. */

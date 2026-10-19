@@ -180,6 +180,8 @@ export const categoryFirestoreSchema = z.object({
   brandWebsite: z.string().optional(),
   brandCountry: z.string().optional(),
   brandFounded: z.number().int().optional(),
+  hasbroName: z.string().optional(),
+  hasbroCoverImage: z.string().optional(),
   highlights: z.array(z.string()).optional(),
   faqs: z.array(z.object({ question: z.string(), answer: z.string() })).optional(),
   aliases: z.array(z.string()).optional(),

@@ -159,6 +159,28 @@ export interface CategoryDocument extends BaseDocument {
   brandFounded?: number;
 
   /**
+   * The Hasbro / international-market name for this generation or wave, where
+   * it genuinely differs from the Takara-Tomy one. Two real pairs exist and
+   * they are separate waves, not one renaming: TT **God** ships as Hasbro
+   * **Evolution**, and TT **Cho-Z** ships as Hasbro **Turbo**.
+   *
+   * 🛑 RENDERED — "Also known as" on the category detail page. That is the
+   * whole difference from `aliases` below, which feeds `searchTxt` and is
+   * rendered nowhere. A buyer who only knows the Hasbro season name needs to
+   * SEE the correspondence, not merely be found by it.
+   *
+   * Left unset wherever a divergence is not confirmed. An honest gap beats a
+   * guessed pairing — same precedent as the 25 of 220 models with no cover and
+   * the deliberately partial `FRANCHISE_BY_CATEGORY_ROOT`.
+   */
+  hasbroName?: string;
+  /**
+   * Cover for the Hasbro-named variant, shown beside the primary cover when
+   * both exist. Same `/media/<slug>` form as `display.coverImage`.
+   */
+  hasbroCoverImage?: string;
+
+  /**
    * Short bullet points — "why shop this category/brand." Category and
    * brand detail pages only; renders nothing when absent/empty.
    */

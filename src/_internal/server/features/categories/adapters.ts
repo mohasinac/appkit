@@ -66,6 +66,14 @@ export const PUBLIC_CATEGORY_FIELDS = [
   "brandWebsite",
   "brandCountry",
   "brandFounded",
+  /*
+   * The Hasbro alternate name and its cover, rendered as "Also known as" by
+   * `CategoryDetailPageView`. Public because the whole point of the field is
+   * that a buyer who only knows the Hasbro season name can SEE the
+   * correspondence — a name on a toy box is not sensitive.
+   */
+  "hasbroName",
+  "hasbroCoverImage",
   // Rollup counts only — see `metrics` in the private list.
   "metrics",
   "createdAt",
@@ -254,6 +262,9 @@ export function toCategoryListItem(doc: CategoryDocument): CategoryItem {
     brandWebsite: doc.brandWebsite,
     brandCountry: doc.brandCountry,
     brandFounded: doc.brandFounded,
+
+    hasbroName: doc.hasbroName,
+    hasbroCoverImage: doc.hasbroCoverImage,
 
     metrics: toPublicMetrics(doc.metrics),
 

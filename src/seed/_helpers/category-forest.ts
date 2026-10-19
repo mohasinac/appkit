@@ -85,6 +85,17 @@ const cover = (slug: string) => seedPhoto(`category-image-${slug}-20260101`, 120
  * empty line, never a crash — but a line that is MEANT to have models and
  * silently has none is the failure this cannot see, which is why the seed
  * asserts `MODEL_LEAF_COUNT` against what it actually spread.
+ *
+ * `opts.hasbroName` carries the regional-naming divergence for the waves that
+ * have one. Last and optional, so all 21 existing call sites are unchanged.
+ *
+ * 🛑 There is no `hasbroCoverImage` here on purpose. The name is an editorial
+ * FACT and belongs in source; the image is a resolved asset and belongs in the
+ * generated map, exactly like `display.coverImage` — see
+ * `GENERATED_CATEGORY_HASBRO_IMAGES` and `withGeneratedHasbroCover` in
+ * `categories-seed-data.ts`. Hard-coding a `/media/…` string here would put
+ * the one field that changes on every re-upload into the one file that should
+ * not have to be edited for it.
  */
 function line(
   id: string,
@@ -92,12 +103,17 @@ function line(
   description: string,
   defaults: CategoryDocument["productDefaults"],
   templates: CategoryDescriptionTemplate[],
+  opts?: { hasbroName?: string },
 ): CategoryTreeNode {
   return {
     id,
     name,
     description,
-    extra: { productDefaults: defaults, descriptionTemplates: templates },
+    extra: {
+      productDefaults: defaults,
+      descriptionTemplates: templates,
+      ...(opts?.hasbroName ? { hasbroName: opts.hasbroName } : {}),
+    },
     children: MODEL_LEAVES[id] ?? [],
   };
 }
@@ -282,12 +298,32 @@ const BEYBLADE_BURST: CategoryTreeNode = {
   },
   children: [
     branch("category-burst-tops", "Burst Tops", "Complete Burst-system Beyblades across every wave.", [
+      /*
+       * 🛑 `hasbroName` is set on exactly the five waves where a Hasbro season
+       * title demonstrably differs, each confirmed by BOTH logos existing in
+       * the wiki corpus (a Japanese-market logo and an English-market one for
+       * the same wave):
+       *
+       *   God        <-> Evolution    Beyblade_Burst_{God,Evolution}_Logo
+       *   Cho-Z      <-> Turbo        {Chouzetsu,Turbo_English}_Logo
+       *   GT         <-> Rise         {GT_Japanese,Rise_English}_Logo
+       *   Superking  <-> Surge        {Superking_Japanese,Surge_English}_Logo
+       *   Dynamite B <-> QuadDrive    {Dynamite_Battle_Japanese,QuadDrive_English}_Logo
+       *
+       * `burst-classic` is unset because season 1 shipped as "Beyblade Burst"
+       * in both markets — there is no divergence to show. `burst-bu` is unset
+       * because the corpus will not support one: it describes Burst Ultimate
+       * as a Takara-Tomy toyline concluding the series, and while Hasbro's
+       * QuadStrike is contemporaneous, no source we hold states they are the
+       * same line renamed. A guessed pairing on a page a buyer reads as fact
+       * is worse than a blank.
+       */
       line("category-burst-classic", "Burst Classic", "The original 2015–2017 single- and dual-layer waves, before any metal entered the Layer.", beyDefaults("category-burst-classic", "Beyblade Burst", "Burst System"), BEY_TEMPLATES),
-      line("category-burst-god", "Burst God", "The God Layer wave, which added spring-loaded Layers and the first real burst-resistance tuning.", beyDefaults("category-burst-god", "Beyblade Burst God", "God Layer System"), BEY_TEMPLATES),
-      line("category-burst-cho-z", "Cho-Z", "The metal-layer wave — heavier Layers and roughly double the burst resistance of what came before.", beyDefaults("category-burst-cho-z", "Beyblade Burst Cho-Z", "Cho-Z Layer System"), BEY_TEMPLATES),
-      line("category-burst-gt", "GT", "The Gatinko wave, with a swappable chip inside the Layer for a third tuning axis.", beyDefaults("category-burst-gt", "Beyblade Burst GT", "Gatinko Layer System"), BEY_TEMPLATES),
-      line("category-burst-superking", "Superking", "The Sparking / Superking wave and its five-sided ratchet, which changed launch dynamics entirely.", beyDefaults("category-burst-superking", "Beyblade Burst Superking", "Sparking Layer System"), BEY_TEMPLATES),
-      line("category-burst-db", "Dynamite Battle", "The DB wave — Armour Tips and the heaviest Layers Burst had shipped to that point.", beyDefaults("category-burst-db", "Beyblade Burst Dynamite Battle", "Dynamite Battle Layer System"), BEY_TEMPLATES),
+      line("category-burst-god", "Burst God", "The God Layer wave, which added spring-loaded Layers and the first real burst-resistance tuning.", beyDefaults("category-burst-god", "Beyblade Burst God", "God Layer System"), BEY_TEMPLATES, { hasbroName: "Beyblade Burst Evolution" }),
+      line("category-burst-cho-z", "Cho-Z", "The metal-layer wave — heavier Layers and roughly double the burst resistance of what came before.", beyDefaults("category-burst-cho-z", "Beyblade Burst Cho-Z", "Cho-Z Layer System"), BEY_TEMPLATES, { hasbroName: "Beyblade Burst Turbo" }),
+      line("category-burst-gt", "GT", "The Gatinko wave, with a swappable chip inside the Layer for a third tuning axis.", beyDefaults("category-burst-gt", "Beyblade Burst GT", "Gatinko Layer System"), BEY_TEMPLATES, { hasbroName: "Beyblade Burst Rise" }),
+      line("category-burst-superking", "Superking", "The Sparking / Superking wave and its five-sided ratchet, which changed launch dynamics entirely.", beyDefaults("category-burst-superking", "Beyblade Burst Superking", "Sparking Layer System"), BEY_TEMPLATES, { hasbroName: "Beyblade Burst Surge" }),
+      line("category-burst-db", "Dynamite Battle", "The DB wave — Armour Tips and the heaviest Layers Burst had shipped to that point.", beyDefaults("category-burst-db", "Beyblade Burst Dynamite Battle", "Dynamite Battle Layer System"), BEY_TEMPLATES, { hasbroName: "Beyblade Burst QuadDrive" }),
       line("category-burst-bu", "Burst Ultimate", "The final Burst wave, closing the line in 2023 before Beyblade X replaced it.", beyDefaults("category-burst-bu", "Beyblade Burst Ultimate", "Burst Ultimate Layer System"), BEY_TEMPLATES),
     ]),
     branch("category-burst-parts", "Burst Parts", "Layers, Discs, Drivers and the chips and armour that bolt onto them.", [
