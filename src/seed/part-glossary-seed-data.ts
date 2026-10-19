@@ -13,7 +13,7 @@
  */
 import type { PartGlossaryDocument } from "../features/parts/schemas/firestore";
 
-export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
+const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
   {
     "id": "armor-tip--yard",
     "classification": "Armor Tip",
@@ -89,7 +89,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Yard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Yard",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armour--1b",
@@ -191,7 +197,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_7",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "assist-blade--slash",
@@ -331,7 +351,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Slash"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Slash",
+    "ratings": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 10
+    }
   },
   {
     "id": "attack-ring--advance-attacker-dm",
@@ -455,7 +480,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Circle_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Circle_Upper",
+    "ratings": {
+      "attack": 2,
+      "defense": 3.5,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--corona-saber",
@@ -521,7 +551,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Corona_Saber"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Corona_Saber",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--cross-attacker",
@@ -576,7 +611,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Attacker is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Attacker",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--cross-dranzer",
@@ -631,7 +671,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Dranzer is a Beyblade attack ring from the Magnacore System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Dranzer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Dranzer",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--cross-fang",
@@ -741,7 +786,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Griffon is a Beyblade attack ring from the Spin Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Griffon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Griffon",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--cross-spike",
@@ -796,7 +846,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Spike is a Beyblade attack ring from the Spin Gear System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spike",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--cross-spiker",
@@ -851,7 +906,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Spiker is a Beyblade attack ring from the Engine Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spiker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spiker",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--cybernetic-dragon",
@@ -919,7 +979,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cybernetic_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cybernetic_Dragon",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--devil-crusher",
@@ -1027,7 +1092,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Horn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Horn",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--double-wing",
@@ -1161,7 +1231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Breaker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Breaker",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--dragon-saucer",
@@ -1229,7 +1304,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Saucer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Saucer",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--dual-dragon",
@@ -1355,7 +1435,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Attacker",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--eight-spike",
@@ -1667,7 +1752,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_G-Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_G-Upper",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--g-upper-attack-profile",
@@ -1782,7 +1872,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Gigantic Claw is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Gigantic_Claw"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Gigantic_Claw",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--god-smasher",
@@ -1963,7 +2058,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Holy Despell is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Holy_Despell"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Holy_Despell",
+    "ratings": {
+      "defense": 1
+    }
   },
   {
     "id": "attack-ring--howling-leo",
@@ -2237,7 +2335,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Attacker",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--metal-defense",
@@ -2260,7 +2363,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Defense is a Beyblade attack ring, weighing 17 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Defense",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--metal-saucer",
@@ -2373,7 +2481,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Mountain Hammer is a Beyblade attack ring from the Magnacore System, weighing 5.9 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Mountain_Hammer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Mountain_Hammer",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--panther-claw",
@@ -2428,7 +2541,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Panther Claw is a Beyblade attack ring from the Spin Gear System, weighing 14 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Claw"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Claw",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--panther-head",
@@ -2500,7 +2618,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Head"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Head",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--penta-wing",
@@ -2550,7 +2673,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Penta Wing is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Penta_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Penta_Wing",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--reverse-dragon",
@@ -2629,7 +2757,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Dragon",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 5
+    }
   },
   {
     "id": "attack-ring--reverse-wolf",
@@ -2772,7 +2906,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Samurai_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Samurai_Upper",
+    "ratings": {
+      "attack": 2,
+      "defense": 3.5,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--scorpio-claw",
@@ -2872,7 +3011,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Shield Hammer is a Beyblade attack ring from the Engine Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Shield_Hammer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Shield_Hammer",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--slash-upper",
@@ -2999,7 +3143,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Sonic_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Sonic_Tiger",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--spark-dragon",
@@ -3081,7 +3230,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spike Dragon is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spike_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spike_Dragon",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--spiral-upper",
@@ -3124,7 +3278,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spiral Upper is a Beyblade attack ring from the Hard Metal System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spiral_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spiral_Upper",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2.5
+    }
   },
   {
     "id": "attack-ring--star-shape",
@@ -3237,7 +3396,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Star_Wolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Star_Wolf",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--strike-turtle",
@@ -3292,7 +3456,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Strike Turtle is a Beyblade attack ring from the Magnacore System, weighing 14 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Strike_Turtle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Strike_Turtle",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--ten-spike",
@@ -3357,7 +3526,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ten_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ten_Spike",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--tiger-defenser",
@@ -3408,7 +3582,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Tiger Defenser is a Beyblade attack ring, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Tiger_Defenser"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Tiger_Defenser",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--triangle-wing",
@@ -3462,7 +3641,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Triangle Wing is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triangle_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triangle_Wing",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--triple-beak",
@@ -3532,7 +3716,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Beak"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Beak",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--triple-tiger-s-tier",
@@ -3658,7 +3847,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Turtle_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Turtle_Survivor",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--ultimate-attacker",
@@ -3814,7 +4008,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Claw"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Claw",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--upper-dragon",
@@ -4023,7 +4222,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "War Lion is a Beyblade attack ring from the Spin Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Lion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Lion",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--war-monkey",
@@ -4163,7 +4367,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wing Survivor is a Beyblade attack ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Survivor",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--wing-upper",
@@ -4219,7 +4428,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wing Upper is a Beyblade attack ring from the Engine Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Upper",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--wolf-crusher",
@@ -4522,7 +4736,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Accel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Accel",
+    "ratings": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--b",
@@ -4697,7 +4916,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Ball",
+    "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 55
+    }
   },
   {
     "id": "bit--f",
@@ -5160,7 +5384,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Flat",
+    "ratings": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--free-ball",
@@ -5292,7 +5521,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Ball",
+    "ratings": {
+      "attack": 10,
+      "defense": 25,
+      "stamina": 60
+    }
   },
   {
     "id": "bit--gear-ball",
@@ -5501,7 +5735,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Ball",
+    "ratings": {
+      "attack": 10,
+      "defense": 15,
+      "stamina": 45
+    }
   },
   {
     "id": "bit--gf",
@@ -5717,7 +5956,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Hexa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Hexa",
+    "ratings": {
+      "attack": 30,
+      "defense": 35,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--lf",
@@ -5987,7 +6231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Point"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Point",
+    "ratings": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25
+    }
   },
   {
     "id": "bit--q",
@@ -6319,7 +6568,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Taper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Taper",
+    "ratings": {
+      "attack": 35,
+      "defense": 20,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--trans-point",
@@ -6428,7 +6682,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Point"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Point",
+    "ratings": {
+      "attack": 35,
+      "defense": 25,
+      "stamina": 25
+    }
   },
   {
     "id": "bit--vortex",
@@ -6585,7 +6844,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Vortex"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Vortex",
+    "ratings": {
+      "attack": 45,
+      "defense": 10,
+      "stamina": 5
+    }
   },
   {
     "id": "bit-chip--ape-emblem",
@@ -8585,7 +8849,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_AeroPegasus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_AeroPegasus",
+    "ratings": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--cobaltdragoon",
@@ -8729,7 +8998,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDragoon",
+    "ratings": {
+      "attack": 60,
+      "defense": 15,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--cobaltdrake",
@@ -8857,7 +9131,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDrake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDrake",
+    "ratings": {
+      "attack": 65,
+      "defense": 30,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--crimsongaruda",
@@ -8952,7 +9231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CrimsonGaruda"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CrimsonGaruda",
+    "ratings": {
+      "attack": 45,
+      "defense": 25,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--dranbuster",
@@ -9154,7 +9438,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranBuster"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranBuster",
+    "ratings": {
+      "attack": 70,
+      "defense": 20,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--drandagger",
@@ -9333,7 +9622,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranDagger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranDagger",
+    "ratings": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--dransword",
@@ -9751,7 +10045,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranzerSpiral"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranzerSpiral",
+    "ratings": {
+      "attack": 35,
+      "defense": 30,
+      "stamina": 35
+    }
   },
   {
     "id": "blade--drigerslash",
@@ -9838,7 +10137,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DrigerSlash"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DrigerSlash",
+    "ratings": {
+      "attack": 40,
+      "defense": 35,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--ghostcircle",
@@ -9948,7 +10252,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GhostCircle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GhostCircle",
+    "ratings": {
+      "attack": 5,
+      "defense": 40,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--hellshammer",
@@ -10078,7 +10387,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsHammer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsHammer",
+    "ratings": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--hellsscythe",
@@ -10286,7 +10600,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsScythe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsScythe",
+    "ratings": {
+      "attack": 30,
+      "defense": 35,
+      "stamina": 35
+    }
   },
   {
     "id": "blade--knightshield",
@@ -10469,7 +10788,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightShield"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightShield",
+    "ratings": {
+      "attack": 20,
+      "defense": 55,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--leonclaw",
@@ -10586,7 +10910,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonClaw"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonClaw",
+    "ratings": {
+      "attack": 40,
+      "defense": 40,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--phoenixwing",
@@ -10771,7 +11100,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixWing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixWing",
+    "ratings": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--savior",
@@ -10859,7 +11193,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savior"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savior",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--sharkedge",
@@ -11068,7 +11416,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SharkEdge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SharkEdge",
+    "ratings": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--silverwolf",
@@ -11188,7 +11541,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SilverWolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SilverWolf",
+    "ratings": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 65
+    }
   },
   {
     "id": "blade--tyrannobeat",
@@ -11330,7 +11688,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TyrannoBeat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TyrannoBeat",
+    "ratings": {
+      "attack": 65,
+      "defense": 30,
+      "stamina": 5
+    }
   },
   {
     "id": "blade--unicornsting",
@@ -11453,7 +11816,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_UnicornSting"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_UnicornSting",
+    "ratings": {
+      "attack": 35,
+      "defense": 35,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--vipertail",
@@ -11592,7 +11960,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ViperTail"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ViperTail",
+    "ratings": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--wizardarrow",
@@ -11809,7 +12182,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardArrow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardArrow",
+    "ratings": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--wizardrod",
@@ -11938,7 +12316,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardRod"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardRod",
+    "ratings": {
+      "attack": 15,
+      "defense": 25,
+      "stamina": 60
+    }
   },
   {
     "id": "blade-base--custom-metal-change",
@@ -11997,7 +12380,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Clutch_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Clutch_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--customize-grip-base",
@@ -12116,7 +12504,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Metal_Sharp"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Metal_Sharp",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--defense-grip-base-2",
@@ -12243,7 +12636,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Engine Stopper Base is a Beyblade blade base from the Engine Gear System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Engine_Stopper_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Engine_Stopper_Base",
+    "ratings": {
+      "attack": 2
+    }
   },
   {
     "id": "blade-base--fantom-grip-base",
@@ -12329,7 +12725,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "First Clutch Base is a Beyblade blade base from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--first-clutch-base-zeus",
@@ -12608,7 +13009,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Griffolyon Base is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Griffolyon_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Griffolyon_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--hit-release",
@@ -12808,7 +13214,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Jumping_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Jumping_Base",
+    "ratings": {
+      "attack": 3
+    }
   },
   {
     "id": "blade-base--magne-flat-base",
@@ -12864,7 +13273,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Magne Flat Base is a Beyblade blade base.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Magne_Flat_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Magne_Flat_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--metal-ball-base",
@@ -13145,7 +13559,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Salamalyon_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Salamalyon_Base",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--sg-bearing-base",
@@ -13290,7 +13709,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Jumping_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Jumping_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--sg-jumping-base-2",
@@ -13320,7 +13744,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Jumping Base 2 is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Jumping_Base_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Jumping_Base_2",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--sg-metal-ball",
@@ -13377,7 +13806,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Metal Flat 2 is a Beyblade blade base from the Magnacore System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_2",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--sg-metal-flat-base",
@@ -13479,7 +13913,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Semi-Flat_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Semi-Flat_Base",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--sg-semi-flat",
@@ -13576,7 +14015,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Sharp"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Sharp",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--sg-sharp-base",
@@ -13787,7 +14231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Viper Metal Ball Base is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Viper_Metal_Ball_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Viper_Metal_Ball_Base",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--volcano-change-base",
@@ -13864,7 +14313,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Volcano_Change_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Volcano_Change_Base",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "chrome-wheel--bahamdia",
@@ -14614,7 +15068,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Valkyrie_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Valkyrie_1",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--0",
@@ -15052,7 +15520,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_0"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_0",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--0-0wall",
@@ -15349,7 +15830,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_00"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_00",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--00-00turn",
@@ -15548,7 +16042,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--10",
@@ -15895,7 +16402,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_10"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_10",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--11",
@@ -16158,7 +16678,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_11"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_11",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--2glaive",
@@ -16577,7 +17110,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_7",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--8",
@@ -16779,7 +17325,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_8'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_8'",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--8flow",
@@ -16876,7 +17435,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Aquilon'-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Aquilon'-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--around",
@@ -17053,7 +17618,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Around"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Around",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--blitz",
@@ -17191,7 +17770,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Blitz"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Blitz",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--boost",
@@ -17441,7 +18034,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Boost"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Boost",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--charge",
@@ -17561,7 +18167,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Drake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Drake",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--force",
@@ -17704,7 +18324,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Force"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Force",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--karma",
@@ -17825,7 +18458,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Karma"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Karma",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--knuckle",
@@ -17972,7 +18619,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Knuckle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Knuckle",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--legacy",
@@ -18097,7 +18757,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Legacy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Legacy",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--limited",
@@ -18228,7 +18902,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Limited"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Limited",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--magnet",
@@ -18425,7 +19112,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nexus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nexus",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--nine",
@@ -18582,7 +19283,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nine"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nine",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--over",
@@ -18693,7 +19407,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Over"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Over",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--sting",
@@ -18861,7 +19589,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Sting"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Sting",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--tapered",
@@ -18959,7 +19701,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Tapered"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Tapered",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--tapered-metal",
@@ -19149,7 +19905,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Triple"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Triple",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--vanguard",
@@ -19297,7 +20066,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vanguard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vanguard",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--variable-per-combo",
@@ -19475,7 +20258,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vertical"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vertical",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--yell",
@@ -19630,7 +20426,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Yell"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Yell",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--zenith",
@@ -19796,7 +20605,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Zenith"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Zenith",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--2d",
@@ -19894,7 +20716,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Atomic'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Atomic'",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bullet",
@@ -19998,7 +20833,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge",
@@ -20066,7 +20914,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--cross",
@@ -20211,7 +21072,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension'",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--dimension-dash",
@@ -20291,7 +21165,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Drift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Drift",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--evolution-eternal",
@@ -20455,7 +21342,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Iron"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Iron",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jaggy",
@@ -20523,7 +21423,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jolt",
@@ -20636,7 +21549,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--kick-3",
@@ -20835,7 +21761,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Loop"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Loop",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--merge",
@@ -20919,7 +21858,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-1a",
@@ -21091,7 +22043,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--nothing",
@@ -21285,7 +22250,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--press",
@@ -21468,7 +22446,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Press"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Press",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--q",
@@ -21609,7 +22600,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Reboot'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Reboot'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--retsu",
@@ -21710,7 +22714,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--spiral",
@@ -21810,7 +22820,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral'",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--unite",
@@ -21892,7 +22915,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--unite-dash",
@@ -22068,7 +23104,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable'",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--variable-dash",
@@ -22185,7 +23234,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BX"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BX",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend",
@@ -22314,7 +23376,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend-zeta-dash",
@@ -22420,7 +23495,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BZ"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BZ",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "energy-ring--4d-clear-wheel-orion",
@@ -22611,7 +23699,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Aquario"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Aquario",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--aquila",
@@ -22811,7 +23904,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Aries"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Aries",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--befall",
@@ -22920,7 +24018,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Befall"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Befall",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 5
+    }
   },
   {
     "id": "energy-ring--berserker",
@@ -23035,7 +24138,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Blaze"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Blaze",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--bull",
@@ -23176,7 +24284,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Bull"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Bull",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--byxis",
@@ -23417,7 +24530,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Capricorn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Capricorn",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--capricorne",
@@ -23700,7 +24818,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cygnus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cygnus",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--eagle",
@@ -23873,7 +24996,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Eagle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Eagle",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--fireblaze",
@@ -24034,7 +25162,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Fireblaze"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Fireblaze",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 5
+    }
   },
   {
     "id": "energy-ring--gemios-dual-orientation-gimmick",
@@ -24244,7 +25377,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Horuseus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Horuseus",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--jupiter",
@@ -24356,7 +25494,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Jupiter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Jupiter",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--kerbecs",
@@ -24515,7 +25658,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Kerbecs"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Kerbecs",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "energy-ring--kerbecs-clear-wheel",
@@ -24767,7 +25915,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Libra"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Libra",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--lynx",
@@ -24889,7 +26042,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lynx"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lynx",
+    "ratings": {
+      "attack": 2.5,
+      "defense": 2.5,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--nemesis-x",
@@ -24966,7 +26124,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Nemesis_X"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Nemesis_X",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--pegasis-ii-clear-wheel",
@@ -25203,7 +26366,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Sagittario_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Sagittario_I",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--samurai",
@@ -25340,7 +26508,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Serpent"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Serpent",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--striker",
@@ -25430,7 +26603,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Striker_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Striker_II",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--virgo",
@@ -25585,7 +26763,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Virgo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Virgo",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--wolf",
@@ -25805,7 +26988,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Wolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Wolf",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--zurafa",
@@ -25907,7 +27095,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Zurafa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Zurafa",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "engine-gear--gyro-engine-gear",
@@ -25937,7 +27130,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Gyro Engine Gear is a Beyblade engine gear from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Gyro_Engine_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Gyro_Engine_Gear",
+    "ratings": {
+      "attack": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "engine-gear--left-engine-gear",
@@ -25979,7 +27176,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear",
+    "ratings": {
+      "attack": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "engine-gear--left-engine-gear-turbo",
@@ -26023,7 +27224,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear_Turbo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear_Turbo",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "engine-gear--right-eg",
@@ -29242,7 +30448,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Wall"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Wall",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--xt",
@@ -29607,7 +30826,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Burn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Burn",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--dark",
@@ -29815,7 +31039,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Dark"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Dark",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--death-4d-metal-wheel",
@@ -30121,7 +31350,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Evil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Evil",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--flame",
@@ -30350,7 +31584,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Flame"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Flame",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--flame-shared-with-flame-sagittario",
@@ -30499,7 +31738,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Forbidden"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Forbidden",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--fusion-4d-metal-wheel",
@@ -30668,7 +31912,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Grand"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Grand",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--grand-metal-wheel",
@@ -30681,7 +31930,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       "grand metal wheel"
     ],
     "source": "case-study"
-  },
+  }
+];
+
+const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
   {
     "id": "fusion-wheel--gravity-counter-attack-fw",
     "classification": "Fusion Wheel",
@@ -30865,7 +32117,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hades"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hades",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--hades-maximum-series-wide-wheel",
@@ -31008,7 +32265,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--kreis-dual-mode-wheel",
@@ -31258,7 +32520,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Poison"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Poison",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--proto",
@@ -31335,7 +32602,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Proto"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Proto",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--ray-counter-smash",
@@ -31650,7 +32922,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Rock"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Rock",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--rock-heaviest-early-fw",
@@ -31843,7 +33120,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Spiral"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Spiral",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--storm",
@@ -32163,7 +33445,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Storm"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Storm",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--storm-core-metal",
@@ -32367,7 +33654,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Diabolos_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Diabolos_1",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--6",
@@ -32468,7 +33769,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_6'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_6'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--4d-clear-wheel-kronos",
@@ -32708,7 +34015,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Deathscyther"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Deathscyther",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-fortress",
@@ -32848,7 +34169,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Drain_Fafnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Drain_Fafnir",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 5,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dranzer-flame",
@@ -32958,7 +34293,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gaia_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gaia_Dragoon",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--genesis-valtryek-v3",
@@ -33051,7 +34400,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Genesis_Valtryek_V3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Genesis_Valtryek_V3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--god-valkyrie",
@@ -33254,7 +34609,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_God_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_God_Valkyrie",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--kaiser-kerbeus",
@@ -33358,7 +34727,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kaiser_Kerbeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kaiser_Kerbeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--king-kerbeus-k2",
@@ -33430,7 +34813,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_King_Kerbeus_K2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_King_Kerbeus_K2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--legend-spriggan",
@@ -33533,7 +34922,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Legend_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Legend_Spriggan",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--lost-l-inor-l2",
@@ -33646,7 +35049,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Maximum_Garuda"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Maximum_Garuda",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 4,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--obelisk-odin",
@@ -33726,7 +35143,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Obelisk_Odin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Obelisk_Odin",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--sieg-xcalibur",
@@ -33827,7 +35258,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sieg_Xcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sieg_Xcalibur",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 0,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--spryzen-requiem-s3",
@@ -33889,7 +35334,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen_Requiem_S3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen_Requiem_S3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--storm-spriggan",
@@ -34019,7 +35470,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spriggan",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--victory-valkyrie",
@@ -34292,7 +35757,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valkyrie",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wild-wyvern",
@@ -34422,7 +35901,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvern"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvern",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wolborg",
@@ -34550,7 +36043,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalibur",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 1,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "base--venom",
@@ -34684,7 +36190,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Venom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Venom",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "lock-chip--valkyrie",
@@ -34839,7 +36359,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Volt"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Volt",
+    "ratings": {
+      "attack": 45,
+      "defense": 15,
+      "stamina": 15
+    }
   },
   {
     "id": "performance-tip--4d-bottom-b-d-bearing-drive",
@@ -35278,7 +36803,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Eternal_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Eternal_Spike",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 6
+    }
   },
   {
     "id": "performance-tip--xf",
@@ -37598,7 +39128,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Spike",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--s",
@@ -38229,7 +39764,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Chain"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Chain",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ratchet--0-80",
@@ -38361,7 +39902,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-80",
+    "ratings": {
+      "attack": 3,
+      "defense": 12,
+      "stamina": 15
+    }
   },
   {
     "id": "ratchet--1",
@@ -38610,7 +40156,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-60",
+    "ratings": {
+      "attack": 17,
+      "defense": 9,
+      "stamina": 4
+    }
   },
   {
     "id": "ratchet--2",
@@ -39041,7 +40592,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-60",
+    "ratings": {
+      "attack": 15,
+      "defense": 9,
+      "stamina": 6
+    }
   },
   {
     "id": "ratchet--3-70",
@@ -39226,7 +40782,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-70",
+    "ratings": {
+      "attack": 15,
+      "defense": 8,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--3-80",
@@ -39557,7 +41118,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-80",
+    "ratings": {
+      "attack": 15,
+      "defense": 7,
+      "stamina": 8
+    }
   },
   {
     "id": "ratchet--4-60",
@@ -39919,7 +41485,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-60",
+    "ratings": {
+      "attack": 11,
+      "defense": 13,
+      "stamina": 6
+    }
   },
   {
     "id": "ratchet--4-70",
@@ -40137,7 +41708,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-70",
+    "ratings": {
+      "attack": 11,
+      "defense": 12,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--4-80",
@@ -40439,7 +42015,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-80",
+    "ratings": {
+      "attack": 11,
+      "defense": 11,
+      "stamina": 8
+    }
   },
   {
     "id": "ratchet--5-60",
@@ -40671,7 +42252,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-60",
+    "ratings": {
+      "attack": 12,
+      "defense": 9,
+      "stamina": 9
+    }
   },
   {
     "id": "ratchet--5-70",
@@ -40857,7 +42443,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-70",
+    "ratings": {
+      "attack": 12,
+      "defense": 8.5,
+      "stamina": 9.5
+    }
   },
   {
     "id": "ratchet--5-80",
@@ -41055,7 +42646,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-80",
+    "ratings": {
+      "attack": 12,
+      "defense": 8,
+      "stamina": 10
+    }
   },
   {
     "id": "ratchet--9",
@@ -41275,7 +42871,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-60",
+    "ratings": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7
+    }
   },
   {
     "id": "running-core--aero-wing-aero-core",
@@ -41388,7 +42989,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Battle_Change_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Battle_Change_Core",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "running-core--bearing-core-2-top",
@@ -41469,7 +43075,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Flat Core is a Beyblade running core from the Hard Metal System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Flat_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Flat_Core",
+    "ratings": {
+      "attack": 3,
+      "defense": 1
+    }
   },
   {
     "id": "running-core--flat-core-gyro-mode",
@@ -41604,7 +43214,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "running-core--grip-sharp-core",
@@ -41670,7 +43285,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Manual_Change_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Manual_Change_Core",
+    "ratings": {
+      "attack": 3,
+      "defense": 1
+    }
   },
   {
     "id": "running-core--metal-ball-core",
@@ -41916,7 +43535,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Semi-Flat Core is a Beyblade running core from the Hard Metal System, weighing 2 g. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Semi-Flat_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Semi-Flat_Core",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "running-core--sharp-core",
@@ -41971,7 +43595,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Sharp Core is a Beyblade running core from the Hard Metal System, weighing 2 g. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Sharp_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Sharp_Core",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "running-core--shooter-change-core",
@@ -42239,7 +43868,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Heavy Metal Core is a Beyblade spin gear from the Engine Gear System, weighing 9 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Heavy_Metal_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Heavy_Metal_Core",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-gear--left-sg",
@@ -42579,7 +44213,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_MG_South_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_MG_South_Core",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-gear--right-sg",
@@ -43225,7 +44864,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_100"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_100",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--105",
@@ -43770,7 +45414,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_105"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_105",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--125",
@@ -44039,7 +45688,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_125"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_125",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--130",
@@ -44309,7 +45963,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_130"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_130",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--135",
@@ -44437,7 +46096,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_135"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_135",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--145",
@@ -44971,7 +46635,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--160",
@@ -45424,7 +47093,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Left_Wing_160"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Left_Wing_160",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--lw105",
@@ -45940,7 +47614,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Tornado_125"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Tornado_125",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--a230",
@@ -46165,7 +47844,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Kerbeus_K8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Kerbeus_K8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--achilles",
@@ -46269,7 +47954,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Achilles"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Achilles",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--wyvern",
@@ -46343,7 +48042,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Wyvern"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Wyvern",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "support-parts--cross-survivor",
@@ -46388,7 +48101,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Parts_-_Cross_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Parts_-_Cross_Survivor",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "support-parts--reverse-attack",
@@ -46831,7 +48549,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Balance"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Balance",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "weight-disk--eight-heavy",
@@ -47279,7 +49002,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Balance"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Balance",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "weight-disk--ten-heavy",
@@ -47453,7 +49181,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Wide"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Wide",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "weight-disk--wide-series",
@@ -47580,7 +49313,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_0"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_0",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--1",
@@ -47660,7 +49407,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_1",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--10",
@@ -47785,7 +49546,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_10"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_10",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--2",
@@ -47942,7 +49717,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_2",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--3",
@@ -48075,7 +49864,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_3",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--4",
@@ -48148,7 +49951,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_4",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--6",
@@ -48284,7 +50101,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_6",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--8",
@@ -48349,7 +50180,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_8",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armour--9",
@@ -48465,7 +50310,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_9"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_-_9",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "armor-tip--adventure",
@@ -48521,7 +50380,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Adventure"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Adventure",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--almight",
@@ -48581,7 +50446,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Almight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Almight",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--billow",
@@ -48641,7 +50519,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Billow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Billow",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--blow",
@@ -48718,7 +50602,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Blow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Blow",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--bounce",
@@ -48772,7 +50669,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Bounce"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Bounce",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--defense",
@@ -48840,7 +50743,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Defense",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--destroy",
@@ -48900,7 +50816,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Destroy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Destroy",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--drift",
@@ -48956,7 +50878,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Drift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Drift",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--eruption",
@@ -49039,7 +50967,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Eruption"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Eruption",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--flap",
@@ -49100,7 +51034,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flap"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flap",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--flexible",
@@ -49156,7 +51096,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flexible"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flexible",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--flugel",
@@ -49224,7 +51170,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flugel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Flugel",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--hunter",
@@ -49303,7 +51255,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Hunter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Hunter",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--jaggy",
@@ -49357,7 +51315,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Jaggy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Jaggy",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--kick",
@@ -49449,7 +51413,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Kick"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Kick",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--lucent",
@@ -49504,7 +51481,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Lucent"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Lucent",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--merge",
@@ -49566,7 +51549,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Merge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Merge",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--moment",
@@ -49633,7 +51622,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Moment"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Moment",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--never",
@@ -49698,7 +51693,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Never"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Never",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--octa",
@@ -49760,7 +51768,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Octa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Octa",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--operate",
@@ -49805,7 +51819,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Operate"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Operate",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--press",
@@ -49882,7 +51902,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Press"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Press",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--quake",
@@ -49953,7 +51986,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quake",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--quattro-i",
@@ -50013,7 +52059,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quattro_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quattro_I",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--quattro-ii",
@@ -50071,7 +52123,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quattro_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Quattro_II",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--revolve",
@@ -50116,7 +52174,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Revolve"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Revolve",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--rise",
@@ -50197,7 +52261,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rise"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rise",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--rugged",
@@ -50260,7 +52337,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rugged"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rugged",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--rumble",
@@ -50332,7 +52415,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rumble"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Rumble",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--shot",
@@ -50408,7 +52497,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Shot"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Shot",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--sparky",
@@ -50460,7 +52562,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Sparky"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Sparky",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--stay",
@@ -50523,7 +52631,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Stay"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Stay",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--still",
@@ -50590,7 +52704,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Still"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Still",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--stormy",
@@ -50652,7 +52772,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Stormy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Stormy",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--sword",
@@ -50708,7 +52834,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Sword"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Sword",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--unite",
@@ -50764,7 +52896,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Unite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Unite",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--universe",
@@ -50824,7 +52962,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Universe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Universe",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--variable",
@@ -50880,7 +53031,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Variable"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Variable",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--venture",
@@ -50961,7 +53118,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Venture"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Venture",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--vs-gear",
@@ -51017,7 +53187,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_VS_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_VS_Gear",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--wave",
@@ -51111,7 +53287,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Wave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Wave",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--xplosion",
@@ -51165,7 +53354,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Xplosion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Xplosion",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--xtend",
@@ -51219,7 +53414,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Xtend%2B"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Xtend%2B",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "armor-tip--zeal",
@@ -51275,7 +53476,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Zeal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Armor_Tip_-_Zeal",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "assist-blade--assault",
@@ -51371,7 +53578,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Assault"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Assault",
+    "ratings": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 5
+    }
   },
   {
     "id": "assist-blade--bumper",
@@ -51484,7 +53696,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Bumper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Bumper",
+    "ratings": {
+      "attack": 10,
+      "defense": 20,
+      "stamina": 10
+    }
   },
   {
     "id": "assist-blade--charge",
@@ -51566,7 +53783,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Charge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Charge",
+    "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 5
+    }
   },
   {
     "id": "assist-blade--dual",
@@ -51701,7 +53923,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Erase"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Erase",
+    "ratings": {
+      "attack": 10,
+      "defense": 5,
+      "stamina": 25
+    }
   },
   {
     "id": "assist-blade--free",
@@ -51760,7 +53987,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Free"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Free",
+    "ratings": {
+      "attack": 5,
+      "defense": 20,
+      "stamina": 25
+    }
   },
   {
     "id": "assist-blade--gravity",
@@ -51819,7 +54051,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Gravity"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Gravity",
+    "ratings": {
+      "attack": 37,
+      "defense": 9,
+      "stamina": 4
+    }
   },
   {
     "id": "assist-blade--heavy",
@@ -51899,7 +54136,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Heavy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Heavy",
+    "ratings": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 11
+    }
   },
   {
     "id": "assist-blade--jaggy",
@@ -51991,7 +54233,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Jaggy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Jaggy",
+    "ratings": {
+      "attack": 20,
+      "defense": 15,
+      "stamina": 5
+    }
   },
   {
     "id": "assist-blade--knuckle",
@@ -52076,7 +54323,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Knuckle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Knuckle",
+    "ratings": {
+      "attack": 30,
+      "defense": 5,
+      "stamina": 5
+    }
   },
   {
     "id": "assist-blade--massive",
@@ -52145,7 +54397,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Massive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Massive",
+    "ratings": {
+      "attack": 15,
+      "defense": 15,
+      "stamina": 10
+    }
   },
   {
     "id": "assist-blade--odd",
@@ -52222,7 +54479,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Odd"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Odd",
+    "ratings": {
+      "attack": 17,
+      "defense": 10,
+      "stamina": 13
+    }
   },
   {
     "id": "assist-blade--quell",
@@ -52424,7 +54686,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Round"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Round",
+    "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20
+    }
   },
   {
     "id": "assist-blade--turn",
@@ -52552,7 +54819,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Turn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Turn",
+    "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20
+    }
   },
   {
     "id": "assist-blade--vertical",
@@ -52620,7 +54892,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Vertical"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Vertical",
+    "ratings": {
+      "attack": 10,
+      "defense": 25,
+      "stamina": 5
+    }
   },
   {
     "id": "assist-blade--wheel",
@@ -52726,7 +55003,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Wheel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Wheel",
+    "ratings": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 20
+    }
   },
   {
     "id": "assist-blade--zillion",
@@ -52785,7 +55067,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Zillion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Zillion",
+    "ratings": {
+      "attack": 22,
+      "defense": 15,
+      "stamina": 3
+    }
   },
   {
     "id": "attack-ring--advance-balancer",
@@ -52973,7 +55260,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Dragon",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--cross-horn",
@@ -53099,7 +55391,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Delta Wave is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Delta_Wave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Delta_Wave",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--double-attacker",
@@ -53137,7 +55434,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Attacker",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--double-snake",
@@ -53210,7 +55512,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Down Force Ring is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Down_Force_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Down_Force_Ring",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--dragon-head",
@@ -53262,7 +55569,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Spiker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Spiker",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--great-tiger",
@@ -53349,7 +55661,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Gyro_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Gyro_Defense",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--jungle-shock",
@@ -53391,7 +55708,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Knight Claws is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Claws"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Claws",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--knight-claws-ring",
@@ -53558,7 +55880,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Scissors Arm is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissors_Arm"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissors_Arm",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--scissor-attacker",
@@ -53632,7 +55959,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Smash Turtle is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Turtle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Turtle",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--spark-attack",
@@ -53682,7 +56014,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Square Edge is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Square_Edge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Square_Edge",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--trident-vector",
@@ -53723,7 +56060,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Trident_Vector"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Trident_Vector",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--triple-attacker",
@@ -53759,7 +56101,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Triple Attacker is a Beyblade attack ring from the Magnacore System, weighing 7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Attacker",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--triple-tiger",
@@ -53786,7 +56133,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Triple Tiger is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Tiger",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--triple-wing",
@@ -53823,7 +56175,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Wing",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "attack-ring--twin-horn",
@@ -53911,7 +56268,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Whale Attacker is a Beyblade attack ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Whale_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Whale_Attacker",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "attack-ring--wing-attack-ring",
@@ -54039,7 +56401,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/A_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/A_Gear",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--ace",
@@ -54211,7 +56587,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Ace"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Ace",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--ace-hasbro",
@@ -54275,7 +56665,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Ace_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Ace_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--bushin-hasbro",
@@ -54333,7 +56729,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Bushin_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Bushin_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--bushin-takara-tomy",
@@ -54447,7 +56849,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Bushin_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Bushin_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--command",
@@ -54500,7 +56916,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Command"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Command",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--cosmic",
@@ -54560,7 +56982,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Cosmic"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Cosmic",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--cosmo",
@@ -54656,7 +57084,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Cosmo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Cosmo",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--dread",
@@ -54750,7 +57192,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Dread"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Dread",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--dusk",
@@ -54809,7 +57265,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Dusk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Dusk",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--eclipse",
@@ -54862,7 +57324,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Eclipse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Eclipse",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--erase-hasbro",
@@ -54927,7 +57395,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Erase_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Erase_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--erase-takara-tomy",
@@ -55023,7 +57497,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Erase_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Erase_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 3,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--flare-hasbro",
@@ -55069,7 +57557,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Flare_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Flare_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--flare-takara-tomy",
@@ -55156,7 +57650,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Flare_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Flare_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 5,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--glyph",
@@ -55216,7 +57724,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Glyph"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Glyph",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--grand",
@@ -55341,7 +57855,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Grand"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Grand",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--harmony",
@@ -55391,7 +57919,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Harmony"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Harmony",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--heaven",
@@ -55499,7 +58033,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Heaven"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Heaven",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 5,
+      "weight": 3,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--imperial",
@@ -55627,7 +58175,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Imperial"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Imperial",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 2,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--inferno",
@@ -55673,7 +58235,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Inferno"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Inferno",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--judgement",
@@ -55782,7 +58350,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Judgement"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Judgement",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--judgement-hasbro",
@@ -55847,7 +58429,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Judgement_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Judgement_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--knockout",
@@ -55940,7 +58528,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Knockout"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Knockout",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--lord",
@@ -56043,7 +58645,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Lord"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Lord",
+    "ratings": {
+      "attack": 5,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--lord-hasbro",
@@ -56114,7 +58730,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Lord_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Lord_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--master",
@@ -56263,7 +58885,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Master"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Master",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 4,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--master-hasbro",
@@ -56318,7 +58954,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Master_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Master_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--monster",
@@ -56373,7 +59015,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Monster"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Monster",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--myth",
@@ -56426,7 +59074,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Myth"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Myth",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--naked",
@@ -56541,7 +59195,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Naked"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Naked",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--poison",
@@ -56628,7 +59296,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Poison"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Poison",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--poison-hasbro",
@@ -56674,7 +59356,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Poison_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Poison_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--prime",
@@ -56722,7 +59410,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Prime"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Prime",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--rock-hasbro",
@@ -56770,7 +59464,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Rock_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Rock_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--rock-takara-tomy",
@@ -56873,7 +59573,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Rock_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Rock_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--royal",
@@ -56919,7 +59633,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Royal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Royal",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--shield",
@@ -56974,7 +59694,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Shield"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Shield",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--slash",
@@ -57095,7 +59821,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Slash"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Slash",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--solar",
@@ -57147,7 +59887,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Solar"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Solar",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--soul",
@@ -57265,7 +60011,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Sword"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Sword",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--tact",
@@ -57373,7 +60125,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Tact"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Tact",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--tact-hasbro",
@@ -57419,7 +60185,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Tact_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Tact_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--union",
@@ -57566,7 +60338,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Union"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Union",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--union-hasbro",
@@ -57643,7 +60429,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Union_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Union_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--venom-hasbro",
@@ -57695,7 +60487,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Venom_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Venom_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--viper",
@@ -57749,7 +60547,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Viper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Viper",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--wizard",
@@ -57856,7 +60660,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Wizard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Wizard",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--wizard-hasbro",
@@ -57915,7 +60733,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Wizard_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Wizard_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--zone",
@@ -57982,7 +60806,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Zone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Zone",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "base--zwei",
@@ -58084,7 +60914,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Zwei"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Zwei",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bit--ball",
@@ -58360,7 +61204,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Ball",
+    "ratings": {
+      "attack": 15,
+      "defense": 25,
+      "stamina": 50
+    }
   },
   {
     "id": "bit--bound-spike",
@@ -58454,7 +61303,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Bound_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Bound_Spike",
+    "ratings": {
+      "attack": 5,
+      "defense": 60,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--cyclone",
@@ -58568,7 +61422,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Cyclone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Cyclone",
+    "ratings": {
+      "attack": 40,
+      "defense": 5,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--disk-spike",
@@ -58649,7 +61508,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Spike",
+    "ratings": {
+      "attack": 5,
+      "defense": 55,
+      "stamina": 40
+    }
   },
   {
     "id": "bit--dot",
@@ -58782,7 +61646,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Dot"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Dot",
+    "ratings": {
+      "attack": 10,
+      "defense": 55,
+      "stamina": 25
+    }
   },
   {
     "id": "bit--elevate",
@@ -58902,7 +61771,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Elevate"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Elevate",
+    "ratings": {
+      "attack": 30,
+      "defense": 15,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--free-flat",
@@ -58969,7 +61843,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Flat",
+    "ratings": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--gear-flat",
@@ -59163,7 +62042,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Flat",
+    "ratings": {
+      "attack": 50,
+      "defense": 5,
+      "stamina": 5
+    }
   },
   {
     "id": "bit--gear-needle",
@@ -59328,7 +62212,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Needle",
+    "ratings": {
+      "attack": 20,
+      "defense": 40,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--gear-point",
@@ -59474,7 +62363,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Point"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Point",
+    "ratings": {
+      "attack": 30,
+      "defense": 25,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--gear-rush",
@@ -59552,7 +62446,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Rush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Rush",
+    "ratings": {
+      "attack": 45,
+      "defense": 10,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--gear-unite",
@@ -59636,7 +62535,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Unite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Unite",
+    "ratings": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--glide",
@@ -59720,7 +62624,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Glide"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Glide",
+    "ratings": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 55
+    }
   },
   {
     "id": "bit--high-needle",
@@ -59900,7 +62809,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_High_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_High_Needle",
+    "ratings": {
+      "attack": 15,
+      "defense": 55,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--high-taper",
@@ -60023,7 +62937,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_High_Taper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_High_Taper",
+    "ratings": {
+      "attack": 30,
+      "defense": 25,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--ignition",
@@ -60108,7 +63027,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Ignition"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Ignition",
+    "ratings": {
+      "attack": 50,
+      "defense": 15,
+      "stamina": 5
+    }
   },
   {
     "id": "bit--jolt",
@@ -60182,7 +63106,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Jolt"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Jolt",
+    "ratings": {
+      "attack": 35,
+      "defense": 10,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--kick",
@@ -60353,7 +63282,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Kick"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Kick",
+    "ratings": {
+      "attack": 35,
+      "defense": 25,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--level",
@@ -60471,7 +63405,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Level"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Level",
+    "ratings": {
+      "attack": 40,
+      "defense": 5,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--low-cyclone",
@@ -60529,7 +63468,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Cyclone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Cyclone",
+    "ratings": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 5
+    }
   },
   {
     "id": "bit--low-flat",
@@ -60727,7 +63671,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Flat",
+    "ratings": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--low-orb",
@@ -60843,7 +63792,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Orb"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Orb",
+    "ratings": {
+      "attack": 5,
+      "defense": 25,
+      "stamina": 55
+    }
   },
   {
     "id": "bit--low-point",
@@ -60914,7 +63868,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Point"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Point",
+    "ratings": {
+      "attack": 30,
+      "defense": 15,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--low-rush",
@@ -61043,7 +64002,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Rush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Rush",
+    "ratings": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 15
+    }
   },
   {
     "id": "bit--merge",
@@ -61123,7 +64087,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Merge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Merge",
+    "ratings": {
+      "attack": 50,
+      "defense": 20,
+      "stamina": 10
+    }
   },
   {
     "id": "bit--metal-needle",
@@ -61234,7 +64203,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Metal_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Metal_Needle",
+    "ratings": {
+      "attack": 8,
+      "defense": 57,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--metal-taper",
@@ -61294,7 +64268,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Metal_Taper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Metal_Taper",
+    "ratings": {
+      "attack": 40,
+      "defense": 22,
+      "stamina": 18
+    }
   },
   {
     "id": "bit--narrow",
@@ -61374,7 +64353,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Narrow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Narrow",
+    "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 60
+    }
   },
   {
     "id": "bit--needle",
@@ -61611,7 +64595,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Needle",
+    "ratings": {
+      "attack": 10,
+      "defense": 50,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--orb",
@@ -61770,7 +64759,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Orb"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Orb",
+    "ratings": {
+      "attack": 10,
+      "defense": 30,
+      "stamina": 50
+    }
   },
   {
     "id": "bit--quake",
@@ -61891,7 +64885,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Quake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Quake",
+    "ratings": {
+      "attack": 55,
+      "defense": 15,
+      "stamina": 5
+    }
   },
   {
     "id": "bit--rubber-accel",
@@ -62005,7 +65004,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Rubber_Accel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Rubber_Accel",
+    "ratings": {
+      "attack": 60,
+      "defense": 17,
+      "stamina": 3
+    }
   },
   {
     "id": "bit--rush",
@@ -62215,7 +65219,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Rush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Rush",
+    "ratings": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--spike",
@@ -62334,7 +65343,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Spike",
+    "ratings": {
+      "attack": 10,
+      "defense": 45,
+      "stamina": 35
+    }
   },
   {
     "id": "bit--trans-kick",
@@ -62399,7 +65413,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Kick"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Kick",
+    "ratings": {
+      "attack": 35,
+      "defense": 30,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--under-flat",
@@ -62488,7 +65507,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Under_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Under_Flat",
+    "ratings": {
+      "attack": 55,
+      "defense": 5,
+      "stamina": 5
+    }
   },
   {
     "id": "bit--under-needle",
@@ -62571,7 +65595,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Under_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Under_Needle",
+    "ratings": {
+      "attack": 10,
+      "defense": 60,
+      "stamina": 20
+    }
   },
   {
     "id": "bit--unite",
@@ -62681,7 +65710,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Unite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Unite",
+    "ratings": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--wall-ball",
@@ -62784,7 +65818,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wall_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wall_Ball",
+    "ratings": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 45
+    }
   },
   {
     "id": "bit--wall-wedge",
@@ -62843,7 +65882,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wall_Wedge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wall_Wedge",
+    "ratings": {
+      "attack": 5,
+      "defense": 60,
+      "stamina": 25
+    }
   },
   {
     "id": "bit--wedge",
@@ -62953,7 +65997,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wedge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wedge",
+    "ratings": {
+      "attack": 5,
+      "defense": 55,
+      "stamina": 30
+    }
   },
   {
     "id": "bit--yielding",
@@ -63025,7 +66074,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Yielding"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Yielding",
+    "ratings": {
+      "attack": 10,
+      "defense": 15,
+      "stamina": 65
+    }
   },
   {
     "id": "bit--zap",
@@ -63112,7 +66166,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Zap"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Zap",
+    "ratings": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 15
+    }
   },
   {
     "id": "bit-chip--bit-chips",
@@ -63654,7 +66713,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Knight Dranzer is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dranzer"
-  },
+  }
+];
+
+const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
   {
     "id": "bit-chip--makendo",
     "classification": "Bit Chip",
@@ -64398,7 +67460,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Draciel_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Draciel_Emblem",
+    "ratings": {
+      "attack": 1,
+      "defense": 3
+    }
   },
   {
     "id": "bit-protector--dragoon-emblem",
@@ -64512,7 +67578,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dranzer_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dranzer_Emblem",
+    "ratings": {
+      "attack": 1,
+      "defense": 2
+    }
   },
   {
     "id": "bit-protector--god-emblem",
@@ -64898,7 +67968,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Astral_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Astral_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--astral-takara-tomy",
@@ -65000,7 +68076,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Astral_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Astral_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--berserk",
@@ -65074,7 +68164,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Berserk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Berserk",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--bite-croc",
@@ -65165,7 +68261,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Bite_Croc"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Bite_Croc",
+    "ratings": {
+      "attack": 60,
+      "defense": 22,
+      "stamina": 18
+    }
   },
   {
     "id": "blade--blackshell",
@@ -65261,7 +68362,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_BlackShell"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_BlackShell",
+    "ratings": {
+      "attack": 10,
+      "defense": 65,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--bumblebee",
@@ -65324,7 +68430,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Bumblebee"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Bumblebee",
+    "ratings": {
+      "attack": 21,
+      "defense": 55,
+      "stamina": 24
+    }
   },
   {
     "id": "blade--captain-america",
@@ -65386,7 +68497,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Captain_America"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Captain_America",
+    "ratings": {
+      "attack": 55,
+      "defense": 28,
+      "stamina": 17
+    }
   },
   {
     "id": "blade--chewbacca",
@@ -65444,7 +68560,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Chewbacca"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Chewbacca",
+    "ratings": {
+      "attack": 22,
+      "defense": 23,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--clamp-crab",
@@ -65508,7 +68629,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Clamp_Crab"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Clamp_Crab",
+    "ratings": {
+      "attack": 10,
+      "defense": 43,
+      "stamina": 47
+    }
   },
   {
     "id": "blade--clockmirage",
@@ -65594,7 +68720,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ClockMirage"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ClockMirage",
+    "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 80
+    }
   },
   {
     "id": "blade--cyclone-hasbro",
@@ -65669,7 +68800,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Cyclone_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Cyclone_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--cyclone-takara-tomy",
@@ -65785,7 +68922,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Cyclone_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Cyclone_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 5,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--dangerous",
@@ -65859,7 +69010,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Dangerous"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Dangerous",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--darth-vader",
@@ -65929,7 +69094,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Darth_Vader"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Darth_Vader",
+    "ratings": {
+      "attack": 28,
+      "defense": 60,
+      "stamina": 12
+    }
   },
   {
     "id": "blade--decay",
@@ -65985,7 +69155,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Decay"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Decay",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--destruction",
@@ -66066,7 +69242,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Destruction"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Destruction",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--devastate",
@@ -66122,7 +69304,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Devastate"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Devastate",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--devil",
@@ -66228,7 +69416,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Devil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Devil",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 5,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--doctor-doom",
@@ -66267,7 +69469,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Doctor Doom is a Beyblade blade from the Basic Line. Released as G3063 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Doctor_Doom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Doctor_Doom",
+    "ratings": {
+      "attack": 19,
+      "defense": 55,
+      "stamina": 26
+    }
   },
   {
     "id": "blade--dracielshield",
@@ -66339,7 +69546,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DracielShield"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DracielShield",
+    "ratings": {
+      "attack": 30,
+      "defense": 50,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--dragoonstorm",
@@ -66422,7 +69634,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DragoonStorm"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DragoonStorm",
+    "ratings": {
+      "attack": 55,
+      "defense": 30,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--dranstrike",
@@ -66490,7 +69707,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranStrike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranStrike",
+    "ratings": {
+      "attack": 58,
+      "defense": 25,
+      "stamina": 17
+    }
   },
   {
     "id": "blade--dynamite",
@@ -66615,7 +69837,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Dynamite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Dynamite",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--general-grievous",
@@ -66677,7 +69913,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_General_Grievous"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_General_Grievous",
+    "ratings": {
+      "attack": 22,
+      "defense": 50,
+      "stamina": 28
+    }
   },
   {
     "id": "blade--gilded",
@@ -66750,7 +69991,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gilded"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gilded",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--gill-shark",
@@ -66870,7 +70117,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gill_Shark"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gill_Shark",
+    "ratings": {
+      "attack": 20,
+      "defense": 25,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--glare-cyclops",
@@ -66978,7 +70230,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Glory"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Glory",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--golemrock",
@@ -67069,7 +70327,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GolemRock"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GolemRock",
+    "ratings": {
+      "attack": 30,
+      "defense": 60,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--green-goblin",
@@ -67131,7 +70394,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Green_Goblin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Green_Goblin",
+    "ratings": {
+      "attack": 17,
+      "defense": 28,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--grogu",
@@ -67183,7 +70451,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Grogu"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Grogu",
+    "ratings": {
+      "attack": 21,
+      "defense": 50,
+      "stamina": 29
+    }
   },
   {
     "id": "blade--guilty-hasbro",
@@ -67243,7 +70516,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Guilty_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Guilty_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--guilty-takara-tomy",
@@ -67330,7 +70609,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Guilty_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Guilty_(Takara_Tomy)",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--gust-bat",
@@ -67392,7 +70685,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gust_Bat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gust_Bat",
+    "ratings": {
+      "attack": 42,
+      "defense": 38,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--hack-viking",
@@ -67456,7 +70754,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hack_Viking"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hack_Viking",
+    "ratings": {
+      "attack": 47,
+      "defense": 28,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--heavensring",
@@ -67537,7 +70840,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HeavensRing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HeavensRing",
+    "ratings": {
+      "attack": 10,
+      "defense": 60,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--hellschain",
@@ -67649,7 +70957,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsChain"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsChain",
+    "ratings": {
+      "attack": 35,
+      "defense": 40,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--hover-wyvern",
@@ -67758,7 +71071,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hover_Wyvern"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hover_Wyvern",
+    "ratings": {
+      "attack": 13,
+      "defense": 60,
+      "stamina": 27
+    }
   },
   {
     "id": "blade--hulk",
@@ -67802,7 +71120,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hulk is a Beyblade blade from the Basic Line, weighing 33 g. Released as G3064 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hulk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hulk",
+    "ratings": {
+      "attack": 12,
+      "defense": 65,
+      "stamina": 23
+    }
   },
   {
     "id": "blade--impactdrake",
@@ -67888,7 +71211,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ImpactDrake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ImpactDrake",
+    "ratings": {
+      "attack": 75,
+      "defense": 25,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--iron-man",
@@ -67965,7 +71293,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Iron_Man"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Iron_Man",
+    "ratings": {
+      "attack": 17,
+      "defense": 55,
+      "stamina": 28
+    }
   },
   {
     "id": "blade--katana",
@@ -68042,7 +71375,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Katana"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Katana",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--knife-shinobi",
@@ -68129,7 +71468,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Knife_Shinobi"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Knife_Shinobi",
+    "ratings": {
+      "attack": 23,
+      "defense": 50,
+      "stamina": 27
+    }
   },
   {
     "id": "blade--knightlance",
@@ -68238,7 +71582,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightLance"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightLance",
+    "ratings": {
+      "attack": 25,
+      "defense": 60,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--knightmail",
@@ -68328,7 +71677,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightMail"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightMail",
+    "ratings": {
+      "attack": 10,
+      "defense": 65,
+      "stamina": 35
+    }
   },
   {
     "id": "blade--leoncrest",
@@ -68456,7 +71810,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonCrest"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonCrest",
+    "ratings": {
+      "attack": 15,
+      "defense": 70,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--lightning-l-drago-rapid-hit-type",
@@ -68520,7 +71879,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Lightning_L-Drago_(Rapid-Hit_Type)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Lightning_L-Drago_(Rapid-Hit_Type)",
+    "ratings": {
+      "attack": 50,
+      "defense": 30,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--lightning-l-drago-upper-type",
@@ -68584,7 +71948,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Lightning_L-Drago_(Upper_Type)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Lightning_L-Drago_(Upper_Type)",
+    "ratings": {
+      "attack": 55,
+      "defense": 25,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--luke-skywalker",
@@ -68653,7 +72022,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Luke_Skywalker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Luke_Skywalker",
+    "ratings": {
+      "attack": 23,
+      "defense": 55,
+      "stamina": 22
+    }
   },
   {
     "id": "blade--lusterdragoon",
@@ -68712,7 +72086,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LusterDragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LusterDragoon",
+    "ratings": {
+      "attack": 75,
+      "defense": 15,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--magma",
@@ -68790,7 +72169,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Magma"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Magma",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--megatron",
@@ -68868,7 +72253,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Megatron"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Megatron",
+    "ratings": {
+      "attack": 27,
+      "defense": 35,
+      "stamina": 38
+    }
   },
   {
     "id": "blade--meteordragoon",
@@ -68952,7 +72342,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_MeteorDragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_MeteorDragoon",
+    "ratings": {
+      "attack": 75,
+      "defense": 15,
+      "stamina": 35
+    }
   },
   {
     "id": "blade--miles-morales",
@@ -69014,7 +72409,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Miles_Morales"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Miles_Morales",
+    "ratings": {
+      "attack": 12,
+      "defense": 33,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--mister-fantastic",
@@ -69053,7 +72453,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Mister Fantastic is a Beyblade blade from the Basic Line. Released as G3063 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Mister_Fantastic"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Mister_Fantastic",
+    "ratings": {
+      "attack": 31,
+      "defense": 55,
+      "stamina": 14
+    }
   },
   {
     "id": "blade--moff-gideon",
@@ -69123,7 +72528,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Moff_Gideon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Moff_Gideon",
+    "ratings": {
+      "attack": 32,
+      "defense": 35,
+      "stamina": 33
+    }
   },
   {
     "id": "blade--mummycurse",
@@ -69208,7 +72618,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_MummyCurse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_MummyCurse",
+    "ratings": {
+      "attack": 30,
+      "defense": 60,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--obi-wan-kenobi",
@@ -69270,7 +72685,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Obi-Wan_Kenobi"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Obi-Wan_Kenobi",
+    "ratings": {
+      "attack": 23,
+      "defense": 60,
+      "stamina": 17
+    }
   },
   {
     "id": "blade--optimus-primal",
@@ -69347,7 +72767,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Primal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Primal",
+    "ratings": {
+      "attack": 60,
+      "defense": 27,
+      "stamina": 13
+    }
   },
   {
     "id": "blade--optimus-prime",
@@ -69431,7 +72856,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Prime"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Prime",
+    "ratings": {
+      "attack": 22,
+      "defense": 55,
+      "stamina": 23
+    }
   },
   {
     "id": "blade--orochicluster",
@@ -69501,7 +72931,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_OrochiCluster"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_OrochiCluster",
+    "ratings": {
+      "attack": 65,
+      "defense": 15,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--phoenixfeather",
@@ -69575,7 +73010,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixFeather"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixFeather",
+    "ratings": {
+      "attack": 50,
+      "defense": 20,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--phoenixrudder",
@@ -69674,7 +73114,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixRudder"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixRudder",
+    "ratings": {
+      "attack": 10,
+      "defense": 35,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--prominence-hasbro",
@@ -69730,7 +73175,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Prominence_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Prominence_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--prominence-takara-tomy",
@@ -69809,7 +73260,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Prominence_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Prominence_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--red-hulk",
@@ -69871,7 +73336,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Red_Hulk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Red_Hulk",
+    "ratings": {
+      "attack": 65,
+      "defense": 27,
+      "stamina": 8
+    }
   },
   {
     "id": "blade--rhinohorn",
@@ -69955,7 +73425,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_RhinoHorn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_RhinoHorn",
+    "ratings": {
+      "attack": 20,
+      "defense": 50,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--roar-hasbro",
@@ -70033,7 +73508,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--roar-takara-tomy",
@@ -70130,7 +73611,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--roar-tyranno",
@@ -70227,7 +73722,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_Tyranno"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Roar_Tyranno",
+    "ratings": {
+      "attack": 60,
+      "defense": 28,
+      "stamina": 12
+    }
   },
   {
     "id": "blade--rock-leone",
@@ -70290,7 +73790,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Rock_Leone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Rock_Leone",
+    "ratings": {
+      "attack": 30,
+      "defense": 55,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--salvage",
@@ -70362,7 +73867,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Salvage"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Salvage",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--samuraicalibur",
@@ -70436,7 +73947,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SamuraiCalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SamuraiCalibur",
+    "ratings": {
+      "attack": 40,
+      "defense": 30,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--samuraisaber",
@@ -70545,7 +74061,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SamuraiSaber"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SamuraiSaber",
+    "ratings": {
+      "attack": 65,
+      "defense": 20,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--savage-bear",
@@ -70624,7 +74145,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savage_Bear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savage_Bear",
+    "ratings": {
+      "attack": 25,
+      "defense": 45,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--scorpiospear",
@@ -70796,7 +74322,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SharkScale"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SharkScale",
+    "ratings": {
+      "attack": 70,
+      "defense": 15,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--shatter-horus",
@@ -70832,7 +74363,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Shatter Horus is a Beyblade blade from the Basic Line, weighing 32.9 g. Released as G4567 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shatter_Horus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shatter_Horus",
+    "ratings": {
+      "attack": 15,
+      "defense": 35,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--shelterdrake",
@@ -70925,7 +74461,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ShelterDrake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ShelterDrake",
+    "ratings": {
+      "attack": 25,
+      "defense": 40,
+      "stamina": 35
+    }
   },
   {
     "id": "blade--shinobishadow",
@@ -71051,7 +74592,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ShinobiShadow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ShinobiShadow",
+    "ratings": {
+      "attack": 10,
+      "defense": 70,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--shockwave",
@@ -71107,7 +74653,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shockwave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shockwave",
+    "ratings": {
+      "attack": 32,
+      "defense": 18,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--siegsuperion",
@@ -71179,7 +74730,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SiegSuperion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SiegSuperion",
+    "ratings": {
+      "attack": 38,
+      "defense": 35,
+      "stamina": 27
+    }
   },
   {
     "id": "blade--sphinxcowl",
@@ -71284,7 +74840,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SphinxCowl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SphinxCowl",
+    "ratings": {
+      "attack": 35,
+      "defense": 55,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--spider-man",
@@ -71369,7 +74930,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Spider-Man"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Spider-Man",
+    "ratings": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--starscream",
@@ -71447,7 +75013,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Starscream"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Starscream",
+    "ratings": {
+      "attack": 18,
+      "defense": 27,
+      "stamina": 55
+    }
   },
   {
     "id": "blade--steel-samurai",
@@ -71531,7 +75102,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Steel_Samurai"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Steel_Samurai",
+    "ratings": {
+      "attack": 40,
+      "defense": 37,
+      "stamina": 23
+    }
   },
   {
     "id": "blade--stone",
@@ -71609,7 +75185,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stone",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--stormpegasis",
@@ -71687,7 +75269,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_StormPegasis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_StormPegasis",
+    "ratings": {
+      "attack": 55,
+      "defense": 15,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--stormspriggan",
@@ -71746,7 +75333,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_StormSpriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_StormSpriggan",
+    "ratings": {
+      "attack": 30,
+      "defense": 40,
+      "stamina": 30
+    }
   },
   {
     "id": "blade--stormtrooper",
@@ -71814,7 +75406,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stormtrooper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stormtrooper",
+    "ratings": {
+      "attack": 18,
+      "defense": 50,
+      "stamina": 32
+    }
   },
   {
     "id": "blade--stun-medusa",
@@ -71868,7 +75465,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stun_Medusa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stun_Medusa",
+    "ratings": {
+      "attack": 13,
+      "defense": 70,
+      "stamina": 17
+    }
   },
   {
     "id": "blade--tackle-goat",
@@ -71944,7 +75546,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tackle_Goat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tackle_Goat",
+    "ratings": {
+      "attack": 13,
+      "defense": 65,
+      "stamina": 22
+    }
   },
   {
     "id": "blade--talon-ptera",
@@ -72043,7 +75650,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Talon_Ptera"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Talon_Ptera",
+    "ratings": {
+      "attack": 27,
+      "defense": 23,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--thanos",
@@ -72121,7 +75733,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Thanos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Thanos",
+    "ratings": {
+      "attack": 22,
+      "defense": 60,
+      "stamina": 18
+    }
   },
   {
     "id": "blade--the-mandalorian",
@@ -72191,7 +75808,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_The_Mandalorian"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_The_Mandalorian",
+    "ratings": {
+      "attack": 40,
+      "defense": 43,
+      "stamina": 17
+    }
   },
   {
     "id": "blade--tricerapress",
@@ -72261,7 +75883,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraPress"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraPress",
+    "ratings": {
+      "attack": 20,
+      "defense": 65,
+      "stamina": 15
+    }
   },
   {
     "id": "blade--triceraspiky",
@@ -72353,7 +75980,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraSpiky"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraSpiky",
+    "ratings": {
+      "attack": 32,
+      "defense": 55,
+      "stamina": 13
+    }
   },
   {
     "id": "blade--trypio",
@@ -72499,7 +76131,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tusk_Mammoth"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tusk_Mammoth",
+    "ratings": {
+      "attack": 33,
+      "defense": 35,
+      "stamina": 32
+    }
   },
   {
     "id": "blade--ultimate-hasbro",
@@ -72560,7 +76197,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Ultimate_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Ultimate_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--ultimate-takara-tomy",
@@ -72660,7 +76303,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Ultimate_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Ultimate_(Takara_Tomy)",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--vanish-hasbro",
@@ -72735,7 +76392,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Vanish_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Vanish_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--vanish-takara-tomy",
@@ -72815,7 +76478,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Vanish_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Vanish_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 6,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--venom",
@@ -72893,7 +76570,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Venom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Venom",
+    "ratings": {
+      "attack": 55,
+      "defense": 22,
+      "stamina": 23
+    }
   },
   {
     "id": "blade--victoryvalkyrie",
@@ -72971,7 +76653,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_VictoryValkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_VictoryValkyrie",
+    "ratings": {
+      "attack": 55,
+      "defense": 20,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--weisstiger",
@@ -73099,7 +76786,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WeissTiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WeissTiger",
+    "ratings": {
+      "attack": 45,
+      "defense": 30,
+      "stamina": 25
+    }
   },
   {
     "id": "blade--whalewave",
@@ -73214,7 +76906,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WhaleWave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WhaleWave",
+    "ratings": {
+      "attack": 45,
+      "defense": 35,
+      "stamina": 20
+    }
   },
   {
     "id": "blade--wrath",
@@ -73279,7 +76976,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Wrath"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Wrath",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "blade--wyverngale",
@@ -73401,7 +77104,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WyvernGale"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WyvernGale",
+    "ratings": {
+      "attack": 10,
+      "defense": 40,
+      "stamina": 50
+    }
   },
   {
     "id": "blade--xenoxcalibur",
@@ -73460,7 +77168,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_XenoXcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_XenoXcalibur",
+    "ratings": {
+      "attack": 65,
+      "defense": 25,
+      "stamina": 10
+    }
   },
   {
     "id": "blade--yell-kong",
@@ -73520,7 +77233,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Yell_Kong"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Yell_Kong",
+    "ratings": {
+      "attack": 13,
+      "defense": 37,
+      "stamina": 50
+    }
   },
   {
     "id": "blade-base--auto-change",
@@ -73615,7 +77333,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Customize Bearing Base is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Bearing_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Bearing_Base",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "blade-base--customize-sharp",
@@ -73698,7 +77421,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Custom Metal Change (w  Upper Attack Support Parts) is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Custom_Metal_Change_(w__Upper_Attack_Support_Parts)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Custom_Metal_Change_(w__Upper_Attack_Support_Parts)",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--defense-grip-2",
@@ -73800,7 +77528,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base_(Dragoon_GT_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base_(Dragoon_GT_Version)",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--first-clutch-base-zeus-version",
@@ -73833,7 +77566,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base_(Zeus_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base_(Zeus_Version)",
+    "ratings": {
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-gear--flame-change",
@@ -73964,7 +77701,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flat",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--flat-base",
@@ -73997,7 +77739,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flat_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flat_Base",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--fortress",
@@ -74024,7 +77771,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Fortress is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Fortress"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Fortress",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 4
+    }
   },
   {
     "id": "blade-base--grip",
@@ -74121,7 +77873,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hit Release (Draciel Version) is a Beyblade blade base from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Draciel_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Draciel_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--hit-release-dranzer-gt-version",
@@ -74144,7 +77901,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hit Release (Dranzer GT Version) is a Beyblade blade base.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Dranzer_GT_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Dranzer_GT_Version)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--hit-release-dranzer-version",
@@ -74185,7 +77947,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Dranzer_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Dranzer_Version)",
+    "ratings": {
+      "attack": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--hit-release-strata-dragoon-g-version",
@@ -74215,7 +77981,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Strata_Dragoon_G_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Strata_Dragoon_G_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--hit-release-base-gigars-version",
@@ -74252,7 +78023,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_Base_(Gigars_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_Base_(Gigars_Version)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--instant-release-dragoon-gt-version",
@@ -74293,7 +78069,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Dragoon_GT_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Dragoon_GT_Version)",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--instant-release-dragoon-g-version",
@@ -74323,7 +78104,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Dragoon_G_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Dragoon_G_Version)",
+    "ratings": {
+      "attack": 3
+    }
   },
   {
     "id": "blade-base--instant-release-driger-g-version",
@@ -74351,7 +78135,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Instant Release (Driger G Version) is a Beyblade blade base from the Engine Gear System, weighing 7.3 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Driger_G_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Driger_G_Version)",
+    "ratings": {
+      "attack": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--instant-release-metal-driger-version",
@@ -74374,7 +78162,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Instant Release (Metal Driger Version) is a Beyblade blade base from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Metal_Driger_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Metal_Driger_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1
+    }
   },
   {
     "id": "blade-base--metal-ball",
@@ -74401,7 +78193,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Ball is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Ball",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 4
+    }
   },
   {
     "id": "blade-base--metal-change",
@@ -74439,7 +78236,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Change"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Change",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--blade-base",
@@ -74467,7 +78269,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Sharp Base is a Beyblade blade base.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sharp_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sharp_Base",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "blade-base--metal-sting",
@@ -74531,7 +78338,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Normal_Base_(Rock_Bison_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Normal_Base_(Rock_Bison_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--normal-base-wolborg-4-version",
@@ -74562,7 +78374,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Normal_Base_(Wolborg_4_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Normal_Base_(Wolborg_4_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--phantom-grip",
@@ -74677,7 +78494,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Metal Ball Base is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Ball_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Ball_Base",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 4
+    }
   },
   {
     "id": "blade-base--sg-roller",
@@ -74766,7 +78588,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Shark Tail is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Shark_Tail"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Shark_Tail",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "blade-base--spiral-change",
@@ -74831,7 +78658,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Switch_Metal_Ball_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Switch_Metal_Ball_Base",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 3
+    }
   },
   {
     "id": "bu-blade--barricade",
@@ -74903,7 +78735,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Barricade"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Barricade",
+    "ratings": {
+      "attack": 2,
+      "defense": 6,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--burst",
@@ -74968,7 +78814,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Burst"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Burst",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--chain",
@@ -75084,7 +78944,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Chain"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Chain",
+    "ratings": {
+      "attack": 3,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--divine",
@@ -75198,7 +79072,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Divine"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Divine",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--gatling",
@@ -75270,7 +79158,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Gatling"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Gatling",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 3,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--king-m",
@@ -75317,7 +79219,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "King M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_M"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_M",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--king-mr",
@@ -75381,7 +79289,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_MR"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_MR",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--king-r",
@@ -75428,7 +79350,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "King R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_R"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_R",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--superking-m",
@@ -75475,7 +79403,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SuperKing M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_M"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_M",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--superking-mr",
@@ -75522,7 +79456,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SuperKing MR is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_MR"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_MR",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--superking-r",
@@ -75569,7 +79509,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SuperKing R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_R"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_R",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--superking-rm",
@@ -75616,7 +79562,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SuperKing RM is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_RM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_RM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--super-m",
@@ -75663,7 +79615,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Super M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_M"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_M",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--super-mr",
@@ -75727,7 +79685,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_MR"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_MR",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--super-r",
@@ -75774,7 +79746,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Super R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_R"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_R",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--wind",
@@ -75846,7 +79824,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Wind"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Wind",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 7,
+      "weight": 3,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--xiphoid",
@@ -75926,7 +79918,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Xiphoid"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Xiphoid",
+    "ratings": {
+      "attack": 7,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "bu-blade--zest",
@@ -75999,7 +80005,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Zest"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Zest",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--1a",
@@ -76173,7 +80193,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1A"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1A",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 7,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--1b",
@@ -76299,7 +80333,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1B"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1B",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 7,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--1d",
@@ -76424,7 +80472,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1D",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--1s",
@@ -76558,7 +80620,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_1S",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--2a",
@@ -76622,7 +80698,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2A"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2A",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 7,
+      "speed": 0,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--2b",
@@ -76694,7 +80784,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2B"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2B",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 7,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--2d",
@@ -76799,7 +80903,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2D",
+    "ratings": {
+      "attack": 0,
+      "defense": 7,
+      "stamina": 1,
+      "weight": 8,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--2s",
@@ -76866,7 +80984,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_2S",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 6,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--3a",
@@ -76934,7 +81066,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_3A"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_3A",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 7,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "chassis--4a",
@@ -77031,7 +81177,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_4A"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Chassis_-_4A",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "core--heavy-metal-core",
@@ -77249,7 +81409,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Achilles"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Achilles",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--bahamut",
@@ -77338,7 +81512,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Bahamut"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Bahamut",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--belial-1",
@@ -77497,7 +81685,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--belial-2",
@@ -77612,7 +81814,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_2",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--belial-3",
@@ -77690,7 +81906,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_3",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--dragon",
@@ -77762,7 +81992,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Dragon",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--fafnir",
@@ -77864,7 +82108,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Fafnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Fafnir",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--helios",
@@ -77938,7 +82196,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Helios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Helios",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--hello-kitty",
@@ -78001,7 +82273,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Hello_Kitty"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Hello_Kitty",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--hyperion",
@@ -78075,7 +82361,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Hyperion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Hyperion",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--kerbeus",
@@ -78193,7 +82493,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Kerbeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Kerbeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--knight",
@@ -78265,7 +82579,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Knight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Knight",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--longinus",
@@ -78352,7 +82680,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Longinus",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--lucifer",
@@ -78424,7 +82766,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Lucifer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Lucifer",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--perseus",
@@ -78517,7 +82873,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Perseus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Perseus",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--phoenix",
@@ -78604,7 +82974,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Phoenix",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--ragnaruk",
@@ -78722,7 +83106,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Ragnaruk",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--spriggan-1",
@@ -78826,7 +83224,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Spriggan_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Spriggan_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--spriggan-2",
@@ -78891,7 +83303,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Spriggan_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Spriggan_2",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--valkyrie-2",
@@ -79028,7 +83454,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Valkyrie_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Valkyrie_2",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "db-core--xcalibur",
@@ -79115,7 +83555,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Xcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Xcalibur",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--almight",
@@ -79180,7 +83634,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Almight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Almight",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "performance-tip--generate-h",
@@ -79228,7 +83695,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Generate-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Generate-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc-integrated-driver--generate",
@@ -79325,7 +83798,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Generate"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Generate",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--hybrid",
@@ -79390,7 +83876,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Hybrid"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Hybrid",
+    "ratings": {
+      "attack": 0,
+      "defense": 6,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--ignition",
@@ -79488,7 +83987,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Ignition'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Ignition'",
+    "ratings": {
+      "attack": 8,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--ignition-h",
@@ -79534,7 +84046,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Ignition-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Ignition-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc-integrated-driver--mugen-l",
@@ -79598,7 +84116,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Mugen-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Mugen-L",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 5,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--mugen",
@@ -79670,7 +84201,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Mugen"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Mugen",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 5,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc-integrated-driver--shot",
@@ -79747,7 +84291,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Shot"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Shot",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--12",
@@ -79969,7 +84527,17 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_12"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_12",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--13",
@@ -80128,7 +84696,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_13"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_13",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--1a-d",
@@ -80191,7 +84772,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1A-D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1A-D",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--1b-d",
@@ -80247,7 +84834,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1B-D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1B-D",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--2",
@@ -80516,7 +85109,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_2",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--2d-d",
@@ -80562,7 +85168,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_2D-D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_2D-D",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--3",
@@ -80671,7 +85283,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_3",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--3a-d",
@@ -80739,7 +85364,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_3A-D"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_3A-D",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--4",
@@ -81048,7 +85679,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_4",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--5",
@@ -81283,7 +85927,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_5",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--6-rc",
@@ -81330,7 +85987,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_6-RC"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_6-RC",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--6",
@@ -81657,7 +86320,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_6",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--8-rc",
@@ -81704,7 +86380,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_8-RC"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_8-RC",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--aero",
@@ -81798,7 +86480,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Aero'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Aero'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--armed",
@@ -81919,7 +86614,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Armed"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Armed",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--blitz-hasbro",
@@ -82015,7 +86723,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Blitz_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Blitz_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--boost-l",
@@ -82069,7 +86783,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Boost-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Boost-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--bumper",
@@ -82182,7 +86902,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Bumper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Bumper",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--central",
@@ -82362,7 +87095,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Central"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Central",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--cho",
@@ -82427,7 +87173,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Cho"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Cho",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 6,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--ciquex-q",
@@ -82522,7 +87282,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ciquex-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ciquex-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--convert",
@@ -82623,7 +87389,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Convert"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Convert",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--convert-hasbro",
@@ -82703,7 +87483,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Convert_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Convert_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--diagron-q",
@@ -82790,7 +87576,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Diagron-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Diagron-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--down",
@@ -82913,7 +87705,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Down"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Down",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--drake-hasbro",
@@ -82973,7 +87778,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Drake_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Drake_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--d-gear-q",
@@ -83029,7 +87840,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_D_Gear-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_D_Gear-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--fortress",
@@ -83107,7 +87924,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Fortress"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Fortress",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--fyquor-q",
@@ -83205,7 +88036,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Fyquor-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Fyquor-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--giga-q",
@@ -83305,7 +88142,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Giga-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Giga-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--giga",
@@ -83434,7 +88277,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Giga"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Giga",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--gravity-l",
@@ -83481,7 +88338,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Gravity-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Gravity-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--gravity",
@@ -83660,7 +88523,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Gravity"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Gravity",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--heavy",
@@ -83966,7 +88842,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Heavy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Heavy",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--hurricane-hasbro",
@@ -84043,7 +88932,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Hurricane_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Hurricane_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--hurricane-takara-tomy",
@@ -84159,7 +89054,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Hurricane_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Hurricane_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--illegal",
@@ -84247,7 +89156,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Illegal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Illegal",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--infinity",
@@ -84409,7 +89332,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Infinity"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Infinity",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--jerk",
@@ -84529,7 +89465,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Jerk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Jerk",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--karma-q",
@@ -84608,7 +89557,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Karma-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Karma-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--knuckle-l",
@@ -84655,7 +89610,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Knuckle-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Knuckle-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--kou",
@@ -84718,7 +89679,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Kou"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Kou",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--limited-l",
@@ -84777,7 +89751,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Limited-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Limited-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--lore",
@@ -84837,7 +89817,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Lore"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Lore",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--magnum",
@@ -85020,7 +90006,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Magnum"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Magnum",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--moon",
@@ -85092,7 +90091,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Moon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Moon",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--nexus-q",
@@ -85196,7 +90209,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nexus-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nexus-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--ou",
@@ -85261,7 +90280,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ou"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ou",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--outer",
@@ -85477,7 +90510,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Outer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Outer",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--oval",
@@ -85616,7 +90662,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Oval"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Oval",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--over-q",
@@ -85688,7 +90747,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Over-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Over-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--paradox",
@@ -85780,7 +90845,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Paradox"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Paradox",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--polish",
@@ -85858,7 +90937,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Polish"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Polish",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--python",
@@ -85933,7 +91025,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Python"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Python",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--quacchu-q",
@@ -86029,7 +91127,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Quacchu-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Quacchu-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--quarter",
@@ -86150,7 +91254,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Quarter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Quarter",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--ratchet",
@@ -86249,7 +91366,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ratchet"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ratchet",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--ratchet-hasbro",
@@ -86313,7 +91444,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ratchet_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ratchet_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--ring",
@@ -86433,7 +91570,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Ring",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--spread",
@@ -86498,7 +91648,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Spread'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Spread'",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--squadron-q",
@@ -86577,7 +91741,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Squadron-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Squadron-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--sting-hasbro",
@@ -86667,7 +91837,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Sting_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Sting_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--swipe",
@@ -86725,7 +91901,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Swipe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Swipe",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--s-gear-q",
@@ -86781,7 +91963,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_S_Gear-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_S_Gear-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--tapered-q",
@@ -86868,7 +92056,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Tapered-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Tapered-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--twist-q",
@@ -86930,7 +92124,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Twist-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Twist-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--upper",
@@ -87056,7 +92256,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Upper",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "disc--vanguard-hasbro",
@@ -87134,7 +92347,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vanguard_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vanguard_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--vertical-l",
@@ -87188,7 +92407,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vertical-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vertical-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--wheel-sp",
@@ -87264,7 +92489,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wheel-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wheel-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--wheel",
@@ -87359,7 +92590,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wheel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wheel",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 6,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--wing",
@@ -87424,7 +92669,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wing'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Wing'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--xanthus-q",
@@ -87492,7 +92751,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Xanthus-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Xanthus-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--xanthus",
@@ -87572,7 +92837,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Xanthus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Xanthus",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "disc--zenith-hasbro",
@@ -87618,7 +92897,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Zenith_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Zenith_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--absorb-s",
@@ -87679,7 +92963,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Absorb-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Absorb-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--absorb",
@@ -87799,7 +93092,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Absorb"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Absorb",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--accel",
@@ -87906,7 +93212,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Accel'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Accel'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--accel-s",
@@ -87981,7 +93300,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Accel-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Accel-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--adventure",
@@ -88060,7 +93388,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Adventure"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Adventure",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--almight-q",
@@ -88116,7 +93457,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Almight-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Almight-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--anchor",
@@ -88204,7 +93551,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Anchor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Anchor",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--assault",
@@ -88287,7 +93647,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Assault'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Assault'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--assault-q",
@@ -88376,7 +93749,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Assault-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Assault-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--atomic-s",
@@ -88430,7 +93809,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Atomic-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Atomic-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--banshee-h",
@@ -88494,7 +93882,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Banshee-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Banshee-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bearing",
@@ -88559,7 +93953,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing'",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 5,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bearing-drift",
@@ -88627,7 +94034,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing_Drift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing_Drift",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bearing-mobius",
@@ -88690,7 +94110,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing_Mobius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bearing_Mobius",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bite-q",
@@ -88750,7 +94183,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bite-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bite-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bite",
@@ -88851,7 +94290,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bite",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--blow",
@@ -88933,7 +94385,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Blow'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Blow'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bounce",
@@ -89005,7 +94470,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bounce"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bounce",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bullet-i-h",
@@ -89064,7 +94542,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet_I-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet_I-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--bullet-ii-h",
@@ -89122,7 +94606,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet_II-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet_II-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge-i-h",
@@ -89186,7 +94676,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_I-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_I-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge-ii-h",
@@ -89241,7 +94737,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_II-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_II-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge-iii-h",
@@ -89287,7 +94789,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_III-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_III-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge-metal",
@@ -89350,7 +94858,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_Metal'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_Metal'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--charge-metal-spm",
@@ -89408,7 +94929,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_Metal-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_Metal-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--claw",
@@ -89561,7 +95088,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Claw"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Claw",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--coil-h",
@@ -89622,7 +95162,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Coil-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Coil-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--cycle",
@@ -89725,7 +95271,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Cycle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Cycle",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--defense-s",
@@ -89793,7 +95352,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Defense-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Defense-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--defense",
@@ -89942,7 +95510,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Defense",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--destroy",
@@ -90085,7 +95666,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--destroy-h",
@@ -90145,7 +95739,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--destroy-s",
@@ -90197,7 +95797,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--destroy-spm",
@@ -90265,7 +95874,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Destroy-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--dimension-h",
@@ -90336,7 +95951,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--dimension-s",
@@ -90396,7 +96017,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-S",
+    "ratings": {
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--dimension-sp",
@@ -90457,7 +96087,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--drift-sp",
@@ -90505,7 +96141,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Drift-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Drift-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--edge-q",
@@ -90594,7 +96236,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Edge-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Edge-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--edge",
@@ -90728,7 +96376,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Edge"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Edge",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--eternal-q",
@@ -90784,7 +96445,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--eternal-s",
@@ -90854,7 +96521,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal-S",
+    "ratings": {
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--eternal",
@@ -90990,7 +96666,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Eternal",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--evolution",
@@ -91080,7 +96769,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--evolution-s",
@@ -91132,7 +96834,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--evolution-sp",
@@ -91188,7 +96899,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Evolution-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--flugel-s",
@@ -91253,7 +96970,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Flugel-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Flugel-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--flugel",
@@ -91420,7 +97146,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Flugel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Flugel",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--friction-h",
@@ -91471,7 +97210,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--friction-s",
@@ -91540,7 +97285,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-S",
+    "ratings": {
+      "speed": 6
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--friction",
@@ -91676,7 +97430,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--fusion",
@@ -91793,7 +97560,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--fusion-q",
@@ -91887,7 +97667,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--fusion-s",
@@ -91971,7 +97757,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--fusion-sp",
@@ -92048,7 +97843,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Fusion-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--guard-h",
@@ -92094,7 +97895,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--guard-q",
@@ -92166,7 +97973,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--guard",
@@ -92302,7 +98115,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--gyro-q",
@@ -92372,7 +98198,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Gyro-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Gyro-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--gyro",
@@ -92486,7 +98318,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Gyro"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Gyro",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-accel",
@@ -92551,7 +98396,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Accel'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Accel'",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-blow",
@@ -92616,7 +98474,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Blow'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Blow'",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-charge",
@@ -92690,7 +98561,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Charge'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Charge'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-defense",
@@ -92755,7 +98639,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Defense",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-eternal",
@@ -92820,7 +98717,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Eternal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Eternal",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-hold",
@@ -92885,7 +98795,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Hold'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Hold'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-jaggy",
@@ -92950,7 +98873,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Jaggy'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Jaggy'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-massive",
@@ -93012,7 +98948,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Massive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Massive",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-revolve",
@@ -93060,7 +99002,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "High Revolve is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.2 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Revolve"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Revolve",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-survive",
@@ -93125,7 +99073,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Survive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Survive",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-wave",
@@ -93190,7 +99151,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Wave'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Wave'",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-xtend",
@@ -93230,7 +99204,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "High Xtend' is a Beyblade driver from the Dynamite Battle Layer System, weighing 9.4 g. Part of Beyblade Burst QuadDrive.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Xtend'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Xtend'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--high-zephyr",
@@ -93295,7 +99275,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Zephyr"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Zephyr",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--hold",
@@ -93379,7 +99372,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hold'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hold'",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--hunter",
@@ -93500,7 +99506,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hunter'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hunter'",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--hunter-s",
@@ -93559,7 +99578,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hunter-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hunter-S",
+    "ratings": {
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--hybrid-h",
@@ -93605,7 +99633,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hybrid-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hybrid-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--impact",
@@ -93740,7 +99774,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Impact"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Impact",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jaggy-h",
@@ -93804,7 +99851,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jaggy-q",
@@ -93865,7 +99918,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jaggy-s",
@@ -93926,7 +99985,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-S",
+    "ratings": {
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jolt-q",
@@ -94000,7 +100068,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--jolt-s",
@@ -94050,7 +100124,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jolt-S",
+    "ratings": {
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--just",
@@ -94102,7 +100185,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Just' is a Beyblade driver from the Dynamite Battle Layer System, weighing 8 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Just'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Just'",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--just-q",
@@ -94169,7 +100265,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Just-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Just-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--keep",
@@ -94242,7 +100344,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep'",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--keep-h",
@@ -94320,7 +100435,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--keep-s",
@@ -94380,7 +100501,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Keep-S",
+    "ratings": {
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--kick",
@@ -94451,7 +100581,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Kick"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Kick",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--liner",
@@ -94516,7 +100659,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner'",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--liner-h",
@@ -94589,7 +100745,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--liner-q",
@@ -94649,7 +100811,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--liner-s",
@@ -94705,7 +100873,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--loop-s",
@@ -94756,7 +100933,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Loop-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Loop-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--low-h",
@@ -94806,7 +100992,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Low-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Low-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--low",
@@ -94891,7 +101083,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Low"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Low",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--massive-q",
@@ -94964,7 +101169,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--massive-s",
@@ -95013,7 +101224,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--massive",
@@ -95143,7 +101363,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Massive",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--merge-sp",
@@ -95203,7 +101436,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--merge-spl",
@@ -95251,7 +101490,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge-SPL"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Merge-SPL",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--metal-accel",
@@ -95337,7 +101582,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Accel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Accel",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-bearing-drift",
@@ -95389,7 +101647,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Bearing Drift is a Beyblade driver from the Dynamite Battle Layer System, weighing 12.3 g. Released August 20, 2022 as B-00 for Beyblade Burst BU.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Bearing_Drift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Bearing_Drift",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-defense",
@@ -95462,7 +101733,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Defense",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-destroy",
@@ -95525,7 +101809,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Destroy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Destroy",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-dimension",
@@ -95599,7 +101896,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Dimension"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Dimension",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-drift",
@@ -95673,7 +101983,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Drift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Drift",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-fusion",
@@ -95736,7 +102059,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Fusion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Fusion",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-never",
@@ -95798,7 +102134,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Never"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Never",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-survive",
@@ -95861,7 +102210,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Survive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Survive",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-universe",
@@ -95926,7 +102288,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Universe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Universe",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--metal-xtreme",
@@ -95989,7 +102364,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Xtreme"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Xtreme",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--mobius-q",
@@ -96064,7 +102452,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--mobius-sp",
@@ -96142,7 +102536,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--moment",
@@ -96216,7 +102616,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Moment'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Moment'",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--needle-q",
@@ -96289,7 +102702,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--needle-s",
@@ -96352,7 +102771,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-S",
+    "ratings": {
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--needle-sp",
@@ -96417,7 +102845,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--needle",
@@ -96553,7 +102987,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Needle",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--never",
@@ -96633,7 +103080,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Never"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Never",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--nothing-rc",
@@ -96688,7 +103148,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing-RC"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing-RC",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--nothing-sp",
@@ -96756,7 +103222,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--octa-h",
@@ -96818,7 +103290,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Octa-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Octa-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--octa",
@@ -96920,7 +103398,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Octa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Octa",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--operate",
@@ -96985,7 +103476,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Operate'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Operate'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--operate-s",
@@ -97034,7 +103538,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Operate-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Operate-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--orbit-h",
@@ -97100,7 +103613,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--orbit-l",
@@ -97147,7 +103666,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--orbit-q",
@@ -97203,7 +103728,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--orbit",
@@ -97368,7 +103899,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--orbit-metal",
@@ -97449,7 +103993,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit_Metal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit_Metal",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--planet",
@@ -97513,7 +104070,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet'",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--planet-h",
@@ -97559,7 +104129,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--planet-q",
@@ -97615,7 +104191,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--power-h",
@@ -97699,7 +104281,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--power-s",
@@ -97751,7 +104339,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--power",
@@ -97837,7 +104434,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Power",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--press-l",
@@ -97884,7 +104494,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Press-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Press-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--prevail-s",
@@ -97962,7 +104578,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Prevail-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Prevail-S",
+    "ratings": {
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quake",
@@ -98024,7 +104649,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quake'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quake'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quattro",
@@ -98089,7 +104720,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quattro'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quattro'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quattro-q",
@@ -98161,7 +104805,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quattro-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quattro-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quest-s",
@@ -98217,7 +104867,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quest-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quest-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quest",
@@ -98299,7 +104958,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quest"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quest",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--quick",
@@ -98420,7 +105092,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quick'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Quick'",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--reboot-rc",
@@ -98475,7 +105160,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Reboot-RC"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Reboot-RC",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--revolve",
@@ -98538,7 +105229,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve'",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "performance-tip--revolve-h",
@@ -98591,7 +105295,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--revolve-l",
@@ -98638,7 +105348,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--revolve-spm",
@@ -98695,7 +105411,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--rise-h",
@@ -98761,7 +105483,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Rise-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Rise-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--rise",
@@ -98873,7 +105601,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Rise"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Rise",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--shot-q",
@@ -98938,7 +105679,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Shot-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Shot-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--spiral-h",
@@ -99002,7 +105749,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--spiral-q",
@@ -99081,7 +105834,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--spiral-s",
@@ -99130,7 +105889,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--survive-s",
@@ -99193,7 +105961,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive-S",
+    "ratings": {
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--survive-sp",
@@ -99257,7 +106034,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--survive",
@@ -99438,7 +106221,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Survive",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--sword",
@@ -99518,7 +106314,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Sword'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Sword'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--sword-s",
@@ -99572,7 +106381,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Sword-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Sword-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--tower-s",
@@ -99635,7 +106453,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Tower-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Tower-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--tower",
@@ -99719,7 +106546,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Tower"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Tower",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--trans",
@@ -99797,7 +106637,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trans'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trans'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--trick-h",
@@ -99859,7 +106712,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trick-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trick-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--trick",
@@ -99930,7 +106789,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trick"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trick",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--ultimate-reboot",
@@ -100021,7 +106893,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Ultimate_Reboot'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Ultimate_Reboot'",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--ultimate-reboot-h",
@@ -100069,7 +106954,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Ultimate_Reboot-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Ultimate_Reboot-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--unite-l",
@@ -100116,7 +107007,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--unite-sp",
@@ -100164,7 +107061,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Unite-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--universe-spm",
@@ -100224,7 +107127,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Universe-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Universe-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--universe",
@@ -100312,8 +107221,24 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Universe"
-  },
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Universe",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
+  }
+];
+
+const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
   {
     "id": "driver--valor-h",
     "classification": "Driver",
@@ -100379,7 +107304,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Valor-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Valor-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--variable-l",
@@ -100426,7 +107357,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable-L"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--venture",
@@ -100534,7 +107471,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Venture"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Venture",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--volcanic",
@@ -100607,7 +107557,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic'",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--volcanic-s",
@@ -100669,7 +107632,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic-S",
+    "ratings": {
+      "speed": 6
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--wave",
@@ -100732,7 +107704,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wave'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wave'",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--wedge",
@@ -100805,7 +107790,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge'",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--wedge-s",
@@ -100870,7 +107868,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge-S",
+    "ratings": {
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--weight",
@@ -101011,7 +108018,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Weight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Weight",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xceed-z",
@@ -101081,7 +108101,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BZ"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BZ",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xceed",
@@ -101167,7 +108193,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xceed-x-sp",
@@ -101215,7 +108247,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed%2BX-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed%2BX-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xceed-sp",
@@ -101283,7 +108321,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xceed-spm",
@@ -101336,7 +108380,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xplosion",
@@ -101401,7 +108451,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xplosion'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xplosion'",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend-h",
@@ -101479,7 +108542,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend-q",
@@ -101554,7 +108623,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend-s",
@@ -101610,7 +108685,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-S",
+    "ratings": {
+      "speed": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--xtend-sl",
@@ -101657,7 +108741,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-SL"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-SL",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--xtreme",
@@ -101790,7 +108880,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtreme'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtreme'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yard",
@@ -101855,7 +108958,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard'",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yard-h",
@@ -101908,7 +109024,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yard-s",
@@ -101977,7 +109099,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-S",
+    "ratings": {
+      "speed": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yard-sl",
@@ -102024,7 +109155,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-SL"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-SL",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "driver--yard-metal",
@@ -102086,7 +109223,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard_Metal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard_Metal",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yielding-q",
@@ -102156,7 +109306,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--yielding",
@@ -102305,7 +109461,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zeal",
@@ -102370,7 +109539,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeal",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zephyr",
@@ -102467,7 +109649,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr'",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "performance-tip--zephyr-h",
@@ -102513,7 +109708,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-H"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-H",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zephyr-q",
@@ -102596,7 +109797,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zephyr-sp",
@@ -102642,7 +109849,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zeta",
@@ -102723,7 +109936,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta'",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zeta-s",
@@ -102782,7 +110008,16 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta-S"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta-S",
+    "ratings": {
+      "speed": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone-x",
@@ -102852,7 +110087,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BX"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BX",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone",
@@ -102942,7 +110183,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone-z-spm",
@@ -103001,7 +110255,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone%2BZ-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone%2BZ-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone-q",
@@ -103057,7 +110317,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-Q"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-Q",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone-sp",
@@ -103123,7 +110389,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-SP",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "driver--zone-spm",
@@ -103176,7 +110448,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-SPM"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone-SPM",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "drive-chip--balderov-b7",
@@ -103256,7 +110534,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Balderov_B7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Balderov_B7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--balkesh-b7",
@@ -103334,7 +110618,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Balkesh_B7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Balkesh_B7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--belfyre-b7",
@@ -103415,7 +110705,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Belfyre_B7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Belfyre_B7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--cobra-c7",
@@ -103483,7 +110779,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Cobra_C7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Cobra_C7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--evo-belfyre-b7",
@@ -103549,7 +110851,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Evo_Belfyre_B7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Evo_Belfyre_B7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--evo-valtryek-v7",
@@ -103613,7 +110921,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Evo_Valtryek_V7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Evo_Valtryek_V7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--fafnir-f7",
@@ -103685,7 +110999,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Fafnir_F7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Fafnir_F7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--ifritor-i7",
@@ -103756,7 +111076,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Ifritor_I7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Ifritor_I7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--linwyrm-l7",
@@ -103828,7 +111154,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Linwyrm_L7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Linwyrm_L7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--luinor-l7",
@@ -103888,7 +111220,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Luinor_L7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Luinor_L7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--muramasa-m7",
@@ -103965,7 +111303,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Muramasa_M7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Muramasa_M7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--nemesis-n7",
@@ -104038,7 +111382,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Nemesis_N7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Nemesis_N7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--perseus-p7",
@@ -104094,7 +111444,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Perseus_P7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Perseus_P7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--phoenix-p7",
@@ -104150,7 +111506,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Phoenix_P7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Phoenix_P7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--regnar-r7",
@@ -104204,7 +111566,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Regnar_R7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Regnar_R7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--roktavor-r7",
@@ -104279,7 +111647,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Roktavor_R7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Roktavor_R7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--spryzen-s7",
@@ -104339,7 +111713,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Spryzen_S7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Spryzen_S7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "drive-chip--valtryek-v7",
@@ -104421,7 +111801,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Valtryek_V7"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Drive_Chip_-_Valtryek_V7",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "evolution-gear--d-gear",
@@ -104489,7 +111875,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/D_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/D_Gear",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "element-wheel--archer",
@@ -104597,7 +111989,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Archer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Archer",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "element-wheel--bandit",
@@ -104694,7 +112091,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Bandit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Bandit",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "element-wheel--berserker",
@@ -104836,7 +112238,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Gladiator"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Gladiator",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "element-wheel--guardian",
@@ -105041,7 +112448,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Ninja"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Ninja",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "element-wheel--phantom",
@@ -105145,7 +112557,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Pirate is a Beyblade element wheel from the Synchrome System, weighing 3.8 g. Released April 21st, 2012 as BBG-08 (Takara Tomy) and SS-08 (Hasbro) for Beyblade: Shogun Steel.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Pirate"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Pirate",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "element-wheel--ronin",
@@ -105240,7 +112657,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Ronin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Ronin",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "element-wheel--samurai",
@@ -105418,7 +112840,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Samurai"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Samurai",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "element-wheel--thief",
@@ -105532,7 +112959,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Thief"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Thief",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "energy-ring--anubius",
@@ -105653,7 +113085,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Anubius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Anubius",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--beelzeb",
@@ -105721,7 +113158,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Beelzeb"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Beelzeb",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--cetus",
@@ -105851,7 +113293,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Chimera"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Chimera",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--comic",
@@ -105943,7 +113390,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Crown"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Crown",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 5
+    }
   },
   {
     "id": "energy-ring--cygzas",
@@ -106040,7 +113492,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Darkhelm"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Darkhelm",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--destroyer",
@@ -106152,7 +113609,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--destroyer-attack",
@@ -106242,7 +113704,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer_Attack",
+    "ratings": {
+      "attack": 5,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--destroyer-stamina",
@@ -106353,7 +113820,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer_Stamina"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Destroyer_Stamina",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 5
+    }
   },
   {
     "id": "energy-ring--dragonis",
@@ -106431,7 +113903,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Dragonis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Dragonis",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--fox",
@@ -106525,7 +114002,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Fox"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Fox",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--gasher",
@@ -106656,7 +114138,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gasher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gasher",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--gemios",
@@ -106789,7 +114276,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gemios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gemios",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--gil",
@@ -106880,7 +114372,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gil",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--giran",
@@ -107020,7 +114517,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Herculeo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Herculeo",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--ice-titan",
@@ -107127,7 +114629,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Ice-Titan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Ice-Titan",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--ionis",
@@ -107208,7 +114715,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Ionis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Ionis",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--kronos",
@@ -107300,7 +114812,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Kronos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Kronos",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 6
+    }
   },
   {
     "id": "energy-ring--l-drago-assault",
@@ -107377,7 +114894,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_Assault"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_Assault",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--l-drago-i",
@@ -107502,7 +115024,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_I",
+    "ratings": {
+      "attack": 5,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--l-drago-ii",
@@ -107679,7 +115206,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_II",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--l-drago-rush",
@@ -107758,7 +115290,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_Rush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_L-Drago_Rush",
+    "ratings": {
+      "attack": 5,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--lacerta",
@@ -107857,7 +115394,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lacerta"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lacerta",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--leol",
@@ -108097,7 +115639,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leone_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leone_I",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--leone-ii",
@@ -108257,7 +115804,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leone_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leone_II",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--leplys",
@@ -108390,7 +115942,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lyre"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lyre",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--nemesis-a",
@@ -108492,7 +116049,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Nemesis_A"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Nemesis_A",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--orion",
@@ -108610,7 +116172,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Orion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Orion",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 6
+    }
   },
   {
     "id": "energy-ring--orso",
@@ -108684,7 +116251,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Orso"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Orso",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--pavon",
@@ -108995,7 +116567,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_I",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--pegasus-ii",
@@ -109225,7 +116802,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_II",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--pegasus-iii",
@@ -109442,7 +117024,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_III"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pegasus_III",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--pisces",
@@ -109563,7 +117150,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pisces"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pisces",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--quetzalcoatl",
@@ -109634,7 +117226,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Quetzalcoatl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Quetzalcoatl",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "energy-ring--rex",
@@ -109756,7 +117353,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Rex"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Rex",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--sagittario-ii",
@@ -109803,7 +117405,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Sagittario_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Sagittario_II",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "energy-ring--scorpio",
@@ -109923,7 +117530,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Scorpio"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Scorpio",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--serpenter",
@@ -110145,7 +117757,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Striker_I"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Striker_I",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "energy-ring--susanow",
@@ -110253,7 +117870,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Susanow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Susanow",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "energy-ring--tempo",
@@ -110364,7 +117986,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Tempo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Tempo",
+    "ratings": {
+      "attack": 0,
+      "defense": 6,
+      "stamina": 0
+    }
   },
   {
     "id": "engine-gear--left-eg-turbo",
@@ -110416,7 +118043,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Left Turbo EG is a Beyblade engine gear from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Turbo_EG"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Turbo_EG",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "engine-gear--right-customize-gear-full-auto-clutch-version",
@@ -110457,7 +118089,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Customize_Gear_(Full_Auto_Clutch_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Customize_Gear_(Full_Auto_Clutch_Version)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "engine-gear--right-eg-circle-survivor",
@@ -110488,7 +118125,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Circle_Survivor)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Circle_Survivor)",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "engine-gear--right-eg-metal-ball",
@@ -110526,7 +118168,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Ball)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Ball)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "engine-gear--right-eg-metal-flat",
@@ -110599,7 +118246,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Semi-Flat)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Semi-Flat)",
+    "ratings": {
+      "attack": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "engine-gear--right-eg-circle-defenser",
@@ -110636,7 +118287,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_Circle_Defenser"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_Circle_Defenser",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "engine-gear--right-eg-reverse",
@@ -110673,7 +118329,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_Reverse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_Reverse",
+    "ratings": {
+      "attack": 4
+    }
   },
   {
     "id": "engine-gear--right-engine-gear-metal-semi-flat-version",
@@ -110710,7 +118369,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Engine_Gear_(Metal_Semi-Flat_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Engine_Gear_(Metal_Semi-Flat_Version)",
+    "ratings": {
+      "attack": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "engine-gear--right-engine-gear-mystery-cutter",
@@ -110742,7 +118405,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right Engine Gear (Mystery Cutter) is a Beyblade engine gear from the Engine Gear System, weighing 6.9 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Engine_Gear_(Mystery_Cutter)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_Engine_Gear_(Mystery_Cutter)",
+    "ratings": {
+      "attack": 3.5,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "face-bolt--anubius",
@@ -116386,7 +124054,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Angle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Angle",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--axe",
@@ -116458,7 +124140,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Axe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Axe",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--bump",
@@ -116595,7 +124291,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Bump"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Bump",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--cross",
@@ -116805,7 +124515,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Cross"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Cross",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--dagger",
@@ -116920,7 +124644,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Dagger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Dagger",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--expand",
@@ -117063,7 +124801,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Expand"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Expand",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--flow",
@@ -117183,7 +124934,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Flow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Flow",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--glaive",
@@ -117511,7 +125276,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Glaive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Glaive",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--hit",
@@ -117590,7 +125369,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Hit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Hit",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--lift",
@@ -117753,7 +125546,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Lift"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Lift",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--meteor",
@@ -117949,7 +125756,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Meteor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Meteor",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--proof",
@@ -118080,7 +125901,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Proof"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Proof",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--reach",
@@ -118216,7 +126051,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Reach"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Reach",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--star",
@@ -118363,7 +126212,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Star"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Star",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--turn",
@@ -118508,7 +126371,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Turn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Turn",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--under",
@@ -118599,7 +126476,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Under"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Under",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "frame--vortex",
@@ -118924,7 +126815,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Vortex"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Frame_-_Vortex",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "fusion-wheel--bakushin",
@@ -119040,7 +126945,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Bakushin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Bakushin",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--beat",
@@ -119101,7 +127011,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat",
+    "ratings": {
+      "attack": 2.5,
+      "defense": 2.5,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--beat-hasbro",
@@ -119182,7 +127097,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat_(Hasbro)",
+    "ratings": {
+      "attack": 2.5,
+      "defense": 2.5,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--blitz",
@@ -119256,7 +127176,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--blitz-hasbro",
@@ -119320,7 +127245,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz_(Hasbro)",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--cosmic",
@@ -119473,7 +127403,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cosmic"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cosmic",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--cosmic-hasbro",
@@ -119573,7 +127508,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cosmic_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cosmic_(Hasbro)",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--counter",
@@ -119745,7 +127685,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Counter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Counter",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--crystal",
@@ -119919,7 +127864,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cyber"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cyber",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--cyclone",
@@ -120036,7 +127986,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cyclone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Cyclone",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--death",
@@ -120095,7 +128050,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Death"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Death",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--death-hasbro",
@@ -120156,7 +128116,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Death_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Death_(Hasbro)",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--devil",
@@ -120285,7 +128250,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Diablo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Diablo",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--divine",
@@ -120370,7 +128340,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Divine"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Divine",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--duo",
@@ -120449,7 +128424,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Duo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Duo",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--duo-hasbro",
@@ -120503,7 +128483,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Duo_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Duo_(Hasbro)",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--fang",
@@ -120617,7 +128602,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fang"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fang",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--fang-hasbro",
@@ -120711,7 +128701,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fang_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fang_(Hasbro)",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--fire",
@@ -120788,7 +128783,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Firefuse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Firefuse",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--flash",
@@ -120866,7 +128866,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Flash"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Flash",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--fury",
@@ -120936,7 +128941,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fury"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fury",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--fusion",
@@ -120989,7 +128999,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fusion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fusion",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--galaxy",
@@ -121194,7 +129209,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Galaxy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Galaxy",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--gravity",
@@ -121379,7 +129399,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Gravity"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Gravity",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--hyper",
@@ -121448,7 +129473,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hyper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hyper",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--inferno",
@@ -121528,7 +129558,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--inferno-battle-fortress",
@@ -121610,7 +129645,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade_(Hasbro)",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--kreis",
@@ -121681,7 +129721,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Kreis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Kreis",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--l-drago-destructor",
@@ -121786,7 +129831,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Destructor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Destructor",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--l-drago-destructor-hasbro",
@@ -121853,7 +129903,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Destructor_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Destructor_(Hasbro)",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--l-drago-guardian",
@@ -121914,7 +129969,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Guardian"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Guardian",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--l-drago-guardian-hasbro",
@@ -121965,7 +130025,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Guardian_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_L-Drago_Guardian_(Hasbro)",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--lightning",
@@ -122090,7 +130155,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Lightning"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Lightning",
+    "ratings": {
+      "attack": 6,
+      "defense": 0.5,
+      "stamina": 0.5
+    }
   },
   {
     "id": "fusion-wheel--mercury",
@@ -122211,7 +130281,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Mercury"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Mercury",
+    "ratings": {
+      "attack": 6,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--meteo",
@@ -122411,7 +130486,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Meteo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Meteo",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--midnight",
@@ -122495,7 +130575,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Midnight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Midnight",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--night",
@@ -122546,7 +130631,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Night"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Night",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--nightmare",
@@ -122668,7 +130758,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Nightmare"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Nightmare",
+    "ratings": {
+      "attack": 4,
+      "defense": 4,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--omega",
@@ -122746,7 +130841,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Omega"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Omega",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--phantom",
@@ -122834,7 +130934,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Phantom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Phantom",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 5
+    }
   },
   {
     "id": "fusion-wheel--phantom-hasbro",
@@ -122905,7 +131010,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Phantom_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Phantom_(Hasbro)",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 5
+    }
   },
   {
     "id": "fusion-wheel--quake",
@@ -123119,7 +131229,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Ray"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Ray",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--scythe",
@@ -123177,7 +131292,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Scythe"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Scythe",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 5
+    }
   },
   {
     "id": "fusion-wheel--scythe-hasbro",
@@ -123251,7 +131371,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Scythe_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Scythe_(Hasbro)",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 5
+    }
   },
   {
     "id": "fusion-wheel--sol",
@@ -123342,7 +131467,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Sol"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Sol",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--thermal",
@@ -123527,7 +131657,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thunder"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thunder",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "fusion-wheel--torch",
@@ -123630,7 +131765,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Torch"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Torch",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "fusion-wheel--tornade",
@@ -123740,7 +131880,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Twisted"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Twisted",
+    "ratings": {
+      "attack": 0,
+      "defense": 6,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--typhoon",
@@ -123860,7 +132005,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Variares"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Variares",
+    "ratings": {
+      "attack": 1,
+      "defense": 6,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--variares-hasbro",
@@ -123928,7 +132078,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Variares_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Variares_(Hasbro)",
+    "ratings": {
+      "attack": 1,
+      "defense": 6,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--vulcan",
@@ -124026,7 +132181,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Vulcan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Vulcan",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "fusion-wheel--wing",
@@ -124111,7 +132271,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Wing",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "fusion-wheel--wing-hasbro",
@@ -124166,7 +132331,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Wing_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Wing_(Hasbro)",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "evolution-gear--f-gear",
@@ -124250,7 +132420,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/F_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/F_Gear",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--achilles",
@@ -124360,7 +132544,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Achilles"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Achilles",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--ashura",
@@ -124483,7 +132681,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Ashura"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Ashura",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--bahamut",
@@ -124621,7 +132833,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Bahamut"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Bahamut",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--diabolos-2",
@@ -124773,7 +132999,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Diabolos_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Diabolos_2",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--dragon-1",
@@ -124963,7 +133203,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Dragon_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Dragon_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--dragon-2",
@@ -125115,7 +133369,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Dragon_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Dragon_2",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--fafnir",
@@ -125238,7 +133506,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Fafnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Fafnir",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--hydra",
@@ -125331,7 +133613,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Hydra"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Hydra",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--joker",
@@ -125446,7 +133742,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Joker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Joker",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--longinus",
@@ -125558,7 +133868,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Longinus",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--odin",
@@ -125653,7 +133977,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Odin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Odin",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--pegasus",
@@ -125772,7 +134110,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Pegasus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Pegasus",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--spriggan",
@@ -125888,7 +134240,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Spriggan",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gatinko-chip--valkyrie",
@@ -126052,7 +134418,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gatinko_Chip_-_Valkyrie",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--0",
@@ -126108,7 +134488,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_0'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_0'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--1",
@@ -126169,7 +134555,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_1",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--10",
@@ -126255,7 +134647,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_10'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_10'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--2",
@@ -126353,7 +134751,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_2'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_2'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--3",
@@ -126426,7 +134830,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_3'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_3'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--4",
@@ -126501,7 +134911,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_4'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_4'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--7",
@@ -126568,7 +134984,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_7'"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_7'",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gravity-ring--greatest-armor",
@@ -126622,7 +135044,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_Greatest_Armor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Ring_-_Greatest_Armor",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--achilles-a5",
@@ -126696,7 +135124,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Achilles_A5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Achilles_A5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--apocalypse-a5",
@@ -126751,7 +135185,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Apocalypse_A5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Apocalypse_A5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--ashindra-a5",
@@ -126809,7 +135249,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Ashindra_A5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Ashindra_A5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--balkesh-b5",
@@ -126882,7 +135328,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Balkesh_B5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Balkesh_B5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--cobra-c5",
@@ -126928,7 +135380,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Cobra_C5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Cobra_C5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--cyclops-c5",
@@ -126974,7 +135432,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Cyclops_C5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Cyclops_C5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--devolos-d5",
@@ -127064,7 +135528,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Devolos_D5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Devolos_D5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--dragon-d5",
@@ -127154,7 +135624,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Dragon_D5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Dragon_D5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--evo-devolos-d5",
@@ -127209,7 +135685,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Devolos_D5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Devolos_D5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--evo-dragon-d5",
@@ -127262,7 +135744,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Dragon_D5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Dragon_D5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--evo-genesis-g5",
@@ -127308,7 +135796,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Genesis_G5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Evo_Genesis_G5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--fafnir-f5",
@@ -127367,7 +135861,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Fafnir_F5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Fafnir_F5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--genesis-g5",
@@ -127413,7 +135913,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Genesis_G5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Genesis_G5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--hydrax-h5",
@@ -127474,7 +135980,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Hydrax_H5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Hydrax_H5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--joker-j5",
@@ -127524,7 +136036,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Joker_J5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Joker_J5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--kerbeus-k5",
@@ -127579,7 +136097,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Kerbeus_K5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Kerbeus_K5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--kraken-k5",
@@ -127642,7 +136166,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Kraken_K5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Kraken_K5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--leviathan-l5",
@@ -127688,7 +136218,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Leviathan_L5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Leviathan_L5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--luinor-l5",
@@ -127741,7 +136277,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Luinor_L5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Luinor_L5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--odax-o5",
@@ -127787,7 +136329,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Odax_O5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Odax_O5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--ogre-o5",
@@ -127843,7 +136391,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Ogre_O5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Ogre_O5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--pegasus-p5",
@@ -127900,7 +136454,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Pegasus_P5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Pegasus_P5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--salamander-s5",
@@ -127946,7 +136506,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Salamander_S5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Salamander_S5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--sphinx-s5",
@@ -127998,7 +136564,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Sphinx_S5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Sphinx_S5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--spryzen-s5",
@@ -128069,7 +136641,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Spryzen_S5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Spryzen_S5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "gt-chip--valtryek-v5",
@@ -128159,7 +136737,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Valtryek_V5"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Chip_-_Valtryek_V5",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "evolution-gear--h-gear",
@@ -128222,7 +136806,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/H_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/H_Gear",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--acid-anubis",
@@ -128322,7 +136920,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Acid_Anubis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Acid_Anubis",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 3,
+      "weight": 1,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--air-knight",
@@ -128408,7 +137020,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Air_Knight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Air_Knight",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 6,
+      "weight": 5,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--air-knight-k4",
@@ -128493,7 +137119,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Air_Knight_K4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Air_Knight_K4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--alter-chronos",
@@ -128586,7 +137218,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Alter_Chronos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Alter_Chronos",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--alter-cognite-c3",
@@ -128638,7 +137284,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Alter_Cognite_C3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Alter_Cognite_C3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--amaterios",
@@ -128751,7 +137403,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Amaterios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Amaterios",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 3,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--aqua-leviathan",
@@ -128804,7 +137470,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Aqua_Leviathan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Aqua_Leviathan",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--archer-hercules",
@@ -128898,7 +137577,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Archer_Hercules"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Archer_Hercules",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 6,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--archer-hercules-h4",
@@ -128962,7 +137655,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Archer_Hercules_H4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Archer_Hercules_H4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--arc-bahamut",
@@ -129041,7 +137740,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Arc_Bahamut"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Arc_Bahamut",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--arc-balkesh-b3",
@@ -129095,7 +137808,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Arc_Balkesh_B3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Arc_Balkesh_B3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--asteroid-zeutron-z3",
@@ -129141,7 +137860,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Asteroid_Zeutron_Z3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Asteroid_Zeutron_Z3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--atlas-anubion-a2",
@@ -129215,7 +137940,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Atlas_Anubion_A2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Atlas_Anubion_A2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--balar-b4",
@@ -129269,7 +138000,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Balar_B4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Balar_B4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--baldur",
@@ -129361,7 +138098,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Baldur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Baldur",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--beast-behemoth",
@@ -129457,7 +138208,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beast_Behemoth"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beast_Behemoth",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--beast-betromoth-b2",
@@ -129533,7 +138298,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beast_Betromoth_B2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beast_Betromoth_B2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--beat-kukulcan",
@@ -129606,7 +138377,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beat_Kukulcan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Beat_Kukulcan",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--behemoth-cyclops-c4",
@@ -129664,7 +138449,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Behemoth_Cyclops_C4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Behemoth_Cyclops_C4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--berserk-roktavor-r3",
@@ -129728,7 +138519,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Berserk_Roktavor_R3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Berserk_Roktavor_R3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--bigbang-genesis",
@@ -129804,7 +138601,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Bigbang_Genesis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Bigbang_Genesis",
+    "ratings": {
+      "attack": 3,
+      "defense": 8,
+      "stamina": 1,
+      "weight": 6,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--blast-jinnius",
@@ -129875,7 +138686,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blast_Jinnius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blast_Jinnius",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--blast-jinnius-j3",
@@ -129933,7 +138758,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blast_Jinnius_J3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blast_Jinnius_J3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--blaze-ragnaruk",
@@ -130060,7 +138891,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blaze_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Blaze_Ragnaruk",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--bloody-longinus",
@@ -130168,7 +139013,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Bloody_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Bloody_Longinus",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 2,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--boom-khalzar-k3",
@@ -130219,7 +139078,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Boom_Khalzar_K3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Boom_Khalzar_K3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--breaker-xcalius-x4",
@@ -130265,7 +139130,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Breaker_Xcalius_X4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Breaker_Xcalius_X4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--brutal-luinor-l4",
@@ -130318,7 +139189,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Brutal_Luinor_L4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Brutal_Luinor_L4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--burn-phoenix",
@@ -130391,7 +139268,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Burn_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Burn_Phoenix",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 5,
+      "weight": 2,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--buster-xcalibur",
@@ -130468,7 +139359,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Buster_Xcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Buster_Xcalibur",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 6
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--caynox",
@@ -130516,7 +139421,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Caynox"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Caynox",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--chaos",
@@ -130587,7 +139498,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Chaos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Chaos",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--cho-z-achilles",
@@ -130748,7 +139673,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Achilles"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Achilles",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--cho-z-spriggan",
@@ -130832,7 +139771,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Spriggan",
+    "ratings": {
+      "attack": 5,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 5,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--cho-z-valkyrie",
@@ -130995,7 +139948,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Cho-Z_Valkyrie",
+    "ratings": {
+      "attack": 7,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--claw-tiger",
@@ -131047,7 +140014,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Claw_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Claw_Tiger",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--crash-ragnaruk",
@@ -131128,7 +140108,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Crash_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Crash_Ragnaruk",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 5,
+      "weight": 5,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--crash-roktavor-r4",
@@ -131192,7 +140186,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Crash_Roktavor_R4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Crash_Roktavor_R4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dark-cerberus",
@@ -131248,7 +140248,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Cerberus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Cerberus",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 5,
+      "weight": 3,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dark-doomscizor-d2",
@@ -131331,7 +140344,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Doomscizor_D2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Doomscizor_D2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--dead-hades",
@@ -131412,7 +140431,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dead_Hades"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dead_Hades",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 6,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dead-phoenix",
@@ -131507,7 +140540,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dead_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dead_Phoenix",
+    "ratings": {
+      "attack": 2,
+      "defense": 7,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--deathscyther",
@@ -131593,7 +140640,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deathscyther"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deathscyther",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--deep-caynox-c3",
@@ -131651,7 +140712,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deep_Caynox_C3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deep_Caynox_C3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--deep-chaos",
@@ -131730,7 +140797,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deep_Chaos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Deep_Chaos",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 5,
+      "weight": 2,
+      "speed": 2,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--diomedes-d2",
@@ -131784,7 +140865,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Diomedes_D2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Diomedes_D2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--doomscizor",
@@ -131836,7 +140923,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Doomscizor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Doomscizor",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-fortress-hasbro",
@@ -131882,7 +140975,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Fortress_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Fortress_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-fortress-takara-tomy",
@@ -131955,7 +141054,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Fortress_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Fortress_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-shield-hasbro",
@@ -132023,7 +141136,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Shield_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Shield_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-shield-takara-tomy",
@@ -132119,7 +141238,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Shield_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Shield_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--draciel-v2",
@@ -132184,7 +141317,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_V2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_V2",
+    "ratings": {
+      "attack": 3,
+      "defense": 6,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--draciel-viper",
@@ -132257,7 +141404,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Viper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Draciel_Viper",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-fantom",
@@ -132369,7 +141530,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Fantom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Fantom",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-fighter",
@@ -132425,7 +141600,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Fighter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Fighter",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-storm-hasbro",
@@ -132476,7 +141657,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Storm_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Storm_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-storm-takara-tomy",
@@ -132581,7 +141768,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Storm_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Storm_(Takara_Tomy)",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-v2",
@@ -132662,7 +141863,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_V2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_V2",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 2,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dragoon-victory",
@@ -132742,7 +141957,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Victory"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dragoon_Victory",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--drain-fafnir-f3",
@@ -132824,7 +142053,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Drain_Fafnir_F3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Drain_Fafnir_F3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dranzer-flame-hasbro",
@@ -132888,7 +142123,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Flame_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Flame_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--dranzer-flame-takara-tomy",
@@ -132989,7 +142230,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Flame_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Flame_(Takara_Tomy)",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--dranzer-spiral-hasbro",
@@ -133044,7 +142299,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Spiral_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Spiral_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--dranzer-spiral-takara-tomy",
@@ -133131,7 +142392,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Spiral_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Spiral_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--dranzer-v2",
@@ -133203,7 +142478,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_V2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_V2",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dranzer-volcano",
@@ -133276,7 +142565,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Volcano"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dranzer_Volcano",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dread-hades-h3",
@@ -133322,7 +142625,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dread_Hades_H3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dread_Hades_H3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dread-phoenix-p4",
@@ -133374,7 +142683,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dread_Phoenix_P4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dread_Phoenix_P4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--driger-fang-hasbro",
@@ -133448,7 +142763,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Fang_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Fang_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--driger-fang-takara-tomy",
@@ -133520,7 +142841,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Fang_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Fang_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 1,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--driger-slash-hasbro",
@@ -133579,7 +142914,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Slash_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Slash_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--driger-slash-takara-tomy",
@@ -133715,7 +143056,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Slash_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Slash_(Takara_Tomy)",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--driger-v2",
@@ -133787,7 +143142,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_V2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_V2",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--driger-vulcan",
@@ -133860,7 +143229,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Vulcan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Driger_Vulcan",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--dullahan-d4",
@@ -133918,7 +143301,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dullahan_D4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dullahan_D4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--duo-aeclipse",
@@ -133980,7 +143369,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Aeclipse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Aeclipse",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--duo-apollos",
@@ -134048,7 +143443,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Apollos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Apollos",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--duo-artemis",
@@ -134116,7 +143517,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Artemis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Duo_Artemis",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--earth-aquila",
@@ -134189,7 +143596,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Earth_Aquila"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Earth_Aquila",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--emperor-forneus",
@@ -134331,7 +143752,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Emperor_Forneus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Emperor_Forneus",
+    "ratings": {
+      "attack": 0,
+      "defense": 6,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--emperor-forneus-f4",
@@ -134400,7 +143835,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Emperor_Forneus_F4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Emperor_Forneus_F4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--epic-evipero-e2",
@@ -134461,7 +143902,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Epic_Evipero_E2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Epic_Evipero_E2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--evil-eye",
@@ -134548,7 +143995,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Evil-eye"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Evil-eye",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--evipero",
@@ -134594,7 +144055,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Evipero"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Evipero",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--exceed-evil-eye",
@@ -134695,7 +144162,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Exceed_Evil-eye"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Exceed_Evil-eye",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--fang-fenrir",
@@ -134781,7 +144262,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fang_Fenrir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fang_Fenrir",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--fang-tiger",
@@ -134833,7 +144328,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fang_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fang_Tiger",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--ferro-fengriff-f2",
@@ -134886,7 +144394,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ferro_Fengriff_F2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ferro_Fengriff_F2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--fire-lizard",
@@ -134938,7 +144452,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fire_Lizard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fire_Lizard",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--flame-sagittario",
@@ -135011,7 +144538,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Flame_Sagittario"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Flame_Sagittario",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--flash-sleipnir",
@@ -135080,7 +144621,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Flash_Sleipnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Flash_Sleipnir",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--fusion-aether",
@@ -135126,7 +144680,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fusion_Aether"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Fusion_Aether",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--gaia-dragoon-vurst",
@@ -135191,7 +144751,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gaia_Dragoon_Vurst"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gaia_Dragoon_Vurst",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--galaxy-pegasis",
@@ -135259,7 +144833,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Pegasis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Pegasis",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--galaxy-zeus",
@@ -135330,7 +144910,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Zeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Zeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 5,
+      "weight": 5,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--galaxy-zeutron-z4",
@@ -135418,7 +145012,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Zeutron_Z4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Galaxy_Zeutron_Z4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--gargoyle-g4",
@@ -135483,7 +145083,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gargoyle_G4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gargoyle_G4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--geist-fafnir",
@@ -135569,7 +145175,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Geist_Fafnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Geist_Fafnir",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 7,
+      "weight": 5,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--geist-fafnir-f4",
@@ -135627,7 +145247,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Geist_Fafnir_F4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Geist_Fafnir_F4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--gigant-gaia",
@@ -135715,7 +145341,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gigant_Gaia"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gigant_Gaia",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--giga-gaianon-g2",
@@ -135789,7 +145429,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Giga_Gaianon_G2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Giga_Gaianon_G2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--gravity-perseus",
@@ -135849,7 +145495,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gravity_Perseus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Gravity_Perseus",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--greatest-raphael",
@@ -135912,7 +145564,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Greatest_Raphael"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Greatest_Raphael",
+    "ratings": {
+      "attack": 4,
+      "defense": 4,
+      "stamina": 4,
+      "weight": 4,
+      "speed": 4,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--guardian-kerbeus",
@@ -136005,7 +145671,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Guardian_Kerbeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Guardian_Kerbeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--guardian-kerbeus-k4",
@@ -136063,7 +145743,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Guardian_Kerbeus_K4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Guardian_Kerbeus_K4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--hazard-kerbeus",
@@ -136150,7 +145836,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hazard_Kerbeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hazard_Kerbeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 7,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--hazard-kerbeus-k4",
@@ -136196,7 +145896,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hazard_Kerbeus_K4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hazard_Kerbeus_K4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--heat-salamander-s4",
@@ -136242,7 +145948,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Heat_Salamander_S4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Heat_Salamander_S4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--hell-kerbecs",
@@ -136314,7 +146026,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hell_Kerbecs"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hell_Kerbecs",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 5,
+      "weight": 3,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--hell-salamander",
@@ -136401,7 +146127,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hell_Salamander"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hell_Salamander",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--holy-horusood",
@@ -136498,7 +146238,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Holy_Horusood"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Holy_Horusood",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--horusood-hasbro",
@@ -136556,7 +146310,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Horusood_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Horusood_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--horusood-takara-tomy",
@@ -136638,7 +146398,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Horusood_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Horusood_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--hound-dog",
@@ -136698,7 +146472,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hound_Dog"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hound_Dog",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--hyper-horusood-h2",
@@ -136763,7 +146550,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hyper_Horusood_H2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hyper_Horusood_H2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--hyrus-h2",
@@ -136817,7 +146610,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hyrus_H2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Hyrus_H2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--inferno-ifrit",
@@ -136912,7 +146711,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Inferno_Ifrit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Inferno_Ifrit",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--inferno-ifritor-i2",
@@ -136963,7 +146776,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Inferno_Ifritor_I2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Inferno_Ifritor_I2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--istros-i2",
@@ -137019,7 +146838,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Istros_I2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Istros_I2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--jail-jormungand",
@@ -137114,7 +146939,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Jail_Jormungand"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Jail_Jormungand",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--jumbo-jormuntor-j2",
@@ -137187,7 +147026,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Jumbo_Jormuntor_J2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Jumbo_Jormuntor_J2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--kerbeus-hasbro",
@@ -137246,7 +147091,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kerbeus_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kerbeus_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--kerbeus-takara-tomy",
@@ -137342,7 +147193,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kerbeus_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kerbeus_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--killer-deathscyther",
@@ -137428,7 +147293,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Killer_Deathscyther"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Killer_Deathscyther",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--kinetic-satomb-s3",
@@ -137489,7 +147368,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kinetic_Satomb_S3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kinetic_Satomb_S3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--knife-lizard",
@@ -137541,7 +147426,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Knife_Lizard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Knife_Lizard",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--kraken-k4",
@@ -137595,7 +147493,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kraken_K4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kraken_K4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--kreis-satan",
@@ -137747,7 +147651,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kreis_Satan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kreis_Satan",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--krusher-doomscizor-d3",
@@ -137799,7 +147717,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Krusher_Doomscizor_D3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Krusher_Doomscizor_D3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--left-aeclipse",
@@ -137862,7 +147786,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Aeclipse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Aeclipse",
+    "ratings": {
+      "attack": 3,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--left-apollos",
@@ -137935,7 +147873,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Apollos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Apollos",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--left-astro-a4",
@@ -137993,7 +147945,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Astro_A4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Left_Astro_A4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--legend-spryzen-s3",
@@ -138051,7 +148009,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Legend_Spryzen_S3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Legend_Spryzen_S3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--lightning-l-drago",
@@ -138132,7 +148096,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lightning_L-Drago"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lightning_L-Drago",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--lost-longinus",
@@ -138260,7 +148238,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lost_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lost_Longinus",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 0,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--lost-luinor-l2",
@@ -138314,7 +148306,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lost_Luinor_L2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Lost_Luinor_L2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--mad-minoboros",
@@ -138393,7 +148391,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Mad_Minoboros"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Mad_Minoboros",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--mad-minoboros-m2",
@@ -138459,7 +148471,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Mad_Minoboros_M2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Mad_Minoboros_M2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--magma-lizard",
@@ -138507,7 +148525,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Magma_Lizard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Magma_Lizard",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--maximus-garuda-g3",
@@ -138566,7 +148589,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Maximus_Garuda_G3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Maximus_Garuda_G3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--meteo-l-drago",
@@ -138626,7 +148655,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Meteo_L-Drago"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Meteo_L-Drago",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--minoboros-hasbro",
@@ -138684,7 +148719,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Minoboros_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Minoboros_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--minoboros-takara-tomy",
@@ -138758,7 +148799,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Minoboros_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Minoboros_(Takara_Tomy)",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--morrigna-m4",
@@ -138821,7 +148876,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Morrigna_M4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Morrigna_M4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--nepstrius",
@@ -138875,7 +148936,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nepstrius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nepstrius",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--neptune",
@@ -138944,7 +149011,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Neptune"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Neptune",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 2,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--nightmare-longinus",
@@ -139029,7 +149110,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nightmare_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nightmare_Longinus",
+    "ratings": {
+      "attack": 7,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 6,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--nightmare-luinor-l3",
@@ -139089,7 +149184,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nightmare_Luinor_L3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nightmare_Luinor_L3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--nova-nepstrius-n2",
@@ -139151,7 +149252,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nova_Nepstrius_N2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nova_Nepstrius_N2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--nova-neptune",
@@ -139237,7 +149344,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nova_Neptune"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Nova_Neptune",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--odax",
@@ -139288,7 +149409,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Odax"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Odax",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--odin",
@@ -139389,7 +149516,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Odin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Odin",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--ogre-o4",
@@ -139462,7 +149603,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ogre_O4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ogre_O4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--omni-odax-o2",
@@ -139537,7 +149684,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Omni_Odax_O2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Omni_Odax_O2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--orb-egis",
@@ -139627,7 +149780,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orb_Egis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orb_Egis",
+    "ratings": {
+      "attack": 0,
+      "defense": 8,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--orb-engaard-e4",
@@ -139689,7 +149856,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orb_Engaard_E4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orb_Engaard_E4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--orichalcum",
@@ -139769,7 +149942,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orichalcum"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orichalcum",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 6,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--orichalcum-o3",
@@ -139819,7 +150006,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orichalcum_O3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orichalcum_O3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--orpheus-o2",
@@ -139867,7 +150060,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orpheus_O2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Orpheus_O2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--perfect-phoenix",
@@ -139935,7 +150134,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Perfect_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Perfect_Phoenix",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--perfect-phoenix-p4",
@@ -139988,7 +150193,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Perfect_Phoenix_P4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Perfect_Phoenix_P4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--phrenic-phantazus-p2",
@@ -140034,7 +150245,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Phrenic_Phantazus_P2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Phrenic_Phantazus_P2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--prime-apocalypse",
@@ -140137,7 +150354,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Prime_Apocalypse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Prime_Apocalypse",
+    "ratings": {
+      "attack": 8,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 6,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--protection-turtle",
@@ -140189,7 +150420,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Protection_Turtle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Protection_Turtle",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--psychic-phantom",
@@ -140291,7 +150535,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Psychic_Phantom"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Psychic_Phantom",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--quad-quetzalcoatl",
@@ -140386,7 +150644,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Quad_Quetzalcoatl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Quad_Quetzalcoatl",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--quill-quetziko-q2",
@@ -140447,7 +150719,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Quill_Quetziko_Q2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Quill_Quetziko_Q2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--raging-roktavor-r2",
@@ -140515,7 +150793,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Raging_Roktavor_R2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Raging_Roktavor_R2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--ragnaruk",
@@ -140613,7 +150897,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ragnaruk",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--ray-unicorno",
@@ -140673,7 +150971,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ray_Unicorno"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Ray_Unicorno",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--regalia-genesis",
@@ -140752,7 +151056,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Regalia_Genesis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Regalia_Genesis",
+    "ratings": {
+      "attack": 1,
+      "defense": 8,
+      "stamina": 2,
+      "weight": 6,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--revive-phoenix",
@@ -140900,7 +151218,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Revive_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Revive_Phoenix",
+    "ratings": {
+      "attack": 1,
+      "defense": 6,
+      "stamina": 2,
+      "weight": 5,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--revive-phoenix-p4",
@@ -140948,7 +151280,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Revive_Phoenix_P4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Revive_Phoenix_P4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--right-aeclipse",
@@ -141011,7 +151349,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Aeclipse"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Aeclipse",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--right-artemis",
@@ -141084,7 +151436,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Artemis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Artemis",
+    "ratings": {
+      "attack": 5,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--right-artemis-a4",
@@ -141142,7 +151508,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Artemis_A4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Right_Artemis_A4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--rising-ragnaruk",
@@ -141281,7 +151653,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rising_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rising_Ragnaruk",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--rock-leone",
@@ -141346,7 +151732,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rock_Leone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rock_Leone",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--roktavor",
@@ -141399,7 +151799,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Roktavor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Roktavor",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--rudr-r4",
@@ -141464,7 +151870,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rudr_R4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Rudr_R4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--screw-trident",
@@ -141541,8 +151953,25 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Screw_Trident"
-  },
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Screw_Trident",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 5,
+      "weight": 4,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
+  }
+];
+
+const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
   {
     "id": "layer--shadow-amaterios",
     "classification": "Layer",
@@ -141603,7 +152032,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Amaterios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Amaterios",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--shadow-orichalcum",
@@ -141671,7 +152106,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Orichalcum"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Orichalcum",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--shelter-regulus",
@@ -141750,7 +152191,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--shelter-regulus-r3",
@@ -141819,7 +152274,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus_R3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus_R3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--shining-amaterios",
@@ -141908,7 +152369,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 6
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--shining-amaterios-a3",
@@ -141954,7 +152429,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios_A3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios_A3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--sky-falcon",
@@ -142007,7 +152488,20 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sky_Falcon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sky_Falcon",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--spark-sleipnir",
@@ -142055,7 +152549,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spark_Sleipnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spark_Sleipnir",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--sphinx-s4",
@@ -142108,7 +152607,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sphinx_S4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sphinx_S4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--spiral-treptune-t4",
@@ -142209,7 +152714,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spiral_Treptune_T4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spiral_Treptune_T4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--spriggan",
@@ -142335,7 +152846,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--spriggan-requiem",
@@ -142482,7 +153007,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan_Requiem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan_Requiem",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--spryzen",
@@ -142535,7 +153074,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--storm-pegasis",
@@ -142652,7 +153197,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Pegasis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Pegasis",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--storm-spryzen-s2",
@@ -142722,7 +153281,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spryzen_S2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spryzen_S2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--storm-tiger",
@@ -142766,7 +153331,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Tiger",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--strike-god-valkyrie",
@@ -142841,7 +153411,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_God_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_God_Valkyrie",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--strike-valtryek-v3",
@@ -142889,7 +153473,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_Valtryek_V3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_Valtryek_V3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--surge-xcalius-x3",
@@ -142949,7 +153539,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surge_Xcalius_X3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surge_Xcalius_X3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--surtr-s2",
@@ -143005,7 +153601,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surtr_S2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surtr_S2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--tempest-wyvron-w3",
@@ -143069,7 +153671,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tempest_Wyvron_W3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tempest_Wyvron_W3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--tide-treptune-t3",
@@ -143115,7 +153723,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tide_Treptune_T3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tide_Treptune_T3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--tornado-wyvern",
@@ -143197,7 +153811,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tornado_Wyvern"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tornado_Wyvern",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--treptune",
@@ -143251,7 +153879,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Treptune"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Treptune",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--trident",
@@ -143336,7 +153969,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Trident"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Trident",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--turbo-achilles-a4",
@@ -143392,7 +154039,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Achilles_A4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Achilles_A4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--turbo-spryzen-s4",
@@ -143442,7 +154095,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Spryzen_S4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Spryzen_S4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--turbo-valtryek-v3",
@@ -143496,7 +154155,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Valtryek_V3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Valtryek_V3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--twin-nemesis",
@@ -143573,7 +154238,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Nemesis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Nemesis",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--twin-noctemis-n3",
@@ -143620,7 +154299,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Noctemis_N3"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Noctemis_N3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--typhon-t4",
@@ -143674,7 +154359,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Typhon_T4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Typhon_T4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--tyros-t2",
@@ -143736,7 +154427,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tyros_T2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tyros_T2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--uber-unicrest-u2",
@@ -143795,7 +154492,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Uber_Unicrest_U2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Uber_Unicrest_U2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--unicorn",
@@ -143882,7 +154585,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicorn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicorn",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--unicrest",
@@ -143934,7 +154651,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicrest"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicrest",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--unlock-unicorn",
@@ -144048,7 +154770,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unlock_Unicorn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unlock_Unicorn",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--unperfect-phoenix",
@@ -144088,7 +154824,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Unperfect Phoenix is a Beyblade layer from the Cho-Z Layer System, weighing 17.9 g. Part of Beyblade Burst Turbo.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--unperfect-phoenix-p4",
@@ -144120,7 +154862,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Unperfect Phoenix P4 is a Beyblade layer from the SlingShock System, weighing 11.6 g. Part of Beyblade Burst Turbo.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix_P4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix_P4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--valkyrie",
@@ -144320,7 +155068,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valkyrie",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--valtryek",
@@ -144382,7 +155144,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valtryek"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valtryek",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--vice-leopard-l4",
@@ -144437,7 +155205,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vice_Leopard_L4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vice_Leopard_L4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--victory-valtryek-v2",
@@ -144527,7 +155301,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valtryek_V2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valtryek_V2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--vise-leopard",
@@ -144607,7 +155387,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vise_Leopard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vise_Leopard",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 2,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--wild-wyvron-w2",
@@ -144705,7 +155499,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvron_W2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvron_W2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wing-falcon",
@@ -144753,7 +155553,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wing_Falcon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wing_Falcon",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--winning-valkyrie",
@@ -144877,7 +155682,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Winning_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Winning_Valkyrie",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 5
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--wolborg-hasbro",
@@ -144952,7 +155771,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wolborg-takara-tomy",
@@ -145050,7 +155875,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wonder-valtryek-v4",
@@ -145108,7 +155947,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wonder_Valtryek_V4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wonder_Valtryek_V4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--wyvern",
@@ -145224,7 +156069,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wyvern"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wyvern",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--wyvron",
@@ -145270,7 +156129,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wyvron"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wyvron",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--xcalibur",
@@ -145389,7 +156253,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xcalibur"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xcalibur",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 4
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--xcalius",
@@ -145447,7 +156325,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xcalius"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xcalius",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--xeno-xcalius-x2",
@@ -145506,7 +156390,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalius_X2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalius_X2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--yaeger-yggdrasil",
@@ -145585,7 +156475,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yaeger_Yggdrasil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yaeger_Yggdrasil",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--yegdrion",
@@ -145631,7 +156535,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yegdrion"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yegdrion",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--yggdrasil",
@@ -145700,7 +156610,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yggdrasil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yggdrasil",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--yugen-yegdrion-y2",
@@ -145769,7 +156693,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yugen_Yegdrion_Y2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Yugen_Yegdrion_Y2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--zillion-zeus",
@@ -145875,7 +156805,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Zillion_Zeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Zillion_Zeus",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 4,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--zillion-zeutron-z2",
@@ -145921,7 +156865,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Zillion_Zeutron_Z2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Zillion_Zeutron_Z2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "layer--z-achilles",
@@ -146093,7 +157043,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Z_Achilles"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Z_Achilles",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 5,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "layer--z-achilles-a4",
@@ -146157,7 +157121,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Z_Achilles_A4"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Z_Achilles_A4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "light-wheel--clay",
@@ -148729,7 +159699,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/L_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/L_Gear",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "core--magnecore",
@@ -148856,7 +159840,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Antler is a Beyblade main blade from the Custom Line, weighing 29.1 g. Released July 9th, 2026 as G1684 for Beyblade X (Season 2).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Antler"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Antler",
+    "ratings": {
+      "attack": 8,
+      "defense": 15,
+      "stamina": 37
+    }
   },
   {
     "id": "main-blade--arc",
@@ -148990,7 +159979,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Arc"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Arc",
+    "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 40
+    }
   },
   {
     "id": "main-blade--blast",
@@ -149085,7 +160079,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Blast"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Blast",
+    "ratings": {
+      "attack": 50,
+      "defense": 10,
+      "stamina": 15
+    }
   },
   {
     "id": "main-blade--brave",
@@ -149232,7 +160231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Brave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Brave",
+    "ratings": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 10
+    }
   },
   {
     "id": "main-blade--brush",
@@ -149341,7 +160345,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Brush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Brush",
+    "ratings": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 5
+    }
   },
   {
     "id": "main-blade--dark",
@@ -149432,7 +160441,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Dark"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Dark",
+    "ratings": {
+      "attack": 10,
+      "defense": 40,
+      "stamina": 10
+    }
   },
   {
     "id": "main-blade--eclipse",
@@ -149570,7 +160584,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Fang"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Fang",
+    "ratings": {
+      "attack": 35,
+      "defense": 10,
+      "stamina": 15
+    }
   },
   {
     "id": "main-blade--flame",
@@ -149659,7 +160678,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Flame"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Flame",
+    "ratings": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 40
+    }
   },
   {
     "id": "main-blade--flare",
@@ -149718,7 +160742,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Flare"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Flare",
+    "ratings": {
+      "attack": 25,
+      "defense": 40,
+      "stamina": 10
+    }
   },
   {
     "id": "main-blade--fort",
@@ -149817,7 +160846,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Fort"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Fort",
+    "ratings": {
+      "attack": 24,
+      "defense": 12,
+      "stamina": 24
+    }
   },
   {
     "id": "main-blade--hunt",
@@ -149882,7 +160916,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Hunt"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Hunt",
+    "ratings": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 30
+    }
   },
   {
     "id": "main-blade--might",
@@ -149964,7 +161003,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Might"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Might",
+    "ratings": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25
+    }
   },
   {
     "id": "main-blade--reaper",
@@ -150062,7 +161106,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Reaper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Reaper",
+    "ratings": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 25
+    }
   },
   {
     "id": "main-blade--wriggle",
@@ -150140,7 +161189,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Wriggle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Wriggle",
+    "ratings": {
+      "attack": 8,
+      "defense": 12,
+      "stamina": 40
+    }
   },
   {
     "id": "metal-blade--blitz",
@@ -150219,7 +161273,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Blitz"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Blitz",
+    "ratings": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 5
+    }
   },
   {
     "id": "metal-blade--delta",
@@ -150296,7 +161355,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Delta"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Delta",
+    "ratings": {
+      "attack": 15,
+      "defense": 15,
+      "stamina": 10
+    }
   },
   {
     "id": "metal-blade--force",
@@ -150420,7 +161484,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Fortress"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Fortress",
+    "ratings": {
+      "attack": 10,
+      "defense": 20,
+      "stamina": 10
+    }
   },
   {
     "id": "metal-blade--hurricane",
@@ -150548,7 +161617,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Rage"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Rage",
+    "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20
+    }
   },
   {
     "id": "metal-blade--tread",
@@ -150817,7 +161891,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Break"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Break",
+    "ratings": {
+      "attack": 10,
+      "defense": 5,
+      "stamina": 5
+    }
   },
   {
     "id": "over-blade--flow",
@@ -150895,7 +161974,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Flow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Flow",
+    "ratings": {
+      "attack": 5,
+      "defense": 5,
+      "stamina": 10
+    }
   },
   {
     "id": "over-blade--guard",
@@ -150963,7 +162047,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Guard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Guard",
+    "ratings": {
+      "attack": 5,
+      "defense": 10,
+      "stamina": 5
+    }
   },
   {
     "id": "over-blade--i",
@@ -151175,7 +162264,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Peak"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Peak",
+    "ratings": {
+      "attack": 8,
+      "defense": 7,
+      "stamina": 5
+    }
   },
   {
     "id": "over-blade--tough",
@@ -151382,7 +162476,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Around_Sharp"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Around_Sharp",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 4
+    }
   },
   {
     "id": "performance-tip--ball",
@@ -151659,7 +162758,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Ball",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--bearing-drive",
@@ -151751,7 +162855,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Bearing_Drive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Bearing_Drive",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 6
+    }
   },
   {
     "id": "performance-tip--blade-semi-flat",
@@ -151838,7 +162947,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Blade_Semi-Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Blade_Semi-Flat",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--bottom-spike",
@@ -152050,7 +163164,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Bottom_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Bottom_Spike",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 4
+    }
   },
   {
     "id": "performance-tip--circle-flat",
@@ -152188,7 +163307,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Circle_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Circle_Flat",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--coating-spike",
@@ -152365,7 +163489,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Coating_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Coating_Spike",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--defense",
@@ -152700,7 +163829,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Defense",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--defense-spike",
@@ -152850,7 +163984,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Defense_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Defense_Spike",
+    "ratings": {
+      "attack": 0.5,
+      "defense": 2.5,
+      "stamina": 4
+    }
   },
   {
     "id": "performance-tip--delta-drive",
@@ -152951,7 +164090,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Delta_Drive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Delta_Drive",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--eternal-defense-spike",
@@ -153043,7 +164187,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Eternal_Defense_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Eternal_Defense_Spike",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 5
+    }
   },
   {
     "id": "performance-tip--eternal-wide-defense",
@@ -153373,7 +164522,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Extreme_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Extreme_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--final-drive",
@@ -153494,7 +164648,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Final_Drive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Final_Drive",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--final-survive",
@@ -153590,7 +164749,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Final_Survive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Final_Survive",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--flat",
@@ -153937,7 +165101,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--flat-ball",
@@ -154018,7 +165187,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat_Ball",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--flat-spike",
@@ -154187,7 +165361,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Flat_Spike",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--gear-circle-flat",
@@ -154303,7 +165482,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Gear_Circle_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Gear_Circle_Flat",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--giga-flat",
@@ -154364,7 +165548,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Giga_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Giga_Flat",
+    "ratings": {
+      "attack": 5,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--hole-flat",
@@ -154731,7 +165920,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Hole_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Hole_Flat",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--hole-flat-spike",
@@ -155121,7 +166315,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Left_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Left_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--left-rubber-flat",
@@ -155205,7 +166404,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Left_Rubber_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Left_Rubber_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--metal-ball",
@@ -155316,7 +166520,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Ball",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--metal-flat",
@@ -155403,7 +166612,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Flat",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--metal-spike",
@@ -155570,7 +166784,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Metal_Spike",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 6
+    }
   },
   {
     "id": "performance-tip--pf",
@@ -155676,7 +166895,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Polish_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Polish_Defense",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--quake-metal-saga",
@@ -155868,7 +167092,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Quake_(Metal_Saga)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Quake_(Metal_Saga)",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--right-rubber-flat",
@@ -156130,7 +167359,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Right_Rubber_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Right_Rubber_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--rubber-ball",
@@ -156208,7 +167442,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Ball",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--rubber-defense-flat",
@@ -156271,7 +167510,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Defense_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Defense_Flat",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--rubber-flat",
@@ -156513,7 +167757,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--rubber-semi-flat",
@@ -156630,7 +167879,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Semi-Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Rubber_Semi-Flat",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--semi-defense",
@@ -156670,7 +167924,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Semi-Defense is a Beyblade performance tip from the Hybrid Wheel System, weighing 0.6 g. Released as BB-40 for Beyblade: Metal Fusion.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Semi-Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Semi-Defense",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--semi-flat",
@@ -156913,7 +168172,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Semi-Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Semi-Flat",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--sharp-wide-defense",
@@ -157238,7 +168502,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Spike",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "performance-tip--spike-ball",
@@ -157390,7 +168659,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Twin_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Twin_Ball",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 4
+    }
   },
   {
     "id": "performance-tip--wave-wide-defense",
@@ -157555,7 +168829,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wave_Wide_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wave_Wide_Defense",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 3
+    }
   },
   {
     "id": "performance-tip--wide-ball",
@@ -157809,7 +169088,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Ball",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--wide-defense",
@@ -158179,7 +169463,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Defense",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    }
   },
   {
     "id": "performance-tip--wide-flat",
@@ -158382,7 +169671,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "performance-tip--wide-semi-flat",
@@ -158479,7 +169773,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Semi-Flat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Wide_Semi-Flat",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 1
+    }
   },
   {
     "id": "performance-tip--x-drive",
@@ -158573,7 +169872,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_X_Drive"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_X_Drive",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "qs-blade--ambush",
@@ -158641,7 +169945,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Ambush"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Ambush",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--bolt",
@@ -158695,7 +170005,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Bolt"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Bolt",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--destined",
@@ -158751,7 +170067,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Destined"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Destined",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--divine",
@@ -158828,7 +170150,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Divine"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Divine",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--fierce",
@@ -158896,7 +170224,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Fierce"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Fierce",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--flame",
@@ -158952,7 +170286,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Flame"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Flame",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--gambit",
@@ -159008,7 +170348,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Gambit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Gambit",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--hydra",
@@ -159069,7 +170415,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Hydra"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Hydra",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--komet",
@@ -159132,7 +170484,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Komet"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Komet",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--lightning",
@@ -159201,7 +170559,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Lightning"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Lightning",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--ruin",
@@ -159257,7 +170621,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Ruin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Ruin",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--stellar",
@@ -159311,7 +170681,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Stellar"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Stellar",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--tidal",
@@ -159373,7 +170749,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Tidal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Tidal",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--twister",
@@ -159433,7 +170815,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Twister"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Twister",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--whirl",
@@ -159487,7 +170875,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Whirl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Whirl",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--xiphoid",
@@ -159548,7 +170942,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Xiphoid"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Xiphoid",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "qs-blade--zeal",
@@ -159607,7 +171007,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Zeal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/QS_Blade_-_Zeal",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ratchet-integrated-bit--operate",
@@ -159825,7 +171231,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_BulletGriffon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_BulletGriffon",
+    "ratings": {
+      "attack": 45,
+      "defense": 45,
+      "stamina": 40
+    }
   },
   {
     "id": "ratchet-integrated-blade--cutter-shinobi",
@@ -159869,7 +171280,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cutter Shinobi is a Beyblade ratchet-integrated blade from the Unique Line, weighing 37.4 g. Released as G1940 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Cutter_Shinobi"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Cutter_Shinobi",
+    "ratings": {
+      "attack": 48,
+      "defense": 48,
+      "stamina": 34
+    }
   },
   {
     "id": "ratchet-integrated-blade--gloryvalkyrie",
@@ -159962,7 +171378,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_GloryValkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_GloryValkyrie",
+    "ratings": {
+      "attack": 85,
+      "defense": 35,
+      "stamina": 25
+    }
   },
   {
     "id": "ratchet-integrated-blade--hellsnether",
@@ -160079,7 +171500,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Rampart Aegis is a Beyblade ratchet-integrated blade from the Unique Line, weighing 32.7 g. Released as G1940 for Beyblade X (Season 3).",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Rampart_Aegis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Rampart_Aegis",
+    "ratings": {
+      "attack": 25,
+      "defense": 70,
+      "stamina": 35
+    }
   },
   {
     "id": "ratchet-integrated-blade--seize-jaguar",
@@ -160189,7 +171615,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Valor_Bison"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Valor_Bison",
+    "ratings": {
+      "attack": 36,
+      "defense": 58,
+      "stamina": 36
+    }
   },
   {
     "id": "ratchet--0-60",
@@ -160248,7 +171679,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-60",
+    "ratings": {
+      "attack": 3,
+      "defense": 14,
+      "stamina": 13
+    }
   },
   {
     "id": "ratchet--0-70",
@@ -160350,7 +171786,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-70",
+    "ratings": {
+      "attack": 3,
+      "defense": 13,
+      "stamina": 14
+    }
   },
   {
     "id": "ratchet--1-50",
@@ -160433,7 +171874,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-50"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-50",
+    "ratings": {
+      "attack": 18,
+      "defense": 9,
+      "stamina": 3
+    }
   },
   {
     "id": "ratchet--1-70",
@@ -160517,7 +171963,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-70",
+    "ratings": {
+      "attack": 17,
+      "defense": 6,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--1-80",
@@ -160655,7 +172106,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-80",
+    "ratings": {
+      "attack": 17,
+      "defense": 4,
+      "stamina": 9
+    }
   },
   {
     "id": "ratchet--2-60",
@@ -160951,7 +172407,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_2-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_2-70",
+    "ratings": {
+      "attack": 10,
+      "defense": 12,
+      "stamina": 8
+    }
   },
   {
     "id": "ratchet--2-80",
@@ -161050,7 +172511,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_2-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_2-80",
+    "ratings": {
+      "attack": 10,
+      "defense": 11,
+      "stamina": 9
+    }
   },
   {
     "id": "ratchet--3-85",
@@ -161246,7 +172712,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-85"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-85",
+    "ratings": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 10
+    }
   },
   {
     "id": "ratchet--4-50",
@@ -161340,7 +172811,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-50"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-50",
+    "ratings": {
+      "attack": 12,
+      "defense": 13,
+      "stamina": 5
+    }
   },
   {
     "id": "ratchet--4-55",
@@ -161485,7 +172961,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-55"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-55",
+    "ratings": {
+      "attack": 7,
+      "defense": 11,
+      "stamina": 12
+    }
   },
   {
     "id": "ratchet--5-50",
@@ -161688,7 +173169,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-60",
+    "ratings": {
+      "attack": 14,
+      "defense": 8,
+      "stamina": 8
+    }
   },
   {
     "id": "ratchet--6-70",
@@ -161769,7 +173255,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-70",
+    "ratings": {
+      "attack": 14,
+      "defense": 7,
+      "stamina": 9
+    }
   },
   {
     "id": "ratchet--6-80",
@@ -161862,7 +173353,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-80",
+    "ratings": {
+      "attack": 14,
+      "defense": 6,
+      "stamina": 10
+    }
   },
   {
     "id": "ratchet--7-55",
@@ -161972,7 +173468,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-55"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-55",
+    "ratings": {
+      "attack": 6,
+      "defense": 14,
+      "stamina": 10
+    }
   },
   {
     "id": "ratchet--7-60",
@@ -162100,7 +173601,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-60"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-60",
+    "ratings": {
+      "attack": 8,
+      "defense": 14,
+      "stamina": 8
+    }
   },
   {
     "id": "ratchet--7-70",
@@ -162191,7 +173697,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-70",
+    "ratings": {
+      "attack": 8,
+      "defense": 12,
+      "stamina": 10
+    }
   },
   {
     "id": "ratchet--7-80",
@@ -162273,7 +173784,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-80",
+    "ratings": {
+      "attack": 7,
+      "defense": 14,
+      "stamina": 9
+    }
   },
   {
     "id": "ratchet--8-70",
@@ -162341,7 +173857,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_8-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_8-70",
+    "ratings": {
+      "attack": 8,
+      "defense": 10,
+      "stamina": 12
+    }
   },
   {
     "id": "ratchet--8-80",
@@ -162407,7 +173928,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_8-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_8-80",
+    "ratings": {
+      "attack": 8,
+      "defense": 9,
+      "stamina": 13
+    }
   },
   {
     "id": "ratchet--9-65",
@@ -162529,7 +174055,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-65"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-65",
+    "ratings": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--9-70",
@@ -162630,7 +174161,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-70"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-70",
+    "ratings": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--9-80",
@@ -162772,7 +174308,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-80"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-80",
+    "ratings": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7
+    }
   },
   {
     "id": "ratchet--m-65",
@@ -162832,7 +174373,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-65"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-65",
+    "ratings": {
+      "attack": 10,
+      "defense": 11,
+      "stamina": 19
+    }
   },
   {
     "id": "ratchet--m-85",
@@ -162925,7 +174471,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-85"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-85",
+    "ratings": {
+      "attack": 8,
+      "defense": 19,
+      "stamina": 13
+    }
   },
   {
     "id": "ring--abyss-hasbro",
@@ -162992,7 +174543,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Abyss_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Abyss_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--abyss-takara-tomy",
@@ -163065,7 +174622,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Abyss_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Abyss_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--blazebringer",
@@ -163125,7 +174696,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Blazebringer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Blazebringer",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--brave",
@@ -163205,7 +174782,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Brave"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Brave",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--brave-hasbro",
@@ -163273,7 +174864,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Brave_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Brave_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--burn",
@@ -163338,7 +174935,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Burn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Burn",
+    "ratings": {
+      "attack": 7,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 2,
+      "burst": 3
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--curse-hasbro",
@@ -163389,7 +175000,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Curse_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Curse_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--curse-takara-tomy",
@@ -163477,7 +175094,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Curse_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Curse_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--death",
@@ -163548,7 +175179,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Death"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Death",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--demise",
@@ -163615,7 +175260,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Demise"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Demise",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--endbringer",
@@ -163663,7 +175314,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Endbringer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Endbringer",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--first",
@@ -163749,7 +175406,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_First"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_First",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--flamebringer",
@@ -163797,7 +175468,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Flamebringer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Flamebringer",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--glide-hasbro",
@@ -163854,7 +175531,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Glide_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Glide_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--glide-takara-tomy",
@@ -163942,7 +175625,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Glide_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Glide_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--hollow-hasbro",
@@ -163988,7 +175685,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Hollow_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Hollow_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--hollow-takara-tomy",
@@ -164066,7 +175769,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Hollow_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Hollow_(Takara_Tomy)",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--infinite",
@@ -164187,7 +175904,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Infinite"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Infinite",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--infinite-hasbro",
@@ -164233,7 +175964,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Infinite_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Infinite_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--jet-hasbro",
@@ -164279,7 +176016,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Jet_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Jet_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--jet-takara-tomy",
@@ -164342,7 +176085,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Jet_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Jet_(Takara_Tomy)",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--king",
@@ -164472,7 +176229,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_King"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_King",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 1,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--kolossal",
@@ -164545,7 +176316,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Kolossal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Kolossal",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--mirage",
@@ -164620,7 +176397,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Mirage"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Mirage",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--mirage-hasbro",
@@ -164695,7 +176486,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Mirage_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Mirage_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--origin",
@@ -164751,7 +176548,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Origin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Origin",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--rage",
@@ -164827,7 +176630,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Rage"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Rage",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 4,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--raid",
@@ -164881,7 +176698,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Raid"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Raid",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--spear",
@@ -164947,7 +176770,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Spear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Spear",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--super",
@@ -165121,7 +176950,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Super"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Super",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--super-hasbro",
@@ -165187,7 +177030,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Super_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Super_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--tempest",
@@ -165269,7 +177118,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Tempest"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Tempest",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 0,
+      "burst": 2
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--the-end",
@@ -165332,7 +177195,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_The_End"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_The_End",
+    "ratings": {
+      "attack": 2,
+      "defense": 8,
+      "stamina": 2,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--triumph",
@@ -165385,7 +177262,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Triumph"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Triumph",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--variant",
@@ -165506,7 +177389,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Variant"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Variant",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--vex",
@@ -165559,7 +177456,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Vex"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Vex",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--volcano",
@@ -165624,7 +177527,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Volcano"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_Volcano",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 4,
+      "weight": 4,
+      "speed": 2,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--world-hasbro",
@@ -165677,7 +177594,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_World_(Hasbro)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_World_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "ring--world-takara-tomy",
@@ -165748,7 +177671,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_World_(Takara_Tomy)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Ring_-_World_(Takara_Tomy)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0,
+      "burst": 1
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "running-core--bearing-core-2",
@@ -167650,7 +179587,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo-Right (Metal Weight Version) is a Beyblade spin gear from the Magnacore System, weighing 4 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo-Right_(Metal_Weight_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo-Right_(Metal_Weight_Version)",
+    "ratings": {
+      "stamina": 3
+    }
   },
   {
     "id": "spin-gear--neo-left-sg-normal-core",
@@ -167683,7 +179623,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Left_SG_(Normal_Core)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Left_SG_(Normal_Core)",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-gear--neo-right-sg-double-bearing-version",
@@ -167718,7 +179663,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (Double Bearing Version) is a Beyblade spin gear from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(Double_Bearing_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(Double_Bearing_Version)",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4
+    }
   },
   {
     "id": "spin-gear--neo-right-sg-metal-weight-version",
@@ -167770,7 +179720,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (MG Core) is a Beyblade spin gear from the Beyblade: V-Force, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(MG_Core)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(MG_Core)",
+    "ratings": {
+      "attack": 1,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-gear--neo-right-sg-mw-core",
@@ -167854,7 +179809,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (North Magnecore Version) is a Beyblade spin gear from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(North_Magnecore_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(North_Magnecore_Version)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "blade-base--neo-right-sg-south-magnecore-dranzer-v-version",
@@ -167923,7 +179883,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right Customize Gear (Free Shaft Version) is a Beyblade spin gear from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Customize_Gear_(Free_Shaft_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Customize_Gear_(Free_Shaft_Version)",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "spin-gear--right-rotation-spin-gear",
@@ -167950,7 +179915,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right Rotation Spin Gear is a Beyblade spin gear from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Rotation_Spin_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Rotation_Spin_Gear",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-gear--right-sg-auto-change-version",
@@ -168125,7 +180095,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (MG Jumping Version) is a Beyblade spin gear from the Magnacore System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(MG_Jumping_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(MG_Jumping_Version)",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-gear--right-sg-triple-change-version",
@@ -168317,7 +180292,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_230"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--85",
@@ -168519,7 +180499,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_85"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_85",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--90",
@@ -168737,7 +180722,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_90"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_90",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--armor-230",
@@ -168814,7 +180804,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Armor_230"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Armor_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--armor-defense-145",
@@ -168982,7 +180977,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Armor_Defense_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Armor_Defense_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--boost-disk-145",
@@ -169126,7 +181126,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Boost_Disk_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Boost_Disk_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--change-height-120",
@@ -169218,7 +181223,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Change_Height_120"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Change_Height_120",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--claw-145",
@@ -169317,7 +181327,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Claw_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Claw_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--defense-125",
@@ -169575,7 +181590,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Defense_125"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Defense_125",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "dome-spin-track--deflect-62",
@@ -169751,7 +181771,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Down_Force_105"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Down_Force_105",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--down-force-145",
@@ -170039,7 +182064,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Down_Force_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Down_Force_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--elevator-230",
@@ -170155,7 +182185,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Elevator_230"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Elevator_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--eternal-defense-145",
@@ -170381,7 +182416,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Eternal_Defense_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Eternal_Defense_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--free-230",
@@ -170460,7 +182500,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Free_230"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Free_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 3
+    }
   },
   {
     "id": "spin-track--gravity-ball-145",
@@ -170652,7 +182697,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Gravity_Ball_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Gravity_Ball_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 3
+    }
   },
   {
     "id": "dome-spin-track--gripper-58",
@@ -170799,7 +182849,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Horn_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Horn_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--left-wing-105",
@@ -170924,7 +182979,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Left_Wing_105"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Left_Wing_105",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--move-145",
@@ -171213,7 +183273,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Rubber_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Rubber_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--sd160",
@@ -171412,7 +183477,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Shield_130"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Shield_130",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--spike-230",
@@ -171473,7 +183543,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Spike_230"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Spike_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--stamina-ring-200",
@@ -171529,7 +183604,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Stamina_Ring_200"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Stamina_Ring_200",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--switch-145",
@@ -171716,7 +183796,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Switch_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Switch_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "spin-track--switch-attack-165",
@@ -171807,7 +183892,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Switch_Attack_165"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Switch_Attack_165",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--triple-height-170",
@@ -171869,7 +183959,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Triple_Height_170"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Triple_Height_170",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "spin-track--tr145",
@@ -171985,7 +184080,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Triple_Roller_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Triple_Roller_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "dome-spin-track--undercut-61",
@@ -172173,7 +184273,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Upper_Wing_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Upper_Wing_145",
+    "ratings": {
+      "attack": 2,
+      "defense": 1.5,
+      "stamina": 3
+    }
   },
   {
     "id": "dome-spin-track--v-cut-61",
@@ -172465,7 +184570,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wide_Defense_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wide_Defense_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "spin-track--wing-105",
@@ -172704,7 +184814,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_105"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_105",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--wing-145",
@@ -172842,7 +184957,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_145"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_145",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 0
+    }
   },
   {
     "id": "spin-track--wing-attack-130",
@@ -172949,7 +185069,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_Attack_130"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Wing_Attack_130",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0
+    }
   },
   {
     "id": "spirit-axle--spirit-axle",
@@ -173026,7 +185151,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Aries"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Aries",
+    "ratings": {
+      "speed": 1
+    }
   },
   {
     "id": "spirit-shield--bull",
@@ -173085,7 +185213,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Bull"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Bull",
+    "ratings": {
+      "speed": 1
+    }
   },
   {
     "id": "spirit-shield--cetus",
@@ -173142,7 +185273,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Cetus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Cetus",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "spirit-shield--destroyer",
@@ -173217,7 +185351,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Destroyer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Destroyer",
+    "ratings": {
+      "speed": 1
+    }
   },
   {
     "id": "spirit-shield--drago",
@@ -173333,7 +185470,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Drago"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Drago",
+    "ratings": {
+      "speed": 2
+    }
   },
   {
     "id": "spirit-shield--fireblaze",
@@ -173408,7 +185548,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Fireblaze"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Fireblaze",
+    "ratings": {
+      "speed": 2
+    }
   },
   {
     "id": "spirit-shield--gil",
@@ -173465,7 +185608,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Gil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Gil",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "spirit-shield--herculeo",
@@ -173512,7 +185658,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Herculeo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Herculeo",
+    "ratings": {
+      "speed": 1
+    }
   },
   {
     "id": "spirit-shield--kerbecs",
@@ -173565,7 +185714,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Kerbecs"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Kerbecs",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "spirit-shield--lacerta",
@@ -173614,7 +185766,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Lacerta"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Lacerta",
+    "ratings": {
+      "speed": 2
+    }
   },
   {
     "id": "spirit-shield--leone",
@@ -173677,7 +185832,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Leone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Leone",
+    "ratings": {
+      "speed": 2
+    }
   },
   {
     "id": "spirit-shield--pegasus",
@@ -173779,7 +185937,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Pegasus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Pegasus",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "spirit-shield--serpent",
@@ -173826,7 +185987,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Serpent"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Serpent",
+    "ratings": {
+      "speed": 2
+    }
   },
   {
     "id": "spirit-shield--striker",
@@ -173875,7 +186039,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Striker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Striker",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "spirit-shield--zurafa",
@@ -173940,7 +186107,10 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Zurafa"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Shield_-_Zurafa",
+    "ratings": {
+      "speed": 3
+    }
   },
   {
     "id": "storm-chip--achilles-a6",
@@ -173993,7 +186163,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Achilles_A6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Achilles_A6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--devolos-d6",
@@ -174095,7 +186271,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Devolos_D6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Devolos_D6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--doomscizor-d6",
@@ -174141,7 +186323,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Doomscizor_D6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Doomscizor_D6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--dragon-d6",
@@ -174194,7 +186382,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Dragon_D6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Dragon_D6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--dullahan-d6",
@@ -174260,7 +186454,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Dullahan_D6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Dullahan_D6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--evo-helios-h6",
@@ -174325,7 +186525,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Helios_H6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Helios_H6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--evo-hyperion-h6",
@@ -174373,7 +186579,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Hyperion_H6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Hyperion_H6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--evo-lucius-l6",
@@ -174421,7 +186633,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Lucius_L6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Evo_Lucius_L6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--fafnir-f6",
@@ -174489,7 +186707,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Fafnir_F6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Fafnir_F6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--helios-h6",
@@ -174557,7 +186781,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Helios_H6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Helios_H6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--hyperion-h6",
@@ -174632,7 +186862,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Hyperion_H6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Hyperion_H6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--lucius-l6",
@@ -174678,7 +186914,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Lucius_L6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Lucius_L6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--luinor-l6",
@@ -174744,7 +186986,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Luinor_L6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Luinor_L6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--roktavor-r6",
@@ -174799,7 +187047,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Roktavor_R6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Roktavor_R6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--satomb-s6",
@@ -174864,7 +187118,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Satomb_S6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Satomb_S6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--spryzen-s6",
@@ -174912,7 +187172,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Spryzen_S6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Spryzen_S6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--valtryek-v6",
@@ -174975,7 +187241,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Valtryek_V6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Valtryek_V6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "storm-chip--wyvron-w6",
@@ -175021,7 +187293,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Wyvron_W6"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Storm_Chip_-_Wyvron_W6",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--achilles-a8",
@@ -175087,7 +187365,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Achilles_A8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Achilles_A8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--bazilisk-b8",
@@ -175155,7 +187439,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Bazilisk_B8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Bazilisk_B8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--dragon-d8",
@@ -175218,7 +187508,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Dragon_D8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Dragon_D8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--evo-x-belfyre-b8",
@@ -175274,7 +187570,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Evo-X_Belfyre_B8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Evo-X_Belfyre_B8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--helios-h8",
@@ -175337,7 +187639,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Helios_H8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Helios_H8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--hyperion-h8",
@@ -175387,7 +187695,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Hyperion_H8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Hyperion_H8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--knight-k8",
@@ -175446,7 +187760,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Knight_K8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Knight_K8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--nyddhog-n8",
@@ -175507,7 +187827,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Nyddhog_N8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Nyddhog_N8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--pandemonium-p8",
@@ -175563,7 +187889,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Pandemonium_P8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Pandemonium_P8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--pandora-p8",
@@ -175681,7 +188013,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Pandora_P8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Pandora_P8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--poseidon-p8",
@@ -175742,7 +188080,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Poseidon_P8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Poseidon_P8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--spryzen-s8",
@@ -175796,7 +188140,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Spryzen_S8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Spryzen_S8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "strike-chip--xcalius-x8",
@@ -175873,7 +188223,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Xcalius_X8"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Strike_Chip_-_Xcalius_X8",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--deathscyther",
@@ -175953,7 +188309,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Deathscyther"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Deathscyther",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--diabolos",
@@ -176025,7 +188395,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Diabolos"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Diabolos",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--dragon",
@@ -176115,7 +188499,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Dragon",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--fafnir",
@@ -176198,7 +188596,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Fafnir"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Fafnir",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--helios-1",
@@ -176305,7 +188717,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Helios_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Helios_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--helios-2",
@@ -176387,7 +188813,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Helios_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Helios_2",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--hyperion-1",
@@ -176546,7 +188986,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Hyperion_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Hyperion_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--hyperion-2",
@@ -176628,7 +189082,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Hyperion_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Hyperion_2",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--longinus",
@@ -176715,7 +189183,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Longinus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Longinus",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--lucifer-1",
@@ -176836,7 +189318,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Lucifer_1"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Lucifer_1",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--lucifer-2",
@@ -176899,7 +189395,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Lucifer_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Lucifer_2",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--ragnaruk",
@@ -176993,7 +189503,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Ragnaruk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Ragnaruk",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--satan",
@@ -177074,7 +189598,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Satan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Satan",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--solomon",
@@ -177137,7 +189675,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Solomon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Solomon",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--spriggan",
@@ -177208,7 +189760,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Spriggan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Spriggan",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--uranus",
@@ -177294,7 +189860,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Uranus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Uranus",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "superking-chip--valkyrie",
@@ -177377,7 +189957,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Valkyrie"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Valkyrie",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "attack-ring--defense-ring",
@@ -177498,7 +190092,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/S_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/S_Gear",
+    "ratings": {
+      "attack": 1,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    }
   },
   {
     "id": "evolution-gear--vs-gear",
@@ -177553,7 +190161,13 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/VS_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/VS_Gear",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "evolution-gear--v-gear",
@@ -177645,7 +190259,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/V_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/V_Gear",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    }
   },
   {
     "id": "warrior-wheel--bahamoote",
@@ -177714,7 +190342,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Bahamoote"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Bahamoote",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "warrior-wheel--balro",
@@ -177783,7 +190416,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Balro"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Balro",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "warrior-wheel--behemoth",
@@ -177993,7 +190631,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Dragoon",
+    "ratings": {
+      "attack": 7,
+      "defense": 0,
+      "stamina": 0
+    }
   },
   {
     "id": "warrior-wheel--fenrir",
@@ -178318,7 +190961,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Golem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Golem",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "warrior-wheel--griffin",
@@ -178415,7 +191063,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Griffin"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Griffin",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   },
   {
     "id": "warrior-wheel--ifrit",
@@ -178606,7 +191259,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Ifrit"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Ifrit",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "warrior-wheel--kraken",
@@ -178925,7 +191583,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Orochi"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Orochi",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "warrior-wheel--pegasus",
@@ -179008,7 +191671,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Pegasus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Pegasus",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    }
   },
   {
     "id": "warrior-wheel--phoenix",
@@ -179133,7 +191801,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Phoenix"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Phoenix",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "warrior-wheel--salamander",
@@ -179292,7 +191965,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Salamander"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Salamander",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "warrior-wheel--wyvang",
@@ -179353,7 +192031,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Wyvang"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Wyvang",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 5
+    }
   },
   {
     "id": "warrior-wheel--zirago",
@@ -179416,7 +192099,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Zirago"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Zirago",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "weight--gen",
@@ -179532,7 +192220,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Gen"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Gen",
+    "ratings": {
+      "attack": 0,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--goku",
@@ -179597,7 +192299,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Goku"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Goku",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--gou",
@@ -179688,7 +192404,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Gou"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Gou",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--metsu",
@@ -179806,7 +192536,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Metsu"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Metsu",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--retsu",
@@ -179975,7 +192719,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Retsu"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Retsu",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--sen",
@@ -180138,7 +192896,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Sen"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Sen",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--sou",
@@ -180247,7 +193019,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Sou"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Sou",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--ten",
@@ -180415,7 +193201,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Ten"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Ten",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 1,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight--zan",
@@ -180622,7 +193422,21 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Zan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_-_Zan",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    }
   },
   {
     "id": "weight-disk--balance",
@@ -180650,7 +193464,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Balance is a Beyblade weight disk from the 4 Layer System, weighing 14 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Balance"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Balance",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 2
+    }
   },
   {
     "id": "attack-ring--circle-heavy",
@@ -180740,7 +193559,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Heavy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Heavy",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "weight-disk--cwd-chain-attacker",
@@ -180918,7 +193742,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Magnetic_Weight_Disk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Magnetic_Weight_Disk",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3
+    }
   },
   {
     "id": "weight-disk--revolver-attack",
@@ -181040,7 +193869,11 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spark Disk is a Beyblade weight disk from the Spin Gear System, weighing 12.9 g. Released 2001 as 12.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Spark_Disk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Spark_Disk",
+    "ratings": {
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "weight-disk--wide",
@@ -181110,7 +193943,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "weight-disk--wide-attack",
@@ -181130,7 +193968,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wide Attack is a Beyblade weight disk, weighing 13.7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Attack",
+    "ratings": {
+      "attack": 2,
+      "defense": 1,
+      "stamina": 3
+    }
   },
   {
     "id": "weight-disk--wide-defense",
@@ -181242,7 +194085,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Aquario"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Aquario",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--aries",
@@ -181317,7 +194165,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Aries"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Aries",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--bull",
@@ -181455,7 +194308,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Bull"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Bull",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--capricorne",
@@ -181514,7 +194372,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Capricorne"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Capricorne",
+    "ratings": {
+      "attack": 4,
+      "defense": 2,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--escolpio",
@@ -181573,7 +194436,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Escolpio"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Escolpio",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--gemios",
@@ -181632,7 +194500,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Gemios"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Gemios",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 2
+    }
   },
   {
     "id": "wheel--l-drago",
@@ -181717,7 +194590,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_L-Drago"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_L-Drago",
+    "ratings": {
+      "attack": 5.5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--leone",
@@ -181798,7 +194676,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Leone"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Leone",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    }
   },
   {
     "id": "wheel--libra",
@@ -181888,7 +194771,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Libra"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Libra",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 5
+    }
   },
   {
     "id": "wheel--pegasis",
@@ -182126,7 +195014,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Pegasis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Pegasis",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--pisces",
@@ -182210,7 +195103,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Pisces"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Pisces",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "wheel--quetzalcoatl",
@@ -182297,7 +195195,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Quetzalcoatl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Quetzalcoatl",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 1
+    }
   },
   {
     "id": "wheel--sagittario",
@@ -182377,7 +195280,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Sagittario"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Sagittario",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "wheel--virgo",
@@ -182475,7 +195383,12 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Virgo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Virgo",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 4
+    }
   },
   {
     "id": "wheel--wolf",
@@ -182555,6 +195468,19 @@ export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Wolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Wolf",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    }
   }
+];
+
+export const partGlossarySeedData: Partial<PartGlossaryDocument>[] = [
+  ...glossaryChunk0,
+  ...glossaryChunk1,
+  ...glossaryChunk2,
+  ...glossaryChunk3,
+  ...glossaryChunk4,
 ];

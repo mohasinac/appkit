@@ -407,6 +407,50 @@ export interface PartColourway {
   inBey: string;
 }
 
+/**
+ * The infobox stat grid, as NUMBERS.
+ *
+ * 🛑 This is a deliberate second representation of the `Stats` row in
+ * `specs[]`, not a mirror to keep in sync. The row is a RENDERING — one line,
+ * because six rows of single digits crowd out every real specification on a
+ * part page — and this is the VALUE, which is what a sort, a filter, a
+ * side-by-side comparison and the simulation all need. Neither can do the
+ * other's job, and both are produced by one parse in one pass, so there is no
+ * second write path to forget (unlike Root Cause #42's shape).
+ *
+ * Every key is OPTIONAL because the source states them per part: a page that
+ * gives Attack and Burst and nothing else yields exactly those two. A missing
+ * key is "not stated", never zero — `weight: 0` is a real rating on a
+ * featherweight disc and must stay distinguishable from silence.
+ *
+ * The scale is 0–6 and is the wiki's own editorial judgement, not a
+ * measurement. It is useful for comparison between parts of the same slot and
+ * should not be presented as a physical quantity.
+ */
+export interface PartRatings {
+  attack?: number;
+  defense?: number;
+  stamina?: number;
+  weight?: number;
+  speed?: number;
+  burst?: number;
+}
+
+/**
+ * WBO tournament-format legality.
+ *
+ * 🛑 A format the source does not rule on is ABSENT, never `false`. Three
+ * states exist — legal, banned, and not stated — and collapsing the third into
+ * the second would publish "banned in Burst Classic" as a fact about every
+ * part whose page simply never mentions Burst Classic.
+ */
+export interface PartWboLegality {
+  burst?: boolean;
+  burstGt?: boolean;
+  burstLimited?: boolean;
+  burstClassic?: boolean;
+}
+
 export interface PartGlossaryDocument extends BaseDocument {
   /** `${slot}--${codeOrSlug}` — both halves, because a code is not unique. */
   id: string;
@@ -507,6 +551,13 @@ export interface PartGlossaryDocument extends BaseDocument {
    * it is a DIFFERENT axis from colour and must not be folded into it.
    */
   hasMoldVariations?: boolean;
+  /**
+   * The 0–6 stat grid as numbers. Present on 1,149 of 2,490 rows — the source
+   * states it per part, so absence is "not stated", not zero.
+   */
+  ratings?: PartRatings;
+  /** WBO format legality. Present on 999 rows; an unstated format is absent. */
+  wboLegality?: PartWboLegality;
 
   /** `/media/<slug>`. 🛑 Never a raw Storage host URL. */
   image?: string;
