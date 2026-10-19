@@ -34,7 +34,7 @@
 import { ProductDocument, ProductSpecification, CustomField, CustomSection } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -215,11 +215,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 4,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-original-dranzer-s-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-original-dranzer-s-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-original-dranzer-s-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-original-dranzer-s-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     featured: true,
@@ -261,11 +261,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 2,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-original-driger-v-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-original-driger-v-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-original-driger-v-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-original-driger-v-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     tags: ["vintage-collectible"],
@@ -294,11 +294,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 6,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-metal-storm-pegasus-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-metal-storm-pegasus-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-metal-storm-pegasus-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-metal-storm-pegasus-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     featured: true,
@@ -326,11 +326,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 3,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-metal-flame-sagittario-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-metal-flame-sagittario-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-metal-flame-sagittario-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-metal-flame-sagittario-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["balance-type", "tournament-grade"],
@@ -359,11 +359,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 10,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-burst-valkyrie-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-burst-valkyrie-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-burst-valkyrie-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-burst-valkyrie-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     featured: true,
@@ -391,11 +391,11 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 5,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-burst-regalia-genesis-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-burst-regalia-genesis-1-20260101", 900, 900),
       seedPhoto("product-image-beyblade-burst-regalia-genesis-2-20260101", 900, 900),
       seedPhoto("product-image-beyblade-burst-regalia-genesis-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["attack-type"],
@@ -436,10 +436,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 5,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-1-20260819", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-1-20260819", 900, 900),
       seedPhoto("product-image-beyblade-original-dragoon-f-video-demo-2-20260819", 900, 900),
-    ],
+    ),
     video: {
       url: "/demo-media/sample-video.mp4",
       thumbnailUrl: seedPhoto("product-video-thumb-beyblade-original-dragoon-f-video-demo-20260819", 800, 450),
@@ -469,10 +469,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 8,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-x-dran-sword-video-demo-1-20260819", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-x-dran-sword-video-demo-1-20260819", 900, 900),
       seedPhoto("product-image-beyblade-x-dran-sword-video-demo-2-20260819", 900, 900),
-    ],
+    ),
     video: {
       url: "/demo-media/sample-video.mp4",
       thumbnailUrl: seedPhoto("product-video-thumb-beyblade-x-dran-sword-video-demo-20260819", 800, 450),
@@ -510,10 +510,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 4,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-1-20260821", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-1-20260821", 900, 900),
       seedPhoto("product-image-beyblade-metal-dark-bull-video-demo-2-20260821", 900, 900),
-    ],
+    ),
     video: {
       // audit-seed-external-url-ok: MediaUploadField's YouTube tab always stores a
       // youtube.com/watch?v= URL — this is exactly that shape, not a raw file.
@@ -552,10 +552,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 7,
     isSold: false,
     mainImage: seedPhoto("product-image-beyblade-burst-spryzen-video-demo-1-20260821", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beyblade-burst-spryzen-video-demo-1-20260821", 900, 900),
       seedPhoto("product-image-beyblade-burst-spryzen-video-demo-2-20260821", 900, 900),
-    ],
+    ),
     video: {
       url: "https://upload.wikimedia.org/wikipedia/commons/4/42/Slow_motion_of_running_greyhound.webm", // audit-seed-external-url-ok: raw <video> src, CC-BY-SA 4.0 (Wikimedia Commons)
       thumbnailUrl: seedPhoto("product-video-thumb-beyblade-burst-spryzen-video-demo-20260821", 800, 450),
@@ -588,10 +588,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("product-image-dran-buster-sold-out-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-dran-buster-sold-out-1-20260824", 900, 900),
       seedPhoto("product-image-dran-buster-sold-out-2-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["attack-type", "sold-out"],
@@ -615,9 +615,9 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("product-image-valtryek-v3-sold-out-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-valtryek-v3-sold-out-1-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["balance-type", "sold-out"],
@@ -667,10 +667,10 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 6,
     isSold: false,
     mainImage: seedPhoto("product-image-beypointer-digital-battle-counter-1-20261012", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("product-image-beypointer-digital-battle-counter-1-20261012", 900, 900),
       seedPhoto("product-image-beypointer-digital-battle-counter-2-20261012", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["accessory"],

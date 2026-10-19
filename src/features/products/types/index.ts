@@ -61,11 +61,33 @@ export type ListingType =
   | "stickers"
   | "spares";
 
+/**
+ * One gallery image — THE single definition, used by both the Firestore
+ * document and the client shape.
+ *
+ * 🛑 This interface already existed here, barrel-exported as public API, with
+ * ZERO consumers anywhere and `Product.images` declared `string[]` beside it:
+ * a speculative type describing a shape nothing produced or read. Plan A6
+ * resurrected it rather than declaring a second `ProductImage` in
+ * `schemas/firestore.ts`, which is what the first draft did — two same-named
+ * types in one package is a defect even when both look plausible, and the
+ * barrel's choice between them is invisible at every call site (Root Cause
+ * #36). `schemas/firestore.ts` imports this one.
+ *
+ * `alt` is the point: measured across the fifteen-site competitor crawl,
+ * per-image alt coverage is ~0% (0/151, 0/306, 0/317; tcgrepublic's 37/63 is
+ * the best anyone manages). `width`/`height` let `next/image` reserve space so
+ * a gallery does not reflow as each image lands — optional because we do not
+ * always know them at write time, and a guessed aspect ratio is worse than
+ * none.
+ */
 export interface ProductImage {
   url: string;
   thumbnailUrl?: string;
   alt?: string;
   order?: number;
+  width?: number;
+  height?: number;
 }
 
 export interface ProductSeo {

@@ -35,7 +35,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -55,10 +55,10 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: seedPhoto("live-image-golden-retriever-1-20260816", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("live-image-golden-retriever-1-20260816", 900, 900),
       seedPhoto("live-image-golden-retriever-2-20260816", 900, 900),
-    ],
+    ),
     /*
      * 🛑 A LIVE LISTING WITHOUT A VIDEO IS NOT A LISTING THE PRODUCT WOULD ACCEPT.
      *
@@ -126,7 +126,7 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900),
-    images: [seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900)],
+    images: seedGallery(seedPhoto("live-image-bearded-dragon-1-20260817", 900, 900)),
     // Required for a live listing — see the note on the retriever above.
     video: {
       url: "/demo-media/sample-video.mp4",
@@ -180,10 +180,10 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: seedPhoto("live-image-bonsai-juniper-1-20260818", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("live-image-bonsai-juniper-1-20260818", 900, 900),
       seedPhoto("live-image-bonsai-juniper-2-20260818", 900, 900),
-    ],
+    ),
     // Required for a live listing — see the note on the retriever above.
     video: {
       url: "/demo-media/sample-video.mp4",
@@ -237,9 +237,9 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("live-image-juniper-bonsai-sold-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("live-image-juniper-bonsai-sold-1-20260824", 900, 900),
-    ],
+    ),
     // Required for a live listing — see the note on the retriever above. A SOLD
     // fixture needs it just as much: it is the row the "Sold & Ended" scope
     // renders, and a sold listing that could never have been created is no

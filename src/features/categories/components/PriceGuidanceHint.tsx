@@ -83,7 +83,7 @@ export function PriceGuidanceHint({
    */
   return (
     <PricesOnly>
-      <Stack gap="2xs" className={className}>
+      <Stack gap="xs" className={className}>
         <Text size="xs" color="muted">
           Market median:{" "}
           <Text as="span" weight="medium" color="primary">

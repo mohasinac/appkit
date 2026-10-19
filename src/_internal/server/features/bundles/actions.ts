@@ -80,7 +80,7 @@ export async function addBundleToCartAction(
       quantity: 1,
       unitPrice: p.price,
       title: p.title,
-      image: p.images?.[0] ?? p.mainImage,
+      image: p.images?.[0]?.url ?? p.mainImage,
       gstRate: p.gstRate,
       hsnCode: p.hsnCode,
       listingType: normalizeListingType(p),

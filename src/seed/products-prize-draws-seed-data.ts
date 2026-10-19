@@ -23,7 +23,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -55,7 +55,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 4,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-mystery-box-1-20260101", 900, 900),
-    images: [seedPhoto("prizedraw-image-beyblade-mystery-box-1-20260101", 900, 900)],
+    images: seedGallery(seedPhoto("prizedraw-image-beyblade-mystery-box-1-20260101", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -115,7 +115,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 2,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-scheduled-1-20260101", 900, 900),
-    images: [seedPhoto("prizedraw-image-beyblade-scheduled-1-20260101", 900, 900)],
+    images: seedGallery(seedPhoto("prizedraw-image-beyblade-scheduled-1-20260101", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -169,10 +169,10 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 2,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("prizedraw-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
       seedPhoto("prizedraw-image-beyblade-x-legendary-vault-2-20260815", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -230,7 +230,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("prizedraw-image-beyblade-metal-closed-1-20260805", 900, 900),
-    images: [seedPhoto("prizedraw-image-beyblade-metal-closed-1-20260805", 900, 900)],
+    images: seedGallery(seedPhoto("prizedraw-image-beyblade-metal-closed-1-20260805", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -285,10 +285,10 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-burst-collectors-1-20260817", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("prizedraw-image-beyblade-burst-collectors-1-20260817", 900, 900),
       seedPhoto("prizedraw-image-beyblade-burst-collectors-2-20260817", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -344,10 +344,10 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 3,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-original-vault-1-20260818", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("prizedraw-image-beyblade-original-vault-1-20260818", 900, 900),
       seedPhoto("prizedraw-image-beyblade-original-vault-2-20260818", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
@@ -406,7 +406,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 3,
     isSold: false,
     mainImage: seedPhoto("prizedraw-image-beyblade-x-vault-closed-1-20260824", 900, 900),
-    images: [seedPhoto("prizedraw-image-beyblade-x-vault-closed-1-20260824", 900, 900)],
+    images: seedGallery(seedPhoto("prizedraw-image-beyblade-x-vault-closed-1-20260824", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,

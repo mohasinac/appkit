@@ -38,7 +38,7 @@ import {
 // One definition of "which fields feed searchTxt", shared with the seed
 // wrapper. Three copies existed and two were missing the same three fields.
 import { buildProductSearchTxt } from "../../../utils/search-txt-builders";
-import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
+import { PRODUCT_COLLECTION, ProductStatusValues, toProductImages, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 // Collection NAMES only — deliberately not `categoriesRepository` or
 // `taxCodesRepository`. See deriveTaxonomy()'s header for why these are raw
 // reads: no repository in this codebase imports another feature's, because of
@@ -328,6 +328,17 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     if (!doc.categorySlugs || doc.categorySlugs.length === 0) {
       doc.categorySlugs = doc.category ? [doc.category] : [];
     }
+    /*
+     * A6 — widen a legacy `images: string[]` document to `ProductImage[]`.
+     *
+     * 🛑 This is HALF the normalisation and must stay paired with the write
+     * half in `create`/`update` below. Read-only widening is Root Cause #101
+     * exactly: the field would be the object form on every object anyone
+     * inspects and still a bare string array in Firestore, so the next write
+     * of an untouched document would persist whichever shape the caller
+     * happened to hold.
+     */
+    doc.images = toProductImages(doc.images);
     return doc as unknown as D;
   }
 
@@ -990,6 +1001,13 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ...data,
       ...derived,
       ...stock,
+      /*
+       * A6 — only when the write NAMES `images`. An unconditional
+       * `toProductImages(data.images)` would write `[]` over a real gallery on
+       * every stock decrement and status flip, because `data` does not carry
+       * the field at all on those paths.
+       */
+      ...(data.images !== undefined ? { images: toProductImages(data.images) } : {}),
       searchTxt: buildProductSearchTxt(merged),
     });
     this.cacheSet(updated);
@@ -1073,7 +1091,17 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     // all. A seed row already carrying the correct chain derives to the same
     // value, so this is a no-op for every existing fixture.
     const derived = await this.deriveTaxonomy(input as Partial<ProductDocument>, true);
-    const withTaxonomy = { ...input, ...derived };
+    /*
+     * A6 — the WRITE half of the `images` normalisation (the read half is in
+     * `mapDoc`). Every create path funnels through here, so a caller handing
+     * us `string[]` — a seed row, an older client, the shipment-link route —
+     * stores the object form rather than leaving the collection mixed.
+     */
+    const withTaxonomy = {
+      ...input,
+      ...derived,
+      ...(input.images !== undefined ? { images: toProductImages(input.images) } : {}),
+    };
     const productData: Omit<ProductDocument, "id"> = {
       ...withTaxonomy,
       barcodeId,

@@ -20,7 +20,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -40,7 +40,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 100,
     isSold: false,
     mainImage: seedPhoto("stickers-image-original-classic-1-20260817", 900, 900),
-    images: [seedPhoto("stickers-image-original-classic-1-20260817", 900, 900)],
+    images: seedGallery(seedPhoto("stickers-image-original-classic-1-20260817", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -79,10 +79,10 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 62,
     isSold: false,
     mainImage: seedPhoto("stickers-image-x-holo-1-20260818", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("stickers-image-x-holo-1-20260818", 900, 900),
       seedPhoto("stickers-image-x-holo-2-20260818", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -121,7 +121,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 60,
     isSold: false,
     mainImage: seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900),
-    images: [seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900)],
+    images: seedGallery(seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -160,7 +160,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 214,
     isSold: false,
     mainImage: seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900),
-    images: [seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900)],
+    images: seedGallery(seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -199,10 +199,10 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 45,
     isSold: false,
     mainImage: seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
       seedPhoto("stickers-image-x-glow-2-20260819", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -242,9 +242,9 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("sticker-image-metal-fight-sold-out-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("sticker-image-metal-fight-sold-out-1-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,
@@ -296,7 +296,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     madeToOrder: true,
     isSold: false,
     mainImage: seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
-    images: [seedPhoto("stickers-image-x-glow-1-20260819", 900, 900)],
+    images: seedGallery(seedPhoto("stickers-image-x-glow-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "stickers" as const,

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { productImageUrls } from "../../products/schemas/firestore";
 import { getPublicUserProfile, getProfileStoreProducts, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { safeRead } from "../../../errors/safe-read";
@@ -54,7 +55,7 @@ function toProductItem(p: ProductDocument): ProductItem {
     originalPrice: p.originalPrice,
     currency: p.currency,
     mainImage: p.mainImage,
-    images: p.images,
+    images: productImageUrls(p.images),
     status: p.status,
     condition: p.condition as ProductItem["condition"],
     listingType: p.listingType,

@@ -50,6 +50,13 @@ const SECTION_TYPE_PRESENCE: Record<CanonicalSectionType, true> = {
   "prize-draws": true,
   "event-raffles": true,
   "collection-cards": true,
+  // Promoted out of the orphan-component set 2026-10-19. Offered here because
+  // all three are deliberately UNSEEDED — the admin builder is the only way
+  // one gets created, which is the point: the seed does not invent
+  // placeholder "How It Works" steps or testimonials nobody said.
+  "how-it-works": true,
+  testimonials: true,
+  "promo-grid": true,
 };
 
 export const SECTION_TYPE_OPTIONS = Object.keys(

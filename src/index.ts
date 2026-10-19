@@ -5942,9 +5942,6 @@ export type { FAQSectionProps } from "./features/homepage/index";
 // FAQTab - Type contract for faqtab.
 export type { FAQTab } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FeaturedResultItem - Type contract for featured result item.
-export type { FeaturedResultItem } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HeroCarouselProps - Type contract for hero carousel props.
 export type { HeroCarouselProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -5978,9 +5975,6 @@ export type { SecurityHighlightItem } from "./features/homepage/index";
 // SecurityHighlightsSectionProps - Type contract for security highlights section props.
 export type { SecurityHighlightsSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SiteFeatureItem - Type contract for site feature item.
-export type { SiteFeatureItem } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // StatsCounterSectionProps - Type contract for stats counter section props.
 export type { StatsCounterSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -6004,9 +5998,6 @@ export type { TrustFeatureItem } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TrustFeaturesSectionProps - Type contract for trust features section props.
 export type { TrustFeaturesSectionProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// TrustIndicatorItem - Type contract for trust indicator item.
-export type { TrustIndicatorItem } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UseHomepageReviewsOptions - Type contract for use homepage reviews options.
 export type { UseHomepageReviewsOptions } from "./features/homepage/index";
@@ -7378,6 +7369,12 @@ export type { ProductFormValue } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ProductImage - Type contract for product image.
 export type { ProductImage } from "./features/products/index";
+// A6 — the `ProductImage[]` normaliser and its URL projection. Public because
+// consumer pages hand `images` to client shapes that still want `string[]`.
+export {
+  toProductImages,
+  productImageUrls,
+} from "./features/products/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ProductInfoProps - Type contract for product info props.
 export type { ProductInfoProps } from "./features/products/index";

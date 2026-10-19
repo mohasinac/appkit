@@ -211,7 +211,7 @@ export async function addGroupLineToCart(
       quantity: m.quantity,
       unitPrice: product.price,
       title: product.title,
-      image: product.images?.[0] ?? product.mainImage,
+      image: product.images?.[0]?.url ?? product.mainImage,
       gstRate: product.gstRate,
       hsnCode: product.hsnCode,
       listingType,
@@ -238,7 +238,7 @@ export async function addGroupLineToCart(
     return addItemToCart(userId, {
       productId: first!.id,
       productTitle: first!.title,
-      productImage: first!.images?.[0] ?? first!.mainImage,
+      productImage: first!.images?.[0]?.url ?? first!.mainImage,
       price: first!.price,
       currency: first!.currency,
       quantity: resolved[0].quantity,
@@ -469,7 +469,7 @@ export async function mergeGuestCart(
     await cartRepository.addItem(userId, {
       productId: product.id,
       productTitle: product.title,
-      productImage: product.images?.[0] ?? "",
+      productImage: product.images?.[0]?.url ?? "",
       price: product.price,
       currency: product.currency ?? getDefaultCurrency(),
       quantity: safeQty,

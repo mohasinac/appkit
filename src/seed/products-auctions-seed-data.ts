@@ -27,7 +27,7 @@
 import { ProductDocument, ProductSpecification } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -73,11 +73,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
       seedPhoto("auction-image-beyblade-original-dragoon-storm-2-20260101", 900, 900),
       seedPhoto("auction-image-beyblade-original-dragoon-storm-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["vintage-collectible", "sealed"],
@@ -117,11 +117,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
       seedPhoto("auction-image-beyblade-metal-lightning-l-drago-2-20260101", 900, 900),
       seedPhoto("auction-image-beyblade-metal-lightning-l-drago-3-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     tags: ["attack-type", "tournament-grade"],
@@ -159,10 +159,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: false,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-x-shark-edge-1-20260814", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-x-shark-edge-1-20260814", 900, 900),
       seedPhoto("auction-image-beyblade-x-shark-edge-2-20260814", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["balance-type", "starter-set"],
@@ -201,10 +201,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-burst-xcalius-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-burst-xcalius-1-20260824", 900, 900),
       seedPhoto("auction-image-beyblade-burst-xcalius-2-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["attack-type", "burst"],
@@ -244,10 +244,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-original-seaborg-1-20260814", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-original-seaborg-1-20260814", 900, 900),
       seedPhoto("auction-image-beyblade-original-seaborg-2-20260814", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     tags: ["defense-type", "vintage-collectible"],
@@ -282,11 +282,11 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     leadingBidderId: "user-rohit-collector",
     isSold: true,
     mainImage: seedPhoto("auction-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
       seedPhoto("auction-image-beyblade-metal-diablo-nemesis-2-20260810", 900, 900),
       seedPhoto("auction-image-beyblade-metal-diablo-nemesis-3-20260810", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     tags: ["attack-type", "tournament-grade"],
@@ -327,10 +327,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     leadingBidderId: "user-seto-kaiba",
     isSold: true,
     mainImage: seedPhoto("auction-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
       seedPhoto("auction-image-beyblade-burst-spriggan-requiem-2-20260810", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     tags: ["balance-type", "dual-spin"],
@@ -364,10 +364,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
       seedPhoto("auction-image-beyblade-burst-cho-z-achilles-2-20260815", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     tags: ["stamina-type"],
@@ -399,10 +399,10 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: true,
     isSold: false,
     mainImage: seedPhoto("auction-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
       seedPhoto("auction-image-beyblade-x-wizard-fafnir-2-20260816", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["balance-type"],
@@ -462,9 +462,9 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: false,
     isSold: false,
     mainImage: seedPhoto("auction-image-lord-spryzen-ended-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("auction-image-lord-spryzen-ended-1-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     tags: ["stamina-type"],
@@ -499,7 +499,7 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     bidsHaveStarted: false,
     isSold: false,
     mainImage: "/media/product-aeropegasus-3-70a-image",
-    images: ["/media/product-aeropegasus-3-70a-image"],
+    images: seedGallery("/media/product-aeropegasus-3-70a-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["attack-type", "rare-bey", "prize-exclusive"],

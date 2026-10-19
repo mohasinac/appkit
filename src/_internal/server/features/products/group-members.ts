@@ -88,7 +88,7 @@ export function toPublicGroupMember(doc: ProductDocument): PublicGroupMember {
     title: doc.title,
     price: doc.price,
     currency: doc.currency,
-    image: doc.images?.[0] ?? doc.mainImage,
+    image: doc.images?.[0]?.url ?? doc.mainImage,
     condition: doc.condition,
     listingType: normalizeListingType(doc),
     isGroupParent: doc.isGroupParent,

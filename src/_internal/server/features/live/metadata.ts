@@ -46,7 +46,7 @@ export function buildLiveItemMetadata(
       description,
       url: canonical,
       type: "website",
-      images: image ? [{ url: image }] : undefined,
+      images: image ? [{ url: typeof image === "string" ? image : image.url }] : undefined,
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",

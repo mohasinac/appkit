@@ -14,7 +14,7 @@ interface DigitalCodeDocLike {
   price?: number | null;
   currency?: string | null;
   mainImage?: string | null;
-  images?: (string | null | undefined)[] | null;
+  images?: ({ url: string } | string | null | undefined)[] | null;
   digitalCode?: { codeDeliveryMethod?: string } | null;
 }
 
@@ -33,7 +33,9 @@ export function renderDigitalCodeOg(
     {
       title: doc?.title ?? "Digital Code",
       deliveryMethod,
-      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
+      imageUrl: resolveOgImageUrl(doc?.mainImage ||
+          (typeof doc?.images?.[0] === "string" ? doc.images[0] : doc?.images?.[0]?.url) ||
+          null, opts.baseUrl),
     },
     opts.siteName,
   );

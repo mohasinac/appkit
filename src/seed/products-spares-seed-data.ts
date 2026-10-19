@@ -39,6 +39,7 @@
  * @tag sideEffects:none
  */
 
+import { seedGallery } from "./_helpers/media";
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
@@ -72,7 +73,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: "/media/category-cross-dranzer-image",
-    images: ["/media/category-cross-dranzer-image"],
+    images: seedGallery("/media/category-cross-dranzer-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "spares" as const,
@@ -121,7 +122,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: "/media/category-bit-chip-galeon-image",
-    images: ["/media/category-bit-chip-galeon-image"],
+    images: seedGallery("/media/category-bit-chip-galeon-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     listingType: "spares" as const,
@@ -175,7 +176,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 4,
     isSold: false,
     mainImage: "/media/category-eight-heavy-image",
-    images: ["/media/category-eight-heavy-image"],
+    images: seedGallery("/media/category-eight-heavy-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "spares" as const,
@@ -222,7 +223,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 1,
     isSold: false,
     mainImage: "/media/category-f-d-image",
-    images: ["/media/category-f-d-image"],
+    images: seedGallery("/media/category-f-d-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "spares" as const,
@@ -270,7 +271,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 2,
     isSold: false,
     mainImage: "/media/category-driver-atomic-image",
-    images: ["/media/category-driver-atomic-image"],
+    images: seedGallery("/media/category-driver-atomic-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "spares" as const,
@@ -328,7 +329,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: "/media/category-eight-heavy-image",
-    images: ["/media/category-eight-heavy-image"],
+    images: seedGallery("/media/category-eight-heavy-image"),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     listingType: "spares" as const,

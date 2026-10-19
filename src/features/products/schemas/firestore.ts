@@ -10,7 +10,9 @@ import {
   type GenerateAuctionIdInput,
   type GeneratePreOrderIdInput,
 } from "../../../utils/id-generators";
-import type { ProductStatus, ListingType } from "../types";
+import type { ProductStatus, ListingType, ProductImage } from "../types";
+
+export type { ProductImage };
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { LotteryConfig } from "../../lottery/types";
 
@@ -20,6 +22,66 @@ export interface ProductVideoField {
   duration: number;
   trimStart?: number;
   trimEnd?: number;
+}
+
+/**
+ * Whatever a document, a request body or a seed row happens to hold, as
+ * `ProductImage[]`.
+ *
+ * 🛑 This is called on the WRITE path (`ProductRepository.create`/`update`)
+ * **and** on the read path (`mapDoc`), and both are required. Root Cause #101
+ * is exactly this shape: `mapDoc` backfilled `categorySlugs` on read while the
+ * write schema stripped it, so the field was present on every object anyone
+ * inspected and absent from the stored document — invisible to every query,
+ * and latent until a human created a listing.
+ *
+ * Accepts `string`, `ProductImage`, and a mixed array of both, because a
+ * partially-migrated collection genuinely contains all three.
+ */
+export function toProductImages(input: unknown): ProductImage[] {
+  if (!Array.isArray(input)) return [];
+  const out: ProductImage[] = [];
+  for (const entry of input) {
+    if (typeof entry === "string") {
+      if (entry) out.push({ url: entry });
+      continue;
+    }
+    if (entry && typeof entry === "object") {
+      const url = (entry as { url?: unknown }).url;
+      if (typeof url !== "string" || !url) continue;
+      /*
+       * 🛑 EVERY optional member is carried through, not just the two A6
+       * added. This runs on the WRITE path, so a member it forgets is a
+       * member it DESTROYS on the next save — and `thumbnailUrl`/`order`
+       * predate this function. Adding a field to `ProductImage` means adding
+       * it here; the alternative is a normaliser that quietly truncates the
+       * type it claims to normalise.
+       */
+      const e = entry as ProductImage;
+      out.push({
+        url,
+        ...(e.alt ? { alt: e.alt } : {}),
+        ...(e.thumbnailUrl ? { thumbnailUrl: e.thumbnailUrl } : {}),
+        ...(typeof e.order === "number" ? { order: e.order } : {}),
+        ...(typeof e.width === "number" ? { width: e.width } : {}),
+        ...(typeof e.height === "number" ? { height: e.height } : {}),
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * Just the URLs, in order — for the many call sites that only ever needed a
+ * `string[]` (a lightbox's source list, an OG image pick, a media-abort
+ * cleanup list).
+ *
+ * This is a PROJECTION, computed on demand, not a stored mirror — so it cannot
+ * drift from `images` the way a denormalised second field would (Root Cause
+ * #42). Takes `unknown` so it also works on a legacy `string[]`.
+ */
+export function productImageUrls(input: unknown): string[] {
+  return toProductImages(input).map((i) => i.url);
 }
 
 export interface ProductSpecification {
@@ -298,7 +360,14 @@ export interface ProductDocument extends BaseDocument {
   stockQuantity: number;
   availableQuantity: number;
   mainImage: string;
-  images: string[];
+  /**
+   * 🛑 `ProductImage[]`, not `string[]` (changed 2026-10-20, plan A6).
+   *
+   * Normalised by `toProductImages()` on BOTH the write path and `mapDoc`, so
+   * a legacy `string[]` document widens losslessly and a new write stores the
+   * object form. Call sites that only want URLs use `productImageUrls()`.
+   */
+  images: ProductImage[];
   video?: ProductVideoField;
   status: ProductStatus;
   storeId: string;

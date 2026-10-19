@@ -214,7 +214,7 @@ export async function sendMessage(input: SendMessageInput): Promise<MessageDocum
       productRef = {
         productId: product.id,
         title: product.title,
-        image: product.images?.[0],
+        image: product.images?.[0]?.url,
         price: product.price,
         // Without this the card cannot pick the right detail route — see the
         // field's own comment on `MessageProductRef`.

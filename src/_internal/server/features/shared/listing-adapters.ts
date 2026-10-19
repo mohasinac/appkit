@@ -1,4 +1,5 @@
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import { productImageUrls } from "../../../../features/products/schemas/firestore";
 
 // The shared fields every listing type exposes to the client.
 // Per-type adapter shapes extend this — prevents field drift across 3 adapter files.
@@ -30,8 +31,9 @@ export function mapBaseListingFields(doc: ProductDocument): BaseListingClientSha
     // bypassing <GatedPrice> entirely — and it had zero readers, so it was
     // pure exposure. Clients format from `price` through the gate.
     currency: doc.currency ?? "INR",
-    mainImage: doc.mainImage || doc.images?.[0] || null,
-    images: doc.images ?? [],
+    mainImage: doc.mainImage || doc.images?.[0]?.url || null,
+    // A6: the client listing shape is still `string[]`; project, never mirror.
+    images: productImageUrls(doc.images),
     storeId: doc.storeId,
     storeName: doc.storeName ?? null,
     category: doc.categorySlugs?.[0] ?? doc.category ?? "",

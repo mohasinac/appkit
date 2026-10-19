@@ -21,7 +21,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -53,10 +53,10 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 20,
     isSold: false,
     mainImage: seedPhoto("art-image-dranzer-phoenix-1-20260817", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("art-image-dranzer-phoenix-1-20260817", 900, 900),
       seedPhoto("art-image-dranzer-phoenix-2-20260817", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -95,10 +95,10 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 37,
     isSold: false,
     mainImage: seedPhoto("art-image-valkyrie-holo-1-20260818", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("art-image-valkyrie-holo-1-20260818", 900, 900),
       seedPhoto("art-image-valkyrie-holo-2-20260818", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -137,7 +137,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 15,
     isSold: false,
     mainImage: seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900),
-    images: [seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900)],
+    images: seedGallery(seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -182,7 +182,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 999,
     isSold: false,
     mainImage: seedPhoto("art-image-metal-vintage-1-20260819", 900, 900),
-    images: [seedPhoto("art-image-metal-vintage-1-20260819", 900, 900)],
+    images: seedGallery(seedPhoto("art-image-metal-vintage-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -221,10 +221,10 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 180,
     isSold: false,
     mainImage: seedPhoto("art-image-original-anniversary-1-20260819", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("art-image-original-anniversary-1-20260819", 900, 900),
       seedPhoto("art-image-original-anniversary-2-20260819", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,
@@ -267,9 +267,9 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("art-image-dragoon-galaxy-sold-out-1-20260824", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("art-image-dragoon-galaxy-sold-out-1-20260824", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "art" as const,

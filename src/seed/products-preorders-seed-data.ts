@@ -24,7 +24,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -46,10 +46,10 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
     categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-x-bx-08-wave-1-20260101", 900, 900),
       seedPhoto("preorder-image-beyblade-x-bx-08-wave-2-20260101", 900, 900),
-    ],
+    ),
     isSold: false,
     availableQuantity: 1,
     tags: ["booster-wave"],
@@ -88,10 +88,10 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-unicornsting-5-60gp","category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
     categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-x-bx-09-glide-ring-1-20260814", 900, 900),
       seedPhoto("preorder-image-beyblade-x-bx-09-glide-ring-2-20260814", 900, 900),
-    ],
+    ),
     isSold: false,
     availableQuantity: 1,
     tags: ["booster-wave"],
@@ -124,10 +124,10 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-union-achilles-cn-xt-retsu","category-burst-superking","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
     categoryNames: ["Superking","Burst Tops","Beyblade Burst","Spinning Tops"],
     brand: "Beyblade",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-burst-b-210-union-1-20260814", 900, 900),
       seedPhoto("preorder-image-beyblade-burst-b-210-union-2-20260814", 900, 900),
-    ],
+    ),
     isSold: false,
     availableQuantity: 1,
     tags: ["stamina-type"],
@@ -164,9 +164,9 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
     categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-x-bx-11-sold-out-1-20260812", 900, 900),
-    ],
+    ),
     // `isSold: false` until 2026-08-24, contradicting both the zero
     // availability and the filled allocation immediately below it — so the
     // one fixture whose whole purpose is to be sold out read as available to
@@ -203,10 +203,10 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-dark-deathscyther-force-jaggy","category-burst-god","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
     categoryNames: ["Burst Classic","Burst Tops","Beyblade Burst","Spinning Tops"],
     brand: "Beyblade",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-burst-b-215-hells-scythe-1-20260817", 900, 900),
       seedPhoto("preorder-image-beyblade-burst-b-215-hells-scythe-2-20260817", 900, 900),
-    ],
+    ),
     isSold: false,
     availableQuantity: 1,
     tags: ["attack-type", "limited-run"],
@@ -243,10 +243,10 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-original-hms","category-original-tops","category-beyblade-original","category-spinning-tops"],
     categoryNames: ["Heavy Metal System","Original Tops","Beyblade Original","Spinning Tops"],
     brand: "Beyblade",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-original-remaster-1-20260818", 900, 900),
       seedPhoto("preorder-image-beyblade-original-remaster-2-20260818", 900, 900),
-    ],
+    ),
     isSold: false,
     availableQuantity: 1,
     tags: ["vintage-collectible", "limited-run"],
@@ -285,9 +285,9 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     categorySlugs: ["category-tyrannobeat-4-70q","category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
     categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
     brand: "Takara-Tomy",
-    images: [
+    images: seedGallery(
       seedPhoto("preorder-image-beyblade-x-bx-12-closed-1-20260824", 900, 900),
-    ],
+    ),
     isSold: true,
     availableQuantity: 0,
     tags: ["limited-run"],
@@ -331,7 +331,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-x-customize-sets"],
     brand: "Takara-Tomy",
-    images: ["/media/product-customize-set-c-cx-20-image"],
+    images: seedGallery("/media/product-customize-set-c-cx-20-image"),
     isSold: false,
     availableQuantity: 10,
     tags: ["custom-line", "cx", "unreleased"],
@@ -364,7 +364,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
 export const productsPreordersSeedData = _rawPreordersSeedData.map((p) => withDerivedCategoryNames(withFinalSale({
   tags: [] as string[],
   stockQuantity: p.availableQuantity ?? 1,
-  mainImage: p.images?.[0] ?? "",
+  mainImage: (typeof p.images?.[0] === "string" ? p.images[0] : p.images?.[0]?.url) ?? "",
   ...p,
   listingType: "pre-order" as const,
   /*

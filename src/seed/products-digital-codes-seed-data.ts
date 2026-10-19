@@ -22,7 +22,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { withProductSearchTxt } from "./_helpers/product-search-txt";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -42,10 +42,10 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 25,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-x-starter-1-20260101", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("digitalcode-image-beyblade-x-starter-1-20260101", 900, 900),
       seedPhoto("digitalcode-image-beyblade-x-starter-2-20260101", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -89,7 +89,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 6,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-x-legendary-1-20260814", 900, 900),
-    images: [seedPhoto("digitalcode-image-beyblade-x-legendary-1-20260814", 900, 900)],
+    images: seedGallery(seedPhoto("digitalcode-image-beyblade-x-legendary-1-20260814", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -139,7 +139,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 0,
     isSold: true,
     mainImage: seedPhoto("digitalcode-image-beyblade-burst-sold-out-1-20260810", 900, 900),
-    images: [seedPhoto("digitalcode-image-beyblade-burst-sold-out-1-20260810", 900, 900)],
+    images: seedGallery(seedPhoto("digitalcode-image-beyblade-burst-sold-out-1-20260810", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -183,10 +183,10 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 32,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-x-tournament-1-20260815", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("digitalcode-image-beyblade-x-tournament-1-20260815", 900, 900),
       seedPhoto("digitalcode-image-beyblade-x-tournament-2-20260815", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -231,7 +231,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 30,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-metal-classic-1-20260816", 900, 900),
-    images: [seedPhoto("digitalcode-image-beyblade-metal-classic-1-20260816", 900, 900)],
+    images: seedGallery(seedPhoto("digitalcode-image-beyblade-metal-classic-1-20260816", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -275,7 +275,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 41,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-burst-avatar-1-20260817", 900, 900),
-    images: [seedPhoto("digitalcode-image-beyblade-burst-avatar-1-20260817", 900, 900)],
+    images: seedGallery(seedPhoto("digitalcode-image-beyblade-burst-avatar-1-20260817", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -319,10 +319,10 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 3,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-x-coaching-1-20260818", 900, 900),
-    images: [
+    images: seedGallery(
       seedPhoto("digitalcode-image-beyblade-x-coaching-1-20260818", 900, 900),
       seedPhoto("digitalcode-image-beyblade-x-coaching-2-20260818", 900, 900),
-    ],
+    ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
@@ -377,7 +377,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 5,
     isSold: false,
     mainImage: seedPhoto("digitalcode-image-beyblade-x-depleted-1-20260824", 900, 900),
-    images: [seedPhoto("digitalcode-image-beyblade-x-depleted-1-20260824", 900, 900)],
+    images: seedGallery(seedPhoto("digitalcode-image-beyblade-x-depleted-1-20260824", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,

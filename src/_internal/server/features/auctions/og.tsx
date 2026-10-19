@@ -12,7 +12,7 @@ interface AuctionDocLike {
   title?: string | null;
   auctionEndDate?: Date | string | null;
   mainImage?: string | null;
-  images?: (string | null | undefined)[] | null;
+  images?: ({ url: string } | string | null | undefined)[] | null;
 }
 
 /** High-level OG renderer — accepts the raw auction document from `getAuctionForDetail`. */
@@ -33,7 +33,9 @@ export function renderAuctionOg(
     {
       title: doc?.title ?? "Live Auction",
       endsLabel,
-      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
+      imageUrl: resolveOgImageUrl(doc?.mainImage ||
+          (typeof doc?.images?.[0] === "string" ? doc.images[0] : doc?.images?.[0]?.url) ||
+          null, opts.baseUrl),
     },
     opts.siteName,
   );

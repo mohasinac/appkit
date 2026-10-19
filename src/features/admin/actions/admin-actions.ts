@@ -24,7 +24,7 @@ import { isAdminUser } from "../../auth/role-predicates";
 import type { OrderAdminUpdateInput, OrderDocument, OrderPlain } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
 import type { UserAdminUpdateInput, UserDocument, UserPlain } from "../../auth";
-import type { ProductAdminUpdateInput, ProductCreateInput, ProductDocument } from "../../products/schemas/firestore";
+import type { ProductAdminUpdateInput, ProductCreateInput, ProductDocument, ProductImage } from "../../products/schemas/firestore";
 import {
   assertPrizeDrawNotLocked,
   assertPrizeDrawWonItemsImmutable,
@@ -333,14 +333,31 @@ export async function adminUpdateProduct(
 
   const finalized = { ...input } as typeof input & {
     mainImage?: string;
-    images?: string[];
+    images?: ProductImage[];
     video?: { url?: string; thumbnailUrl?: string };
   };
   if (typeof finalized.mainImage === "string" && finalized.mainImage) {
     finalized.mainImage = await finalizeStagedMediaUrl(finalized.mainImage);
   }
   if (Array.isArray(finalized.images) && finalized.images.length > 0) {
-    finalized.images = await finalizeStagedMediaArray(finalized.images);
+    /*
+     * 🛑 Finalise the URL and KEEP THE REST OF THE OBJECT (A6).
+     *
+     * `finalizeStagedMediaArray` takes and returns `string[]` — it moves
+     * staged uploads to their permanent path. Handing it
+     * `images.map(i => i.url)` and assigning the result back would have
+     * silently dropped `alt`, `width`, `height` and `thumbnailUrl` on every
+     * admin save: the exact lossy-write failure `toProductImages` carries its
+     * own warning about, on the one code path where a human has just typed
+     * the alt text.
+     */
+    const finalisedUrls = await finalizeStagedMediaArray(
+      finalized.images.map((img) => img.url),
+    );
+    finalized.images = finalized.images.map((img, i) => ({
+      ...img,
+      url: finalisedUrls[i] ?? img.url,
+    }));
   }
   if (finalized.video?.url) {
     finalized.video = {
