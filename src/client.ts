@@ -623,6 +623,8 @@ export type { SearchViewProps } from "./features/search/index";
  */
 export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
 export { useSiteSearch } from "./features/search/hooks/useSiteSearch";
+export { useScopedSearch, mergeSearchTiers } from "./features/search/hooks/useScopedSearch";
+export type { UseScopedSearchResult } from "./features/search/hooks/useScopedSearch";
 export type { UseSiteSearchOptions, UseSiteSearchResult } from "./features/search/hooks/useSiteSearch";
 export type {
   SearchIndexState,

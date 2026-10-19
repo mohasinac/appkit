@@ -14,6 +14,16 @@ export type {
   SearchEverythingResult,
 } from "./_internal/server/features/search/search-everything";
 export { SEARCH_SOURCES } from "./_internal/server/features/search/search-sources";
+export { SCOPED_SCAN_BUDGET } from "./_internal/server/features/search/search-everything";
+// Tier 2 — viewer-scoped sources. Server-only by construction: they build an
+// owner clause from a session, and a client that could construct them could
+// construct somebody else's.
+export {
+  scopedSourcesFor,
+  scopedScanTotal,
+  assertWithinScopedBudget,
+} from "./_internal/server/features/search/scoped-sources";
+export type { SearchViewer } from "./_internal/server/features/search/scoped-sources";
 // D12 — part + composition reads. Every one is by document id or ONE
 // indexed equality; none needs a composite index.
 export {
@@ -1954,6 +1964,16 @@ export {
   CODE_DOWNLOAD_STATUSES,
   type CodeAssetResolution,
 } from "./_internal/server/features/digital-code/download";
+
+// ── Statutory business documents — admin-only, encrypted at rest ────────────
+export {
+  resolveBusinessDocument,
+  type BusinessDocumentResolution,
+} from "./_internal/server/features/business-documents/download";
+export {
+  businessDocumentsRepository,
+  BusinessDocumentsRepository,
+} from "./features/business-documents/repository/business-documents.repository";
 
 // ── Live-item listing — data + adapters + metadata + OG ──────────────────────
 export { getLiveItemForDetail } from "./_internal/server/features/live/data";

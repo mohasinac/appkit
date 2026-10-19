@@ -39,6 +39,7 @@ import React from "react";
 
 import { Text } from "../../../ui";
 import { useSiteSearch } from "../hooks/useSiteSearch";
+import { mergeSearchTiers, useScopedSearch } from "../hooks/useScopedSearch";
 import { SearchFacetRail } from "./SearchFacetRail";
 import { SearchResultsPageView } from "./SearchResultsPageView";
 import type { SearchEverythingResult } from "../../../_internal/server/features/search/search-everything";
@@ -52,6 +53,12 @@ export interface SearchResultsClientProps {
    */
   initialResult: SearchEverythingResult;
   indexEnabled: boolean;
+  /**
+   * Whether a session exists. FALSE for a guest, and that is what makes
+   * "signed out issues zero authenticated requests" verifiable in the
+   * Network panel rather than merely true on the server.
+   */
+  isSignedIn?: boolean;
   /**
    * `typeKey` -> heading.
    *
@@ -72,6 +79,7 @@ export function SearchResultsClient({
   q,
   initialResult,
   indexEnabled,
+  isSignedIn = false,
   labels,
 }: SearchResultsClientProps) {
   const [selectedFacets, setSelectedFacets] = React.useState<readonly string[]>([]);
@@ -101,8 +109,23 @@ export function SearchResultsClient({
     );
   }, []);
 
+  /*
+   * Tier 2. `submittedQuery` is `q` — the URL parameter — so it changes when
+   * the user SUBMITS, not as they type. That is the whole gating story: the
+   * local tier runs per keystroke because it is free, this one runs per
+   * navigation because it is a bounded Firestore fan-out.
+   */
+  const scoped = useScopedSearch({ enabled: isSignedIn, submittedQuery: q });
+
   const usingLocal = local.status === "ready" && local.result !== null;
-  const result = usingLocal && local.result ? local.result : initialResult;
+  const baseResult = usingLocal && local.result ? local.result : initialResult;
+  const result = React.useMemo(
+    () =>
+      scoped.groups.length > 0
+        ? { ...baseResult, groups: mergeSearchTiers(baseResult.groups, scoped.groups) }
+        : baseResult,
+    [baseResult, scoped.groups],
+  );
 
   /*
    * 🛑 A dropped facet selection must not silently keep filtering.
@@ -135,6 +158,17 @@ export function SearchResultsClient({
               selected={selectedFacets}
               onToggle={toggleFacet}
             />
+          )}
+          {scoped.status === "failed" && (
+            /*
+             * Said out loud, for the same reason as the line below it. A
+             * seller whose draft is missing because the scoped fetch failed
+             * will read the silence as "that draft does not exist".
+             */
+            <Text size="sm" color="muted">
+              Couldn&apos;t search your account — results below are public
+              listings only.
+            </Text>
           )}
           {local.status === "failed" && (
             /*
