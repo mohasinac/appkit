@@ -54,6 +54,7 @@ import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { FeatureBadgeList } from "../../products/components/FeatureBadge";
+import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShareButton } from "../../products/components/ShareButton";
@@ -338,11 +339,16 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   const minBidIncrementOverride =
     typeof p.minBidIncrement === "number" ? p.minBidIncrement : undefined;
 
-  const images: string[] = Array.isArray(p.images)
-    ? (p.images as string[])
-    : typeof p.mainImage === "string"
-      ? [p.mainImage]
-      : [];
+  // `images` is `ProductImage[]` since A6 — `productImageUrls` is the one
+  // normaliser (it also accepts the legacy `string[]`). Casting it to
+  // `string[]` handed the gallery objects and rendered a placeholder.
+  const galleryUrls = productImageUrls(p.images);
+  const images: string[] =
+    galleryUrls.length > 0
+      ? galleryUrls
+      : typeof p.mainImage === "string"
+        ? [p.mainImage]
+        : [];
 
   const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
 
@@ -412,11 +418,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         snapshot={{
           title: typeof p.title === "string" ? p.title : undefined,
           thumb:
-            typeof p.mainImage === "string"
-              ? p.mainImage
-              : Array.isArray(p.images) && typeof p.images[0] === "string"
-                ? p.images[0]
-                : undefined,
+            typeof p.mainImage === "string" ? p.mainImage : images[0],
           price: typeof p.price === "number" ? p.price : undefined,
           storeId: typeof p.storeId === "string" ? p.storeId : undefined,
           storeName: typeof p.storeName === "string" ? p.storeName : undefined,

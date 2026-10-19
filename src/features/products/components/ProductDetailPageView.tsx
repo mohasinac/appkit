@@ -27,6 +27,7 @@ const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-spac
 const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
+import { productImageUrls } from "../schemas/firestore";
 import { PART_SLOT_LABEL } from "../../parts/schemas/firestore";
 import { getModelsUsingPart } from "../../../_internal/server/features/parts/data";
 import { ctaAnchorProps } from "../../layout/cta-anchor";
@@ -298,11 +299,16 @@ export async function ProductDetailPageView({
   const originalPrice =
     typeof p.originalPrice === "number" ? (p.originalPrice as number) : null;
 
-  const images: string[] = Array.isArray(p.images)
-    ? (p.images as string[])
-    : typeof p.mainImage === "string"
-      ? [p.mainImage]
-      : [];
+  // `images` is `ProductImage[]` since A6 — `productImageUrls` is the one
+  // normaliser (it also accepts the legacy `string[]`). Casting it to
+  // `string[]` handed the gallery objects and rendered a placeholder.
+  const galleryUrls = productImageUrls(p.images);
+  const images: string[] =
+    galleryUrls.length > 0
+      ? galleryUrls
+      : typeof p.mainImage === "string"
+        ? [p.mainImage]
+        : [];
 
   const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
 

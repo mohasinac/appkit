@@ -23,6 +23,7 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-config";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { productImageUrls } from "../../products/schemas/firestore";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -254,11 +255,9 @@ export async function defaultBundleItemsFetch(
         id,
         title,
         image:
-          typeof rec.mainImage === "string"
-            ? (rec.mainImage as string)
-            : Array.isArray(rec.images) && typeof rec.images[0] === "string"
-              ? (rec.images[0] as string)
-              : undefined,
+          typeof rec.mainImage === "string" && rec.mainImage
+            ? rec.mainImage
+            : productImageUrls(rec.images)[0],
         price: typeof rec.price === "number" ? (rec.price as number) : undefined,
         storeId: typeof rec.storeId === "string" ? (rec.storeId as string) : undefined,
       };

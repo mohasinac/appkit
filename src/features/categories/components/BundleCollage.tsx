@@ -18,6 +18,7 @@ import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 
 export interface BundleCollageProps {
@@ -33,7 +34,7 @@ function toGalleryImages(
   canSeePrices: boolean,
 ): LightboxImage[] {
   return members.map((p, i) => ({
-    src: p.mainImage ?? p.images?.[0] ?? "",
+    src: p.mainImage || productImageUrls(p.images)[0] || "",
     alt: p.title,
     badge: `#${i + 1}`,
     caption: p.title,
@@ -71,7 +72,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
     <>
       <Grid cols="categoryCards" gap="3">
         {members.map((p, idx) => {
-          const cover = p.mainImage ?? p.images?.[0];
+          const cover = p.mainImage || productImageUrls(p.images)[0];
           const href = String(
             ROUTES.PUBLIC.PRODUCT_DETAIL?.(p.slug ?? p.id) ?? "#",
           );

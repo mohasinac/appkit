@@ -40,6 +40,8 @@ import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { EntityTypeahead } from "../../search/components/EntityTypeahead";
+import { productImageUrls } from "../schemas/firestore";
+import type { ProductImage } from "../schemas/firestore";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -50,7 +52,7 @@ export interface CompareProductLike {
   price?: number;
   currency?: string;
   mainImage?: string;
-  images?: string[];
+  images?: readonly (string | ProductImage)[];
   condition?: string;
   brand?: string;
   category?: string;
@@ -214,7 +216,7 @@ interface ColumnProps {
 
 function CompareColumn({ item, productType, labels, onRemove, onClose, customFieldKeys }: ColumnProps) {
   const href = detailHref(item, productType);
-  const img = item.mainImage ?? item.images?.[0];
+  const img = item.mainImage || productImageUrls(item.images)[0];
   return (
     <Stack gap="md" className={COLUMN_CARD_CLASS}>
       <Row justify="between" align="start" gap="sm">

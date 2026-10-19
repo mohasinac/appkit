@@ -40,6 +40,7 @@ import type { CategoryItem } from "../types";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { productImageUrls } from "../../products/schemas/firestore";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -528,7 +529,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const mosaicImages = hasCover
     ? []
     : (productsResult?.items ?? [])
-        .map((row: ProductDocument) => row.mainImage ?? row.images?.[0] ?? null)
+        .map((row: ProductDocument) => row.mainImage || productImageUrls(row.images)[0] || null)
         .filter((src): src is string => !!src)
         .slice(0, 5);
   const hasMosaic = mosaicImages.length >= MOSAIC_MIN;

@@ -50,6 +50,7 @@ import {
 import type { ModelCompositionDocument } from "../../parts/schemas/firestore";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { productImageUrls } from "../../products/schemas/firestore";
 
 const FILTER_KEYS = [
   "status",
@@ -765,8 +766,8 @@ export function SellerProductsView({
           secondary: [priceLabel, stockLabel, secondaryBase, statusLabel].filter(Boolean).join(" · "),
           status: statusLabel,
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-          imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
-          image: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
+          imageUrl: toStringValue(item.mainImage, undefined) || productImageUrls(item.images)[0],
+          image: toStringValue(item.mainImage, undefined) || productImageUrls(item.images)[0],
           listingKind: kind,
           price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
           stock: stockLabel || "—",

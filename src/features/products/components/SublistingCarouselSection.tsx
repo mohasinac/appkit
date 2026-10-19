@@ -10,6 +10,8 @@ import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { SUBLISTING_CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { ListingType } from "../types";
+import { productImageUrls } from "../schemas/firestore";
+import type { ProductImage } from "../schemas/firestore";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -21,7 +23,7 @@ interface CarouselListing {
   title: string;
   price: number;
   currency?: string;
-  images?: string[];
+  images?: readonly (string | ProductImage)[];
   mainImage?: string;
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
@@ -58,7 +60,7 @@ function ListingThumb({
   listing: CarouselListing;
   isCurrent: boolean;
 }) {
-  const image = listing.images?.[0] ?? listing.mainImage ?? "";
+  const image = productImageUrls(listing.images)[0] || listing.mainImage || "";
   const href = getHref(listing);
   const price = formatCurrency(listing.price, listing.currency ?? "INR");
 

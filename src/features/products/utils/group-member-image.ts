@@ -1,3 +1,6 @@
+import { productImageUrls } from "../schemas/firestore";
+import type { ProductImage } from "../schemas/firestore";
+
 /**
  * The thumbnail for one product-group member, from whichever shape the caller
  * supplied.
@@ -33,10 +36,16 @@
 export interface GroupMemberImageSource {
   /** The public projection's single thumbnail. */
   image?: string;
-  /** A raw document's gallery. Only read when `image` is absent. */
-  images?: string[];
+  /**
+   * A raw document's gallery. Only read when `image` is absent.
+   *
+   * 🛑 `ProductImage[]` since A6 — a raw document holds objects, a legacy one
+   * holds strings, and the public projection holds neither. `productImageUrls`
+   * is the one normaliser that spans all three.
+   */
+  images?: readonly (string | ProductImage)[];
 }
 
 export function resolveGroupMemberImage(m: GroupMemberImageSource): string {
-  return m.image ?? m.images?.[0] ?? "";
+  return m.image || productImageUrls(m.images)[0] || "";
 }

@@ -44,6 +44,7 @@ import {
   type OfferBounds,
 } from "../../../_internal/shared/features/offers/config";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
+import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 
 export interface ClassifiedDetailPageViewProps {
@@ -113,7 +114,16 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
   const title = String(p.title ?? p.name ?? "Classified Listing");
   const price = typeof p.price === "number" ? p.price : null;
-  const images: string[] = Array.isArray(p.images) ? (p.images as string[]) : typeof p.mainImage === "string" ? [p.mainImage] : [];
+  // `images` is `ProductImage[]` since A6 — `productImageUrls` is the one
+  // normaliser (it also accepts the legacy `string[]`). Casting it to
+  // `string[]` handed the gallery objects and rendered a placeholder.
+  const galleryUrls = productImageUrls(p.images);
+  const images: string[] =
+    galleryUrls.length > 0
+      ? galleryUrls
+      : typeof p.mainImage === "string"
+        ? [p.mainImage]
+        : [];
   const meta = product.classified;
   const location = meta?.meetupArea ? [meta.meetupArea.locality, meta.meetupArea.city].filter(Boolean).join(", ") : null;
   const category = Array.isArray(p.categorySlugs) && p.categorySlugs.length > 0 ? String(p.categorySlugs[0]) : (typeof p.category === "string" ? p.category : null);

@@ -21,6 +21,8 @@ import {
   visibleValues,
 } from "../../shell";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
+import { productImageUrls } from "../schemas/firestore";
+import type { ProductImage } from "../schemas/firestore";
 
 const groupTitleSchema = z.object({
   groupTitle: annotate(z.string().min(1, "Group title is required"), {
@@ -86,7 +88,7 @@ interface ChildInfo {
   id: string;
   title: string;
   price: number;
-  images?: string[];
+  images?: readonly (string | ProductImage)[];
   condition?: string;
   /*
    * Both come from `toPublicGroupMember`, the allow-list projection the group
@@ -573,9 +575,9 @@ export function GroupSettingsPanel({
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
                       <Row key={child.id} align="center" gap="sm" padding="y-xs">
-                        {child.images?.[0] ? (
+                        {productImageUrls(child.images)[0] ? (
                           <Div className="relative w-8 h-8 flex-shrink-0 border border-[var(--appkit-color-border)]" rounded="full" overflow="hidden">
-                            <MediaImage src={child.images[0]} alt={child.title} size="thumbnail" />
+                            <MediaImage src={productImageUrls(child.images)[0]} alt={child.title} size="thumbnail" />
                           </Div>
                         ) : (
                           <Div className="w-8 h-8" surface="subtle" rounded="full" />

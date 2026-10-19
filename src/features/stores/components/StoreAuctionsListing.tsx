@@ -18,6 +18,7 @@ import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import type { ListingType } from "../../products/types";
+import { productImageUrls } from "../../products/schemas/firestore";
 
 const STORE_AUCTION_TYPES: readonly ListingType[] = ["auction"];
 
@@ -114,7 +115,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     description: p.description,
     price: p.price ?? 0,
     currency: p.currency || getDefaultCurrency(),
-    mainImage: p.mainImage ?? p.images?.[0],
+    mainImage: p.mainImage || productImageUrls(p.images)[0],
     images: p.images,
     listingType: "auction" as const,
     auctionEndDate: p.auctionEndDate,

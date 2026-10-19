@@ -37,6 +37,7 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
+import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 
 export interface DigitalCodeDetailPageViewProps {
@@ -95,7 +96,16 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
   const title = String(p.title ?? p.name ?? "Digital Code");
   const price = typeof p.price === "number" ? p.price : null;
-  const images: string[] = Array.isArray(p.images) ? (p.images as string[]) : typeof p.mainImage === "string" ? [p.mainImage] : [];
+  // `images` is `ProductImage[]` since A6 — `productImageUrls` is the one
+  // normaliser (it also accepts the legacy `string[]`). Casting it to
+  // `string[]` handed the gallery objects and rendered a placeholder.
+  const galleryUrls = productImageUrls(p.images);
+  const images: string[] =
+    galleryUrls.length > 0
+      ? galleryUrls
+      : typeof p.mainImage === "string"
+        ? [p.mainImage]
+        : [];
   const meta = product.digitalCode;
   const codesLeft = meta?.codesAvailable ?? 0;
   const category = Array.isArray(p.categorySlugs) && p.categorySlugs.length > 0 ? String(p.categorySlugs[0]) : (typeof p.category === "string" ? p.category : null);
