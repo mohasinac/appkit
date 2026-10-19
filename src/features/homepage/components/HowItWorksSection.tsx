@@ -1,7 +1,8 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Anchor, Button, Div, Grid, Heading, Icon, Row, Section, Span, Text } from "../../../ui";
+import type { IconKey } from "../../../ui";
 // --- Constants ---------------------------------------------------------------
 
 const CLS_VISIBLE = "opacity-100 translate-y-0";
@@ -9,12 +10,24 @@ const STEP_DELAYS = ["delay-0", "delay-150", "delay-300", "delay-[450ms]"] as co
 
 // --- Types -------------------------------------------------------------------
 
+/**
+ * Promoted to a registered `SectionType` ("how-it-works") 2026-10-19 — see
+ * `HowItWorksSectionConfig` in `schemas/firestore.ts`, which this prop shape
+ * mirrors exactly (Firestore config must be JSON-serialisable; a function
+ * value cannot round-trip through a document write).
+ *
+ * `renderIcon?: (props) => ReactNode` was the blocker: a function prop has no
+ * representation in a Firestore document. Replaced with `iconKey?: IconKey`,
+ * rendered through the shared `<Icon>` registry primitive (Root Cause #80) —
+ * the same indirection `TrustBadge.iconKey` already uses for this exact
+ * problem. `accentFrom` is dropped: declared on the old type, never read
+ * anywhere in this component.
+ */
 export interface HowItWorksStep {
   number: number;
   title: string;
   desc: string;
-  renderIcon?: (props: { className?: string }) => React.ReactNode;
-  accentFrom?: string;
+  iconKey?: IconKey;
   iconColor?: string;
   iconBg?: string;
   badgeBg?: string;
@@ -25,7 +38,13 @@ export interface HowItWorksSectionProps {
   subtitle?: string;
   pillLabel?: string;
   ctaLabel?: string;
-  onCtaClick?: () => void;
+  /**
+   * A link, not a handler — `onCtaClick?: () => void` could not survive a
+   * Firestore round-trip either. Renders as an `<Anchor>`, matching how every
+   * other promoted section's CTA resolves (`EventRafflesSectionConfig`'s
+   * `cta`, `FeaturedBundlesSectionConfig`'s `viewMoreLabel` pattern, etc.).
+   */
+  ctaLink?: string;
   steps: HowItWorksStep[];
   className?: string;
 }
@@ -76,12 +95,12 @@ function StepCard({
       </Row>
 
       {/* Icon */}
-      {step.renderIcon && (
+      {step.iconKey && (
         <Row
           className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-[var(--appkit-color-border)]`} align="center" justify="center" rounded="2xl"
         >
           <Span className={`${iconColor}`} aria-hidden="true">
-            {step.renderIcon({ className: "w-6 h-6" })}
+            <Icon name={step.iconKey} size="lg" />
           </Span>
         </Row>
       )}
@@ -109,7 +128,7 @@ export function HowItWorksSection({
   subtitle,
   pillLabel,
   ctaLabel,
-  onCtaClick,
+  ctaLink,
   steps,
   className = "",
 }: HowItWorksSectionProps) {
@@ -182,14 +201,14 @@ const sectionRef = useRef<HTMLElement>(null);
         </Grid>
 
         {/* CTA */}
-        {ctaLabel && onCtaClick && (
+        {ctaLabel && ctaLink && (
           <Div
             className={`text-left transition-all duration-700 delay-500 ${
  visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
  }`}
           >
-            <Button variant="primary" size="lg" onClick={onCtaClick}>
-              {ctaLabel}
+            <Button variant="primary" size="lg" asChild>
+              <Anchor href={ctaLink} tone="none">{ctaLabel}</Anchor>
             </Button>
           </Div>
         )}

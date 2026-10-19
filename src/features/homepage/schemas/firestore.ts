@@ -827,6 +827,73 @@ export interface GoogleReviewsSectionConfig {
   googleMapsUrl?: string;
 }
 
+/**
+ * Added 2026-10-19 promoting `HowItWorksSection` out of the orphan set — see
+ * `HowItWorksSection.tsx`'s own docstring for why `renderIcon`/`onCtaClick`
+ * (function props, not serialisable) became `iconKey`/`ctaLink`. `steps` is
+ * inline because the step count/order IS the authored content, same reasoning
+ * as `TestimonialsSectionConfig.testimonials` below.
+ */
+export interface HowItWorksStepConfig {
+  number: number;
+  title: string;
+  desc: string;
+  iconKey?: string;
+  iconColor?: string;
+  iconBg?: string;
+  badgeBg?: string;
+}
+
+export interface HowItWorksSectionConfig {
+  title: string;
+  subtitle?: string;
+  pillLabel?: string;
+  ctaLabel?: string;
+  ctaLink?: string;
+  steps: HowItWorksStepConfig[];
+}
+
+/**
+ * Added 2026-10-19 promoting `TestimonialsCarousel` out of the orphan set.
+ * Deliberately NOT a read from the `testimonials` collection shape
+ * (`Testimonial` in `types/index.ts`) — `featured`/`sortOrder`/`active` are
+ * collection-row housekeeping with no meaning inside an already-ordered
+ * config array, and `avatarUrl` was declared there and never rendered. No
+ * `autoScroll`/`scrollInterval`/`loop` either: the component has no autoplay,
+ * arrows or dots — it is not actually a carousel, despite the name.
+ */
+export interface TestimonialsSectionConfig {
+  eyebrow?: string;
+  heading?: string;
+  testimonials: {
+    id: string;
+    name: string;
+    rating: 1 | 2 | 3 | 4 | 5;
+    text: string;
+  }[];
+}
+
+/**
+ * Added 2026-10-19 promoting `PromoGrid` out of the orphan set. `banners` is
+ * capped at `PROMO_GRID_MAX_BANNERS` (4) by the component itself — the
+ * layout has exactly one hero slot and three regular ones, so a 5th banner
+ * is silently dropped, not a bug. No admin background/colour field: the dark
+ * theme is intentionally hardcoded (Root Cause #67 — a themed background
+ * paired with fixed white ink would invert wrong in a light theme; this
+ * component is always dark, by design, so it never pairs the two).
+ */
+export interface PromoGridSectionConfig {
+  eyebrow?: string;
+  heading?: string;
+  banners: {
+    id: string;
+    title: string;
+    ctaLabel: string;
+    ctaUrl: string;
+    image: string;
+  }[];
+}
+
 export type SectionType =
   | "welcome"
   | "carousel"
@@ -852,7 +919,10 @@ export type SectionType =
   | "featured-bundles"
   | "prize-draws"
   | "event-raffles"
-  | "collection-cards";
+  | "collection-cards"
+  | "how-it-works"
+  | "testimonials"
+  | "promo-grid";
 
 export type SectionConfig =
   | CarouselSectionConfig
@@ -957,6 +1027,9 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   "prize-draws": 21,
   "event-raffles": 22,
   "collection-cards": 23,
+  "how-it-works": 24,
+  testimonials: 25,
+  "promo-grid": 26,
 };
 
 export const BANNER_HEIGHTS: Record<BannerSectionConfig["height"], string> = {

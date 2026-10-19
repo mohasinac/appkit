@@ -1,8 +1,14 @@
 /*
  * WHY: Seeds the homepage layout — which sections render, in what order, with what copy.
  * WHAT: 24 sections (23 enabled + 1 deliberately disabled), ordered 1..24 contiguously.
- * `google-reviews` is a 25th REGISTERED type with no document — see the note
- * beside the deliberate budget-tile omission below for why.
+ * `google-reviews` is a REGISTERED type with no document — see the note
+ * beside the deliberate budget-tile omission below for why. Three more joined
+ * it 2026-10-19 (`how-it-works`/`testimonials`/`promo-grid`, promoted out of
+ * the orphan-component set into real `SectionType`s + `SECTION_REGISTRY`
+ * entries) — deliberately left unseeded too: each is now available in the
+ * admin section builder's create picker, so an admin can add one when there is
+ * real copy to put in it, rather than this file inventing placeholder "How It
+ * Works" steps or testimonials nobody actually said.
  *
  * 🛑 That count and range are ASSERTED, not described — `order` must stay unique
  * and contiguous. Until 2026-10-19 this header read "22 sections … 1..21" while

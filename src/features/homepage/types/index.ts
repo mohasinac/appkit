@@ -92,16 +92,14 @@ export interface Banner {
 }
 
 // --- Promo Grid --------------------------------------------------------------
-
-export interface PromoBanner {
-  id: string;
-  title: string;
-  ctaLabel: string;
-  ctaUrl: string;
-  image: string;
-  sortOrder: number;
-  active: boolean;
-}
+//
+// `PromoBanner` (the collection-row shape: id/title/ctaLabel/ctaUrl/image +
+// sortOrder/active) was REMOVED 2026-10-19. `PromoGrid` was promoted to a
+// real `SectionType` ("promo-grid") and now reads inline config banners via
+// `PromoGridSectionConfig` (`schemas/firestore.ts`) — sortOrder/active are
+// collection-row housekeeping with no meaning inside an already-ordered
+// config array. This left `PromoBanner` with zero consumers anywhere in the
+// codebase; do not re-add it without a reader.
 
 // --- Trust Badges ------------------------------------------------------------
 
@@ -117,17 +115,14 @@ export interface TrustBadge {
 }
 
 // --- Testimonials -------------------------------------------------------------
-
-export interface Testimonial {
-  id: string;
-  name: string;
-  rating: 1 | 2 | 3 | 4 | 5;
-  text: string;
-  avatarUrl?: string;
-  featured: boolean;
-  sortOrder: number;
-  active: boolean;
-}
+//
+// `Testimonial` (the collection-row shape: id/name/rating/text/avatarUrl +
+// featured/sortOrder/active) was REMOVED 2026-10-19 for the same reason as
+// `PromoBanner` above — `TestimonialsCarousel` was promoted to a real
+// `SectionType` ("testimonials") and now reads inline config testimonials via
+// `TestimonialsSectionConfig`. `avatarUrl` was declared here and never
+// rendered by the component even before the promotion. Do not re-add this
+// type without a reader.
 
 // --- Before / After Gallery ---------------------------------------------------
 

@@ -40,6 +40,9 @@ import { HomepageSectionBoundary } from "../components/HomepageSectionBoundary";
 import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
 import { EventRafflesSection } from "../../events/components/EventRafflesSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
+import { HowItWorksSection, type HowItWorksStep } from "../components/HowItWorksSection";
+import { TestimonialsCarousel } from "../components/TestimonialsCarousel";
+import { PromoGrid } from "../components/PromoGrid";
 import type { CarouselSlide } from "../types/index";
 import type {
   HomepageSectionDocument,
@@ -69,6 +72,9 @@ import type {
   PrizeDrawsSectionConfig,
   EventRafflesSectionConfig,
   CollectionCardsSectionConfig,
+  HowItWorksSectionConfig,
+  TestimonialsSectionConfig,
+  PromoGridSectionConfig,
 } from "../schemas";
 import type { ProductItem } from "../../products/types";
 import type { StoreListItem } from "../../stores/types";
@@ -708,6 +714,56 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
             brands: sectionData.brands,
             stores: sectionData.stores,
           }}
+        />
+      );
+    },
+  },
+
+  // Promoted out of the orphan-component set 2026-10-19 (see each component's
+  // own docstring for the config-serialisability fixes this required).
+  "how-it-works": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
+      const cfg = config as HowItWorksSectionConfig;
+      if (!cfg?.title || !Array.isArray(cfg.steps) || cfg.steps.length === 0) return null;
+      return (
+        <HowItWorksSection
+          title={cfg.title}
+          subtitle={cfg.subtitle}
+          pillLabel={cfg.pillLabel}
+          ctaLabel={cfg.ctaLabel}
+          ctaLink={cfg.ctaLink}
+          steps={cfg.steps as HowItWorksStep[]}
+        />
+      );
+    },
+  },
+
+  testimonials: {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
+      const cfg = config as TestimonialsSectionConfig;
+      if (!Array.isArray(cfg?.testimonials) || cfg.testimonials.length === 0) return null;
+      return (
+        <TestimonialsCarousel
+          eyebrow={cfg.eyebrow}
+          heading={cfg.heading}
+          testimonials={cfg.testimonials}
+        />
+      );
+    },
+  },
+
+  "promo-grid": {
+    surfaces: ["homepage"],
+    render: ({ config }) => {
+      const cfg = config as PromoGridSectionConfig;
+      if (!Array.isArray(cfg?.banners) || cfg.banners.length === 0) return null;
+      return (
+        <PromoGrid
+          eyebrow={cfg.eyebrow}
+          heading={cfg.heading}
+          banners={cfg.banners}
         />
       );
     },

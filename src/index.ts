@@ -5964,9 +5964,6 @@ export type { HowItWorksStep } from "./features/homepage/index";
 // NewsletterSectionProps - Type contract for newsletter section props.
 export type { NewsletterSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PromoBanner - Type contract for promo banner.
-export type { PromoBanner } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PromoGridProps - Type contract for promo grid props.
 export type { PromoGridProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -5990,9 +5987,6 @@ export type { SubscribeNewsletterInput } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SubscribeNewsletterResult - Type contract for subscribe newsletter result.
 export type { SubscribeNewsletterResult } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// Testimonial - Type contract for testimonial.
-export type { Testimonial } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TestimonialsCarouselProps - Type contract for testimonials carousel props.
 export type { TestimonialsCarouselProps } from "./features/homepage/index";
