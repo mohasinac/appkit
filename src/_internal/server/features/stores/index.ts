@@ -26,3 +26,9 @@ export {
   type ToStoreListItemOptions,
   type StoreProjectionSource,
 } from "./adapters";
+export {
+  resolveStoreTabs,
+  getDefaultStoreTabPath,
+  type ResolvedStoreTabs,
+  type StoreTabLink,
+} from "./tabs";

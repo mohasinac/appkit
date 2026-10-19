@@ -65,29 +65,35 @@ const __W = "max-w-7xl mx-auto";
  * Admin surfaces that genuinely need both still show both —
  * `CategoryTableColumns` renders "own (total)" explicitly.
  */
+/*
+ * 🛑 products + auctions, SUMMED.
+ *
+ * `metrics.productCount` EXCLUDES auctions — `Tally` keeps `productIds` and
+ * `auctionIds` as separate arrays and writes `auctionCount` /
+ * `totalAuctionCount` alongside, so the comparable "how much is in here"
+ * figure is the sum of both. Reading only the product half understated every
+ * subcategory holding an auction, and understated it silently: the chip
+ * showed a plausible smaller number rather than anything that looked wrong.
+ *
+ * This page already derives its own header figures correctly that way
+ * (`productCount` and `auctionCount` resolved separately further down); this
+ * was the one place that took the product half for the whole.
+ *
+ * Prefer the rollup (`total*`) over the own-count for both halves, because a
+ * chip is a navigational promise about the whole subtree you are about to
+ * enter, not about what happens to be filed at that exact node. Shared by
+ * `toSubcategoryItems` (the chip's badge count) and the scroller's own
+ * filter below, so the two can't disagree about what "has listings" means.
+ */
+function listingCountFor(child: CategoryItem): number {
+  const products = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
+  const auctions = child.metrics?.totalAuctionCount ?? child.metrics?.auctionCount ?? 0;
+  return products + auctions;
+}
+
 function toSubcategoryItems(children: readonly CategoryItem[]): OverflowRowItem[] {
   return children.map((child) => {
-    /*
-     * 🛑 products + auctions, SUMMED.
-     *
-     * `metrics.productCount` EXCLUDES auctions — `Tally` keeps `productIds` and
-     * `auctionIds` as separate arrays and writes `auctionCount` /
-     * `totalAuctionCount` alongside, so the comparable "how much is in here"
-     * figure is the sum of both. Reading only the product half understated every
-     * subcategory holding an auction, and understated it silently: the chip
-     * showed a plausible smaller number rather than anything that looked wrong.
-     *
-     * This page already derives its own header figures correctly that way
-     * (`productCount` and `auctionCount` resolved separately further down); the
-     * chip mapper was the one place that took the product half for the whole.
-     *
-     * Prefer the rollup (`total*`) over the own-count for both halves, because a
-     * chip is a navigational promise about the whole subtree you are about to
-     * enter, not about what happens to be filed at that exact node.
-     */
-    const products = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
-    const auctions = child.metrics?.totalAuctionCount ?? child.metrics?.auctionCount ?? 0;
-    const count = products + auctions;
+    const count = listingCountFor(child);
     return {
       id: child.id,
       label: child.name,
@@ -276,9 +282,31 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       : Promise.resolve([]),
   ]);
 
+  // 🛑 SAME TIER ONLY. `rootSiblingCategories` spans the whole root subtree —
+  // siblings AND cousins across every depth — so without a tier check this
+  // rendered deeper descendants (children, grandchildren) as "related",
+  // which reads as a second, redundant Subcategories row rather than a set
+  // of actual peers. A category with no siblings at its own tier correctly
+  // shows nothing here; the tier-grouped descendant tabs above already cover
+  // "what's below this category".
   const relatedCategories = rootSiblingCategories
-    .filter((c) => c.id !== category?.id && (!c.categoryType || c.categoryType === "category"))
+    .filter(
+      (c) =>
+        c.id !== category?.id &&
+        (!c.categoryType || c.categoryType === "category") &&
+        c.tier === category?.tier,
+    )
     .slice(0, RELATED_CATEGORY_LIMIT);
+
+  // 🛑 ONLY children that actually have something in them. A direct child
+  // with zero listings anywhere in its own subtree is a dead end — clicking
+  // it opens an empty category page — so it's dropped from the chip row
+  // rather than rendered with no count badge. `listingCountFor` reads the
+  // ROLLUP (own + descendants), so a child that merely has no listings of
+  // its OWN but does further down is correctly kept.
+  const directChildrenWithListings = childCategories
+    .filter((c) => c.tier === (category?.tier ?? 0) + 1)
+    .filter((c) => listingCountFor(c) > 0);
 
   // Stores tab — stores whose storeCategory is this category or ANY descendant.
   //
@@ -353,7 +381,16 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
      * and it cast `createdAt` through `as unknown as string` where the adapter
      * converts a Timestamp properly.
      */
-    .map((s) => toStoreListItem(s));
+    .map((s) => toStoreListItem(s))
+    // 🛑 `storeCategory` is a one-time "primarily sells this" tag, not proof
+    // of current stock — a store can match the category and still have
+    // nothing listed right now (the exact shape of the empty-store report
+    // this filter closes). Listing it here sends a visitor into a store page
+    // with nothing to buy, so only stores that actually have products are
+    // kept. `totalProducts` is the denormalised `stats.totalProducts`
+    // counter, incremented atomically on create/delete — cheap to read here,
+    // unlike a per-store query.
+    .filter((s) => (s.totalProducts ?? 0) > 0);
 
   const storeCount = categoryStores.length;
   // `tabCounts` is keyed by tabSlug and already covers every listing type plus
@@ -716,7 +753,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       })()}
 
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
-      {childCategories.length > 0 && (
+      {directChildrenWithListings.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
           <Div className={__W} padding="inline">
             {/*
@@ -740,12 +777,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               * to which parent, which is the defect the per-depth labels were
               * added to paper over.
               */}
-            {(() => {
-              const directChildren = childCategories.filter(
-                (c) => c.tier === (category?.tier ?? 0) + 1,
-              );
-              if (directChildren.length === 0) return null;
-              return (
             <Div padding="b-2xs">
               <Text size="xs" color="muted" weight="medium" className="mb-[var(--appkit-space-1-5)]">
                 Subcategories
@@ -760,7 +791,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 * unreachable off the right edge).
                 */}
               <OverflowRow
-                items={toSubcategoryItems(directChildren)}
+                items={toSubcategoryItems(directChildrenWithListings)}
                 ariaLabel="Subcategories"
                 variant="nav"
                 placeholder="Browse subcategories"
@@ -768,8 +799,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 noResultsText="No matching subcategory"
               />
             </Div>
-              );
-            })()}
           </Div>
         </Section>
       )}

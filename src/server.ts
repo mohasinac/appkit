@@ -1689,6 +1689,7 @@ export {
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";
+export { getDefaultStoreTabPath } from "./_internal/server/features/stores/tabs";
 
 // Public-store allow-list projection — the ONLY sanctioned way a StoreDocument
 // may reach a client component or an HTTP response. See adapters.ts header.
