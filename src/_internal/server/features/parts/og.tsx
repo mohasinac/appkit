@@ -125,7 +125,7 @@ export function renderPartClassificationOg(
 ): ReactElement {
   const label = PART_SLOT_LABEL[slot] ?? slot;
   return shell(
-    "Parts database",
+    "Beyblade parts gallery",
     label,
     // `count` comes from the same bounded read the page renders, so the number
     // on the card is the number on the page. A separate count query would be a

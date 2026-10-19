@@ -1,5 +1,5 @@
 /**
- * D12 — the parts database index, and one classification's listing.
+ * D12 — the Beyblade parts gallery index, and one classification's listing.
  *
  * ── 🛑 THE INDEX COSTS ZERO FIRESTORE READS ────────────────────────────────
  *
@@ -59,7 +59,7 @@ export function PartsIndexPageView({
       <Container size="lg">
         <Stack gap="lg" className="min-w-0">
           <Stack gap="xs">
-            <Heading level={1}>Parts database</Heading>
+            <Heading level={1}>Beyblade parts gallery</Heading>
             <Text color="muted">
               Every component we have a record of, by what it is. A code like{" "}
               <Span weight="semibold">RF</Span> or <Span weight="semibold">105</Span> means

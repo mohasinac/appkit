@@ -39,14 +39,15 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/parts",
     steps: [
       "Open /parts.",
+      "Confirm the page heading reads 'Beyblade parts gallery'.",
       "Count the classification tiles.",
       "Confirm every tile reads as a part NAME in sentence case — 'Performance Tip', 'Fusion Wheel', 'Bit Chip' — and not as a URL slug like 'performance-tip' or 'bit-chip'.",
       "Open any one tile and confirm it loads a page rather than 404ing.",
     ],
     expectedBehaviour:
-      "BEFORE: there was no parts database at all, so a buyer reading '105RF' on a listing had nowhere to learn that 105 is a spin-track height and RF is a rubber flat tip. AFTER: 20 classifications, each a real page. The labels come from a compile-checked map rather than being title-cased from the slug, because 'Bit Chip' is not 'bit-chip' title-cased and 'Armour' is not 'armour'.",
+      "BEFORE: there was no parts reference at all, so a buyer reading '105RF' on a listing had nowhere to learn that 105 is a spin-track height and RF is a rubber flat tip. AFTER: 20 classifications, each a real page, under the heading 'Beyblade parts gallery'. The labels come from a compile-checked map rather than being title-cased from the slug, because 'Bit Chip' is not 'bit-chip' title-cased and 'Armour' is not 'armour'.",
     expectedUiState:
-      "Exactly 20 tiles, each labelled in sentence case, each a working link.",
+      "The heading reads 'Beyblade parts gallery'. Exactly 20 tiles, each labelled in sentence case, each a working link.",
     expectedData: { classificationTiles: 20 },
     endResult: "Nothing is changed; this case only reads.",
   },
