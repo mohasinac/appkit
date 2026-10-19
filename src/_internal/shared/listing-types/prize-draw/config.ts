@@ -27,6 +27,8 @@ export const config = {
   // /prize-draws is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
   // ordinary unit prices in the general grid.
   inGeneralCatalogue: false,
+  // sells ENTRIES at a fixed price; a group line would blur what was entered
+  canJoinProductGroup: false,
   iconKey: "prizeDraw" as const,
   hideDefault: "closed" as const,
   // `prizeRevealStatus`, NOT remaining entries: a draw can close with slots

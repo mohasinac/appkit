@@ -73,6 +73,12 @@ import { MAX_FEATURES_PER_PRODUCT } from "../schemas/product-features";
 // B3. A second regex here would be Root Cause #75's shape.
 import { interpolate } from "../../../_internal/shared/templating/placeholders";
 import type { ProductStatus } from "../types";
+/*
+ * From their DEFINING modules, not a barrel — a repository reaching the wide
+ * entry is how the Turbopack client-bundle trap gets re-opened (Root Cause #18).
+ */
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 /**
@@ -1231,17 +1237,98 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }
 
-  async findByGroupId(groupId: string): Promise<ProductDocument[]> {
-    // Tier GP: groups may mix standard products + pre-orders (never auctions).
+  /**
+   * Every member of a group, UNFILTERED — drafts, and every listing type.
+   *
+   * 🛑 This is the scope `dissolveGroup` needs and the ONLY one that may be
+   * unfiltered. A filtered dissolve leaves the excluded members carrying a
+   * `groupId` pointing at a group that no longer exists, which nothing ever
+   * clears — and that orphan is invisible until someone wonders why a product
+   * claims to be in a group with no other members.
+   */
+  async findAllByGroupId(groupId: string): Promise<ProductDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
       .where("groupId", "==", groupId)
-      .where(PRODUCT_FIELDS.LISTING_TYPE, "in", [
-        LISTING_TYPE_VALUES.STANDARD,
-        LISTING_TYPE_VALUES.PRE_ORDER,
-      ])
       .get();
-    return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
+    const byQuery = snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
+    return this.withParentSideFallback(groupId, byQuery);
+  }
+
+  /**
+   * Group members a BUYER may see: eligible types, published only.
+   *
+   * 🛑 The type filter is DERIVED from `canJoinProductGroup`, not hard-coded.
+   * It used to be a literal `["standard", "pre-order"]`, which silently dropped
+   * every `stickers` / `art` member from the query — so `ShowGroupSection` saw
+   * one member and returned null, and the picker was unreachable with nothing
+   * erroring anywhere (Root Cause #58).
+   *
+   * 🛑 The `status` filter is NEW and is a leak fix, not a tightening. There
+   * was no status filter at all, so DRAFT members were reaching the public
+   * `/api/products/group/[groupId]` payload; widening the type list without
+   * this would have widened that leak at the same time.
+   */
+  async findGroupMembersForPublic(groupId: string): Promise<ProductDocument[]> {
+    const eligible = ALL_LISTING_TYPES.filter((t) => pluginFor(t).canJoinProductGroup);
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where("groupId", "==", groupId)
+      // `in` caps at 30 values; this is 4 of 9 today and cannot approach it.
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "in", eligible)
+      .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
+      .get();
+    const byQuery = snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
+    const withFallback = await this.withParentSideFallback(groupId, byQuery);
+    /*
+     * 🛑 The fallback results are filtered TOO. Without this the fallback
+     * becomes the hole the query just closed — a draft or an ineligible member
+     * would reach the public payload through the parent's own list.
+     */
+    const eligibleSet = new Set<string>(eligible);
+    return withFallback.filter(
+      (p) =>
+        eligibleSet.has(String(p.listingType ?? LISTING_TYPE_VALUES.STANDARD)) &&
+        p.status === ProductStatusValues.PUBLISHED,
+    );
+  }
+
+  /**
+   * Union the child-side query with the PARENT's own `groupChildSlugs`.
+   *
+   * Mirrors `resolveBundleMemberIds`, and exists for the same reason: Root
+   * Cause #42 documented a parent carrying `groupChildSlugs` while its children
+   * had no `groupId`, so a child-side query resolved only the parent and the
+   * group rendered as one member. The repository's six mutating methods all
+   * write both sides in one batch, so code cannot produce that state — but a
+   * seeded fixture or a direct Firestore edit still can, and the READER was
+   * never made resilient. `listBundleMembers` got this fix; this did not.
+   */
+  private async withParentSideFallback(
+    groupId: string,
+    byQuery: ProductDocument[],
+  ): Promise<ProductDocument[]> {
+    const seen = new Set(byQuery.map((p) => p.id));
+    /*
+     * `startGroup` sets `groupId = parent.slug`, so the group id IS the
+     * parent's slug and one lookup finds it. If that ever stops being true the
+     * fallback simply finds nothing, which is the same behaviour as today.
+     */
+    const parent = byQuery.find((p) => p.isGroupParent) ?? (await this.findById(groupId));
+    const missing = (parent?.groupChildSlugs ?? []).filter((id) => !seen.has(id));
+    if (missing.length === 0) return byQuery;
+
+    const extra = await Promise.all(missing.map((id) => this.findById(id)));
+    return [...byQuery, ...extra.filter((p): p is ProductDocument => p !== null)];
+  }
+
+  /**
+   * @deprecated Ambiguous about scope — say which one you mean.
+   * Kept so no caller silently changes behaviour; it resolves to the PUBLIC
+   * scope, which is what every existing caller wanted.
+   */
+  async findByGroupId(groupId: string): Promise<ProductDocument[]> {
+    return this.findGroupMembersForPublic(groupId);
   }
 
   async startGroup(productId: string, slug: string): Promise<void> {
@@ -1257,7 +1344,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async dissolveGroup(groupId: string): Promise<void> {
-    const members = await this.findByGroupId(groupId);
+    // UNFILTERED on purpose — see findAllByGroupId. Dissolving must clear every
+    // member's fields, including drafts and ineligible types, or they keep a
+    // groupId pointing at nothing.
+    const members = await this.findAllByGroupId(groupId);
     const batch = this.db.batch();
     const clearFields = {
       groupId: null,

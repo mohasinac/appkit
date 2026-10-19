@@ -131,6 +131,31 @@ export interface ListingTypePlugin {
    * reachable only by typing the URL.
    */
   inGeneralCatalogue: boolean;
+
+  /**
+   * May a listing of this type be a MEMBER of a product group?
+   *
+   * A product group is "a whole plus its parts, buy any mix" — a sticker sheet
+   * with its cut-out stickers, a complete Beyblade with its spares. The buyer
+   * picks quantities per member through `GroupMemberPicker`.
+   *
+   * 🛑 `findByGroupId` used to hard-code `["standard", "pre-order"]`, which
+   * made this field's answer invisible and wrong: a `stickers` or `art` member
+   * was silently dropped from the query, so `ShowGroupSection` saw one member
+   * and returned null — the picker was unreachable with nothing erroring. That
+   * is Root Cause #58's shape, a union member missing from the one allowlist
+   * that gates it.
+   *
+   * Required, not optional, for the same reason as `inGeneralCatalogue`: a
+   * tenth type must not compile until someone decides.
+   *
+   * False where the type's own pricing or lifecycle makes "pick N of these"
+   * meaningless — an auction is one unique lot, a pre-order is a deposit
+   * against a future release, a prize-draw sells entries, a classified has no
+   * cart, a digital-code is a fungible pool, and a live item is
+   * jurisdiction-gated per buyer.
+   */
+  canJoinProductGroup: boolean;
   /**
    * Leading glyph for this type's chip, tab and dropdown row.
    *

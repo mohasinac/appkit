@@ -30,6 +30,8 @@ export const config = {
   browseRoute: String(ROUTES.PUBLIC.PRE_ORDERS),
   // /pre-orders is in MAIN_NAV_ITEMS.
   inGeneralCatalogue: false,
+  // a deposit against a future release; members would ship at different times
+  canJoinProductGroup: false,
   iconKey: "preOrder" as const,
   hideDefault: "closed" as const,
   // A pre-order closes when its allocation fills, NOT when its delivery date

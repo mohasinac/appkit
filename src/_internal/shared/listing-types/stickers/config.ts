@@ -30,6 +30,8 @@ export const config = {
   browseRoute: String(ROUTES.PUBLIC.ART),
   // /art ("Art & Stickers") is in MAIN_NAV_ITEMS and spans art + stickers.
   inGeneralCatalogue: false,
+  // THE case this exists for: a sheet plus its individual cut-out stickers
+  canJoinProductGroup: true,
   iconKey: "stickers" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared

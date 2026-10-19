@@ -27,6 +27,8 @@ export const config = {
   browseRoute: String(ROUTES.PUBLIC.PRODUCTS),
   // The general catalogue IS this type's page.
   inGeneralCatalogue: true,
+  // the ordinary case — a complete item whose parts can be sold beside it
+  canJoinProductGroup: true,
   iconKey: "order" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared

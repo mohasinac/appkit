@@ -29,6 +29,8 @@ export const config = {
   // Has a dedicated page but NO MAIN_NAV_ITEMS entry, so /products is its only
   // discovery path. Dropping it here would orphan the type (Root Cause #61).
   inGeneralCatalogue: true,
+  // no cart at all (cartLine "blocked") — the purchase path is contact-seller
+  canJoinProductGroup: false,
   iconKey: "deals" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
