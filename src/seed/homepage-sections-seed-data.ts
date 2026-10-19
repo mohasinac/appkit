@@ -154,7 +154,14 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       title: "Shop by Category",
-      maxCategories: 8,
+      /*
+       * 6, from the `categories-generation-tiles` SECTION_TEMPLATE — and 6 is a
+       * measured number, not a round one: worldhobbyshop's "Shop Beyblades by
+       * Generation" is exactly six tiles (Beyblade X, Burst, Metal, Plastic
+       * Generation, Launchers & Grips, Stadiums & Arenas), 3 columns at 1280 and
+       * 1 at 390. See docs/research/competitor-crawl-2026-10/layout.md.
+       */
+      maxCategories: 6,
       viewMoreLabel: "All categories →",
       autoScroll: false,
       scrollInterval: 5000,
@@ -175,7 +182,20 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     config: {
       title: "Featured Products",
       subtitle: "Hand-picked listings from verified sellers.",
-      maxItems: 12,
+      /*
+       * 8, from the `products-recently-added` SECTION_TEMPLATE, which took it
+       * from worldhobbyshop's one product rail — measured 2026-10-19 at exactly
+       * 8 cards, 4 columns (docs/research/competitor-crawl-2026-10/layout.md).
+       * The SEO leader ships the fewest products on its homepage; its advantage
+       * is taxonomy routing, not merchandising volume.
+       *
+       * Safe against the `<= 12` rule above: SSR still supplies 12 via
+       * getFeatured*(12) and this renders 8 of them, so it can never under-fill.
+       * The 4-row over-fetch is deliberate — `getFeaturedProducts(12)` is shared
+       * with the auctions and pre-orders rails, so narrowing it to match would
+       * couple three sections' counts to one fetch.
+       */
+      maxItems: 8,
       viewMoreLabel: "View all products →",
       rows: 1,
       autoScroll: false,
@@ -342,7 +362,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       title: "From Our Blog",
-      maxArticles: 6,
+      // 4, from the `blog-four-excerpts` SECTION_TEMPLATE (beybladeartshop ships
+      // four article excerpts). Safe against the SSR fetch, which supplies 6 via
+      // getFeaturedBlogPosts(6) — this renders 4 of them.
+      maxArticles: 4,
       viewMoreLabel: "View all posts →",
       showReadTime: true,
       showAuthor: true,
