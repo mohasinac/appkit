@@ -14,6 +14,8 @@
  * Idempotent: already-proxied URLs (`/media/...` or `/api/media/ext?url=...`)
  * pass through untouched, so wrapping a wrapped URL is safe.
  */
+
+import type { ProductImage } from "../../features/products/types";
 import { MEDIA_ENDPOINTS } from "../../constants/api-endpoints";
 
 const PROXY_PREFIX = "/media/";
@@ -80,6 +82,22 @@ export function seedExtMedia(url: string): string {
 const SEED_TILE_PREFIX = "/images/seed-tiles/";
 
 /**
+ * Is this cover value a generated PLACEHOLDER rather than a real image?
+ *
+ * 🛑 Load-bearing for `withGeneratedCoverImage`, which otherwise treats any
+ * non-empty `display.coverImage` as hand-authored and skips the row — so a
+ * `seedPhoto(...)` tile BLOCKED every fetched wordmark, and a logo could be
+ * downloaded, uploaded, mapped and still never appear.
+ *
+ * The distinction is the honest one: a tile is what the seed emits when it has
+ * nothing better, so it is a default to be improved on. A real path (a
+ * `/media/<slug>` or an admin upload) is a decision, and that still wins.
+ */
+export function isSeedPlaceholderImage(value: string | undefined | null): boolean {
+  return typeof value === "string" && value.startsWith(SEED_TILE_PREFIX);
+}
+
+/**
  * Muted backgrounds, all dark enough for the same light foreground.
  *
  * Raw hex rather than theme tokens because an SVG served as the body of an
@@ -124,6 +142,26 @@ export function seedPhotoLabel(seed: string): string {
     .trim();
   if (!cleaned) return "LetItRip";
   return cleaned.replace(/\b[a-z]/g, (c) => c.toUpperCase());
+}
+
+/**
+ * A seed gallery as `ProductImage[]` — plan A6 changed
+ * `ProductDocument.images` from `string[]` to `ProductImage[]`, and these
+ * fixtures hold bare URLs.
+ *
+ * 🛑 Deliberately sets NO `alt`. The only string available at these call
+ * sites is the product title, and "Dranzer S" repeated as the alt of all
+ * three of its photos is the naive fill that screen-reader users correctly
+ * treat as noise — worse than absent, because it claims to describe. The
+ * GENERATED catalogue does emit real alt ("Chain Kerbeus — Aquilon-Q
+ * (Disc)") because its join knows what each photo is OF; a hand-written
+ * fixture does not, and should say so by omission.
+ *
+ * Nor does it set `width`/`height`: a seed tile is one SVG serving every
+ * aspect (see `seedPhoto` below), so there is no honest intrinsic size.
+ */
+export function seedGallery(...urls: string[]): ProductImage[] {
+  return urls.filter(Boolean).map((url) => ({ url }));
 }
 
 /**

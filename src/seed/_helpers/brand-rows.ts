@@ -80,6 +80,7 @@ import type { CategoryDocument } from "../../features/categories/schemas";
  * brand discriminator a single spelling.
  */
 import { CATEGORY_FIELDS } from "../../constants/field-names";
+import { seedPhoto } from "./media";
 
 export interface BrandSeedInput {
   /** Without the `brand-` prefix. */
@@ -131,20 +132,21 @@ export function brandRow(
      * corrupt the ranges `onCategoryWrite` shifts on insert.
      */
     /*
-     * 🛑 NO `coverImage` — and its absence is what lets a real logo through.
+     * A placeholder tile, which a real logo now OVERRIDES rather than being
+     * blocked by — `withGeneratedCoverImage` treats a `/images/seed-tiles/`
+     * path as a default to improve on, not as a hand-authored decision
+     * (`isSeedPlaceholderImage`).
      *
-     * `withGeneratedCoverImage` skips any row that already has one, so the
-     * `seedPhoto(...)` tile that used to be here BLOCKED the generated map
-     * outright: a logo could be fetched, uploaded and mapped, and every brand
-     * card would still show a grey tile. Three brands resolve a real wordmark
-     * today (Beyblade, Hasbro, Sonokong); the rest fall through to no image,
-     * which `CategoryCard` renders as the row's `color` + emoji rather than a
-     * broken box.
+     * 🛑 So keep it. Three brands resolve a real wordmark today (Beyblade,
+     * Hasbro, Sonokong) and override this; the other 25 have no verified
+     * source and fall back to the tile. Removing the line would give those 25
+     * an EMPTY grey box, because a brand row carries no `color` and no `icon`
+     * either — strictly worse than a neutral tile.
      *
-     * `icon` stays unset — see trap 2. An emoji here would have outranked the
-     * logo even after this.
+     * `icon` stays unset — see trap 2. An emoji here would outrank the logo.
      */
     display: {
+      coverImage: seedPhoto(`brand-logo-${input.slug}-20260101`, 800, 800),
       showInMenu: false,
       showInFooter: input.footer ?? false,
     },

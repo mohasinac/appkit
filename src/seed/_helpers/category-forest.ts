@@ -75,22 +75,22 @@ import {
 import { seedPhoto } from "./media";
 
 /**
- * A synthetic placeholder tile, for a node with no real cover yet.
+ * A synthetic placeholder tile, for a node with no real cover of its own.
  *
- * 🛑 Setting this BLOCKS the generated map. `withGeneratedCoverImage` skips any
- * row whose `display.coverImage` is already non-empty — a hand-authored value
- * always wins — so a `cover(...)` here is not a fallback, it is a decision that
- * this node will never take a fetched image.
+ * 🛑 This is a FALLBACK, not a decision — and that took a fix to become true.
+ * `withGeneratedCoverImage` used to skip any row with a non-empty
+ * `display.coverImage`, so a `cover(...)` here BLOCKED the generated map
+ * outright: a wordmark could be fetched, uploaded and mapped and the card
+ * would still show a grey tile, with nothing reporting why.
  *
- * So the four Beyblade generation roots no longer call it: they now resolve a
- * real wordmark from `GENERATED_CATEGORY_IMAGES` instead. The remaining callers
- * are the nodes for which no verified image exists yet (the five non-Beyblade
- * roots, Accessories, and the two TCG nodes) — for those a neutral tile still
- * beats an empty box, and removing the call without having an image to put
- * there would downgrade them to a flat colour block.
+ * It now ranks the three sources honestly — a real authored path beats a
+ * generated image beats a placeholder tile (`isSeedPlaceholderImage`) — so
+ * every node can keep a tile in source and simply be overridden when an image
+ * exists. Four roots are overridden today (the Beyblade generations); the rest
+ * render the tile, which is the right thing to show when there is nothing
+ * better and much better than the empty box they would get from no value.
  *
- * Deleting one of these is therefore the single edit that switches a node from
- * placeholder to real artwork, once its image is in the manifest.
+ * So adding artwork to a node is now a manifest entry ALONE — no edit here.
  */
 const cover = (slug: string) => seedPhoto(`category-image-${slug}-20260101`, 1200, 600);
 
@@ -192,8 +192,7 @@ const BEYBLADE_ORIGINAL: CategoryTreeNode = {
   description:
     "The original Beyblade series (1999–2003) by Takara — Plastic Generation tops, Spin Gear, Magnacore, Engine Gear and HMS, with the ripcord launchers that started the franchise.",
   extra: {
-    // No `coverImage`: resolves the real series wordmark from the generated map.
-    display: { icon: "🪀", color: "#b45309", showInMenu: true, showInFooter: false },
+    display: { icon: "🪀", coverImage: cover("beyblade-original"), color: "#b45309", showInMenu: true, showInFooter: false },
     contentBody: `<p>The original Beyblade line ran from 1999 to 2003 and moved through four part systems in four years. Each one changed what a top could do, and each one is a separate shelf here because the parts do not interchange.</p>
 <p><strong>Spin Gear System</strong> was the first — an Attack Ring, a Weight Disk, a Blade Base and a spin gear that set direction. <strong>Magnacore</strong> added magnets to the base, pulling a top toward or away from the stadium centre. <strong>Engine Gear</strong> put a wound spring inside the top that released mid-battle. <strong>Heavy Metal System</strong>, the 2003 finale, replaced the plastic core with metal throughout and is the most expensive original-era line on this site by a wide margin — a reflection of how few survive in playable condition.</p>
 <p>Browse by system above, or go straight to a model. Loose <a href="/categories/category-original-parts">Attack Rings, Weight Disks and Blade Bases</a> are listed separately for rebuilds, and <a href="/categories/category-original-launchers">ripcord launchers and winders</a> are their own shelf because an original-era launcher drives nothing from a later generation.</p>`,
@@ -249,8 +248,7 @@ const BEYBLADE_METAL: CategoryTreeNode = {
   description:
     "The Metal Fight era (2008–2013) — Metal System, Metal Fusion, Metal Masters, Metal Fury's 4D system and Shogun Steel. Metal-weighted tops with a four-part swappable system.",
   extra: {
-    // No `coverImage`: resolves the real series wordmark from the generated map.
-    display: { icon: "⚙️", color: "#64748b", showInMenu: true, showInFooter: false },
+    display: { icon: "⚙️", coverImage: cover("beyblade-metal"), color: "#64748b", showInMenu: true, showInFooter: false },
     contentBody: `<p>Metal Fight ran from 2008 to 2013 and is the generation that made Beyblade a tuning game. A top is four parts — a Face Bolt, an Energy Ring, a Fusion Wheel and a Spin Track with a Performance Tip — and every one of them is sold loose here, which is why this branch has more part listings than complete tops.</p>
 <p>The code after a name is the build. <strong>105RF</strong> means a 105-height Spin Track and a Rubber Flat tip: tall enough to clear a dish's slope, with rubber for aggressive floor contact. <strong>145WD</strong> is taller again with a Wide Defense tip, which trades speed for the ability to survive being hit. Reading those codes is most of what separates a casual buyer from a competitive one, and our <a href="/categories/category-metal-parts">parts shelf</a> is organised by them.</p>
 <p>Four sub-generations sit above: <strong>Metal System</strong> (the 2008 debut), <strong>Metal Fusion</strong> and <strong>Metal Masters</strong> on the Hybrid Wheel System, <strong>Metal Fury</strong> on the heavier 4D system, and <strong>Shogun Steel</strong> / Zero-G, which added a rocking stadium and tops built for it.</p>`,
@@ -300,8 +298,7 @@ const BEYBLADE_BURST: CategoryTreeNode = {
     "Beyblade Burst (2015–2023) by Takara Tomy and Hasbro — tops that burst apart on a hard enough hit, with swappable Layer, Disc and Driver parts across seven waves.",
   extra: {
     isFeatured: true,
-    // No `coverImage`: resolves the real series wordmark from the generated map.
-    display: { icon: "💥", color: "#059669", showInMenu: true, showInFooter: false },
+    display: { icon: "💥", coverImage: cover("beyblade-burst"), color: "#059669", showInMenu: true, showInFooter: false },
     contentBody: `<p>Burst added the mechanic the franchise is now named for: hit a top hard enough and it comes apart, ending the battle immediately. That single rule changed how everything is priced and tuned, because burst <em>resistance</em> became as valuable as attack power.</p>
 <p>A Burst top is three parts — a <strong>Layer</strong> on top, a <strong>Disc</strong> under it and a <strong>Driver</strong> at the floor — and all three are listed loose on our <a href="/categories/category-burst-parts">parts shelf</a>. Seven waves sit above, and they are not cosmetic revisions: <strong>Burst Classic</strong> (2015) was all plastic; <strong>God</strong> added spring-loaded Layers; <strong>Cho-Z</strong> put metal in the Layer and roughly doubled burst resistance; <strong>GT</strong> added a swappable chip; <strong>Superking</strong> introduced the five-sided Sparking ratchet; <strong>Dynamite Battle</strong> and <strong>Burst Ultimate</strong> closed the line with the heaviest Layers it ever shipped.</p>
 <p>Prices climb almost monotonically with the wave, from around ₹300 for an early single-layer release to ₹1,500 and up for Burst Ultimate — which is a straightforward proxy for how much metal is in the Layer.</p>`,
@@ -372,8 +369,7 @@ const BEYBLADE_X: CategoryTreeNode = {
     "Beyblade X (2023–present) by Takara Tomy — the current generation, built on the Xtreme Gear system with Blade, Ratchet and Bit parts and the Xtreme Dash rail.",
   extra: {
     isFeatured: true,
-    // No `coverImage`: resolves the real series wordmark from the generated map.
-    display: { icon: "💫", color: "#0d9488", showInMenu: true, showInFooter: false },
+    display: { icon: "💫", coverImage: cover("beyblade-x"), color: "#0d9488", showInMenu: true, showInFooter: false },
     contentBody: `<p>Beyblade X is the current generation and the first to put the stadium at the centre of the design. Its Xtreme Line stadiums have a raised rail, and an X top that hits that rail accelerates along it — the Xtreme Dash. Everything about an X build is tuned around whether it can reach and hold that rail.</p>
 <p>The three-part system is renamed: <strong>Blade</strong> on top, <strong>Ratchet</strong> in the middle setting height, <strong>Bit</strong> at the floor. Functionally that mirrors Burst's Layer, Disc and Driver, and physically it is incompatible with all of them. A Ratchet is written as two numbers — <strong>3-60</strong> means three protrusions at a 6.0 mm height — and that notation is the fastest way to read what a build is doing.</p>
 <p>Three retail lines sit above. <strong>Basic Line</strong> is the entry point; <strong>Unique Line (UX)</strong> adds gimmicked Blades; <strong>Custom Line (CX)</strong> splits the Blade itself into a Lock Chip, a Main Blade and an Assist Blade, which is the deepest customisation the franchise has shipped. The <strong>X-Over Project</strong> reissues classic designs on X hardware.</p>`,

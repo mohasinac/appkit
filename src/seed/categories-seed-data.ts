@@ -53,7 +53,7 @@
 
 import type { CategoryDocument } from "../features/categories/schemas";
 import { CATEGORY_FIELDS } from "../constants/field-names";
-import { seedPhoto } from "./_helpers/media";
+import { seedPhoto, isSeedPlaceholderImage } from "./_helpers/media";
 import { buildCategoryTree } from "./_helpers/category-tree";
 import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
@@ -582,7 +582,25 @@ function withGeneratedContent<T extends Partial<CategoryDocument>>(row: T): T {
  */
 function withGeneratedCoverImage<T extends Partial<CategoryDocument>>(row: T): T {
   const existing = row.display?.coverImage;
-  if (typeof existing === "string" && existing.trim().length > 0) return row;
+  /*
+   * 🛑 A seed PLACEHOLDER tile does not count as hand-authored.
+   *
+   * The rule is still "a hand-authored cover wins", but a `seedPhoto(...)`
+   * tile was never authored — it is what the seed emits when it has nothing
+   * better. Treating it as a decision is what made the placeholder BLOCK every
+   * fetched wordmark: a logo could be downloaded, uploaded to Storage, mapped,
+   * and the card would still show a grey tile, with nothing anywhere
+   * reporting why.
+   *
+   * So the precedence is: real authored path > generated image > placeholder
+   * tile. That lets every branch row keep an honest tile in source — which is
+   * what it falls back to when no image exists, and is much better than the
+   * empty grey box a brand row would otherwise render, since brand rows carry
+   * no `color` and no `icon` either.
+   */
+  if (typeof existing === "string" && existing.trim().length > 0 && !isSeedPlaceholderImage(existing)) {
+    return row;
+  }
   const generated = row.id ? GENERATED_CATEGORY_IMAGES[row.id] : undefined;
   if (!generated) return row;
   return { ...row, display: { ...(row.display ?? {}), coverImage: generated } };
