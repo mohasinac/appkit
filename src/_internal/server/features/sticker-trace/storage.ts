@@ -48,7 +48,26 @@ import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 import { getAdminStorage } from "../../../../providers/db-firebase";
 
-/** Nothing under here is reachable without a signed URL minted by this module. */
+/**
+ * Everything this feature writes lives under here.
+ *
+ * 🛑 The one-line claim this used to carry — "nothing under here is reachable
+ * without a signed URL minted by this module" — was FALSE, in the same way the
+ * identical claim on `DIGITAL_CONTENT_PREFIX` was: `/media/[...slug]`'s
+ * raw-path fallback resolved any multi-segment slug as a literal storage path,
+ * so `/media/private/sticker-sheets/...` served these objects, watermarked, to
+ * anyone. Unlike digital-content's `randomUUID()` names, a part is written as
+ * `part-003.png` — guessable on the first try.
+ *
+ * The proxy now refuses a raw `private/` path outright. What is true is
+ * narrower than the old sentence and worth stating precisely: **no public URL
+ * exists for one of these objects unless something deliberately mints a
+ * `mediaAssets` row for it.** A row is what creates a `/media/{shortId}` slug,
+ * and a resolved row is intentionally still allowed through the proxy — that is
+ * how a promoted part gets a watermarked marketplace copy with no byte
+ * duplicated. The unwatermarked printable original has no row and is reachable
+ * only by a signed URL from this module.
+ */
 export const SCAN_ROOT = "private/sticker-sheets";
 
 /** How long a read URL lives. Long enough to fetch, short enough to be useless if leaked. */

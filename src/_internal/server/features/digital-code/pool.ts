@@ -33,10 +33,25 @@ import {
 /**
  * Where a delivered asset's bytes live.
  *
- * Deliberately OUTSIDE every prefix the public media proxy knows how to resolve,
- * and no `mediaAssets` row is ever created for it — a `mediaAssets` row is what
- * mints a `/media/{shortId}` slug, and that slug is served without
- * authentication. No row, no slug, no public URL.
+ * No `mediaAssets` row is ever created for one — a row is what mints a
+ * `/media/{shortId}` slug, and that slug is served without authentication. No
+ * row, no slug, no public URL. That half was, and remains, true.
+ *
+ * 🛑 CORRECTED 2026-10-19. This block used to open with "deliberately OUTSIDE
+ * every prefix the public media proxy knows how to resolve", and that was
+ * FALSE from the day the proxy's raw-path fallback shipped: `/media/[...slug]`
+ * treats any multi-segment slug it cannot resolve through `mediaAssets` as a
+ * literal storage path, so `/media/private/digital-content/...` resolved and
+ * served. It did watermark, so no pristine original leaked — but a paid asset
+ * was reachable by anyone who guessed the object name, and the only thing
+ * standing in the way was `randomUUID()`.
+ *
+ * The proxy now refuses a raw path under `private/` outright
+ * (`PRIVATE_PREFIX` in `src/app/api/media/[...slug]/route.ts`), so the
+ * statement is true again — but it is true because of a check, not because of
+ * the prefix, and that distinction is the whole reason this comment was wrong
+ * for so long. An unenforced invariant written as a fact is worse than no
+ * comment: it is the reason nobody looked.
  */
 export const DIGITAL_CONTENT_PREFIX = "private/digital-content";
 
