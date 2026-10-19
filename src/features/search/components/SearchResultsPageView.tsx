@@ -32,11 +32,27 @@ export interface SearchResultsPageViewProps {
   result: SearchEverythingResult;
   /** Rendered above the groups — the consumer owns the input control. */
   renderSearchInput?: () => React.ReactNode;
+  /**
+   * Rendered between the input and the groups. The facet rail lives here.
+   *
+   * A SLOT rather than a `facets` prop, because this component is also
+   * rendered from a Server Component with no facets at all (the kill-switch
+   * fallback), and a required-looking prop that is absent half the time
+   * invites a `?? []` that silently renders an empty rail.
+   */
+  renderAboveGroups?: () => React.ReactNode;
+  /**
+   * A short line under the heading — "results as of 10:51". Optional because
+   * the server tier has no build time to report.
+   */
+  footnote?: string;
 }
 
 export function SearchResultsPageView({
   result,
   renderSearchInput,
+  renderAboveGroups,
+  footnote,
 }: SearchResultsPageViewProps) {
   const { q, terms, groups, totalHits } = result;
   const hasQuery = q.trim().length > 0;
@@ -71,7 +87,15 @@ export function SearchResultsPageView({
             )}
           </Stack>
 
+          {footnote && (
+            <Text size="xs" color="muted">
+              {footnote}
+            </Text>
+          )}
+
           {renderSearchInput?.()}
+
+          {renderAboveGroups?.()}
 
           {!hasQuery && (
             <Text color="muted">
