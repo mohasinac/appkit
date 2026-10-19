@@ -85,6 +85,21 @@ export interface ProductsIndexListingProps {
    * pass a matching set when overriding `listingTypes`. */
   typeTabs?: readonly { id: string; label: string }[];
   searchPlaceholder?: string;
+  /**
+   * Scope every query to one store, for a store-detail tab.
+   *
+   * 🛑 Added so a store tab can REUSE this component. There are six
+   * hand-written `Store<Type>Listing` components — ~140 lines each of the same
+   * toolbar, availability tabs, sticky pagination and card grid — and a seventh
+   * copy for spares would push a Rule-of-Three breach from six to seven while
+   * being the cheapest possible moment not to. Consolidating the existing six
+   * is its own session; not adding to them costs one prop.
+   *
+   * It OVERRIDES the URL's `storeId` rather than merging: on a store tab the
+   * store is the page, so a `?storeId=` from a stale link must not be able to
+   * show another seller's stock under this seller's heading.
+   */
+  storeId?: string;
 }
 
 export function ProductsIndexListing({
@@ -92,6 +107,7 @@ export function ProductsIndexListing({
   listingTypes = GENERIC_PRODUCT_LISTING_TYPES,
   typeTabs = PRODUCT_TYPE_FILTER_TABS,
   searchPlaceholder = "Search products...",
+  storeId: scopedStoreId,
 }: ProductsIndexListingProps) {
   const router = useRouter();
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
@@ -207,7 +223,7 @@ export function ProductsIndexListing({
     maxPrice: table.get(TABLE_KEYS.MAX_PRICE) ? Number(table.get(TABLE_KEYS.MAX_PRICE)) : undefined,
     condition: table.get(TABLE_KEYS.CONDITION) || undefined,
     brand: table.get(TABLE_KEYS.BRAND) || undefined,
-    storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
+    storeId: scopedStoreId || table.get(TABLE_KEYS.STORE_ID) || undefined,
     freeShipping: table.get(TABLE_KEYS.FREE_SHIPPING) === "true" ? true : undefined,
     // These three are in FILTER_KEYS (so they count toward the filter badge)
     // but were never put on the wire — the drawer sections were inert.

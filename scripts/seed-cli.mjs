@@ -193,7 +193,7 @@ const {
   categoriesSeedData, storesSeedData, sessionsSeedData,
   productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
-  productsArtSeedData, productsStickersSeedData,
+  productsArtSeedData, productsStickersSeedData, productsSparesSeedData,
   productsCatalogueSeedData,
   FRANCHISE_BY_CATEGORY_ROOT,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
@@ -501,6 +501,11 @@ const SEED_DATA_MAP = {
     // /stickers were permanently empty, and listingType=art|stickers returned 0.
     // Root Cause #58's family one layer down: added everywhere except the runner.
     ...(productsArtSeedData || []), ...(productsStickersSeedData || []),
+    // 🛑 BOTH sites, every time. This file's own header records 13 art/sticker
+    // fixtures that never reached the database because only the import was
+    // edited and this spread was not — the loader then wrote every OTHER
+    // product and reported success.
+    ...(productsSparesSeedData || []),
     // The 972 generated catalogue-filler listings (one per taxonomy leaf) —
     // see scripts/gen-catalogue-listings.mjs. This is what makes `products`
     // reproducible after a full wipe; without it the collection drops from

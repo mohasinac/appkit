@@ -120,6 +120,8 @@ export { SellerArtView } from "./SellerArtView";
 export type { SellerArtViewProps } from "./SellerArtView";
 export { SellerStickersView } from "./SellerStickersView";
 export type { SellerStickersViewProps } from "./SellerStickersView";
+export { SellerSparesView } from "./SellerSparesView";
+export type { SellerSparesViewProps } from "./SellerSparesView";
 export { SellerDigitalCodesView } from "./SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./SellerDigitalCodesView";
 export { SellerLiveView } from "./SellerLiveView";

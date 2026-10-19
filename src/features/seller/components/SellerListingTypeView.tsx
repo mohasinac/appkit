@@ -143,7 +143,8 @@ export type SellerListingTypeKey =
   | "stickers"
   | "classified"
   | "digital-code"
-  | "live";
+  | "live"
+  | "spares";
 
 export const SELLER_LISTING_TYPE_SPECS: Record<SellerListingTypeKey, SellerListingTypeSpec> = {
   art: {
@@ -172,6 +173,27 @@ export const SELLER_LISTING_TYPE_SPECS: Record<SellerListingTypeKey, SellerListi
       size: toStringValue((item.printMeta as { size?: string } | undefined)?.size, ""),
     }),
     extraColumns: [textCell("size", "Size")],
+  },
+
+  spares: {
+    editRoute: (id) => String(ROUTES.STORE.SPARES_EDIT(id)),
+    newRoute: String(ROUTES.STORE.SPARES_NEW),
+    createLabel: "List a Spare",
+    bulkKey: "spares",
+    deleteLabel: "Spare Listing",
+    searchPlaceholder: "Search spares by part or colour...",
+    emptyLabel: "No spares listed yet — list a part you have going spare",
+    /*
+     * Colourway, not size. Two listings of the same part code are told apart by
+     * COLOUR here — a red Cross Dranzer and a navy one are different objects to
+     * a buyer rebuilding a specific top, which is the user's own framing
+     * ("sell it to someone who wants it in the same colour"). `printMeta.size`
+     * is meaningless on a moulded component.
+     */
+    extraFields: (item) => ({
+      colourway: toStringValue(item.colourway, ""),
+    }),
+    extraColumns: [textCell("colourway", "Colourway")],
   },
 
   classified: {

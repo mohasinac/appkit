@@ -56,6 +56,8 @@ export { AdminArtView } from "./AdminArtView";
 export type { AdminArtViewProps } from "./AdminArtView";
 export { AdminStickersView } from "./AdminStickersView";
 export type { AdminStickersViewProps } from "./AdminStickersView";
+export { AdminSparesView } from "./AdminSparesView";
+export type { AdminSparesViewProps } from "./AdminSparesView";
 export { AdminGroupedListingsView } from "./AdminGroupedListingsView";
 export type { AdminGroupedListingsViewProps } from "./AdminGroupedListingsView";
 export { AdminCarouselGroupEditorView } from "./AdminCarouselGroupEditorView";

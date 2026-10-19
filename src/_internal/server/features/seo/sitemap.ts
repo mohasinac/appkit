@@ -166,6 +166,12 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.DIGITAL_CODES), "daily", 0.6),
     page(String(ROUTES.PUBLIC.LIVE), "hourly", 0.7),
     page(String(ROUTES.PUBLIC.ART), "weekly", 0.6),
+    /*
+     * `daily`, matching the other one-of-a-kind types rather than `/art`'s
+     * weekly: most spares are quantity 1, so the page turns over as fast as
+     * classifieds do.
+     */
+    page(String(ROUTES.PUBLIC.SPARES), "daily", 0.6),
     page(String(ROUTES.PUBLIC.FEES), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_PRE_ORDERS_WORK), "monthly", 0.4),

@@ -706,6 +706,7 @@ export const SELLER_BULK_ACTIONS = {
   live:           [ROW_ACTION_ID.DELETE],
   art:            [ROW_ACTION_ID.DELETE],
   stickers:       [ROW_ACTION_ID.DELETE],
+  spares:         [ROW_ACTION_ID.DELETE],
   auctions:       [ROW_ACTION_ID.DELETE],
   preOrders:      [ROW_ACTION_ID.DELETE],
   prizeDraws:     [ROW_ACTION_ID.DELETE],

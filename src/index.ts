@@ -257,6 +257,10 @@ export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./ui/components
 // Kbd — primitive for <kbd> (keyboard key affordance).
 export { Kbd } from "./ui/components/Kbd";
 export type { KbdProps, KbdSize, KbdTone } from "./ui/components/Kbd";
+// PendingValue — renders a value, or a visible [to be confirmed] marker when a
+// statutory disclosure field has not been decided yet.
+export { PendingValue } from "./ui/components/PendingValue";
+export type { PendingValueProps } from "./ui/components/PendingValue";
 // Quote — primitive for inline <q> + multi-line <blockquote> (via `block`).
 export { Quote } from "./ui/components/Quote";
 export type { QuoteProps, QuoteTone } from "./ui/components/Quote";
@@ -1385,8 +1389,14 @@ export { clearRateLimitStore } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// decryptBuffer - Helper for decrypt buffer (binary enc:v1: envelope).
+export { decryptBuffer } from "./security/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // decryptSecret - Helper for decrypt secret.
 export { decryptSecret } from "./security/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// encryptBuffer - Helper for encrypt buffer (binary enc:v1: envelope).
+export { encryptBuffer } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // encryptSecret - Helper for encrypt secret.
 export { encryptSecret } from "./security/index";
@@ -1405,6 +1415,9 @@ export { hasAnyPermission } from "./features/auth/permissions/constants";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // hasPermission - Model for has permission.
 export { hasPermission } from "./features/auth/permissions/constants";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// isBufferEncrypted - Shared export for is buffer encrypted.
+export { isBufferEncrypted } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // isSecretEncrypted - Shared export for is secret encrypted.
 export { isSecretEncrypted } from "./security/index";
@@ -1769,6 +1782,16 @@ export { recordAdminAction } from "./_internal/server/features/audit-log/actions
 export type { RecordAdminActionInput } from "./_internal/server/features/audit-log/actions";
 export { AdminAuditActionValues, ADMIN_AUDIT_LOG_FIELDS, ADMIN_AUDIT_LOG_COLLECTION } from "./features/audit-log/schemas/firestore";
 export type { AdminAuditAction, AdminAuditLogDocument } from "./features/audit-log/schemas/firestore";
+export {
+  BusinessDocumentKindValues,
+  ALL_BUSINESS_DOCUMENT_KINDS,
+  BUSINESS_DOCUMENT_KIND_LABELS,
+  BUSINESS_DOCUMENT_FIELDS,
+  BUSINESS_DOCUMENTS_COLLECTION,
+  BUSINESS_DOCUMENTS_STORAGE_PREFIX,
+  BUSINESS_DOCUMENT_ALLOWED_TYPES,
+} from "./features/business-documents/schemas/firestore";
+export type { BusinessDocumentKind, BusinessDocumentDocument } from "./features/business-documents/schemas/firestore";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // notificationRepository - Shared export for notification repository.
 export { notificationRepository } from "./repositories/index";
@@ -2146,6 +2169,16 @@ export { productsLiveItemsSeedData } from "./seed/index";
 export { productsArtSeedData } from "./seed/index";
 // productsStickersSeedData - Seed data for stickers product listings (EMI/art-stickers session).
 export { productsStickersSeedData } from "./seed/index";
+/*
+ * productsSparesSeedData — loose components off disassembled items.
+ *
+ * 🛑 This OUTER barrel export is load-bearing and is the one most likely to be
+ * skipped: `seed-cli.mjs` imports the BARE `@mohasinac/appkit` package, so it
+ * resolves through here and NOT through `seed/index.ts`. Export from the inner
+ * barrel only and the symbol exists, TypeScript is happy, and the loader still
+ * prints `spares — no seed data, skipping` and exits 0 (Root Cause #90).
+ */
+export { productsSparesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
@@ -3407,6 +3440,7 @@ export { AdminLiveView } from "./features/admin/index";
 // EMI/art-stickers session — admin listing views for art / stickers.
 export { AdminArtView } from "./features/admin/index";
 export { AdminStickersView } from "./features/admin/index";
+export { AdminSparesView } from "./features/admin/index";
 export type { AdminPrizeDrawsViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
@@ -9889,6 +9923,8 @@ export { SellerArtView } from "./features/seller/components/SellerArtView";
 export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
 export { SellerStickersView } from "./features/seller/components/SellerStickersView";
 export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
+export { SellerSparesView } from "./features/seller/components/SellerSparesView";
+export type { SellerSparesViewProps } from "./features/seller/components/SellerSparesView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";

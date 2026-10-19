@@ -34,6 +34,7 @@ import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data
 import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
 import { productsArtSeedData } from "./products-art-seed-data";
 import { productsStickersSeedData } from "./products-stickers-seed-data";
+import { productsSparesSeedData } from "./products-spares-seed-data";
 import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
@@ -144,6 +145,7 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsLiveItemsSeedData),
       ...asArr(productsArtSeedData),
       ...asArr(productsStickersSeedData),
+      ...asArr(productsSparesSeedData),
     ].map((p) => ({
       ...p,
       type:

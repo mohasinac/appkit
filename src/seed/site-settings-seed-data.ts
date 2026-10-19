@@ -316,6 +316,14 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     shipping: "",
     ethics: "",
     codeOfConduct: "",
+    /*
+     * Added 2026-10-19 alongside the two new `PolicyPageView` keys. Empty like
+     * every sibling: the seed deliberately ships no legal prose — the admin
+     * Legal tab is the author, and a seeded placeholder would render as real
+     * policy text on an indexed public page.
+     */
+    cancellation: "",
+    grievance: "",
   },
   shipping: {
     estimatedDays: 7,
