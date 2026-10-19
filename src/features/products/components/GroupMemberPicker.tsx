@@ -44,7 +44,7 @@ import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { normalizeListingType } from "../utils/listing-type";
-import { resolveGroupMemberImage } from "./ShowGroupSection";
+import { resolveGroupMemberImage } from "../utils/group-member-image";
 import {
   checkGroupRules,
   describeGroupRules,

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Div, PricesOnly, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker } from "./GroupMemberPicker";
+import { resolveGroupMemberImage } from "../utils/group-member-image";
 import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
@@ -60,26 +61,6 @@ interface Props {
 function memberHref(m: GroupMember): string {
   const slug = m.slug ?? m.id;
   return pluginFor(normalizeListingType(m)).detailRoute(slug);
-}
-
-/**
- * The member's thumbnail, from whichever shape the caller supplied.
- *
- * 🛑 `image` MUST be tried first. `toPublicGroupMember` is an ALLOW-LIST
- * projection that emits the singular `image` (`images[0].url ?? mainImage`)
- * and no `images[]` array at all — so a component reading only `images[0]`
- * gets `undefined` for every member served by the public endpoint and renders
- * a placeholder tile. That was live on every product-group page: all seven
- * BX-53 members showed a grey box while their images sat in Storage serving
- * HTTP 200. Nothing errors, because an empty `src` is a legal `MediaImage`.
- *
- * The `images[0]` fallback stays for callers that pass a raw document rather
- * than the projection. Shared with `GroupMemberPicker`'s `memberImage`, which
- * had the correct order all along — one rule reachable by copy-paste is one
- * that gets copied wrong (Root Cause #75), so this is the only definition.
- */
-export function resolveGroupMemberImage(m: { image?: string; images?: string[] }): string {
-  return m.image ?? m.images?.[0] ?? "";
 }
 
 function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: boolean }) {
