@@ -21,24 +21,31 @@
  * section type with a renderer and zero seeded rows is the same class of gap,
  * just silent rather than colliding.
  *
- * ORDER follows current marketplace-homepage research rather than the previous
- * arbitrary arrangement: hero → trust → orient (categories, systems matrix) →
- * shop (products, auctions, pre-orders, bundles) → supply (stores) → social
- * proof (reviews) → engage (events, raffles, prize draws) → editorial (blog) →
- * convert (seller banner, newsletter) → reassure (stats, security, community,
- * FAQ, brands).
+ * ORDER: hero → SHOP (products, auctions) → carousel → trust → orient
+ * (categories, systems matrix) → shop cont. (pre-orders, bundles) → supply
+ * (stores) → social proof (reviews) → engage (events, raffles, prize draws) →
+ * editorial (blog) → convert (seller banner, newsletter) → reassure (stats,
+ * security, community, FAQ, brands).
  *
- * The systems matrix sits at 5, between the generation tiles and the first
- * product rail, because that is where the measured leader puts it: on
- * worldhobbyshop "Browse Beyblade Systems & Series" (25 text links) follows
- * "Shop Beyblades by Generation" (6 image tiles) and precedes the one product
- * rail — taxonomy routing before merchandising. See
+ * 🛑 Products (2) and auctions (3) were lifted above the carousel on
+ * 2026-10-20 at the owner's request — real merchandise directly under the
+ * hero, promotions below it. That OVERRIDES the research arrangement this
+ * header used to describe (trust → orient → shop), so do not "restore" the
+ * old order on the strength of the paragraphs below; they explain the
+ * reasoning for the sections that are still in a research-driven position,
+ * not a mandate for the two that were deliberately moved.
+ *
+ * The systems matrix still sits immediately after the generation tiles (6 → 7)
+ * because that is where the measured leader puts it: on worldhobbyshop
+ * "Browse Beyblade Systems & Series" (25 text links) follows "Shop Beyblades
+ * by Generation" (6 image tiles) — taxonomy routing stays together. See
  * docs/research/competitor-crawl-2026-10/layout.md.
  *
- * Baymard's finding drives the top: a static hero outperforms a carousel, and
- * the one documented carousel win came from demoting it BELOW a static hero.
- * So `welcome` is first and owns the page's single <h1>; `carousel` sits under
- * it and its slide titles render as <h2>.
+ * Baymard's finding still drives the hero: a static hero outperforms a
+ * carousel, and the one documented carousel win came from demoting it BELOW a
+ * static hero. So `welcome` is first and owns the page's single <h1>; the
+ * `carousel` is now demoted further still, under the first two product rails,
+ * and its slide titles render as <h2>.
  *
  * COPY IS CATALOGUE-NEUTRAL on purpose. "Shop by Category" stays correct
  * however the catalogue changes; "Burst & X Series" goes stale the moment it
@@ -95,13 +102,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ---- 2. Promo carousel ---------------------------------------------------
+  // ---- 4. Promo carousel ---------------------------------------------------
   // "medium" rather than "tall": it now sits UNDER a full hero, so a
   // viewport-height band would push everything else below the fold.
   {
     id: "section-hero-carousel",
     type: "carousel",
-    order: 2,
+    order: 4,
     enabled: true,
     config: {
       title: "Featured promotions",
@@ -115,13 +122,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ---- 3. Trust bar --------------------------------------------------------
-  // Moved up from 4. Research: ~80% of attention is above the fold and the
-  // first 3–4 trust elements carry nearly all of the lift.
+  // ---- 5. Trust bar --------------------------------------------------------
+  // Research: ~80% of attention is above the fold and the first 3–4 trust
+  // elements carry nearly all of the lift.
   {
     id: "section-trust-indicators",
     type: "trust-indicators",
-    order: 3,
+    order: 5,
     enabled: true,
     config: {
       title: "Why buyers trust us",
@@ -156,12 +163,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(20),
   },
 
-  // ---- 4. Orient: categories ----------------------------------------------
+  // ---- 6. Orient: categories ----------------------------------------------
   // Baymard's top homepage guideline, and the main internal-linking surface.
   {
     id: "section-collectibles-categories",
     type: "categories",
-    order: 4,
+    order: 6,
     enabled: true,
     config: {
       title: "Shop by Category",
@@ -182,13 +189,17 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(10),
   },
 
-  // ---- 5–8. Shop -----------------------------------------------------------
+  // ---- 2–3, 8–9. Shop ------------------------------------------------------
+  // Products (2) and auctions (3) sit directly under the hero, ABOVE the
+  // carousel — a merchandising-first top of page, asked for 2026-10-20.
+  // Pre-orders (8) and bundles (9) stay below the orientation band.
+  //
   // maxItems stays <= 12 everywhere: SSR supplies exactly 12 via
   // getFeatured*(12), so a larger cap would promise rows that cannot fill.
   {
     id: "section-featured-products",
     type: "products",
-    order: 6,
+    order: 2,
     enabled: true,
     config: {
       title: "Featured Products",
@@ -220,7 +231,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-live-auctions",
     type: "auctions",
-    order: 7,
+    order: 3,
     enabled: true,
     config: {
       title: "Live Auctions",
@@ -664,7 +675,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-systems-matrix",
     type: "custom-cards",
-    order: 5,
+    order: 7,
     enabled: true,
     config: {
       title: "Every system, every part family",
