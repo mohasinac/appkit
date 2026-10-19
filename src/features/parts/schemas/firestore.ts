@@ -434,6 +434,18 @@ export interface PartRatings {
   weight?: number;
   speed?: number;
   burst?: number;
+  /*
+   * 🛑 These five are on a DIFFERENT SCALE from the six above. `Bit - Accel`
+   * reads Dash 40 and Burst resistance 80 — 0-100 — while attack/defense/etc.
+   * are 0-6. They are stored as stated rather than normalised: rescaling would
+   * invent precision the source never gave, and a value is still comparable
+   * against other parts of the same slot, which is what a rating is for.
+   */
+  dash?: number;
+  burstResistance?: number;
+  power?: number;
+  height?: number;
+  runTime?: number;
 }
 
 /**
@@ -449,6 +461,18 @@ export interface PartWboLegality {
   burstGt?: boolean;
   burstLimited?: boolean;
   burstClassic?: boolean;
+  /*
+   * 🛑 Reading only the Burst four left every Beyblade X part reporting NO
+   * legality — 286 pages — which renders identically to "not tournament
+   * legal". Adding these took coverage from 999 rows to 1,380.
+   */
+  xStandard?: boolean;
+  xMasters?: boolean;
+  xOpen?: boolean;
+  mfbStandard?: boolean;
+  mfbLimited?: boolean;
+  mfbZeroG?: boolean;
+  mfb4d?: boolean;
 }
 
 export interface PartGlossaryDocument extends BaseDocument {
@@ -556,8 +580,33 @@ export interface PartGlossaryDocument extends BaseDocument {
    * states it per part, so absence is "not stated", not zero.
    */
   ratings?: PartRatings;
-  /** WBO format legality. Present on 999 rows; an unstated format is absent. */
+  /** WBO format legality across 11 formats; an unstated format is absent. */
   wboLegality?: PartWboLegality;
+  /**
+   * Other names for this exact part — the community abbreviation (`Armor Tip
+   * - Adventure` is `Ad`) and the other vendor's name. On 1,072 of 2,490 rows.
+   * Feeds search, so a buyer can find a part by the code printed on it.
+   */
+  aka?: string[];
+  /**
+   * Hasbro's own product code, a SEPARATE field from `productCodes`. On 309
+   * rows, and it is the Hasbro <-> Takara-Tomy equivalence stated outright.
+   */
+  hasbroCode?: string;
+  /** Attack / Defense / Stamina / Balance, per part. 793 rows. */
+  partType?: string;
+  /** Right-Spin / Left-Spin / Dual. 756 rows. */
+  spinDirection?: string;
+  /** Beyblade X's attribute label — "Sky" and siblings. 29 rows. */
+  element?: string;
+  /**
+   * The character this part belongs to in the story — `Bit Chip - Black
+   * Dranzer` is Kai Hiwatari's. Only 27 rows, but it is the sole place a PART
+   * is tied to a character.
+   */
+  owner?: string;
+  /** The episode this part appeared in. 22 rows. */
+  appearAnime?: string;
 
   /** `/media/<slug>`. 🛑 Never a raw Storage host URL. */
   image?: string;
