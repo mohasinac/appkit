@@ -14,4 +14,18 @@ export const bundleRule: CategoryCheckoutRule = {
   cartEligible: false, // direct-checkout-only; addBundleToCart has been removed
   orderType: "standard", // bundle orders resolve to standard orderType
   requiresShippingAddress: true,
+  /*
+   * 🛑 cod + cash, NOT emi. A bundle is priced BELOW the sum of its members —
+   * that discount is the whole product — so a no-show on delivery costs the
+   * seller several items at once, and the bundle has meanwhile been held out of
+   * every member's own availability. EMI is confirmed-at-order financing rather
+   * than a deferred payment, so it carries none of that and stays available.
+   *
+   * 🛑 Honoured by `assertPaymentMethodAllowed`, NOT by `runSyncPreflight` —
+   * which skips multi-member lines, and a bundle line is always one. A value
+   * here relying on preflight would be a silent no-op.
+   */
+  blockedPaymentMethods: ["cod", "cash"],
+  blockedPaymentMessage:
+    "Bundles cannot be paid for on delivery or in cash — a bundle is priced below the sum of its parts and is reserved when you order.",
 };

@@ -14,6 +14,18 @@ export {
   getSplitKey,
   runSyncPreflight,
 } from "./_registry";
+/*
+ * The payment gate is a SEPARATE module from `_registry`, on purpose: it is the
+ * one rule check that cannot be expressed as a per-listing-type pass over
+ * single-member lines, which is all `runSyncPreflight` can see. Keeping them
+ * apart is what stops someone folding it back into preflight, where it would
+ * silently stop covering bundles and grouped lines.
+ */
+export {
+  assertPaymentMethodAllowed,
+  blockedMethodsForCart,
+  type BlockedMethod,
+} from "./payment-gate";
 export {
   CART_MAX_ITEMS,
   CHECKOUT_MAX_ORDERS_PER_TX,

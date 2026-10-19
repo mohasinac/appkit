@@ -86,8 +86,20 @@ export interface ListingCheckoutRule {
    * all methods allowed. Prize-draw blocks cod/cash/emi — winner assignment
    * depends on the order's payment actually being confirmed, which those
    * deferred-payment methods don't guarantee.
+   *
+   * 🛑 Enforced by `assertPaymentMethodAllowed`, NOT by `runSyncPreflight`. A
+   * rule may only trust preflight for a single-member line; a type that can
+   * appear inside a bundle or a grouped selection is skipped there entirely.
+   * The gate runs over every member of every line, once, before the
+   * transaction.
    */
   blockedPaymentMethods?: CheckoutPaymentMethod[];
+  /**
+   * The refusal, in this type's own words. Optional — the gate generates a
+   * correct sentence without it. Supply one when the REASON is worth saying,
+   * as prize-draw's does.
+   */
+  blockedPaymentMessage?: string;
 
   /**
    * Return the grouping key used by the order splitter. Items with the same
@@ -164,4 +176,18 @@ export interface CategoryCheckoutRule {
   cartEligible: boolean;
   orderType: OrderType;
   requiresShippingAddress: boolean;
+  /**
+   * Payment methods this category cannot be paid with.
+   *
+   * 🛑 NOT enforced by `runSyncPreflight`. That function skips multi-member
+   * lines by design, and a bundle is always one — so a value here would be set,
+   * reviewed, and never read. `assertPaymentMethodAllowed` is what honours it,
+   * and it runs cart-wide before the transaction.
+   */
+  blockedPaymentMethods?: CheckoutPaymentMethod[];
+  /**
+   * The refusal, in this category's own words. Optional — the gate generates a
+   * correct sentence without it. Supply one when the REASON is worth saying.
+   */
+  blockedPaymentMessage?: string;
 }

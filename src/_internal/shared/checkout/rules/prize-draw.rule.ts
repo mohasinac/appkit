@@ -21,6 +21,19 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  */
 const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "cash", "emi"];
 
+/**
+ * The refusal, kept VERBATIM when this check moved out of `preflightChecks`
+ * into `assertPaymentMethodAllowed`.
+ *
+ * 🛑 The gate can generate a correct sentence on its own, and a generated one
+ * would have been a regression here: this wording names the REASON (winner
+ * assignment waits on confirmed payment) rather than just the refusal, and the
+ * reason is the thing a buyer needs in order to pick a different method rather
+ * than abandon the entry.
+ */
+const PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE =
+  "Prize-draw entries can only be paid by manual bank/UPI transfer or PhonePe — cash on delivery and EMI are not available for this listing type.";
+
 export const prizeDrawRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
   orderType: "prize-draw",
@@ -29,6 +42,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
   maxLinesPerOrder: PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },
   blockedPaymentMethods: PRIZE_DRAW_BLOCKED_PAYMENT_METHODS,
+  blockedPaymentMessage: PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE,
 
   splitKey: (item: CartItemDocument) => `prize-draw:${item.itemId}`,
 
@@ -55,18 +69,23 @@ export const prizeDrawRule: ListingCheckoutRule = {
     return chunks;
   },
 
-  preflightChecks: (pairs: CartItemProductPair[], paymentMethod?: CheckoutPaymentMethod): void => {
-    if (paymentMethod && PRIZE_DRAW_BLOCKED_PAYMENT_METHODS.includes(paymentMethod)) {
-      const hasPrizeDraw = pairs.some((p) => p.product.listingType === "prize-draw");
-      if (hasPrizeDraw) {
-        throw Object.assign(
-          new ValidationError(
-            "Prize-draw entries can only be paid by manual bank/UPI transfer or PhonePe — cash on delivery and EMI are not available for this listing type.",
-          ),
-          { code: "PRIZE_DRAW_PAYMENT_METHOD_BLOCKED" },
-        );
-      }
-    }
+  preflightChecks: (pairs: CartItemProductPair[]): void => {
+    /*
+     * The payment-method check USED to live here and is now in
+     * `assertPaymentMethodAllowed`, which runs cart-wide before the
+     * transaction.
+     *
+     * 🛑 This is not a tidy-up. The copy here could only ever see
+     * single-member lines — `runSyncPreflight` skips a bundle or grouped line,
+     * and its online call site reduces each line to its FIRST member — so a
+     * prize-draw entry reachable through a grouped selection was never
+     * checked. Re-adding a copy here would be a second answer to one question
+     * (Root Cause #75), and the one that is easier to find is the one that
+     * cannot see every line.
+     *
+     * `blockedPaymentMethods` + `blockedPaymentMessage` on this rule are what
+     * the gate reads, so the wording is unchanged.
+     */
     for (const { item, product } of pairs) {
       if (product.listingType !== "prize-draw") continue;
       const max = product.prizeMaxEntries ?? 0;

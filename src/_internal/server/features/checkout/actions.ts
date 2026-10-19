@@ -107,6 +107,7 @@ import type { ListingType } from "../../../../features/products/types/index";
 import {
   getListingRule,
   runSyncPreflight,
+  assertPaymentMethodAllowed,
 } from "../../../shared/checkout/rules";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
@@ -1306,6 +1307,24 @@ export async function createCheckoutOrderAction(
       );
     }
   }
+  /*
+   * Payment-method gate — before `enforceMaxPerUserForCart`, which runs count
+   * queries, because this answer needs no reads at all.
+   *
+   * 🛑 `preTxProductById` is the right map and `preTxPairs` below is NOT: that
+   * pairing keeps only `getCartItemMemberIds(item)[0]`, so a bundle or grouped
+   * line contributes one member and the rest are invisible. The gate walks
+   * every member of every line against this map.
+   *
+   * 🛑 This ONE call site is complete coverage, and that is worth stating so
+   * nobody adds a second. Only `cod`/`cash`/`emi` are ever blocked (auction,
+   * bundle, prize-draw) and all three arrive here; the Razorpay path is always
+   * `"online"`, which no rule blocks — and a throw there would land AFTER
+   * capture, taking the buyer's money and then refusing the order. Pre-capture
+   * is the only safe place for this, and the method is decided here.
+   */
+  assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod);
+
   const preTxPairs = cartItems
     .map((item): { item: CartItemDocument; product: ProductDocument } | null => {
       const [firstMember] = getCartItemMemberIds(item);
