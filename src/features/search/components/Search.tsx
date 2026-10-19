@@ -13,6 +13,17 @@ import type { LucideIcon } from "lucide-react";
 import { Button, Div, Input, Li, Row, Select, Span, Stack, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
 import type { NavSuggestionRecord } from "../hooks/useNavSuggestions";
+import { useSiteSearch } from "../hooks/useSiteSearch";
+
+/**
+ * The dropdown renders no group headings, so it needs no labels — but
+ * `useSiteSearch` requires one because `/search` does.
+ *
+ * 🛑 Declared at MODULE scope, not inline. It is a `useMemo` dependency
+ * inside the hook, and an inline arrow is a new identity on every render,
+ * which would re-run the scan on every keystroke of an unchanged query.
+ */
+const identityLabel = (typeKey: string) => typeKey;
 
 export type SearchResourceType =
   | "products"
@@ -80,6 +91,17 @@ export interface SearchProps {
   resourceTypes?: SearchResourceTypeOption[];
   defaultResourceType?: SearchResourceType;
   storageKey?: string;
+  /**
+   * `siteSettings.search?.indexEnabled`. Read as `!== false`, so an absent
+   * settings object leaves the local index in play.
+   *
+   * When the index answers, the typeahead spends ZERO network requests per
+   * keystroke and spans all 21 indexed types instead of the four
+   * `/api/search/suggestions` can produce. When it is off or has failed, the
+   * component falls back to that endpoint unchanged — which is why
+   * `useNavSuggestions` is still called rather than deleted.
+   */
+  searchIndexEnabled?: boolean;
 }
 
 const DEFAULT_TYPE_ICONS: Record<NavSuggestionRecord["type"], string> = {
@@ -164,6 +186,7 @@ export function Search({
   resourceTypes,
   defaultResourceType = "products",
   storageKey = "letitrip_search_type",
+  searchIndexEnabled,
 }: SearchProps) {
   const isInlineMode = value !== undefined;
   const [query, setQuery] = useState(isInlineMode ? value : "");
@@ -173,8 +196,35 @@ export function Search({
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inlineBlurRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { suggestions, isLoading: suggestionsLoading } =
-    useNavSuggestions(query, selectedType);
+  /*
+   * 🛑 BOTH hooks are called unconditionally — React's rules leave no choice,
+   * and it costs nothing here because each one is self-gating.
+   *
+   * `useSiteSearch` is gated on `active`: it issues no request until the user
+   * focuses or types, and then exactly one, for the whole page session.
+   * `useNavSuggestions` is gated on its own 3-character minimum AND on
+   * `remoteQuery` below, which is blank whenever the index is answering — so
+   * the fallback path makes no network request at all in the normal case.
+   */
+  const [searchIntent, setSearchIntent] = useState(false);
+  const local = useSiteSearch(query, {
+    active: searchIntent,
+    indexEnabled: searchIndexEnabled,
+    label: identityLabel,
+  });
+  /*
+   * The index is authoritative the moment it is `ready`. `loading` must NOT
+   * fall through to the remote path: that would fire the very round trips
+   * this replaces, for the one second before the local answer arrives, on
+   * every first keystroke.
+   */
+  const useLocal = local.status === "ready";
+  const remoteQuery = useLocal || local.status === "loading" ? "" : query;
+  const { suggestions: remoteSuggestions, isLoading: remoteLoading } =
+    useNavSuggestions(remoteQuery, selectedType);
+
+  const suggestions = useLocal ? local.suggestions : remoteSuggestions;
+  const suggestionsLoading = useLocal ? false : local.status === "loading" || remoteLoading;
 
   const typeIcons = { ...DEFAULT_TYPE_ICONS, ...suggestionTypeIcons };
   const typeBadges = { ...DEFAULT_TYPE_BADGES, ...suggestionTypeBadges };
@@ -231,6 +281,7 @@ export function Search({
   }, [isOpen, isInlineMode, query, suggestions.length]);
 
   const handleInlineChange = (nextValue: string) => {
+    setSearchIntent(true);
     setQuery(nextValue);
     if (!deferred) {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -405,6 +456,10 @@ export function Search({
             onChange={(event) => handleInlineChange(event.target.value)}
             onKeyDown={handleInlineKeyDown}
             onFocus={() => {
+              // Focus is the earliest honest signal of intent, and it buys
+              // the ~900 ms the artifact takes to land before the first
+              // keystroke needs an answer.
+              setSearchIntent(true);
               if (inlineBlurRef.current) clearTimeout(inlineBlurRef.current);
               setIsInlineOpen(true);
             }}
@@ -657,7 +712,11 @@ export function Search({
               type="search"
               placeholder={placeholder ?? labels.placeholder}
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onFocus={() => setSearchIntent(true)}
+              onChange={(event) => {
+                setSearchIntent(true);
+                setQuery(event.target.value);
+              }}
               onKeyDown={handleOverlayKeyDown}
               className="w-full rounded-lg border bg-[var(--appkit-color-surface)] text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
             />

@@ -62,6 +62,7 @@ import {
   facetsOf,
   hrefFor,
   REC_DETAIL,
+  REC_FACETS,
   REC_TITLE,
   REC_TYPE,
   type SearchIndexArtifact,
@@ -89,6 +90,17 @@ export interface ResolvedEntity {
   readonly detail: string;
   readonly href: string;
   readonly score: number;
+  /**
+   * The record's raw compact facet string (`"lt:auction|br:takara-tomy"`), or
+   * `""`. Carried on the hit so a facet rail can count what the CURRENT result
+   * set contains without going back to the artifact and re-finding each row.
+   *
+   * 🛑 Raw rather than parsed, on purpose. Parsing is `facetsOf(rec)` and it
+   * allocates an array per record; a rail counts over every hit on every
+   * keystroke, and most queries never render one. The consumer parses the
+   * handful it actually needs.
+   */
+  readonly facets: string;
 }
 
 export interface ResolveOptions {
@@ -242,6 +254,7 @@ export function searchIndex(
         title: p.rec[REC_TITLE],
         detail: p.rec[REC_DETAIL],
         href: hrefFor(artifact, p.rec),
+        facets: p.rec[REC_FACETS] ?? "",
         // An alias hit is a weaker signal than a direct one and must not
         // outrank it when both are present in a later, wider query.
         score: aliasPass ? score - S_ALIAS : score,

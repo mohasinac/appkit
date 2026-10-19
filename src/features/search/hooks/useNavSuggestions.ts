@@ -6,6 +6,19 @@ import { SEARCH_ENDPOINTS } from "../../../constants/api-endpoints";
 export interface NavSuggestionRecord {
   objectID: string;
   type: "page" | "category" | "blog" | "event" | "product";
+  /**
+   * The real index type key (`auction`, `part`, `faq`, `scammer`, …) when the
+   * row came from the local search artifact, which spans 21 types.
+   *
+   * 🛑 `type` above stays a 5-value union on purpose. It is what the
+   * dropdown's `DEFAULT_TYPE_ICONS` / `DEFAULT_TYPE_BADGES` maps switch on,
+   * so widening it would compile everywhere and render 16 types unstyled
+   * (Root Cause #20). `useSiteSearch.suggestionTypeFor` collapses the key
+   * into that union for presentation and puts the precise one here, so a
+   * badge can be specific where a map entry exists without any caller
+   * breaking where one does not.
+   */
+  typeKey?: string;
   title: string;
   subtitle?: string;
   url: string;

@@ -7992,6 +7992,8 @@ export { useSearch } from "./features/search/index";
 // [CLIENT]-Browser only. Fetches the public search artifact once per page session.
 // Exported from the defining module, not the feature barrel — see client.ts.
 export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
+export { useSiteSearch } from "./features/search/hooks/useSiteSearch";
+export type { UseSiteSearchOptions, UseSiteSearchResult } from "./features/search/hooks/useSiteSearch";
 export type {
   SearchIndexState,
   SearchIndexStatus,

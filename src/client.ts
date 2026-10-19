@@ -622,6 +622,8 @@ export type { SearchViewProps } from "./features/search/index";
  * fetch per page session" guarantee quietly becomes two.
  */
 export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
+export { useSiteSearch } from "./features/search/hooks/useSiteSearch";
+export type { UseSiteSearchOptions, UseSiteSearchResult } from "./features/search/hooks/useSiteSearch";
 export type {
   SearchIndexState,
   SearchIndexStatus,
