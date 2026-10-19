@@ -275,6 +275,54 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ...group("buying", "Buying", [
     {
       /*
+       * Part Two B/C/D/E — spares, made-to-order, promoted sticker parts and
+       * the group discount, all together on the one page a buyer actually
+       * uses. Each case is an explicit BEFORE -> AFTER: a spare page returning
+       * 200 with plausible cards is not evidence any of this works.
+       */
+      pageKey: "spares-and-groups",
+      pageLabel: "Spares browse, made-to-order, and group selections",
+      href: "/spares",
+      cases: [
+        {
+          key: "spares-not-in-general-catalogue",
+          label: "A spare does NOT appear on /products, but does appear on /spares",
+          description:
+            "BEFORE: there was no tenth listing type. AFTER: open /products and search for a known spare's title (e.g. \"Cross Dranzer\") — it must NOT appear, because `spares` sets `inGeneralCatalogue: false`. The same title DOES appear on /spares. If it appears on both, the exclusion broke; if it appears on neither, the nav/page wiring broke.",
+        },
+        {
+          key: "spares-nav-entry-present",
+          label: "The main nav's Products dropdown has a \"Spares\" child linking to /spares",
+        },
+        {
+          key: "made-to-order-buyable-at-zero-stock",
+          label: "A made-to-order listing at zero stock is buyable and says \"Made to order\", never \"Out of Stock\"",
+          description:
+            "Open the seeded \"Custom Beyblade Sticker Sheet — Print on Demand\" (stockQuantity 0, madeToOrder true). It must show \"Made to order — printed when you order\" rather than an Out of Stock badge, Add to Cart must work, and checkout must complete. This is the exact case C exists for: stock must gate nothing on this listing.",
+          href: "/products/sticker-beyblade-custom-print-on-demand",
+        },
+        {
+          key: "group-picker-shows-rules-before-choosing",
+          label: "A group with selection rules states them BEFORE the buyer picks anything",
+          description:
+            "Open the seeded \"Burst & X Attackers You Might Like\" group (via one of its member products' Group section). The picker must show its rules (min 2, max 3, max 2 of any one, 10% off) as text near the top — not only as a refusal after submitting.",
+        },
+        {
+          key: "group-picker-blocks-and-explains-invalid-selection",
+          label: "Picking an invalid combination (e.g. only 1 item, or 3 of one item) shows the reason and disables Add",
+          description:
+            "On the same group, select only 1 item: the Add button must be disabled and a message naming the rule must appear (\"Pick at least 2…\"). Select 3 of one item: a different message naming the per-item cap must appear. Fixing the selection must re-enable Add without a page reload.",
+        },
+        {
+          key: "group-discount-applied-and-shown",
+          label: "The group discount is shown on the picker AND the cart line is actually discounted by that percentage",
+          description:
+            "Select a valid combination (e.g. 2 different items) on the 10%-off group and note the total shown in the picker. Add to cart, then open the cart and the checkout review: the line total must be 10% below the sum of the two items' individual prices, to the paisa, in all three places (picker, cart, checkout).",
+        },
+      ],
+    },
+    {
+      /*
        * The post-purchase money surface. `/user/orders/[id]/` has five
        * subroutes — cancel, return, track, invoice, payment — and before
        * 2026-09-14 only `track` had a single case anywhere in the catalogue.
@@ -2329,6 +2377,42 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
   ]),
 
   ...group("selling", "Selling", [
+    {
+      /*
+       * Part Two B/E — the seller side of spares, and the shared group-stock
+       * editor. "Stock is independent per listing" is the whole premise, so
+       * the editor-save-and-reload round trip is what actually proves that —
+       * a shared pool bug would show up exactly here, as one listing's stock
+       * silently changing another's.
+       */
+      pageKey: "spares-seller-and-group-editing",
+      pageLabel: "Seller spares dashboard and group stock/rules editing",
+      href: "/store/spares",
+      cases: [
+        {
+          key: "seller-can-list-a-spare",
+          label: "A seller can create, publish and see a spare on their own /store/spares list",
+        },
+        {
+          key: "group-stock-edit-is-independent",
+          label: "Editing one group member's stock does NOT change any other member's stock",
+          description:
+            "Open a group parent's editor, note two children's stock figures, change ONLY one of them in the shared stock editor, save, reload. The edited child shows the new figure; the other child is UNCHANGED. This is the premise the whole feature rests on — a shared pool would fail exactly this check.",
+        },
+        {
+          key: "group-rules-save-and-reload",
+          label: "Saved group rules (min/max/per-item cap/discount) survive a reload and reach the public picker",
+          description:
+            "In the group parent's editor, set min/max/per-item/discount to new values, save, reload the editor — the same values must still be there. Then open the group's public picker (as a buyer) and confirm the NEW rule text is what shows, not the old one.",
+        },
+        {
+          key: "group-stock-partial-failure-reported",
+          label: "Saving group stock for a member no longer in the group reports it, without losing the other saved rows",
+          description:
+            "Unlink a child from a group in one tab, then (without reloading) try to save that same child's stock from a second tab holding the stale member list. The response must name that row as rejected while the OTHER rows in the same save still succeed — not a blanket failure.",
+        },
+      ],
+    },
     {
       /*
        * The UPDATE path. The create path has 57 cases on /store/products/new
@@ -7548,6 +7632,39 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "buyer-redirected", label: "A signed-in buyer is redirected and sees no Tools entry for it" },
           { key: "guest-redirected", label: "A signed-out visitor is redirected; /tools itself is unaffected" },
           { key: "storage-meter-honest", label: "The storage meter reports object COUNT beside bytes, and says when it truncated" },
+        ],
+      },
+      {
+        /*
+         * Part Two D — promoting a traced, accepted, promoted-to-full-res
+         * sheet into real marketplace listings. Distinct from the tracer's
+         * own "promote" (run -> sheet, full-res pixels); this is sheet ->
+         * marketplace (real products). Needs a real traced sheet to reach, so
+         * these cases follow the tracer's own happy path rather than
+         * standing alone.
+         */
+        pageKey: "sticker-promote-to-listings",
+        pageLabel: "Promoting a sheet to real listings",
+        href: "/tools/sticker-tracer",
+        cases: [
+          {
+            key: "promote-creates-one-group",
+            label: "Promoting a sheet creates one parent listing plus one child per UNIQUE part, all in one group",
+            description:
+              "On a sheet with at least one part marked a duplicate of another, promote it to listings. The group must contain the parent plus exactly the UNIQUE parts — a duplicate part must NOT get its own listing — and the picker on the parent's product page must show every member, not just one (this is exactly the `linkChildToGroup` stale-append bug: linking N children in a loop used to leave only one).",
+          },
+          {
+            key: "promoted-part-image-watermarked",
+            label: "A promoted part's marketplace image is watermarked; the admin's original download is NOT",
+            description:
+              "Open the promoted CHILD listing's public page and note its image carries a visible watermark. Then, from the tracer's own UI, download that same part's original — it must be clean, with no watermark. Same pixels, same object, two different responses: that is the point.",
+          },
+          {
+            key: "promote-refuses-before-full-res-render",
+            label: "Promoting a sheet that has not been accepted-and-rendered is refused, naming the fix",
+            description:
+              "Attempt to promote a sheet whose active run has not had \"Accept & render\" run on it (or try on a fresh trace with no promoted run). The action must refuse with a message naming the required step (accept/render the run first) — not create partial listings.",
+          },
         ],
       },
     ],

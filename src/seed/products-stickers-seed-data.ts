@@ -268,6 +268,58 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
       ["stickers", "sold-out"],
     ]),
   } as unknown as Partial<ProductDocument>,
+  {
+    /*
+     * Part Two C — the one seeded `madeToOrder: true` fixture. Print-on-demand
+     * is the case that flag exists for: this sheet is printed when ordered
+     * rather than held in a finite run, so `stockQuantity`/`availableQuantity`
+     * are deliberately 0 and must NOT make the listing read as sold out.
+     *
+     * 🛑 Reuses an EXISTING uploaded cover (`stickers-image-x-glow-1`) rather
+     * than inventing a new slug — a slug with no row in
+     * `media-assets-seed-data.ts` 404s silently and reads as a broken image,
+     * not as a seed bug (the 2026-10-17 incident this project already paid
+     * for once).
+     */
+    id: "sticker-beyblade-custom-print-on-demand",
+    slug: "sticker-beyblade-custom-print-on-demand",
+    title: "Custom Beyblade Sticker Sheet — Print on Demand",
+    description: "Pick any character art from our catalogue and we print your sheet when you order — nothing is held in stock, so it never sells out.",
+    categorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Plastic Generation","Original Tops","Beyblade Original","Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    price: 179,
+    currency: "INR",
+    stockQuantity: 0,
+    availableQuantity: 0,
+    madeToOrder: true,
+    isSold: false,
+    mainImage: seedPhoto("stickers-image-x-glow-1-20260819", 900, 900),
+    images: [seedPhoto("stickers-image-x-glow-1-20260819", 900, 900)],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "stickers" as const,
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    printMeta: { size: "5x5 cm sheet", material: "Vinyl", finish: "Glossy" },
+    customFields: [{ key: "Turnaround", type: "text", value: "Printed and shipped within 2 business days" }],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["stickers", "made-to-order"],
+    createdAt: new Date("2026-10-19"),
+    updatedAt: new Date("2026-10-19"),
+    searchTxt: buildSearchTxt([
+      "Custom Beyblade Sticker Sheet — Print on Demand",
+      "Pick any character art from our catalogue and we print your sheet when you order.",
+      "Beyblade",
+      "brand-beyblade",
+      ["Beyblade Original", "Spinning Tops"],
+      ["stickers", "made-to-order"],
+    ]),
+  } as unknown as Partial<ProductDocument>,
 ];
 
 /*

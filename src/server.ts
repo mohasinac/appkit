@@ -184,9 +184,6 @@ export { DEFAULT_CATEGORIES } from "./seed/index";
 // DEFAULT_FAQS - Constant used across modules.
 export { DEFAULT_FAQS } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// DEFAULT_HOMEPAGE_SECTIONS - Constant used across modules.
-export { DEFAULT_HOMEPAGE_SECTIONS } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // NOTIFICATION_FIXTURES - Constant used across modules.
 export { NOTIFICATION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -303,9 +300,6 @@ export { makeFullStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullUser - Shared export for make full user.
 export { makeFullUser } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// makeHomepageSection - Shared export for make homepage section.
-export { makeHomepageSection } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeNotification - Shared export for make notification.
 export { makeNotification } from "./seed/index";
@@ -1159,18 +1153,6 @@ export { getCarouselSlideById } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageSectionById - Helper for get homepage section by id.
 export { getHomepageSectionById } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageGET - Shared export for homepage get.
-export { homepageGET } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemDELETE - Shared export for homepage section item delete.
-export { homepageSectionItemDELETE } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemGET - Shared export for homepage section item get.
-export { homepageSectionItemGET } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemPATCH - Shared export for homepage section item patch.
-export { homepageSectionItemPATCH } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listActiveCarouselSlides - Helper for list active carousel slides.
 export { listActiveCarouselSlides } from "./features/homepage/server";

@@ -35,7 +35,9 @@ export const COLLECTION_CACHE_PATHS: Readonly<Record<string, string[]>> = {
   categories: [CATEGORY_ENDPOINTS.LIST],
   products: [PRODUCT_ENDPOINTS.LIST],
   carouselSlides: [HOMEPAGE_ENDPOINTS.CAROUSEL],
-  homepageSections: [HOMEPAGE_ENDPOINTS.SECTIONS],
+  // No public GET endpoint exists for homepageSections (removed 2026-10-19 —
+  // see HOMEPAGE_ENDPOINTS' own comment). Real-time freshness comes from
+  // `revalidatePath("/")`, which /api/admin/sections already calls on write.
   siteSettings: [SITE_SETTINGS_ENDPOINTS.GET],
   faqs: [FAQ_ENDPOINTS.LIST],
   reviews: [REVIEW_ENDPOINTS.LIST],

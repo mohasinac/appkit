@@ -100,6 +100,22 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(15),
     updatedAt: daysAgo(3),
+    /*
+     * Part Two E — the one seeded fixture exercising self-assembled-selection
+     * rules end to end (`GroupMemberPicker` ↔ `checkGroupRules` ↔
+     * `deriveLinePrice`'s discount), without requiring the sticker tracer's
+     * multi-step admin flow to produce one first.
+     *
+     * 🛑 Deliberately NOT `minActiveMembers` (above) — that is visibility ("hide
+     * the whole group below 2 ACTIVE members"). `groupMinMembers` constrains
+     * what ONE BUYER'S SELECTION may contain, and the two can legitimately
+     * disagree: this group stays visible at 2 active members while requiring a
+     * buyer to pick at least 2 of the 4.
+     */
+    groupMinMembers: 2,
+    groupMaxMembers: 3,
+    groupMaxUnitsPerMember: 2,
+    groupDiscountPercent: 10,
   },
 
   // --- Coverage for every other listing type — previously only standard products had a

@@ -1964,9 +1964,6 @@ export { DEFAULT_CATEGORIES } from "./seed/index";
 // DEFAULT_FAQS - Constant used across modules.
 export { DEFAULT_FAQS } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// DEFAULT_HOMEPAGE_SECTIONS - Constant used across modules.
-export { DEFAULT_HOMEPAGE_SECTIONS } from "./seed/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // NOTIFICATION_FIXTURES - Constant used across modules.
 export { NOTIFICATION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -2098,9 +2095,6 @@ export { makeFullStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullUser - Shared export for make full user.
 export { makeFullUser } from "./seed/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// makeHomepageSection - Shared export for make homepage section.
-export { makeHomepageSection } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeNotification - Shared export for make notification.
 export { makeNotification } from "./seed/index";
@@ -2241,9 +2235,6 @@ export type { CouponDiscountType } from "./seed/index";
 // FirestoreIndexConfig - Type contract for firestore index config.
 export type { FirestoreIndexConfig } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HomepageSectionType - Type contract for homepage section type.
-export type { HomepageSectionType } from "./seed/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NotificationType - Type contract for notification type.
 export type { NotificationType, NotificationRelatedType } from "./features/admin/schemas/firestore";
 export { NOTIFICATION_TYPE_VALUES, NOTIFICATION_RELATED_TYPE_VALUES } from "./features/admin/schemas/firestore";
@@ -2301,9 +2292,6 @@ export type { SeedCouponDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedFaqDocument - Type contract for seed faq document.
 export type { SeedFaqDocument } from "./seed/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SeedHomepageSectionDocument - Type contract for seed homepage section document.
-export type { SeedHomepageSectionDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedLocaleData - Type contract for seed locale data.
 export type { SeedLocaleData } from "./seed/index";
@@ -5941,14 +5929,8 @@ export { useFeaturedProducts } from "./features/homepage/index";
 // useHeroCarousel - React hook for use hero carousel.
 export { useHeroCarousel } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useHomepage - React hook for use homepage.
-export { useHomepage } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useHomepageReviews - React hook for use homepage reviews.
 export { useHomepageReviews } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useHomepageSections - React hook for use homepage sections.
-export { useHomepageSections } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useNewsletter - React hook for use newsletter.
 export { useNewsletter } from "./features/homepage/index";
@@ -6009,15 +5991,6 @@ export type { HeroBannerProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HeroCarouselProps - Type contract for hero carousel props.
 export type { HeroCarouselProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HomepageData - Type contract for homepage data.
-export type { HomepageData } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HomepageSection - Type contract for homepage section.
-export type { HomepageSection } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HomepageSectionContent - Type contract for homepage section content.
-export type { HomepageSectionContent } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HomepageViewProps - Type contract for homepage view props.
 export type { HomepageViewProps } from "./features/homepage/index";
@@ -6115,10 +6088,6 @@ export type { WelcomeSectionProps } from "./features/homepage/index";
 // WhatsAppCommunitySectionProps - Type contract for whats app community section props.
 export type { WhatsAppCommunitySectionProps } from "./features/homepage/index";
 
-// ./features/homepage/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// HomepageSectionsRepository - Shared export for homepage sections repository.
-export { HomepageSectionsRepository } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselGET - Shared export for carousel get.
 export { carouselGET } from "./features/homepage/server";
@@ -6155,18 +6124,6 @@ export { getCarouselSlideById } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageSectionById - Helper for get homepage section by id.
 export { getHomepageSectionById } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageGET - Shared export for homepage get.
-export { homepageGET } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemDELETE - Shared export for homepage section item delete.
-export { homepageSectionItemDELETE } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemGET - Shared export for homepage section item get.
-export { homepageSectionItemGET } from "./features/homepage/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// homepageSectionItemPATCH - Shared export for homepage section item patch.
-export { homepageSectionItemPATCH } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listActiveCarouselSlides - Helper for list active carousel slides.
 export { listActiveCarouselSlides } from "./features/homepage/server";

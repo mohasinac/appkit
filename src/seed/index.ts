@@ -67,13 +67,6 @@ export { makeCategory } from "./factories/category.factory";
 export type { SeedCarouselSlideDocument } from "./factories/carousel.factory";
 export { makeCarouselSlide } from "./factories/carousel.factory";
 
-// Factories — homepage
-export type {
-  SeedHomepageSectionDocument,
-  HomepageSectionType,
-} from "./factories/homepage-section.factory";
-export { makeHomepageSection } from "./factories/homepage-section.factory";
-
 // Factories — address
 export type { SeedAddressDocument } from "./factories/address.factory";
 export {
@@ -142,7 +135,6 @@ export {
 // Defaults
 export { DEFAULT_CATEGORIES } from "./defaults/categories";
 export { DEFAULT_FAQS } from "./defaults/faqs";
-export { DEFAULT_HOMEPAGE_SECTIONS } from "./defaults/homepage-sections";
 
 // Migrated seed datasets from consumer repositories
 // SB-UNI-C — brandsSeedData merged into categoriesSeedData with categoryType:"brand".

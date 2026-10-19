@@ -1,43 +1,52 @@
-export type HomepageSectionType =
-  | "hero"
-  | "featured_categories"
-  | "featured_products"
-  | "banner"
-  | "testimonials"
-  | "promotions"
-  | "blog_posts"
-  | "sellers"
-  | "custom";
-
-export interface HomepageSectionContent {
-  title?: string;
-  subtitle?: string;
-  ctaLabel?: string;
-  ctaUrl?: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  itemIds?: string[];
-  html?: string;
-}
-
-export interface HomepageSection {
-  id: string;
-  type: HomepageSectionType;
-  title?: string;
-  /** Primary enable/disable flag stored in Firestore as `enabled` */
-  enabled?: boolean;
-  /** Alias kept for older consumers */
-  isVisible?: boolean;
-  order?: number;
-  content?: HomepageSectionContent;
-  mobile?: Partial<HomepageSectionContent>;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface HomepageData {
-  sections: HomepageSection[];
-}
+/*
+ * 🛑 DELETED 2026-10-19 — a second, incompatible section vocabulary, attached
+ * to LIVE, MOUNTED, publicly-reachable code.
+ *
+ * This file declared `HomepageSectionType` (9 values: `hero`,
+ * `featured_categories`, `featured_products`, `banner`, `testimonials`,
+ * `promotions`, `blog_posts`, `sellers`, `custom`), `HomepageSectionContent`,
+ * `HomepageSection` and `HomepageData`, against the live `SectionType` in
+ * `../schemas/firestore.ts`, which holds 25 values sharing exactly ONE
+ * (`banner`) with this union. A second, independently-declared copy of the
+ * same 9-value union lived in `seed/factories/homepage-section.factory.ts`
+ * too — THREE incompatible section vocabularies in one codebase, none of them
+ * the one the real renderer and repository use.
+ *
+ * This was not dead code sitting unused — `GET /api/homepage-sections` and
+ * `GET/POST /api/homepage-sections/[id]` were REAL, MOUNTED routes (stubs
+ * literally headed "feat-homepage — Pure stub", from a generic starter kit
+ * never adapted to this project) reading/writing the SAME `homepageSections`
+ * Firestore collection the real system owns, through a SECOND,
+ * identically-named `HomepageSectionsRepository` class (a generic
+ * `IRepository<HomepageSection>` wrapper in `repository/homepage.repository.ts`,
+ * distinct from the real `BaseRepository`-backed one in
+ * `homepage-sections.repository.ts`) — Root Cause #36's two-same-named-types
+ * defect, on a REPOSITORY CLASS this time, with a live route behind it.
+ *
+ * Concretely, before this deletion: the stub's GET filtered on `isVisible==true`,
+ * a field that does not exist on a real `HomepageSectionDocument` (the real
+ * field is `enabled`), so unauthenticated requests always got `[]`; its POST
+ * (admin-gated) would have written a document shaped `{ type: "hero", title,
+ * content: {...} }` into the collection the real renderer reads, where
+ * `SECTION_REGISTRY[section.type]` — see `../lib/section-renderer.tsx` — would
+ * resolve to `undefined` and render nothing, with no error anywhere: a
+ * corrupted, uneditable-through-the-real-admin-UI row, silently invisible.
+ *
+ * `useHomepage()` (the hook typed against `HomepageData`) fetched
+ * `HOMEPAGE_ENDPOINTS.GET = "/api/homepage"`, which was never mounted at all.
+ * `useHomepageSections()` called the stub above and had zero real callers —
+ * only a comment in `AdminSectionsView.tsx` mentioning it existed.
+ *
+ * All of it is deleted: the two hooks, the stub API routes (`api/route.ts`,
+ * `api/[id]/`, and a THIRD unused parallel stub at `api/sections/` for
+ * `/api/homepage/sections`), the stub repository class, `HeroSection.tsx`
+ * (zero real consumers), the seed factory, and the matching consumer-side
+ * `src/app/api/homepage-sections/{route.ts,[id]/route.ts}`.
+ *
+ * The live contract is `SectionType` / `SectionConfig` / `HomepageSectionDocument`
+ * in `../schemas/firestore.ts`, served by `GET /api/admin/sections` and read
+ * directly by `MarketplaceHomepageView` via `homepageSectionsRepository`.
+ */
 
 // --- CharacterHotspot --------------------------------------------------------
 

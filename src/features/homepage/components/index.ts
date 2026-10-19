@@ -1,4 +1,3 @@
-export { HeroSection } from "./HeroSection";
 export type { CharacterHotspotProps } from "./CharacterHotspot";
 export { CharacterHotspot } from "./CharacterHotspot";
 export type { CharacterHotspotFormProps } from "./CharacterHotspotForm";

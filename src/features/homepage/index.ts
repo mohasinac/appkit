@@ -1,6 +1,4 @@
 export * from "./types";
-export * from "./hooks/useHomepage";
-export * from "./hooks/useHomepageSections";
 export * from "./hooks/useHeroCarousel";
 export * from "./hooks/useFeaturedProducts";
 export * from "./hooks/useFeaturedAuctions";
