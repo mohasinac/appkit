@@ -209,7 +209,25 @@ export interface PartGlossaryDocument extends BaseDocument {
   aliases?: string[];
   /** Which extractor source contributed the row. */
   source?: string;
-  searchTxt?: string[];
+  /*
+   * 🛑 `searchTxt?: string[]` was REMOVED here, and must not come back.
+   *
+   * It was declared and never written — 0 of 752 documents had it, for the
+   * whole life of the collection — so a field that looked like a search
+   * index was a promise the corpus could not keep, and it was invisible to
+   * `audit-searchtxt-migration` because the collection appeared in none of
+   * its buckets.
+   *
+   * Parts are searchable, and better than they would have been with tokens:
+   * they are in the public search ARTIFACT, which gives substring matching
+   * (`ariza` finds Charizard) that `array-contains` edge n-grams
+   * structurally cannot. Writing 752 documents' worth of tokens to serve a
+   * query path the artifact makes unnecessary is the speculative-infra
+   * pattern this codebase retired `route-schema-registry` for.
+   *
+   * The collection is declared `INDEX_ARTIFACT_ONLY` in that audit, whose
+   * rule is precisely that a member must NOT declare this field.
+   */
 }
 
 /** One slot of one model's composition. */
@@ -289,7 +307,9 @@ export interface ModelCompositionDocument extends BaseDocument {
   source?: string;
   /** The named-model category this composition describes, when one exists. */
   categoryId?: string;
-  searchTxt?: string[];
+  // 🛑 No `searchTxt` — see the note on PartGlossaryDocument above. 0 of 259
+  // documents ever had one; compositions are reachable through the public
+  // search artifact instead.
 }
 
 /** `(slot, code|name)` → document id. The ONE place this is composed. */
