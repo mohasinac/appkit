@@ -47,8 +47,16 @@ export function toProductImages(input: unknown): ProductImage[] {
       continue;
     }
     if (entry && typeof entry === "object") {
-      const url = (entry as { url?: unknown }).url;
-      if (typeof url !== "string" || !url) continue;
+      /*
+       * `Partial<ProductImage>`, NOT `{ url?: unknown }` — one narrowing
+       * instead of two casts, and no `unknown` in a local binding
+       * (`audit-unknown-leakage` flagged the earlier spelling, correctly: an
+       * `unknown` here defeats the checking on every member read below it).
+       * Every member is still validated before use, so the assertion is
+       * narrowing a shape we are about to prove rather than asserting a fact.
+       */
+      const e = entry as Partial<ProductImage>;
+      if (typeof e.url !== "string" || !e.url) continue;
       /*
        * 🛑 EVERY optional member is carried through, not just the two A6
        * added. This runs on the WRITE path, so a member it forgets is a
@@ -57,9 +65,8 @@ export function toProductImages(input: unknown): ProductImage[] {
        * it here; the alternative is a normaliser that quietly truncates the
        * type it claims to normalise.
        */
-      const e = entry as ProductImage;
       out.push({
-        url,
+        url: e.url,
         ...(e.alt ? { alt: e.alt } : {}),
         ...(e.thumbnailUrl ? { thumbnailUrl: e.thumbnailUrl } : {}),
         ...(typeof e.order === "number" ? { order: e.order } : {}),
