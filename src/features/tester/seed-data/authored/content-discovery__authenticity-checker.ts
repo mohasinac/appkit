@@ -370,3 +370,95 @@ export const authored: Record<string, AuthoredCase> = {
     endResult: "Nothing is changed.",
   },
 };
+
+/*
+ * ── Guards for the near-miss work (2026-10-19) ──────────────────────────
+ *
+ * 🛑 All four protect behaviour that is ALREADY CORRECT, and that is the
+ * point of them. A "did you mean" affordance is precisely the change that
+ * could turn an absent code into an accusation, and this tool's third rule
+ * is that a false counterfeit accusation against a real seller is worse
+ * than a missed one.
+ *
+ * Appended as a second export rather than merged into the map above, so the
+ * diff shows what the near-miss change added and the original 21 cases stay
+ * byte-identical.
+ */
+export const authoredNearMiss: Record<string, AuthoredCase> = {
+  "checklist-content-discovery-authenticity-checker-authenticity-unknown-code-is-not-fake": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Leave the model name empty.",
+      "Enter Z9999 in the box-code field — well-formed (one letter, four digits) but in no table.",
+      "Pick any generation.",
+      "Run the check.",
+      "Read the verdict chip, the headline and the caveat word for word.",
+      "Read every row under 'What I checked' and note each row's direction.",
+    ],
+    inputs: { code: "Z9999" },
+    expectedBehaviour:
+      "An unmatched code is NOT evidence in either direction. New genuine codes appear regularly, and counterfeiters use real codes anyway — this project's own crawl found 516 real B-xx codes on one counterfeit catalogue.",
+    expectedUiState:
+      "The verdict is 'Inconclusive'. The code signal reads NEUTRAL, and its text says the code is not recorded rather than that the item is fake. No wording anywhere implies counterfeit, and no verdict more severe than inconclusive appears. Either of those is the failure.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-content-discovery-authenticity-checker-authenticity-near-miss-suggests": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Find a code the tool recognises — A0813 is a known one.",
+      "Enter A0831 instead: the same characters with one pair transposed.",
+      "Run the check.",
+      "Read the suggestion line and note where on the page it sits.",
+      "Read every row under 'What I checked'.",
+      "Write down the verdict.",
+      "Run the check again with the transposition removed and compare the verdict.",
+    ],
+    inputs: { nearMiss: "A0831", realCode: "A0813" },
+    expectedBehaviour:
+      "A near-miss is INPUT CORRECTION, never evidence. It is ambiguous between a typo and a batch deliberately mimicking a real code, and an ambiguous signal must not become an accusation.",
+    expectedUiState:
+      "A neutral line offers 'did you mean A0813?'. It sits OUTSIDE the 'What I checked' list and does NOT appear as a signal row. No evasion or counterfeit warning fires. The verdict is identical to what the same input produced before the suggestion existed.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-content-discovery-authenticity-checker-authenticity-inconclusive-asks-for-more": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Leave the model name EMPTY.",
+      "Enter a plausible box code and pick a generation.",
+      "Run the check.",
+      "Read the caveat under the verdict word for word.",
+      "Now fill in a model name as well and run it again.",
+      "Compare the two caveats.",
+    ],
+    expectedBehaviour:
+      "Name-against-code agreement is one of the engine's strongest signals and cannot be computed with only one of the two. The tool already asks which generation and already asks which model on an ambiguous name; asking for the missing half is the same mechanism one input over.",
+    expectedUiState:
+      "With no name, the caveat says that supplying the model name lets the tool cross-check it against the code, and offers asking the seller for a photo of the box bottom and the screws. With the name supplied, that prompt is gone. The VERDICT is 'Inconclusive' in both cases — only the caveat differs.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-content-discovery-authenticity-checker-authenticity-evasion-warning-survives": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Type Pegasis in the model name field — note the spelling, 'sis' not 'sus'.",
+      "If a typeahead offers canonical names, read them but do NOT pick one yet.",
+      "Run the check and read every row under 'What I checked'.",
+      "Note whether a trademark-evasion or fuzzy-spelling signal fired.",
+      "Now clear the field, type Pegasis again, and this time PICK 'Storm Pegasus' from the typeahead.",
+      "Run the check again and compare the signals.",
+    ],
+    inputs: { evasionSpelling: "Pegasis", canonical: "Storm Pegasus" },
+    expectedBehaviour:
+      "This is the hazard the whole separation exists for. The site search matcher deliberately treats 'Pegasis' as a match for 'Storm Pegasus' — its alias table is derived FROM a counterfeit seller's 1,277 titles, on the insight that an evasion spelling is the same string a buyer mistypes. This tool treats that same spelling as EVIDENCE. If picking a canonical name replaced what the user typed, the warning would be silenced by construction and the tool would confirm a fake using the exact spelling that indicates one.",
+    expectedUiState:
+      "The evasion/fuzzy signal fires in BOTH runs. A case asserting only 'the typeahead found it' would pass against precisely the bug this guards, so the second run is the one that matters.",
+    endResult: "Read-only; nothing persists.",
+  },
+};

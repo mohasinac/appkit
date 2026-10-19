@@ -140,3 +140,67 @@ export const authored: Record<string, AuthoredCase> = {
       "Read-only; nothing persists. The fourth query is the control — a search that returned nothing for everything would pass the first three for the wrong reason.",
   },
 };
+
+/*
+ * ── The header now reaches /search (2026-10-19) ─────────────────────────
+ *
+ * One `onSearch` handler was the entire reason the cross-resource results
+ * page had no users: it mapped the type dropdown to a browse route and
+ * redirected there, so a buyer searching "dranzer" never learned there is
+ * also a category, a part, a blog post and an FAQ about it.
+ */
+export const authoredIndexEra: Record<string, AuthoredCase> = {
+  "checklist-search-and-nav-header-search-header-search-submit-lands-on-search": {
+    roles: ["guest"],
+    startPage: "/",
+    steps: [
+      "Open / in a private window.",
+      "Click the header search and type dranzer.",
+      "Press Enter.",
+      "Read the URL in the address bar.",
+      "Count the section headings on the page.",
+      "Find the 'See all … →' link on one group and read where it points.",
+    ],
+    inputs: { query: "dranzer" },
+    expectedBehaviour:
+      "Submitting goes to the cross-resource page. The nine per-type browse routes are not lost — each is its own group's 'See all' link, which is where a per-type destination belongs once results are grouped.",
+    expectedUiState:
+      "The URL is /search?q=dranzer. Results appear under several headings. Any URL of the form /products?q=… or /stores?q=… means the old redirect is still in place.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-search-and-nav-header-search-header-search-type-is-a-filter": {
+    roles: ["guest"],
+    startPage: "/",
+    steps: [
+      "Open / in a private window.",
+      "Open the header search and set the type dropdown to Stores.",
+      "Type beyblade and press Enter.",
+      "Read the URL and the sections shown.",
+      "Find the Stores group and click its 'See all stores →' link.",
+      "Go back, clear the query completely, and press Enter with an EMPTY box.",
+      "Note whether the page navigated anywhere.",
+    ],
+    inputs: { type: "Stores", query: "beyblade" },
+    expectedBehaviour:
+      "The dropdown narrows the result set; it no longer decides the destination. An empty query does nothing, because landing on a browse page you did not ask for is worse than staying put.",
+    expectedUiState:
+      "You land on /search, not /stores. The Stores group's 'See all' link is what goes to /stores. Submitting an empty box leaves you exactly where you were.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-search-and-nav-header-search-header-search-no-price-for-guest": {
+    roles: ["guest"],
+    startPage: "/",
+    steps: [
+      "Open / in a private window with no session.",
+      "Click the header search and type dranzer.",
+      "Read every suggestion row, including the small grey second line.",
+      "Look specifically for a ₹ figure anywhere in the dropdown.",
+    ],
+    inputs: { query: "dranzer" },
+    expectedBehaviour:
+      "The suggestion subtitle used to be the product's price, from an unauthenticated route cached publicly for 60 seconds — so every signed-out visitor saw prices in the header on every page of the site.",
+    expectedUiState:
+      "Subtitles read as brand and category, e.g. 'Takara-Tomy · Attack Rings'. Any ₹ in the dropdown while signed out is a FAIL.",
+    endResult: "Read-only; nothing persists.",
+  },
+};

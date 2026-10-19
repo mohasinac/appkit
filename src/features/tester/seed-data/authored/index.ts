@@ -81,10 +81,12 @@ import { authored as a_content_discovery__coupons } from "./content-discovery__c
 import { authored as a_content_discovery__events } from "./content-discovery__events";
 import { authored as a_content_discovery__faq_help } from "./content-discovery__faq-help";
 import { authored as a_content_discovery__authenticity_checker } from "./content-discovery__authenticity-checker";
+import { authoredNearMiss as a_content_discovery__authenticity_near_miss } from "./content-discovery__authenticity-checker";
 import { authored as a_content_discovery__parts_database } from "./content-discovery__parts-database";
 import { authored as a_content_discovery__category_tabs_franchise_bundles } from "./content-discovery__category-tabs-franchise-bundles";
 import { authored as a_content_discovery__notifications } from "./content-discovery__notifications";
 import { authored as a_content_discovery__search } from "./content-discovery__search";
+import { authored as a_content_discovery__site_wide_index } from "./content-discovery__site-wide-index";
 import { authored as a_cta_layout__checkout_bottom_bar } from "./cta-layout__checkout-bottom-bar";
 import { authored as a_cta_layout__dialog_footers } from "./cta-layout__dialog-footers";
 import { authored as a_cta_layout__editor_action_bar } from "./cta-layout__editor-action-bar";
@@ -140,6 +142,7 @@ import { authored as a_seo__page_metadata } from "./seo__page-metadata";
 import { authored as a_seo__og_images } from "./seo__og-images";
 import { authored as a_search_and_nav__employee_permissions } from "./search-and-nav__employee-permissions";
 import { authored as a_search_and_nav__header_search } from "./search-and-nav__header-search";
+import { authoredIndexEra as a_search_and_nav__header_search_index_era } from "./search-and-nav__header-search";
 import { authored as a_search_and_nav__settings_deep_links } from "./search-and-nav__settings-deep-links";
 import { authored as a_search_and_nav__sidebar_search } from "./search-and-nav__sidebar-search";
 import { authored as a_selling__listing_edit_roundtrip } from "./selling__listing-edit-roundtrip";
@@ -213,10 +216,12 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_content_discovery__events,
   ...a_content_discovery__faq_help,
   ...a_content_discovery__authenticity_checker,
+  ...a_content_discovery__authenticity_near_miss,
   ...a_content_discovery__parts_database,
   ...a_content_discovery__category_tabs_franchise_bundles,
   ...a_content_discovery__notifications,
   ...a_content_discovery__search,
+  ...a_content_discovery__site_wide_index,
   ...a_cta_layout__checkout_bottom_bar,
   ...a_cta_layout__dialog_footers,
   ...a_cta_layout__editor_action_bar,
@@ -272,6 +277,7 @@ export const AUTHORED_CASES: Record<string, AuthoredCase> = {
   ...a_seo__og_images,
   ...a_search_and_nav__employee_permissions,
   ...a_search_and_nav__header_search,
+  ...a_search_and_nav__header_search_index_era,
   ...a_search_and_nav__settings_deep_links,
   ...a_search_and_nav__sidebar_search,
   ...a_selling__listing_edit_roundtrip,
