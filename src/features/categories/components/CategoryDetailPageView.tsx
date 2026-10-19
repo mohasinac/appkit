@@ -367,13 +367,28 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     if (c?.id) rowsById.set(c.id, c);
   }
 
-  const parentLadder: SubcategoryCardItem[] = (category?.ancestors ?? []).map((a) => ({
-    id: a.id,
-    name: a.name,
-    href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.id)),
-    level: a.tier,
-    ...resolveTaxonomyVisual(rowsById.get(a.id) ?? null),
-  }));
+  /*
+   * 🛑 The IMMEDIATE parent only — one card, never the chain.
+   *
+   * `ancestors` is ordered root-first, so the last entry is the direct parent
+   * and everything before it is a grandparent. Rendering the whole ladder put
+   * four cards on a tier-4 page for a path the breadcrumb at the top of the
+   * page already spells out in full, and the uncles/grandparents are not
+   * places you step to from here — the one move this row needs to afford is
+   * "up one".
+   */
+  const immediateParent = (category?.ancestors ?? []).at(-1);
+  const parentLadder: SubcategoryCardItem[] = immediateParent
+    ? [
+        {
+          id: immediateParent.id,
+          name: immediateParent.name,
+          href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(immediateParent.id)),
+          level: immediateParent.tier,
+          ...resolveTaxonomyVisual(rowsById.get(immediateParent.id) ?? null),
+        },
+      ]
+    : [];
 
   // Stores tab — stores whose storeCategory is this category or ANY descendant.
   //
@@ -902,24 +917,22 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 * typing the name of something inside it, not only by scrolling.
                 */}
               {/*
-                * The ancestor LADDER, above the children.
+                * One card: the immediate parent, as the way back UP.
                 *
-                * The breadcrumb already encodes this path, but as text at the
-                * very top of a long page — by the time you have scrolled to
-                * the subcategory row you cannot see where you are without
-                * scrolling back. Repeating it here as the same card shape,
-                * labelled L0 (root) upward, makes the position legible at the
-                * exact point you are choosing where to go next, and makes
-                * stepping UP one level a click rather than a scroll.
+                * The breadcrumb at the top of the page already spells out the
+                * full path, but by the time you have scrolled to this row it
+                * is off-screen — so the one move this row needs to afford is
+                * "up one level", at the point you are choosing where to go
+                * next. Grandparents and uncles are not that move and are left
+                * to the breadcrumb.
                 *
-                * `ancestors` is ordered root-first, so the index IS the depth.
-                * 🛑 It excludes the current category by construction, so a
-                * root renders no row at all rather than one card pointing at
-                * the page you are already on.
+                * 🛑 `ancestors` excludes the current category, so a ROOT
+                * renders no row rather than a card pointing at the page you
+                * are already on.
                 */}
               {parentLadder.length > 0 && (
                 <Div padding="b-2xs">
-                  <SubcategoryCardRow items={parentLadder} label="Parent categories" />
+                  <SubcategoryCardRow items={parentLadder} label="Parent category" />
                 </Div>
               )}
               <SubcategoryCardRow
