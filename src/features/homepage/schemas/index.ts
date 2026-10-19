@@ -12,37 +12,38 @@ export * from "./firestore";
 // the section-builder schemas validate it at the form boundary.
 
 import { z } from "zod";
-import { SECTION_SURFACE_VALUES } from "./firestore";
+import { DEFAULT_SECTION_ORDER, SECTION_SURFACE_VALUES } from "./firestore";
+import type { SectionType } from "./firestore";
 import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
 import type { JsonValue } from "../../../schemas/types";
 
-export const homepageSectionTypeSchema = z.enum([
-  "welcome",
-  "carousel",
-  "stats",
-  "trust-indicators",
-  "categories",
-  "brands",
-  "products",
-  "pre-orders",
-  "auctions",
-  "banner",
-  "features",
-  "reviews",
-  "whatsapp-community",
-  "faq",
-  "blog-articles",
-  "newsletter",
-  "stores",
-  "events",
-  "social-feed",
-  "custom-cards",
-  "google-reviews",
-  "featured-bundles",
-  "prize-draws",
-  "event-raffles",
-  "collection-cards",
-]);
+/**
+ * 🛑 GENUINELY derived from `SectionType`, not a parallel hand-written list.
+ *
+ * This used to be a literal `z.enum([...25 strings...])`, with a docstring one
+ * screen up claiming it was "derived from the union, so that gap cannot
+ * reopen." It was not derived — it was a hand-typed duplicate that happened to
+ * agree with `SectionType` on the day it was written, with nothing enforcing
+ * that agreement afterward. Adding a 26th section type without also editing
+ * this array would 400 every save of the new type — exactly the failure the
+ * docstring claimed was already closed.
+ *
+ * `DEFAULT_SECTION_ORDER: Record<SectionType, number>` (`./firestore.ts`) is
+ * already compile-checked exhaustive over `SectionType` — TypeScript refuses
+ * to compile it if a union member is missing a key, or if an extra key exists
+ * that isn't in the union. So `Object.keys(DEFAULT_SECTION_ORDER)` IS the
+ * `SectionType` value set, genuinely, every time this file is built — adding
+ * a type to the union without updating `DEFAULT_SECTION_ORDER` is now a `tsc`
+ * error at THAT assignment, not a runtime 400 discovered on save.
+ *
+ * The cast is sound, not a loosening: `Object.keys` returns `string[]` only
+ * because that's TypeScript's (overly conservative) built-in signature for
+ * it — the compile-time guarantee from `DEFAULT_SECTION_ORDER`'s own type
+ * is what actually makes the runtime values correct.
+ */
+export const homepageSectionTypeSchema = z.enum(
+  Object.keys(DEFAULT_SECTION_ORDER) as [SectionType, ...SectionType[]],
+);
 
 // JsonValue Zod — used for section configs whose shape varies per section type.
 // The section-builder schemas (W5 row 1) provide the per-type validation.
@@ -81,13 +82,10 @@ export const homepageSectionFirestoreSchema = z.object({
  * union, so that gap cannot reopen.
  */
 /*
- * 🛑 Derived from SECTION_SURFACE_VALUES, not restated as a literal list.
- *
- * `homepageSectionTypeSchema` above is a hand-written duplicate of the
- * `SectionType` union whose own docstring claims it is "derived from the union,
- * so that gap cannot reopen" — it is not, and nothing enforces parity, so
- * adding a section type without editing it produces a 400 on save. This one is
- * genuinely derived, so it cannot drift the same way.
+ * 🛑 Derived from SECTION_SURFACE_VALUES, not restated as a literal list —
+ * same discipline `homepageSectionTypeSchema` above now follows too (fixed
+ * 2026-10-19; it used to be the hand-written duplicate this comment used to
+ * warn about, with nothing enforcing parity with `SectionType`).
  */
 export const sectionSurfaceSchema = z.enum(SECTION_SURFACE_VALUES);
 
