@@ -20,11 +20,25 @@
  *
  * ≈ 4,000 reads/day, about 8% of the tier.
  *
- * 🛑 A lone `INDEX_UPDATED_AT_FIELD` range clause needs NO composite index — Firestore
- * auto-creates single-field ascending ones — so this cannot produce the
- * swallowed `FAILED_PRECONDITION` of Root Cause #59. Every document extends
- * `BaseDocument`, which declares `updatedAt`, so coverage is structural rather
- * than per-collection luck.
+ * 🛑 THE INCREMENTAL CLAUSE NEEDS A COMPOSITE INDEX PER SOURCE, and an earlier
+ * version of this header claimed the opposite.
+ *
+ * A LONE range clause on `updatedAt` needs nothing — Firestore auto-creates
+ * single-field ascending indexes. But every source that also carries a
+ * `where` equality (`status == published`, `categoryType == brand`,
+ * `isActive == true`) combines equality + range, and that DOES require a
+ * composite. Only `category`, `part` and `model` — the three with no `where`
+ * — are index-free.
+ *
+ * Found by running the job against production, not by reading it: the FULL
+ * build has no range clause and passed cleanly, so nothing surfaced until the
+ * first INCREMENTAL pass returned `9 FAILED_PRECONDITION` for brand, store,
+ * blog and every other filtered source. Exactly the Root Cause #59 shape the
+ * old comment claimed immunity from.
+ *
+ * The indexes are declared in `appkit/firebase/base/firestore.indexes.json`.
+ * Adding a source with a `where` means adding its `(field, updatedAt)` pair
+ * there too, or that source silently stops updating incrementally.
  *
  * ## Unpublish vs hard delete — different mechanisms, say which is which
  *
@@ -80,6 +94,12 @@ export interface BuildStats {
   readonly perType: Readonly<Record<string, number>>;
   /** Documents read but rejected by `toRecord` — unpublished, unjoinable, … */
   readonly dropped: number;
+  /**
+   * Sources that threw. Non-zero means the artifact is INCOMPLETE for those
+   * types, so the caller must not treat the build as clean — see the
+   * `dirty` handling in `searchIndexBuild`.
+   */
+  readonly failed: number;
   readonly durationMs: number;
 }
 
@@ -260,6 +280,7 @@ export async function buildFull(
       reads,
       perType,
       dropped,
+      failed: 0,
       durationMs: Date.now() - started,
     },
   };
@@ -294,6 +315,7 @@ export async function buildIncremental(
   const perType: Record<string, number> = {};
   let reads = 0;
   let dropped = 0;
+  let failed = 0;
 
   for (const source of PUBLIC_INDEX_SOURCES) {
     try {
@@ -305,6 +327,7 @@ export async function buildIncremental(
       perType[source.typeKey] = out.kept.length;
       dropped += out.dropped;
     } catch (err) {
+      failed++;
       const e = normalizeError(err);
       serverLogger.warn("searchIndexBuild: source failed during INCREMENTAL build — skipped", {
         source: source.typeKey,
@@ -321,6 +344,7 @@ export async function buildIncremental(
       reads,
       perType,
       dropped,
+      failed,
       durationMs: Date.now() - started,
     },
   };

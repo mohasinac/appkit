@@ -25,6 +25,7 @@ import {
   productStatsSyncHandler,
   revenueRollupHandler,
   priceIndexRollupHandler,
+  searchIndexBuildHandler,
   analyticsAlertEvaluateHandler,
   pageViewRollupHandler,
   pageViewPruneHandler,
@@ -125,6 +126,31 @@ export const revenueRollup = defineFunction({
  * additionally drop each category page's ISR entry nightly on a project that
  * was paused for exceeding ISR writes by 15.5×.
  */
+/*
+ * Build the public search index artifact — every 15 minutes, but it EXITS on
+ * one read unless something changed.
+ *
+ * 🛑 The cadence is not the cost. Firestore bills per document read
+ * regardless of `select()`, so a full rebuild at this cadence would be
+ * ~358,000 reads/day against a 50,000/day tier. The job is idle-exit /
+ * incremental / daily-full instead, landing at ~4,000/day. See the core's
+ * header; it logs its mode and read count on every run so a regression to
+ * always-full is visible before it is a quota wall.
+ *
+ * Its own job rather than folded into an existing cadence: `countersReconcile`
+ * and `productStatsSync` already run near their 540s ceiling, and a rebuild
+ * failing inside one would take category metrics down with it — the argument
+ * `priceIndexRollup` makes directly below.
+ */
+export const searchIndexBuild = defineFunction({
+  name: "searchIndexBuild",
+  description:
+    "Build the public search index artifact into Storage (idle-exit / incremental / daily full).",
+  trigger: { kind: "schedule", cron: "*/15 * * * *", timeZone: "UTC" },
+  handler: searchIndexBuildHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "512MiB", maxInstances: 1 },
+});
+
 export const priceIndexRollup = defineFunction({
   name: "priceIndexRollup",
   description:
@@ -342,6 +368,7 @@ export const SCHEDULED_FUNCTIONS = [
   productStatsSync,
   revenueRollup,
   priceIndexRollup,
+  searchIndexBuild,
   analyticsAlertEvaluate,
   pageViewRollup,
   pageViewPrune,
