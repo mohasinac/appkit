@@ -127,6 +127,23 @@ export function useMediaUpload(
       return apiClient.post<MediaUploadResult>(finalizeEndpoint, {
         storagePath: signResponse.storagePath,
         isPublic,
+        /*
+         * A7 — the ORIGINAL client filename, for the provenance heuristics.
+         *
+         * 🛑 It cannot be derived server-side. Our own `storagePath` is a
+         * content-derived SEO slug minted at sign time (§ Media Filename Slug
+         * Patterns), so by the time the server sees the upload the only name
+         * left is one we invented — and the signals A7 looks for (Amazon's
+         * `_AC_SL1500_`, a generator's `ChatGPT-Image-…`) live exclusively in
+         * the name the file arrived with.
+         *
+         * Advisory and client-supplied, therefore trivially spoofable. That is
+         * acceptable because nothing gates on it: it raises a flag for a human,
+         * and a seller who renames a file to avoid one has merely declined to
+         * volunteer information. Never treat it as evidence of anything but
+         * itself.
+         */
+        originalFilename: file.name,
       });
     },
   });
