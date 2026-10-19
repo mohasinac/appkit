@@ -2,22 +2,12 @@ export type { CharacterHotspotProps } from "./CharacterHotspot";
 export { CharacterHotspot } from "./CharacterHotspot";
 export type { CharacterHotspotFormProps } from "./CharacterHotspotForm";
 export { CharacterHotspotForm } from "./CharacterHotspotForm";
-export type { HeroBannerProps } from "./HeroBanner";
-export { HeroBanner } from "./HeroBanner";
 export type { HeroCarouselProps } from "./HeroCarousel";
 export { HeroCarousel } from "./HeroCarousel";
 export type { PromoGridProps } from "./PromoGrid";
 export { PromoGrid } from "./PromoGrid";
-export type { TrustBadgesProps } from "./TrustBadges";
-export { TrustBadges } from "./TrustBadges";
 export type { TestimonialsCarouselProps } from "./TestimonialsCarousel";
 export { TestimonialsCarousel } from "./TestimonialsCarousel";
-export type { BeforeAfterCardProps } from "./BeforeAfterCard";
-export { BeforeAfterCard } from "./BeforeAfterCard";
-export type { NewsletterBannerProps } from "./NewsletterBanner";
-export { NewsletterBanner } from "./NewsletterBanner";
-export { HomepageView } from "./HomepageView";
-export type { HomepageViewProps } from "./HomepageView";
 export { MarketplaceHomepageView } from "./MarketplaceHomepageView";
 export type {
   MarketplaceHomepageViewProps,
@@ -55,37 +45,14 @@ export { FAQSection } from "./FAQSection";
 export type { NewsletterSectionProps } from "./NewsletterSection";
 export { NewsletterSection } from "./NewsletterSection";
 
-export type { AdvertisementBannerProps } from "./AdvertisementBanner";
-export { AdvertisementBanner } from "./AdvertisementBanner";
-
 export type {
   SecurityHighlightItem,
   SecurityHighlightsSectionProps,
 } from "./SecurityHighlightsSection";
 export { SecurityHighlightsSection } from "./SecurityHighlightsSection";
 
-export type {
-  SiteFeatureItem,
-  SiteFeaturesSectionProps,
-} from "./SiteFeaturesSection";
-export { SiteFeaturesSection } from "./SiteFeaturesSection";
-
-export type {
-  TrustIndicatorItem,
-  TrustIndicatorsSectionProps,
-} from "./TrustIndicatorsSection";
-export { TrustIndicatorsSection } from "./TrustIndicatorsSection";
-
 export type { WhatsAppCommunitySectionProps } from "./WhatsAppCommunitySection";
 export { WhatsAppCommunitySection } from "./WhatsAppCommunitySection";
-
-export { HomepageSkeleton } from "./HomepageSkeleton";
-
-export type {
-  FeaturedResultItem,
-  FeaturedResultsSectionProps,
-} from "./FeaturedResultsSection";
-export { FeaturedResultsSection } from "./FeaturedResultsSection";
 
 
 // -- New marketplace homepage sections ----------------------------------------

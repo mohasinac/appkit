@@ -5811,10 +5811,6 @@ export { INPUT_ERROR } from "./features/forms/index";
 // INPUT_SUCCESS - Constant used across modules.
 export { INPUT_SUCCESS } from "./features/forms/index";
 
-// ./features/homepage/index
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdvertisementBanner - Shared export for advertisement banner.
-export { AdvertisementBanner } from "./features/homepage/index";
 // AdSlot - Ad placement slot renderer.
 export { AdSlot } from "./features/homepage/index";
 export type { AdSlotProps } from "./features/homepage/index";
@@ -5837,9 +5833,6 @@ export type {
   MarketplaceHomepageViewAdSlots,
 } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// BeforeAfterCard - Component for before after card.
-export { BeforeAfterCard } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // CharacterHotspot - Shared export for character hotspot.
 export { CharacterHotspot } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -5852,28 +5845,13 @@ export { CustomerReviewsSection } from "./features/homepage/index";
 // FAQSection - Shared export for faqsection.
 export { FAQSection } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// FeaturedResultsSection - Shared export for featured results section.
-export { FeaturedResultsSection } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HeroBanner - Shared export for hero banner.
-export { HeroBanner } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HeroCarousel - Shared export for hero carousel.
 export { HeroCarousel } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HomepageSkeleton - Shared export for homepage skeleton.
-export { HomepageSkeleton } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HomepageView - Component for homepage view.
-export { HomepageView } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HowItWorksSection - Shared export for how it works section.
 export { HowItWorksSection } from "./features/homepage/index";
 
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// NewsletterBanner - Shared export for newsletter banner.
-export { NewsletterBanner } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // NewsletterSection - Shared export for newsletter section.
 export { NewsletterSection } from "./features/homepage/index";
@@ -5887,23 +5865,14 @@ export { SectionCarousel } from "./features/homepage/index";
 // SecurityHighlightsSection - Shared export for security highlights section.
 export { SecurityHighlightsSection } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SiteFeaturesSection - Shared export for site features section.
-export { SiteFeaturesSection } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // StatsCounterSection - Shared export for stats counter section.
 export { StatsCounterSection } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // TestimonialsCarousel - Shared export for testimonials carousel.
 export { TestimonialsCarousel } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// TrustBadges - Shared export for trust badges.
-export { TrustBadges } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // TrustFeaturesSection - Shared export for trust features section.
 export { TrustFeaturesSection } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// TrustIndicatorsSection - Shared export for trust indicators section.
-export { TrustIndicatorsSection } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // WelcomeSection - Shared export for welcome section.
 export { WelcomeSection } from "./features/homepage/index";
@@ -5938,14 +5907,8 @@ export { useTopBrands } from "./features/homepage/index";
 // useTopCategories - React hook for use top categories.
 export { useTopCategories } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdvertisementBannerProps - Type contract for advertisement banner props.
-export type { AdvertisementBannerProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // Banner - Type contract for banner.
 export type { Banner } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// BeforeAfterCardProps - Type contract for before after card props.
-export type { BeforeAfterCardProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BlogListResult - Type contract for blog list result.
 export type { BlogListResult } from "./features/homepage/index";
@@ -5980,17 +5943,8 @@ export type { FAQTab } from "./features/homepage/index";
 // FeaturedResultItem - Type contract for featured result item.
 export type { FeaturedResultItem } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FeaturedResultsSectionProps - Type contract for featured results section props.
-export type { FeaturedResultsSectionProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HeroBannerProps - Type contract for hero banner props.
-export type { HeroBannerProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HeroCarouselProps - Type contract for hero carousel props.
 export type { HeroCarouselProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HomepageViewProps - Type contract for homepage view props.
-export type { HomepageViewProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HotspotPin - Type contract for hotspot pin.
 export type { HotspotPin } from "./features/homepage/index";
@@ -6006,9 +5960,6 @@ export type { HowItWorksSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowItWorksStep - Type contract for how it works step.
 export type { HowItWorksStep } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// NewsletterBannerProps - Type contract for newsletter banner props.
-export type { NewsletterBannerProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NewsletterSectionProps - Type contract for newsletter section props.
 export type { NewsletterSectionProps } from "./features/homepage/index";
@@ -6031,9 +5982,6 @@ export type { SecurityHighlightsSectionProps } from "./features/homepage/index";
 // SiteFeatureItem - Type contract for site feature item.
 export type { SiteFeatureItem } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SiteFeaturesSectionProps - Type contract for site features section props.
-export type { SiteFeaturesSectionProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // StatsCounterSectionProps - Type contract for stats counter section props.
 export type { StatsCounterSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -6055,9 +6003,6 @@ export type { TrustBadge } from "./features/homepage/index";
 // TrustBadgeIconKey - Type contract for trust badge icon key.
 export type { TrustBadgeIconKey } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// TrustBadgesProps - Type contract for trust badges props.
-export type { TrustBadgesProps } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TrustFeatureItem - Type contract for trust feature item.
 export type { TrustFeatureItem } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -6066,9 +6011,6 @@ export type { TrustFeaturesSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TrustIndicatorItem - Type contract for trust indicator item.
 export type { TrustIndicatorItem } from "./features/homepage/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// TrustIndicatorsSectionProps - Type contract for trust indicators section props.
-export type { TrustIndicatorsSectionProps } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UseHomepageReviewsOptions - Type contract for use homepage reviews options.
 export type { UseHomepageReviewsOptions } from "./features/homepage/index";
