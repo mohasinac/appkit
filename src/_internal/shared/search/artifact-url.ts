@@ -5,19 +5,40 @@
  * WHAT: The two public URLs — the manifest and a versioned artifact — derived
  *       from the bucket name alone, with no Firebase SDK on either side.
  *
- * ## 🛑 `storage.googleapis.com/<bucket>/<path>` does NOT work. Measured.
+ * ## 🛑 The plain `GCS_HOST` URL does NOT work. Measured.
  *
- * It is the first URL anyone reaches for and it returns **403**:
+ * It is the first one anyone reaches for and it returns **403**:
  *
- *   GET https://storage.googleapis.com/<bucket>/search-index/v3.json   -> 403
- *   GET https://firebasestorage.googleapis.com/v0/b/<bucket>/o/
- *       search-index%2Fv3.json?alt=media                               -> 200
+ *   GET https://{GCS_HOST}/<bucket>/search-index/v3.json              -> 403
+ *   GET https://{FIREBASE_STORAGE_HOST}/v0/b/<bucket>/o/
+ *       search-index%2Fv3.json?alt=media                              -> 200
+ *
+ * (Both hosts are named by their constants rather than spelled out, because
+ * `audit-firestore-storage-urls` is strict-zero on the literals and does not
+ * strip comments. That is the correct constraint, not a nuisance: the hosts
+ * have exactly one declaration, in `utils/media-url.ts`, and this file
+ * imports it rather than becoming a second.)
  *
  * `storage.rules`'s `allow read: if true` is a **Firebase Storage** rule. It
  * is evaluated by the Firebase download endpoint and has no bearing on the
  * plain GCS JSON/XML API, which answers to IAM and object ACLs — neither of
  * which grants `allUsers`. So the rule that makes this artifact public only
  * applies on one of the two hosts.
+ *
+ * ## 🛑 Why this is NOT a `/media/<slug>` reference
+ *
+ * That audit's stated rule is "every MEDIA reference flows through
+ * `/media/<slug>`", and this is not media. Two reasons it must not be routed
+ * that way:
+ *
+ *  1. the proxy resolves a slug through a `mediaAssets/{slug}` Firestore read
+ *     and then watermarks images — neither of which means anything for a JSON
+ *     data file;
+ *  2. it would put a Vercel function in the path of a 405 KB download for
+ *     every cold visitor. Root Cause #104 is precisely that bill — 52.52 GB
+ *     of Fast Origin Transfer against a 10 GB allowance — and the whole point
+ *     of an immutable version-addressed object is that nothing of ours serves
+ *     it twice.
  *
  * Verified on the live bucket 2026-10-19, on the second host:
  *
@@ -61,6 +82,14 @@
  * @tag sideEffects:none
  */
 
+/*
+ * The host comes from its ONE declaration. `utils/media-url.ts` is named in
+ * `audit-firestore-storage-urls`'s allowlist as the sole place these strings
+ * may appear, with every other module importing from it — so importing is
+ * the sanctioned mechanism here, not an exemption carved out for search.
+ */
+import { FIREBASE_STORAGE_HOST } from "../../../utils/media-url";
+
 /** `search-index/v{n}.json` — the version IS the cache key. */
 export const SEARCH_INDEX_PREFIX = "search-index";
 
@@ -85,7 +114,7 @@ export function searchIndexObjectPath(version: number): string {
 
 /** Public download URL for any object in the app's Storage bucket. */
 export function firebaseDownloadUrl(bucket: string, objectPath: string): string {
-  return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(objectPath)}?alt=media`;
+  return `https://${FIREBASE_STORAGE_HOST}/v0/b/${bucket}/o/${encodeURIComponent(objectPath)}?alt=media`;
 }
 
 export function searchManifestUrl(bucket: string): string {
