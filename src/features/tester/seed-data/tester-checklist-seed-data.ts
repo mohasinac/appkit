@@ -3319,28 +3319,73 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
        * romanisation and a licensed Indian importer's name.
        */
       pageKey: "authenticity-checker",
-      pageLabel: "Authenticity checker — box codes, per-generation checks and the sign-in gate",
+      pageLabel: "Authenticity checker — box codes, per-generation checks and the regional code tables",
       href: "/tools/authenticity",
       cases: [
-        { key: "guest-sees-reference-not-a-wall", label: "Signed out, the generation table and universal checks still render — only the lookup is gated" },
-        { key: "no-signin-flash-when-authenticated", label: "A signed-in user never sees 'Sign in to run a lookup' during a hard reload" },
+        /* ── Guards for the near-miss work (2026-10-19) ──────────────────
+         * All three protect behaviour that is ALREADY CORRECT. They exist
+         * because a "did you mean" feature is precisely the change that
+         * could turn an absent code into an accusation, and this tool's
+         * third rule is that a false counterfeit accusation against a real
+         * seller is worse than a missed one.
+         */
+        {
+          key: "authenticity-unknown-code-is-not-fake",
+          label: "An invented but well-formed box code returns NEUTRAL + inconclusive — never a counterfeit verdict",
+          description:
+            "Type a code that is well-formed (one letter, four digits) but not in any table — try Z9999. The verdict must be \"Inconclusive\", the signal must read neutral, and the text must say the code is NOT RECORDED rather than fake. Any wording that implies the item is counterfeit is the failure, and so is any verdict more severe than inconclusive. New genuine codes appear regularly, and counterfeiters use real codes anyway, so an absent code proves nothing in either direction.",
+          href: "/tools/authenticity",
+        },
+        {
+          key: "authenticity-near-miss-suggests",
+          label: "A one-character-off code offers \"did you mean …?\" as a SUGGESTION, with no change to the verdict",
+          description:
+            "BEFORE: a transposed code said only \"not in either table\". AFTER: enter A0831 when A0813 is a known code — you get a neutral \"did you mean A0813?\" line. It must sit OUTSIDE the \"What I checked\" list, must not appear as a signal, must not fire any evasion or counterfeit warning, and the verdict must stay exactly what it was without the suggestion. A near-miss is ambiguous between a typo and a batch mimicking a real code; it is input correction, never evidence.",
+          href: "/tools/authenticity",
+        },
+        {
+          key: "authenticity-inconclusive-asks-for-more",
+          label: "Code-only input prompts for the model name and offers the ask-the-seller next step",
+          description:
+            "Enter a code and a generation but NO model name. The inconclusive result must now say that supplying the name lets it cross-check name against code, and must offer asking the seller for a photo of the box bottom and the screws. BEFORE: you got the physical checklist and no indication that a second field would unlock a real check.",
+          href: "/tools/authenticity",
+        },
+        {
+          key: "authenticity-evasion-warning-survives",
+          label: "Typing \"Pegasis\" still reaches the tool's own verdict with the evasion warning intact",
+          description:
+            "SECURITY-SHAPED, and it exists because of a specific hazard. The site search matcher deliberately treats \"Pegasis\" as a match for \"Storm Pegasus\" — its alias table is built FROM a counterfeit seller's spellings. This tool treats that same spelling as EVIDENCE of trademark evasion. Type Pegasis here: the fuzzy/evasion signal must still fire. If a name typeahead is offered and you pick a canonical name from it, the tool must STILL analyse what you typed — a case asserting only \"the typeahead found it\" would pass against exactly the bug this guards.",
+          href: "/tools/authenticity",
+        },
+        { key: "guest-sees-reference-not-a-wall", label: "Signed out, the LOOKUP ITSELF runs — no sign-in card anywhere on the page" },
+        { key: "no-signin-flash-when-authenticated", label: "No session placeholder and no sign-in card during a hard reload, signed in or out" },
         { key: "midfake-code-reads-as-batch-not-accusation", label: "A matched midfake code reports a batch, never a counterfeit accusation against the seller" },
         { key: "date-code-shows-both-readings", label: "A box date code shows BOTH circulating readings and says neither is official" },
         { key: "real-product-code-is-not-evidence", label: "A well-formed product code is marked neutral and states that real codes appear on fakes" },
-        { key: "name-code-mismatch-asks-rather-than-accuses", label: "A name/code mismatch is a question, and ticking Random Booster re-reads it as expected" },
+        { key: "name-code-mismatch-asks-rather-than-accuses", label: "A name/code mismatch is a question, and answering 'How it was sold' re-reads it as expected" },
         { key: "ambiguous-name-asks-which-model", label: "An ambiguous name asks which release instead of confidently naming one" },
         { key: "takara-spelling-is-not-flagged", label: "'Storm Pegasis' (the Takara Tomy spelling) is not flagged, while 'Scythee' is" },
         { key: "funskool-is-not-a-fake-signal", label: "Funskool reads as a licensed importer; Rapidity reads as an unlicensed producer" },
         { key: "unknown-code-is-not-called-fake", label: "An unrecorded code says 'not recorded' and explicitly not 'fake'" },
         { key: "asks-generation-when-nothing-inferable", label: "With no generation inferable the tool asks instead of returning a verdict" },
-        { key: "api-refuses-signed-out", label: "POST /api/tools/authenticity returns 401/403 signed out and leaks no assessment" },
-        { key: "json-ld-declares-the-gate", label: "The WebApplication JSON-LD declares the gated region, and its cssSelector matches a real element" },
+        { key: "api-refuses-signed-out", label: "POST /api/tools/authenticity answers a signed-out caller, and still 400s an undeclared key" },
+        { key: "json-ld-declares-no-false-gate", label: "The WebApplication JSON-LD declares NO paywalled region, now that there is none" },
+        { key: "defaults-to-metal-fight", label: "Generation opens on Metal Fight, and a Burst code against it raises a mismatch signal rather than passing silently" },
+        { key: "contested-code-reports-the-disagreement", label: "A code two sources disagree about reports the disagreement instead of picking a side" },
+        { key: "font-midfake-does-not-accuse", label: "A midfake row whose own source calls the code authentic does NOT reach 'likely reproduction'" },
+        { key: "regional-code-reads-as-regional", label: "A Korean or Middle-East code names its region instead of coming back unrecorded" },
       ],
     },
     {
       /*
-       * D12 — the parts database, the composition panel, and the part line in a
-       * seller's auto-filled description.
+       * D12 — the Beyblade parts gallery, the composition panel, and the part
+       * line in a seller's auto-filled description.
+       *
+       * 🛑 `pageKey` stays `parts-database` even though the surface is now
+       * called the Beyblade parts gallery. It keys all nine case ids, every
+       * `testerChecklistResponses` row already recorded against them, and
+       * `audit-tester-checklist-hrefs`. A label is a label; a key is an
+       * identifier.
        *
        * 🛑 Four defects this feature has already produced, every one of them a
        * 200 with plausible content: a read against a field the collection does
@@ -3351,7 +3396,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
        * ABSENT panel — indistinguishable from a model we have no data for.
        */
       pageKey: "parts-database",
-      pageLabel: "Parts database, composition panel and the part line in a description",
+      pageLabel: "Beyblade parts gallery, composition panel and the part line in a description",
       href: "/parts",
       cases: [
         { key: "index-lists-every-classification", label: "The parts index lists all 20 classifications, labelled as names and not as URL slugs" },
@@ -3623,7 +3668,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "search-typeahead-differs",
           label: "Typing \"dranzer\" and then \"dragoon\" in the header search gives DIFFERENT suggestions",
           description:
-            "WAS: the same 5 newest rows appeared for every keystroke, because no search term reached the query at all. If both terms give an identical list, the term is still being ignored.",
+            "WAS: the same 5 newest rows appeared for every keystroke, because no search term reached the query at all. If both terms give an identical list, the term is still being ignored. UPDATED 2026-10-19: suggestions now come from the local index and span all 21 content types rather than the four the old endpoint could produce — so expect categories, parts and FAQs among the rows, not only products. ALSO CHECK, in DevTools -> Network: after the first index download there must be NO request per keystroke.",
         },
         {
           key: "search-typeahead-no-drafts",
@@ -3756,6 +3801,132 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description:
             "Write this one carefully. Every other case here passes on freshly seeded data while real production documents stay invisible, because search tokens are only written when a record is saved. Pick a listing that has NOT been edited recently and confirm it is findable; if it is not, the backfill did not cover it.",
           href: "/products",
+        },
+
+        /* ── The site-wide index (2026-10-19) ─────────────────────────────
+         * Every case below is written as an explicit BEFORE -> AFTER,
+         * because almost all of them describe behaviour that previously
+         * returned HTTP 200 with plausible rows. A case reading "check
+         * search works" passes AGAINST the bug it is meant to catch.
+         */
+        {
+          key: "search-finds-every-type",
+          label: "Searching \"dranzer\" from the header lands on /search and returns hits in SEVERAL sections",
+          description:
+            "BEFORE: the header sent you to /products?q=dranzer — one browse page — so you never learned there is also a category, a part, a blog post and an FAQ about it. AFTER: you land on /search and see grouped results across several sections. CONTROL, and it is the only assertion here that cannot pass by accident: search \"zzzznope\" and the page must say nothing matched, with ZERO result rows.",
+          href: "/search",
+        },
+        {
+          key: "search-finds-a-part",
+          label: "Searching \"Rubber Flat\" and then \"RF\" both find the part",
+          description:
+            "BEFORE: zero results for either — all 752 parts had no search tokens at all, so they were reachable only by drilling /parts -> classification -> code. AFTER: both queries return the part, and the row shows its classification underneath the name.",
+          href: "/search",
+        },
+        {
+          key: "search-ambiguous-part-code",
+          label: "Searching \"105\" returns SEVERAL parts, each showing a DIFFERENT classification",
+          description:
+            "BEFORE: there was no way to search parts at all. AFTER: \"105\" is deliberately ambiguous — it is a Metal Fight spin-track height, while a bare number in Burst is a disc — so the right answer is several rows, each naming its own classification and each linking to a different two-segment /parts/<classification>/<code> page. ONE row is the failure: it means something picked a winner.",
+          href: "/search",
+        },
+        {
+          key: "search-midword",
+          label: "Searching \"ariza\" finds Charizard",
+          description:
+            "BEFORE: impossible. Firestore token search is word-PREFIX only, so a mid-word fragment matched nothing. AFTER: it matches, because the browser scans the whole index. CONTROL: \"zzzz\" must still return nothing — a matcher that returns everything for any fragment would also pass the first half.",
+          href: "/search",
+        },
+        {
+          key: "search-typo",
+          label: "Searching \"dragon g\" finds Dragoon G, and \"Pegasis\" finds Storm Pegasus",
+          description:
+            "Misspellings are expanded at index time from a crawl of a counterfeit seller's real titles, on the basis that an evasion spelling is the same string a buyer mistypes. BEFORE: neither matched. AFTER: both do.",
+          href: "/search",
+        },
+        {
+          key: "search-normalised-away",
+          label: "Searching \"!!!\" shows the \"no searchable words\" state — NOT every listing",
+          description:
+            "BEFORE (the inverse bug, on /api/products): a punctuation-only query produced no filter clause, so it returned the ENTIRE published catalogue as search results. AFTER: the page says the query had no searchable words in it. Note this is a different message from \"nothing matched\" and both must be distinguishable.",
+          href: "/search",
+        },
+        {
+          key: "search-zero-reads",
+          label: "After the first search, typing produces NO further network requests",
+          description:
+            "Open DevTools -> Network, signed out. Type a query: you should see ONE fetch of the index artifact (a .json from firebasestorage, a few hundred KB) and nothing per keystroke thereafter. BEFORE: every keystroke hit /api/search/suggestions. A request per character is the failure even though the results look identical.",
+          href: "/search",
+        },
+        {
+          key: "search-no-prices",
+          label: "No rupee amount appears anywhere in the header suggestions or /search results, signed out",
+          description:
+            "BEFORE: the header dropdown printed the product price as the suggestion subtitle, from a route cached PUBLIC for 60s — a live guest-price leak on every page. AFTER: suggestions show the brand and category instead, and no ₹ appears anywhere for a signed-out visitor.",
+          href: "/search",
+        },
+        {
+          key: "search-no-sandbox",
+          label: "No tester-sandbox row appears in search results for a signed-out visitor",
+          description:
+            "The index is ONE shared file every browser downloads, with no per-viewer filter anywhere after it is built — so a sandbox row in it is published to the world for that version's lifetime. Search \"sandbox\" and \"tester\" signed out; nothing seeded as test data may appear.",
+          href: "/search",
+        },
+        {
+          key: "search-freshness",
+          label: "A newly published listing becomes findable within ~15 minutes, and unpublishing removes it",
+          description:
+            "Publish a listing, note the time, and search its exact title. It should appear within about 15 minutes. Then unpublish it and search again — it must disappear within the same window. BEFORE: there was no index to go stale. A row that never appears, or never leaves, both mean the rebuild stopped.",
+          href: "/search",
+        },
+        {
+          key: "search-facet-counts",
+          label: "Facet chips on /search show counts that match the rows actually displayed, and ticking one narrows BOTH",
+          description:
+            "Search a broad term. The rail shows chips like Type/Brand/Condition with a number on each. Tick one: the results narrow AND the other chips' numbers drop to match. A chip whose count does not change the result set, or a count that disagrees with the rows you can see, is the failure.",
+          href: "/search",
+        },
+        {
+          key: "search-guest-no-private",
+          label: "Signed out, /search shows no account sections and makes ZERO authenticated requests",
+          description:
+            "SECURITY. In a private window with no session, search a broad term and watch DevTools -> Network. There must be no request to /api/search/scoped at all — not a 401, not an empty 200. An authenticated request firing for a guest means a session the page did not expect.",
+          href: "/search",
+        },
+        {
+          key: "search-buyer-isolation",
+          label: "Buyer A cannot find Buyer B's order — by the UI AND by calling the API directly",
+          description:
+            "SECURITY, and the API half is the half that matters. Signed in as one buyer, search a term from another buyer's order. Then call /api/search/scoped?q=<term> directly in the same session and read the JSON. Neither may contain the other buyer's row. A UI that hides it while the API returns it is the failure this case exists for.",
+          href: "/search",
+        },
+        {
+          key: "search-seller-own-store",
+          label: "A seller finds their own DRAFT listing; another seller's draft is absent",
+          description:
+            "Signed in as a seller, search a draft listing's title. It appears under \"Your listings (incl. drafts)\" — that section exists precisely because published listings are deduped away into the public results, so what is left is your drafts. Then confirm a different store's draft title returns nothing.",
+          href: "/search",
+        },
+        {
+          key: "search-listing-boxes-still-filter",
+          label: "The per-collection search boxes still filter — one public, one seller, one admin",
+          description:
+            "REGRESSION GUARD. The box on /stores, the one on /store/orders and the one on /admin/users are a DIFFERENT system from site-wide search and must be untouched. For each: a real term narrows the list, a nonsense term returns zero, pagination still works, and the filter-drawer badge still counts correctly.",
+          href: "/stores",
+        },
+        {
+          key: "search-support-ticket-two-words",
+          label: "A TWO-WORD support-ticket search narrows to tickets matching BOTH words",
+          description:
+            "BEFORE: the second word was discarded entirely, so the search returned everything matching the longer word and looked like it was working. AFTER: search two words you know appear in one ticket's subject but not together in others — only the matching ticket should remain.",
+          href: "/admin/support-tickets",
+        },
+        {
+          key: "search-parts-page-has-a-box",
+          label: "/parts has a search box that finds a part by name or by code",
+          description:
+            "BEFORE: /parts was browse-only — 752 parts reachable only by clicking a classification then a code. AFTER: there is a search input above the classification grid. Type \"RF\" and the part appears with its classification; type \"zzzznope\" and it says nothing matches. The classification grid must still be there below it.",
+          href: "/parts",
         },
       ],
     },
@@ -7218,6 +7389,27 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Header search",
       href: "/",
       cases: [
+        {
+          key: "header-search-submit-lands-on-search",
+          label: "Submitting the header search lands on /search with GROUPED results — not on one browse page",
+          description:
+            "BEFORE: submitting sent you to the browse route for whichever type was selected in the dropdown — /products?q=dranzer — so a cross-resource search was unreachable and the /search page it should have used had no users at all. AFTER: you land on /search?q=dranzer and see results grouped by type, each group with its own \"See all … →\" link pointing at that browse page. The per-type destinations are not lost; they moved to where they belong.",
+          href: "/",
+        },
+        {
+          key: "header-search-type-is-a-filter",
+          label: "The type dropdown NARROWS the results — it no longer decides where you land",
+          description:
+            "BEFORE: choosing \"Stores\" meant submitting took you to /stores. AFTER: choosing \"Stores\" narrows what you see, and the Stores group's own \"See all stores →\" link is what takes you to /stores. Also confirm an EMPTY query does nothing at all on submit — landing on a bare browse page you did not ask for is worse than staying put.",
+          href: "/",
+        },
+        {
+          key: "header-search-no-price-for-guest",
+          label: "Signed out, no suggestion row shows a price",
+          description:
+            "BEFORE: the suggestion subtitle was the product's price, served from a route cached PUBLIC for 60 seconds — so every signed-out visitor saw prices in the header on every page. AFTER: the subtitle is the brand and category. Any ₹ in the dropdown while signed out is a FAIL.",
+          href: "/",
+        },
         {
           key: "search-finds-maintenance-toggle",
           label: "Searching 'maintenance' reaches the maintenance TOGGLE, not just Site Settings",
