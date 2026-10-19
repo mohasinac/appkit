@@ -208,6 +208,48 @@ export interface StoreDocument extends BaseDocument {
    */
   pricesIncludeGst?: boolean;
 
+  /*
+   * ── Tax identity ────────────────────────────────────────────────────────
+   *
+   * Added 2026-10-19. Until then there was NO seller-level tax identity
+   * anywhere on this document, and every order invoiced under the platform's
+   * own `siteSettings.gst` — while the seeded FAQ `faq-gst-invoice` told
+   * buyers that "sellers who are GST-registered include GST details on the
+   * invoice", which the system could not do.
+   *
+   * 🛑 The resolution order is SELLER FIRST, PLATFORM OTHERWISE, and it lives
+   * in exactly one function — `resolveSupplierIdentity` in
+   * `_internal/server/features/checkout/supplier-identity.ts`. Do not inline
+   * a `store.gstin ?? settings.gst.gstin` chain at a call site: Root Cause #75
+   * is a money rule copied to four places where two copies missed a branch.
+   *
+   * 🛑 These are the identity of the SUPPLIER OF RECORD, so they are snapshot
+   * onto the order at creation and never recomputed. Changing them affects
+   * future orders only.
+   */
+
+  /**
+   * The seller's own 15-character GSTIN, when they have one.
+   *
+   * Absent/empty means unregistered, and the order then carries the
+   * platform's GSTIN. Validate with the existing `isValidGstin` (shape AND
+   * base-36 checksum) — never a second regex.
+   */
+  gstin?: string;
+
+  /**
+   * Registered legal name, when it differs from `storeName`.
+   *
+   * "Beyblade Arena" is a storefront; "Arena Collectibles Pvt Ltd" is who
+   * issues the invoice. Absent means the platform's legal name is used
+   * alongside the platform GSTIN — the two always travel together, because a
+   * GSTIN under the wrong legal name is a worse invoice than neither.
+   */
+  legalName?: string;
+
+  /** Registered address as it should appear on the invoice. */
+  registeredAddress?: string;
+
   /**
    * How this store PRICES shipping — C5b. Absent means `free`.
    *

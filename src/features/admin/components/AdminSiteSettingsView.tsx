@@ -255,6 +255,17 @@ export function AdminSiteSettingsView({
   const [facebook, setFacebook] = React.useState("");
   const [youtube, setYoutube] = React.useState("");
   const [whatsapp, setWhatsapp] = React.useState("");
+  /*
+   * 🛑 Load-bearing, and its absence was a live bug until 2026-10-19.
+   *
+   * `buildFullPayload()` writes the WHOLE `contact` group, so a key this
+   * component does not carry in state is erased on the next save of ANY tab.
+   * `contact.upiVpa` is the site-wide fallback `resolveDisplayedUpiId` uses
+   * when a seller has no UPI configured or the store is admin-owned — i.e.
+   * the VPA a manual-payment buyer is told to pay into. Saving the Watermark
+   * tab silently blanked it.
+   */
+  const [upiVpa, setUpiVpa] = React.useState("");
   const [linkedin, setLinkedin] = React.useState("");
   const [pinterest, setPinterest] = React.useState("");
 
@@ -536,6 +547,7 @@ export function AdminSiteSettingsView({
     setFacebook(s.socialLinks?.facebook ?? "");
     setYoutube(s.socialLinks?.youtube ?? "");
     setWhatsapp(s.contact?.whatsappNumber ?? "");
+    setUpiVpa(s.contact?.upiVpa ?? "");
     setLinkedin(s.socialLinks?.linkedin ?? "");
     setPinterest(s.socialLinks?.pinterest ?? "");
 
@@ -769,7 +781,7 @@ export function AdminSiteSettingsView({
       // message, not text — text was never read by AnnouncementBar or the homepage.
       announcementBar: { enabled: announcementEnabled, message: announcementText, link: announcementLink, backgroundColor: announcementBg },
       seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
-      contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
+      contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp, upiVpa },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
       watermark: {
         type: watermarkType,
@@ -1255,6 +1267,13 @@ export function AdminSiteSettingsView({
                 <Input label="Facebook URL" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/letitrip" />
                 <Input label="YouTube URL" value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="https://youtube.com/@letitrip" />
                 <Input label="WhatsApp number" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+91XXXXXXXXXX" />
+                {/*
+                  Editable here for the first time. It was already stored and
+                  already read by the manual-payment flow, but had no input —
+                  so the only way to set it was the seed, and the next save of
+                  any tab wiped it. See the state declaration for why.
+                */}
+                <Input label="Business UPI VPA" value={upiVpa} onChange={(e) => setUpiVpa(e.target.value)} placeholder="name@bank" />
                 <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/letitrip" />
                 <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/letitrip" />
               </Grid>

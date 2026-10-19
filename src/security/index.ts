@@ -90,6 +90,9 @@ export {
   decryptSecret,
   isSecretEncrypted,
   maskSecret,
+  encryptBuffer,
+  decryptBuffer,
+  isBufferEncrypted,
 } from "./settings-encryption";
 
 // RBAC system — DELETED 2026-08-29.

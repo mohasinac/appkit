@@ -1,3 +1,6 @@
+import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
+import { siteSettingsRepository } from "../../../repositories";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
@@ -14,6 +17,35 @@ export async function ShippingPolicyView({
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("shippingPolicy");
+
+  /*
+   * 🛑 `siteSettings.legalPages.shipping` was WRITTEN by the admin form and
+   * read by nothing.
+   *
+   * Every other legal page renders through `PolicyPageView`, which checks that
+   * group for an admin HTML override. This page does not — it has a bespoke
+   * layout with a five-step delivery diagram that a flat `sections[]` cannot
+   * express — so the override had no reader and an admin who rewrote the
+   * shipping policy saw their text saved successfully and never appear.
+   *
+   * Reading it here rather than converting the page is the deliberate choice:
+   * converting would mean flattening 38 i18n keys into `sections[]` and losing
+   * the diagram, which is a regression dressed up as consolidation.
+   */
+  let adminHtml = "";
+  try {
+    const settings = await siteSettingsRepository.getSingleton();
+    adminHtml = settings.legalPages?.shipping ?? "";
+  } catch (_err) {
+    void normalizeError(_err);
+    // The i18n copy below is a complete policy in its own right, so a failed
+    // read degrades to it — but an admin who HAS overridden this page would
+    // silently see the old text, so the operator needs to know.
+    serverLogger.warn("about.shippingPolicyView: siteSettings.legalPages read failed", {
+      field: "shipping",
+      error: normalizeError(_err).message,
+    });
+  }
 
   const SECTIONS = [
     { title: t("orderProcessTitle"), text: t("orderProcessText") },
@@ -90,6 +122,20 @@ export async function ShippingPolicyView({
       </Section>
 
       <Div className={`${page.container.sm}`} padding="content-banner">
+        {adminHtml ? (
+          /*
+            Admin-set HTML replaces the WHOLE body — subtitle, sections,
+            diagram and contact block — matching PolicyPageView's behaviour
+            exactly. Rendering the override above the bundled copy would show
+            two shipping policies on one page, and the reader has no way to
+            know which one binds.
+          */
+          <Div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{ __html: adminHtml }}
+          />
+        ) : (
+          <>
         <Text size="lg" variant="secondary" className="mb-8">
           {t("subtitle")}
         </Text>
@@ -123,7 +169,14 @@ export async function ShippingPolicyView({
             <Text variant="secondary">{t("contactText")}</Text>
           </Section>
         </Stack>
+          </>
+        )}
 
+        {/*
+          Outside the override branch on purpose: these are NAVIGATION, not
+          policy text. An admin replacing the copy should not also remove the
+          way out of the page.
+        */}
         <Div layout="flex" gap="6" textSize="sm" className={`mt-12 border-t`} border="default" padding="t-xl">
           <TextLink
             href={String(ROUTES.PUBLIC.TRACK_ORDER)}

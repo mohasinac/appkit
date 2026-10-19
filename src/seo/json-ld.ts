@@ -380,6 +380,31 @@ export interface SiteIdentityOptions {
   siteUrl?: string;
   /** Real social/profile URLs — feeds schema.org `sameAs`, which drives entity recognition. */
   sameAs?: readonly string[];
+  /**
+   * The LEGAL entity behind the brand, for `Organization`.
+   *
+   * Distinct from `siteName`: "LetItRip" is what the site calls itself,
+   * "Let It Rip India" is what issues the invoice. schema.org has separate
+   * `name` and `legalName` for exactly this, and an Indian e-commerce site is
+   * required to publish the latter.
+   *
+   * Every field is optional and an unset one is OMITTED rather than emitted
+   * empty — a `legalName: ""` or a `PostalAddress` of blanks is a wrong entity
+   * asserted confidently, which is worse for entity recognition than saying
+   * nothing (the same reasoning as `sameAs: []` above).
+   */
+  legalName?: string;
+  /** 15-character GSTIN — emitted as schema.org `taxID`. */
+  taxId?: string;
+  telephone?: string;
+  email?: string;
+  address?: {
+    streetAddress?: string;
+    addressLocality?: string;
+    addressRegion?: string;
+    postalCode?: string;
+    addressCountry?: string;
+  };
 }
 
 export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, JsonLdValue> {
@@ -388,10 +413,41 @@ export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, J
   // `sameAs: []` was hardcoded empty while appkit.config.js carried real
   // socialUrls that nothing read. An empty array is worse than omitting the key.
   const sameAs = (opts?.sameAs ?? []).filter(Boolean);
+
+  /*
+   * Emit a PostalAddress only when at least one part of it is known. A node of
+   * empty strings validates, reads as a real address to a consumer, and is
+   * wrong — the same reason `sameAs: []` is omitted rather than sent empty.
+   */
+  const a = opts?.address;
+  const hasAddress = Boolean(
+    a && (a.streetAddress || a.addressLocality || a.postalCode || a.addressCountry),
+  );
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     name,
+    // Omitted when it equals `name` — repeating the brand as the legal name
+    // asserts they are the same entity, which for a sole proprietorship
+    // trading under a brand is not true.
+    legalName:
+      opts?.legalName && opts.legalName.trim() && opts.legalName.trim() !== name
+        ? opts.legalName.trim()
+        : undefined,
+    taxID: opts?.taxId?.trim() || undefined,
+    telephone: opts?.telephone?.trim() || undefined,
+    email: opts?.email?.trim() || undefined,
+    address: hasAddress
+      ? {
+          "@type": "PostalAddress",
+          streetAddress: a?.streetAddress || undefined,
+          addressLocality: a?.addressLocality || undefined,
+          addressRegion: a?.addressRegion || undefined,
+          postalCode: a?.postalCode || undefined,
+          addressCountry: a?.addressCountry || undefined,
+        }
+      : undefined,
     url: base || undefined,
     logo: absoluteUrl("/icons/icon-512x512.png", base),
     sameAs: sameAs.length > 0 ? [...sameAs] : undefined,
@@ -399,6 +455,8 @@ export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, J
       "@type": "ContactPoint",
       contactType: "customer support",
       url: absoluteUrl(ROUTES.PUBLIC.CONTACT, base),
+      telephone: opts?.telephone?.trim() || undefined,
+      email: opts?.email?.trim() || undefined,
     },
   };
 }

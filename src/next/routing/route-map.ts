@@ -107,6 +107,19 @@ export const DEFAULT_ROUTE_MAP = {
     COOKIE_POLICY: "/cookies",
     REFUND_POLICY: "/refund-policy",
     SHIPPING_POLICY: "/shipping-policy",
+    /**
+     * Cancellation policy. Distinct from the refund policy, which already
+     * covers cancellation in passing — PhonePe's merchant review asks for it
+     * by name, and so does the Consumer Protection (E-Commerce) Rules 2020
+     * disclosure list.
+     */
+    CANCELLATION_POLICY: "/cancellation-policy",
+    /**
+     * Grievance officer. A MANDATORY published disclosure under the Consumer
+     * Protection (E-Commerce) Rules 2020 and the IT Rules 2021 — name,
+     * designation, contact and a response commitment.
+     */
+    GRIEVANCE: "/grievance",
     HOW_AUCTIONS_WORK: "/how-auctions-work",
     HOW_PRE_ORDERS_WORK: "/how-pre-orders-work",
     HOW_OFFERS_WORK: "/how-offers-work",
@@ -627,6 +640,10 @@ export const PUBLIC_ROUTES = [
   ROUTES.PUBLIC.PRIVACY as string,
   ROUTES.PUBLIC.ETHICS as string,
   ROUTES.PUBLIC.CODE_OF_CONDUCT as string,
+  ROUTES.PUBLIC.CANCELLATION_POLICY as string,
+  // Public by necessity: a grievance officer a complainant must sign in to
+  // find is not a published disclosure.
+  ROUTES.PUBLIC.GRIEVANCE as string,
   ROUTES.ERRORS.UNAUTHORIZED,
   ROUTES.AUTH.LOGIN,
   ROUTES.AUTH.REGISTER,

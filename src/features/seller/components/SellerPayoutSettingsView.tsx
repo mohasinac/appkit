@@ -48,9 +48,17 @@ const payoutSettingsDraftSchema = z.object({
   bankName: annotate(z.string(), { section: "method", quick: true, order: 6, row: "pair" }),
   accountType: annotate(z.enum(["savings", "current"]), { section: "method", quick: true, order: 7, row: "pair" }),
 
+  // The three fields that identify the SUPPLIER OF RECORD on this store's
+  // invoices. A seller with a GSTIN invoices under it; one without
+  // invoices under LetItRip's (resolveSupplierIdentity).
+  //
+  // `pan` and `businessType` were removed 2026-10-19: neither exists on
+  // StoreDocument or UserDocument and the route stripped them, so a
+  // seller who entered a PAN was told it saved and it went nowhere.
+  // An input that provably cannot persist is worse than no input.
   gstin: annotate(z.string(), { section: "tax", sectionLabel: "Tax Info", order: 1, row: "pair" }),
-  pan: annotate(z.string(), { section: "tax", order: 2, row: "pair" }),
-  businessType: annotate(z.string(), { section: "tax", order: 3, row: "pair" }),
+  legalName: annotate(z.string(), { section: "tax", order: 2, row: "pair" }),
+  registeredAddress: annotate(z.string(), { section: "tax", order: 3, row: "full" }),
 
   autoPayout: annotate(z.boolean(), {
     section: "preferences", sectionLabel: "Preferences", order: 1, row: "quarter",
@@ -115,8 +123,8 @@ interface PayoutDraft {
   bankName: string;
   accountType: AccountType;
   gstin: string;
-  pan: string;
-  businessType: string;
+  legalName: string;
+  registeredAddress: string;
   autoPayout: boolean;
   minimumThreshold: string;
   emiEnabled: boolean;
@@ -151,8 +159,8 @@ const DEFAULT_DRAFT: PayoutDraft = {
   bankName: "",
   accountType: "savings",
   gstin: "",
-  pan: "",
-  businessType: "",
+  legalName: "",
+  registeredAddress: "",
   autoPayout: true,
   minimumThreshold: "",
   emiEnabled: false,
@@ -185,9 +193,22 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           ifscCode: details.bankAccount?.ifscCode ?? "",
           bankName: details.bankAccount?.bankName ?? "",
           accountType: details.bankAccount?.accountType ?? "savings",
-          gstin: res?.data?.taxInfo?.gstin ?? "",
-          pan: res?.data?.taxInfo?.pan ?? "",
-          businessType: res?.data?.taxInfo?.businessType ?? "",
+          /*
+           * 🛑 Flat fields, NOT `res.data.taxInfo.*`.
+           *
+           * `taxInfo` is a key the route has never returned, so these three
+           * inputs were ALWAYS blank on load no matter what had been saved —
+           * and the save side posted a `taxInfo` object that the route's
+           * `z.object()` schema silently stripped. A seller could type their
+           * GSTIN, get a success toast, reload, and find it gone.
+           *
+           * The route now declares and persists `gstin` / `legalName` /
+           * `registeredAddress` on the STORE, because the GSTIN decides who
+           * is the supplier of record on that store's invoices.
+           */
+          gstin: res?.data?.gstin ?? "",
+          legalName: res?.data?.legalName ?? "",
+          registeredAddress: res?.data?.registeredAddress ?? "",
           autoPayout: res?.data?.preferences?.autoPayout ?? true,
           minimumThreshold: res?.data?.preferences?.minimumThreshold
             ? String(res.data.preferences.minimumThreshold)
@@ -231,11 +252,11 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         pricesIncludeGst: draft.pricesIncludeGst,
         supportsShippingProtection: draft.supportsShippingProtection,
         supportsSaleProtection: draft.supportsSaleProtection,
-        taxInfo: {
-          gstin: draft.gstin.trim(),
-          pan: draft.pan.trim(),
-          businessType: draft.businessType.trim(),
-        },
+        // Flat, matching the route's schema. A nested `taxInfo` object was
+        // stripped by `z.object()` and never reached Firestore.
+        gstin: draft.gstin.trim(),
+        legalName: draft.legalName.trim(),
+        registeredAddress: draft.registeredAddress.trim(),
         preferences: {
           autoPayout: draft.autoPayout,
           minimumThreshold: Math.round(parseFloat(draft.minimumThreshold || "0") * 100) / 100,
@@ -411,12 +432,13 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "tax",
       label: "Tax Info",
-      fields: ["gstin", "pan", "businessType"],
+      fields: ["gstin", "legalName", "registeredAddress"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Tax Information</Heading>
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-            Optional — required only for GST invoice generation and TDS compliance.
+            Optional. Enter a GSTIN and your orders are invoiced under your own
+            registration; leave it blank and they are invoiced under LetItRip&apos;s.
           </Text>
           <FormField
             name="gstin"
@@ -429,24 +451,34 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             disabled={busy}
           />
           <FormField
-            name="pan"
-            label="PAN (optional)"
+            name="legalName"
+            label="Registered legal name (optional)"
             type="text"
-            value={values.pan}
-            onChange={(v) => onChange({ pan: v.toUpperCase() })}
-            placeholder="e.g. ABCDE1234F"
-            helpText="Required for payouts above ₹50,000 per year (TDS threshold)."
+            value={values.legalName}
+            onChange={(v) => onChange({ legalName: v })}
+            placeholder="e.g. Arena Collectibles Pvt Ltd"
+            helpText="The entity name that appears on the invoice. Leave blank to use your store name."
             disabled={busy}
           />
           <FormField
-            name="businessType"
-            label="Business Type (optional)"
+            name="registeredAddress"
+            label="Registered address (optional)"
             type="text"
-            value={values.businessType}
-            onChange={(v) => onChange({ businessType: v })}
-            placeholder="e.g. Individual, Sole Proprietor, Private Limited"
+            value={values.registeredAddress}
+            onChange={(v) => onChange({ registeredAddress: v })}
+            placeholder="Address as registered against your GSTIN"
+            helpText="Printed on invoices issued under your GSTIN."
             disabled={busy}
           />
+          {/*
+            PAN and Business Type were removed 2026-10-19. Neither had any
+            storage — no field on StoreDocument or UserDocument — and the
+            route's z.object() stripped the whole `taxInfo` object, so a
+            seller who entered their PAN was shown a success toast and the
+            value went nowhere. An input that provably cannot persist is
+            worse than no input: it tells the seller we hold something we
+            do not. Re-add either one WITH a schema field and a write path.
+          */}
         </Stack>
       ),
     },

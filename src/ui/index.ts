@@ -657,6 +657,8 @@ export { Scrim } from "./components/Scrim";
 export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./components/Scrim";
 export { Kbd } from "./components/Kbd";
 export type { KbdProps, KbdSize, KbdTone } from "./components/Kbd";
+export { PendingValue } from "./components/PendingValue";
+export type { PendingValueProps } from "./components/PendingValue";
 export { StickyToolbar } from "./components/StickyToolbar";
 export type {
   StickyToolbarProps,

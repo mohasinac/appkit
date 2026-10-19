@@ -546,10 +546,29 @@ export interface SiteSettingsDocument extends BaseDocument {
     email: string;
     phone: string;
     address: string;
-    /** Business UPI Virtual Payment Address (market-specific) */
+    /**
+     * Business UPI Virtual Payment Address (market-specific).
+     *
+     * 🛑 The site-wide fallback `resolveDisplayedUpiId` uses when a seller has
+     * no UPI configured or the store is admin-owned — i.e. what a buyer paying
+     * manually is told to pay INTO. It was being silently erased on every
+     * settings save until 2026-10-19: `buildFullPayload()` writes the whole
+     * `contact` group and simply did not carry this key, so saving any
+     * unrelated tab blanked it and manual payments lost their destination.
+     * Any key added here must also be added to that function's state and
+     * payload (Root Cause #76).
+     */
     upiVpa?: string;
     /** WhatsApp number with country code (market-specific) */
     whatsappNumber?: string;
+    /**
+     * Human-readable support hours, e.g. "Mon-Sat, 10:00-19:00 IST".
+     *
+     * Written by the admin form since long before it was declared here, which
+     * made it invisible to every type-driven review — the same gap that let
+     * `adSettings` and `integrations` ship publicly (Root Cause #70).
+     */
+    supportHours?: string;
   };
   payment: {
     phonepeEnabled: boolean;
@@ -684,6 +703,12 @@ export interface SiteSettingsDocument extends BaseDocument {
     twitter?: string;
     instagram?: string;
     linkedin?: string;
+    // Both written by AdminSiteSettingsView's socialLinks payload and both
+    // undeclared here until 2026-10-19 — so they round-tripped through
+    // Firestore while being invisible to the type, which is the condition
+    // Root Cause #70 turns into a leak.
+    youtube?: string;
+    pinterest?: string;
   };
   /**
    * The outbound-messaging kill switch and spend ceiling.
@@ -844,6 +869,10 @@ export interface SiteSettingsDocument extends BaseDocument {
     shipping: string;
     ethics: string;
     codeOfConduct: string;
+    /** Cancellation policy — a PolicyPageView key since 2026-10-19. */
+    cancellation: string;
+    /** Grievance officer disclosure — a PolicyPageView key since 2026-10-19. */
+    grievance: string;
   };
   shipping: {
     estimatedDays: number;

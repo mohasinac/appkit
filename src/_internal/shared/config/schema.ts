@@ -129,6 +129,120 @@ export interface AppkitSeoConfig {
   locale?: string;
 }
 
+/**
+ * A value the business has not decided yet.
+ *
+ * 🛑 `null`, deliberately, rather than `undefined` or an empty string. All
+ * three would render the same blank space, and only this one is distinguishable
+ * from "the key is missing" at a glance in the config file — which matters
+ * because every field typed this way appears on a page whose purpose is legal
+ * disclosure. A renderer is expected to show a visible `[to be confirmed]`
+ * marker (`<PendingValue>`), never an empty gap, so that an unfilled statutory
+ * field is obvious to whoever looks at the page rather than reading as absent.
+ */
+export type PendingString = string | null;
+
+/** Registered postal address of the legal entity. */
+export interface AppkitBusinessAddress {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  /**
+   * GST state code, e.g. "27" for Maharashtra.
+   *
+   * 🛑 Must match the first two digits of `AppkitBusinessConfig.gstin`, and is
+   * an INPUT to the intra- vs inter-state supply decision that picks CGST+SGST
+   * over IGST. Wrong here means wrong tax on every invoice.
+   */
+  stateCode: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface AppkitBusinessSupport {
+  email?: PendingString;
+  phone?: PendingString;
+  /** WhatsApp number with country code, digits only, e.g. "918919665811". */
+  whatsapp?: PendingString;
+  /** Human-readable, e.g. "Mon-Sat, 10:00-19:00 IST". */
+  hours?: PendingString;
+}
+
+/**
+ * Grievance officer. A mandatory published disclosure for an Indian
+ * e-commerce platform under the Consumer Protection (E-Commerce) Rules 2020
+ * and the IT Rules 2021 — name, designation and a working contact.
+ */
+export interface AppkitBusinessGrievance {
+  name?: PendingString;
+  designation?: PendingString;
+  email?: PendingString;
+  phone?: PendingString;
+}
+
+/**
+ * Published policy terms, as PROSE rather than numbers.
+ *
+ * "2-3 business days" carries its own unit; a bare `3` forces every renderer
+ * to re-invent one, and they will not agree.
+ */
+export interface AppkitBusinessPolicy {
+  processingTime?: PendingString;
+  deliveryEstimate?: PendingString;
+  shippingCharges?: PendingString;
+  cancellationWindow?: PendingString;
+  returnWindow?: PendingString;
+  refundTimeline?: PendingString;
+}
+
+/** Where buyers paying by bank transfer or UPI send money. */
+export interface AppkitBusinessBank {
+  name?: PendingString;
+  accountName?: PendingString;
+  /** 🛑 PRIVATE. Never on the public GET /api/site-settings. */
+  accountNumber?: PendingString;
+  /** 🛑 PRIVATE. Never on the public GET /api/site-settings. */
+  ifsc?: PendingString;
+  /** UPI Virtual Payment Address, e.g. "name@bank". Buyer-facing. */
+  upiVpa?: PendingString;
+  /**
+   * Root-relative path to the payment QR image.
+   *
+   * 🛑 A STATIC asset under public/, never a `/media/<slug>`. The media proxy
+   * composites a watermark onto every image it serves and has no skip
+   * mechanism, and a mark over a QR can corrupt enough modules to break the
+   * scan. `resolveMediaUrl` returns a relative path untouched, which is what
+   * makes a static path safe here.
+   */
+  qrImagePath?: string;
+}
+
+/**
+ * Statutory identity of the legal entity behind the site.
+ *
+ * This is the ONE owner of these facts. They are published by law, so none of
+ * it is secret and all of it belongs in a committed, reviewable file; the
+ * corresponding `BUSINESS_*` env vars exist to override per deployment.
+ */
+export interface AppkitBusinessConfig {
+  /** Registered legal name, e.g. "Let It Rip India". */
+  legalName: string;
+  /** Proprietor / authorised signatory. */
+  proprietor?: string;
+  /** e.g. "Sole proprietorship", "Private limited company". */
+  structure?: string;
+  /** 15-character GSTIN. Validate with `isValidGstin` — shape AND checksum. */
+  gstin?: PendingString;
+  /** Udyam (MSME) registration number. */
+  udyamNumber?: PendingString;
+  registeredAddress?: AppkitBusinessAddress;
+  support?: AppkitBusinessSupport;
+  grievance?: AppkitBusinessGrievance;
+  policy?: AppkitBusinessPolicy;
+  bank?: AppkitBusinessBank;
+}
+
 export interface AppkitI18nConfig {
   /** next-intl localePrefix strategy (default: "never") */
   localePrefix?: "never" | "always" | "as-needed";
@@ -158,6 +272,14 @@ export interface AppkitConfig {
   locales?: string[];
   /** Brand identity — name, social URLs, taglines */
   brand?: AppkitBrandConfig;
+  /**
+   * Statutory identity of the legal entity — legal name, GSTIN, registered
+   * address, support channels, grievance officer, published policy terms.
+   *
+   * Distinct from `brand`, which is how the site PRESENTS itself. "LetItRip"
+   * is the brand; "Let It Rip India" is the entity that issues the invoice.
+   */
+  business?: AppkitBusinessConfig;
   /** SEO defaults — siteUrl, defaultTitle, OG image, Twitter handle */
   seo?: AppkitSeoConfig;
   /** i18n / next-intl routing options */

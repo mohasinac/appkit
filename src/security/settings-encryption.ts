@@ -95,6 +95,110 @@ export function isSecretEncrypted(value: string): boolean {
   return encEnvelopeKind(value) === "settings";
 }
 
+/*
+ * ---------------------------------------------------------------------------
+ * Binary envelope — for FILE BYTES, not strings.
+ * ---------------------------------------------------------------------------
+ *
+ * Same algorithm, same key, same `enc:v1:` marker as the string form above, but
+ * a BINARY layout rather than a dot-joined base64 triple:
+ *
+ *   "enc:v1:" (7 ASCII bytes) || iv (12) || authTag (16) || ciphertext
+ *
+ * 🛑 Why not reuse `encryptSecret` with a base64 string. Two reasons, and the
+ * first one is a hard ceiling rather than a preference:
+ *
+ *   1. Base64 inflates by 4/3, so the 680 KB Udyam certificate becomes ~907 KB
+ *      of string before the envelope is added. A Firestore document is capped
+ *      at 1 MiB, so that approach is one slightly-larger PDF away from an
+ *      unrecoverable write failure — and it fails at UPLOAD time, after the
+ *      user has handed over the document.
+ *   2. The bytes belong in Storage regardless, and Storage takes a Buffer. Round
+ *      -tripping them through base64 to satisfy a string API costs 33% of the
+ *      object size and every byte of it is paid again on download.
+ *
+ * So: metadata in Firestore, ciphertext in Storage. These two functions are the
+ * seam between them.
+ */
+
+/** ASCII `enc:v1:` — the same marker the string envelope uses, as raw bytes. */
+const BINARY_PREFIX = Buffer.from(PREFIX, "ascii");
+const TAG_BYTES = 16;
+
+/**
+ * AES-256-GCM a file's bytes under `SETTINGS_ENCRYPTION_KEY`.
+ *
+ * Throws when the key is unset — deliberately, and identically to
+ * `encryptSecret`. A document store that silently writes plaintext when
+ * misconfigured is worse than one that refuses, because nothing downstream can
+ * tell the two apart afterwards.
+ */
+export function encryptBuffer(plaintext: Buffer): Buffer {
+  const key = getMasterKey();
+  const { randomBytes, createCipheriv } = nodeCrypto();
+  const iv = randomBytes(IV_BYTES);
+  const cipher = createCipheriv(ALGORITHM, key, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+
+  return Buffer.concat([BINARY_PREFIX, iv, cipher.getAuthTag(), ciphertext]);
+}
+
+/**
+ * Reverse `encryptBuffer`.
+ *
+ * 🛑 Unlike `decryptSecret`, a buffer with no `enc:v1:` prefix is REJECTED
+ * rather than passed through. That asymmetry is intentional. `decryptSecret`
+ * tolerates plaintext because the settings collection genuinely holds
+ * unencrypted placeholders that predate encryption, so passing them through is
+ * the migration path. Here there is no such legacy: every object this reads was
+ * written by `encryptBuffer`, so an unprefixed buffer means the wrong object,
+ * a truncated download, or an upload that bypassed encryption — and returning
+ * it verbatim would serve one of those to an admin as though it were fine.
+ *
+ * GCM authentication also means `final()` throws on any tampering or on the
+ * wrong key, so a corrupted object fails loudly instead of yielding garbage.
+ */
+export function decryptBuffer(encrypted: Buffer): Buffer {
+  if (!isBufferEncrypted(encrypted)) {
+    throw new Error(
+      "Buffer is not settings-encrypted — expected an 'enc:v1:' binary envelope",
+    );
+  }
+
+  const ivStart = BINARY_PREFIX.length;
+  const tagStart = ivStart + IV_BYTES;
+  const dataStart = tagStart + TAG_BYTES;
+
+  const { createDecipheriv } = nodeCrypto();
+  const decipher = createDecipheriv(
+    ALGORITHM,
+    getMasterKey(),
+    encrypted.subarray(ivStart, tagStart),
+  );
+  decipher.setAuthTag(encrypted.subarray(tagStart, dataStart));
+
+  return Buffer.concat([
+    decipher.update(encrypted.subarray(dataStart)),
+    decipher.final(),
+  ]);
+}
+
+/**
+ * True when `buf` carries the binary envelope AND is long enough to hold a
+ * complete one.
+ *
+ * The length check is not pedantry: without it a 7-byte buffer containing only
+ * the prefix passes, and `decryptBuffer` then hands `createDecipheriv` a
+ * zero-length IV, which throws `Invalid initialization vector` — an error that
+ * describes the crypto call rather than the truncated download that caused it.
+ */
+export function isBufferEncrypted(buf: Buffer): boolean {
+  return (
+    buf.length > BINARY_PREFIX.length + IV_BYTES + TAG_BYTES &&
+    buf.subarray(0, BINARY_PREFIX.length).equals(BINARY_PREFIX)
+  );
+}
+
 export function maskSecret(value: string): string {
   if (!value || value.length < 12) {
     return "****";

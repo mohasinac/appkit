@@ -15,11 +15,33 @@ export type PolicyKey =
   | "cookies"
   | "refund"
   | "ethics"
-  | "conduct";
+  | "conduct"
+  | "cancellation"
+  | "grievance";
 
 export interface PolicyPageViewProps {
   /** Which policy to render */
   policy: PolicyKey;
+  /**
+   * Rendered after the policy sections and before the related links.
+   *
+   * The slot exists for /grievance, whose officer block (name, designation,
+   * email, phone) comes from `appkit.config.js` → `business.grievance` rather
+   * than from i18n — those values are deployment-specific and some are still
+   * undecided, so they render through `<PendingValue>` as a visible
+   * `[to be confirmed]` marker.
+   *
+   * 🛑 Deliberately a `children` ReactNode and not a render prop: this is an
+   * async Server Component, and a function prop would have to cross the
+   * server/client boundary at the call site to be useful. The caller builds
+   * the node and passes it down, which needs nothing serialisable.
+   *
+   * Note it renders under the i18n sections but is SKIPPED when an admin HTML
+   * override is present — an override replaces the page's body, and silently
+   * appending a block the admin cannot see or edit would make the override a
+   * half-truth.
+   */
+  children?: React.ReactNode;
 }
 
 /**
@@ -81,12 +103,25 @@ const POLICY_META: Record<
     firestoreField: "codeOfConduct",
     relatedLabelKey: "relatedConduct",
   },
+  cancellation: {
+    path: String(ROUTES.PUBLIC.CANCELLATION_POLICY),
+    namespace: "cancellationPolicy",
+    firestoreField: "cancellation",
+    relatedLabelKey: "relatedCancellation",
+  },
+  grievance: {
+    path: String(ROUTES.PUBLIC.GRIEVANCE),
+    namespace: "grievance",
+    firestoreField: "grievance",
+    relatedLabelKey: "relatedGrievance",
+  },
 };
 
 const POLICY_KEYS = Object.keys(POLICY_META) as PolicyKey[];
 
 export async function PolicyPageView({
   policy,
+  children,
 }: PolicyPageViewProps) {
   const page = { container: PAGE_CONTAINER };
   const meta = POLICY_META[policy];
@@ -182,6 +217,14 @@ export async function PolicyPageView({
                 </Section>
               ))}
             </Stack>
+
+            {/*
+              Caller-supplied block (the grievance officer card). Inside this
+              branch on purpose: an admin HTML override replaces the page body,
+              and appending a block they cannot see or edit would make the
+              override a half-truth.
+            */}
+            {children}
           </>
         )}
 
