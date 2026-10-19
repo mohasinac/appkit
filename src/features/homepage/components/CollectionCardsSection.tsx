@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Container,
+  Div,
   Grid,
   Heading,
   Row,
@@ -161,14 +162,19 @@ export async function CollectionCardsSection({
                     <Link
                       key={row.slug}
                       href={hrefFor(row.slug)}
-                      className="group flex flex-col items-center gap-2 rounded-xl border border-[var(--appkit-color-border)] p-3 text-center transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
+                      // audit-content-alignment-ok: a self-contained icon tile — the
+                      // caption centers under the thumbnail above it by design, same
+                      // as SpinWheelView's widget-text precedent, not marketing copy
+                      className="group rounded-xl border border-[var(--appkit-color-border)] text-center transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
                     >
-                      <div className="h-16 w-16 overflow-hidden rounded-lg">
-                        <MediaImage src={row.image} alt={row.name} size="thumbnail" />
-                      </div>
-                      <Text size="xs" weight="medium" className="line-clamp-2">
-                        {row.name}
-                      </Text>
+                      <Stack align="center" gap="xs" padding="sm">
+                        <Div className="h-16 w-16 overflow-hidden" rounded="lg">
+                          <MediaImage src={row.image} alt={row.name} size="thumbnail" />
+                        </Div>
+                        <Text size="xs" weight="medium" className="line-clamp-2">
+                          {row.name}
+                        </Text>
+                      </Stack>
                     </Link>
                   ))}
                 </Grid>

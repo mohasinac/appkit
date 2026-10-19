@@ -39,9 +39,9 @@ interface CustomSectionTab {
  * site reads it off a cast Firestore document) so callers do one line instead
  * of two: `customTabs={toCustomSectionTabs(p.customSections)}`.
  */
-export function toCustomSectionTabs(customSections: unknown): CustomSectionTab[] {
-  const sections: CustomSection[] = Array.isArray(customSections)
-    ? (customSections as CustomSection[])
+export function toCustomSectionTabs(input: unknown): CustomSectionTab[] {
+  const sections: CustomSection[] = Array.isArray(input)
+    ? (input as CustomSection[])
     : [];
   return sections.map((s) => ({
     id: s.id,

@@ -55,6 +55,10 @@ export function PromoGrid({
   return (
     <Section
       paddingY="y-4xl"
+      // audit-variant-ok: deliberately theme-INVARIANT dark surface, not a
+      // themed token — see PromoGridSectionConfig's own docstring (Root
+      // Cause #67): this section is always dark by design, in every theme,
+      // so no surface/color variant preset applies.
       className="bg-zinc-950 border-t border-b border-white/[0.06]"
     >
       <Div className="mx-auto max-w-7xl" padding="x-md">
@@ -111,6 +115,9 @@ export function PromoGrid({
                 ) : (
                   // No image slug resolved — a plain dark tile rather than
                   // crashing `next/image` on an undefined `src`.
+                  // audit-variant-ok: same theme-invariant dark surface as the
+                  // section background above — no image resolved, no themed
+                  // preset applies here either.
                   <Div className="absolute inset-0 bg-zinc-800" aria-hidden="true" />
                 )}
                 <Div

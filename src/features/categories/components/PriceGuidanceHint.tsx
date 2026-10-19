@@ -65,6 +65,13 @@ export function PriceGuidanceHint({
   if (!guidance?.market) return null;
 
   const { median, p25, p75 } = guidance.market;
+  // audit-guest-price-ok: this component is never mounted on a public page —
+  // its own docstring above says so — and the data source itself enforces
+  // it server-side: /api/categories/[id]/price-guidance is seller/admin/
+  // moderator-gated (createRouteHandler roles), unlike its public,
+  // CDN-cached description-template sibling which strips priceGuidance
+  // specifically because it is NOT gated. A signed-out caller gets a 403
+  // before this component ever has a number to format.
   const fmt = (n: number) => formatCurrency(n, currency);
   // p25/p75 are independently optional (see CategoryPriceGuidance's own
   // docstring) — a range renders only when BOTH are present, never a

@@ -42,6 +42,7 @@ import { serverLogger } from "../../../../../monitoring";
 import { createRouteHandler } from "../../../../../next/api/routeHandler";
 import { getProviders } from "../../../../../contracts";
 import { categoriesRepository } from "../../../repository/categories.repository";
+import { isAdminUser } from "../../../../auth/role-predicates";
 import type { CategoryPriceGuidance } from "../../../schemas/category-content";
 import {
   priceGuidanceOnSellerBasis,
@@ -105,7 +106,7 @@ export const GET = createRouteHandler<unknown, { id: string }>({
        * docstring for why this must stay consistent everywhere it's read).
        */
       let sellerIncludesGst: boolean | undefined;
-      if (user!.role !== "admin") {
+      if (!isAdminUser(user)) {
         const { db } = getProviders();
         const storesRepo = db?.getRepository<{ pricesIncludeGst?: boolean }>("stores");
         const result = await storesRepo?.findAll({ filters: `ownerId==${user!.uid}`, pageSize: 1 });

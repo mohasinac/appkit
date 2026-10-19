@@ -862,15 +862,18 @@ export interface HowItWorksSectionConfig {
  * `autoScroll`/`scrollInterval`/`loop` either: the component has no autoplay,
  * arrows or dots — it is not actually a carousel, despite the name.
  */
+/** An embedded sub-document with its own `id` — a type alias, not a Firestore collection root, so it does not extend `BaseDocument`. */
+export type TestimonialConfigEntry = {
+  id: string;
+  name: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  text: string;
+};
+
 export interface TestimonialsSectionConfig {
   eyebrow?: string;
   heading?: string;
-  testimonials: {
-    id: string;
-    name: string;
-    rating: 1 | 2 | 3 | 4 | 5;
-    text: string;
-  }[];
+  testimonials: TestimonialConfigEntry[];
 }
 
 /**
@@ -882,16 +885,19 @@ export interface TestimonialsSectionConfig {
  * paired with fixed white ink would invert wrong in a light theme; this
  * component is always dark, by design, so it never pairs the two).
  */
+/** An embedded sub-document with its own `id` — a type alias, not a Firestore collection root, so it does not extend `BaseDocument`. */
+export type PromoBannerConfigEntry = {
+  id: string;
+  title: string;
+  ctaLabel: string;
+  ctaUrl: string;
+  image: string;
+};
+
 export interface PromoGridSectionConfig {
   eyebrow?: string;
   heading?: string;
-  banners: {
-    id: string;
-    title: string;
-    ctaLabel: string;
-    ctaUrl: string;
-    image: string;
-  }[];
+  banners: PromoBannerConfigEntry[];
 }
 
 export type SectionType =
