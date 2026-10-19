@@ -7,10 +7,12 @@
  *      either prints a raw URL as visible text, or hands an emoji to an
  *      `<img src>` that then 404s into a broken-image glyph.
  *
- *      On top of that, `icon` BEATS `coverImage` — `brand-rows.ts` trap 2
- *      records why: the brand seed deliberately leaves `icon` unset precisely
- *      because an emoji left there would win over a real logo. A renderer that
- *      checks `coverImage` first silently inverts that rule.
+ *      On top of that there is an ORDERING question between the two, and
+ *      `brand-rows.ts` trap 2 settles it: the brand seed leaves `icon` unset
+ *      *precisely because* an emoji there would win over a real logo. So an
+ *      emoji must rank BELOW a real cover (it is decoration), while an icon
+ *      that is a URL ranks above one (it is the more specific asset). That is
+ *      the precedence implemented below, corrected 2026-10-20.
  *
  *      Two decisions, both easy to get wrong, previously made at each call
  *      site. This is the one place that makes them.
@@ -61,18 +63,31 @@ function looksLikeUrl(value: string): boolean {
 /**
  * Resolve the leading visual for a taxonomy row.
  *
- * Precedence: `display.icon` (as image when it is a URL, else as emoji) →
- * `display.coverImage`. Returns an empty object when the row has neither, so
- * the caller can fall back to an initial rather than reserving a blank box.
+ * Precedence: an `icon` that is a URL → `coverImage` → an `icon` that is an
+ * EMOJI. Returns an empty object when the row has none, so the caller can fall
+ * back to an initial rather than reserving a blank box.
+ *
+ * 🛑 The emoji ranks LAST, and that ordering changed 2026-10-20. It used to be
+ * "icon, whatever it holds, then cover", which meant a row carrying both a
+ * real photograph and a decorative emoji rendered the emoji — the twelve
+ * forest roots are exactly that shape. `brand-rows.ts` trap 2 already names
+ * this as the defect rather than the intent: the brand seed leaves `icon`
+ * unset *precisely because* an emoji there would beat a real logo. Honouring
+ * that reading everywhere is what lets a root keep its emoji for menus while
+ * its page shows the photograph.
+ *
+ * An icon that is a URL still wins — that is `BrandsSection`'s long-standing
+ * convention, where `icon` holds the brand logo and is the more specific
+ * choice than a generic cover.
  */
 export function resolveTaxonomyVisual(row: TaxonomyVisualSource | null | undefined): TaxonomyVisual {
   const icon = row?.display?.icon?.trim();
-  if (icon) {
-    return looksLikeUrl(icon) ? { imageUrl: icon } : { emoji: icon };
-  }
+  if (icon && looksLikeUrl(icon)) return { imageUrl: icon };
 
   const cover = row?.display?.coverImage?.trim();
   if (cover && looksLikeUrl(cover)) return { imageUrl: cover };
+
+  if (icon) return { emoji: icon };
 
   return {};
 }

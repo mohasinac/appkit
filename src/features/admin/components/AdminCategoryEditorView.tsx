@@ -185,6 +185,14 @@ const categoryFormSchema = z.object({
     .optional()
     .or(z.literal("")),
   highlightsText: z.string().optional().or(z.literal("")),
+  /*
+   * The Hasbro / international-market name for a generation wave, rendered on
+   * the category page as "Also known as". Editable here because wave naming is
+   * editorial and gets corrected — the seed deliberately leaves it unset
+   * wherever a divergence is not evidenced, and this is how one gets filled in
+   * later without a reseed.
+   */
+  hasbroName: z.string().max(120, "Keep the name under 120 characters").optional().or(z.literal("")),
   taxCodeId: z.string().optional().or(z.literal("")),
   defaultCondition: z.string().optional().or(z.literal("")),
   defaultAuthenticity: z.string().optional().or(z.literal("")),
@@ -223,6 +231,7 @@ interface CategoryFormValues {
   showInMenu: boolean;
   contentBody: string;
   highlightsText: string;
+  hasbroName: string;
   taxCodeId: string;
   defaultCondition: string;
   defaultAuthenticity: string;
@@ -247,6 +256,7 @@ const EMPTY_VALUES: CategoryFormValues = {
   showInMenu: true,
   contentBody: "",
   highlightsText: "",
+  hasbroName: "",
   taxCodeId: "",
   defaultCondition: "",
   defaultAuthenticity: "",
@@ -290,6 +300,7 @@ interface CategoryPayload {
   contentBody?: string;
   highlights?: string[];
   faqs?: CategoryFaq[];
+  hasbroName?: string;
   descriptionTemplates?: CategoryTemplateRow[];
   /*
    * The REAL type, not a `Record<string, unknown>`.
@@ -391,6 +402,13 @@ function buildContentPayload(
     contentBody: String(v.contentBody ?? ""),
     highlights: linesToList(String(v.highlightsText ?? "")),
     faqs: faqs.filter((f) => f.question.trim() !== "" && f.answer.trim() !== ""),
+    /*
+     * Omitted when blank rather than sent as `""`. The route schema is
+     * `.min(1)`, so an empty string is a 400 — and "I cleared the field" has
+     * to mean "do not write it", not "write an empty string every reader then
+     * has to treat as absent".
+     */
+    ...(String(v.hasbroName ?? "").trim() ? { hasbroName: String(v.hasbroName).trim() } : {}),
     descriptionTemplates: templates
       .filter((t) => t.label.trim() !== "" && t.body.trim() !== "")
       .map((t) => ({ ...t, id: t.id || toCategorySlug(t.label) || "template" })),
@@ -473,6 +491,7 @@ export function AdminCategoryEditorView({
       showInMenu: cat.display?.showInMenu ?? true,
       contentBody: cat.contentBody ?? "",
       highlightsText: listToLines(cat.highlights),
+      hasbroName: cat.hasbroName ?? "",
       taxCodeId: cat.productDefaults?.taxCodeId ?? "",
       defaultCondition: cat.productDefaults?.defaultCondition ?? "",
       defaultAuthenticity: cat.productDefaults?.defaultAuthenticity ?? "",
@@ -674,7 +693,7 @@ export function AdminCategoryEditorView({
           {
             id: "content",
             label: "Content & Templates",
-            fields: ["contentBody", "highlightsText"],
+            fields: ["contentBody", "highlightsText", "hasbroName"],
             render: ({ values: v, onChange, errors }) => (
               <Stack gap="md">
                 <Stack gap="xs">
@@ -697,6 +716,16 @@ export function AdminCategoryEditorView({
                     </Text>
                   )}
                 </Stack>
+
+                <FieldInput
+                  name="hasbroName"
+                  label="Hasbro / international name"
+                  value={String(v.hasbroName ?? "")}
+                  onChange={(val) => onChange({ hasbroName: val })}
+                  placeholder="e.g. Beyblade Burst Turbo"
+                  error={errors.hasbroName}
+                  hint="Only when the Hasbro season name genuinely differs from the Takara-Tomy one — Cho-Z ships as Turbo, God as Evolution. Rendered on the category page as 'Also known as'. Leave blank if there is no divergence, or if you cannot confirm one: a guessed pairing reads as fact."
+                />
 
                 <Stack gap="xs">
                   <Text size="sm" weight="medium">Highlights — one per line</Text>

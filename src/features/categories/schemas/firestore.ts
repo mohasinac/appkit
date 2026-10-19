@@ -433,6 +433,16 @@ export const CATEGORIES_UPDATABLE_FIELDS = [
   "descriptionTemplates",
   "productDefaults",
   "aliases",
+  /*
+   * The regional-naming pair. Updatable for the same reason the five above
+   * are: without it `CategoryUpdateInput` cannot express the field and the
+   * admin editor would save a 200 and write nothing. Wave names are editorial
+   * and get corrected — the one case this plan would not set (Burst Ultimate ↔
+   * QuadStrike) is exactly the kind a human may later confirm and want to fill
+   * in without a reseed.
+   */
+  "hasbroName",
+  "hasbroCoverImage",
 ] as const;
 
 export type CategoryCreateInput = Omit<

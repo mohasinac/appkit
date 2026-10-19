@@ -40,6 +40,17 @@ export function CategoryCard({
   const productCount =
     category.metrics?.totalProductCount ?? category.metrics?.productCount ?? (category as any).productCount ?? 0;
 
+  /*
+   * Is a real picture going to render in the image area? Drives the emoji
+   * overlay below, which must not paint over artwork. Deliberately mirrors the
+   * first two branches of the chain rather than being derived from it — the
+   * `color` branch is a flat tint, which an emoji on top of is still the
+   * intended look.
+   */
+  const hasArtwork =
+    (category.display?.mosaicImages?.length ?? 0) >= MOSAIC_MIN ||
+    Boolean(category.display?.coverImage);
+
   const inner = (
     <Stack className="h-full">
       {/* Image area — fixed aspect ratio */}
@@ -70,8 +81,19 @@ export function CategoryCard({
         ) : category.display?.color ? (
           <DynamicBgDiv color={category.display.color} className="h-full w-full opacity-80" />
         ) : null}
-        {/* Icon overlay */}
-        {category.display?.icon && (
+        {/*
+          * Icon overlay — a FALLBACK, not a decoration on top of artwork.
+          *
+          * 🛑 It used to render unconditionally, `absolute inset-0` at 4xl, so
+          * a row carrying both a cover and an emoji got a giant glyph centred
+          * over its photograph. That was invisible while the twelve forest
+          * roots all carried placeholder tiles and nothing else; the moment a
+          * real cover landed on one it became the most obvious thing on the
+          * card. Same reading as `brand-rows.ts` trap 2 and
+          * `resolveTaxonomyVisual`: an emoji is what you show when you have no
+          * image, never what you show over one.
+          */}
+        {category.display?.icon && !hasArtwork && (
           <Row textSize="4xl" className="absolute inset-0" align="center" justify="center">
             {category.display.icon}
           </Row>

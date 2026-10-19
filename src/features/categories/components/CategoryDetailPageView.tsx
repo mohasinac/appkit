@@ -668,6 +668,46 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         </Div>
       </Section>
 
+      {/* ── Regional naming: the Hasbro name for this wave ──────────────────
+          A buyer who grew up on Hasbro's seasons knows "Turbo", not "Cho-Z",
+          and the catalogue has always been FINDABLE by either — per-model
+          Hasbro names are folded into `aliases`. But `aliases` feeds
+          `searchTxt` and is rendered nowhere, so nothing on the page ever
+          stated the correspondence. Someone who searched "Turbo", landed on
+          Cho-Z and saw no mention of Turbo had no way to know they were in the
+          right place.
+
+          Renders nothing when unset, which is the common case: five of the
+          seven Burst waves have a confirmed divergence and nothing else in the
+          forest does. */}
+      {category?.hasbroName && (
+        <Section padding="y-md">
+          <Container size="xl">
+            <Row gap="md" align="center" wrap>
+              {category.hasbroCoverImage && (
+                <MediaImage
+                  src={category.hasbroCoverImage}
+                  alt={`${category.hasbroName} logo`}
+                  size="thumbnail"
+                  className="h-12 w-auto flex-shrink-0"
+                />
+              )}
+              <Stack gap="xs">
+                <Text size="xs" color="muted" transform="uppercase" weight="medium">
+                  Also known as
+                </Text>
+                <Text weight="semibold">{category.hasbroName}</Text>
+                <Text size="xs" color="muted">
+                  The same wave, named differently outside Japan — Takara-Tomy
+                  releases it as {category.name}, Hasbro as {category.hasbroName}.
+                  Both names find these listings.
+                </Text>
+              </Stack>
+            </Row>
+          </Container>
+        </Section>
+      )}
+
       {/* ── D4 / I7: the category's OWN content ────────────────────────────
           🛑 `contentBody` has existed on the schema since B3, has an admin
           editor, and `category-content.ts` claimed it rendered "on the category
