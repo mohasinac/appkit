@@ -500,3 +500,51 @@ export const authoredNearMiss: Record<string, AuthoredCase> = {
     endResult: "Read-only; nothing persists.",
   },
 };
+
+/*
+ * ── The name typeahead (2026-10-19) ──────────────────────────────────────
+ *
+ * `EntityTypeahead` is wired into the model-name field with
+ * `fillOnPick={false}` for exactly the reason `authenticity-name-typeahead`
+ * below checks: picking a suggestion must never replace what the engine
+ * analyses, or the evasion signal `authenticity-evasion-warning-survives`
+ * guards would be silenced by the very feature meant to help discovery.
+ */
+export const authoredTypeahead: Record<string, AuthoredCase> = {
+  "checklist-content-discovery-authenticity-checker-authenticity-name-typeahead": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Type a partial model name into the model-name field, e.g. Drago.",
+      "Read the suggestions offered beneath the field.",
+      "Click one of the suggestions.",
+      "Read the model-name field's actual text after clicking.",
+      "Read any confirmation line that appeared.",
+      "Run the check and read the result.",
+    ],
+    inputs: { partial: "Drago" },
+    expectedBehaviour:
+      "The typeahead is discovery only. Clicking a suggestion must NOT overwrite the field — if it did, the engine would analyse the canonical name instead of what the user actually typed, which is the mechanism `authenticity-evasion-warning-survives` exists to catch happening the other way.",
+    expectedUiState:
+      "Canonical releases appear as the user types. After clicking one, the field still shows exactly what was typed (e.g. 'Drago'), and a muted confirmation line names the matched release separately. The check result is consistent with the typed text, not the clicked suggestion.",
+    endResult: "Read-only; nothing persists.",
+  },
+  "checklist-content-discovery-authenticity-checker-authenticity-box-code-still-instant": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity and open DevTools → Network.",
+      "Clear the network log.",
+      "Enter a known box date code (e.g. A0813) in the code field, leaving the name field empty.",
+      "Run the check.",
+      "Read the network log for any request to a search endpoint or the search artifact.",
+    ],
+    inputs: { code: "A0813" },
+    expectedBehaviour:
+      "GUARD CASE. The box date-code table is bundled locally and resolves with zero network requests — this was true before the typeahead work and must stay true, because the two code paths (date-code lookup vs. name typeahead) are independent.",
+    expectedUiState:
+      "The result renders immediately. The network log shows no fetch to the search artifact or any /api/search* endpoint.",
+    endResult: "Read-only; nothing persists.",
+  },
+};

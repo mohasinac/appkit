@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { buildTokensIndex } from "../../../security/blind-index-tokens";
 
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
@@ -46,6 +47,15 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // filter matched every employee. The composite indexes it needs are already
     // declared and deployed — (permissionGroup, role, createdAt|displayName).
     permissionGroup: { canFilter: true, canSort: false },
+    /*
+     * Whole-word admin name search. `canSort: false` — an array field has no
+     * sort order Firestore can express. Without this entry, `@=` (Firestore
+     * `array-contains`) on `nameTokensIndex` is dropped SILENTLY by Sieve
+     * (`throwExceptions: false`), and the clause after it goes with it —
+     * which here would be nothing, but is the exact mechanism Root Cause #62
+     * documents for every other field this has happened to.
+     */
+    nameTokensIndex: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
   };
@@ -152,6 +162,26 @@ export class UserRepository extends BaseRepository<UserDocument> {
    */
   protected override piiFields = USER_PII_FIELDS;
   protected override piiIndexMap = USER_PII_INDEX_MAP;
+
+  /**
+   * Admin search by first/last name or email local-part, without decryption.
+   * `displayName` and `email` only — `phoneNumber` is excluded on purpose: a
+   * phone number has no word boundaries, so tokenising it yields one token
+   * that is the whole number, an exact lookup `phoneIndex` already covers.
+   *
+   * Running through `applyWriteHooks` is what makes a `users` row that
+   * SURVIVES a tester cascade (it is PRESERVE-tier and never wiped) keep a
+   * correct index going forward, and what makes a NEWLY signed-up real user
+   * searchable without anyone having to remember to re-run the backfill.
+   */
+  protected override buildTokensIndexFor(
+    data: Record<string, unknown>,
+  ): Record<string, string[]> | null {
+    const displayName = typeof data.displayName === "string" ? data.displayName : undefined;
+    const email = typeof data.email === "string" ? data.email : undefined;
+    if (!displayName && !email) return null;
+    return { nameTokensIndex: buildTokensIndex(displayName, email) };
+  }
 
   /**
    * The base hook, plus the nested objects it cannot see.

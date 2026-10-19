@@ -240,6 +240,26 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     return total;
   }
 
+  /**
+   * `db.getAll`, not N `findById` calls — same reasoning as `liveTotalsFor`
+   * just above. Built for the site-wide search index's local-resolution
+   * path: the client resolves candidate category ids from the public
+   * artifact at zero reads, and this is the one query the server still
+   * needs to turn those ids into real documents.
+   *
+   * A missing id is simply ABSENT from the returned array, never null —
+   * the caller filters, so there is nothing to distinguish a deleted
+   * category from one that never existed, and nothing needs to.
+   */
+  async getManyByIds(ids: readonly string[]): Promise<CategoryDocument[]> {
+    if (ids.length === 0) return [];
+    const refs = ids.map((id) => this.getCollection().doc(id));
+    const snaps = await this.db.getAll(...refs);
+    return snaps
+      .filter((s) => s.exists)
+      .map((s) => this.mapDoc<CategoryDocument>(s));
+  }
+
   async getCategoryBySlug(slug: string): Promise<CategoryDocument | null> {
     try {
       const snapshot = await this.db

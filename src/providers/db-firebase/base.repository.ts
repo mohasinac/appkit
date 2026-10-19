@@ -25,6 +25,10 @@ import {
 import { deserializeTimestamps, prepareForFirestore } from "./helpers";
 import { getAdminDb } from "./admin";
 import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
+import {
+  BLIND_INDEX_KEY_VERSION_FIELD,
+  CURRENT_BLIND_INDEX_KEY_VERSION,
+} from "../../security/blind-index-tokens";
 import type { JsonValue } from "../../schemas/types";
 
 /**
@@ -177,6 +181,33 @@ export abstract class BaseRepository<T extends DocumentData> {
   }
 
   /**
+   * Build this document's `*TokensIndex` fields — whole-word HMAC digests
+   * over PII, for admin search without decryption. Return `null` to leave
+   * the document alone (the default).
+   *
+   * Mirrors `buildSearchTxtFor`'s shape exactly, and for the reason that
+   * shape exists: a hook run from `applyWriteHooks` reaches EVERY write path
+   * — create, createWithId, update, the `*InTx`/`*InBatch` family, and a
+   * seed load, which goes through the same repository methods. A one-off
+   * backfill script cannot reach any of those; it only catches documents
+   * that already existed when it ran.
+   *
+   * 🛑 This is NOT `buildSearchTxtFor`'s inverse rule. `searchTxt` must never
+   * carry PII; this hook exists FOR PII, and runs in the only place that
+   * sees the plaintext before `encryptPiiFields` replaces it. See
+   * `security/blind-index-tokens.ts` for why the tokens are whole-word only.
+   *
+   * Return shape is `{ fieldName: digests[] }` rather than a single array,
+   * because a document can carry more than one token field (a payout has
+   * `sellerTokensIndex`, nothing else does yet, but the hook is general).
+   */
+  protected buildTokensIndexFor(
+    _data: Record<string, JsonValue>,
+  ): Record<string, string[]> | null {
+    return null;
+  }
+
+  /**
    * The one place writes are transformed. Every write path routes through here
    * so a new method cannot silently skip encryption.
    *
@@ -198,6 +229,18 @@ export abstract class BaseRepository<T extends DocumentData> {
 
     const searchTxt = this.buildSearchTxtFor(out as Record<string, JsonValue>);
     if (searchTxt) (out as Record<string, JsonValue>).searchTxt = searchTxt;
+
+    /*
+     * `data`, not `out` — the plaintext source, same as `piiIndicesFor`
+     * above. By this point `out` may already hold ciphertext, and hashing
+     * ciphertext would make the index meaningless.
+     */
+    const tokensIndex = this.buildTokensIndexFor(data as Record<string, JsonValue>);
+    if (tokensIndex) {
+      Object.assign(out as Record<string, JsonValue>, tokensIndex, {
+        [BLIND_INDEX_KEY_VERSION_FIELD]: CURRENT_BLIND_INDEX_KEY_VERSION,
+      });
+    }
 
     return out;
   }

@@ -3441,6 +3441,20 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             "SECURITY-SHAPED, and it exists because of a specific hazard. The site search matcher deliberately treats \"Pegasis\" as a match for \"Storm Pegasus\" — its alias table is built FROM a counterfeit seller's spellings. This tool treats that same spelling as EVIDENCE of trademark evasion. Type Pegasis here: the fuzzy/evasion signal must still fire. If a name typeahead is offered and you pick a canonical name from it, the tool must STILL analyse what you typed — a case asserting only \"the typeahead found it\" would pass against exactly the bug this guards.",
           href: "/tools/authenticity",
         },
+        {
+          key: "authenticity-name-typeahead",
+          label: "Typing a partial model name offers canonical releases, and picking one does NOT change what gets checked",
+          description:
+            "BEFORE: you had to already know the exact release name. AFTER: type a partial name (e.g. \"Drago\") and canonical releases appear beneath the field as suggestions. Click one — a confirmation line appears (\"We have a record close to this: …\"), but the TEXT YOU TYPED in the field must stay exactly as you typed it. Submit the check and confirm the result is consistent with what you typed, not with the suggestion you clicked.",
+          href: "/tools/authenticity",
+        },
+        {
+          key: "authenticity-box-code-still-instant",
+          label: "A box date code (e.g. A0813) resolves instantly with no network request — it is NOT in the search index",
+          description:
+            "GUARD CASE. Open DevTools -> Network, clear it, and submit a known box date code. No fetch to the search artifact or any search endpoint should appear — the date-code table is bundled locally and always was. This case exists because the site-wide index work added a name typeahead to this same page, and the two must stay on separate code paths.",
+          href: "/tools/authenticity",
+        },
         { key: "guest-sees-reference-not-a-wall", label: "Signed out, the LOOKUP ITSELF runs — no sign-in card anywhere on the page" },
         { key: "no-signin-flash-when-authenticated", label: "No session placeholder and no sign-in card during a hard reload, signed in or out" },
         { key: "midfake-code-reads-as-batch-not-accusation", label: "A matched midfake code reports a batch, never a counterfeit accusation against the seller" },
@@ -3460,6 +3474,51 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "regional-code-reads-as-regional", label: "A Korean or Middle-East code names its region instead of coming back unrecorded" },
         { key: "series-window-names-the-production-run", label: "A derivable date names its Metal-series production window, or names none outside all four" },
         { key: "temporal-context-for-an-unmatched-code", label: "An unmatched code reports what else the tables record from the same month, framed as context not a match" },
+      ],
+    },
+    {
+      pageKey: "price-index-tool",
+      pageLabel: "What it sold for — realised prices",
+      href: "/tools/price-index",
+      cases: [
+        {
+          key: "price-index-resolves-locally",
+          label: "Candidate names appear with no network delay while typing; only the bands themselves come from the server",
+          description:
+            "BEFORE: resolving a free-text query to a category leaf was a Firestore searchTxt query on every lookup. AFTER: open /tools/price-index, open DevTools -> Network, clear the log, and search a real model name. The suggestion/candidate step must feel instant and correspond to the local search artifact (a .json fetched once, not per search); only ONE further request — to the bands endpoint — should fire, carrying just the resolved id(s), and it must return real min/median/mean/max figures for a model with recorded sales.",
+          href: "/tools/price-index",
+        },
+        {
+          key: "price-index-falls-back-when-index-off",
+          label: "Price lookup still works end-to-end if the search index is unavailable",
+          description:
+            "GUARD CASE for the fallback path. If the admin search-index kill switch is off (or the artifact fails to load), the price lookup must still return real results via the original query-based endpoint — the feature must not go blank just because the faster path is unavailable.",
+          href: "/tools/price-index",
+          needsReview: true,
+          reviewNote:
+            "Needs the kill switch flipped off to observe, which an ordinary run does not do — flagged for a human or admin-tooling pass.",
+        },
+      ],
+    },
+    {
+      pageKey: "compare-overlay-add-item",
+      pageLabel: "Compare overlay — add another item",
+      href: "/products",
+      cases: [
+        {
+          key: "compare-add-another-via-typeahead",
+          label: "The compare overlay's \"Add another\" typeahead adds a real item without leaving the page",
+          description:
+            "BEFORE: the compare overlay only ever showed items selected via listing-page checkboxes before opening it — there was no way to add a further item once the overlay was open. AFTER: open the compare overlay with at least one item selected, find the 'Add another to compare' box, type a product name, and pick a suggestion. The picked item's full column (image, price, specs) appears in the overlay without closing it or returning to the listing grid.",
+          href: "/products",
+        },
+        {
+          key: "compare-add-hidden-at-column-limit",
+          label: "The \"Add another\" box disappears once the compare overlay is full",
+          description:
+            "Add items via checkboxes (or the typeahead) until the overlay holds its maximum number of columns. The 'Add another' box must then be absent entirely — not merely disabled — since a picker that cannot add anything is worse than none.",
+          href: "/products",
+        },
       ],
     },
     {
@@ -4015,6 +4074,34 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           description:
             "BEFORE: /parts was browse-only — 752 parts reachable only by clicking a classification then a code. AFTER: there is a search input above the classification grid. Type \"RF\" and the part appears with its classification; type \"zzzznope\" and it says nothing matches. The classification grid must still be there below it.",
           href: "/parts",
+        },
+        {
+          key: "search-facet-carries-through",
+          label: "\"See all →\" on a group with a facet ticked lands on the browse page WITH that facet still applied",
+          description:
+            "Search a broad term and tick a facet chip (e.g. a brand). Click the group's own \"See all →\" link. BEFORE: the link always went to the plain, unfiltered browse page, so refining on /search and then following through threw the refinement away. AFTER: the destination URL carries the same filter (e.g. ?f=brand==Takara-Tomy) and the browse page opens already narrowed.",
+          href: "/search",
+        },
+        {
+          key: "search-admin-person-exact",
+          label: "Admin can find a user by typing just their FIRST name — but a prefix of it finds nothing",
+          description:
+            "Signed in as admin, open /admin/users and type a real user's first name only (not their full \"First Last\"). BEFORE: the search was an exact match on the WHOLE displayName string, so typing only the first name found nobody. AFTER: it is a whole-WORD match and finds them. Then type only the first 3-4 letters of that name (a prefix, not the whole word) — this must find NOTHING. That second half is the design, not a bug: the index is whole-word only so it cannot be unpicked by counting partial-match frequencies.",
+          href: "/admin/users",
+        },
+        {
+          key: "search-no-plaintext-pii",
+          label: "The stored search-index values are HMAC digests, never a readable name",
+          description:
+            "For an admin or engineer with Firestore console access: open a `users` document and find `nameTokensIndex`. Every entry must be an opaque hex digest (prefixed `hmac:`), never the person's actual name or email in any form. Also confirm no such field exists on, or is reachable from, the public search artifact (the .json file fetched by a signed-out visitor) — a deterministic per-person identifier published to every browser is a disclosure even though it cannot be reversed.",
+          href: "/admin/users",
+        },
+        {
+          key: "faq-punctuation-search",
+          label: "Searching \"!!!\" in the FAQ box shows the normalised-away state, not every FAQ",
+          description:
+            "GUARD CASE — this behaviour is already correct and this case exists to pin it so it cannot regress while the site-wide index work is in motion elsewhere. Open /faqs and search \"!!!\". It must say the search had no searchable words, and show zero FAQs — not the entire FAQ list.",
+          href: "/faqs",
         },
       ],
     },

@@ -34,6 +34,7 @@ import * as React from "react";
 
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
+import { SEARCH_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { SearchEverythingResult, SearchGroup } from "../../../_internal/server/features/search/search-everything";
 
 /** Matches the server-side gate, so the two cannot disagree about what is worth asking. */
@@ -80,7 +81,7 @@ export function useScopedSearch({
 
     apiClient
       .get<{ data?: SearchEverythingResult }>(
-        `/api/search/scoped?q=${encodeURIComponent(q)}`,
+        SEARCH_ENDPOINTS.SCOPED(q),
         { signal: controller.signal },
       )
       .then((res) => {

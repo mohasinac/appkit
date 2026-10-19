@@ -76,6 +76,21 @@ export interface EntityTypeaheadProps {
   value?: string;
   onChange?: (value: string) => void;
   limit?: number;
+  /**
+   * Default `true`: picking a suggestion fills the field with the
+   * canonical title, as every ordinary typeahead does.
+   *
+   * 🛑 Set `false` when the consumer's DOWNSTREAM LOGIC treats a mismatch
+   * between what was typed and the canonical form as a signal rather than
+   * noise — `/tools/authenticity` is the one caller that needs this. Its
+   * engine fires a trademark-evasion warning on a FUZZY match, and that
+   * warning is exactly what filling the field would silence: the engine
+   * would receive "Storm Pegasus" and match it exactly, never learning the
+   * user typed "Pegasis" at all. With this false, a pick still calls
+   * `onPick` (with `rawQuery` intact) but leaves the field exactly as
+   * typed — discovery without consequence.
+   */
+  fillOnPick?: boolean;
 }
 
 export function EntityTypeahead({
@@ -87,6 +102,7 @@ export function EntityTypeahead({
   value,
   onChange,
   limit = 6,
+  fillOnPick = true,
 }: EntityTypeaheadProps) {
   const controlled = value !== undefined;
   const [internal, setInternal] = React.useState("");
@@ -148,7 +164,9 @@ export function EntityTypeahead({
                     typeKey: result?.groups.find((g) => g.hits.includes(hit))?.key ?? "",
                     rawQuery: query,
                   });
-                  setQuery(hit.title);
+                  // See `fillOnPick`'s 🛑 — skipping this is the whole
+                  // reason the prop exists, not an inconsistency.
+                  if (fillOnPick) setQuery(hit.title);
                   setDismissed(true);
                 }}
               >

@@ -222,9 +222,27 @@ export async function searchPriceIndex(rawQuery: string): Promise<PriceIndexSear
   });
   const page = listingRows.slice(0, PRICE_INDEX_SEARCH_LIMIT);
 
-  const bandsByLeaf = await priceIndexRepository.getManyForLeaves(page.map((c) => c.id));
+  const results = await buildBandsForLeaves(page);
 
-  const results: PriceIndexSearchResult[] = page.map((c) => {
+  return {
+    ...base,
+    results,
+    truncated: listingRows.length > PRICE_INDEX_SEARCH_LIMIT,
+  };
+}
+
+/**
+ * The ONE multi-get, shared by the search path above and the ids-only path
+ * below — the actual band-shaping logic (sort by sample size, omit an empty
+ * `bands` array, the "no sales recorded" vs "zero sales" distinction) must
+ * answer identically regardless of how the category list was resolved.
+ */
+async function buildBandsForLeaves(
+  leaves: ReadonlyArray<{ id: string; name: string; slug: string; path?: string; display?: { coverImage?: string } }>,
+): Promise<PriceIndexSearchResult[]> {
+  const bandsByLeaf = await priceIndexRepository.getManyForLeaves(leaves.map((c) => c.id));
+
+  return leaves.map((c) => {
     const doc = bandsByLeaf.get(c.id);
     const bands = doc
       ? Object.entries(doc.byListingType ?? {})
@@ -249,10 +267,42 @@ export async function searchPriceIndex(rawQuery: string): Promise<PriceIndexSear
       ...(doc ? { windowDays: doc.windowDays, computedAt: toIso(doc.computedAt) } : {}),
     };
   });
+}
 
-  return {
-    ...base,
-    results,
-    truncated: listingRows.length > PRICE_INDEX_SEARCH_LIMIT,
-  };
+/**
+ * Tier 1 adoption — the client already resolved candidate leaves LOCALLY via
+ * the public search artifact (`useSiteSearch({ types: ["model", "category"] })`),
+ * at zero Firestore reads. This is the ONLY query this path still needs: one
+ * multi-get, bounded by however many ids the client resolved (capped the
+ * same as the search path, so a crafted request cannot demand an unbounded
+ * `getAll`).
+ *
+ * 🛑 Deliberately NOT filtering brand/bundle categoryType here — the CALLER
+ * already did that at index-build time (`PUBLIC_INDEX_SOURCES`'s category
+ * source only emits real listing leaves under the "model"/"category" type
+ * keys), so re-deriving the same filter from a bare id list would be a
+ * second, independently-maintained copy of a rule that already lives in one
+ * place. If that assumption is ever wrong, the cost is a band shown for a
+ * brand/bundle row — cosmetic, not a leak, since no money figure is ever
+ * attached to a document that does not already have sales recorded.
+ */
+export async function getPriceIndexBandsForIds(
+  rawIds: readonly string[],
+): Promise<PriceIndexSearchResult[]> {
+  const ids = [...new Set(rawIds.filter((id) => typeof id === "string" && id.length > 0))].slice(
+    0,
+    PRICE_INDEX_SEARCH_LIMIT,
+  );
+  if (ids.length === 0) return [];
+
+  const docs = await categoriesRepository.getManyByIds(ids);
+  const leaves = docs.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    path: c.path,
+    display: c.display,
+  }));
+
+  return buildBandsForLeaves(leaves);
 }

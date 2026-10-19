@@ -519,6 +519,9 @@ export function ProductsIndexListing({
         onRemove={(id) =>
           setCompareIds((ids) => ids.filter((i) => i !== id))
         }
+        onAdd={(id) =>
+          setCompareIds((ids) => (ids.includes(id) ? ids : [...ids, id]))
+        }
       />
 
       <FilterDrawer

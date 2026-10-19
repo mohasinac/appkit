@@ -7887,32 +7887,8 @@ export type { UpdateReviewActionInput } from "./features/reviews/server";
 // Search - Shared export for search.
 export { Search } from "./features/search/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SearchFiltersRow - Shared export for search filters row.
-export { SearchFiltersRow } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SearchResultsSection - Shared export for search results section.
-export { SearchResultsSection } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SearchView - Component for search view.
-export { SearchView } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// buildSearchResultColumns - Helper for build search result columns.
-export { buildSearchResultColumns } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// searchProductItemSchema - Model for search product item schema.
-export { searchProductItemSchema } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// searchQuerySchema - Model for search query schema.
-export { searchQuerySchema } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// searchResultAdminColumns - Shared export for search result admin columns.
-export { searchResultAdminColumns } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useNavSuggestions - React hook for use nav suggestions.
 export { useNavSuggestions } from "./features/search/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useSearch - React hook for use search.
-export { useSearch } from "./features/search/index";
 // [CLIENT]-Browser only. Fetches the public search artifact once per page session.
 // Exported from the defining module, not the feature barrel — see client.ts.
 export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
@@ -7928,9 +7904,6 @@ export type {
 // NavSuggestionRecord - Type contract for nav suggestion record.
 export type { NavSuggestionRecord } from "./features/search/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchCategoryOption - Type contract for search category option.
-export type { SearchCategoryOption } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SearchLabels - Type contract for search labels.
 export type { SearchLabels } from "./features/search/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -7940,43 +7913,14 @@ export type { SearchResourceType } from "./features/search/index";
 // SearchResourceTypeOption - Type contract for search resource type option.
 export type { SearchResourceTypeOption } from "./features/search/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchProductItem - Type contract for search product item.
-export type { SearchProductItem } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SearchProps - Type contract for search props.
 export type { SearchProps } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchQuery - Type contract for search query.
-export type { SearchQuery } from "./features/search/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SearchQuickLink - Type contract for search quick link.
 export type { SearchQuickLink } from "./features/search/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchResponse - Type contract for search response.
-export type { SearchResponse } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchResultsSectionProps - Type contract for search results section props.
-export type { SearchResultsSectionProps } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SearchRouterAdapter - Type contract for search router adapter.
 export type { SearchRouterAdapter } from "./features/search/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchViewProps - Type contract for search view props.
-export type { SearchViewProps } from "./features/search/index";
-
-// ./features/search/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// SearchRepository - Shared export for search repository.
-export { SearchRepository } from "./features/search/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// searchGET - Shared export for search get.
-export { searchGET } from "./features/search/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// searchProducts - Shared export for search products.
-export { searchProducts } from "./features/search/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SearchProductsResult - Type contract for search products result.
-export type { SearchProductsResult } from "./features/search/server";
 
 // ./features/seller/index
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.

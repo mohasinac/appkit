@@ -11,6 +11,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { MediaImage } from "../../media/MediaImage";
 import { TOOL_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http/ApiClient";
+import { useSiteSearch } from "../../search/hooks/useSiteSearch";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
@@ -331,13 +332,28 @@ function ResultCard({ row, threshold }: { row: PriceIndexResultRow; threshold: n
   );
 }
 
+/** Stable identity — a `useMemo` dependency inside `useSiteSearch`. */
+const identityLabel = (typeKey: string) => typeKey;
+
+/** `/categories/{slug}` -> `{slug}`. Category documents are pure slugs (id === slug). */
+function categoryIdFromHref(href: string): string | null {
+  const m = /^\/categories\/([^/?#]+)/.exec(href);
+  return m ? m[1] : null;
+}
+
 export interface PriceIndexToolViewProps {
   /** Seeded from `?q=` so a shared link reproduces the lookup. */
   initialQuery?: string;
   initialData?: PriceIndexToolResponse | null;
+  /** `siteSettings.search?.indexEnabled`. Read as `!== false`. */
+  searchIndexEnabled?: boolean;
 }
 
-export function PriceIndexToolView({ initialQuery = "", initialData = null }: PriceIndexToolViewProps) {
+export function PriceIndexToolView({
+  initialQuery = "",
+  initialData = null,
+  searchIndexEnabled,
+}: PriceIndexToolViewProps) {
   const [draft, setDraft] = useState(initialQuery);
   /**
    * The SUBMITTED term, distinct from `draft`.
@@ -351,26 +367,102 @@ export function PriceIndexToolView({ initialQuery = "", initialData = null }: Pr
   const [term, setTerm] = useState(initialQuery.trim());
 
   /*
-   * `useQuery` + `apiClient`, not a hand-rolled `fetch` with its own loading
-   * and error state — which is what this had, and what `audit-form-mutation-hook`
-   * correctly rejected. It also deletes three `useState`s: React Query already
-   * owns in-flight, error and the response, and it dedupes the identical lookup
-   * rather than issuing it twice.
+   * 🛑 TIER 1 ADOPTION. `searchPriceIndex` (the fallback below) pays a
+   * `searchTxt` push-down query to turn `term` into category leaves —
+   * exactly the resolution `useSiteSearch` already does in the browser, at
+   * zero reads, for every other search surface on the site. Resolving here
+   * removes that query from the HOT path; the server is left with only the
+   * one multi-get it cannot avoid.
+   *
+   * `active` mirrors `term`'s own gate (2+ chars) rather than firing on
+   * mount — consistent with every other `useSiteSearch` caller, which loads
+   * the ~420 KB artifact only once intent is shown.
    */
-  const query = useQuery({
+  const local = useSiteSearch(term, {
+    active: term.length >= 2,
+    indexEnabled: searchIndexEnabled,
+    types: ["model", "category"],
+    label: identityLabel,
+  });
+
+  const localIds = React.useMemo(() => {
+    if (!local.result) return [];
+    const ids = new Set<string>();
+    for (const group of local.result.groups) {
+      for (const hit of group.hits) {
+        const id = categoryIdFromHref(hit.href);
+        if (id) ids.add(id);
+      }
+    }
+    return [...ids];
+  }, [local.result]);
+
+  const localReady = local.status === "ready";
+
+  /*
+   * The bands-only request. Enabled ONLY once local resolution has actually
+   * produced something — an empty `localIds` with the gate open would be a
+   * request shaped `?ids=`, which the route already treats as "no results"
+   * but which is still a request worth not making.
+   */
+  const bandsQuery = useQuery({
+    queryKey: ["tool", "price-index", "bands", localIds],
+    queryFn: () =>
+      apiClient.get<{ results: PriceIndexResultRow[] }>(TOOL_ENDPOINTS.PRICE_INDEX_BANDS(localIds)),
+    enabled: localReady && localIds.length > 0,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  /*
+   * The FALLBACK. Fires only when the local index is off, failed, or
+   * (rarely) resolved to nothing — never alongside the local path, so a
+   * working index never pays for both. Same cache posture as it always had.
+   */
+  const fallbackEnabled =
+    term.length >= 2 && (local.status === "failed" || local.status === "disabled" ||
+      (localReady && localIds.length === 0));
+  const fallbackQuery = useQuery({
     queryKey: ["tool", "price-index", term],
     queryFn: () => apiClient.get<PriceIndexToolResponse>(TOOL_ENDPOINTS.PRICE_INDEX_SEARCH(term)),
-    enabled: term.length >= 2,
-    /*
-     * The endpoint is edge-cached for an hour over a day-stale aggregate, so
-     * refetching on focus or remount would spend invocations to learn nothing.
-     */
+    enabled: fallbackEnabled,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     ...(initialData && initialData.query === initialQuery.trim()
       ? { initialData }
       : {}),
   });
+
+  /*
+   * One shape out, regardless of which path answered. `truncated` is always
+   * `false` on the local path — `PRICE_INDEX_SEARCH_LIMIT` already bounded
+   * how many ids were resolved, so there is nothing left uncounted the way
+   * the query-based path's search step could leave behind.
+   */
+  const query = localReady && localIds.length > 0
+    ? {
+        data: bandsQuery.data
+          ? {
+              query: term,
+              results: bandsQuery.data.results,
+              truncated: false,
+              /*
+               * The confidence threshold is a server-side constant
+               * (`PRICE_INDEX_MIN_CONFIDENT_SAMPLES = 3`), not something
+               * resolved per-request — the bands endpoint does not echo it
+               * back because it is already baked into each band's own
+               * `confident` flag. Hardcoded to match the renderer's own
+               * existing fallback below (`data?.minConfidentSamples ?? 3`),
+               * so the two paths show the same explanatory copy.
+               */
+              minConfidentSamples: 3,
+            }
+          : undefined,
+        isFetching: bandsQuery.isFetching,
+        isError: bandsQuery.isError,
+        error: bandsQuery.error,
+      }
+    : fallbackQuery;
 
   const run = useCallback((q: string) => setTerm(q.trim()), []);
 

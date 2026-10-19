@@ -159,14 +159,16 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const config: ListingViewConfig<AdminUsersResponse, UserRow> = {
     portal: "admin",
     title: "Users",
-    // Exact match, and the copy has to say so. `/api/admin/users` branches on
-    // whether the term contains "@": an email resolves through
-    // `emailIndex == piiBlindIndex(q)` and a name through `displayName == q`.
-    // BOTH are equality. Email cannot be partial-matched at all — it is
-    // encrypted, and ciphertext has no usable prefix (D1) — and "seller
-    // handles" were never matched by anything.
+    // `/api/admin/users` branches on whether the term contains "@": an
+    // email resolves through `emailIndex == piiBlindIndex(q)` (whole-value
+    // equality — ciphertext has no usable prefix, D1) and a name through
+    // `nameTokensIndex @= tokensIndexQueryValue(q)` — a WHOLE WORD, not a
+    // prefix and not the full "First Last" string. "Mohasin" now finds
+    // "Mohasin Chinnapattan"; "Moh" still finds nothing, deliberately (see
+    // security/blind-index-tokens.ts for why a prefix-expanded blind index
+    // is the thing that leaks by frequency analysis).
     search: {
-      placeholder: "Full name or email (exact match)",
+      placeholder: "Full name (one word) or email",
       mode: "exact",
       fields: ["displayName", "email"],
     },

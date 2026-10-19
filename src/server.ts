@@ -15,6 +15,21 @@ export type {
 } from "./_internal/server/features/search/search-everything";
 export { SEARCH_SOURCES } from "./_internal/server/features/search/search-sources";
 export { SCOPED_SCAN_BUDGET } from "./_internal/server/features/search/search-everything";
+/*
+ * `buildTokensIndex` is server-only for the same reason `encryptPiiFields`
+ * is: it feeds `BaseRepository.buildTokensIndexFor`, which runs inside the
+ * write-hook chain that also calls `hmacBlindIndex` (a `node:crypto` HMAC).
+ * `seed-cli.mjs`'s own `encryptSeedPii` needs this exported here because the
+ * seed CLI writes directly to Firestore and does not go through any
+ * repository's `createWithId` — see the 🛑 on `PayoutRepository`'s
+ * `buildTokensIndexFor` for why that bypass is the one that matters.
+ */
+export {
+  buildTokensIndex,
+  tokensIndexQueryValue,
+  BLIND_INDEX_KEY_VERSION_FIELD,
+  CURRENT_BLIND_INDEX_KEY_VERSION,
+} from "./security/blind-index-tokens";
 // Tier 2 — viewer-scoped sources. Server-only by construction: they build an
 // owner clause from a session, and a client that could construct them could
 // construct somebody else's.
@@ -1024,7 +1039,7 @@ export {
 // only: it reads Firestore through two repositories, so it must never reach
 // client.ts (verify-entries would catch firebase-admin, but the import chain
 // is the thing to keep clean — Root Cause #6).
-export { searchPriceIndex, PRICE_INDEX_SEARCH_LIMIT, PRICE_INDEX_MIN_QUERY_LENGTH } from "./_internal/server/features/price-index/search";
+export { searchPriceIndex, getPriceIndexBandsForIds, PRICE_INDEX_SEARCH_LIMIT, PRICE_INDEX_MIN_QUERY_LENGTH } from "./_internal/server/features/price-index/search";
 export type {
   PriceIndexSearchResponse,
   PriceIndexSearchResult,
@@ -1334,12 +1349,6 @@ export { updateReview } from "./features/reviews/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // voteReviewHelpful - Shared export for vote review helpful.
 export { voteReviewHelpful } from "./features/reviews/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// searchGET - Shared export for search get.
-export { searchGET } from "./features/search/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// searchProducts - Shared export for search products.
-export { searchProducts } from "./features/search/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // acceptCounterOffer - Shared export for accept counter offer.
 export { acceptCounterOffer } from "./features/seller/server";

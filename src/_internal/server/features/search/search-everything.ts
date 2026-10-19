@@ -40,11 +40,15 @@
  *
  * ── 🛑 WHAT IT DOES NOT REUSE, AND WHY ─────────────────────────────────────
  *
- * NOT `SearchRepository`. That class builds `title_=${q}` — a case-sensitive
+ * NOT `SearchRepository`. That class built `title_=${q}` — a case-sensitive
  * STARTS-WITH on `title` alone — so "dranzer" would not find "Beyblade
- * Original Dranzer S" and "flat" would find nothing at all. It is reachable
- * only through `/api/search`, whose own hook (`useSearch`) has zero consumers
- * outside barrel re-exports. Recorded rather than deleted here; see F1.
+ * Original Dranzer S" and "flat" would find nothing at all. It was reachable
+ * only through `/api/search`, whose own hook (`useSearch`) had zero consumers
+ * outside barrel re-exports. The whole dead subsystem — `SearchRepository`,
+ * `/api/search`, `useSearch`, `SearchView`/`SearchFiltersRow`/
+ * `SearchResultsSection`, the legacy `search-actions.ts`/`data.ts`/
+ * `actions.ts` chain — was deleted in the Wave 10 cleanup, kept only as this
+ * historical note on why `searchEverything` never called it.
  */
 import { planSearchTxt } from "../../../../utils/search-txt-query";
 /*

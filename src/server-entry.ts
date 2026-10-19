@@ -220,13 +220,6 @@ export {
   getScammerProfilePageData as getScammerProfilePageDataCached,
 } from "./_internal/server/features/scams/index";
 
-// S5: search data layer + action
-export {
-  getSearchResults,
-  searchAction,
-  type SearchQuery,
-} from "./_internal/server/features/search/index";
-
 // S3: categories data layer
 export {
   getCategoryForDetail,

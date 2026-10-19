@@ -140,3 +140,18 @@ export function tokensIndexQueryValue(term: string): string | null {
  * everything, and a mismatch is detectable rather than invisible.
  */
 export const BLIND_INDEX_KEY_VERSION_FIELD = "blindIndexKeyVersion";
+
+/**
+ * The version every NEW write stamps. Bump by hand when `PII_HMAC_KEY`
+ * rotates — never computed, because a value derived from the key itself
+ * would be constant across every rotation and the whole point is to tell
+ * two rotations apart.
+ *
+ * Read from `PII_HMAC_KEY_VERSION` so the repository write path (which runs
+ * inside the Next.js/Functions runtime) and `backfill-blind-index.mjs`
+ * (which runs as a standalone script before `appkit/dist` is necessarily
+ * current) agree without importing from each other.
+ */
+export const CURRENT_BLIND_INDEX_KEY_VERSION = Number(
+  (typeof process !== "undefined" ? process.env?.PII_HMAC_KEY_VERSION : undefined) ?? "1",
+);

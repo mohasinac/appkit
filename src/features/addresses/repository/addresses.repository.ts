@@ -24,6 +24,7 @@ import {
   revealPii,
   ADDRESS_PII_FIELDS,
 } from "../../../security";
+import { buildTokensIndex } from "../../../security/blind-index-tokens";
 import {
   ADDRESS_FIELDS,
   ADDRESSES_COLLECTION,
@@ -53,6 +54,28 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
    * call.
    */
   protected override piiFields = ADDRESS_PII_FIELDS;
+
+  /**
+   * Admin search by name, without decryption. ONLY `fullName` — never
+   * `addressLine1`: "find everyone on Brigade Road" is not a capability
+   * admin needs and is the single most re-identifying field on the
+   * document. See `security/blind-index-tokens.ts` for why this is
+   * whole-word rather than a prefix-expanded index.
+   *
+   * Runs through `applyWriteHooks`, so it reaches every write path
+   * including a seed load — which is what makes it survive the tester
+   * harness's cascade on `addresses` (it references `ownerId`, a
+   * PRESERVE-tier user, so the row itself is never actually wiped — but
+   * the field regenerating on every write is what makes that true by
+   * construction rather than by luck).
+   */
+  protected override buildTokensIndexFor(
+    data: Record<string, unknown>,
+  ): Record<string, string[]> | null {
+    const fullName = typeof data.fullName === "string" ? data.fullName : undefined;
+    if (!fullName) return null;
+    return { nameTokensIndex: buildTokensIndex(fullName) };
+  }
 
   /*
    * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.

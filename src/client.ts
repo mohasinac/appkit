@@ -612,8 +612,6 @@ export { StoreSidebar } from "./features/seller/components/SellerSidebar";
 export type { StoreNavItem, StoreNavGroup } from "./features/seller/components/SellerSidebar";
 export { StoreProductsView, StoreAboutView } from "./features/stores/index";
 export type { StoreProductItem, StoreAboutViewProps, StoreDetail } from "./features/stores/index";
-export { SearchView } from "./features/search/index";
-export type { SearchViewProps } from "./features/search/index";
 /*
  * The browser-side search index. Exported from its DEFINING module rather
  * than through `features/search/index` (Root Cause #18) — `ensureSearchIndex`

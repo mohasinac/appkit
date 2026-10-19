@@ -5,6 +5,7 @@
  * Handles seller payout requests and admin payout processing.
  */
 
+import { buildTokensIndex } from "../../../security/blind-index-tokens";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -110,6 +111,28 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    */
   protected override piiFields = PAYOUT_PII_FIELDS;
   protected override piiIndexMap = PAYOUT_PII_INDEX_MAP;
+
+  /**
+   * Admin search by seller name/email, without decryption.
+   *
+   * 🛑 THIS IS THE ONE THAT MATTERS FOR THE TESTER HARNESS. `payouts` is
+   * SEED_TRANSACTIONAL: it cascades on `storeId` whenever its store is
+   * wiped, then gets RE-SEEDED from `appkit/src/seed/payouts-seed-data.ts`.
+   * The seed file has no `sellerTokensIndex` field — only this hook produces
+   * one — so a one-shot backfill script would have been silently undone by
+   * the very next tester run. Routing through `applyWriteHooks` means the
+   * reseed writes through `createWithId`, which calls this hook, which
+   * regenerates the index — so the field is never actually "missing after a
+   * wipe", because the wipe is always followed by the write that restores it.
+   */
+  protected override buildTokensIndexFor(
+    data: Record<string, unknown>,
+  ): Record<string, string[]> | null {
+    const sellerName = typeof data.sellerName === "string" ? data.sellerName : undefined;
+    const sellerEmail = typeof data.sellerEmail === "string" ? data.sellerEmail : undefined;
+    if (!sellerName && !sellerEmail) return null;
+    return { sellerTokensIndex: buildTokensIndex(sellerName, sellerEmail) };
+  }
 
   /**
    * The base hook, plus the nested objects it cannot see.

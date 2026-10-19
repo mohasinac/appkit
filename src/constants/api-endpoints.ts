@@ -677,11 +677,7 @@ export const REVIEW_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 
 export const SEARCH_ENDPOINTS = {
-  QUERY: (q: string, extra?: string) =>
-    `/api/search?q=${encodeURIComponent(q)}${extra ? `&${extra}` : ""}`,
   SUGGESTIONS: "/api/search/suggestions",
-  /** @param params — pre-built querystring (no leading `?`) from a caller-owned URLSearchParams */
-  RAW: (params: string) => `/api/search?${params}`,
   /** Tier 2 — the viewer's own orders/offers/drafts/addresses. `private, no-store`. */
   SCOPED: (q: string) => `/api/search/scoped?q=${encodeURIComponent(q)}`,
 } as const;

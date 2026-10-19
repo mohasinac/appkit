@@ -1,19 +1,16 @@
 import type { FeatureManifest } from "../../contracts";
 
 /**
- * 🛑 `default` was `SearchView` and the route has never rendered it.
+ * `default` is `SearchResultsClient`, which is what `[locale]/search/page.tsx`
+ * actually renders. It used to say `SearchView` — a component the route has
+ * never rendered, from the dead legacy `feat-search` subsystem — and A7
+ * (`audit-feature-manifest-routes`) is what this file is the fixed example
+ * for.
  *
- * `src/app/[locale]/search/page.tsx` renders `SearchResultsClient`;
- * `SearchView` is part of the dead subsystem (no consumers, slated for
- * deletion). A manifest that names a component the route does not import is
- * a map of the codebase that is wrong in the one direction nobody checks —
- * nothing reads it at runtime, so it drifts silently and then misleads the
- * next person who trusts it.
- *
- * `api/search` is likewise still declared here while being dead; it is left
- * in place only until the deletion wave removes the route itself, so the
- * manifest and the filesystem go empty in the same commit rather than this
- * one claiming an endpoint vanished a week early.
+ * `api/search` (the dead `SearchRepository`-backed GET handler) was removed
+ * from `apiRoutes` in the same Wave 10 commit that deleted the route itself
+ * — the manifest and the filesystem go empty together, not one claiming the
+ * other vanished a week early.
  */
 export const manifest: FeatureManifest = {
   name: "search",
@@ -23,7 +20,6 @@ export const manifest: FeatureManifest = {
     { segment: "[locale]/search", exports: { default: "SearchResultsClient" } },
   ],
   apiRoutes: [
-    { segment: "api/search", methods: ["GET"] },
     { segment: "api/search/scoped", methods: ["GET"] },
     { segment: "api/search/suggestions", methods: ["GET"] },
     { segment: "api/categories/flat", methods: ["GET"] },

@@ -333,4 +333,75 @@ export const authored: Record<string, AuthoredCase> = {
       "A search box sits above the grid. 'RF' returns the part with its classification on a second line; 'zzzznope' says no part matches. The classification grid is still there underneath — the box adds a way in, it does not replace browsing.",
     endResult: "Read-only; nothing persists.",
   },
+
+  "checklist-content-discovery-search-search-facet-carries-through": {
+    roles: ["guest"],
+    startPage: "/search",
+    steps: [
+      "Open /search?q=beyblade in a private window.",
+      "Tick one facet chip, e.g. a brand.",
+      "Find that group's own 'See all →' link and read its href before clicking.",
+      "Click it.",
+      "Read the URL you land on and whether the listing page shows the same filter applied.",
+    ],
+    inputs: { query: "beyblade" },
+    expectedBehaviour:
+      "The refinement a visitor builds on /search must survive the jump to the real browse page — losing it means re-doing work they already did.",
+    expectedUiState:
+      "The destination URL carries the same filter (e.g. a brand query parameter), and the browse page opens already narrowed to it, not showing the unfiltered full list.",
+    endResult: "Read-only; nothing persists.",
+  },
+
+  "checklist-content-discovery-search-search-admin-person-exact": {
+    roles: ["admin"],
+    startPage: "/admin/users",
+    steps: [
+      "Sign in as admin and open /admin/users.",
+      "Pick a real user and note their first name only.",
+      "Type just that first name into the search box.",
+      "Read the results.",
+      "Clear the box and type only the first 3-4 letters of that same first name — a prefix, not the whole word.",
+      "Read the results again.",
+    ],
+    expectedBehaviour:
+      "The admin search resolves through a whole-WORD index, not a whole-STRING exact match. Typing a first name alone must find a user whose displayName is 'First Last' — before this it required the exact full string. A PREFIX of the word must find nobody: the index is whole-word only on purpose, so it cannot be unpicked by counting partial-match frequencies.",
+    expectedUiState:
+      "The full first name returns the user. The 3-4 letter prefix returns an empty list — not the same user, not anybody else.",
+    endResult: "Read-only; nothing persists.",
+  },
+
+  "checklist-content-discovery-search-search-no-plaintext-pii": {
+    roles: ["admin"],
+    startPage: "/admin/users",
+    steps: [
+      "With Firestore console access, open any `users` document.",
+      "Find the `nameTokensIndex` field and read its values.",
+      "Confirm every entry is an opaque hex string with an `hmac:` prefix, never a readable name fragment.",
+      "Separately, fetch the public search artifact's .json file (the one the header search downloads) and search its raw text for the word 'TokensIndex'.",
+    ],
+    needsReview: true,
+    reviewNote:
+      "Needs Firestore console access, which an automated browser session does not have — flagged for a human or an admin-tooling pass rather than answered null.",
+    expectedBehaviour:
+      "A blind index lets admin search without ever decrypting anyone's name. If the stored values are readable, or if the field reaches the public artifact (a deterministic per-person identifier published to every browser, cross-referenceable even unbroken), the whole design has failed regardless of what the UI shows.",
+    expectedUiState:
+      "Every `nameTokensIndex` entry is an `hmac:`-prefixed digest. The public artifact's raw text contains no occurrence of 'TokensIndex' at all.",
+    endResult: "Read-only; nothing persists.",
+  },
+
+  "checklist-content-discovery-search-faq-punctuation-search": {
+    roles: ["guest"],
+    startPage: "/faqs",
+    steps: [
+      "Open /faqs in a private window.",
+      "Type !!! into the FAQ search box.",
+      "Read the message shown and count the FAQs displayed.",
+    ],
+    inputs: { punctuation: "!!!" },
+    expectedBehaviour:
+      "GUARD CASE — pins behaviour that is already correct. A punctuation-only query has no searchable words, and must say so rather than silently falling through to 'no filter', which would return the entire FAQ catalogue disguised as search results.",
+    expectedUiState:
+      "The page says the search had no searchable words. Zero FAQs are shown — not the full list.",
+    endResult: "Read-only; nothing persists.",
+  },
 };

@@ -39,6 +39,7 @@ import { COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { EntityTypeahead } from "../../search/components/EntityTypeahead";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -82,6 +83,8 @@ export interface CompareOverlayLabels {
   close?: string;
   remove?: string;
   view?: string;
+  /** Placeholder/aria-label for the "add another" typeahead. Only rendered when `onAdd` is passed. */
+  addAnother?: string;
   field?: Partial<CompareFieldLabels>;
 }
 
@@ -91,6 +94,7 @@ interface ResolvedLabels {
   close: string;
   remove: string;
   view: string;
+  addAnother: string;
   field: CompareFieldLabels;
 }
 
@@ -100,6 +104,7 @@ const DEFAULT_LABELS: ResolvedLabels = {
   close: "Close",
   remove: "Remove",
   view: "View",
+  addAnother: "Add another to compare",
   field: {
     image: "Photo",
     price: "Price",
@@ -121,8 +126,30 @@ export interface CompareOverlayProps {
   onClose: () => void;
   /** Called when a column's Remove button is clicked. */
   onRemove?: (id: string) => void;
+  /**
+   * Called with a resolved slug when the user picks a result from the
+   * "Add another" typeahead. Omit to leave the overlay exactly as it was —
+   * every existing caller keeps working unchanged.
+   *
+   * 🛑 Resolution only, no fetch. The overlay already knows how to turn an
+   * id into a full `CompareProductLike` via `productIds` (`useFetchedProducts`
+   * fetches `/api/products?ids=…`); this hands back ONE more id for that same
+   * mechanism, rather than teaching the overlay a second way to load a
+   * product. The caller decides whether to append to its own `productIds`
+   * state or ignore it.
+   */
+  onAdd?: (id: string) => void;
+  /** `siteSettings.search?.indexEnabled`. Threaded through to the typeahead. */
+  searchIndexEnabled?: boolean;
   labels?: CompareOverlayLabels;
 }
+
+/** Index type keys for each `productType` discriminator the overlay accepts. */
+const TYPEAHEAD_TYPES: Record<NonNullable<CompareOverlayProps["productType"]>, readonly string[]> = {
+  product: ["standard"],
+  auction: ["auction"],
+  preorder: ["pre-order"],
+};
 
 const OVERLAY_CLASS =
   "fixed inset-0 flex flex-col bg-[var(--appkit-color-bg)] overflow-hidden z-[var(--appkit-z-modal,60)]";
@@ -318,6 +345,8 @@ export function CompareOverlay({
   productType = "product",
   onClose,
   onRemove,
+  onAdd,
+  searchIndexEnabled,
   labels: labelOverrides,
 }: CompareOverlayProps) {
   const labels = useMemo<ResolvedLabels>(
@@ -407,6 +436,35 @@ export function CompareOverlay({
           <X className="h-5 w-5" />
         </IconButton>
       </Row>
+
+      {/*
+        * "Add another" — resolution only, at zero Firestore reads. Hidden
+        * entirely when the caller passed no `onAdd` (every pre-existing
+        * consumer), and once the column limit is reached: a picker that
+        * cannot actually add anything is worse than an absent one.
+        */}
+      {onAdd && trimmed.length < COMPARE_MAX_ITEMS && (
+        <Div className={`${__P.p4} border-b border-[var(--appkit-color-border-subtle)]`}>
+          <EntityTypeahead
+            types={TYPEAHEAD_TYPES[productType]}
+            indexEnabled={searchIndexEnabled}
+            label={labels.addAnother}
+            placeholder={labels.addAnother}
+            limit={5}
+            onPick={(pick) => {
+              /*
+               * The LAST path segment, not a type-specific pattern. The
+               * three listing types this overlay accepts have three
+               * different detail routes (/products, /auctions,
+               * /pre-orders), and every one of them ends in the slug — the
+               * same thing `productIds` already expects.
+               */
+              const slug = pick.href.split("/").filter(Boolean).pop();
+              if (slug) onAdd(slug);
+            }}
+          />
+        </Div>
+      )}
 
       <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
         {isLoading ? (

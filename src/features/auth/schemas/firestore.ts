@@ -424,6 +424,8 @@ export const USER_FIELDS = {
   DISPLAY_NAME: "displayName",
   EMAIL_INDEX: "emailIndex",
   PHONE_INDEX: "phoneIndex",
+  /** Whole-word HMAC digests of `displayName` + `email`. See `blind-index-tokens.ts`. */
+  NAME_TOKENS_INDEX: "nameTokensIndex",
   PHOTO_URL: "photoURL",
   AVATAR_METADATA: "avatarMetadata",
   ROLE: "role",

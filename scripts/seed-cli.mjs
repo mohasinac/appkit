@@ -181,7 +181,8 @@ const appkit = await import("@mohasinac/appkit");
 // client-safe barrel, only from "@mohasinac/appkit/server". The *_PII_FIELDS
 // / *_PII_INDEX_MAP constants are plain data and stay in the main barrel.
 const appkitServer = await import("@mohasinac/appkit/server");
-const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig } = appkitServer;
+const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig,
+  buildTokensIndex, BLIND_INDEX_KEY_VERSION_FIELD, CURRENT_BLIND_INDEX_KEY_VERSION } = appkitServer;
 
 const {
   // seed data
@@ -191,7 +192,7 @@ const {
   storeCategoriesSeedData, listingTemplatesSeedData, moderationQueueSeedData, reportsSeedData,
   itemRequestsSeedData, storeGoogleConfigSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
-  productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
+  productsStandardSeedData, productsBeybladeXSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData, productsSparesSeedData,
   productsCatalogueSeedData,
@@ -494,7 +495,12 @@ const SEED_DATA_MAP = {
   categories: categoriesSeedData,
   stores: storesSeedData,
   products: withFranchise(withDerivedCategoryFields([
-    ...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
+    ...(productsStandardSeedData || []),
+    // Real, wiki-verified Beyblade X listings under store-letitrip-official —
+    // added 2026-10-19 for PhonePe merchant registration, which requires at
+    // least one genuinely purchasable product. See the file's own header.
+    ...(productsBeybladeXSeedData || []),
+    ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
     // spread here — so 13 fixtures had NEVER reached the database, /art and
@@ -506,11 +512,30 @@ const SEED_DATA_MAP = {
     // edited and this spread was not — the loader then wrote every OTHER
     // product and reported success.
     ...(productsSparesSeedData || []),
-    // The 972 generated catalogue-filler listings (one per taxonomy leaf) —
-    // see scripts/gen-catalogue-listings.mjs. This is what makes `products`
-    // reproducible after a full wipe; without it the collection drops from
-    // 1,039 to 71 the moment someone purges it.
-    ...(productsCatalogueSeedData || []),
+    /*
+     * 🛑 DEREGISTERED 2026-10-19 — productsCatalogueSeedData (1,237 rows, one
+     * per taxonomy leaf) is NOT spread here, on purpose.
+     *
+     * This is a reversal of the comment that used to be here, which said the
+     * opposite: that this spread was "what makes `products` reproducible
+     * after a full wipe." That was true when the catalogue was the only
+     * content under its leaf categories. It stopped being true the moment
+     * real curated listings exist for the SAME leaves — four of them,
+     * confirmed by grep: `category-aeropegasus-3-70a`, `category-
+     * valkyrievolt-s4-70v`, `category-wizardarrow-4-80b`, `category-
+     * knightshield-3-80n` each already carry one generated row. Re-enabling
+     * this spread would not just add filler back — it would put a
+     * hash-priced synthetic duplicate (one measured as a NEGATIVE price,
+     * `-61`) into the exact categories the real BX-53 fixture now occupies,
+     * silently resurrecting the thing a full `appkit-seed purge` was just run
+     * to remove.
+     *
+     * The generator (`scripts/gen-catalogue-listings.mjs`) and the committed
+     * file itself are both left untouched — this is deliberately a one-line
+     * "stop loading it" change, not a deletion. Re-enable only after deciding
+     * what should happen to a leaf that now has BOTH a real listing and a
+     * generated one.
+     */
   ])),
   orders: ordersSeedData,
   reviews: reviewsSeedData,
@@ -601,6 +626,33 @@ async function purgeCollection(path) {
   return removed;
 }
 
+/*
+ * 🛑 `TOKENS_INDEX_MAP` holds ONLY `payouts`, and that is a measured fact
+ * about this file, not an oversight.
+ *
+ * `encryptSeedPii` is called from exactly one place — `loadGeneric`'s
+ * per-doc loop. `users` and `addresses` are seeded by their OWN dedicated
+ * loaders (`loadUsers`, the addresses block near line 1029) that write
+ * straight to Firestore and never call this function — so a `users`/
+ * `addresses` entry here would be dead code, silently unreachable, which is
+ * worse than no entry: it would read as "handled" to the next person who
+ * greps for it.
+ *
+ * It is also the right scope rather than a gap, because `users` and
+ * `addresses` are PRESERVE-tier in the tester harness — never wiped, never
+ * reseeded — so the only two things that can write their `*TokensIndex`
+ * are a REAL write (covered by `UserRepository`/`AddressesRepository`'s
+ * `buildTokensIndexFor`, wired separately) and the one-time bootstrap seed
+ * load `appkit-seed load --collections users` documented in CLAUDE.md's
+ * § "Claude Tester" — which `backfill-blind-index.mjs` exists to catch up
+ * after. `payouts` has no such safety net: it is SEED_TRANSACTIONAL, so it
+ * cascades and RESEEDS on every tester run that touches its store, through
+ * exactly this function — which is why it is the one entry that matters.
+ */
+const TOKENS_INDEX_MAP = {
+  payouts: { field: "sellerTokensIndex", from: ["sellerName", "sellerEmail"] },
+};
+
 function encryptSeedPii(collection, data) {
   const PII_MAP = {
     orders: ORDER_PII_FIELDS,
@@ -612,11 +664,28 @@ function encryptSeedPii(collection, data) {
     eventEntries: EVENT_ENTRY_PII_FIELDS,
   };
   const fields = PII_MAP[collection];
-  if (!fields) return data;
-  let result = encryptPiiFields(data, [...fields]);
+  let result = fields ? encryptPiiFields(data, [...fields]) : { ...data };
   if (collection === "payouts" && result.bankAccount) {
     result.bankAccount = encryptPayoutBankAccount(result.bankAccount);
   }
+
+  /*
+   * 🛑 THIS IS WHAT MAKES `payouts` SURVIVE A TESTER WIPE WITH A WORKING
+   * SEARCH INDEX. `payouts` is SEED_TRANSACTIONAL in the tester harness —
+   * it cascades on `storeId` whenever its store is wiped, then gets
+   * RE-SEEDED by exactly this function. Without this block, the reseeded
+   * documents would carry ciphertext and no `sellerTokensIndex` at all,
+   * silently undoing a one-shot backfill on the very next tester run.
+   */
+  const tokensIndex = TOKENS_INDEX_MAP[collection];
+  if (tokensIndex) {
+    const values = tokensIndex.from.map((f) => data[f]).filter((v) => typeof v === "string");
+    if (values.length > 0) {
+      result[tokensIndex.field] = buildTokensIndex(...values);
+      result[BLIND_INDEX_KEY_VERSION_FIELD] = CURRENT_BLIND_INDEX_KEY_VERSION;
+    }
+  }
+
   return result;
 }
 
