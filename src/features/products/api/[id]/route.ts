@@ -14,7 +14,8 @@ import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next/api/routeHandler";
-import type { ProductItem } from "../../types/index";
+import type { ListingType, ProductItem } from "../../types/index";
+import { ALL_LISTING_TYPES } from "../../../../_internal/shared/listing-types/feature-flags";
 
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
@@ -75,8 +76,14 @@ const productUpdateSchema = z
     isPromoted: z.boolean().optional(),
     allowShipBeforeEmiComplete: z.boolean().optional(),
     printMeta: printMetaSchema.optional(),
+    /*
+     * 🛑 DERIVED from `ALL_LISTING_TYPES`, never restated. This literal was
+     * wrong in both directions: `spares` missing (so the type could not be
+     * PATCHed onto a listing at all) and `bundle` still present (so a caller
+     * could write a value no registry has a branch for). Root Cause #61.
+     */
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live", "art", "stickers"])
+      .enum(ALL_LISTING_TYPES as [ListingType, ...ListingType[]])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })

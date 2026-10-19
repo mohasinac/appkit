@@ -17,7 +17,8 @@ import { NextResponse } from "next/server.js";
 import { z } from "zod";
 import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next/api/routeHandler";
-import type { ProductItem, ProductListResponse } from "../types/index";
+import type { ListingType, ProductItem, ProductListResponse } from "../types/index";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { mediaFieldSchema } from "../../media/types/index";
 import { printMetaSchema } from "../schemas/index";
 import { sanitizeProductsForPublic } from "../utils/sanitize";
@@ -63,11 +64,22 @@ const productMutateSchema = z
     sellerName: z.string().optional(),
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
-    // `bundle` is deliberately absent: SB-UNI-D moved bundles onto
-    // `categories` as a categoryType, so a product written with that value
-    // would match no listing-type query anywhere.
+    /*
+     * 🛑 DERIVED from `ALL_LISTING_TYPES`, never restated.
+     *
+     * The literal that used to sit here is the cautionary tale for why. Its
+     * comment correctly explained that `bundle` is absent because SB-UNI-D
+     * moved bundles onto `categories` — so the dead value had been noticed and
+     * removed — and the list was STILL wrong, because `spares` was added to the
+     * union on 2026-10-19 and never reached here. A fix for one half of the
+     * drift, documented in a comment, with the other half drifting one field
+     * over underneath it.
+     *
+     * Deriving removes both failure modes at once: a dead value cannot survive
+     * and a new member cannot be forgotten. Root Cause #61.
+     */
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live", "art", "stickers"])
+      .enum(ALL_LISTING_TYPES as [ListingType, ...ListingType[]])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })
