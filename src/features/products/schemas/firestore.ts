@@ -533,6 +533,35 @@ export interface ProductDocument extends BaseDocument {
   isPromoted?: boolean;
   isOnSale?: boolean;
   isSold?: boolean;
+  /**
+   * This listing is PRINTED OR BUILT WHEN ORDERED, so stock does not gate it.
+   *
+   * A per-LISTING flag, deliberately not implied by `listingType`. A seller can
+   * hold a finite run of pre-cut sticker sheets and also offer a
+   * print-on-demand sheet, and the two must coexist on the same type — which a
+   * type-level rule cannot express. (`showsStockQuantity` on the plugin is the
+   * type-level field and must NOT be repurposed for this.)
+   *
+   * 🛑 It bypasses the stock CHECK and never the DECREMENT. `availableQuantity`
+   * going negative on a made-to-order row IS the production queue — how many
+   * are owed — and `stock-restore.ts` requires the restore to mirror the
+   * decrement exactly, so skipping the decrement would make a cancelled order
+   * restore stock that was never taken.
+   *
+   * 🛑 Not snapshotted onto `CartLineMember`. A snapshot goes stale the moment
+   * the flag is flipped, and every check site already holds the product
+   * document — so it is derived, never copied (Root Cause #42).
+   *
+   * 🛑 CHECKED, not assumed: nothing auto-sets `isSold` when quantity reaches
+   * zero, so a made-to-order listing does NOT destroy itself on its first
+   * sale. `buildStockUpdatePayload` writes `availableQuantity` and the rule's
+   * `stockDecrementExtras` and nothing else; the only two writers of
+   * `isSold: true` in the whole tree are auction settlement and the auction
+   * buyout, both of which are selling a unique lot and are correct to do it.
+   * If a future "mark sold out automatically" feature is added, it must skip
+   * made-to-order rows or every one of them dies on its first order.
+   */
+  madeToOrder?: boolean;
   /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
   allowShipBeforeEmiComplete?: boolean;
   /**
@@ -938,6 +967,10 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "isPromoted",
   "isOnSale",
   "isSold",
+  /* Public because the PDP has to SAY "made to order, printed when you order"
+   * instead of a stock line, and the group picker has to uncap that member's
+   * stepper. Both are client-side reads. */
+  "madeToOrder",
   "slug",
   "seoTitle",
   "seoDescription",
@@ -1018,6 +1051,11 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "preOrderCancellable",
   "isOnSale",
   "isSold",
+  /* 🛑 Listed here or an update STRIPS it — the write schema has no
+   * `.passthrough()`, so a field absent from this list is dropped before it
+   * reaches Firestore while the write still returns 200 (Root Cause #101). The
+   * seller checkbox would appear to save and change nothing. */
+  "madeToOrder",
   "allowShipBeforeEmiComplete",
   /*
    * B3 — these three were MISSING, so the fields existed on the document

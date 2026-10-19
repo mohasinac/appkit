@@ -95,6 +95,23 @@ export function validateCartItemStock(
     if (!product || product.status !== ProductStatusValues.PUBLISHED) {
       return { productId: member.productId, availableQty: product?.availableQuantity ?? 0 };
     }
+    /*
+     * 🛑 Made to order: skip the stock CHECK for this member.
+     *
+     * There is nothing to be short of — the thing is printed or built when the
+     * order arrives. `availableQuantity` on such a row goes negative by design
+     * and that negative IS the production queue, which is why the check is
+     * bypassed here and `getExpandedDecrements` above is deliberately left
+     * alone: it still counts, the decrement still lands, and
+     * `stock-restore.ts` can still mirror it exactly on a cancellation. Skip
+     * the decrement instead and a cancelled order restores stock that was
+     * never taken.
+     *
+     * Placed AFTER the published-status check on purpose: a draft or archived
+     * listing is unbuyable whatever its production model.
+     */
+    if (product.madeToOrder === true) continue;
+
     // The fallback must be member-weighted too. Left as a bare `item.quantity`
     // it would validate a line needing 3× of a member against demand for 1
     // whenever the cumulative map didn't happen to carry that product.

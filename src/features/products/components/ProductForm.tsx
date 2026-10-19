@@ -452,16 +452,54 @@ export function ProductForm({
           disabled={isReadonly}
           placeholder="0"
         />
-        <FormField
-          name="stockQuantity"
-          label={t("formStock")}
-          type="number"
-          value={String(product.stockQuantity ?? "")}
-          onChange={(value) => update({ stockQuantity: Number(value) })}
-          disabled={isReadonly}
-          placeholder="0"
-        />
+        {/*
+          * 🛑 Hidden, not disabled, when made to order — and the distinction
+          * matters. A disabled field still SHOWS a number, so a seller reads
+          * "Stock: 0" on a listing they can sell indefinitely and concludes
+          * something is wrong. There is no stock to report, so the control that
+          * reports it has no business being on screen.
+          *
+          * The stored value is left untouched either way: a seller who flips
+          * made-to-order off gets their old stock figure back rather than a
+          * zero this form wrote on their behalf.
+          */}
+        {product.madeToOrder === true ? null : (
+          <FormField
+            name="stockQuantity"
+            label={t("formStock")}
+            type="number"
+            value={String(product.stockQuantity ?? "")}
+            onChange={(value) => update({ stockQuantity: Number(value) })}
+            disabled={isReadonly}
+            placeholder="0"
+          />
+        )}
       </FormGroup>
+
+      {/*
+        * Made to order — a per-LISTING flag.
+        *
+        * 🛑 NOT gated on `pluginFor(listingType).showsStockQuantity`. That is a
+        * per-TYPE plugin field and repurposing it for a per-listing choice is
+        * precisely what this flag exists to avoid: a seller must be able to
+        * hold a finite run of pre-cut sticker sheets AND offer a
+        * print-on-demand one on the same listing type.
+        */}
+      <Checkbox
+        label="Made to order"
+        /* `suffix`, not a `helperText` prop — Checkbox has no such prop, and the
+         * explanation is load-bearing: a seller needs to know this turns stock
+         * tracking OFF before they tick it, not after. */
+        suffix={
+          <Text size="xs" color="muted">
+            Printed or built when someone orders it. Stock is not tracked and
+            the listing never shows as sold out.
+          </Text>
+        }
+        checked={!!product.madeToOrder}
+        onChange={(e) => update({ madeToOrder: e.target.checked })}
+        disabled={isReadonly}
+      />
 
       {!isReadonly && (
         <ImageUpload

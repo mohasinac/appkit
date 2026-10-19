@@ -45,6 +45,16 @@ export interface PublicGroupMember {
   groupTitle?: string;
   /** Drives the stepper's `max`. */
   availableQuantity: number;
+  /**
+   * Made to order — the stepper is UNCAPPED for this member.
+   *
+   * 🛑 This is an ALLOW-LIST projection: a field absent from this interface and
+   * from `toPublicGroupMember` below simply does not reach the picker, with no
+   * error anywhere. Without it the picker reads `availableQuantity: 0` on a
+   * print-on-demand member and caps the stepper at zero — the member renders,
+   * looks selectable, and cannot be chosen.
+   */
+  madeToOrder?: boolean;
   storeId: string;
   storeName?: string;
   status: string;
@@ -68,6 +78,7 @@ export function toPublicGroupMember(doc: ProductDocument): PublicGroupMember {
     isGroupParent: doc.isGroupParent,
     groupTitle: doc.groupTitle,
     availableQuantity: doc.availableQuantity ?? 0,
+    madeToOrder: doc.madeToOrder,
     storeId: doc.storeId,
     storeName: doc.storeName,
     status: doc.status,

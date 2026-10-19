@@ -60,6 +60,14 @@ export interface GroupPickerMember {
   isGroupParent?: boolean;
   condition?: string;
   availableQuantity?: number;
+  /**
+   * Printed or built when ordered — no stock ceiling.
+   *
+   * 🛑 Both the "Out of stock" refusal and the stepper's `max` read
+   * `availableQuantity`, so without this a print-on-demand member at quantity 0
+   * renders as unselectable while being perfectly buyable.
+   */
+  madeToOrder?: boolean;
   storeId?: string;
   storeName?: string;
   isSold?: boolean;
@@ -88,7 +96,10 @@ function memberHref(m: GroupPickerMember): string {
 function blockedReason(m: GroupPickerMember): string | null {
   if (m.isSold) return "Sold";
   if (m.status && m.status !== "published") return "Unavailable";
-  if ((m.availableQuantity ?? 0) <= 0) return "Out of stock";
+  // Made to order has no stock to be out of — checked BEFORE the quantity
+  // test, and after `isSold`, which stays the seller's kill switch whatever
+  // the production model.
+  if (m.madeToOrder !== true && (m.availableQuantity ?? 0) <= 0) return "Out of stock";
   // `cartLine: "blocked"` is how a classified / live listing says "contact the
   // seller instead" — those can never join a cart line.
   if (pluginFor(normalizeListingType(m)).cartLine === "blocked") return "Not purchasable here";
@@ -220,7 +231,13 @@ export function GroupMemberPicker({
                           value={qty[m.id] ?? 0}
                           onChange={(next) => setQty((prev) => ({ ...prev, [m.id]: next }))}
                           min={0}
-                          max={m.availableQuantity}
+                          /*
+                           * `undefined` means uncapped — `QuantityStepper`
+                           * only disables its increment when a `max` is given.
+                           * A made-to-order member has no ceiling; the line's
+                           * own 99-per-line cap still applies at the cart.
+                           */
+                          max={m.madeToOrder === true ? undefined : m.availableQuantity}
                           ariaLabel={`Quantity for ${m.title}`}
                           decrementLabel={ACTIONS.CART["decrease-quantity"].ariaLabel}
                           incrementLabel={ACTIONS.CART["increase-quantity"].ariaLabel}

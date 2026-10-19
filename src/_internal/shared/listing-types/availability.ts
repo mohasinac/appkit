@@ -89,7 +89,31 @@ export function num(value: DateLike): number | null {
  * and must not vanish from the default scope.
  */
 export function baseAvailable(row: AvailabilityRow): boolean {
+  /*
+   * `isSold` stays the kill switch and is tested FIRST, ahead of the
+   * made-to-order bypass. A seller who marks a listing sold has made a
+   * statement about the listing, not about its stock level, and it must hold
+   * whatever the production model is — otherwise a made-to-order row could
+   * never be retired at all.
+   */
   if (row[PRODUCT_FIELDS.IS_SOLD] === true) return false;
+
+  /*
+   * 🛑 Made to order: stock does not gate availability, so return before the
+   * two quantity checks.
+   *
+   * This ONE branch fixes `isListingRowAvailable`, the dense `available`
+   * scope, all three homepage `getFeatured*` helpers and related-items at
+   * once, because every one of them resolves to this function — which is the
+   * entire reason the four disagreeing copies were collapsed into it (Root
+   * Cause #73). It also correctly keeps a made-to-order row OUT of "Sold &
+   * Ended": that scope is the complement of this predicate.
+   *
+   * The counter-case is the point of the flag being per-listing: a finite
+   * spare at quantity 0 is genuinely gone and still falls through to the
+   * checks below.
+   */
+  if (row[PRODUCT_FIELDS.MADE_TO_ORDER] === true) return true;
 
   const available = num(row[PRODUCT_FIELDS.AVAILABLE_QUANTITY]);
   if (available !== null && available <= 0) return false;
@@ -137,6 +161,31 @@ export const STOCK_ONLY_UNAVAILABLE_CLAUSES: readonly UnavailableClause[] = [
   { field: PRODUCT_FIELDS.AVAILABLE_QUANTITY, op: "eq", value: 0 },
   { field: PRODUCT_FIELDS.IS_SOLD, op: "eq", value: true },
 ];
+
+/*
+ * 🛑 WHY `madeToOrder` IS NOT A CLAUSE HERE, written down so nobody
+ * "optimises" it into a FAILED_PRECONDITION.
+ *
+ * A made-to-order row at quantity 0 still matches the first clause above, so it
+ * is fetched by the "Sold & Ended" query and then dropped in memory by
+ * `baseAvailable`. That is wasteful and it is CORRECT.
+ *
+ * The apparent fix — adding `madeToOrder != true` to narrow the query — cannot
+ * be expressed: `!=` is an INEQUALITY, so `UnavailableClause` would require it
+ * to name its own `sortField`, and Firestore implicitly appends an
+ * inequality's field to the `orderBy`. Pairing it with the scope's real sort
+ * demands a composite index in an order nobody declares (Root Cause #59), and
+ * every caller wraps the query in a guard that turns the failure into an empty
+ * page rather than an error.
+ *
+ * Worse, a Firestore inequality EXCLUDES every document that lacks the field —
+ * which is every product written before this flag existed, i.e. all of them.
+ * `madeToOrder != true` would return almost nothing. Same trap as the
+ * `isTestData` one CLAUDE.md documents.
+ *
+ * The in-memory drop is bounded by the page size, so the cost is a few rows
+ * read and discarded. Leave it.
+ */
 
 /**
  * `isAvailable` for a type with no rule beyond `baseAvailable`. Named rather

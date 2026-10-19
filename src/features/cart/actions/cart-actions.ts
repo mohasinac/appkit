@@ -190,7 +190,13 @@ export async function addGroupLineToCart(
         `"${product.title}" can't be added to the cart. ${rule.cartIneligibleHint ?? ""}`.trim(),
       );
     }
-    if ((product.availableQuantity ?? 0) < m.quantity) {
+    /*
+     * 🛑 Made to order: no stock CHECK for this member. Nothing is held in
+     * reserve — it is printed or built when the order arrives — so the only
+     * honest answer to "how many are left" is "as many as you want". The
+     * decrement still happens at checkout; see `validateCartItemStock`.
+     */
+    if (product.madeToOrder !== true && (product.availableQuantity ?? 0) < m.quantity) {
       throw new ValidationError(
         `Only ${product.availableQuantity ?? 0} left of "${product.title}".`,
       );
@@ -369,9 +375,18 @@ export async function mergeGuestCart(
   for (const item of items) {
     const product = await productRepository.findById(item.productId);
     if (!product || product.status !== "published") continue;
-    if (product.availableQuantity < 1) continue;
+    /*
+     * A made-to-order row survives the guest-cart merge at its full requested
+     * quantity. Dropping it (or clamping it to 0) would silently delete the
+     * line a signed-out visitor had chosen, which reads as the cart losing
+     * items on login — and there is no stock level for the clamp to clamp to.
+     */
+    const unlimited = product.madeToOrder === true;
+    if (!unlimited && product.availableQuantity < 1) continue;
 
-    const safeQty = Math.min(item.quantity, product.availableQuantity);
+    const safeQty = unlimited
+      ? item.quantity
+      : Math.min(item.quantity, product.availableQuantity);
 
     const storeName = await resolveStoreName(product.storeId, product.storeName);
     await cartRepository.addItem(userId, {

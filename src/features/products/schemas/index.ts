@@ -111,6 +111,7 @@ export const productItemSchema = z.object({
     ])
     .optional(),
   // SB1-G Phase 4 — canonical discriminator (legacy `isAuction`/`isPreOrder` booleans removed).
+  madeToOrder: z.boolean().optional(),
   listingType: LISTING_TYPE_ENUM.optional(),
   // SB1-C — prize-draw + bundle fields. All optional.
   maxPerUser: z.number().int().positive().optional(),

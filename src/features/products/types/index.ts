@@ -126,6 +126,16 @@ export interface ProductItem {
   sublistingIcon?: string;
   isOnSale?: boolean;
   isSold?: boolean;
+  /**
+   * Printed or built when ordered, so stock does not gate it. Per-LISTING, not
+   * implied by `listingType` — a seller can hold a finite run of pre-cut sheets
+   * and also offer a print-on-demand one.
+   *
+   * On the client this drives three things: the PDP says "made to order"
+   * instead of a stock line, the group picker uncaps that member's stepper, and
+   * `baseAvailable` keeps the row in the default scope at quantity 0.
+   */
+  madeToOrder?: boolean;
   inStock?: boolean;
   stockCount?: number;
   rating?: number;

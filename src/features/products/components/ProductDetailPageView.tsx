@@ -273,9 +273,24 @@ export async function ProductDetailPageView({
     typeof p.availableQuantity === "number"
       ? (p.availableQuantity as number)
       : null;
-  const effectiveStock = availableQuantity ?? stockQuantity;
-  const inStock =
-    effectiveStock !== null ? effectiveStock > 0 : p.status === "published";
+  /*
+   * Made to order — printed or built when ordered, so there is no stock level
+   * to report and no "only N left" to be true.
+   *
+   * 🛑 `effectiveStock` is deliberately forced to `null` rather than left
+   * alone: every scarcity line below is guarded on `effectiveStock !== null`,
+   * and a made-to-order row's stored quantity goes NEGATIVE by design (it is
+   * the production queue). Leaving it would print "only -4 left — order soon!".
+   * One assignment suppresses all four of those branches, which is why this is
+   * done here and not at each of them.
+   */
+  const madeToOrder = p.madeToOrder === true;
+  const effectiveStock = madeToOrder ? null : availableQuantity ?? stockQuantity;
+  const inStock = madeToOrder
+    ? p.status === "published"
+    : effectiveStock !== null
+      ? effectiveStock > 0
+      : p.status === "published";
 
   const avgRating =
     typeof p.avgRating === "number" ? (p.avgRating as number) : null;
@@ -567,7 +582,11 @@ export async function ProductDetailPageView({
                     surface={inStock ? "success-surface" : "danger-surface"}
                     className={`ml-auto ${ inStock ? "text-success" : "text-error" }`} padding="pill-sm" rounded="full"
                   >
-                    {inStock ? "✓ In Stock" : "✗ Out of Stock"}
+                    {madeToOrder
+                      ? "✓ Made to order"
+                      : inStock
+                        ? "✓ In Stock"
+                        : "✗ Out of Stock"}
                     {inStock && effectiveStock !== null && effectiveStock <= 10
                       ? ` — only ${effectiveStock} left`
                       : ""}
@@ -577,7 +596,11 @@ export async function ProductDetailPageView({
                 <Span layout="inline-flex" gap="xs" 
                   className={`w-fit .5 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="pill-md" size="xs" weight="medium"
                 >
-                  {inStock ? "✓ In Stock" : "✗ Out of Stock"}
+                  {madeToOrder
+                    ? "✓ Made to order"
+                    : inStock
+                      ? "✓ In Stock"
+                      : "✗ Out of Stock"}
                   {inStock && effectiveStock !== null && effectiveStock <= 10
                     ? ` — only ${effectiveStock} left`
                     : ""}
@@ -784,6 +807,15 @@ export async function ProductDetailPageView({
                   {inStock && effectiveStock !== null && effectiveStock > 3 && effectiveStock <= 10 && (
                     <Text className="mt-1" color="muted" size="xs">
                       {effectiveStock} in stock
+                    </Text>
+                  )}
+                  {/* The positive statement, in place of the stock line this
+                    * listing has nothing to put there. Without it the stock
+                    * block simply renders empty, which reads as missing data
+                    * rather than as a different production model. */}
+                  {madeToOrder && (
+                    <Text className="mt-1" color="muted" size="xs">
+                      Made to order — printed when you order, so it never runs out.
                     </Text>
                   )}
                 </Div>
