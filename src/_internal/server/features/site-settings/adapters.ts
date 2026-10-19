@@ -72,6 +72,20 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   // render a "Message seller" CTA at all. Narrowed to `enabled` only; there is
   // nothing else in the group.
   "chat",
+  /*
+   * useSearchIndex — the kill switch for the browser-side search artifact.
+   *
+   * Public because the reader is a GUEST's search box: search is the one
+   * surface that must work before anyone signs in, so a server-only flag
+   * could not reach the visitor it governs. Publishing it discloses one
+   * boolean meaning "site search currently falls back to the server path",
+   * which is observable from the outside anyway by watching which request
+   * the page makes.
+   *
+   * 🛑 It fails OPEN on absence (`!== false`), so a settings fetch that fails
+   * leaves search working rather than dark — see the schema note.
+   */
+  "search",
 ] as const;
 
 /** Everything else, with the reason it stays server-side. */
@@ -161,5 +175,17 @@ export function toPublicSiteSettings(
     effectiveWatermark: opts?.effectiveWatermark,
     // D9 — undefined reads as OFF, never a default-true `??`.
     chat: { enabled: doc.chat?.enabled === true },
+    /*
+     * 🛑 `!== false`, the opposite of the line above it, and the two sit
+     * together deliberately so the difference is visible rather than looking
+     * like one of them is a mistake.
+     *
+     * `chat` is a feature nobody has turned on yet; absent means off. This is
+     * a kill switch on a path that is already the primary one; absent means
+     * ON, and only an explicit `false` disables it. Normalised here rather
+     * than at the reader so there is one place that decides, and a client
+     * cannot accidentally re-derive it with `??`.
+     */
+    search: { indexEnabled: doc.search?.indexEnabled !== false },
   };
 }

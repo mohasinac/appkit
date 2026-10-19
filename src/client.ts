@@ -614,6 +614,20 @@ export { StoreProductsView, StoreAboutView } from "./features/stores/index";
 export type { StoreProductItem, StoreAboutViewProps, StoreDetail } from "./features/stores/index";
 export { SearchView } from "./features/search/index";
 export type { SearchViewProps } from "./features/search/index";
+/*
+ * The browser-side search index. Exported from its DEFINING module rather
+ * than through `features/search/index` (Root Cause #18) — `ensureSearchIndex`
+ * is a module-scope singleton, and routing it through a barrel is how a
+ * second copy of that module ends up in the graph, at which point the "one
+ * fetch per page session" guarantee quietly becomes two.
+ */
+export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
+export type {
+  SearchIndexState,
+  SearchIndexStatus,
+  LoadedSearchIndex,
+  UseSearchIndexOptions,
+} from "./features/search/hooks/useSearchIndex";
 export { AdSlot } from "./features/homepage/components/AdSlot";
 export { useActiveAd } from "./features/homepage/hooks/useActiveAd";
 export type { ActiveAdRecord, ActiveAdCreative } from "./features/homepage/hooks/useActiveAd";

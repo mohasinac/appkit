@@ -44,6 +44,15 @@ export interface PublicSiteSettings {
   };
   /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
   chat?: { enabled: boolean };
+  /**
+   * The browser-side search index kill switch. **ON by default** — the
+   * projection emits `indexEnabled: doc.search?.indexEnabled !== false`, so
+   * an unseeded settings document and an absent group both mean "search
+   * works". The property itself is optional only because an OLD cached
+   * `/api/site-settings` response predates the field; `useSearchIndex`
+   * therefore reads it as `!== false` a second time rather than `=== true`.
+   */
+  search?: { indexEnabled: boolean };
   notificationChannels?: NotificationChannelConfig;
   announcementBar?: SiteSettingsDocument["announcementBar"];
   navConfig?: SiteSettingsDocument["navConfig"];

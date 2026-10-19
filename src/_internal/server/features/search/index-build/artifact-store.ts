@@ -34,6 +34,11 @@
 
 import { normalizeError } from "../../../../../errors/normalize";
 import { serverLogger } from "../../../../../monitoring/server-logger";
+import {
+  SEARCH_INDEX_PREFIX,
+  SEARCH_MANIFEST_OBJECT,
+  searchIndexObjectPath,
+} from "../../../../shared/search/artifact-url";
 import type { SearchIndexArtifact } from "../../../../shared/search/index-record";
 /*
  * `import type` only — erased at runtime, so this file never pulls
@@ -46,8 +51,15 @@ import type { Bucket } from "@google-cloud/storage";
 export const SEARCH_INDEX_COLLECTION = "searchIndex";
 export const SEARCH_INDEX_MANIFEST_ID = "manifest";
 
-/** `search-index/v{n}.json` — the version IS the cache key. */
-export const SEARCH_INDEX_PREFIX = "search-index";
+/*
+ * 🛑 `SEARCH_INDEX_PREFIX` and the object paths are IMPORTED, not declared
+ * here. They were declared here first, and the client then needed the same
+ * two strings — which is a mirror, and a mirror of a URL fails in the worst
+ * available way: the builder writes `search-index/v4.json`, the client asks
+ * for `searchIndex/v4.json`, and a 404 is indistinguishable from "the index
+ * has not been built yet" (Root Cause #42). One declaration, in the shared
+ * module both sides already import.
+ */
 
 /** Current + previous. See the prune note in the header. */
 const KEEP_VERSIONS = 2;
@@ -132,7 +144,7 @@ export async function markSearchIndexDirty(db: ManifestDb, job: string): Promise
 }
 
 export function storagePathFor(version: number): string {
-  return `${SEARCH_INDEX_PREFIX}/v${version}.json`;
+  return searchIndexObjectPath(version);
 }
 
 export interface PublishResult {
@@ -196,4 +208,67 @@ export async function publishArtifact(
   }
 
   return { storagePath: path, bytes: body.byteLength, pruned };
+}
+
+/**
+ * Mirror the manifest to Storage so the client needs no Firebase SDK.
+ *
+ * Writes only the four fields a browser has any business reading — `dirty`,
+ * `lastFullAt` and `perType` are build bookkeeping, and publishing "the index
+ * is currently stale" to every visitor tells them nothing they can act on.
+ * The shape is `SearchIndexManifestPublic`, declared beside the URL builders.
+ *
+ * ## 🛑 60 seconds, and the number is load-bearing in both directions
+ *
+ * This is the ONLY uncacheable-for-long hop in the whole design, so it sets
+ * the floor on how fast a new build reaches a visitor — and the ceiling on
+ * how often a returning visitor pays for a request. The artifact behind it is
+ * `immutable`, so a client that re-reads the manifest and finds the same
+ * version does one small conditional fetch and no download at all.
+ *
+ * Too long and the 15-minute build cadence is a lie; too short and every
+ * visitor re-requests it per page view for a document that changes a few
+ * times an hour.
+ *
+ * ## Written LAST, and failing it does not fail the build
+ *
+ * A published artifact with a stale manifest serves the previous index for up
+ * to a minute — correct, just behind. A manifest pointing at an artifact that
+ * was never written is a 404 on the client's critical path. So the order is
+ * artifact, then Firestore, then this; and a throw here is logged, not
+ * propagated, because the Firestore manifest (which is what the NEXT build
+ * reads) is already correct by this point.
+ */
+export async function publishManifestMirror(
+  bucket: StorageBucket,
+  manifest: SearchIndexManifest,
+): Promise<void> {
+  try {
+    const body = Buffer.from(
+      JSON.stringify({
+        schema: manifest.schema,
+        version: manifest.version,
+        builtAt: manifest.builtAt,
+        recordCount: manifest.recordCount,
+      }),
+      "utf8",
+    );
+    await bucket.file(SEARCH_MANIFEST_OBJECT).save(body, {
+      contentType: "application/json; charset=utf-8",
+      metadata: { cacheControl: "public, max-age=60" },
+    });
+  } catch (err) {
+    const e = normalizeError(err);
+    /*
+     * WARN rather than throw. But it is a real symptom: the artifact is live
+     * and no client will ever learn its version, so the index silently stops
+     * advancing while every other signal says the build succeeded. That is
+     * precisely the "confident wrong answer" shape, which is why it is logged
+     * at WARN and not swallowed.
+     */
+    serverLogger.warn("search index manifest mirror failed (artifact is published)", {
+      version: manifest.version,
+      message: e.message,
+    });
+  }
 }

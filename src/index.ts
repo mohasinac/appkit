@@ -7989,6 +7989,15 @@ export { useNavSuggestions } from "./features/search/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useSearch - React hook for use search.
 export { useSearch } from "./features/search/index";
+// [CLIENT]-Browser only. Fetches the public search artifact once per page session.
+// Exported from the defining module, not the feature barrel — see client.ts.
+export { useSearchIndex, ensureSearchIndex } from "./features/search/hooks/useSearchIndex";
+export type {
+  SearchIndexState,
+  SearchIndexStatus,
+  LoadedSearchIndex,
+  UseSearchIndexOptions,
+} from "./features/search/hooks/useSearchIndex";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NavSuggestionRecord - Type contract for nav suggestion record.
 export type { NavSuggestionRecord } from "./features/search/index";

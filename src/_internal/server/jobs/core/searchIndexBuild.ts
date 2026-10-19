@@ -46,6 +46,7 @@ import {
 import {
   manifestRef,
   publishArtifact,
+  publishManifestMirror,
   readManifest,
   storagePathFor,
   type SearchIndexManifest,
@@ -160,6 +161,12 @@ export async function runSearchIndexBuild(ctx: JobContext): Promise<void> {
     dirty: stats.failed > 0,
   };
   await manifestRef(db).set(next, { merge: true });
+  /*
+   * Firestore first (the next build reads it), the public mirror second (the
+   * browser reads it). See `publishManifestMirror` for why a failure here is
+   * logged rather than thrown.
+   */
+  await publishManifestMirror(getAdminStorage().bucket(), next);
 
   /*
    * 🛑 The line that makes a runaway visible. `reads` is the number that has
@@ -192,20 +199,26 @@ export async function runSearchIndexFullRebuild(ctx: JobContext): Promise<void> 
   try {
     const { artifact, stats } = await buildFull(db, version, now);
     const published = await publishArtifact(getAdminStorage().bucket(), artifact);
-    await manifestRef(db).set(
-      {
-        schema: artifact.schema,
-        version,
-        builtAt: artifact.builtAt,
-        lastFullAt: artifact.builtAt,
-        storagePath: published.storagePath,
-        recordCount: artifact.r.length,
-        bytes: published.bytes,
-        perType: stats.perType,
-        dirty: false,
-      },
-      { merge: true },
-    );
+    const next: SearchIndexManifest = {
+      schema: artifact.schema,
+      version,
+      builtAt: artifact.builtAt,
+      lastFullAt: artifact.builtAt,
+      storagePath: published.storagePath,
+      recordCount: artifact.r.length,
+      bytes: published.bytes,
+      perType: stats.perType,
+      dirty: false,
+    };
+    await manifestRef(db).set(next, { merge: true });
+    /*
+     * 🛑 The mirror belongs on BOTH paths. This one is the manual repair
+     * entry point — the one somebody reaches for precisely when the index is
+     * wrong — so a rebuild that fixed the artifact and left every browser
+     * pointed at the broken version would be the worst possible outcome of
+     * running it.
+     */
+    await publishManifestMirror(getAdminStorage().bucket(), next);
     logger.info("search index FULL rebuild complete", {
       version,
       reads: stats.reads,

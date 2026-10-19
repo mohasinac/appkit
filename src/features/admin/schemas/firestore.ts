@@ -725,6 +725,46 @@ export interface SiteSettingsDocument extends BaseDocument {
   chat?: {
     enabled: boolean;
   };
+  /**
+   * The public search index — the browser-side artifact, not the per-listing
+   * search boxes, which this flag cannot reach.
+   *
+   * ## 🛑 Why a group of its own and not `featureFlags`
+   *
+   * The plan for this feature said "a kill switch in `siteSettings.featureFlags`".
+   * That group was DELETED on 2026-08-29 because 11 of its 14 keys had zero
+   * readers, and the two survivors moved into `payment` as real settings. Its
+   * deletion note draws the line this honours: *"A flag is a temporary switch
+   * around unfinished work."* This is exactly that — so it is a flag, and it
+   * earns the one thing the deleted keys could not show: a named reader
+   * (`useSearchIndex`).
+   *
+   * 🛑 It is NOT in `payment` or any other existing group, and that is
+   * defensive rather than tidy. `AdminSiteSettingsView.buildFullPayload`
+   * writes `payment: { phonepeEnabled, upiManualEnabled, codEnabled,
+   * otpCheckoutThreshold }` — the WHOLE group, from four pieces of form
+   * state — so any fifth key in there is silently erased the next time an
+   * admin saves anything on that page (Root Cause #76). A kill switch that a
+   * routine save turns back on is worse than none, because it fails in the
+   * direction of the thing it exists to stop.
+   *
+   * ## 🛑 Default ON — the opposite polarity to `chat.enabled`
+   *
+   * `chat` is an opt-in feature and its readers test `=== true`. This is a
+   * kill switch on the primary path, so its reader tests `!== false`: an
+   * absent field, an unseeded document and a failed settings fetch must all
+   * mean "search works". The only state that disables it is somebody
+   * deliberately writing `false`.
+   *
+   * Recovery exists because the index can be wrong in a way nothing errors
+   * on — a bad patch, a schema the client does not understand — and the
+   * alternative route back is a Vercel deploy. Flipping this sends every
+   * client to the server `SEARCH_SOURCES` path, which is why that path is
+   * kept rather than deleted.
+   */
+  search?: {
+    indexEnabled?: boolean;
+  };
   emailSettings: {
     fromName: string;
     fromEmail: string;
@@ -1088,6 +1128,27 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   disabledRoutes: [],
 };
 
+/**
+ * 🛑 DEAD, AND IT DISAGREES WITH THE REAL PROJECTION. Do not add to it.
+ *
+ * Measured 2026-10-19 while adding `search`: this constant has **zero
+ * consumers** — it is re-exported from the barrel and read by nothing. The
+ * list that actually decides what leaves the server is
+ * `PUBLIC_SITE_SETTINGS_FIELDS` in
+ * `_internal/server/features/site-settings/adapters.ts`, which is audited by
+ * `audit-public-projection-parity`.
+ *
+ * The two already disagree, in the dangerous direction: this one names
+ * `commissions` (the real projection marks it PRIVATE — "internal economics")
+ * and `featureFlags`, a settings group DELETED in 2026-08-29. So anyone who
+ * reached for it as authoritative would publish platform fee structure and
+ * key a feature off a group that no longer exists.
+ *
+ * Left in place rather than deleted here only because removing a barrel
+ * export is a breaking change that needs its own version bump; it belongs
+ * with the other search-subsystem deletions. Adding a field to it would make
+ * it look maintained, which is the one thing it must not look.
+ */
 export const SITE_SETTINGS_PUBLIC_FIELDS = [
   "siteName",
   "motto",
