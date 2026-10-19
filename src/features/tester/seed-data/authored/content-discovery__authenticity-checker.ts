@@ -1,6 +1,6 @@
 /*
  * WHY: Authored six-part procedures for content-discovery/authenticity-checker.
- * WHAT: 16 cases, keyed by full checklist id.
+ * WHAT: 22 cases, keyed by full checklist id.
  *
  * 🛑 EVERY CASE IS WRITTEN AS BEFORE → AFTER, because this feature's whole
  * failure mode is a confident, plausible, wrong answer returned with HTTP 200. A
@@ -47,7 +47,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/tools/authenticity",
     steps: [
       "Open /tools/authenticity signed out.",
-      "Confirm the LOOKUP FORM itself is there and usable — Model name, Code on the box, Brand, Generation, How it was sold, and a 'Check it' button.",
+      "Confirm the LOOKUP FORM itself is there and usable — 'Which bey is it?', 'Code on the box', a collapsed 'More details' holding the name-as-printed, brand, generation and how-it-was-sold fields, and a 'Check it' button.",
       "Confirm there is no sign-in card and no 'Sign in to run a lookup' text anywhere on the page.",
       "Enter A0813 as the code and submit, still signed out.",
       "Confirm a real assessment comes back rather than an error or a prompt to sign in.",
@@ -546,5 +546,133 @@ export const authoredTypeahead: Record<string, AuthoredCase> = {
     expectedUiState:
       "The result renders immediately. The network log shows no fetch to the search artifact or any /api/search* endpoint.",
     endResult: "Read-only; nothing persists.",
+  },
+/* ── The model picker and the per-model code list (2026-10-20) ──────────
+   * 🛑 The reported bug these exist for: typing "l drago" returned
+   * "Inconclusive — Nothing contradicts it, and nothing confirms it either",
+   * while the tool held 33 recorded box codes for Lightning L-Drago, 35 for
+   * Meteo and 27 for Destructor and had no way to reach any of them. Every
+   * table was keyed by CODE, so naming a bey could never surface them.
+   *
+   * So each case compares the answer against data the tool DEMONSTRABLY HAS.
+   * "Check the picker works" passes against the bug; "picking Lightning
+   * L-Drago must list its 33 codes" does not.
+   */
+  "checklist-content-discovery-authenticity-checker-model-picker-finds-l-drago": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "Confirm the FIRST field is 'Which bey is it?' and is a searchable select, not a plain text box.",
+      "Open it and type: l drago",
+      "Confirm all three L-Drago releases are offered — Lightning L-Drago 100HF, Meteo L-Drago LW105LF and L-Drago Destructor F:S.",
+      "Confirm each offered row states how many box codes are on file for it.",
+      "Clear the search and type: pegasis",
+      "Confirm Storm Pegasus still appears, even though the list spells it Pegasus.",
+      "Answer no if 'l drago' offers nothing, or if the field is a free-text input with no list.",
+    ],
+    inputs: { search: "l drago" },
+    expectedBehaviour:
+      "BEFORE: the first field was a free-text 'Model name'. Typing 'l drago' matched four releases, so the engine refused to pick one and returned an inconclusive verdict — correct, and useless, because the three L-Dragos it declined to choose between have 95 recorded box codes between them and the screen never said so. AFTER: the picker resolves exactly one bey, which is what unlocks the per-model code list. It searches aliases as well as labels, because Takara Tomy romanises the line Pegasis and Hasbro prints Pegasus — a label-only filter would find neither from the other.",
+    expectedUiState:
+      "A searchable select labelled 'Which bey is it?' listing three L-Drago rows, each annotated with a box-code count. Beys with codes on file are offered before beys without.",
+    endResult: "Nothing is written. The picker only reads a bundled list.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-picked-model-lists-its-box-codes": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Open /tools/authenticity.",
+      "In 'Which bey is it?', search for and pick: Lightning L-Drago 100HF",
+      "Leave 'Code on the box' EMPTY.",
+      "Press 'Check it'.",
+      "Read the verdict line, then look for a panel headed 'Box codes recorded for Lightning L-Drago 100HF'.",
+      "Count the codes it lists.",
+      "Answer no if the verdict is 'Inconclusive — Nothing contradicts it, and nothing confirms it either', or if no code list appears.",
+    ],
+    inputs: { modelSlug: "lightning-l-drago-100hf" },
+    expectedBehaviour:
+      "BEFORE: naming this bey with no code produced 'Inconclusive — Nothing contradicts it, and nothing confirms it either' and a physical checklist. True, in that nothing had been checked — and it withheld the 33 box codes the tables record for this exact bey, which is the single most useful thing the tool holds and the one thing the user had asked for. AFTER: the verdict is 'I know this one. Now find the code stamped on the box.' — still not a judgement, because nothing has been checked, but with the next step named and the 33 codes listed to check against.",
+    expectedUiState:
+      "Verdict badge 'Need a bit more', headline 'I know this one. Now find the code stamped on the box.', a caveat naming the count, and a panel listing 33 codes as badges. A link reading 'Everything we hold on Lightning L-Drago 100HF' points at the model's own category page.",
+    expectedData: { recordedCodes: 33 },
+    endResult: "Read-only.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-picked-model-plus-its-own-code": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Pick 'Lightning L-Drago 100HF' in 'Which bey is it?'.",
+      "Enter A0910 in 'Code on the box' — a code recorded against this exact bey.",
+      "Press 'Check it' and read the verdict.",
+      "Expand 'How I got there' and find the row about the code.",
+      "Press 'Start over'. Pick Lightning L-Drago 100HF again, this time enter A0310 — a real code recorded against a DIFFERENT bey.",
+      "Read the verdict and expand the working-out again.",
+      "Answer no if the second case reads as a mismatch, a discrepancy, or anything implying the item is wrong.",
+    ],
+    inputs: { modelSlug: "lightning-l-drago-100hf", recordedCode: "A0910", otherBeyCode: "A0310" },
+    expectedBehaviour:
+      "A0910 is in this bey's own list, so the check reads as agreement — the strongest thing the tool can say from data, and it still says so is not proof. A0310 is recorded, but on Earth Aquila: that is WEAK SUPPORT, not a mismatch, because a production date covers whatever was boxed that day. The distinction is the whole point. Reporting 'that code belongs to a different bey' as a discrepancy would manufacture suspicion out of how the tables are organised, and the panel highlights the code you entered inside the list so you can see where it sits.",
+    expectedUiState:
+      "First run: 'Consistent with an original', and a row reading that the code is recorded on genuine boxes of this exact bey. Second run: still not adverse — a neutral row saying the code is recorded but not against this bey, with the phrase 'weak support rather than a mismatch'.",
+    endResult: "Read-only.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-missing-code-is-not-an-accusation": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Pick 'Lightning L-Drago 100HF' in 'Which bey is it?'.",
+      "Enter Z9999 in 'Code on the box' — well-formed, and in none of the tables.",
+      "Press 'Check it'.",
+      "Read the verdict, the code panel and the working-out.",
+      "Answer no if any sentence implies the item is fake, counterfeit or a reproduction, or if the verdict is more severe than 'Inconclusive'.",
+    ],
+    inputs: { modelSlug: "lightning-l-drago-100hf", code: "Z9999" },
+    expectedBehaviour:
+      "A code absent from a model's list means UNRECORDED, never wrong. These tables are what collectors photographed, not a manufacturing record: 38 of 221 canonical beys have any recorded code at all, new genuine codes turn up regularly, and counterfeiters print real codes anyway. The panel must say so where a user will actually read it, not only inside the collapsed working-out — the reading 'my code is not in the list, so it is fake' is the one this whole feature has to defend against.",
+    expectedUiState:
+      "Verdict 'Inconclusive'. A neutral row reading 'Not among the 33 codes recorded for Lightning L-Drago 100HF' whose text says 'unrecorded, not wrong'. The code panel carries a line beginning 'A code missing from this list means unrecorded, not fake.'",
+    endResult: "Read-only.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-working-out-is-collapsed-by-default": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Pick 'Lightning L-Drago 100HF' and enter A0910. Press 'Check it'.",
+      "WITHOUT expanding anything, confirm you can read the verdict badge, the headline, the caveat and the recorded-code list.",
+      "Confirm the reasoning is behind a single collapsed control reading 'How I got there — N checks'.",
+      "Expand it and confirm every individual check is still there, each with its own confidence chip.",
+      "Press 'Start over'. Now enter the code A0813 with no model picked — a code the sources record as a midfake batch.",
+      "Confirm the working-out is ALREADY OPEN this time, without being clicked.",
+      "Answer no if the reasoning is expanded by default on the clean run, or collapsed on the midfake run.",
+    ],
+    inputs: { modelSlug: "lightning-l-drago-100hf", cleanCode: "A0910", midfakeCode: "A0813" },
+    expectedBehaviour:
+      "BEFORE: every check rendered expanded under a 'What I checked' heading — up to eleven rows of reasoning between the buyer and the answer they asked for. AFTER: it is collapsed, not deleted, because 'why should I believe this' has to stay one tap away for a tool whose entire posture is that it hedges and cites. A CONCERN forces it open: the one case where the reasoning IS the answer is the case where something is wrong, and the user who never expands it must not be the user who never finds out.",
+    expectedUiState:
+      "Clean run: verdict block, code panel, a collapsed 'How I got there — N checks', then the physical checks. Midfake run: the same control, already open.",
+    endResult: "Read-only.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-result-scrolls-into-view": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Resize the browser to a phone viewport (about 390 x 740) or use device emulation.",
+      "Pick 'Lightning L-Drago 100HF' and enter A0910.",
+      "Scroll so the 'Check it' button is visible, and note what is on screen.",
+      "Press 'Check it'.",
+      "Without scrolling yourself, confirm the verdict badge and headline are now on screen.",
+      "Answer no if the page does not move and the verdict is below the fold.",
+    ],
+    inputs: { viewport: "390x740", modelSlug: "lightning-l-drago-100hf", code: "A0910" },
+    expectedBehaviour:
+      "BEFORE: the form is taller than a phone viewport, so the answer rendered below the fold and pressing 'Check it' looked like it had done nothing — at the one moment this tool must not be ambiguous. AFTER: the result is scrolled into view on every fresh assessment, including the re-run a clarifying question triggers, and anchored at the top of the viewport rather than the middle so the badge and headline land where the eye already is.",
+    expectedUiState: "After submitting, the verdict badge and headline are visible without manual scrolling.",
+    endResult: "Read-only.",
   },
 };

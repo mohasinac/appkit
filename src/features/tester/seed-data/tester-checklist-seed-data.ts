@@ -3474,6 +3474,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "regional-code-reads-as-regional", label: "A Korean or Middle-East code names its region instead of coming back unrecorded" },
         { key: "series-window-names-the-production-run", label: "A derivable date names its Metal-series production window, or names none outside all four" },
         { key: "temporal-context-for-an-unmatched-code", label: "An unmatched code reports what else the tables record from the same month, framed as context not a match" },
+        /* ── The model picker and the per-model code list (2026-10-20) ───
+         * The reported bug: naming a bey the tool holds 33 recorded box
+         * codes for produced "Nothing contradicts it, and nothing confirms
+         * it either" and never mentioned them. Every case here compares the
+         * answer against data the tool demonstrably has.
+         */
+        { key: "model-picker-finds-l-drago", label: "The model picker finds all three L-Dragos by partial name, and each shows how many box codes are on file" },
+        { key: "picked-model-lists-its-box-codes", label: "Picking a model with no code returns the codes recorded for that exact bey, not a bare 'inconclusive'" },
+        { key: "picked-model-plus-its-own-code", label: "A code recorded against the picked bey reads as agreement; one recorded against a different bey reads as weak support, not a mismatch" },
+        { key: "missing-code-is-not-an-accusation", label: "A code absent from the picked model's list says 'unrecorded', never 'fake', and the verdict stays inconclusive" },
+        { key: "working-out-is-collapsed-by-default", label: "The verdict is readable without expanding anything, and a concern auto-opens the working-out" },
+        { key: "result-scrolls-into-view", label: "Submitting scrolls the verdict into view on a phone rather than leaving it below the fold" },
       ],
     },
     {
