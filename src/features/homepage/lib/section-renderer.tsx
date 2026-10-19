@@ -695,11 +695,19 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
 
   "collection-cards": {
     surfaces: ["homepage", "category", "brand"],
-    render: ({ config }) => {
+    render: ({ config, sectionData }) => {
       const cfg = config as CollectionCardsSectionConfig;
       return (
         <CollectionCardsSection
           config={cfg ?? { collections: [] }}
+          // The `categories`/`brands`/`stores` arrays homepage already fetches
+          // for ITS OWN same-named sections — zero extra round-trips. See the
+          // component's own docstring for why only these three are wired.
+          sectionData={{
+            categories: sectionData.categories,
+            brands: sectionData.brands,
+            stores: sectionData.stores,
+          }}
         />
       );
     },

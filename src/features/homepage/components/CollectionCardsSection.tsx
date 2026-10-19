@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Container,
+  Grid,
   Heading,
   Row,
   Section,
@@ -8,13 +9,26 @@ import {
   Stack,
   Text,
 } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
+import { ROUTES } from "../../../next/routing/route-map";
 import type {
   CollectionCardsSectionConfig,
   CollectionCardsEntry,
 } from "../schemas/firestore";
+import type { CategoryItem } from "../../categories/types";
+import type { StoreListItem } from "../../stores/types";
 
 export interface CollectionCardsSectionProps {
   config: CollectionCardsSectionConfig;
+  /**
+   * Pre-fetched items for the entry types that are actually wired — see the
+   * module docstring below for which ones and why those three specifically.
+   */
+  sectionData?: {
+    categories?: CategoryItem[];
+    brands?: CategoryItem[];
+    stores?: StoreListItem[];
+  };
 }
 
 const DEFAULT_ITEMS_PER_ROW = 4 as const;
@@ -36,15 +50,27 @@ function entryLabel(entry: CollectionCardsEntry): string {
 }
 
 /**
- * Renders a single homepage strip that mixes multiple resource types (products,
- * stores, blog, etc.) — driven entirely from config.
+ * Renders a single homepage strip that mixes multiple resource types
+ * (products, stores, blog, etc.), driven entirely from config.
  *
- * Each entry's data fetch wires into the existing per-resource repositories.
- * Until the data wiring lands the section renders the configured collection
- * tabs + a placeholder, exercising the schema/admin plumbing end-to-end.
+ * 🛑 `categories` / `brands` / `stores` entries render REAL data as of
+ * 2026-10-19 — reusing `sectionData` that `MarketplaceHomepageView` already
+ * fetches for the dedicated `categories`/`brands`/`stores` sections, so this
+ * costs zero extra round-trips (Rule #6). Those three were chosen first
+ * because they are the PERMANENT axes: populated independently of the
+ * product catalogue's size, so a `collection-cards` section built from them
+ * can never go empty the way a `"products"`/`"auctions"` entry could.
+ *
+ * Every other entry type (`products`, `auctions`, `pre-orders`, `events`,
+ * `blog-posts`, `reviews`) still renders the honest placeholder — a real
+ * "not wired yet" state is correct here, not a bug to paper over with
+ * fabricated data, and the earlier revision's "data wiring lands with the
+ * bundle/raffle work" message survives per-entry rather than as a blanket
+ * claim about the whole section.
  */
 export async function CollectionCardsSection({
   config,
+  sectionData,
 }: CollectionCardsSectionProps) {
   const title = config.title ?? "Featured Collections";
   const subtitle = config.subtitle;
@@ -58,13 +84,19 @@ export async function CollectionCardsSection({
     return null;
   }
 
+  const wiredEntries = collections.filter(
+    (e) => e.type === "categories" || e.type === "brands" || e.type === "stores",
+  );
+  const unwiredEntries = collections.filter(
+    (e) => e.type !== "categories" && e.type !== "brands" && e.type !== "stores",
+  );
+
   return (
     <Section padding="y-2xl">
       <Container size="xl">
         <Stack gap="md">
           <Stack gap="xs">
-            <Heading
-              level={2} size="2xl" weight="semibold" color="primary">
+            <Heading level={2} size="2xl" weight="semibold" color="primary">
               {title}
             </Heading>
             {subtitle ? (
@@ -87,26 +119,85 @@ export async function CollectionCardsSection({
             </Row>
           ) : null}
 
-          <Stack
-            align="start"
-            gap="sm"
-            className="border-dashed text-left" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
-          >
-            <Text size="sm" color="muted">
-              Mixed collection rendering ({collections.length}/3 collection
-              {collections.length === 1 ? "" : "s"}, up to {maxItems} items,
-              {" "}{itemsPerRow} per row) — data wiring lands with the bundle/raffle
-              work.
-            </Text>
-            {cta ? (
-              <Link
-                href={cta.href}
-                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
-              >
-                {cta.label} →
-              </Link>
-            ) : null}
-          </Stack>
+          {wiredEntries.map((entry, idx) => {
+            const rows: Array<{ slug: string; name: string; image?: string }> =
+              entry.type === "categories"
+                ? (sectionData?.categories ?? [])
+                    .slice(0, entry.limit ?? maxItems)
+                    .map((c) => ({ slug: c.slug, name: c.name, image: c.display?.coverImage }))
+                : entry.type === "brands"
+                  ? (sectionData?.brands ?? [])
+                      .slice(0, entry.limit ?? maxItems)
+                      .map((b) => ({ slug: b.slug, name: b.name, image: b.display?.coverImage }))
+                  : (sectionData?.stores ?? [])
+                      .slice(0, entry.limit ?? maxItems)
+                      .map((s) => ({ slug: s.storeSlug, name: s.storeName, image: s.storeLogoURL }));
+
+            if (rows.length === 0) return null;
+
+            const hrefFor = (slug: string) =>
+              entry.type === "categories"
+                ? String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug))
+                : entry.type === "brands"
+                  ? String(ROUTES.PUBLIC.BRAND_DETAIL(slug))
+                  : String(ROUTES.PUBLIC.STORE_DETAIL(slug));
+
+            return (
+              <Stack key={`${entry.type}-${idx}`} gap="sm">
+                <Text size="sm" weight="semibold" color="muted">
+                  {entryLabel(entry)}
+                </Text>
+                {/*
+                 * `cols="categoryCards"` — THE canonical 130px-floor card
+                 * ladder (audit-card-grid-cols.mjs is strict-zero on
+                 * hand-written `grid-cols-N` ladders; see CLAUDE.md § "The
+                 * bottom edge is three tiers" sibling rule for card grids).
+                 * `config.itemsPerRow` stays honoured in the unwired
+                 * placeholder text below rather than driving a second,
+                 * competing ladder here.
+                 */}
+                <Grid cols="categoryCards" gap="md">
+                  {rows.map((row) => (
+                    <Link
+                      key={row.slug}
+                      href={hrefFor(row.slug)}
+                      className="group flex flex-col items-center gap-2 rounded-xl border border-[var(--appkit-color-border)] p-3 text-center transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
+                    >
+                      <div className="h-16 w-16 overflow-hidden rounded-lg">
+                        <MediaImage src={row.image} alt={row.name} size="thumbnail" />
+                      </div>
+                      <Text size="xs" weight="medium" className="line-clamp-2">
+                        {row.name}
+                      </Text>
+                    </Link>
+                  ))}
+                </Grid>
+              </Stack>
+            );
+          })}
+
+          {unwiredEntries.length > 0 && (
+            <Stack
+              align="start"
+              gap="sm"
+              className="border-dashed text-left" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
+            >
+              <Text size="sm" color="muted">
+                {unwiredEntries.map(entryLabel).join(", ")} — up to {maxItems}{" "}
+                items, {itemsPerRow} per row when wired — data wiring lands
+                with the bundle/raffle work.
+              </Text>
+            </Stack>
+          )}
+
+          {cta ? (
+            <Link
+              href={cta.href}
+              className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
+            >
+              {cta.label} →
+            </Link>
+          ) : null}
         </Stack>
       </Container>
     </Section>

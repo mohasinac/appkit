@@ -1,6 +1,8 @@
 /*
  * WHY: Seeds the homepage layout — which sections render, in what order, with what copy.
- * WHAT: 23 sections (22 enabled + 1 deliberately disabled), ordered 1..23 contiguously.
+ * WHAT: 24 sections (23 enabled + 1 deliberately disabled), ordered 1..24 contiguously.
+ * `google-reviews` is a 25th REGISTERED type with no document — see the note
+ * beside the deliberate budget-tile omission below for why.
  *
  * 🛑 That count and range are ASSERTED, not described — `order` must stay unique
  * and contiguous. Until 2026-10-19 this header read "22 sections … 1..21" while
@@ -8,7 +10,10 @@
  * `section-featured-products` BOTH claimed `order: 5`. `MarketplaceHomepageView`
  * tie-breaks on `updatedAt` (identical for both) and then `id.localeCompare`, so
  * the live running order of the homepage was decided alphabetically — a silent
- * accident, not a layout decision.
+ * accident, not a layout decision. The 24th document (`collection-cards`,
+ * added the same day) closed the other half of that finding: a registered
+ * section type with a renderer and zero seeded rows is the same class of gap,
+ * just silent rather than colliding.
  *
  * ORDER follows current marketplace-homepage research rather than the previous
  * arbitrary arrangement: hero → trust → orient (categories, systems matrix) →
@@ -728,6 +733,63 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),
   },
+
+  /*
+   * `collection-cards` had a renderer and a builder with zero seeded rows — a
+   * type nobody ever saw, structurally identical to 22 missing-order or
+   * mis-ordered sections elsewhere in this file: a gap only a human reading
+   * the schema would ever notice.
+   *
+   * 🛑 Deliberately scoped to `categories` / `brands` / `stores` — the three
+   * axes that are PERMANENT regardless of product count. Even if every one of
+   * the 1,237 generated catalogue products were deleted, these three entry
+   * types would still resolve to real, populated rows: 1,185 categories, 28
+   * brand rows, 5 stores, all seeded independently of the product catalogue.
+   * A `"products"` or `"auctions"` entry here would be the opposite — a card
+   * that goes empty the moment the catalogue does, on a section whose entire
+   * point is to always have something to show.
+   */
+  {
+    id: "section-top-collections",
+    type: "collection-cards",
+    order: 24,
+    enabled: true,
+    config: {
+      title: "Explore the Marketplace",
+      subtitle: "Three ways into the catalogue that never go empty.",
+      layout: "grid",
+      itemsPerRow: 3,
+      showCollectionTabs: false,
+      collections: [
+        { type: "categories", label: "Shop by Generation", limit: 6 },
+        { type: "brands", label: "Shop by Brand", limit: 8 },
+        { type: "stores", label: "Verified Sellers", limit: 5 },
+      ],
+      cta: { label: "View all categories →", href: String(ROUTES.PUBLIC.CATEGORIES), variant: "text" },
+    },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+
+  /*
+   * 🛑 `google-reviews` stays DELIBERATELY UNSEEDED — not an oversight, the
+   * same decision already made for `googleMapsApiKey`/`googlePlaceId` in
+   * `site-settings-seed-data.ts`: those are seeded `""` on purpose, because
+   * their consumers (`GoogleReviewsSectionConfig.placeId` is this section's
+   * only REQUIRED field) read them directly and would treat a placeholder as
+   * a usable credential, producing a failed, possibly BILLED Google Places
+   * API call instead of skipping cleanly.
+   *
+   * Reviews pulled from this section are real third-party content keyed to a
+   * real Google Business Profile this project does not have. Fabricating a
+   * `placeId` would either hit Google's API with an invalid key (cost, for a
+   * call that can never succeed) or — worse — a VALID placeId for a real,
+   * unrelated business, rendering someone else's reviews as this store's own.
+   * Neither is a seed-data problem to paper over; it is a real business
+   * prerequisite (a Google Business Profile must exist) that has not happened
+   * yet. The type stays in `SectionType` and `SECTION_REGISTRY` — it is a real
+   * feature with zero fabricated data, not a bug.
+   */
 
   /*
    * 🛑 TCI's five BUDGET TILES ("Under ₹499 / ₹799 / ₹999 / ₹1499") are
