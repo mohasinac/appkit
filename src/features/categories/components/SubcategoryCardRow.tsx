@@ -59,6 +59,15 @@ export interface SubcategoryCardItem {
   emoji?: string;
   /** Direct children's names — searched, never rendered. */
   childNames?: readonly string[];
+  /**
+   * Depth in the forest: 0 is a root, 1 its child, and so on.
+   *
+   * Rendered as a small "L0 / L1 / L2" marker so a row of ancestors reads as a
+   * LADDER rather than as five unrelated cards. Omitted on the subcategory row
+   * itself, where every card is the same depth by construction and the marker
+   * would be noise repeated N times.
+   */
+  level?: number;
 }
 
 /**
@@ -191,6 +200,12 @@ export function SubcategoryCardRow({
                     </Row>
                   )}
                 </Div>
+
+                {item.level !== undefined && (
+                  <Span size="xs" color="muted" weight="medium">
+                    {item.level === 0 ? "L0 · root" : `L${item.level}`}
+                  </Span>
+                )}
 
                 <Text size="xs" weight="medium" className="line-clamp-2">
                   {item.name}

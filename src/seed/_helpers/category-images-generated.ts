@@ -544,9 +544,28 @@ export const GENERATED_CATEGORY_IMAGES: Readonly<Record<string, string>> = {
   "category-ten-heavy": "/media/category-ten-heavy-image",
   "category-ten-wide": "/media/category-ten-wide-image",
   "category-wing-attacker": "/media/category-wing-attacker-image",
+  "brand-bandai": "/media/brand-bandai-image",
+  "brand-banpresto": "/media/brand-banpresto-image",
   "brand-beyblade": "/media/brand-beyblade-image",
+  "brand-bushiroad": "/media/brand-bushiroad-image",
+  "brand-funskool": "/media/brand-funskool-image",
+  "brand-furyu": "/media/brand-furyu-image",
+  "brand-good-smile-company": "/media/brand-good-smile-company-image",
   "brand-hasbro": "/media/brand-hasbro-image",
+  "brand-hot-wheels": "/media/brand-hot-wheels-image",
+  "brand-konami": "/media/brand-konami-image",
+  "brand-mattel": "/media/brand-mattel-image",
+  "brand-mcfarlane-toys": "/media/brand-mcfarlane-toys-image",
+  "brand-mezco": "/media/brand-mezco-image",
+  "brand-newboy": "/media/brand-newboy-image",
+  "brand-pokemon-company": "/media/brand-pokemon-company-image",
   "brand-sonokong": "/media/brand-sonokong-image",
+  "brand-taito": "/media/brand-taito-image",
+  "brand-takara-tomy": "/media/brand-takara-tomy-image",
+  "brand-takara": "/media/brand-takara-image",
+  "brand-tamashii-nations": "/media/brand-tamashii-nations-image",
+  "brand-toy-biz": "/media/brand-toy-biz-image",
+  "brand-wizards-of-the-coast": "/media/brand-wizards-of-the-coast-image",
   "category-beyblade-burst": "/media/category-beyblade-burst-image",
   "category-beyblade-metal": "/media/category-beyblade-metal-image",
   "category-beyblade-original": "/media/category-beyblade-original-image",
@@ -567,9 +586,16 @@ export const GENERATED_CATEGORY_IMAGES: Readonly<Record<string, string>> = {
   "category-x-custom-cx": "/media/category-x-custom-cx-image",
   "category-x-unique-ux": "/media/category-x-unique-ux-image",
   "franchise-beyblade": "/media/franchise-beyblade-image",
+  "franchise-bleach": "/media/franchise-bleach-image",
+  "franchise-dc-comics": "/media/franchise-dc-comics-image",
+  "franchise-dragon-ball": "/media/franchise-dragon-ball-image",
+  "franchise-marvel": "/media/franchise-marvel-image",
+  "franchise-naruto": "/media/franchise-naruto-image",
+  "franchise-one-piece": "/media/franchise-one-piece-image",
+  "franchise-one-punch-man": "/media/franchise-one-punch-man-image",
 };
 
-export const GENERATED_CATEGORY_IMAGE_COUNT = 528;
+export const GENERATED_CATEGORY_IMAGE_COUNT = 554;
 
 /**
  * The REGIONAL-VARIANT logo, keyed on the same category id.

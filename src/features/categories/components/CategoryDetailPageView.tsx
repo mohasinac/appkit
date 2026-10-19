@@ -340,6 +340,41 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .filter((c) => c.tier === (category?.tier ?? 0) + 1)
     .filter((c) => listingCountFor(c) > 0);
 
+  /*
+   * The ancestor chain as cards, root first.
+   *
+   * 🛑 `ancestor.id` is used as the slug, which is correct HERE and is not a
+   * general licence: categories are one of this codebase's "pure slug"
+   * collections (`id === slug`), so the two are interchangeable for a category
+   * row. `CategoryAncestor` carries only `{id, name, tier}` — no slug field —
+   * so the alternative would be a lookup per ancestor for a value already in
+   * hand.
+   *
+   * `tier` comes from the stored ancestor rather than the array index: the
+   * index is only the depth if the chain is complete, and a chain that skipped
+   * a tier would silently relabel every level below it (the closure-skip case
+   * CLAUDE.md records under the counters invariant).
+   */
+  /*
+   * `CategoryAncestor` is `{id, name, tier}` and carries no display block, so
+   * the artwork is looked up in rows this page ALREADY fetched —
+   * `rootSiblingCategories` spans the whole root subtree, which is where an
+   * ancestor lives. A miss simply yields no visual and the card falls back,
+   * which is why this is a plain lookup and not another read.
+   */
+  const rowsById = new Map<string, CategoryItem>();
+  for (const c of [...rootSiblingCategories, ...childCategories]) {
+    if (c?.id) rowsById.set(c.id, c);
+  }
+
+  const parentLadder: SubcategoryCardItem[] = (category?.ancestors ?? []).map((a) => ({
+    id: a.id,
+    name: a.name,
+    href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.id)),
+    level: a.tier,
+    ...resolveTaxonomyVisual(rowsById.get(a.id) ?? null),
+  }));
+
   // Stores tab — stores whose storeCategory is this category or ANY descendant.
   //
   // `storeCategory` is a single slug with no ancestor chain (unlike a product's
@@ -866,6 +901,27 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 * the cards — so an off-screen subcategory is reachable by
                 * typing the name of something inside it, not only by scrolling.
                 */}
+              {/*
+                * The ancestor LADDER, above the children.
+                *
+                * The breadcrumb already encodes this path, but as text at the
+                * very top of a long page — by the time you have scrolled to
+                * the subcategory row you cannot see where you are without
+                * scrolling back. Repeating it here as the same card shape,
+                * labelled L0 (root) upward, makes the position legible at the
+                * exact point you are choosing where to go next, and makes
+                * stepping UP one level a click rather than a scroll.
+                *
+                * `ancestors` is ordered root-first, so the index IS the depth.
+                * 🛑 It excludes the current category by construction, so a
+                * root renders no row at all rather than one card pointing at
+                * the page you are already on.
+                */}
+              {parentLadder.length > 0 && (
+                <Div padding="b-2xs">
+                  <SubcategoryCardRow items={parentLadder} label="Parent categories" />
+                </Div>
+              )}
               <SubcategoryCardRow
                 items={toSubcategoryItems(directChildrenWithListings, childCategories)}
               />
