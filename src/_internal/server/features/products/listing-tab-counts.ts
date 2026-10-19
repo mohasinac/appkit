@@ -238,6 +238,22 @@ async function unavailableByType(
        * An inequality is the exception Firestore forces — its first `orderBy`
        * must be its own field (Root Cause #59) — so that one clause does need
        * an index, which is exactly why `unknown` is tracked per type.
+       *
+       * 🛑 THE AUCTION INDEXES ARE NOT DECLARED, deliberately. Until they are,
+       * the auction clause returns FAILED_PRECONDITION, `unknown` gains
+       * `auction`, and that ONE badge falls back to its total — every other
+       * type stays exact. Adding them to
+       * `appkit/firebase/base/firestore.indexes.json` is only half the change:
+       * an undeployed index file fails `audit-firebase-rules-deployed`, so the
+       * three entries below and `npm run firebase -- deploy --only
+       * firestore:indexes` belong in the same session.
+       *
+       *   products: status ASC, categorySlugs CONTAINS, auctionEndDate DESC
+       *   products: brand  ASC, status ASC,             auctionEndDate DESC
+       *   products: storeId ASC, status ASC,            auctionEndDate DESC
+       *
+       * One per scope the tab bars count in, because `buildScopedQuery` leads
+       * with a different equality for each.
        */
       const sorts =
         clause.op === "lt" && clause.sortField
