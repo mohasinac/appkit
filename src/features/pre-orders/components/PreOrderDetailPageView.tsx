@@ -44,7 +44,7 @@ import {
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { PreOrderBottomActions } from "./PreOrderBottomActions";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
-import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
+import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
 import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
@@ -55,7 +55,6 @@ import { ShareButton } from "../../products/components/ShareButton";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShowGroupSection } from "../../products/components/ShowGroupSection";
-import type { CustomSection } from "../../products/schemas/firestore";
 import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
 import { computeRelatedItems } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
@@ -491,9 +490,6 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
     ? (p.specifications as { name: string; value: string; unit?: string }[])
     : [];
-  const customSections: CustomSection[] = Array.isArray(p.customSections)
-    ? (p.customSections as CustomSection[])
-    : [];
   const descriptionHtml = toDescriptionHtml(p.description);
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
   const groupId = typeof p.groupId === "string" ? p.groupId : null;
@@ -622,11 +618,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                   </Dl>
                 ) : undefined
               }
-              customTabs={customSections.map((s) => ({
-                id: s.id,
-                label: s.title,
-                content: <CustomSectionTabContent section={s} />,
-              }))}
+              customTabs={toCustomSectionTabs(p.customSections)}
             />
           )}
           renderBuyBar={() => (

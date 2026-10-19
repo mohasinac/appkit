@@ -66,10 +66,9 @@ import { isFinalSale } from "../constants/final-sale";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 import { ShareButton } from "./ShareButton";
-import { CustomSectionTabContent } from "./CustomSectionTabContent";
+import { toCustomSectionTabs } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
 import { ShowGroupSection } from "./ShowGroupSection";
-import type { CustomSection } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { RelatedItemsSection } from "./RelatedItemsSection";
 import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal/server/features/products/data";
@@ -471,10 +470,6 @@ export async function ProductDetailPageView({
       : [];
 
   const allSpecs = [...specs, ...customFields];
-
-  const customSections: CustomSection[] = Array.isArray(p.customSections)
-    ? (p.customSections as CustomSection[])
-    : [];
 
   const allowOffers = p.allowOffers === true;
   // Was `p.type === "simple"`. `ProductDocument` has no `type` field at all —
@@ -1147,11 +1142,7 @@ export async function ProductDetailPageView({
                   emptyLabel="No reviews yet — be the first to review this product."
                 />
               }
-              customTabs={customSections.map((s) => ({
-                id: s.id,
-                label: s.title,
-                content: <CustomSectionTabContent section={s} />,
-              }))}
+              customTabs={toCustomSectionTabs(p.customSections)}
             />
           )}
           renderBundleSection={

@@ -30,7 +30,7 @@ import {
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
-import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
+import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
 import { ShareButton } from "../../products/components/ShareButton";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
@@ -46,7 +46,7 @@ import {
   type OfferBounds,
 } from "../../../_internal/shared/features/offers/config";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
-import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
+import type { ProductDocument } from "../../products/schemas/firestore";
 
 export interface ClassifiedDetailPageViewProps {
   slug: string;
@@ -126,7 +126,6 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
   const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
   const storeHref = storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null;
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications) ? (p.specifications as { name: string; value: string; unit?: string }[]) : [];
-  const customSections: CustomSection[] = Array.isArray(p.customSections) ? (p.customSections as CustomSection[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
   const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
@@ -284,11 +283,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                   </Dl>
                 ) : undefined
               }
-              customTabs={customSections.map((s) => ({
-                id: s.id,
-                label: s.title,
-                content: <CustomSectionTabContent section={s} />,
-              }))}
+              customTabs={toCustomSectionTabs(p.customSections)}
             />
           )}
           renderBuyBar={() => (

@@ -49,8 +49,7 @@ import {
 } from "../../../ui";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
-import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
-import type { CustomSection } from "../../products/schemas/firestore";
+import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
 import { AuctionBottomActions } from "./AuctionBottomActions";
 import { AuctionLiveStatusBadge } from "./AuctionLiveStatusBadge";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
@@ -380,9 +379,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
     ? (p.specifications as { name: string; value: string; unit?: string }[])
     : [];
-  const customSections: CustomSection[] = Array.isArray(p.customSections)
-    ? (p.customSections as CustomSection[])
-    : [];
   const descriptionHtml = toDescriptionHtml(p.description as JsonValue);
 
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
@@ -659,11 +655,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   </Dl>
                 ) : undefined
               }
-              customTabs={customSections.map((s) => ({
-                id: s.id,
-                label: s.title,
-                content: <CustomSectionTabContent section={s} />,
-              }))}
+              customTabs={toCustomSectionTabs(p.customSections)}
             />
           )}
           renderBidHistory={() => {

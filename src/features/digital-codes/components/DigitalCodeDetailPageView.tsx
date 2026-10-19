@@ -30,7 +30,7 @@ import {
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
-import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
+import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
 import { ShareButton } from "../../products/components/ShareButton";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { RelatedItemsSection } from "../../products/components/RelatedItemsSection";
@@ -39,7 +39,7 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
-import type { CustomSection, ProductDocument } from "../../products/schemas/firestore";
+import type { ProductDocument } from "../../products/schemas/firestore";
 
 export interface DigitalCodeDetailPageViewProps {
   slug: string;
@@ -108,7 +108,6 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
   const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
   const storeHref = storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null;
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications) ? (p.specifications as { name: string; value: string; unit?: string }[]) : [];
-  const customSections: CustomSection[] = Array.isArray(p.customSections) ? (p.customSections as CustomSection[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
   const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, initialReviews] = await Promise.all([
@@ -238,11 +237,7 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
                   emptyLabel="No reviews yet — be the first to review this product."
                 />
               }
-              customTabs={customSections.map((s) => ({
-                id: s.id,
-                label: s.title,
-                content: <CustomSectionTabContent section={s} />,
-              }))}
+              customTabs={toCustomSectionTabs(p.customSections)}
             />
           )}
           renderBuyBar={() => (
