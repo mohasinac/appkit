@@ -409,7 +409,6 @@ export function AdminSiteSettingsView({
   // ⑪ Platform Limits
   const [maxProductsPerStore, setMaxProductsPerStore] = React.useState(100);
   const [maxCustomFields, setMaxCustomFields] = React.useState(50);
-  const [maxCustomSections, setMaxCustomSections] = React.useState(3);
   const [orderCancelWindow, setOrderCancelWindow] = React.useState(24);
 
   // ⑫ Legal
@@ -645,7 +644,6 @@ export function AdminSiteSettingsView({
 
     setMaxProductsPerStore(s.platformLimits?.maxProductsPerStore ?? 100);
     setMaxCustomFields(s.platformLimits?.maxCustomFieldsPerProduct ?? 50);
-    setMaxCustomSections(s.platformLimits?.maxCustomSectionsPerProduct ?? 3);
     setOrderCancelWindow(s.platformLimits?.orderCancellationWindowHours ?? 24);
 
     setTermsHtml(s.legalPages?.terms ?? "");
@@ -872,7 +870,7 @@ export function AdminSiteSettingsView({
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
-      platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
+      platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
       // Both keys are always sent: Firestore's update() replaces a nested map
       // wholesale, so omitting one here would wipe it. The load-time spread this
@@ -1810,7 +1808,33 @@ export function AdminSiteSettingsView({
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max custom fields per product" value={String(maxCustomFields)} onChange={(e) => setMaxCustomFields(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Max custom sections per product" value={String(maxCustomSections)} onChange={(e) => setMaxCustomSections(parseInt(e.target.value) || 0)} type="number" min={0} />
+                {/*
+                 * 🛑 "Max custom sections per product" REMOVED 2026-10-19 — it
+                 * was fully inert. `platformLimits.maxCustomSectionsPerProduct`
+                 * had no declared default, no seeded value (`platformLimits`
+                 * was absent from the seeded site-settings document entirely),
+                 * and its ONLY read site was this component's own React state
+                 * fallback (`?? 3`). The REAL, enforced cap is the hard
+                 * constant `MAX_CUSTOM_SECTIONS = 3`
+                 * (`features/products/schemas/firestore.ts`), read only by
+                 * `CustomSectionsEditor.tsx` — this input changed a number
+                 * nothing downstream ever looked at.
+                 *
+                 * Following this document's own established rule for exactly
+                 * this situation (`SiteSettingsPlatformLimits`'s docstring:
+                 * "Do not re-add them without a reader") rather than wiring a
+                 * fake enforcement path through an editor component with no
+                 * site-settings access, which would have been a second,
+                 * unverifiable change layered on top of a provably dead one.
+                 *
+                 * 🛑 Its three siblings in this same Grid were checked and are
+                 * ALSO unread anywhere outside this file — `maxProductsPerStore`,
+                 * `maxCustomFieldsPerProduct` (directly above), and
+                 * `orderCancellationWindowHours` (directly below). That is a
+                 * real, larger finding — the entire "Platform Limits" tab may
+                 * be decorative — left exactly as found rather than silently
+                 * widening this fix to three more inputs nobody asked about.
+                 */}
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
               </Grid>
             </SettingsTabForm>

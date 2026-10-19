@@ -460,9 +460,17 @@ export interface SiteSettingsPlatformLimits {
    *
    * Do not re-add them without a reader: a control that silently does nothing
    * is worse than an absent one.
+   *
+   * 🛑 `maxCustomSectionsPerProduct` removed 2026-10-19 for the SAME reason —
+   * no default, never seeded, and its only read site was the admin form's own
+   * React state fallback. The real cap is `MAX_CUSTOM_SECTIONS` in
+   * `features/products/schemas/firestore.ts`, read only by
+   * `CustomSectionsEditor.tsx`. Its sibling `maxCustomFieldsPerProduct` below
+   * is in the identical position (same lack of reader) and was left alone —
+   * flagged, not silently fixed, since widening this change without being
+   * asked risks a half-verified edit with no build loop to catch a miss.
    */
   maxCustomFieldsPerProduct?: number;
-  maxCustomSectionsPerProduct?: number;
   orderCancellationWindowHours?: number;
 }
 
