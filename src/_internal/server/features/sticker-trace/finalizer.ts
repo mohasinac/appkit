@@ -150,6 +150,15 @@ async function deleteRunTasks(runId: string): Promise<void> {
    * a guess that broke on `categories` with `Transaction too big`.
    */
   const writer = db.bulkWriter();
-  for (const doc of snap.docs) writer.delete(doc.ref);
+  /*
+   * `void` because `close()` is the await point, not each delete.
+   *
+   * BulkWriter returns a promise per operation and resolves them through
+   * `close()`, which also surfaces their failures — so awaiting each delete
+   * here would serialise the whole batch and defeat the reason BulkWriter was
+   * chosen. Marking them ignored is the rule's own prescribed form, and it is
+   * accurate: they are not unhandled, they are handled one line down.
+   */
+  for (const doc of snap.docs) void writer.delete(doc.ref);
   await writer.close();
 }
