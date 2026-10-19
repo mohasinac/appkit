@@ -369,6 +369,44 @@ export const authored: Record<string, AuthoredCase> = {
       "C2811 → a supporting signal reading 'Recorded on … releases' naming Korea (Sonokong). K2510 → the same shape naming Middle East (NewBoy), plus the 'seems legit' history.",
     endResult: "Nothing is changed.",
   },
+
+  "checklist-content-discovery-authenticity-checker-series-window-names-the-production-run": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Enter C2312 as the code and submit (Generation stays on Metal Fight).",
+      "Confirm a signal says the date falls inside a NAMED production window, and names it 'Metal Fury' with a start and end date.",
+      "Confirm the signal says this is about the CALENDAR DATE, not about the code itself.",
+      "Now enter A0813 instead and submit.",
+      "Confirm there is NO series-window signal for A0813 — its derived date (8 January 2013) is after every window the source states ends (Shogun Steel, 23 December 2012).",
+      "Answer no if the window signal is missing for C2312, or present for A0813.",
+    ],
+    inputs: { code: "C2312" },
+    expectedBehaviour:
+      "BEFORE: the reference post's own 'Additional Information' section — the only place any source states a MANUFACTURING WINDOW rather than one code's date (Metal Fusion/Masters/Fury, Shogun Steel) — was parsed for nothing; the tool could only ever say what a specific code decoded to. AFTER: every derivable date is checked against those four windows and named when it falls inside one. This is a fact about the calendar, so it fires even for C2312, which matches no code in any table.",
+    expectedUiState:
+      "C2312 → a signal reading 'Falls inside the Metal Fury production window', naming '3 April 2011 – 1 April 2012'. A0813 → no such signal at all.",
+    endResult: "Nothing is changed.",
+  },
+
+  "checklist-content-discovery-authenticity-checker-temporal-context-for-an-unmatched-code": {
+    roles: ["guest"],
+    startPage: "/tools/authenticity",
+    steps: [
+      "Enter C2312 as the code and submit.",
+      "Confirm the main 'not in any of the tables' signal is still present and still says not-recorded is not fake.",
+      "Find a SEPARATE signal headed 'What the tables record from March 2012'.",
+      "Confirm it lists several genuine releases from that month BY NAME, and explicitly says 'Midfake batches: none recorded' rather than omitting that half.",
+      "Confirm the detail text explicitly says this is NOT a match for the code and your item matching none of the names is NOT evidence of anything.",
+      "Answer no if the month-context signal is missing, or if it reads as though it identifies the item.",
+    ],
+    inputs: { code: "C2312" },
+    expectedBehaviour:
+      "BEFORE: a code that matched nothing got exactly one sentence — 'not recorded, not fake' — and nothing else, even though the tables know a great deal about what else was moving through production the same month. AFTER: for a well-formed code that matches no table row, the engine also reports every genuine and midfake product name recorded from the SAME CALENDAR MONTH, explicitly framed as context rather than a match. 🛑 This only fires for an UNMATCHED code — a code that DID match something already has its own, richer product list, and piling month-context on top of that would dilute the one thing that actually matters (the match itself, or for a contested code, the disagreement).",
+    expectedUiState:
+      "A signal titled 'What the tables record from March 2012' listing names like Diablo Nemesis X:D, Fang Leone 130W²D, Kreis Cygnus, Phantom Orion and others, ending '… and N more', followed by 'Midfake batches: none recorded.' and the context/not-evidence sentence.",
+    endResult: "Nothing is changed.",
+  },
 };
 
 /*

@@ -3458,6 +3458,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "contested-code-reports-the-disagreement", label: "A code two sources disagree about reports the disagreement instead of picking a side" },
         { key: "font-midfake-does-not-accuse", label: "A midfake row whose own source calls the code authentic does NOT reach 'likely reproduction'" },
         { key: "regional-code-reads-as-regional", label: "A Korean or Middle-East code names its region instead of coming back unrecorded" },
+        { key: "series-window-names-the-production-run", label: "A derivable date names its Metal-series production window, or names none outside all four" },
+        { key: "temporal-context-for-an-unmatched-code", label: "An unmatched code reports what else the tables record from the same month, framed as context not a match" },
       ],
     },
     {

@@ -18,7 +18,7 @@
  *
  * Provenance for every row: docs/research/beyblade-authenticity-2026-10/README.md
  *
- * 517 date-code documents · 6 generation documents
+ * 517 date-code documents · 6 generation documents · 4 series-window documents
  * 495 original · 18 midfake · 4 contested · 0 unresolved,
  * merged from 113 + 777 + 22 rows across three archived sources.
  *
@@ -43,8 +43,8 @@
 
 export const AUTHENTICITY_KNOWLEDGE_COLLECTION = "authenticityKnowledge";
 
-/** A date-code row, a generation summary, or (future) a marque. */
-export type AuthenticityKnowledgeKind = "date-code" | "generation" | "marque";
+/** A date-code row, a generation summary, a series-production window, or (future) a marque. */
+export type AuthenticityKnowledgeKind = "date-code" | "generation" | "series-window" | "marque";
 
 /**
  * What the community has recorded about a box code.
@@ -97,6 +97,10 @@ export interface AuthenticityKnowledgeDocument {
   releasesWithRetailCode?: number;
   exampleCodes?: string[];
   hasDateCodeTable?: boolean;
+  /** series-window rows only. `name`/`generation` are shared with other kinds above. */
+  name?: string;
+  startLabel?: string;
+  endLabel?: string;
 }
 
 export const authenticityKnowledgeSeedData: AuthenticityKnowledgeDocument[] = [
@@ -8957,7 +8961,43 @@ export const authenticityKnowledgeSeedData: AuthenticityKnowledgeDocument[] = [
     hasDateCodeTable: true,
     seedPurpose: "permanent",
   },
+  {
+    id: "authknow-series-metal-fusion",
+    kind: "series-window",
+    name: "Metal Fusion",
+    generation: "mfb",
+    startLabel: "5 April 2009",
+    endLabel: "28 March 2010",
+    seedPurpose: "permanent",
+  },
+  {
+    id: "authknow-series-metal-masters",
+    kind: "series-window",
+    name: "Metal Masters",
+    generation: "mfb",
+    startLabel: "4 April 2010",
+    endLabel: "27 March 2011",
+    seedPurpose: "permanent",
+  },
+  {
+    id: "authknow-series-metal-fury",
+    kind: "series-window",
+    name: "Metal Fury",
+    generation: "mfb",
+    startLabel: "3 April 2011",
+    endLabel: "1 April 2012",
+    seedPurpose: "permanent",
+  },
+  {
+    id: "authknow-series-shogun-steel",
+    kind: "series-window",
+    name: "Shogun Steel",
+    generation: "zerog",
+    startLabel: "8 April 2012",
+    endLabel: "23 December 2012",
+    seedPurpose: "permanent",
+  },
 ];
 
 /** Asserted downstream so a silent drop is loud. */
-export const AUTHENTICITY_KNOWLEDGE_COUNT = 523;
+export const AUTHENTICITY_KNOWLEDGE_COUNT = 527;
