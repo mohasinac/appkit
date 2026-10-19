@@ -40,6 +40,8 @@
  *    so the worst case is the pre-2026-10-19 behaviour, not a hole.
  */
 
+import { normalizeError } from "../../../errors/normalize";
+
 /** Longest edge, in CSS pixels, of the stored master. */
 export const IMAGE_DOWNSCALE_MAX_EDGE = 2048;
 
@@ -150,8 +152,20 @@ export async function downscaleImageFile(
       type: format,
       lastModified: file.lastModified,
     });
-  } catch {
-    // Case 4 — fail open. See the header.
+  } catch (err) {
+    void normalizeError(err);
+    /*
+     * Case 4 — fail open. See the header.
+     *
+     * Reported rather than swallowed silently: `normalizeError` fires the
+     * observability hook, so a browser that cannot decode what it just accepted
+     * is visible instead of merely producing a suspiciously large upload. The
+     * upload itself still proceeds, with the original file.
+     *
+     * 🛑 The call sits on the line directly below the `catch` on purpose —
+     * `audit-catch-normalize` only looks a few lines ahead, so putting this
+     * comment first was enough to make it read as an unnormalised catch.
+     */
     return file;
   } finally {
     decoded?.release();
