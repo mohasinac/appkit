@@ -47,3 +47,26 @@ export { rasterisePartToBox } from "../../_internal/shared/features/sticker-trac
  * silent factor-of-N millimetre error lives.
  */
 export { buildCutFileBytes, buildCutFileForRun } from "../../_internal/server/features/sticker-trace/build-cut-file";
+
+/*
+ * Everything the PDF mosaic needs, assembled server-side.
+ *
+ * 🛑 `pdfkit` is Node-only and stays in functions/, but the DATA — the sheet,
+ * the promoted PNGs and the layout — comes from here. Letting the Function
+ * gather it would mean re-deriving the nest, and a preview that disagrees with
+ * the printed sheet about where a sticker sits is worse than no preview.
+ */
+export {
+  collectMosaicInputs,
+  type MosaicInputs,
+  type MosaicPartInput,
+} from "../../_internal/server/features/sticker-trace/mosaic-inputs";
+
+/*
+ * The page-id union, exported so a Function can accept one without casting.
+ *
+ * It was briefly reconstructed at the call site with a conditional type, which
+ * type-checked and was unreadable — and an unreadable cast is how an invalid
+ * page id eventually gets through. Exporting the union lets the compiler do it.
+ */
+export type { PrintPageSizeId } from "../../_internal/shared/features/sticker-trace/export/page-sizes";
