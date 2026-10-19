@@ -216,7 +216,7 @@ export function vectoriseArtwork(
     deviation: Math.round(deviation * 1000) / 1000,
     notRecommended: tooFar || tooMany,
     reason: tooFar
-      ? `${Math.round(deviation * 100)}% of this part's pixels are off by a visible amount — it is a gradient or a halftone, and vectorising will band it. Keep the raster.`
+      ? `${Math.round(deviation * 100)}% of this part's pixels shift visibly — it is a gradient or a halftone, and vectorising will band it. Keep the raster.`
       : tooMany
         ? `${nodeCount.toLocaleString()} nodes is past what Design Space handles comfortably. Keep the raster, or trace with fewer colours.`
         : "",
