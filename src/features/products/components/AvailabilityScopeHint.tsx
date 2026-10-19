@@ -77,7 +77,8 @@ export function AvailabilityScopeHint({
       surface="muted"
       rounded="lg"
       border="subtle"
-      className="mb-4 flex-wrap"
+      wrap
+      className="mb-4"
     >
       <Text size="sm" color="muted">
         {hidden === 1

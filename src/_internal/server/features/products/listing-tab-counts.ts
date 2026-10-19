@@ -31,9 +31,12 @@ import { sieveAnd, sieveFilter, SIEVE_OP, sortBy } from "../../../../utils/sieve
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import {
   isListingRowAvailable,
-  unavailableClausesFor,
+  pluginFor,
 } from "../../../shared/listing-types/_registry";
-import type { AvailabilityRow } from "../../../shared/listing-types/availability";
+import type {
+  AvailabilityRow,
+  UnavailableClause,
+} from "../../../shared/listing-types/availability";
 import { normalizeListingType } from "../../../../features/products/utils/listing-type";
 import { clauseToSieve, PUBLIC_PRODUCT_MAX_PAGE_SIZE } from "./list-public";
 import type { ListingTab } from "../../../../features/products/constants/listing-tabs";
@@ -145,12 +148,18 @@ function bundleMatchesScope(
 interface UnavailableTally {
   byType: Map<ListingType, number>;
   /**
-   * A clause query saturated its window or failed outright. The tally is then
-   * a FLOOR, so a subtraction from `total` yields only an UPPER BOUND on
-   * `available` — reported as the total rather than as a number that is
+   * Types whose tally is a FLOOR rather than a count, because a clause they
+   * depend on failed or saturated its window. Subtracting a floor yields an
+   * UPPER BOUND, so these report the total instead of a number that is
    * quietly too high.
+   *
+   * 🛑 PER TYPE, not one global flag. The equality clauses are index-free
+   * (Firestore merge-joins them), but the auction clause is an inequality and
+   * needs a composite index per scope — so under a global flag one missing
+   * index would cost accurate badges on all NINE types. Narrow degradation is
+   * the difference between a feature that mostly works and one that is inert.
    */
-  truncated: boolean;
+  unknown: Set<ListingType>;
 }
 
 /**
@@ -191,27 +200,57 @@ async function unavailableByType(
   now: Date,
 ): Promise<UnavailableTally> {
   const byType = new Map<ListingType, number>();
-  const clauses = unavailableClausesFor(types);
-  if (clauses.length === 0) return { byType, truncated: false };
+  const unknown = new Set<ListingType>();
+
+  /*
+   * One entry per DISTINCT clause, remembering which types depend on it, so a
+   * clause that cannot run takes down only those types' badges.
+   */
+  const distinct = new Map<
+    string,
+    { clause: UnavailableClause; types: Set<ListingType> }
+  >();
+  for (const type of types) {
+    for (const clause of pluginFor(type).unavailableClauses) {
+      const key = clause.field + "|" + clause.op + "|" + String(clause.value);
+      const entry = distinct.get(key) ?? { clause, types: new Set<ListingType>() };
+      entry.types.add(type);
+      distinct.set(key, entry);
+    }
+  }
+  if (distinct.size === 0) return { byType, unknown };
 
   const status = scope.status ?? DEFAULT_STATUS;
   const results = await Promise.all(
-    clauses.map(async (clause) => {
-      // An inequality must be ordered by its own field — Firestore appends it
-      // to the `orderBy` implicitly, so any other sort demands a composite
-      // index nobody declared (Root Cause #59).
+    [...distinct.values()].map(async (entry) => {
+      const { clause } = entry;
+      /*
+       * 🛑 NO SORT on an equality clause — load-bearing, not an omission.
+       *
+       * A tally does not care about order, and adding `orderBy createdAt`
+       * turns a query Firestore can merge-join from single-field indexes into
+       * one demanding a composite index PER CLAUSE PER SCOPE: fifteen new
+       * indexes on a collection already carrying 223, every one of them write
+       * amplification on every product write. Measured against the live
+       * project: all four equality clauses run index-free without the sort and
+       * return FAILED_PRECONDITION with it.
+       *
+       * An inequality is the exception Firestore forces — its first `orderBy`
+       * must be its own field (Root Cause #59) — so that one clause does need
+       * an index, which is exactly why `unknown` is tracked per type.
+       */
       const sorts =
         clause.op === "lt" && clause.sortField
           ? sortBy(clause.sortField, "DESC")
-          : sortBy(PRODUCT_FIELDS.CREATED_AT, "DESC");
+          : undefined;
       try {
-        return await productRepository.list(
+        const result = await productRepository.list(
           {
             filters: sieveAnd(
               sieveFilter(PRODUCT_FIELDS.STATUS, SIEVE_OP.EQ, status),
               clauseToSieve(clause, now),
             ),
-            sorts,
+            ...(sorts ? { sorts } : {}),
             page: 1,
             pageSize: PUBLIC_PRODUCT_MAX_PAGE_SIZE,
           },
@@ -221,29 +260,39 @@ async function unavailableByType(
             brandName: scope.brandName,
           },
         );
+        return { entry, result };
       } catch (error) {
         const e = normalizeError(error);
         // ERROR, not warn: a clause that cannot run is almost always a missing
-        // composite index — a permanent, silent skew of every badge on the
-        // page rather than a transient blip.
+        // composite index — a permanent, silent skew of the badges that depend
+        // on it rather than a transient blip. The fields are named so the log
+        // says which index to create.
         serverLogger.error(
-          `listingTabCounts: unavailable clause failed (${clause.field} ${clause.op}); badges fall back to totals`,
-          { field: clause.field, op: clause.op, error: e.message },
+          "listingTabCounts: unavailable clause failed; those badges fall back to totals",
+          {
+            field: clause.field,
+            op: clause.op,
+            types: [...entry.types],
+            error: e.message,
+          },
         );
-        return null;
+        return { entry, result: null };
       }
     }),
   );
 
   const merged = new Map<string, AvailabilityRow>();
-  let truncated = false;
-  for (const result of results) {
+  for (const { entry, result } of results) {
     if (!result) {
-      truncated = true;
+      for (const type of entry.types) unknown.add(type);
       continue;
     }
     const rows = result.items as unknown as AvailabilityRow[];
-    if (rows.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE) truncated = true;
+    // A saturated window means there are more unavailable rows than were seen,
+    // so the tally is a floor for every type this clause serves.
+    if (rows.length >= PUBLIC_PRODUCT_MAX_PAGE_SIZE) {
+      for (const type of entry.types) unknown.add(type);
+    }
     for (const row of rows) {
       const id = typeof row.id === "string" ? row.id : JSON.stringify(row.id);
       if (!merged.has(id)) merged.set(id, row);
@@ -256,7 +305,7 @@ async function unavailableByType(
     const type = normalizeListingType(row);
     byType.set(type, (byType.get(type) ?? 0) + 1);
   }
-  return { byType, truncated };
+  return { byType, unknown };
 }
 
 /** The listing types one tab spans — `"art|stickers"` is a pipe OR-group. */
@@ -301,15 +350,20 @@ export async function listingTabCounts(
   const total: ListingTabCounts = {};
   const available: ListingTabCounts = {};
   for (const tab of listingTabs) {
+    const tabTypes = typesOf(tab);
     const totalForTab = typeCounts[String(tab.listingType)];
     total[tab.id] = totalForTab;
-    if (totalForTab === undefined || unavailable.truncated) {
-      // Unknown beats a number that is quietly too high. Falling back to the
-      // total reproduces the pre-2026-10-20 badge rather than inventing one.
+    if (
+      totalForTab === undefined ||
+      tabTypes.some((t) => unavailable.unknown.has(t))
+    ) {
+      // Falling back to the total reproduces the pre-split badge rather than
+      // inventing a number — and it keeps the hint silent, because the hint
+      // only speaks when both figures are known.
       available[tab.id] = totalForTab;
       continue;
     }
-    const gone = typesOf(tab).reduce(
+    const gone = tabTypes.reduce(
       (sum, type) => sum + (unavailable.byType.get(type) ?? 0),
       0,
     );
