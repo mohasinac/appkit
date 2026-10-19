@@ -1,6 +1,6 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
-import { Anchor, Dd, Dl, Dt, RichText, Stack, Text } from "../../../ui";
+import { Anchor, RichText, SpecTable, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 
@@ -64,27 +64,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
         />
       )}
       {fields.length > 0 && (
-        <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
-          {fields.map((f, i) => (
-            <Row gap="md" oddEven="zebra"
-              key={i}
-              surface="default" padding="inline"
-            >
-              <Dt weight="medium" className="w-36 flex-shrink-0 capitalize" color="primary">
-                {f.key}
-              </Dt>
-              <Dd className="flex-1" color="muted">
-                {f.type === "url" ? (
-                  <Anchor href={f.value} tone="none" underline="hover" className="text-primary-600 dark:text-primary-400 break-all">
-                    {f.value}
-                  </Anchor>
-                ) : (
-                  renderFieldValue(f)
-                )}
-              </Dd>
-            </Row>
-          ))}
-        </Dl>
+        <SpecTable rows={fields.map((f) => ({ name: f.key, value: String(f.value), unit: f.unit }))} />
       )}
       {!html && fields.length === 0 && (
         <Text size="sm" color="faint">No content in this section.</Text>

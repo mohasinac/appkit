@@ -37,9 +37,7 @@ import {
   Text,
   Ul,
   Li,
-  Dl,
-  Dt,
-  Dd,
+  SpecTable,
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { PreOrderBottomActions } from "./PreOrderBottomActions";
@@ -601,21 +599,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               }
               specsContent={
                 specs.length > 0 ? (
-                  <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
-                    {specs.map((s, i) => (
-                      <Row gap="md" oddEven="zebra"
-                        key={i}
-                        surface="default" padding="inline"
-                      >
-                        <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
-                          {s.name}
-                        </Dt>
-                        <Dd className="flex-1" color="muted">
-                          {s.value}{s.unit ? ` ${s.unit}` : ""}
-                        </Dd>
-                      </Row>
-                    ))}
-                  </Dl>
+                  <SpecTable rows={specs} />
                 ) : undefined
               }
               customTabs={toCustomSectionTabs(p.customSections)}
