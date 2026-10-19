@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { buildTokensIndex } from "../../../security/blind-index-tokens";
+import type { JsonValue } from "../../../schemas/types";
 
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
@@ -175,7 +176,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
    * searchable without anyone having to remember to re-run the backfill.
    */
   protected override buildTokensIndexFor(
-    data: Record<string, unknown>,
+    data: Record<string, JsonValue>,
   ): Record<string, string[]> | null {
     const displayName = typeof data.displayName === "string" ? data.displayName : undefined;
     const email = typeof data.email === "string" ? data.email : undefined;

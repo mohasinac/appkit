@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "../../../schemas/types";
 /**
  * AddressesRepository — SB-UNI-A 2026-05-13
  *
@@ -70,7 +71,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
    * construction rather than by luck).
    */
   protected override buildTokensIndexFor(
-    data: Record<string, unknown>,
+    data: Record<string, JsonValue>,
   ): Record<string, string[]> | null {
     const fullName = typeof data.fullName === "string" ? data.fullName : undefined;
     if (!fullName) return null;

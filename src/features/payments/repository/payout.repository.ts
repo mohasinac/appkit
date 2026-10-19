@@ -6,6 +6,7 @@
  */
 
 import { buildTokensIndex } from "../../../security/blind-index-tokens";
+import type { JsonValue } from "../../../schemas/types";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -126,7 +127,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * wipe", because the wipe is always followed by the write that restores it.
    */
   protected override buildTokensIndexFor(
-    data: Record<string, unknown>,
+    data: Record<string, JsonValue>,
   ): Record<string, string[]> | null {
     const sellerName = typeof data.sellerName === "string" ? data.sellerName : undefined;
     const sellerEmail = typeof data.sellerEmail === "string" ? data.sellerEmail : undefined;
