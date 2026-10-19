@@ -72,6 +72,14 @@ export interface StickerRunHistoryPanelProps {
   onOpenAsset?: (runId: string, kind: "preview" | "overlay" | "cutSvg") => void;
   /** Start a retry from this run — the retry panel takes it from here. */
   onRetry?: (run: StickerRunRow) => void;
+  /**
+   * Accept this run as the sheet's result and render its parts full-size.
+   *
+   * 🛑 Offered only on a SUCCEEDED run that is not already active. Promoting a
+   * failed run would copy a partial result onto the sheet, and re-promoting the
+   * active one spends the whole render budget to reach the state it is in.
+   */
+  onPromote?: (run: StickerRunRow) => void;
 }
 
 /**
@@ -116,6 +124,7 @@ export function StickerRunHistoryPanel({
   loading = false,
   onOpenAsset,
   onRetry,
+  onPromote,
 }: StickerRunHistoryPanelProps) {
   const open = useCallback(
     (runId: string, kind: "preview" | "overlay" | "cutSvg") => () =>
@@ -220,6 +229,11 @@ export function StickerRunHistoryPanel({
               {onRetry ? (
                 <Button size="sm" variant="ghost" onClick={() => onRetry(run)}>
                   Retry from this
+                </Button>
+              ) : null}
+              {onPromote && run.status === "succeeded" && !run.isActive ? (
+                <Button size="sm" variant="primary" onClick={() => onPromote(run)}>
+                  Accept &amp; render
                 </Button>
               ) : null}
             </Row>

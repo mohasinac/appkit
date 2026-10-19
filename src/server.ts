@@ -2192,6 +2192,14 @@ export {
   buildCutFileForRun,
   buildCutFileBytes,
 } from "./_internal/server/features/sticker-trace/build-cut-file";
+/*
+ * The page-id and profile-id unions, so a route takes one without a cast.
+ * Exported for the same reason the narrow Functions entry exports the page id:
+ * a conditional type reconstructed at the call site compiles and is unreadable,
+ * and an unreadable cast is how an invalid id eventually gets through.
+ */
+export type { PrintPageSizeId } from "./_internal/shared/features/sticker-trace/export/page-sizes";
+export type { MachineProfileId } from "./_internal/shared/features/sticker-trace/export/machine-profiles";
 export {
   promoteStickerTraceRun,
   isRunPromoted,
