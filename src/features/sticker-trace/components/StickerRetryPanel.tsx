@@ -19,8 +19,14 @@
  * 🛑 The panel PREDICTS the clamp client-side so the operator sees it before
  * submitting, and the server computes it again independently. Those are not
  * redundant: the prediction is an affordance, the server's is the decision.
- * They share `earliestChangedStage`/`stageIndex`, so they cannot disagree about
- * which parameter belongs to which stage.
+ * Both call `resolveResumeStage`, so they cannot disagree about which parameter
+ * belongs to which stage.
+ *
+ * 🛑 Built on `<SectionForm>`, not a hand-rolled `<Form>`. Three controls is
+ * where a form stops being trivial, and sectionising is what buys the error
+ * summary, the jump-to-field link and the pinned mobile action bar for free —
+ * audit-form-sectionised is strict-zero on exactly this, and its grandfather
+ * list is empty and closed.
  *
  * EXPORTS: StickerRetryPanel
  *
@@ -33,10 +39,12 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
+import { z } from "zod";
 import { normalizeError } from "../../../errors/normalize";
-import { Alert, Button, Card, Form, Heading, Stack, Text } from "../../../ui/index";
+import { Alert, Card, Stack, Text } from "../../../ui/index";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
+import { SectionForm, type SectionDef } from "../../shell/SectionForm";
 import { TRACE_STAGES } from "../../../_internal/shared/features/sticker-trace/types";
 import type {
   PrecisionTier,
@@ -51,6 +59,27 @@ import { paramsForTier } from "../../../_internal/shared/features/sticker-trace/
 import { TIER_HELP } from "../constants/help-content";
 
 const TIERS: PrecisionTier[] = ["draft", "standard", "precise", "max"];
+
+/** This form's own values. */
+interface RetryValues {
+  name: string;
+  tier: PrecisionTier;
+  requested: TraceStage;
+  [key: string]: unknown;
+}
+
+/**
+ * 🛑 `.min(1)` on the name, mirroring `requireName` on the server.
+ *
+ * Validated in both places deliberately rather than redundantly: the schema
+ * guards THIS form, `requireName` guards every caller including a future server
+ * action. A rule enforced only at the edge is the one the next caller bypasses.
+ */
+const retrySchema = z.object({
+  name: z.string().min(1, "Name this attempt so you can tell it apart later."),
+  tier: z.enum(["draft", "standard", "precise", "max"]),
+  requested: z.string().min(1),
+});
 
 export interface StickerRetryPanelProps {
   /** The run being retried — its name and params seed the form. */
@@ -77,136 +106,158 @@ export function StickerRetryPanel({
    * is MANDATORY and the server rejects an empty one, so an empty field is a
    * guaranteed round-trip failure on the most common action in the tool.
    */
-  const [name, setName] = useState(`${source.name} — retry`);
-  const [tier, setTier] = useState<PrecisionTier>(source.tier);
-  const [requested, setRequested] = useState<TraceStage>("decode");
+  const [values, setValues] = useState<RetryValues>({
+    name: `${source.name} — retry`,
+    tier: source.tier,
+    requested: "decode",
+  });
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const onChange = useCallback(
+    (partial: Partial<RetryValues>) => setValues((v) => ({ ...v, ...partial })),
+    [],
+  );
 
   /*
    * The next run's parameters, resolved exactly as the server will resolve
    * them: tier defaults first, overrides second. Comparing anything else would
    * predict a clamp the server does not apply, or miss one it does.
    */
-  const nextParams = useMemo(() => paramsForTier(tier), [tier]);
+  const nextParams = useMemo(() => paramsForTier(values.tier), [values.tier]);
 
   const notice = useMemo(() => {
     if (!source.params) return "";
-    return explainResume(resolveResumeStage(requested, source.params, nextParams));
-  }, [source.params, nextParams, requested]);
+    return explainResume(
+      resolveResumeStage(values.requested, source.params, nextParams),
+    );
+  }, [source.params, nextParams, values.requested]);
 
   const submit = useCallback(async () => {
     setPending(true);
     setError(null);
     try {
-      await onSubmit({ name: name.trim(), tier, requestedResumeStage: requested });
+      await onSubmit({
+        name: values.name.trim(),
+        tier: values.tier,
+        requestedResumeStage: values.requested,
+      });
     } catch (err) {
       const n = normalizeError(err);
       /*
-       * Shown here rather than thrown away. A retry that fails silently leaves
-       * the operator looking at a form that did nothing — and the most likely
-       * failure is a 409 on a name clash or a lapsed session, both of which the
-       * message names precisely.
+       * Shown rather than thrown away. A retry that fails silently leaves the
+       * operator looking at a form that did nothing — and the likeliest causes,
+       * a lapsed session or a rejected name, are both named by the message.
        */
       setError(n.message);
     } finally {
       setPending(false);
     }
-  }, [name, tier, requested, onSubmit]);
+  }, [values, onSubmit]);
+
+  const sections = useMemo<SectionDef<RetryValues>[]>(
+    () => [
+      {
+        id: "attempt",
+        label: "This attempt",
+        required: true,
+        fields: ["name", "tier"],
+        render: ({ values: v, onChange: set, errors }) => (
+          <Stack gap="comfortable">
+            <Text size="sm" color="muted">
+              This never edits{" "}
+              <Text as="span" weight="semibold">
+                {source.name}
+              </Text>{" "}
+              — it creates a new attempt beside it, so both stay comparable.
+            </Text>
+
+            <FieldInput
+              name="name"
+              label="Name this attempt"
+              required
+              value={v.name}
+              error={errors.name}
+              onChange={(next) => set({ name: next })}
+            />
+
+            <FieldSelect
+              name="tier"
+              label="Tier"
+              value={v.tier}
+              options={TIERS.map((t) => ({ value: t, label: TIER_HELP[t].title }))}
+              onChange={(next) => set({ tier: next as PrecisionTier })}
+            />
+            <Text size="xs" color="muted">
+              {TIER_HELP[v.tier].body}
+            </Text>
+          </Stack>
+        ),
+      },
+      {
+        id: "resume",
+        label: "Where it restarts",
+        fields: ["requested"],
+        render: ({ values: v, onChange: set }) => (
+          <Stack gap="comfortable">
+            <FieldSelect
+              name="requested"
+              label="Resume from"
+              value={v.requested}
+              options={TRACE_STAGES.map((s) => ({ value: s, label: s }))}
+              onChange={(next) => set({ requested: next as TraceStage })}
+            />
+
+            {/*
+              * The clamp. `explainResume` returns an empty string when nothing
+              * was moved, so an absent alert genuinely means "you get what you
+              * asked for" rather than "we forgot to tell you".
+              */}
+            {notice ? <Alert variant="warning">{notice}</Alert> : null}
+
+            {/*
+              * Pruning is a DIFFERENT refusal from the clamp and must not be
+              * folded into it: the clamp is about parameters, this is about
+              * bytes that no longer exist. Resuming against a pruned run would
+              * read every missing artifact as an empty result — a
+              * successful-looking run with no parts.
+              */}
+            {artifactsPruned ? (
+              <Alert variant="warning">
+                This run&apos;s artifacts have been cleared, so the retry starts
+                from the beginning whatever you pick here.
+              </Alert>
+            ) : null}
+
+            {!source.params ? (
+              <Text size="xs" color="muted">
+                This run predates parameter recording, so the resume point cannot
+                be checked ahead of time — the server will decide and tell you.
+              </Text>
+            ) : null}
+          </Stack>
+        ),
+      },
+    ],
+    [source.name, source.params, notice, artifactsPruned],
+  );
 
   return (
     <Card variant="default">
-      <Form onSubmit={(e) => e.preventDefault()}>
-        <Stack gap="comfortable">
-          <Heading level={3}>Retry as a new run</Heading>
-
-          {error ? <Alert variant="error">{error}</Alert> : null}
-
-          <Text size="sm" color="muted">
-            This never edits <Text as="span" weight="semibold">{source.name}</Text> —
-            it creates a new attempt beside it, so both stay comparable.
-          </Text>
-
-          <FieldInput
-            name="name"
-            label="Name this attempt"
-            required
-            value={name}
-            onChange={setName}
-          />
-          <Text size="xs" color="muted">
-            Required. You will be comparing this against the others in a week.
-          </Text>
-
-          <FieldSelect
-            name="tier"
-            label="Tier"
-            value={tier}
-            options={TIERS.map((t) => ({ value: t, label: TIER_HELP[t].title }))}
-            onChange={(v) => setTier(v as PrecisionTier)}
-          />
-          <Text size="xs" color="muted">
-            {TIER_HELP[tier].body}
-          </Text>
-
-          <FieldSelect
-            name="resume"
-            label="Resume from"
-            value={requested}
-            options={TRACE_STAGES.map((s) => ({ value: s, label: s }))}
-            onChange={(v) => setRequested(v as TraceStage)}
-          />
-
-          {/*
-            * The clamp. `explainResume` returns an empty string when nothing was
-            * moved, so an absent alert genuinely means "you get what you asked
-            * for" rather than "we forgot to tell you".
-            */}
-          {notice ? (
-            <Alert variant="warning">
-              {notice}
-            </Alert>
-          ) : null}
-
-          {/*
-            * Pruning is a different refusal from the clamp and must not be
-            * folded into it: the clamp is about parameters, this is about bytes
-            * that no longer exist. Resuming against a pruned run would read
-            * every missing artifact as an empty result — a successful-looking
-            * run with no parts.
-            */}
-          {artifactsPruned ? (
-            <Alert variant="warning">
-              This run&apos;s artifacts have been cleared, so the retry starts from
-              the beginning whatever you pick here.
-            </Alert>
-          ) : null}
-
-          {!source.params ? (
-            <Text size="xs" color="muted">
-              This run predates parameter recording, so the resume point cannot be
-              checked ahead of time — the server will decide and tell you.
-            </Text>
-          ) : null}
-
-          <Stack gap="dense">
-            <Button
-              type="submit"
-              variant="primary"
-              isLoading={pending}
-              disabled={pending || name.trim().length === 0}
-              onClick={submit}
-            >
-              Start retry
-            </Button>
-            {onCancel ? (
-              <Button variant="ghost" onClick={onCancel} disabled={pending}>
-                Cancel
-              </Button>
-            ) : null}
-          </Stack>
-        </Stack>
-      </Form>
+      <Stack gap="comfortable">
+        {error ? <Alert variant="error">{error}</Alert> : null}
+        <SectionForm<RetryValues>
+          sections={sections}
+          values={values}
+          onChange={onChange}
+          onSubmit={submit}
+          schema={retrySchema}
+          submitLabel="Start retry"
+          isLoading={pending}
+          onCancel={onCancel}
+          cancelLabel="Cancel"
+        />
+      </Stack>
     </Card>
   );
 }
