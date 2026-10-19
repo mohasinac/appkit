@@ -34,23 +34,33 @@
  *    never attributes a product code to Tomy alone). Every row below is one
  *    B6 can put at least one real product behind.
  *
- * ## 🛑 Why these are seedPhoto tiles and not 28 committed logo SVGs
+ * ## 🛑 Real logos, decided 2026-10-20 — and what the earlier caution was right about
  *
- * The plan recommended committing `public/images/brands/<slug>.svg` to avoid
- * `seedExtMedia`, which persists an `/api/media/ext?url=…` into Firestore and
- * costs a lambda plus a third-party fetch plus a full sharp encode PER IMAGE
- * PER RENDER — Root Cause #104, the thing that took Fast Origin Transfer to
- * 52.52 GB against a 10 GB cap.
+ * This block used to argue for neutral `seedPhoto` tiles over real logos, on
+ * the grounds that 26 of these are marques we do not own and "shipping drawn
+ * approximations of their logos is trademark reproduction for commercial
+ * use… a licensed-asset task, not a seed task."
  *
- * That reasoning is right and the conclusion has moved, because `seedPhoto`
- * now resolves to one of six STATIC LOCAL SVG tiles served `immutable` from
- * `/images/`. It already has the property the recommendation was reaching for:
- * no proxy, no third-party fetch, no per-render cost.
+ * That call was reversed deliberately, not forgotten. Real wordmarks are now
+ * used to IDENTIFY the line a listing belongs to, which is nominative use, and
+ * the help pages carry an explicit fair-use and non-affiliation notice naming
+ * every marque. Provenance for each file is recorded per-image in
+ * `docs/research/taxonomy-images-2026-10/image-provenance.json`, so
+ * attribution is possible and a takedown is mechanical.
  *
- * And it avoids a question committing the files would raise — 26 of these are
- * marques we do not own, so shipping drawn approximations of their logos is
- * trademark reproduction for commercial use. A neutral tile is honest about
- * being a placeholder. Real logos are a licensed-asset task, not a seed task.
+ * 🛑 Two things the old reasoning got right and this did NOT change:
+ *
+ *   1. **Never `seedExtMedia`.** A persisted `/api/media/ext?url=…` costs a
+ *      lambda plus a third-party fetch plus a sharp encode PER RENDER — Root
+ *      Cause #104, which took Fast Origin Transfer to 52.52 GB against a
+ *      10 GB cap. These are fetched ONCE, stored in our own bucket, and
+ *      referenced as `/media/<slug>`.
+ *   2. **No drawn approximations.** Nothing here is an imitation of a logo we
+ *      traced; each is the actual wordmark, cited.
+ *
+ * Only three brands resolve an image today (Beyblade, Hasbro, Sonokong). The
+ * other 25 have no verified source yet and show no cover rather than a guessed
+ * one — see `knownGaps` in the manifest.
  *
  * @tag domain:categories
  * @tag layer:seed
@@ -70,7 +80,6 @@ import type { CategoryDocument } from "../../features/categories/schemas";
  * brand discriminator a single spelling.
  */
 import { CATEGORY_FIELDS } from "../../constants/field-names";
-import { seedPhoto } from "./media";
 
 export interface BrandSeedInput {
   /** Without the `brand-` prefix. */
@@ -121,8 +130,21 @@ export function brandRow(
      * forest's DFS numbering, and giving them a position inside it would
      * corrupt the ranges `onCategoryWrite` shifts on insert.
      */
+    /*
+     * 🛑 NO `coverImage` — and its absence is what lets a real logo through.
+     *
+     * `withGeneratedCoverImage` skips any row that already has one, so the
+     * `seedPhoto(...)` tile that used to be here BLOCKED the generated map
+     * outright: a logo could be fetched, uploaded and mapped, and every brand
+     * card would still show a grey tile. Three brands resolve a real wordmark
+     * today (Beyblade, Hasbro, Sonokong); the rest fall through to no image,
+     * which `CategoryCard` renders as the row's `color` + emoji rather than a
+     * broken box.
+     *
+     * `icon` stays unset — see trap 2. An emoji here would have outranked the
+     * logo even after this.
+     */
     display: {
-      coverImage: seedPhoto(`brand-logo-${input.slug}-20260101`, 800, 800),
       showInMenu: false,
       showInFooter: input.footer ?? false,
     },

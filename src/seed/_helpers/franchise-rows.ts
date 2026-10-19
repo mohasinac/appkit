@@ -49,7 +49,6 @@ import type { CategoryDocument } from "../../features/categories/schemas";
  * `categories-seed-data.ts` imports this one; matching it is what keeps the
  * discriminator a single spelling. Same reasoning as `brand-rows.ts`. */
 import { CATEGORY_FIELDS } from "../../constants/field-names";
-import { seedPhoto } from "./media";
 
 export interface FranchiseSeedInput {
   /** Without the `franchise-` prefix. Products match on this, never the name. */
@@ -83,10 +82,17 @@ export function franchiseRow(
     path: id,
     isLeaf: true,
     order,
-    /* `icon` deliberately unset — the brands grid reads `display.icon` first
-     * and an emoji there would beat a real cover image (brand-rows trap 2). */
+    /*
+     * 🛑 NO `coverImage`, for the same reason as `brand-rows.ts`: a
+     * `seedPhoto(...)` tile here would BLOCK `withGeneratedCoverImage`, which
+     * skips any row that already has one. Only `franchise-beyblade` resolves a
+     * real wordmark today; the other seven are the inactive dead-facet rows and
+     * show no cover rather than a guessed one.
+     *
+     * `icon` also stays unset — the brands grid reads `display.icon` first and
+     * an emoji there would beat a real cover image (brand-rows trap 2).
+     */
     display: {
-      coverImage: seedPhoto(`franchise-cover-${input.slug}-20261014`, 800, 800),
       showInMenu: false,
       showInFooter: false,
     },
