@@ -41,3 +41,26 @@ export const CUT_CONTOUR_CSS = `rgb(${CUT_CONTOUR_RGB[0]} ${CUT_CONTOUR_RGB[1]} 
  * sees on screen. Both have to be right, which is why both live here.
  */
 export const CUT_CONTOUR_SVG_NAME = "CutContour";
+
+/**
+ * Hex form, for the one consumer that needs it: an SVG `stroke` attribute.
+ *
+ * 🛑 DERIVED from the channels above rather than written as a literal, and that
+ * is not ceremony. `audit-hex-tokens` blocks raw hex project-wide because a
+ * hand-typed colour drifts from its token — and here the drift would be worse
+ * than cosmetic: a broker's RIP separates the cut layer by matching this exact
+ * swatch alongside the name, so a wrong digit produces a file that prints the
+ * cut line as artwork instead of cutting it.
+ */
+const toHex = (c: number): string => c.toString(16).padStart(2, "0").toUpperCase();
+
+export const CUT_CONTOUR_HEX = `#${CUT_CONTOUR_RGB.map(toHex).join("")}`;
+
+/**
+ * The stroke for a cut line that is plain geometry rather than a spot colour —
+ * the Cricut profiles. Black because a cutter ignores colour entirely and a
+ * human opening the file should see the outline; derived for the same reason
+ * as above rather than typed.
+ */
+export const CUT_GEOMETRY_RGB = Object.freeze([0, 0, 0] as const);
+export const CUT_GEOMETRY_HEX = `#${CUT_GEOMETRY_RGB.map(toHex).join("")}`;
