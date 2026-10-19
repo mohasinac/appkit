@@ -448,6 +448,43 @@ function realListingsOnly(products) {
   return kept;
 }
 
+/**
+ * Drop bundle categories whose members are not in the loaded catalogue.
+ *
+ * 🛑 A bundle is ALL-OR-NOTHING — `canAddToCart` buys every member together —
+ * so a bundle missing even one member is unsellable, and one missing ALL of
+ * them is a card that opens an empty page. Measured right after the demo
+ * listings stopped loading: of the five seeded bundles, three had zero
+ * surviving members and the other two had 1-of-4 and 2-of-3. All five were
+ * still `isActive: true`, and all five rendered on the HOMEPAGE as collage
+ * cards built from `display.mosaicImages` — which are baked at seed time from
+ * the members' own imagery, so they kept showing pictures of products that no
+ * longer exist. That is 92 placeholder-tile references on the homepage.
+ *
+ * Derived rather than hand-maintained for the same reason as the product
+ * filter: a bundle that becomes valid later starts loading again on its own,
+ * and one that breaks stops, with nobody having to remember either.
+ *
+ * Only `categoryType: "bundle"` rows are considered. Every other category is
+ * taxonomy and is never touched — rebuilding the tree is expensive and is
+ * explicitly not what this is for.
+ */
+function loadableBundlesOnly(categories, loadedProducts) {
+  const live = new Set(loadedProducts.map((p) => p?.id).filter(Boolean));
+  let dropped = 0;
+  const kept = categories.filter((c) => {
+    if (c?.categoryType !== "bundle") return true;
+    const ids = Array.isArray(c.bundleProductIds) ? c.bundleProductIds : [];
+    const ok = ids.length > 0 && ids.every((id) => live.has(id));
+    if (!ok) dropped++;
+    return ok;
+  });
+  if (dropped > 0) {
+    console.log(`  • ${dropped} bundle(s) not loaded — members missing from the catalogue`);
+  }
+  return kept;
+}
+
 function withFranchise(products) {
   let stamped = 0;
   const out = products.map((p) => {
@@ -530,32 +567,13 @@ function withDerivedCategoryFields(products) {
   return out;
 }
 
-const SEED_DATA_MAP = {
-  users: usersSeedData,
-  /*
-   * store-extensions. COLLECTION_MAP was only HALF the wiring: load() reads
-   * SEED_DATA_MAP and short-circuits on an empty array, so adding the ten
-   * collection names alone produced "no seed data, skipping" for all ten.
-   * Same shape as the art/stickers note further down -- added everywhere
-   * except the map that actually runs.
-   */
-  payoutMethods: payoutMethodsSeedData,
-  shippingConfigs: shippingConfigsSeedData,
-  analyticsCards: analyticsCardsSeedData,
-  analyticsAlerts: analyticsAlertsSeedData,
-  storeCategories: storeCategoriesSeedData,
-  listingTemplates: listingTemplatesSeedData,
-  moderationQueue: moderationQueueSeedData,
-  reports: reportsSeedData,
-  itemRequests: itemRequestsSeedData,
-  storeGoogleConfig: storeGoogleConfigSeedData,
-  addresses: addressesSeedData,
-  storeAddresses: storeAddressesSeedData,
-  // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
-  // standalone brands collection/seed exists anymore.
-  categories: categoriesSeedData,
-  stores: storesSeedData,
-  products: withFranchise(withDerivedCategoryFields(realListingsOnly([
+/**
+ * The real catalogue, computed ONCE so the bundle filter and the product
+ * loader cannot disagree about what "loaded" means. Deriving it twice is
+ * Root Cause #75's shape — two copies of one rule, one of which learns about
+ * a change and the other does not.
+ */
+const REAL_PRODUCTS = realListingsOnly([
     ...(productsStandardSeedData || []),
     // Real, wiki-verified Beyblade X listings under store-letitrip-official —
     // added 2026-10-19 for PhonePe merchant registration, which requires at
@@ -597,7 +615,34 @@ const SEED_DATA_MAP = {
      * what should happen to a leaf that now has BOTH a real listing and a
      * generated one.
      */
-  ]))),
+  ]);
+
+const SEED_DATA_MAP = {
+  users: usersSeedData,
+  /*
+   * store-extensions. COLLECTION_MAP was only HALF the wiring: load() reads
+   * SEED_DATA_MAP and short-circuits on an empty array, so adding the ten
+   * collection names alone produced "no seed data, skipping" for all ten.
+   * Same shape as the art/stickers note further down -- added everywhere
+   * except the map that actually runs.
+   */
+  payoutMethods: payoutMethodsSeedData,
+  shippingConfigs: shippingConfigsSeedData,
+  analyticsCards: analyticsCardsSeedData,
+  analyticsAlerts: analyticsAlertsSeedData,
+  storeCategories: storeCategoriesSeedData,
+  listingTemplates: listingTemplatesSeedData,
+  moderationQueue: moderationQueueSeedData,
+  reports: reportsSeedData,
+  itemRequests: itemRequestsSeedData,
+  storeGoogleConfig: storeGoogleConfigSeedData,
+  addresses: addressesSeedData,
+  storeAddresses: storeAddressesSeedData,
+  // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
+  // standalone brands collection/seed exists anymore.
+  categories: loadableBundlesOnly(categoriesSeedData, REAL_PRODUCTS),
+  stores: storesSeedData,
+  products: withFranchise(withDerivedCategoryFields(REAL_PRODUCTS)),
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,
