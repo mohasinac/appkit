@@ -102,7 +102,57 @@ export interface SearchSource {
   moreHref: (q: string) => string;
   /** Extra equality narrowing, e.g. `status == published`. */
   where?: ReadonlyArray<readonly [string, unknown]>;
+  /**
+   * The bounded window this source reads before the in-memory refine.
+   *
+   * Defaults to `SCAN` (60). Scoped sources pass 20: an owner clause
+   * (`userId == uid`) has already collapsed the candidate set, so a 60-doc
+   * window is 40 reads spent proving there was nothing else.
+   */
+  scanLimit?: number;
+  /**
+   * How this source FINDS rows. Discriminated so TypeScript forces every
+   * source to answer, which is what makes `audit-scoped-search-ownership`
+   * R2 checkable rather than advisory.
+   *
+   *   `search-txt`      the `array-contains` push-down. Requires the
+   *                     collection to carry `searchTxt`.
+   *   `bounded-memory`  read the owner's bounded window and filter in
+   *                     memory, with no token push-down at all.
+   *
+   * 🛑 A PII-bearing collection must be `bounded-memory`. `searchTxt` is
+   * plaintext, edge-n-gram-expanded and stored on the document — giving
+   * `addresses` a token push-down would write a prefix-expanded index over
+   * a person's name and street, which is the precise thing § Searching PII
+   * refuses (a 1-character prefix has 36 possible values; the frequency
+   * distribution unpicks from there). Decrypting a bounded owner-scoped
+   * window in memory re-derives a bound ownership already gives, and adds
+   * no leak surface.
+   */
+  mode?: "search-txt" | "bounded-memory";
+  /**
+   * For `bounded-memory`: does this row match? Receives the DECRYPTED
+   * document, so a repository that decrypts on read is the intended caller.
+   * Every term must match (AND), consistent with the push-down path.
+   */
+  matches?: (data: SearchDocData, terms: readonly string[]) => boolean;
+  /** Ordering for `bounded-memory`, since there is no token clause to sort by. */
+  orderBy?: readonly [string, "asc" | "desc"];
 }
+
+/**
+ * 🛑 The ceiling on what ONE viewer's scoped search may read.
+ *
+ * Σ `scanLimit` across the widest role, checked by
+ * `audit-scoped-search-ownership` R4 — which PRINTS THE ARITHMETIC on
+ * failure, because "the budget is exceeded" is useless without knowing by
+ * which source and how much.
+ *
+ * 400 against Rule #6's ~3-round-trip guidance is defensible because the
+ * sources run in ONE `Promise.all`: it is one round trip of fan-out, not
+ * twelve sequential ones. The number that matters is documents read.
+ */
+export const SCOPED_SCAN_BUDGET = 400;
 
 /** A projected Firestore document's fields. */
 export type SearchDocData = Record<string, FirestoreValue>;
@@ -123,6 +173,14 @@ interface SearchQueryRef {
   where(field: string, op: string, value: unknown): SearchQueryRef;
   select(...fields: string[]): SearchQueryRef;
   limit(n: number): SearchQueryRef;
+  /**
+   * Only `bounded-memory` sources use this. The push-down path deliberately
+   * does not order: an `orderBy` beside an `array-contains` demands a
+   * composite index per source, and a missing one throws
+   * `FAILED_PRECONDITION` into the per-source catch, where it renders as an
+   * empty group — i.e. silently (Root Cause #59).
+   */
+  orderBy(field: string, direction: "asc" | "desc"): SearchQueryRef;
   get(): Promise<{ docs: SearchDoc[] }>;
 }
 
@@ -168,20 +226,44 @@ export async function searchEverything(
         moreHref: src.moreHref(q),
       };
       try {
+        const scan = src.scanLimit ?? SCAN;
+        const boundedMemory = src.mode === "bounded-memory";
+
         let ref = db.collection(src.collection);
         for (const [field, value] of src.where ?? []) ref = ref.where(field, "==", value);
-        const snap = await ref
-          .where(SEARCH_TXT_FIELD, "array-contains", plan.head)
-          .select(...src.select, SEARCH_TXT_FIELD)
-          .limit(SCAN)
-          .get();
+
+        /*
+         * 🛑 The two modes differ in ONE clause and in nothing else.
+         *
+         * `bounded-memory` omits the `array-contains` push-down and does not
+         * project `searchTxt` — because the collections that use it do not
+         * have one, deliberately (see `mode`). Everything downstream —
+         * `toHit`, the PER_GROUP slice, the `truncated` floor — is shared, so
+         * the two paths cannot drift in how they REPORT, only in how they
+         * find.
+         */
+        const snap = boundedMemory
+          ? await (src.orderBy
+              ? ref.orderBy(src.orderBy[0], src.orderBy[1])
+              : ref
+            )
+              .select(...src.select)
+              .limit(scan)
+              .get()
+          : await ref
+              .where(SEARCH_TXT_FIELD, "array-contains", plan.head)
+              .select(...src.select, SEARCH_TXT_FIELD)
+              .limit(scan)
+              .get();
 
         // AND-refine the remaining terms in memory — one push-down per query is
         // all Firestore gives, so the rest is a filter over a bounded window.
-        const matched = snap.docs.filter((d) => {
-          const txt = (d.data()[SEARCH_TXT_FIELD] as string[] | undefined) ?? [];
-          return plan.rest.every((t) => txt.includes(t));
-        });
+        const matched = boundedMemory
+          ? snap.docs.filter((d) => src.matches?.(d.data(), terms) ?? false)
+          : snap.docs.filter((d) => {
+              const txt = (d.data()[SEARCH_TXT_FIELD] as string[] | undefined) ?? [];
+              return plan.rest.every((t) => txt.includes(t));
+            });
 
         const hits = matched
           .map((d) => src.toHit(d.id, d.data()))
@@ -191,8 +273,10 @@ export async function searchEverything(
           ...base,
           hits: hits.slice(0, PER_GROUP),
           // Saturated window OR more matches than we show — either way the
-          // count on screen is a floor.
-          truncated: snap.docs.length >= SCAN || hits.length > PER_GROUP,
+          // count on screen is a floor. Compared against THIS source's own
+          // limit, not the module default: a scoped source scanning 20 that
+          // returned 20 is saturated even though 20 < SCAN.
+          truncated: snap.docs.length >= scan || hits.length > PER_GROUP,
         };
       } catch (err) {
         const e = normalizeError(err);
