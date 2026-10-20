@@ -190,7 +190,7 @@ function setPath(obj: Record<string, unknown>, path: string, value: unknown): vo
  *
  * 🛑 That dotted-path support is also what made it possible to point this
  * function at a field belonging to the OTHER crypto system. A store's
- * `whatsappConfig.accessToken` is encrypted with SETTINGS_ENCRYPTION_KEY;
+ * A store secret would be encrypted with SETTINGS_ENCRYPTION_KEY;
  * passing it here would encrypt it with the PII key while
  * `StoreRepository.decryptSecrets` kept decrypting with the settings one.
  * Only ever pass fields from this file's own `*_PII_FIELDS` lists.
