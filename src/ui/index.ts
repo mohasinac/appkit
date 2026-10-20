@@ -310,6 +310,22 @@ export type { ImageMosaicProps, ImageMosaicSize } from "./components/ImageMosaic
 /* D3 — two real branches, side by side with real photos and real counts. */
 export { SplitTile } from "./components/SplitTile";
 export type { SplitTileProps, SplitTilePane } from "./components/SplitTile";
+/* Image-led tile — artwork fills the card, a scrim carries the type. */
+export {
+  PosterCard,
+  PosterChip,
+  PosterGrid,
+  PlainCard,
+  POSTER_CLASS,
+  PLAIN_CLASS,
+} from "./components/PosterCard";
+export type {
+  PosterCardProps,
+  PosterCardHeight,
+  PosterChipProps,
+  PosterGridProps,
+  PlainCardProps,
+} from "./components/PosterCard";
 
 export type {
   ImageLightboxProps,

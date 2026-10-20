@@ -1,136 +1,186 @@
 "use client";
-import { Row } from "@mohasinac/appkit/ui";
+import Link from "next/link";
 import React from "react";
-import { Anchor, Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
-import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
+import {
+  Div,
+  Heading,
+  HorizontalScroller,
+  PlainCard,
+  PLAIN_CLASS,
+  PosterCard,
+  PosterGrid,
+  POSTER_CLASS,
+  Section,
+} from "../../../ui";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
+/* Not re-exported from `ui/index` — import from the defining module (Root Cause #18). */
+import { Iframe } from "../../../ui/components/Iframe";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
-
-const __P = {
-  p4: "p-[var(--appkit-space-4)]",
-} as const;
-
-const __O = {
-  hidden: "overflow-hidden",
-} as const;
 
 // --- Constants ---------------------------------------------------------------
 
 const CLS_CONTAINER = "w-full max-w-7xl mx-auto px-[var(--appkit-space-4)]";
 
-// --- Helpers -----------------------------------------------------------------
+/**
+ * Which of the four authored button variants reads as a DESTINATION rather
+ * than a sibling.
+ *
+ * The four generic variants (`primary`/`secondary`/`outline`/`ghost`) were
+ * four different button shapes in one wrapping row — the single biggest
+ * reason the systems matrix read as a pile of controls rather than a set of
+ * links. Collapsed to two levels of emphasis: a chip is either one of many
+ * peers, or it is the card's main destination.
+ */
+type CardButton = NonNullable<CustomCardsCard["buttons"]>[number];
 
-const COLS_CLASS: Record<1 | 2 | 3 | 4, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
-};
+function isKeyChip(variant: CardButton["variant"]): boolean {
+  return variant !== "ghost";
+}
 
-const RADIUS_CLASS: Record<string, string> = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  xl: "rounded-xl",
-  full: "rounded-full",
-};
+/**
+ * 🛑 `next/link` for an internal href, a plain `<a>` only for an external one.
+ *
+ * A bare anchor on an internal route does a FULL PAGE LOAD — the regression
+ * documented on `OverflowRow.linkAs`, and invisible apart from the flash. The
+ * hrefs here are admin-authored, so both kinds genuinely occur.
+ */
+function Chip({
+  button,
+  className,
+}: {
+  button: CardButton;
+  className: string;
+}) {
+  const external = button.target === "_blank" || /^https?:\/\//.test(button.href);
 
-const SHADOW_CLASS: Record<string, string> = {
-  none: "",
-  sm: "shadow-sm",
-  md: "shadow-md",
-  lg: "shadow-lg",
-};
+  if (external) {
+    return (
+      <a
+        href={button.href}
+        className={className}
+        target={button.target ?? "_blank"}
+        rel="noopener noreferrer"
+      >
+        {button.label}
+      </a>
+    );
+  }
 
-const VARIANT_CLASS: Record<string, string> = {
-  primary:
-    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md bg-[var(--appkit-color-primary)] text-white text-[length:var(--appkit-text-sm)] font-medium hover:opacity-90 transition-opacity",
-  secondary:
-    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md bg-[var(--appkit-color-secondary)] text-white text-[length:var(--appkit-text-sm)] font-medium hover:opacity-90 transition-opacity",
-  outline:
-    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md border border-current text-[length:var(--appkit-text-sm)] font-medium hover:bg-black/5 transition-colors",
-  ghost:
-    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium hover:underline transition-colors",
-};
+  return (
+    <Link href={button.href} className={className}>
+      {button.label}
+    </Link>
+  );
+}
+
+/**
+ * Peers first, destinations last.
+ *
+ * The seeded order interleaves them ("… Heavy Metal System, Parts, Launchers"
+ * on one card, "Parts" mid-row on another), so the solid chips landed in a
+ * different place on every card and the row had no readable shape. Sorting is
+ * stable, so the authored order within each group is preserved.
+ */
+function orderedButtons(buttons: readonly CardButton[]): CardButton[] {
+  return [...buttons].sort(
+    (a, b) => Number(isKeyChip(a.variant)) - Number(isKeyChip(b.variant)),
+  );
+}
 
 // --- Card Item ---------------------------------------------------------------
 
 function CardItem({ card }: { card: CustomCardsCard }) {
-  const radiusClass = RADIUS_CLASS[card.borderRadius ?? "lg"] ?? "rounded-lg";
-  const shadowClass = SHADOW_CLASS[card.shadowLevel ?? "sm"] ?? "shadow-sm";
+  const buttons = card.buttons?.length ? orderedButtons(card.buttons) : [];
 
-  return (
-    <DynamicBgDiv
-      color={card.backgroundColor}
-      textColor={card.textColor}
-      className={`flex flex-col overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
-    >
-      {card.image && (
-        <Div className={`relative w-full aspect-video ${__O.hidden}`}>
+  /*
+   * With artwork → the poster treatment: the image fills the card and the
+   * scrim carries the type. Without → the plain card. Branching on the data
+   * rather than on a config flag keeps every OTHER `custom-cards` section an
+   * admin has authored rendering exactly as before.
+   */
+  if (card.image) {
+    return (
+      <PosterCard
+        height="tall"
+        media={
           <MediaImage
             src={card.image}
             alt={card.imageAlt ?? ""}
             size="card"
+            objectFit="cover"
           />
-        </Div>
-      )}
+        }
+        eyebrow={card.eyebrow}
+        title={card.title}
+        text={card.body}
+        chips={
+          buttons.length > 0
+            ? buttons.map((btn, i) => (
+                <Chip
+                  key={`${btn.href}-${i}`}
+                  button={btn}
+                  className={
+                    isKeyChip(btn.variant)
+                      ? `${POSTER_CLASS.chip} ${POSTER_CLASS.chipKey}`
+                      : POSTER_CLASS.chip
+                  }
+                />
+              ))
+            : undefined
+        }
+      />
+    );
+  }
 
-      <Stack className={`${__P.p4} flex-1`} gap="sm">
-        {card.eyebrow && (
-          <Text className="tracking-widest opacity-70" size="xs" weight="semibold" transform="uppercase">
-            {card.eyebrow}
-          </Text>
-        )}
-        {card.title && (
-          <Text className="leading-snug" size="base" weight="bold">{card.title}</Text>
-        )}
-        {card.body && (
-          <Text className="opacity-80 leading-relaxed flex-1" size="sm">{card.body}</Text>
-        )}
-
-        {card.buttons && card.buttons.length > 0 && (
-          <Row gap="sm" wrap className="mt-2">
-            {card.buttons.map((btn, i) => (
-              <Anchor
-                key={i}
-                href={btn.href}
-                target={btn.target ?? "_self"}
-                rel={btn.target === "_blank" ? "noopener noreferrer" : undefined}
-                tone="none"
-                underline="none"
-                className={VARIANT_CLASS[btn.variant] ?? VARIANT_CLASS.primary}
-              >
-                {btn.label}
-              </Anchor>
-            ))}
-          </Row>
-        )}
-
-        {card.formEmbed && (
-          <iframe
+  return (
+    <PlainCard
+      eyebrow={card.eyebrow}
+      title={card.title}
+      text={card.body}
+      chips={
+        buttons.length > 0
+          ? buttons.map((btn, i) => (
+              <Chip
+                key={`${btn.href}-${i}`}
+                button={btn}
+                className={
+                  isKeyChip(btn.variant)
+                    ? `${PLAIN_CLASS.chip} ${PLAIN_CLASS.chipKey}`
+                    : PLAIN_CLASS.chip
+                }
+              />
+            ))
+          : undefined
+      }
+      footer={
+        card.formEmbed ? (
+          <Iframe
             src={card.formEmbed}
-            sandbox="allow-forms allow-scripts"
-            loading="lazy"
-            className="w-full mt-3 border-0 rounded-md min-h-[200px]"
             title="Embedded form"
+            sandbox="allow-forms allow-scripts"
           />
-        )}
-      </Stack>
-    </DynamicBgDiv>
+        ) : undefined
+      }
+    />
   );
 }
 
 // --- Section Header ----------------------------------------------------------
 
 function SectionHeader({ title }: { title?: string }) {
-const themed = { textPrimary: THEMED_TEXT_PRIMARY };
-if (!title) return null;
+  const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+  if (!title) return null;
   return (
-    <Div className="mb-6">
-      <Heading level={2} className={themed.textPrimary}>
+    <Div className="mb-6 text-left">
+      <Heading
+        level={2}
+        className={themed.textPrimary}
+        size="2xl"
+        mdSize="3xl"
+        weight="bold"
+      >
         {title}
       </Heading>
     </Div>
@@ -142,8 +192,16 @@ if (!title) return null;
 export type CustomCardsSectionProps = CustomCardsSectionConfig;
 
 export function CustomCardsSection(config: CustomCardsSectionProps) {
-  const { title, layout, columns = 3, cards, autoScroll, scrollIntervalMs, loop = true } = config;
-if (!cards?.length) return null;
+  const {
+    title,
+    layout,
+    columns = 3,
+    cards,
+    autoScroll,
+    scrollIntervalMs,
+    loop = true,
+  } = config;
+  if (!cards?.length) return null;
 
   // autoScroll: wrap all cards in SectionCarousel (client carousel)
   if (autoScroll) {
@@ -189,40 +247,54 @@ if (!cards?.length) return null;
     );
   }
 
-  // Masonry layout: CSS columns
+  /*
+   * Masonry. `columns-*` on a container whose children are poster cards would
+   * fragment them across column boundaries, so the cards still carry
+   * `break-inside-avoid` — unchanged behaviour, just the new card shapes.
+   */
   if (layout === "masonry") {
-    const colsClass = COLS_CLASS[columns as 1 | 2 | 3 | 4] ?? COLS_CLASS[3];
-    const masonryClass = colsClass
-      .split(" ")
-      .map((c) => c.replace("grid-cols-", "columns-"))
-      .join(" ");
+    const masonryClass =
+      columns === 4
+        ? "columns-1 sm:columns-2 lg:columns-4"
+        : columns === 2
+          ? "columns-1 sm:columns-2"
+          : columns === 1
+            ? "columns-1"
+            : "columns-1 sm:columns-2 lg:columns-3";
     return (
       <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <Stack className={`${masonryClass}`} gap="md">
+          {/*
+            `gap-4`/`mb-4`, not `gap-[var(--appkit-space-4)]`. The token is
+            1rem, which is exactly what those utilities emit — and an
+            arbitrary-value utility authored inside appkit is one its own
+            Tailwind build may not generate, in which case the class silently
+            compiles to nothing (`audit-dead-css-classes` caught precisely
+            that on the `mb-` one).
+          */}
+          <Div gap="4" className={masonryClass}>
             {cards.map((card) => (
-              <Div key={card.id} className="break-inside-avoid">
+              <Div key={card.id} className="break-inside-avoid mb-4">
                 <CardItem card={card} />
               </Div>
             ))}
-          </Stack>
+          </Div>
         </Div>
       </Section>
     );
   }
 
   // Grid layout (default)
-  const colsClass = COLS_CLASS[columns as 1 | 2 | 3 | 4] ?? COLS_CLASS[3];
   return (
     <Section padding="y-3xl" surface="muted">
       <Div className={CLS_CONTAINER}>
         <SectionHeader title={title} />
-        <Div layout="grid" gap="4" className={`${colsClass}`}>
+        <PosterGrid columns={columns}>
           {cards.map((card) => (
             <CardItem key={card.id} card={card} />
           ))}
-        </Div>
+        </PosterGrid>
       </Div>
     </Section>
   );

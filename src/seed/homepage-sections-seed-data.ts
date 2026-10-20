@@ -773,6 +773,14 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    *
    * No prices anywhere, which is what makes this safe where a price-band tile
    * is not — see the note below the array.
+   *
+   * 🛑 Each card's `image` is the SAME `/media/<shortId>` the generation
+   * CATEGORY carries, not a second asset. `CustomCardsSection` renders a card
+   * with artwork as a poster — the image fills it and a scrim carries the type
+   * — so the four cards here and the four `promo-grid` banners below and the
+   * four category tiles are one set of four objects, uploaded once. Minting a
+   * parallel `matrix-*` shortId would be a mirror that drifts the first time
+   * one of them is re-fetched (Root Cause #42).
    */
   {
     id: "section-systems-matrix",
@@ -788,6 +796,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       cards: [
         {
           id: "matrix-original",
+          image: "/media/category-beyblade-original-image",
+          imageAlt: "",
           eyebrow: "1999–2003",
           title: "Beyblade Original",
           body: "Four part systems in four years, and they do not interchange. Plastic Generation through Heavy Metal System.",
@@ -803,6 +813,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         },
         {
           id: "matrix-metal",
+          image: "/media/category-beyblade-metal-image",
+          imageAlt: "",
           eyebrow: "2008–2013",
           title: "Metal Fight",
           body: "The tuning era, and the only generation where loose parts outnumber complete tops.",
@@ -818,6 +830,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         },
         {
           id: "matrix-burst",
+          image: "/media/category-beyblade-burst-image",
+          imageAlt: "",
           eyebrow: "2015–2023",
           title: "Beyblade Burst",
           body: "Seven waves of the bursting mechanic, from single-layer Classic to Burst Ultimate.",
@@ -834,6 +848,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         },
         {
           id: "matrix-x",
+          image: "/media/category-beyblade-x-image",
+          imageAlt: "",
           eyebrow: "2023–",
           title: "Beyblade X",
           body: "The Xtreme Line rail is the centre of the design — blades, ratchets and bits, and a stadium that is part of the game.",

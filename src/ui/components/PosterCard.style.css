@@ -33,6 +33,8 @@
   isolation: isolate;
   border-radius: var(--appkit-radius-2xl);
   background-color: rgb(var(--appkit-poster-ink));
+  /* The card is itself a link on the category tile. */
+  text-decoration: none;
   /* A hairline INSIDE the radius. A `border` would be clipped by
      `overflow: hidden` on the image corners; an inset ring is not. */
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
@@ -47,6 +49,18 @@
 
 .appkit-poster--compact {
   min-height: 14rem;
+}
+
+/* A compact tile carries a name and a count, not a headline and a paragraph —
+   at `--appkit-text-2xl` a two-word category name wraps to three lines in a
+   scroller cell. */
+.appkit-poster--compact .appkit-poster__title {
+  font-size: var(--appkit-text-lg);
+}
+
+.appkit-poster--compact .appkit-poster__body {
+  gap: var(--appkit-space-1);
+  padding: var(--appkit-space-4);
 }
 
 /* Hover lift. Guarded so a touch device — where `:hover` sticks after a tap —
@@ -274,6 +288,145 @@
   color: rgb(var(--appkit-poster-ink));
 }
 
+/* ── On-surface chips ─────────────────────────────────────────────────────
+ *
+ * The light-theme counterpart of `.appkit-poster__chip`, for the same control
+ * on a card that has NO artwork — a `custom-cards` section an admin authored
+ * without images still renders a row of taxonomy links, and those must not
+ * fall back to the four generic button variants that made the row read as a
+ * pile of mismatched buttons.
+ *
+ * Theme-RELATIVE, unlike everything above: there is no scrim here, so the ink
+ * has to invert with the theme. `bg-{…}-surface`-style tokens throughout, no
+ * fixed white — Root Cause #67.
+ */
+
+.appkit-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 0.3125rem 0.6875rem;
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-full);
+  background: var(--appkit-color-surface-elevated);
+  color: var(--appkit-color-text-muted);
+  font-size: var(--appkit-text-xs);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.appkit-chip:hover {
+  border-color: var(--appkit-color-primary);
+  background: var(--appkit-color-primary-surface);
+  color: var(--appkit-color-primary);
+}
+
+.appkit-chip--key {
+  border-color: transparent;
+  background: var(--appkit-color-primary);
+  color: var(--appkit-color-text-on-primary);
+  font-weight: 600;
+}
+
+.appkit-chip--key:hover {
+  border-color: transparent;
+  background: var(--appkit-color-primary-600);
+  color: var(--appkit-color-text-on-primary);
+}
+
+/* ── Plain card ───────────────────────────────────────────────────────────
+ *
+ * The no-artwork sibling of `.appkit-poster`. Same radius, same hairline, same
+ * hover — so a mixed section (some cards with images, some without) still
+ * reads as one row rather than two designs.
+ */
+
+.appkit-plain-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-space-3);
+  padding: var(--appkit-space-5);
+  min-height: 14rem;
+  border-radius: var(--appkit-radius-2xl);
+  background: var(--appkit-color-surface);
+  box-shadow: inset 0 0 0 1px var(--appkit-color-border);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .appkit-plain-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 0 0 1px var(--appkit-color-primary),
+      0 18px 40px -18px rgb(0 0 0 / 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-plain-card {
+    transition: none;
+  }
+
+  .appkit-plain-card:hover {
+    transform: none;
+  }
+}
+
+.appkit-plain-card__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  color: var(--appkit-color-text-faint);
+  font-size: var(--appkit-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.appkit-plain-card__eyebrow::before {
+  content: "";
+  width: 1.25rem;
+  height: 1px;
+  flex: none;
+  background: var(--appkit-color-border);
+}
+
+.appkit-plain-card__title {
+  margin: 0;
+  color: var(--appkit-color-text);
+  font-size: var(--appkit-text-xl);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.appkit-plain-card__text {
+  margin: 0;
+  color: var(--appkit-color-text-muted);
+  font-size: var(--appkit-text-sm);
+  line-height: 1.55;
+}
+
+.appkit-plain-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--appkit-space-2);
+  margin-top: auto;
+  padding-top: var(--appkit-space-3);
+  border-top: 1px solid var(--appkit-color-border-subtle);
+}
+
 /* ── Grid ─────────────────────────────────────────────────────────────── */
 
 /*
@@ -286,11 +439,20 @@
 .appkit-poster-grid {
   display: grid;
   gap: var(--appkit-space-4);
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Explicit rather than inherited from the base. A modifier that generates no
+   rule of its own is what `audit-dead-css-classes` exists to catch, and
+   "it happens to equal the default today" is not a reason to omit it. */
+.appkit-poster-grid--1 {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (min-width: 40rem) {
-  .appkit-poster-grid {
+  .appkit-poster-grid--2,
+  .appkit-poster-grid--3,
+  .appkit-poster-grid--4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

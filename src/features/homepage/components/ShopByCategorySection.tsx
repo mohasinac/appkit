@@ -3,21 +3,23 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text } from "../../../ui";
+import {
+  Button,
+  Div,
+  Heading,
+  HorizontalScroller,
+  POSTER_CLASS,
+  Row,
+  Section,
+  Span,
+  Text,
+} from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
-
-const __P = {
-  p3: "p-[var(--appkit-space-3)]",
-} as const;
-
-const __O = {
-  hidden: "overflow-hidden",
-} as const;
 
 export interface ShopByCategorySectionProps {
   title?: string;
@@ -42,57 +44,67 @@ function isImageUrl(s: string): boolean {
   return s.startsWith("http") || s.startsWith("/") || s.startsWith("data:");
 }
 
+/**
+ * One category tile.
+ *
+ * 🛑 Image-LED, not image-on-top-of-a-body. The previous shape was a 16:9 crop
+ * stacked over a white block holding an icon square, the name, a count and a
+ * "Browse category →" line — four separate type sizes and a redundant CTA on a
+ * tile that is already entirely a link. It also letterboxed the artwork: every
+ * generation cover is portrait key art, so `aspect-video` cropped it to a
+ * horizontal band through the middle.
+ *
+ * Now it is the same `PosterCard` the systems matrix uses, so the two bands on
+ * the homepage read as one system rather than two designs.
+ */
 function CategoryChip({ category }: { category: CategoryItem }) {
   const iconSrc = category.display?.icon;
   const coverImage = category.display?.coverImage;
-  const initial = category.name[0]?.toUpperCase() ?? "?";
+  const resolvedCover = coverImage && isImageUrl(coverImage) ? resolveMediaUrl(coverImage) : undefined;
   const productCount = category.metrics?.totalProductCount ?? category.metrics?.productCount ?? 0;
+
+  /*
+   * `display.icon` holds an EMOJI in the seed and a URL in other writers —
+   * the ambiguity `resolveTaxonomyVisual` exists for. Only the emoji form is
+   * used as an eyebrow glyph here; a URL would print as raw text.
+   */
+  const emoji = iconSrc && !isImageUrl(iconSrc) ? iconSrc : undefined;
+
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
-      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:hover:border-primary-600"
+      className={`${POSTER_CLASS.root} ${POSTER_CLASS.compact} w-full`}
     >
-      {coverImage && isImageUrl(coverImage) ? (
-        <Div className={`aspect-video w-full ${__O.hidden}`} surface="subtle">
+      {resolvedCover ? (
+        <Div className={POSTER_CLASS.media}>
+          {/*
+            `fill` + `sizes`, not a fixed 320×180. The tile is a flex child of a
+            horizontal scroller whose width varies by breakpoint, so a declared
+            intrinsic size made Next serve the wrong candidate at every width
+            except one.
+          */}
           <Image
-            src={resolveMediaUrl(coverImage)!}
-            alt={category.name}
-            width={320}
-            height={180}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            src={resolvedCover}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 20rem, (min-width: 640px) 45vw, 80vw"
+            className="h-full w-full object-cover"
           />
         </Div>
-      ) : (
-        <Div surface="muted" className="aspect-video w-full" />
-      )}
+      ) : null}
+      <Div className={POSTER_CLASS.scrim} aria-hidden="true" />
 
-      <Stack className={`flex-1 ${__P.p3} text-left`}>
-        <Row textWeight="bold" textSize="sm" className="mb-2 h-9 w-9 bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
-          {iconSrc && isImageUrl(iconSrc) ? (
-            <Image
-              src={resolveMediaUrl(iconSrc)!}
-              alt=""
-              width={24}
-              height={24}
-              className="h-6 w-6 rounded object-cover"
-              aria-hidden={true}
-            />
-          ) : iconSrc ? (
-            <Span size="lg" aria-hidden="true" className="leading-none">{iconSrc}</Span>
-          ) : (
-            initial
-          )}
-        </Row>
-        <Text size="sm" weight="semibold" color="primary" truncate={2}>
-          {category.name}
-        </Text>
-        <Text className="mt-1" color="muted" size="xs">
+      <Div className={POSTER_CLASS.body}>
+        {emoji && (
+          <Span className={POSTER_CLASS.eyebrow} aria-hidden="true">
+            {emoji}
+          </Span>
+        )}
+        <Span className={POSTER_CLASS.title}>{category.name}</Span>
+        <Span className={POSTER_CLASS.meta}>
           {productCount.toLocaleString()} items
-        </Text>
-        <Text className="mt-auto text-primary dark:text-primary-400 pt-[0.75rem]" size="xs" weight="medium">
-          Browse category →
-        </Text>
-      </Stack>
+        </Span>
+      </Div>
     </Link>
   );
 }
@@ -211,7 +223,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         )}
 
         {isLoading ? (
-          <Div layout="flex" gap="3" className={`${__O.hidden} px-[0.25rem]`}>
+          <Div layout="flex" gap="3" overflow="hidden" className="px-[0.25rem]">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse" surface="subtle" rounded="xl" />
             ))}
