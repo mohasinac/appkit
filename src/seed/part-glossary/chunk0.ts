@@ -16635,7 +16635,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Valkyrie 1 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.7 g. Released July 17th, 2021 as B-187 for Beyblade Burst QuadDrive. It shipped with Savior Valkyrie Shot-7, Dynamite Valkyrie Over Just-6, Random Booster Vol. 27 and 1 other release.",
+    "seoDescription": "Valkyrie 1 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.7 g. Released July 17th, 2021 as B-187 for Beyblade Burst QuadDrive. It shipped with Savior Valkyrie Shot-7, Dynamite Valkyrie Over Just-6, Random Booster Vol. 27 and 1 other release.",
     "shippedIn": [
       "Savior Valkyrie Shot-7",
       "Dynamite Valkyrie Over Just-6",
@@ -22248,20 +22248,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "role": "weight",
     "jpName": "バンガード",
     "romaji": "Bangādo"
-  },
-  {
-    "id": "disc--variable-per-combo",
-    "classification": "Disc",
-    "slot": "disc",
-    "code": null,
-    "name": "variable per combo",
-    "usedBy": [
-      "gen3-bu-draciel-fortress"
-    ],
-    "aliases": [
-      "variable per combo"
-    ],
-    "source": "composition"
   },
   {
     "id": "disc--vertical",
@@ -35049,5 +35035,19 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "grand metal wheel"
     ],
     "source": "case-study"
+  },
+  {
+    "id": "fusion-wheel--gravity-counter-attack-fw",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Gravity COUNTER-ATTACK FW",
+    "usedBy": [
+      "gen2-mfb-gravity-destroyer"
+    ],
+    "aliases": [
+      "gravity counter-attack fw"
+    ],
+    "source": "composition"
   }
 ];

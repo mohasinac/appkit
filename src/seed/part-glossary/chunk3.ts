@@ -9,173 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "driver--valor-h",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Valor-H",
-    "weightG": 8.4,
-    "aliases": [
-      "valor-h",
-      "Valor-HyperSphere"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "HyperSphere System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Rise"
-      },
-      {
-        "label": "Product code",
-        "value": "E7727"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TH02"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Stats",
-        "value": "Run time 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Valor-H is a Beyblade driver from the HyperSphere System, weighing 8.4 g. Released as E7727 for Beyblade Burst Rise. It shipped with Cosmic Kraken K5 Lore Valor-H, Cosmic Kraken K5 and Gargoyle G5 Dual Pack, Air Knight K5 8' Valor-H and 4 other releases.",
-    "shippedIn": [
-      "Cosmic Kraken K5 Lore Valor-H",
-      "Cosmic Kraken K5 and Gargoyle G5 Dual Pack",
-      "Air Knight K5 8' Valor-H",
-      "Behemoth Cyclops C5 Convert Valor-H",
-      "Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack",
-      "Sword Dragon D5 Spread Valor-H",
-      "Infinity Brink Battle Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Cosmic Kraken K5 Lore Valor-H",
-        "set": "Cosmic Kraken K5 and Gargoyle G5 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Air Knight K5 8' Valor-H"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Behemoth Cyclops C5 Convert Valor-H",
-        "set": "Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Sword Dragon D5 Spread Valor-H",
-        "set": "Infinity Brink Battle Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Valor-H",
-    "ratings": {
-      "runTime": 3
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "runTime": 50
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Valor-HyperSphere"
-    ],
-    "hasbroCode": "TH02",
-    "partType": "Stamina",
-    "role": "tip"
-  },
-  {
-    "id": "driver--variable-l",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Variable-L",
-    "aliases": [
-      "variable-l",
-      "V-L"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dual Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst"
-      },
-      {
-        "label": "Product code",
-        "value": "C1513"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TA06-L"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: banned · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
-      }
-    ],
-    "seoDescription": "Variable-L is a Beyblade driver from the Dual Layer System. Released as C1513 for Beyblade Burst. It shipped with Victory Valtryek V2 Boost-L Variable-L, Victory Valtryek V2 Rip Fire Pack.",
-    "shippedIn": [
-      "Victory Valtryek V2 Boost-L Variable-L",
-      "Victory Valtryek V2 Rip Fire Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Victory Valtryek V2 Boost-L Variable-L",
-        "set": "Victory Valtryek V2 Rip Fire Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable-L",
-    "wboLegality": {
-      "burst": false,
-      "burstGt": false,
-      "burstLimited": false,
-      "burstClassic": false
-    },
-    "aka": [
-      "V-L"
-    ],
-    "hasbroCode": "TA06-L",
-    "partType": "Attack",
-    "role": "tip"
-  },
-  {
     "id": "driver--venture",
     "classification": "Driver",
     "slot": "driver",
@@ -31462,7 +31295,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Achilles A5 is a Beyblade gt chip from the HyperSphere System, weighing 3.4 g. Released as E7714 for Beyblade Burst Rise. It shipped with Union Achilles A5 Convert Xtend+-H, Sword Achilles A5 Boost Dimension-H, Extreme Challenger Battle Set and 1 other release. 2 alternate colourways are recorded.",
+    "seoDescription": "Achilles A5 is a Beyblade GT chip from the HyperSphere System, weighing 3.4 g. Released as E7714 for Beyblade Burst Rise. It shipped with Union Achilles A5 Convert Xtend+-H, Sword Achilles A5 Boost Dimension-H, Extreme Challenger Battle Set and 1 other release. 2 alternate colourways are recorded.",
     "shippedIn": [
       "Union Achilles A5 Convert Xtend+-H",
       "Sword Achilles A5 Boost Dimension-H",
@@ -31548,7 +31381,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Apocalypse A5 is a Beyblade gt chip from the HyperSphere System, weighing 3.4 g. Released as E7621 for Beyblade Burst Rise. It shipped with Prime Apocalypse A5 0 Ultimate Reboot-H, Vortex Climb Battle Set, Cosmic Apocalypse A5 Vanguard Coil-H and 1 other release.",
+    "seoDescription": "Apocalypse A5 is a Beyblade GT chip from the HyperSphere System, weighing 3.4 g. Released as E7621 for Beyblade Burst Rise. It shipped with Prime Apocalypse A5 0 Ultimate Reboot-H, Vortex Climb Battle Set, Cosmic Apocalypse A5 Vanguard Coil-H and 1 other release.",
     "shippedIn": [
       "Prime Apocalypse A5 0 Ultimate Reboot-H",
       "Vortex Climb Battle Set",
@@ -31615,7 +31448,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ashindra A5 is a Beyblade gt chip from the HyperSphere System, weighing 3.1 g. Released as E7609 for Beyblade Burst Rise. It shipped with Bushin Ashindra A5 Hurricane Keep-H, Vertical Drop Battle Set, Battle Hunters 3-Pack.",
+    "seoDescription": "Ashindra A5 is a Beyblade GT chip from the HyperSphere System, weighing 3.1 g. Released as E7609 for Beyblade Burst Rise. It shipped with Bushin Ashindra A5 Hurricane Keep-H, Vertical Drop Battle Set, Battle Hunters 3-Pack.",
     "shippedIn": [
       "Bushin Ashindra A5 Hurricane Keep-H",
       "Vertical Drop Battle Set",
@@ -31689,7 +31522,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Balkesh B5 is a Beyblade gt chip from the HyperSphere System, weighing 3.4 g. Released as E7731 for Beyblade Burst Rise. It shipped with Dusk Balkesh B5 7 Orbit-H, Dusk Balkesh B5 and Right Artemis A5 Dual Pack, Erase Balkesh B5 Down Rise-H and 5 other releases.",
+    "seoDescription": "Balkesh B5 is a Beyblade GT chip from the HyperSphere System, weighing 3.4 g. Released as E7731 for Beyblade Burst Rise. It shipped with Dusk Balkesh B5 7 Orbit-H, Dusk Balkesh B5 and Right Artemis A5 Dual Pack, Erase Balkesh B5 Down Rise-H and 5 other releases.",
     "shippedIn": [
       "Dusk Balkesh B5 7 Orbit-H",
       "Dusk Balkesh B5 and Right Artemis A5 Dual Pack",
@@ -31770,7 +31603,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Cobra C5 is a Beyblade gt chip from the HyperSphere System, weighing 3.4 g. Released as F0624 for Beyblade Burst Surge. It shipped with Flare Cobra C5 2 Planet-H.",
+    "seoDescription": "Cobra C5 is a Beyblade GT chip from the HyperSphere System, weighing 3.4 g. Released as F0624 for Beyblade Burst Surge. It shipped with Flare Cobra C5 2 Planet-H.",
     "shippedIn": [
       "Flare Cobra C5 2 Planet-H"
     ],
@@ -31828,7 +31661,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Cyclops C5 is a Beyblade gt chip from the HyperSphere System, weighing 3.2 g. Released as F0622 for Beyblade Burst Surge. It shipped with Poison Cyclops C5 Knuckle Guard-H.",
+    "seoDescription": "Cyclops C5 is a Beyblade GT chip from the HyperSphere System, weighing 3.2 g. Released as F0622 for Beyblade Burst Surge. It shipped with Poison Cyclops C5 Knuckle Guard-H.",
     "shippedIn": [
       "Poison Cyclops C5 Knuckle Guard-H"
     ],
@@ -31886,7 +31719,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Devolos D5 is a Beyblade gt chip from the HyperSphere System, weighing 3.2 g. Released as E7717 for Beyblade Burst Rise. It shipped with Venom Devolos D5 Vanguard Bullet I-H, Erase Devolos D5 Vanguard Bullet II-H, Erase Devolos D5 and Left Astro A5 Dual Pack and 3 other releases.",
+    "seoDescription": "Devolos D5 is a Beyblade GT chip from the HyperSphere System, weighing 3.2 g. Released as E7717 for Beyblade Burst Rise. It shipped with Venom Devolos D5 Vanguard Bullet I-H, Erase Devolos D5 Vanguard Bullet II-H, Erase Devolos D5 and Left Astro A5 Dual Pack and 3 other releases.",
     "shippedIn": [
       "Venom Devolos D5 Vanguard Bullet I-H",
       "Erase Devolos D5 Vanguard Bullet II-H",
@@ -31983,7 +31816,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Dragon D5 is a Beyblade gt chip from the HyperSphere System, weighing 3.1 g. Released as E7609 for Beyblade Burst Rise. It shipped with Ace Dragon D5 Sting Charge I-H, Vertical Drop Battle Set, Golden Judgement Dragon D5 Triple Bullet I-H and 8 other releases.",
+    "seoDescription": "Dragon D5 is a Beyblade GT chip from the HyperSphere System, weighing 3.1 g. Released as E7609 for Beyblade Burst Rise. It shipped with Ace Dragon D5 Sting Charge I-H, Vertical Drop Battle Set, Golden Judgement Dragon D5 Triple Bullet I-H and 8 other releases.",
     "shippedIn": [
       "Ace Dragon D5 Sting Charge I-H",
       "Vertical Drop Battle Set",
@@ -32085,7 +31918,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Evo Devolos D5 is a Beyblade gt chip from the HyperSphere System, weighing 2.9 g. Released as E9239 for Beyblade Burst Rise. It shipped with Master Devolos D5 Generate-H, Master Devolos D5 and Emperor Forneus F5 Dual Pack, Eclipse Evo Devolos D5 8' Rise-H and 1 other release.",
+    "seoDescription": "Evo Devolos D5 is a Beyblade GT chip from the HyperSphere System, weighing 2.9 g. Released as E9239 for Beyblade Burst Rise. It shipped with Master Devolos D5 Generate-H, Master Devolos D5 and Emperor Forneus F5 Dual Pack, Eclipse Evo Devolos D5 8' Rise-H and 1 other release.",
     "shippedIn": [
       "Master Devolos D5 Generate-H",
       "Master Devolos D5 and Emperor Forneus F5 Dual Pack",
@@ -32152,7 +31985,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Evo Dragon D5 is a Beyblade gt chip from the HyperSphere System, weighing 3 g. Released as E9241 for Beyblade Burst Rise. It shipped with Command Dragon D5 Ignition-H, Myth Evo Dragon D5 Outer Power-H, Myth Evo Dragon D5 and Perfect Phoenix P4 Dual Pack.",
+    "seoDescription": "Evo Dragon D5 is a Beyblade GT chip from the HyperSphere System, weighing 3 g. Released as E9241 for Beyblade Burst Rise. It shipped with Command Dragon D5 Ignition-H, Myth Evo Dragon D5 Outer Power-H, Myth Evo Dragon D5 and Perfect Phoenix P4 Dual Pack.",
     "shippedIn": [
       "Command Dragon D5 Ignition-H",
       "Myth Evo Dragon D5 Outer Power-H",
@@ -32217,7 +32050,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Evo Genesis G5 is a Beyblade gt chip from the HyperSphere System, weighing 3.5 g. Released as E9242 for Beyblade Burst Rise. It shipped with Eclipse Genesis G5 Swipe Friction-H.",
+    "seoDescription": "Evo Genesis G5 is a Beyblade GT chip from the HyperSphere System, weighing 3.5 g. Released as E9242 for Beyblade Burst Rise. It shipped with Eclipse Genesis G5 Swipe Friction-H.",
     "shippedIn": [
       "Eclipse Genesis G5 Swipe Friction-H"
     ],
@@ -32275,7 +32108,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Fafnir F5 is a Beyblade gt chip from the HyperSphere System, weighing 3 g. Released as E7711 for Beyblade Burst Rise. It shipped with Wizard Fafnir F5 Ratchet Rise-H, Zone Fafnir F5 Gravity Revolve-H, Extreme Challenger Battle Set and 1 other release.",
+    "seoDescription": "Fafnir F5 is a Beyblade GT chip from the HyperSphere System, weighing 3 g. Released as E7711 for Beyblade Burst Rise. It shipped with Wizard Fafnir F5 Ratchet Rise-H, Zone Fafnir F5 Gravity Revolve-H, Extreme Challenger Battle Set and 1 other release.",
     "shippedIn": [
       "Wizard Fafnir F5 Ratchet Rise-H",
       "Zone Fafnir F5 Gravity Revolve-H",
@@ -32346,7 +32179,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Genesis G5 is a Beyblade gt chip from the HyperSphere System, weighing 3.3 g. Released as E7718 for Beyblade Burst Rise. It shipped with Royal Genesis G5 Swipe Hybrid-H.",
+    "seoDescription": "Genesis G5 is a Beyblade GT chip from the HyperSphere System, weighing 3.3 g. Released as E7718 for Beyblade Burst Rise. It shipped with Royal Genesis G5 Swipe Hybrid-H.",
     "shippedIn": [
       "Royal Genesis G5 Swipe Hybrid-H"
     ],
@@ -32404,7 +32237,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Hydrax H5 is a Beyblade gt chip from the HyperSphere System, weighing 2.7 g. Released as E7728 for Beyblade Burst Rise. It shipped with Viper Hydrax H5 Python Coil-H, Viper Hydrax H5 and Dullahan D5 Dual Pack, Lord Hydrax H5 Convert Trick-H and 2 other releases.",
+    "seoDescription": "Hydrax H5 is a Beyblade GT chip from the HyperSphere System, weighing 2.7 g. Released as E7728 for Beyblade Burst Rise. It shipped with Viper Hydrax H5 Python Coil-H, Viper Hydrax H5 and Dullahan D5 Dual Pack, Lord Hydrax H5 Convert Trick-H and 2 other releases.",
     "shippedIn": [
       "Viper Hydrax H5 Python Coil-H",
       "Viper Hydrax H5 and Dullahan D5 Dual Pack",
@@ -32481,7 +32314,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Joker J5 is a Beyblade gt chip from the HyperSphere System, weighing 3.3 g. Released as E7715 for Beyblade Burst Rise. It shipped with Judgement Joker J5 00 Trick-H.",
+    "seoDescription": "Joker J5 is a Beyblade GT chip from the HyperSphere System, weighing 3.3 g. Released as E7715 for Beyblade Burst Rise. It shipped with Judgement Joker J5 00 Trick-H.",
     "shippedIn": [
       "Judgement Joker J5 00 Trick-H"
     ],
@@ -32539,7 +32372,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Kerbeus K5 is a Beyblade gt chip from the HyperSphere System, weighing 3.2 g. Released as E9238 for Beyblade Burst Rise. It shipped with Shield Kerbeus K5 Infinity Liner-H, Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack, Master Kerbeus K5 Vanguard Xtend+-H and 1 other release.",
+    "seoDescription": "Kerbeus K5 is a Beyblade GT chip from the HyperSphere System, weighing 3.2 g. Released as E9238 for Beyblade Burst Rise. It shipped with Shield Kerbeus K5 Infinity Liner-H, Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack, Master Kerbeus K5 Vanguard Xtend+-H and 1 other release.",
     "shippedIn": [
       "Shield Kerbeus K5 Infinity Liner-H",
       "Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack",
@@ -32614,7 +32447,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Kraken K5 is a Beyblade gt chip from the HyperSphere System, weighing 2.9 g. Released as E7727 for Beyblade Burst Rise. It shipped with Cosmic Kraken K5 Lore Valor-H, Cosmic Kraken K5 and Gargoyle G5 Dual Pack, Shield Kraken K5 Hurricane Banshee-H and 1 other release.",
+    "seoDescription": "Kraken K5 is a Beyblade GT chip from the HyperSphere System, weighing 2.9 g. Released as E7727 for Beyblade Burst Rise. It shipped with Cosmic Kraken K5 Lore Valor-H, Cosmic Kraken K5 and Gargoyle G5 Dual Pack, Shield Kraken K5 Hurricane Banshee-H and 1 other release.",
     "shippedIn": [
       "Cosmic Kraken K5 Lore Valor-H",
       "Cosmic Kraken K5 and Gargoyle G5 Dual Pack",
@@ -32683,7 +32516,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Leviathan L5 is a Beyblade gt chip from the HyperSphere System, weighing 3.1 g. Released as F0621 for Beyblade Burst Surge. It shipped with Tact Leviathan L5 7 Zephyr-H.",
+    "seoDescription": "Leviathan L5 is a Beyblade GT chip from the HyperSphere System, weighing 3.1 g. Released as F0621 for Beyblade Burst Surge. It shipped with Tact Leviathan L5 7 Zephyr-H.",
     "shippedIn": [
       "Tact Leviathan L5 7 Zephyr-H"
     ],
@@ -32741,7 +32574,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Luinor L5 is a Beyblade gt chip from the HyperSphere System, weighing 3.3 g. Released as E7736 for Beyblade Burst Rise. It shipped with Zone Luinor L5 Drake Spiral-H, Wizard Luinor L5 Upper Liner-H, Infinity Brink Battle Set.",
+    "seoDescription": "Luinor L5 is a Beyblade GT chip from the HyperSphere System, weighing 3.3 g. Released as E7736 for Beyblade Burst Rise. It shipped with Zone Luinor L5 Drake Spiral-H, Wizard Luinor L5 Upper Liner-H, Infinity Brink Battle Set.",
     "shippedIn": [
       "Zone Luinor L5 Drake Spiral-H",
       "Wizard Luinor L5 Upper Liner-H",
@@ -32806,7 +32639,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Odax O5 is a Beyblade gt chip from the HyperSphere System, weighing 3.5 g. Released as E9240 for Beyblade Burst Rise. It shipped with Myth Odax O5 1' Destroy-H.",
+    "seoDescription": "Odax O5 is a Beyblade GT chip from the HyperSphere System, weighing 3.5 g. Released as E9240 for Beyblade Burst Rise. It shipped with Myth Odax O5 1' Destroy-H.",
     "shippedIn": [
       "Myth Odax O5 1' Destroy-H"
     ],
@@ -32872,7 +32705,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ogre O5 is a Beyblade gt chip from the HyperSphere System, weighing 3.2 g. Released as E9237 for Beyblade Burst Rise. It shipped with Monster Ogre O5 Outer Octa-H, Monster Ogre O5 and Orb Engaard E5 Dual Pack.",
+    "seoDescription": "Ogre O5 is a Beyblade GT chip from the HyperSphere System, weighing 3.2 g. Released as E9237 for Beyblade Burst Rise. It shipped with Monster Ogre O5 Outer Octa-H, Monster Ogre O5 and Orb Engaard E5 Dual Pack.",
     "shippedIn": [
       "Monster Ogre O5 Outer Octa-H",
       "Monster Ogre O5 and Orb Engaard E5 Dual Pack"
@@ -32938,7 +32771,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Pegasus P5 is a Beyblade gt chip from the HyperSphere System, weighing 3.2 g. Released as E7719 for Beyblade Burst Rise. It shipped with Harmony Pegasus P5 10 Low-H, Glyph Pegasus P5 Oval Yard-H, Extreme Challenger Battle Set.",
+    "seoDescription": "Pegasus P5 is a Beyblade GT chip from the HyperSphere System, weighing 3.2 g. Released as E7719 for Beyblade Burst Rise. It shipped with Harmony Pegasus P5 10 Low-H, Glyph Pegasus P5 Oval Yard-H, Extreme Challenger Battle Set.",
     "shippedIn": [
       "Harmony Pegasus P5 10 Low-H",
       "Glyph Pegasus P5 Oval Yard-H",
@@ -33003,7 +32836,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Salamander S5 is a Beyblade gt chip from the HyperSphere System, weighing 3.1 g. Released as E9235 for Beyblade Burst Rise. It shipped with Inferno Salamander S5 Wing Jaggy-H.",
+    "seoDescription": "Salamander S5 is a Beyblade GT chip from the HyperSphere System, weighing 3.1 g. Released as E9235 for Beyblade Burst Rise. It shipped with Inferno Salamander S5 Wing Jaggy-H.",
     "shippedIn": [
       "Inferno Salamander S5 Wing Jaggy-H"
     ],
@@ -33061,7 +32894,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Sphinx S5 is a Beyblade gt chip from the HyperSphere System, weighing 3 g. Released as E7732 for Beyblade Burst Rise. It shipped with Solar Sphinx S5 6 Jaggy-H, Battle Guardians 3-Pack.",
+    "seoDescription": "Sphinx S5 is a Beyblade GT chip from the HyperSphere System, weighing 3 g. Released as E7732 for Beyblade Burst Rise. It shipped with Solar Sphinx S5 6 Jaggy-H, Battle Guardians 3-Pack.",
     "shippedIn": [
       "Solar Sphinx S5 6 Jaggy-H",
       "Battle Guardians 3-Pack"
@@ -33129,7 +32962,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Spryzen S5 is a Beyblade gt chip from the HyperSphere System, weighing 3.9 g. Released as E7729 for Beyblade Burst Rise. It shipped with Lord Spryzen S5 Blitz Dimension-H, Lord Spryzen S5 and Crash Roktavor R5 Dual Pack, Dusk Spryzen S5 Infinity Keep-H and 3 other releases.",
+    "seoDescription": "Spryzen S5 is a Beyblade GT chip from the HyperSphere System, weighing 3.9 g. Released as E7729 for Beyblade Burst Rise. It shipped with Lord Spryzen S5 Blitz Dimension-H, Lord Spryzen S5 and Crash Roktavor R5 Dual Pack, Dusk Spryzen S5 Infinity Keep-H and 3 other releases.",
     "shippedIn": [
       "Lord Spryzen S5 Blitz Dimension-H",
       "Lord Spryzen S5 and Crash Roktavor R5 Dual Pack",
@@ -33208,7 +33041,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Valtryek V5 is a Beyblade gt chip from the HyperSphere System, weighing 3.3 g. Released as E7710 for Beyblade Burst Rise. It shipped with Sword Valtryek V5 Blitz Power-H, Cosmic Valtryek V5 Ring Trick-H, Union Valtryek V5 Armed Destroy-H and 8 other releases.",
+    "seoDescription": "Valtryek V5 is a Beyblade GT chip from the HyperSphere System, weighing 3.3 g. Released as E7710 for Beyblade Burst Rise. It shipped with Sword Valtryek V5 Blitz Power-H, Cosmic Valtryek V5 Ring Trick-H, Union Valtryek V5 Armed Destroy-H and 8 other releases.",
     "shippedIn": [
       "Sword Valtryek V5 Blitz Power-H",
       "Cosmic Valtryek V5 Ring Trick-H",
@@ -52380,5 +52213,183 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "ring",
     "jpName": "スクリュートライデント",
     "romaji": "Sukuryū Toraidento"
+  },
+  {
+    "id": "layer--shadow-amaterios",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shadow Amaterios",
+    "weightG": 18.9,
+    "aliases": [
+      "shadow-amaterios",
+      "sα",
+      "Yamiterios"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-00"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アマテリオス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Shadō Amateriosu"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 2018"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shadow Amaterios is a Beyblade layer from the Cho-Z Layer System, weighing 18.9 g. Released August 2018 as B-00 for Beyblade Burst Turbo. It shipped with Shadow Amaterios 0 Xtreme'.",
+    "shippedIn": [
+      "Shadow Amaterios 0 Xtreme'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Shadow Amaterios 0 Xtreme'",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Amaterios",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "sα",
+      "Yamiterios"
+    ],
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "アマテリオス",
+    "romaji": "Shadō Amateriosu"
+  },
+  {
+    "id": "layer--shadow-orichalcum",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shadow Orichalcum",
+    "weightG": 11.1,
+    "aliases": [
+      "shadow-orichalcum",
+      "sΩ"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "B-00"
+      },
+      {
+        "label": "Japanese name",
+        "value": "シャドウ・オリハルコン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Shadō Oriharukon"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 2017"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shadow Orichalcum is a Beyblade layer from the God Layer System, weighing 11.1 g. Released August 2017 as B-00 for Beyblade Burst Evolution. It shipped with Shadow Orichalcum Aero Bite, Random Layer Collection Vol. 11.",
+    "shippedIn": [
+      "Shadow Orichalcum Aero Bite",
+      "Random Layer Collection Vol. 11"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Shadow Orichalcum Aero Bite",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-11",
+        "bey": "Random Layer Collection Vol. 11"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Orichalcum",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "sΩ"
+    ],
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "シャドウ・オリハルコン",
+    "romaji": "Shadō Oriharukon"
   }
 ];

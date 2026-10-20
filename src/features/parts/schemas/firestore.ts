@@ -312,11 +312,11 @@ export const PART_SLOT_CATEGORY: Record<PartSlot, string> = {
   "disc-integrated-driver": "category-burst-drivers",
 
   // Beyblade X — the CX Custom line, which has its own node.
-  "lock-chip": "category-x-custom-cx",
-  "main-blade": "category-x-custom-cx",
-  "assist-blade": "category-x-custom-cx",
-  "over-blade": "category-x-custom-cx",
-  "metal-blade": "category-x-custom-cx",
+  "lock-chip": "category-x-lock-chips",
+  "main-blade": "category-x-main-blades",
+  "assist-blade": "category-x-assist-blades",
+  "over-blade": "category-x-over-blades",
+  "metal-blade": "category-x-metal-blades",
   "gear-chip": "category-x-custom-cx",
   // Beyblade X — integrated parts file under the half a buyer shops for.
   "ratchet-integrated-blade": "category-x-blades",
@@ -335,7 +335,7 @@ export const PART_SLOT_CATEGORY: Record<PartSlot, string> = {
   "evolution-gear": "category-original-engine-gears",
   "bit-protector": "category-original-bit-chips",
   cew: "category-original-weight-disks",
-  "support-parts": "category-original-parts",
+  "support-parts": "category-original-support-parts",
 };
 
 /** Every slot key, for an index page that must not hand-write the list. */

@@ -6602,14 +6602,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "disc",
         "slotLabel": "FORGE DISC",
-        "partName": "variable per combo",
-        "partId": "disc--variable-per-combo"
+        "partName": "variable per combo"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "variable per combo",
-        "partId": "performance-tip--variable-per-combo"
+        "partName": "variable per combo"
       }
     ],
     "source": "gen3/bu/draciel-fortress.md",

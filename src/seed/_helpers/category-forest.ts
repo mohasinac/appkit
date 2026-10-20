@@ -220,6 +220,13 @@ const BEYBLADE_ORIGINAL: CategoryTreeNode = {
       node("category-original-weight-disks", "Weight Disks", "The metal disk between ring and base. Heavier disks buy stamina; lighter ones buy speed.", partDefaults("category-original-weight-disks", "Weight Disk"), PART_TEMPLATES),
       node("category-original-blade-bases", "Blade Bases", "The bottom assembly — tip shape, spin gear housing and, on later systems, the magnet or engine.", partDefaults("category-original-blade-bases", "Blade Base"), PART_TEMPLATES),
       /*
+       * 🛑 Support Parts had been keyed on THIS BRANCH, which takes explicit
+       * children and so never reads `PART_LEAVES` — its 3 leaves were dropped
+       * silently. Same cause as the 82 CX leaves under `category-x-custom-cx`;
+       * see the note there.
+       */
+      node("category-original-support-parts", "Support Parts", "Bolt-on extras that fill no stack position of their own — Cross Survivor, Reverse Attack and the other SP pieces.", partDefaults("category-original-support-parts", "Support Parts"), PART_TEMPLATES),
+      /*
        * D13 — five part-type nodes the forest was missing, so every one of the
        * 20 part classifications has a home. Measured before adding: 135 of 753
        * parts (bit chips 66, running cores 25, chrome wheels 25, spin gears 14,
@@ -396,6 +403,26 @@ const BEYBLADE_X: CategoryTreeNode = {
       node("category-x-blades", "Blades", "The upper piece that defines an X combo's attack shape and its ability to hold the rail.", partDefaults("category-x-blades", "Blade"), PART_TEMPLATES),
       node("category-x-ratchets", "Ratchets", "The middle component. Written as protrusions-height — 3-60, 4-60, 9-60 — and the fastest lever on a build.", partDefaults("category-x-ratchets", "Ratchet"), PART_TEMPLATES),
       node("category-x-bits", "Bits", "The floor-contact tip, the X-format equivalent of a Driver.", partDefaults("category-x-bits", "Bit"), PART_TEMPLATES),
+      /*
+       * 🛑 CX PARTS NEED THEIR OWN NODES, and their absence cost 82 leaves.
+       *
+       * `PART_SLOT_CATEGORY` pointed all five Custom Line slots at
+       * `category-x-custom-cx` — which is a `line()`, so it attaches
+       * `MODEL_LEAVES[id]` and never reads `PART_LEAVES[id]` at all. The
+       * generated map held 82 leaves under that key and every one of them was
+       * silently dropped: not mis-tiered, absent. Together with the 3 under
+       * `branch("category-original-parts")` that is exactly the 85-leaf
+       * shortfall the tier-4 guard had been reporting as a bare number.
+       *
+       * One node per classification, matching every other generation here —
+       * an 82-leaf grab-bag under a single "CX Parts" node would also have
+       * satisfied the count while being the wrong shelf for a buyer.
+       */
+      node("category-x-lock-chips", "Lock Chips", "The CX centrepiece. It locks a Main Blade and an Assist Blade together and carries the beast art.", partDefaults("category-x-lock-chips", "Lock Chip"), PART_TEMPLATES),
+      node("category-x-main-blades", "Main Blades", "The primary contact blade of a CX build — the piece that sets its attack shape.", partDefaults("category-x-main-blades", "Main Blade"), PART_TEMPLATES),
+      node("category-x-assist-blades", "Assist Blades", "The lower CX blade, tuning weight distribution and how the build sits on the rail.", partDefaults("category-x-assist-blades", "Assist Blade"), PART_TEMPLATES),
+      node("category-x-over-blades", "Over Blades", "A CX blade that mounts above the Lock Chip, adding an upper contact surface.", partDefaults("category-x-over-blades", "Over Blade"), PART_TEMPLATES),
+      node("category-x-metal-blades", "Metal Blades", "A metal CX blade — the heaviest option in the format and the usual choice for an outspin build.", partDefaults("category-x-metal-blades", "Metal Blade"), PART_TEMPLATES),
     ]),
     branch("category-x-launchers", "Beyblade X Launchers", "String launchers, winders and grips for the X format.", [
       node("category-x-string-launchers", "String Launchers", "The standard X launcher, with a shot angle designed around reaching the Xtreme Line rail.", launcherDefaults("category-x-string-launchers", "Beyblade X"), PART_TEMPLATES),

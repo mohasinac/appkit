@@ -59,8 +59,8 @@ import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
 import { FRANCHISE_ROW_COUNT, buildFranchiseRows } from "./_helpers/franchise-rows";
-import { MODEL_LEAF_COUNT } from "./_helpers/category-models";
-import { PART_LEAF_COUNT } from "./_helpers/category-parts";
+import { MODEL_LEAF_COUNT, MODEL_LEAVES } from "./_helpers/category-models";
+import { PART_LEAF_COUNT, PART_LEAVES } from "./_helpers/category-parts";
 import { MARKET_BAND_LEAF_IDS } from "./_helpers/category-content";
 import {
   GENERATED_CATEGORY_CONTENT,
@@ -788,12 +788,56 @@ if (allIds.length !== allCategoryRows.length) {
 const tier4Rows = rawCategories.filter((c) => c.tier === 4).length;
 const expectedTier4 = MODEL_LEAF_COUNT + PART_LEAF_COUNT;
 if (tier4Rows !== expectedTier4) {
+  /*
+   * 🛑 NAME THE DROPPED LEAVES. A count told us 2,626 of 2,711 arrived and
+   * nothing more, which is unactionable: the ids are all distinct and every
+   * parent key exists in the forest, so the difference is in WHICH parent each
+   * leaf hangs off and at what depth — and that is only visible per leaf.
+   *
+   * The expensive version of this was a session spent inferring the cause from
+   * indentation in the forest literal. The cheap version is the set
+   * difference, grouped by the parent that owns each missing leaf, which also
+   * says the tier it actually landed at. One run names the fix.
+   */
+  const reached = new Set(
+    rawCategories.filter((c) => c.tier === 4).map((c) => String(c.id)),
+  );
+  const tierOf = new Map(rawCategories.map((c) => [String(c.id), c.tier]));
+  const declared: { id: string; parent: string }[] = [];
+  for (const [parent, leaves] of Object.entries(MODEL_LEAVES)) {
+    for (const leaf of leaves) declared.push({ id: leaf.id, parent });
+  }
+  for (const [parent, leaves] of Object.entries(PART_LEAVES)) {
+    for (const leaf of leaves) declared.push({ id: leaf.id, parent });
+  }
+  const missing = declared.filter((d) => !reached.has(d.id));
+  const byParent = new Map<string, { n: number; landedAt: Set<string>; sample: string[] }>();
+  for (const m of missing) {
+    if (!byParent.has(m.parent)) {
+      byParent.set(m.parent, { n: 0, landedAt: new Set(), sample: [] });
+    }
+    const g = byParent.get(m.parent)!;
+    g.n += 1;
+    g.landedAt.add(tierOf.has(m.id) ? `tier ${tierOf.get(m.id)}` : "absent");
+    if (g.sample.length < 3) g.sample.push(m.id);
+  }
+  const detail = [...byParent.entries()]
+    .sort((a, b) => b[1].n - a[1].n)
+    .map(
+      ([parent, g]) =>
+        `    ${parent}: ${g.n} leaf/leaves landed at ${[...g.landedAt].join("+")} ` +
+        `(e.g. ${g.sample.join(", ")})`,
+    )
+    .join("\n");
   throw new Error(
     `category seed: ${tier4Rows} tier-4 leaves reached the tree but the generated ` +
-      `maps declare ${expectedTier4} (${MODEL_LEAF_COUNT} models + ${PART_LEAF_COUNT} parts). ` +
-      `A parent id in the forest no longer matches a key in MODEL_LEAVES or PART_LEAVES — ` +
-      `re-run node scripts/gen-category-models.mjs and node scripts/gen-category-parts.mjs ` +
-      `and check the parent ids.`,
+      `maps declare ${expectedTier4} (${MODEL_LEAF_COUNT} models + ${PART_LEAF_COUNT} parts).\n` +
+      `  ${missing.length} declared leaf/leaves did not arrive as tier 4, by parent:\n` +
+      `${detail}\n` +
+      `  A parent at the wrong DEPTH puts its leaves at the wrong tier (a leaf is ` +
+      `always parentDepth+1); a parent id the forest renamed makes them absent ` +
+      `entirely. Fix the forest, then re-run node scripts/gen-category-models.mjs ` +
+      `and node scripts/gen-category-parts.mjs.`,
   );
 }
 if (brandRows.length !== BRAND_ROW_COUNT) {

@@ -9,20 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "fusion-wheel--gravity-counter-attack-fw",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Gravity COUNTER-ATTACK FW",
-    "usedBy": [
-      "gen2-mfb-gravity-destroyer"
-    ],
-    "aliases": [
-      "gravity counter-attack fw"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "fusion-wheel--hades",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -8195,20 +8181,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--variable-per-combo",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "variable per combo",
-    "usedBy": [
-      "gen3-bu-draciel-fortress"
-    ],
-    "aliases": [
-      "variable per combo"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "performance-tip--w2d",
     "classification": "Performance Tip",
     "slot": "performance-tip",
@@ -8467,7 +8439,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Chain is a Beyblade qs blade from the QuadDrive System, weighing 9.9 g. Released as F6804 for Beyblade Burst QuadStrike. It shipped with Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6', Quad Creature Battle Set, Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6 and 2 other releases.",
+    "seoDescription": "Chain is a Beyblade QS blade from the QuadDrive System, weighing 9.9 g. Released as F6804 for Beyblade Burst QuadStrike. It shipped with Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6', Quad Creature Battle Set, Chain Kerbeus K8 Aquilon-Q Revolve-Q+Yard-6 and 2 other releases.",
     "shippedIn": [
       "Chain Dragon D8 Fyquor-Q Bite-Q+Billow-6'",
       "Quad Creature Battle Set",
@@ -39915,6 +39887,78 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Knight Dranzer is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dranzer",
     "element": "Fire",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--makendo",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Makendo",
+    "aliases": [
+      "makendo"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Makendo is a Beyblade bit chip from the Spin Gear System. It shipped with Makendo.",
+    "shippedIn": [
+      "Makendo"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "bey": "Makendo"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Makendo"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Makendo",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--master-draciel",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Master Draciel",
+    "aliases": [
+      "master-draciel"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: 2000"
+      }
+    ],
+    "seoDescription": "Master Draciel is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000. It shipped with Master Draciel.",
+    "shippedIn": [
+      "Master Draciel"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Master Draciel"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Draciel",
     "role": "chip"
   }
 ];

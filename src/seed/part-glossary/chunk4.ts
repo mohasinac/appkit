@@ -9,184 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "layer--shadow-amaterios",
-    "classification": "Layer",
-    "slot": "layer",
-    "code": null,
-    "name": "Shadow Amaterios",
-    "weightG": 18.9,
-    "aliases": [
-      "shadow-amaterios",
-      "sα",
-      "Yamiterios"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Layer"
-      },
-      {
-        "label": "System",
-        "value": "Cho-Z Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "B-00"
-      },
-      {
-        "label": "Japanese name",
-        "value": "アマテリオス"
-      },
-      {
-        "label": "Romaji",
-        "value": "Shadō Amateriosu"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Spin direction",
-        "value": "Right-Spin"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 2018"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
-      }
-    ],
-    "seoDescription": "Shadow Amaterios is a Beyblade layer from the Cho-Z Layer System, weighing 18.9 g. Released August 2018 as B-00 for Beyblade Burst Turbo. It shipped with Shadow Amaterios 0 Xtreme'.",
-    "shippedIn": [
-      "Shadow Amaterios 0 Xtreme'"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Shadow Amaterios 0 Xtreme'",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Amaterios",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": false,
-      "burstClassic": false
-    },
-    "aka": [
-      "sα",
-      "Yamiterios"
-    ],
-    "partType": "Attack",
-    "spinDirection": "Right-Spin",
-    "role": "ring",
-    "jpName": "アマテリオス",
-    "romaji": "Shadō Amateriosu"
-  },
-  {
-    "id": "layer--shadow-orichalcum",
-    "classification": "Layer",
-    "slot": "layer",
-    "code": null,
-    "name": "Shadow Orichalcum",
-    "weightG": 11.1,
-    "aliases": [
-      "shadow-orichalcum",
-      "sΩ"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Layer"
-      },
-      {
-        "label": "System",
-        "value": "God Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Evolution"
-      },
-      {
-        "label": "Product code",
-        "value": "B-00"
-      },
-      {
-        "label": "Japanese name",
-        "value": "シャドウ・オリハルコン"
-      },
-      {
-        "label": "Romaji",
-        "value": "Shadō Oriharukon"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Spin direction",
-        "value": "Right-Spin"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 2017"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
-      }
-    ],
-    "seoDescription": "Shadow Orichalcum is a Beyblade layer from the God Layer System, weighing 11.1 g. Released August 2017 as B-00 for Beyblade Burst Evolution. It shipped with Shadow Orichalcum Aero Bite, Random Layer Collection Vol. 11.",
-    "shippedIn": [
-      "Shadow Orichalcum Aero Bite",
-      "Random Layer Collection Vol. 11"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Shadow Orichalcum Aero Bite",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BG-11",
-        "bey": "Random Layer Collection Vol. 11"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shadow_Orichalcum",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": false
-    },
-    "aka": [
-      "sΩ"
-    ],
-    "partType": "Stamina",
-    "spinDirection": "Right-Spin",
-    "role": "ring",
-    "jpName": "シャドウ・オリハルコン",
-    "romaji": "Shadō Oriharukon"
-  },
-  {
     "id": "layer--shelter-regulus",
     "classification": "Layer",
     "slot": "layer",
@@ -21241,7 +21063,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ambush is a Beyblade qs blade from the QuadDrive System, weighing 6.2 g. Released as F6807 for Beyblade Burst QuadStrike.",
+    "seoDescription": "Ambush is a Beyblade QS blade from the QuadDrive System, weighing 6.2 g. Released as F6807 for Beyblade Burst QuadStrike.",
     "shippedIn": [
       "Ambush Bazilisk B8 Fyquor-Q Liner-Q+Eruption-0",
       "Ambush Achilles A8 Aquilon'-Q Revolve-Q+Rugged-2",
@@ -21325,7 +21147,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Bolt is a Beyblade qs blade from the QuadDrive System, weighing 6.2 g. Released as F6811 for Beyblade Burst QuadStrike. It shipped with Bolt Spryzen S8 Xanthus-Q Quattro-Q+Jaggy-1.",
+    "seoDescription": "Bolt is a Beyblade QS blade from the QuadDrive System, weighing 6.2 g. Released as F6811 for Beyblade Burst QuadStrike. It shipped with Bolt Spryzen S8 Xanthus-Q Quattro-Q+Jaggy-1.",
     "shippedIn": [
       "Bolt Spryzen S8 Xanthus-Q Quattro-Q+Jaggy-1"
     ],
@@ -21395,7 +21217,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Destined is a Beyblade qs blade from the QuadDrive System, weighing 6.6 g. Released as F6780 for Beyblade Burst QuadStrike. It shipped with Destined Evo-X Belfyre B8 D Gear-Q Gyro-Q+VS Gear-2', Light Ignite Battle Set.",
+    "seoDescription": "Destined is a Beyblade QS blade from the QuadDrive System, weighing 6.6 g. Released as F6780 for Beyblade Burst QuadStrike. It shipped with Destined Evo-X Belfyre B8 D Gear-Q Gyro-Q+VS Gear-2', Light Ignite Battle Set.",
     "shippedIn": [
       "Destined Evo-X Belfyre B8 D Gear-Q Gyro-Q+VS Gear-2'",
       "Light Ignite Battle Set"
@@ -21467,7 +21289,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Divine is a Beyblade qs blade from the QuadDrive System, weighing 6.6 g. Released as F6781 for Beyblade Burst QuadStrike. It shipped with Divine Evo Belfyre B8 Squadron-Q Guard-Q+Adventure-3, Thunder Edge Battle Set, Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0 and 1 other release.",
+    "seoDescription": "Divine is a Beyblade QS blade from the QuadDrive System, weighing 6.6 g. Released as F6781 for Beyblade Burst QuadStrike. It shipped with Divine Evo Belfyre B8 Squadron-Q Guard-Q+Adventure-3, Thunder Edge Battle Set, Divine Xcalius X8 Giga-Q Jolt-Q+Yard-0 and 1 other release.",
     "shippedIn": [
       "Divine Evo Belfyre B8 Squadron-Q Guard-Q+Adventure-3",
       "Thunder Edge Battle Set",
@@ -21560,7 +21382,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Fierce is a Beyblade qs blade from the QuadDrive System, weighing 8.8 g. Released as F6812 for Beyblade Burst QuadStrike. It shipped with Fierce Helios H8 Squadron-Q Quattro-Q+Stay-3, Quad Creature Battle Set, Fierce Bazilisk B8 Quacchu-Q Jolt-Q+Flap-4 and 2 other releases.",
+    "seoDescription": "Fierce is a Beyblade QS blade from the QuadDrive System, weighing 8.8 g. Released as F6812 for Beyblade Burst QuadStrike. It shipped with Fierce Helios H8 Squadron-Q Quattro-Q+Stay-3, Quad Creature Battle Set, Fierce Bazilisk B8 Quacchu-Q Jolt-Q+Flap-4 and 2 other releases.",
     "shippedIn": [
       "Fierce Helios H8 Squadron-Q Quattro-Q+Stay-3",
       "Quad Creature Battle Set",
@@ -21648,7 +21470,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Flame is a Beyblade qs blade from the QuadDrive System, weighing 6.9 g. Released as F6810 for Beyblade Burst QuadStrike. It shipped with Flame Pandora Everlasting P8 Aquilon-Q Jolt-Q+Flexible-10', Energy Uprising 4-Pack.",
+    "seoDescription": "Flame is a Beyblade QS blade from the QuadDrive System, weighing 6.9 g. Released as F6810 for Beyblade Burst QuadStrike. It shipped with Flame Pandora Everlasting P8 Aquilon-Q Jolt-Q+Flexible-10', Energy Uprising 4-Pack.",
     "shippedIn": [
       "Flame Pandora Everlasting P8 Aquilon-Q Jolt-Q+Flexible-10'",
       "Energy Uprising 4-Pack"
@@ -21726,7 +21548,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Gambit is a Beyblade qs blade from the QuadDrive System, weighing 9.6 g. Released as F6813 for Beyblade Burst QuadStrike. It shipped with Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4', Gambit Dragon D8 and Ambush Achilles A8 Dual Pack.",
+    "seoDescription": "Gambit is a Beyblade QS blade from the QuadDrive System, weighing 9.6 g. Released as F6813 for Beyblade Burst QuadStrike. It shipped with Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4', Gambit Dragon D8 and Ambush Achilles A8 Dual Pack.",
     "shippedIn": [
       "Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4'",
       "Gambit Dragon D8 and Ambush Achilles A8 Dual Pack"
@@ -21798,7 +21620,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Hydra is a Beyblade qs blade from the QuadDrive System, weighing 8.6 g. Released as F6805 for Beyblade Burst QuadStrike. It shipped with Hydra Poseidon P8 Nexus-Q Bite-Q+Billow-2', Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3, Fierce Bazilisk B8 and Hydra Kerbeus K8 Dual Pack.",
+    "seoDescription": "Hydra is a Beyblade QS blade from the QuadDrive System, weighing 8.6 g. Released as F6805 for Beyblade Burst QuadStrike. It shipped with Hydra Poseidon P8 Nexus-Q Bite-Q+Billow-2', Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3, Fierce Bazilisk B8 and Hydra Kerbeus K8 Dual Pack.",
     "shippedIn": [
       "Hydra Poseidon P8 Nexus-Q Bite-Q+Billow-2'",
       "Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3",
@@ -21875,7 +21697,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Komet is a Beyblade qs blade from the QuadDrive System, weighing 7 g. Released as F6815 for Beyblade Burst QuadStrike. It shipped with Komet Bazilisk B8 Xanthus-Q Fusion-Q+Rugged-7, Quad Creature Battle Set, Komet Helios H8 Fyquor-Q Planet-Q+Zeal-2 and 1 other release.",
+    "seoDescription": "Komet is a Beyblade QS blade from the QuadDrive System, weighing 7 g. Released as F6815 for Beyblade Burst QuadStrike. It shipped with Komet Bazilisk B8 Xanthus-Q Fusion-Q+Rugged-7, Quad Creature Battle Set, Komet Helios H8 Fyquor-Q Planet-Q+Zeal-2 and 1 other release.",
     "shippedIn": [
       "Komet Bazilisk B8 Xanthus-Q Fusion-Q+Rugged-7",
       "Quad Creature Battle Set",
@@ -21958,7 +21780,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Lightning is a Beyblade qs blade from the QuadDrive System, weighing 6.9 g. Released as F6781 for Beyblade Burst QuadStrike. It shipped with Lightning Poseidon P8 Over-Q Yielding-Q+Adventure-1, Quad Creature Battle Set, Lightning Pandora Endless P8 Twist-Q Fusion-Q+Still-7' and 2 other releases.",
+    "seoDescription": "Lightning is a Beyblade QS blade from the QuadDrive System, weighing 6.9 g. Released as F6781 for Beyblade Burst QuadStrike. It shipped with Lightning Poseidon P8 Over-Q Yielding-Q+Adventure-1, Quad Creature Battle Set, Lightning Pandora Endless P8 Twist-Q Fusion-Q+Still-7' and 2 other releases.",
     "shippedIn": [
       "Lightning Poseidon P8 Over-Q Yielding-Q+Adventure-1",
       "Quad Creature Battle Set",
@@ -22044,7 +21866,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ruin is a Beyblade qs blade from the QuadDrive System, weighing 6.2 g. Released as F6780 for Beyblade Burst QuadStrike. It shipped with Ruin Pandemonium P8 Karma-Q Spiral-Q+Lucent-4', Light Ignite Battle Set.",
+    "seoDescription": "Ruin is a Beyblade QS blade from the QuadDrive System, weighing 6.2 g. Released as F6780 for Beyblade Burst QuadStrike. It shipped with Ruin Pandemonium P8 Karma-Q Spiral-Q+Lucent-4', Light Ignite Battle Set.",
     "shippedIn": [
       "Ruin Pandemonium P8 Karma-Q Spiral-Q+Lucent-4'",
       "Light Ignite Battle Set"
@@ -22116,7 +21938,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Stellar is a Beyblade qs blade from the QuadDrive System, weighing 6.3 g. Released as F6809 for Beyblade Burst QuadStrike. It shipped with Stellar Hyperion H8 Diagron-Q Guard-Q+Xplosion-7'.",
+    "seoDescription": "Stellar is a Beyblade QS blade from the QuadDrive System, weighing 6.3 g. Released as F6809 for Beyblade Burst QuadStrike. It shipped with Stellar Hyperion H8 Diagron-Q Guard-Q+Xplosion-7'.",
     "shippedIn": [
       "Stellar Hyperion H8 Diagron-Q Guard-Q+Xplosion-7'"
     ],
@@ -22190,7 +22012,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Tidal is a Beyblade qs blade from the QuadDrive System, weighing 6.8 g. Released as F6815 for Beyblade Burst QuadStrike. It shipped with Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6', Komet Helios H8 and Tidal Pandora Epic P8 Dual Pack, Energy Uprising 4-Pack.",
+    "seoDescription": "Tidal is a Beyblade QS blade from the QuadDrive System, weighing 6.8 g. Released as F6815 for Beyblade Burst QuadStrike. It shipped with Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6', Komet Helios H8 and Tidal Pandora Epic P8 Dual Pack, Energy Uprising 4-Pack.",
     "shippedIn": [
       "Tidal Pandora Epic P8 Nexus-Q Just-Q+Stormy-6'",
       "Komet Helios H8 and Tidal Pandora Epic P8 Dual Pack",
@@ -22277,7 +22099,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Twister is a Beyblade qs blade from the QuadDrive System, weighing 7.7 g. Released as F7778 for Beyblade Burst QuadStrike. It shipped with Twister Pandora Evasive P8 Quacchu-Q Edge-Q+Rumble-4, Energy Uprising 4-Pack.",
+    "seoDescription": "Twister is a Beyblade QS blade from the QuadDrive System, weighing 7.7 g. Released as F7778 for Beyblade Burst QuadStrike. It shipped with Twister Pandora Evasive P8 Quacchu-Q Edge-Q+Rumble-4, Energy Uprising 4-Pack.",
     "shippedIn": [
       "Twister Pandora Evasive P8 Quacchu-Q Edge-Q+Rumble-4",
       "Energy Uprising 4-Pack"
@@ -22354,7 +22176,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Whirl is a Beyblade qs blade from the QuadDrive System, weighing 7 g. Released as F6808 for Beyblade Burst QuadStrike. It shipped with Whirl Knight K8 Tapered-Q Jaggy-Q+Bounce-2.",
+    "seoDescription": "Whirl is a Beyblade QS blade from the QuadDrive System, weighing 7 g. Released as F6808 for Beyblade Burst QuadStrike. It shipped with Whirl Knight K8 Tapered-Q Jaggy-Q+Bounce-2.",
     "shippedIn": [
       "Whirl Knight K8 Tapered-Q Jaggy-Q+Bounce-2"
     ],
@@ -22424,7 +22246,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Xiphoid is a Beyblade qs blade from the QuadDrive System, weighing 9 g. Released as F7726 for Beyblade Burst QuadStrike. It shipped with Xiphoid Xcalius X8 Xanthus-Q Xtend+-Q+Sword-1, Xcalius Power Speed Launcher Set, Xiphoid Knight K8 Nexus-Q Assault-Q+Quattro II-7.",
+    "seoDescription": "Xiphoid is a Beyblade QS blade from the QuadDrive System, weighing 9 g. Released as F7726 for Beyblade Burst QuadStrike. It shipped with Xiphoid Xcalius X8 Xanthus-Q Xtend+-Q+Sword-1, Xcalius Power Speed Launcher Set, Xiphoid Knight K8 Nexus-Q Assault-Q+Quattro II-7.",
     "shippedIn": [
       "Xiphoid Xcalius X8 Xanthus-Q Xtend+-Q+Sword-1",
       "Xcalius Power Speed Launcher Set",
@@ -22501,7 +22323,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Zeal is a Beyblade qs blade from the QuadDrive System, weighing 8.2 g. Released as F6806 for Beyblade Burst QuadStrike. It shipped with Zeal Achilles A8 Giga-Q Massive-Q+Quattro II-10, Zeal Nyddhog N8 Ciquex-Q Mobius-Q+Eruption-10'.",
+    "seoDescription": "Zeal is a Beyblade QS blade from the QuadDrive System, weighing 8.2 g. Released as F6806 for Beyblade Burst QuadStrike. It shipped with Zeal Achilles A8 Giga-Q Massive-Q+Quattro II-10, Zeal Nyddhog N8 Ciquex-Q Mobius-Q+Eruption-10'.",
     "shippedIn": [
       "Zeal Achilles A8 Giga-Q Massive-Q+Quattro II-10",
       "Zeal Nyddhog N8 Ciquex-Q Mobius-Q+Eruption-10'"

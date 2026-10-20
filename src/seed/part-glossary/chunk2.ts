@@ -9,78 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "bit-chip--makendo",
-    "classification": "Bit Chip",
-    "slot": "bit-chip",
-    "code": null,
-    "name": "Makendo",
-    "aliases": [
-      "makendo"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Bit Chip"
-      },
-      {
-        "label": "System",
-        "value": "Spin Gear System"
-      }
-    ],
-    "seoDescription": "Makendo is a Beyblade bit chip from the Spin Gear System. It shipped with Makendo.",
-    "shippedIn": [
-      "Makendo"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara",
-        "bey": "Makendo"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Makendo"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Makendo",
-    "role": "chip"
-  },
-  {
-    "id": "bit-chip--master-draciel",
-    "classification": "Bit Chip",
-    "slot": "bit-chip",
-    "code": null,
-    "name": "Master Draciel",
-    "aliases": [
-      "master-draciel"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "System",
-        "value": "Spin Gear System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: 2000"
-      }
-    ],
-    "seoDescription": "Master Draciel is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000. It shipped with Master Draciel.",
-    "shippedIn": [
-      "Master Draciel"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "bey": "Master Draciel"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Draciel",
-    "role": "chip"
-  },
-  {
     "id": "bit-chip--master-dragoon",
     "classification": "Bit Chip",
     "slot": "bit-chip",
@@ -13564,7 +13492,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "classification": "Blade Base",
     "slot": "blade-base",
     "code": null,
-    "name": "Custom Metal Change (w  Upper Attack Support Parts)",
+    "name": "Custom Metal Change (w/ Upper Attack Support Parts)",
     "aliases": [
       "custom-metal-change-w-upper-attack-support-parts"
     ],
@@ -13583,7 +13511,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 4 · Defense 1 · Stamina 2"
       }
     ],
-    "seoDescription": "Custom Metal Change (w  Upper Attack Support Parts) is a Beyblade blade base from the Magnacore System.",
+    "seoDescription": "Custom Metal Change (w/ Upper Attack Support Parts) is a Beyblade blade base from the Magnacore System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Custom_Metal_Change_(w__Upper_Attack_Support_Parts)",
     "ratings": {
       "attack": 4,
@@ -15112,7 +15040,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Barricade is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 14.8 g. Released December 10th, 2022 as B-206 for Beyblade Burst BU. It shipped with Barricade Lucifer Illegal Bearing Mobius-10. One alternate colourway is recorded: black and purple with pink barrier blades.",
+    "seoDescription": "Barricade is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 14.8 g. Released December 10th, 2022 as B-206 for Beyblade Burst BU. It shipped with Barricade Lucifer Illegal Bearing Mobius-10. One alternate colourway is recorded: black and purple with pink barrier blades.",
     "shippedIn": [
       "Barricade Lucifer Illegal Bearing Mobius-10"
     ],
@@ -15230,7 +15158,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Burst is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 15.6 g. Released November 12th, 2022 as B-205 for Beyblade Burst BU. It shipped with Burst Spriggan Spread' Fusion'-8, Burst Ultimate VS Set.",
+    "seoDescription": "Burst is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 15.6 g. Released November 12th, 2022 as B-205 for Beyblade Burst BU. It shipped with Burst Spriggan Spread' Fusion'-8, Burst Ultimate VS Set.",
     "shippedIn": [
       "Burst Spriggan Spread' Fusion'-8",
       "Burst Ultimate VS Set"
@@ -15341,7 +15269,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Chain is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 14.8 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Chain Kerbeus Fortress Yard'-6, Random Booster Vol. 29, Chain Ragnaruk Tapered Accel'-10 and 3 other releases.",
+    "seoDescription": "Chain is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 14.8 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Chain Kerbeus Fortress Yard'-6, Random Booster Vol. 29, Chain Ragnaruk Tapered Accel'-10 and 3 other releases.",
     "shippedIn": [
       "Chain Kerbeus Fortress Yard'-6",
       "Random Booster Vol. 29",
@@ -15503,7 +15431,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Divine is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 9.4 g. Released April 23rd, 2022 as B-197 for Beyblade Burst BU. It shipped with Divine Belial Nexus Adventure-3, Divine Belial Nexus Bearing Drift (1 Gear), Ultimate Fusion DX Set and 4 other releases.",
+    "seoDescription": "Divine is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 9.4 g. Released April 23rd, 2022 as B-197 for Beyblade Burst BU. It shipped with Divine Belial Nexus Adventure-3, Divine Belial Nexus Bearing Drift (1 Gear), Ultimate Fusion DX Set and 4 other releases.",
     "shippedIn": [
       "Divine Belial Nexus Adventure-3",
       "Divine Belial Nexus Bearing Drift (1 Gear)",
@@ -15663,7 +15591,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Gatling is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 16.2 g. Released June 25th, 2022 as B-199 for Beyblade Burst BU. It shipped with Gatling Dragon Karma Charge Metal'-10. One alternate colourway is recorded: white and gold.",
+    "seoDescription": "Gatling is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 16.2 g. Released June 25th, 2022 as B-199 for Beyblade Burst BU. It shipped with Gatling Dragon Karma Charge Metal'-10. One alternate colourway is recorded: white and gold.",
     "shippedIn": [
       "Gatling Dragon Karma Charge Metal'-10"
     ],
@@ -15776,7 +15704,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "King M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "King M is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_M",
     "wboLegality": {
       "burst": true,
@@ -15853,7 +15781,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "King MR is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with King Helios MR Giga Zeal-10, Ultimate Fusion DX Set.",
+    "seoDescription": "King MR is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with King Helios MR Giga Zeal-10, Ultimate Fusion DX Set.",
     "shippedIn": [
       "King Helios MR Giga Zeal-10",
       "Ultimate Fusion DX Set"
@@ -15959,7 +15887,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "King R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "King R is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_King_R",
     "wboLegality": {
       "burst": true,
@@ -16032,7 +15960,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "SuperKing M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "SuperKing M is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_M",
     "wboLegality": {
       "burst": true,
@@ -16105,7 +16033,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "SuperKing MR is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "SuperKing MR is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_MR",
     "wboLegality": {
       "burst": true,
@@ -16178,7 +16106,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "SuperKing R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "SuperKing R is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_R",
     "wboLegality": {
       "burst": true,
@@ -16251,7 +16179,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "SuperKing RM is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "SuperKing RM is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_SuperKing_RM",
     "wboLegality": {
       "burst": true,
@@ -16324,7 +16252,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Super M is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "Super M is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_M",
     "wboLegality": {
       "burst": true,
@@ -16401,7 +16329,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Super MR is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Super Hyperion MR Tapered Xplosion-2, Ultimate Fusion DX Set.",
+    "seoDescription": "Super MR is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Super Hyperion MR Tapered Xplosion-2, Ultimate Fusion DX Set.",
     "shippedIn": [
       "Super Hyperion MR Tapered Xplosion-2",
       "Ultimate Fusion DX Set"
@@ -16507,7 +16435,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Super R is a Beyblade bu blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
+    "seoDescription": "Super R is a Beyblade BU blade from the Dynamite Battle Layer System. Released October 8th, 2022 as B-203 for Beyblade Burst BU.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BU_Blade_-_Super_R",
     "wboLegality": {
       "burst": true,
@@ -16585,7 +16513,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Wind is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 13.2 g. Released September 10th, 2022 as B-202 for Beyblade Burst BU. It shipped with Wind Knight Moon Bounce-6, Random Booster Vol. 30, Wind Kerbeus Xanthus Bounce-4.",
+    "seoDescription": "Wind is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 13.2 g. Released September 10th, 2022 as B-202 for Beyblade Burst BU. It shipped with Wind Knight Moon Bounce-6, Random Booster Vol. 30, Wind Kerbeus Xanthus Bounce-4.",
     "shippedIn": [
       "Wind Knight Moon Bounce-6",
       "Random Booster Vol. 30",
@@ -16703,7 +16631,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Xiphoid is a Beyblade bu blade from the Dynamite Battle Layer System, weighing 13 g. Released July 16th, 2022 as B-200 for Beyblade Burst BU. It shipped with Xiphoid Xcalibur Xanthus Sword'-1, Xiphoid Belial Karma Destroy'-10, Random Booster Vol. 30.",
+    "seoDescription": "Xiphoid is a Beyblade BU blade from the Dynamite Battle Layer System, weighing 13 g. Released July 16th, 2022 as B-200 for Beyblade Burst BU. It shipped with Xiphoid Xcalibur Xanthus Sword'-1, Xiphoid Belial Karma Destroy'-10, Random Booster Vol. 30.",
     "shippedIn": [
       "Xiphoid Xcalibur Xanthus Sword'-1",
       "Xiphoid Belial Karma Destroy'-10",
@@ -16828,7 +16756,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Zest is a Beyblade bu blade from the Dynamite Battle Layer System. Released August 6th, 2022 as B-201 for Beyblade Burst BU. It shipped with Zest Achilles Illegal Quattro'-4, Zest Achilles Customize Set. One alternate colourway is recorded: red.",
+    "seoDescription": "Zest is a Beyblade BU blade from the Dynamite Battle Layer System. Released August 6th, 2022 as B-201 for Beyblade Burst BU. It shipped with Zest Achilles Illegal Quattro'-4, Zest Achilles Customize Set. One alternate colourway is recorded: red.",
     "shippedIn": [
       "Zest Achilles Illegal Quattro'-4",
       "Zest Achilles Customize Set"
@@ -18610,7 +18538,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Achilles is a Beyblade db core from the Dynamite Battle Layer System, weighing 8.1 g. Released August 6th, 2022 as B-201 for Beyblade Burst BU. It shipped with Zest Achilles Illegal Quattro'-4, Zest Achilles Customize Set. One alternate colourway is recorded: red and silver.",
+    "seoDescription": "Achilles is a Beyblade DB core from the Dynamite Battle Layer System, weighing 8.1 g. Released August 6th, 2022 as B-201 for Beyblade Burst BU. It shipped with Zest Achilles Illegal Quattro'-4, Zest Achilles Customize Set. One alternate colourway is recorded: red and silver.",
     "shippedIn": [
       "Zest Achilles Illegal Quattro'-4",
       "Zest Achilles Customize Set"
@@ -18719,7 +18647,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Bahamut is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.8 g. Released June 26th, 2021 as B-186 for Beyblade Burst QuadDrive. It shipped with Roar Bahamut Giga Moment-10, Random Booster Vol. 26, Roar Bahamut Karma Metal Drift-6 and 1 other release.",
+    "seoDescription": "Bahamut is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.8 g. Released June 26th, 2021 as B-186 for Beyblade Burst QuadDrive. It shipped with Roar Bahamut Giga Moment-10, Random Booster Vol. 26, Roar Bahamut Karma Metal Drift-6 and 1 other release.",
     "shippedIn": [
       "Roar Bahamut Giga Moment-10",
       "Random Booster Vol. 26",
@@ -18843,7 +18771,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Belial 1 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7 g. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It shipped with Dynamite Belial Nexus Venture-2, Beyblade Dynamite Battle Entry Set, Astral Spriggan Customize Set and 8 other releases.",
+    "seoDescription": "Belial 1 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7 g. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It shipped with Dynamite Belial Nexus Venture-2, Beyblade Dynamite Battle Entry Set, Astral Spriggan Customize Set and 8 other releases.",
     "shippedIn": [
       "Dynamite Belial Nexus Venture-2",
       "Beyblade Dynamite Battle Entry Set",
@@ -19038,7 +18966,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Belial 2 is a Beyblade db core from the Dynamite Battle Layer System, weighing 8.1 g. Released October 2nd, 2021 as B-191 for Beyblade Burst QuadDrive. It shipped with Dangerous Belial Almight-2, Overdrive Special Starter Set, Divine Belial Nexus Adventure-3 and 2 other releases.",
+    "seoDescription": "Belial 2 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 8.1 g. Released October 2nd, 2021 as B-191 for Beyblade Burst QuadDrive. It shipped with Dangerous Belial Almight-2, Overdrive Special Starter Set, Divine Belial Nexus Adventure-3 and 2 other releases.",
     "shippedIn": [
       "Dangerous Belial Almight-2",
       "Overdrive Special Starter Set",
@@ -19198,7 +19126,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Belial 3 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.9 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Divine Belial Nexus Bearing Drift (1 Gear), Ultimate Fusion DX Set. One alternate colourway is recorded: black and gold.",
+    "seoDescription": "Belial 3 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.9 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Divine Belial Nexus Bearing Drift (1 Gear), Ultimate Fusion DX Set. One alternate colourway is recorded: black and gold.",
     "shippedIn": [
       "Divine Belial Nexus Bearing Drift (1 Gear)",
       "Ultimate Fusion DX Set"
@@ -19320,7 +19248,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Dragon is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.8 g. Released June 25th, 2022 as B-199 for Beyblade Burst BU. It shipped with Gatling Dragon Karma Charge Metal'-10. One alternate colourway is recorded: blue, gold, and clear.",
+    "seoDescription": "Dragon is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.8 g. Released June 25th, 2022 as B-199 for Beyblade Burst BU. It shipped with Gatling Dragon Karma Charge Metal'-10. One alternate colourway is recorded: blue, gold, and clear.",
     "shippedIn": [
       "Gatling Dragon Karma Charge Metal'-10"
     ],
@@ -19427,7 +19355,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Fafnir is a Beyblade db core from the Dynamite Battle Layer System, weighing 6.8 g. Released May 29th, 2021 as B-185 for Beyblade Burst QuadDrive. It shipped with Vanish Fafnir Tapered Kick-3, Roar Fafnir 00 Revolve-2, Random Booster Vol. 26 and 2 other releases. 3 alternate colourways are recorded.",
+    "seoDescription": "Fafnir is a Beyblade DB core from the Dynamite Battle Layer System, weighing 6.8 g. Released May 29th, 2021 as B-185 for Beyblade Burst QuadDrive. It shipped with Vanish Fafnir Tapered Kick-3, Roar Fafnir 00 Revolve-2, Random Booster Vol. 26 and 2 other releases. 3 alternate colourways are recorded.",
     "shippedIn": [
       "Vanish Fafnir Tapered Kick-3",
       "Roar Fafnir 00 Revolve-2",
@@ -19572,7 +19500,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Helios is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.2 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with King Helios MR Giga Zeal-10, Ultimate Fusion DX Set. One alternate colourway is recorded: blue and silver.",
+    "seoDescription": "Helios is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.2 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with King Helios MR Giga Zeal-10, Ultimate Fusion DX Set. One alternate colourway is recorded: blue and silver.",
     "shippedIn": [
       "King Helios MR Giga Zeal-10",
       "Ultimate Fusion DX Set"
@@ -19689,7 +19617,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Hello Kitty is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.3 g. Released August 5th, 2022 (Hello Kitty Cup) · September 17th, 2022 as B-00 for Beyblade Burst BU. It shipped with Astral Hello Kitty Over Revolve'-0.",
+    "seoDescription": "Hello Kitty is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.3 g. Released August 5th, 2022 (Hello Kitty Cup) · September 17th, 2022 as B-00 for Beyblade Burst BU. It shipped with Astral Hello Kitty Over Revolve'-0.",
     "shippedIn": [
       "Astral Hello Kitty Over Revolve'-0"
     ],
@@ -19795,7 +19723,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Hyperion is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.3 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Super Hyperion MR Tapered Xplosion-2, Ultimate Fusion DX Set. One alternate colourway is recorded: red and gold.",
+    "seoDescription": "Hyperion is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.3 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with Super Hyperion MR Tapered Xplosion-2, Ultimate Fusion DX Set. One alternate colourway is recorded: red and gold.",
     "shippedIn": [
       "Super Hyperion MR Tapered Xplosion-2",
       "Ultimate Fusion DX Set"
@@ -19912,7 +19840,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Kerbeus is a Beyblade db core from the Dynamite Battle Layer System, weighing 8.1 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Chain Kerbeus Fortress Yard'-6, Random Booster Vol. 29, Dynamite Kerbeus Legacy Moment-9 and 4 other releases.",
+    "seoDescription": "Kerbeus is a Beyblade DB core from the Dynamite Battle Layer System, weighing 8.1 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Chain Kerbeus Fortress Yard'-6, Random Booster Vol. 29, Dynamite Kerbeus Legacy Moment-9 and 4 other releases.",
     "shippedIn": [
       "Chain Kerbeus Fortress Yard'-6",
       "Random Booster Vol. 29",
@@ -20072,7 +20000,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Knight is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.6 g. Released September 10th, 2022 as B-202 for Beyblade Burst BU. It shipped with Wind Knight Moon Bounce-6, Random Booster Vol. 30, Prominence Knight Legacy Sword'-1.",
+    "seoDescription": "Knight is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.6 g. Released September 10th, 2022 as B-202 for Beyblade Burst BU. It shipped with Wind Knight Moon Bounce-6, Random Booster Vol. 30, Prominence Knight Legacy Sword'-1.",
     "shippedIn": [
       "Wind Knight Moon Bounce-6",
       "Random Booster Vol. 30",
@@ -20176,7 +20104,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Longinus is a Beyblade db core from the Dynamite Battle Layer System, weighing 10.1 g. Released September 11th, 2021 as B-189 for Beyblade Burst QuadDrive. It shipped with Guilty Longinus Karma Metal Destroy-2, Vanish Longinus Nexus Moment-7, Random Booster Vol. 27.",
+    "seoDescription": "Longinus is a Beyblade DB core from the Dynamite Battle Layer System, weighing 10.1 g. Released September 11th, 2021 as B-189 for Beyblade Burst QuadDrive. It shipped with Guilty Longinus Karma Metal Destroy-2, Vanish Longinus Nexus Moment-7, Random Booster Vol. 27.",
     "shippedIn": [
       "Guilty Longinus Karma Metal Destroy-2",
       "Vanish Longinus Nexus Moment-7",
@@ -20306,7 +20234,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Lucifer is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.4 g. Released December 10th, 2022 as B-206 for Beyblade Burst BU. It shipped with Barricade Lucifer Illegal Bearing Mobius-10. One alternate colourway is recorded: purple and gold.",
+    "seoDescription": "Lucifer is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.4 g. Released December 10th, 2022 as B-206 for Beyblade Burst BU. It shipped with Barricade Lucifer Illegal Bearing Mobius-10. One alternate colourway is recorded: purple and gold.",
     "shippedIn": [
       "Barricade Lucifer Illegal Bearing Mobius-10"
     ],
@@ -20413,7 +20341,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Perseus is a Beyblade db core from the Dynamite Battle Layer System, weighing 10.7 g. Released July 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with Armor - 6, Blade - Dynamite, Savior Perseus Giga Bearing'-3 and 1 other release. 2 alternate colourways are recorded.",
+    "seoDescription": "Perseus is a Beyblade DB core from the Dynamite Battle Layer System, weighing 10.7 g. Released July 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with Armor - 6, Blade - Dynamite, Savior Perseus Giga Bearing'-3 and 1 other release. 2 alternate colourways are recorded.",
     "shippedIn": [
       "Armor - 6",
       "Blade - Dynamite",
@@ -20541,7 +20469,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Phoenix is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.6 g. Released October 2nd, 2021 as B-191 for Beyblade Burst QuadDrive. It shipped with Prominence Phoenix Tapered Metal Universe-10, Overdrive Special Starter Set, Zest Achilles Customize Set.",
+    "seoDescription": "Phoenix is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.6 g. Released October 2nd, 2021 as B-191 for Beyblade Burst QuadDrive. It shipped with Prominence Phoenix Tapered Metal Universe-10, Overdrive Special Starter Set, Zest Achilles Customize Set.",
     "shippedIn": [
       "Prominence Phoenix Tapered Metal Universe-10",
       "Overdrive Special Starter Set",
@@ -20663,7 +20591,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ragnaruk is a Beyblade db core from the Dynamite Battle Layer System, weighing 6.7 g. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It shipped with Cyclone Ragnaruk Giga Never-6, Random Booster Vol. 25, Cyclone Ragnaruk Nexus Rise-2 and 4 other releases.",
+    "seoDescription": "Ragnaruk is a Beyblade DB core from the Dynamite Battle Layer System, weighing 6.7 g. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It shipped with Cyclone Ragnaruk Giga Never-6, Random Booster Vol. 25, Cyclone Ragnaruk Nexus Rise-2 and 4 other releases.",
     "shippedIn": [
       "Cyclone Ragnaruk Giga Never-6",
       "Random Booster Vol. 25",
@@ -20816,7 +20744,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Spriggan 1 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.9 g. Released August 7th, 2021 as B-188 for Beyblade Burst QuadDrive. It shipped with Astral Spriggan Over Quattro-0, Astral Spriggan Customize Set, Guilty Spriggan Outer Never-2 and 3 other releases.",
+    "seoDescription": "Spriggan 1 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.9 g. Released August 7th, 2021 as B-188 for Beyblade Burst QuadDrive. It shipped with Astral Spriggan Over Quattro-0, Astral Spriggan Customize Set, Guilty Spriggan Outer Never-2 and 3 other releases.",
     "shippedIn": [
       "Astral Spriggan Over Quattro-0",
       "Astral Spriggan Customize Set",
@@ -20964,7 +20892,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Spriggan 2 is a Beyblade db core from the Dynamite Battle Layer System, weighing 8.3 g. Released November 12th, 2022 as B-205 for Beyblade Burst BU. It shipped with Burst Spriggan Spread' Fusion'-8, Burst Ultimate VS Set.",
+    "seoDescription": "Spriggan 2 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 8.3 g. Released November 12th, 2022 as B-205 for Beyblade Burst BU. It shipped with Burst Spriggan Spread' Fusion'-8, Burst Ultimate VS Set.",
     "shippedIn": [
       "Burst Spriggan Spread' Fusion'-8",
       "Burst Ultimate VS Set"
@@ -21066,7 +20994,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Valkyrie 2 is a Beyblade db core from the Dynamite Battle Layer System, weighing 7.5 g. Released December 11th, 2021 as B-193 for Beyblade Burst QuadDrive. It shipped with Ultimate Valkyrie Legacy Variable'-9, Random Booster Vol. 28, Cyclone Valkyrie Giga High Eternal-3 and 3 other releases.",
+    "seoDescription": "Valkyrie 2 is a Beyblade DB core from the Dynamite Battle Layer System, weighing 7.5 g. Released December 11th, 2021 as B-193 for Beyblade Burst QuadDrive. It shipped with Ultimate Valkyrie Legacy Variable'-9, Random Booster Vol. 28, Cyclone Valkyrie Giga High Eternal-3 and 3 other releases.",
     "shippedIn": [
       "Ultimate Valkyrie Legacy Variable'-9",
       "Random Booster Vol. 28",
@@ -21247,7 +21175,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Xcalibur is a Beyblade db core from the Dynamite Battle Layer System, weighing 10.6 g. Released July 16th, 2022 as B-200 for Beyblade Burst BU. It shipped with Xiphoid Xcalibur Xanthus Sword'-1, Devil Xcalibur Moon High Wave'-2, Random Booster Vol. 30. 2 alternate colourways are recorded.",
+    "seoDescription": "Xcalibur is a Beyblade DB core from the Dynamite Battle Layer System, weighing 10.6 g. Released July 16th, 2022 as B-200 for Beyblade Burst BU. It shipped with Xiphoid Xcalibur Xanthus Sword'-1, Devil Xcalibur Moon High Wave'-2, Random Booster Vol. 30. 2 alternate colourways are recorded.",
     "shippedIn": [
       "Xiphoid Xcalibur Xanthus Sword'-1",
       "Devil Xcalibur Moon High Wave'-2",
@@ -50245,5 +50173,172 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "role": "tip",
     "jpName": "ユニバース",
     "romaji": "Yunibāsu"
+  },
+  {
+    "id": "driver--valor-h",
+    "classification": "Driver",
+    "slot": "driver",
+    "code": null,
+    "name": "Valor-H",
+    "weightG": 8.4,
+    "aliases": [
+      "valor-h",
+      "Valor-HyperSphere"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Driver"
+      },
+      {
+        "label": "System",
+        "value": "HyperSphere System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Rise"
+      },
+      {
+        "label": "Product code",
+        "value": "E7727"
+      },
+      {
+        "label": "Hasbro code",
+        "value": "TH02"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Stats",
+        "value": "Run time 3"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Valor-H is a Beyblade driver from the HyperSphere System, weighing 8.4 g. Released as E7727 for Beyblade Burst Rise. It shipped with Cosmic Kraken K5 Lore Valor-H, Cosmic Kraken K5 and Gargoyle G5 Dual Pack, Air Knight K5 8' Valor-H and 4 other releases.",
+    "shippedIn": [
+      "Cosmic Kraken K5 Lore Valor-H",
+      "Cosmic Kraken K5 and Gargoyle G5 Dual Pack",
+      "Air Knight K5 8' Valor-H",
+      "Behemoth Cyclops C5 Convert Valor-H",
+      "Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack",
+      "Sword Dragon D5 Spread Valor-H",
+      "Infinity Brink Battle Set"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Cosmic Kraken K5 Lore Valor-H",
+        "set": "Cosmic Kraken K5 and Gargoyle G5 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Air Knight K5 8' Valor-H"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Behemoth Cyclops C5 Convert Valor-H",
+        "set": "Shield Kerbeus K5 and Behemoth Cyclops C5 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Sword Dragon D5 Spread Valor-H",
+        "set": "Infinity Brink Battle Set"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Valor-H",
+    "ratings": {
+      "runTime": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "Valor-HyperSphere"
+    ],
+    "hasbroCode": "TH02",
+    "partType": "Stamina",
+    "role": "tip"
+  },
+  {
+    "id": "driver--variable-l",
+    "classification": "Driver",
+    "slot": "driver",
+    "code": null,
+    "name": "Variable-L",
+    "aliases": [
+      "variable-l",
+      "V-L"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Driver"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "C1513"
+      },
+      {
+        "label": "Hasbro code",
+        "value": "TA06-L"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: banned · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Variable-L is a Beyblade driver from the Dual Layer System. Released as C1513 for Beyblade Burst. It shipped with Victory Valtryek V2 Boost-L Variable-L, Victory Valtryek V2 Rip Fire Pack.",
+    "shippedIn": [
+      "Victory Valtryek V2 Boost-L Variable-L",
+      "Victory Valtryek V2 Rip Fire Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost-L Variable-L",
+        "set": "Victory Valtryek V2 Rip Fire Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Variable-L",
+    "wboLegality": {
+      "burst": false,
+      "burstGt": false,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "V-L"
+    ],
+    "hasbroCode": "TA06-L",
+    "partType": "Attack",
+    "role": "tip"
   }
 ];
