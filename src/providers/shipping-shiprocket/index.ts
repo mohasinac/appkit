@@ -12,10 +12,19 @@
  *    `loginResponse` requires — the rest are ignored, as Zod ignores unknown
  *    keys by default.
  *
- * 🛑 NOT VERIFIED: every other endpoint. Order creation, AWB assignment,
- *    tracking, serviceability and label generation all MUTATE or bill against
- *    a real carrier account, so none was called. Their field names below are
- *    claims taken from the published docs, not facts read off a payload.
+ * ✅ ALSO VERIFIED (2026-10-20): `GET /courier/serviceability/` from pickup
+ *    `413001`. HTTP 200, and `data.available_courier_companies` came back with
+ *    10-11 entries for Mumbai, Bengaluru and Delhi carrying `courier_name`,
+ *    `rate` and `estimated_delivery_days` — so `serviceabilityResponse` below
+ *    is read off a real payload, not inferred. It is a read-only quote: no
+ *    shipment is created and nothing is booked.
+ *
+ * 🛑 NOT VERIFIED: order creation, AWB assignment, tracking and label
+ *    generation. Each MUTATES or bills a real carrier account — creating an
+ *    order can schedule a pickup, an AWB can consume an allocation, a cancel
+ *    may still bill — so none was called, and none is discoverable without
+ *    incurring it. Their field names below are claims from the published docs,
+ *    not facts read off a payload.
  *
  * That asymmetry is the reason every response is parsed through Zod rather
  * than cast: an unverified contract that is wrong surfaces as a named error at
@@ -69,7 +78,6 @@ import type {
 import { ApiError } from "../../errors";
 import { normalizeError } from "../../errors/normalize";
 import { serverLogger } from "../../monitoring/server-logger";
-import { getPlatformSupplier } from "../../_internal/shared/features/site-settings/supplier-of-record";
 
 const API_BASE = "https://apiv2.shiprocket.in/v1/external";
 
@@ -377,27 +385,31 @@ export class ShiprocketShippingProvider extends IShippingProvider {
     weight: number,
   ): Promise<ServiceabilityResult> {
     /*
-     * `pickup_postcode` is required by their API, and it comes from the ONE
-     * owner of the business's address: `appkit.config.js → business`, injected
-     * at boot through `configurePlatformSupplier`.
+     * `pickup_postcode` is required by their API and comes from
+     * `SHIPROCKET_PICKUP_PINCODE`.
      *
-     * 🛑 This used to read ONLY `SHIPROCKET_PICKUP_PINCODE` and its comment
-     * said "we do not have it on this contract" — which was wrong: the
-     * registered address has carried `postalCode` all along. The var was
-     * never set in any runtime, so serviceability returned
-     * `{ isServiceable: false }` for every destination, and checkout would
-     * have told every buyer we cannot ship to them. A quote that is silently
-     * always "no" is indistinguishable from a carrier with no coverage.
+     * 🛑 This comment used to say "we do not have it on this contract", which
+     * was wrong and cost the whole method: the consumer's `appkit.config.js →
+     * business.registeredAddress` has carried `postalCode` all along. Nothing
+     * set the var, so every call returned `{ isServiceable: false }` WITHOUT
+     * calling the API — checkout would have told every buyer we cannot ship to
+     * them, for every destination. A quote that is silently always "no" is
+     * indistinguishable from a carrier with no coverage, which is why it had no
+     * symptom. Verified live once the var was populated: 10-11 couriers quoted
+     * from 413001 to Mumbai, Bengaluru and Delhi.
      *
-     * The env var stays as an OVERRIDE and is checked first, for the case
-     * where goods dispatch from somewhere other than the registered office.
+     * 🛑 appkit has no reader for a consumer config file, so the DEFAULT is the
+     * consumer's job: `src/providers.config.ts` populates this var from the
+     * business block at boot. Deliberately not threaded through
+     * `configurePlatformSupplier` — that seam's own 🛑 says it "is NOT a cache
+     * of site settings and must not become one"; it answers *who the invoice
+     * supplier is*, and a carrier pickup field there is mission creep on a seam
+     * with one stated purpose. One var, one reader, no precedence rule.
      */
-    const origin =
-      process.env.SHIPROCKET_PICKUP_PINCODE?.trim() ||
-      getPlatformSupplier().pickupPostcode?.trim();
+    const origin = process.env.SHIPROCKET_PICKUP_PINCODE?.trim();
     if (!origin) {
       serverLogger.warn(
-        "shiprocket: no pickup postcode — set it on appkit.config.js business.registeredAddress, or override with SHIPROCKET_PICKUP_PINCODE",
+        "shiprocket: no pickup postcode — set business.registeredAddress.postalCode in appkit.config.js, or SHIPROCKET_PICKUP_PINCODE directly",
         { pincode },
       );
       return { isServiceable: false, couriers: [] };

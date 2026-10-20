@@ -35,16 +35,6 @@ export interface PlatformSupplierIdentity {
   legalName?: string;
   /** One line, as it should appear in an invoice header. */
   address?: string;
-  /**
-   * The registered address's POSTCODE, on its own.
-   *
-   * Carried separately from `address` because a carrier needs it as a field,
-   * not inside a sentence — Shiprocket's serviceability call takes
-   * `pickup_postcode`, and parsing it back out of a formatted address line
-   * is the kind of re-derivation that goes wrong the first time someone adds
-   * a flat number.
-   */
-  pickupPostcode?: string;
 }
 
 let _identity: PlatformSupplierIdentity = {};
