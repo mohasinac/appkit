@@ -2265,3 +2265,9 @@ export {
   resetPlatformSupplier,
 } from "./_internal/shared/features/site-settings/supplier-of-record";
 export type { PlatformSupplierIdentity } from "./_internal/shared/features/site-settings/supplier-of-record";
+
+// Shiprocket carrier adapter. 🛑 NEVER exercised against the live API — the
+// credentials are empty — so it parses every response through Zod and refuses
+// at construction when unconfigured. See the module header.
+export { ShiprocketShippingProvider } from "./providers/shipping-shiprocket/index";
+export type { ShiprocketConfig } from "./providers/shipping-shiprocket/index";

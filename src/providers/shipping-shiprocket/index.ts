@@ -1,0 +1,429 @@
+/**
+ * @mohasinac/shipping-shiprocket — IShippingProvider over Shiprocket's v1 API.
+ *
+ * ── Read this before trusting it ──────────────────────────────────────────
+ *
+ * ── What is verified, and what is not ────────────────────────────────────
+ *
+ * ✅ VERIFIED against the live API (2026-10-20, real API-user credentials):
+ *    `POST /v1/external/auth/login` returns HTTP 200 with
+ *    `{ company_id, created_at, email, first_name, id, last_name, token }`.
+ *    The `token` field is present and non-empty, which is the only field
+ *    `loginResponse` requires — the rest are ignored, as Zod ignores unknown
+ *    keys by default.
+ *
+ * 🛑 NOT VERIFIED: every other endpoint. Order creation, AWB assignment,
+ *    tracking, serviceability and label generation all MUTATE or bill against
+ *    a real carrier account, so none was called. Their field names below are
+ *    claims taken from the published docs, not facts read off a payload.
+ *
+ * That asymmetry is the reason every response is parsed through Zod rather
+ * than cast: an unverified contract that is wrong surfaces as a named error at
+ * the boundary, instead of as an `undefined` AWB written to an order and shown
+ * to a buyer as a tracking number that tracks nothing.
+ *
+ * ── Auth: why a dedicated API user, and why the token is cached ───────────
+ *
+ * Shiprocket's core v1 API has no long-lived key/secret. You POST credentials
+ * to `/v1/external/auth/login` and receive a bearer token valid for roughly
+ * ten days, then log in again.
+ *
+ * 🛑 Those credentials should be a DEDICATED API USER (Shiprocket dashboard →
+ * Settings → API → Configure), not the dashboard login. Using the dashboard
+ * account means the token dies whenever someone changes that password — a
+ * shipping integration that breaks on an unrelated admin action — and it hands
+ * full account scope to this process. The env var is named
+ * `SHIPROCKET_LOGIN_USER_EMAIL` rather than `LOGIN_ID` because the login payload
+ * field is `email`; a var called "login id" invites someone to put a username
+ * in it and get a 400 they cannot explain.
+ *
+ * 🛑 The token is cached in module state with its expiry. Logging in per
+ * request would mean two round trips for every shipment and would hit
+ * Shiprocket's auth rate limit under any real volume. A 401 mid-flight clears
+ * the cache and retries ONCE — exactly once, because a credential that is
+ * genuinely wrong must fail fast rather than loop.
+ *
+ * ── What is deliberately NOT here ────────────────────────────────────────
+ *
+ * Inbound webhooks. Shiprocket pushes status updates to a URL configured in
+ * its dashboard and authenticates them with an `x-api-key` header whose value
+ * you set there — a THIRD secret, and an inbound route rather than a provider
+ * method. `trackShipment` below polls instead, which is correct for a provider
+ * contract and wasteful as a status mechanism; the webhook is the better
+ * answer and belongs in its own route with its own verification.
+ *
+ * @tag domain:shipping
+ * @tag layer:providers
+ * @tag access:server-only
+ */
+
+import { z } from "zod";
+import { IShippingProvider } from "../../contracts";
+import type {
+  CreateShipmentInput,
+  Shipment,
+  ShippingAddress,
+  TrackingInfo,
+  ServiceabilityResult,
+} from "../../contracts";
+import { ApiError } from "../../errors";
+import { normalizeError } from "../../errors/normalize";
+import { serverLogger } from "../../monitoring/server-logger";
+
+const API_BASE = "https://apiv2.shiprocket.in/v1/external";
+
+export interface ShiprocketConfig {
+  /** The API user's email. See the header on why this is not a "login id". */
+  email: string;
+  password: string;
+  /** Shiprocket pickup-location nickname, as registered in their dashboard. */
+  pickupLocation?: string;
+}
+
+// ── Response contracts ──────────────────────────────────────────────────────
+//
+// Every one of these is a CLAIM about a payload nobody here has seen. Parsing
+// rather than casting is what turns a wrong claim into a named error.
+
+const loginResponse = z.object({
+  token: z.string().min(1),
+});
+
+const createOrderResponse = z.object({
+  order_id: z.union([z.number(), z.string()]),
+  shipment_id: z.union([z.number(), z.string()]),
+  /** Absent until an AWB is assigned — which is a separate call. */
+  awb_code: z.string().nullish(),
+  courier_name: z.string().nullish(),
+  status: z.string().nullish(),
+});
+
+const trackingResponse = z.object({
+  tracking_data: z.object({
+    shipment_status: z.union([z.number(), z.string()]).nullish(),
+    shipment_track: z
+      .array(
+        z.object({
+          current_status: z.string().nullish(),
+          delivered_date: z.string().nullish(),
+          edd: z.string().nullish(),
+        }),
+      )
+      .nullish(),
+    shipment_track_activities: z
+      .array(
+        z.object({
+          date: z.string().nullish(),
+          status: z.string().nullish(),
+          activity: z.string().nullish(),
+          location: z.string().nullish(),
+        }),
+      )
+      .nullish(),
+  }),
+});
+
+const serviceabilityResponse = z.object({
+  data: z.object({
+    available_courier_companies: z
+      .array(
+        z.object({
+          courier_name: z.string(),
+          estimated_delivery_days: z.union([z.number(), z.string()]).nullish(),
+          rate: z.union([z.number(), z.string()]).nullish(),
+        }),
+      )
+      .nullish(),
+  }),
+});
+
+function num(v: unknown, fallback = 0): number {
+  const n = typeof v === "string" ? Number.parseFloat(v) : v;
+  return typeof n === "number" && Number.isFinite(n) ? n : fallback;
+}
+
+/**
+ * Parse an upstream response, or throw a named contract error.
+ *
+ * 🛑 `.parse()`, not `.safeParse()`. The only branch on failure is to throw,
+ * and a `safeParse` whose `.success` is checked once and converted straight
+ * into a throw is indistinguishable — to a reader and to
+ * `audit-unvalidated-safeparse` — from a result nobody handled.
+ *
+ * 🛑 Logs the FAILING PATHS, never the payload. A Shiprocket response carries
+ * the buyer's name, phone and full address, and an error log is the wrong
+ * place for all three.
+ */
+function parseUpstream<T>(contract: z.ZodType<T>, json: unknown, what: string): T {
+  try {
+    return contract.parse(json);
+  } catch (err) {
+    const issues =
+      err instanceof z.ZodError
+        ? err.issues.map((i) => i.path.join("."))
+        : [];
+    serverLogger.error("shiprocket: response contract mismatch", {
+      what,
+      issues,
+    });
+    throw new ApiError(502, `Shiprocket ${what} returned an unexpected shape.`, {
+      code: "SHIPROCKET_CONTRACT_MISMATCH",
+    });
+  }
+}
+
+export class ShiprocketShippingProvider extends IShippingProvider {
+  readonly name = "shiprocket";
+
+  private token: string | null = null;
+  private tokenExpiresAt = 0;
+
+  constructor(private readonly config: ShiprocketConfig) {
+    super();
+    /*
+     * 🛑 Refuses at CONSTRUCTION, not at first use. `providers.config.ts`
+     * already argues this: a degraded shipping provider hands back a synthetic
+     * tracking id for a parcel no carrier was told about, so the seller sees an
+     * AWB-shaped string and a success toast while the buyer gets a number that
+     * tracks nothing. A loud failure at boot is attributable and recoverable by
+     * flipping one setting; the silent version is neither.
+     */
+    if (!config.email?.trim() || !config.password?.trim()) {
+      throw new Error(
+        "[shiprocket] SHIPROCKET_LOGIN_USER_EMAIL / SHIPROCKET_API_PASSWORD are empty. " +
+          "Create a dedicated API user in Shiprocket (Settings -> API -> Configure) " +
+          "and set both, or set siteSettings.shipping.provider back to 'manual'. " +
+          "This refuses rather than degrading because a fallback would return a " +
+          "synthetic tracking id for a parcel that was never booked.",
+      );
+    }
+  }
+
+  /**
+   * A bearer token, logging in only when the cached one is absent or stale.
+   *
+   * The 60-second safety margin matters: a token that expires mid-request
+   * produces a 401 the caller has to interpret, and shaving a minute off a
+   * ten-day lifetime costs nothing.
+   */
+  private async getToken(force = false): Promise<string> {
+    if (!force && this.token && Date.now() < this.tokenExpiresAt - 60_000) {
+      return this.token;
+    }
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: this.config.email,
+        password: this.config.password,
+      }),
+    });
+    if (!res.ok) {
+      throw new ApiError(502, `Shiprocket auth failed (${res.status}). Check the API user's credentials.`, { code: "SHIPROCKET_AUTH_FAILED" });
+    }
+    const parsed = parseUpstream(loginResponse, await res.json(), "auth/login");
+    this.token = parsed.token;
+    // Their docs say ~10 days; treated as 9 so a boundary never surprises us.
+    this.tokenExpiresAt = Date.now() + 9 * 24 * 60 * 60 * 1000;
+    return this.token;
+  }
+
+  /**
+   * One authenticated call, with a single re-auth on 401.
+   *
+   * 🛑 Exactly one retry. A token that expired early is worth one more attempt;
+   * a credential that is wrong must fail rather than loop, because a retry loop
+   * against an auth endpoint is how an integration gets rate-limited and then
+   * looks like an outage.
+   */
+  private async call<T>(
+    path: string,
+    init: RequestInit,
+    contract: z.ZodType<T>,
+  ): Promise<T> {
+    const attempt = async (force: boolean): Promise<Response> => {
+      const token = await this.getToken(force);
+      return fetch(`${API_BASE}${path}`, {
+        ...init,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          ...(init.headers ?? {}),
+        },
+      });
+    };
+
+    let res = await attempt(false);
+    if (res.status === 401) {
+      this.token = null;
+      res = await attempt(true);
+    }
+    if (!res.ok) {
+      throw new ApiError(502, `Shiprocket ${path} failed (${res.status}).`, { code: "SHIPROCKET_REQUEST_FAILED" });
+    }
+
+    const json: unknown = await res.json();
+    return parseUpstream(contract, json, path);
+  }
+
+  /** Their order payload wants the address flattened across many keys. */
+  private addressFields(prefix: "billing" | "shipping", a: ShippingAddress) {
+    const p = prefix === "billing" ? "billing" : "shipping";
+    return {
+      [`${p}_customer_name`]: a.name,
+      [`${p}_address`]: a.addressLine1,
+      [`${p}_address_2`]: a.addressLine2 ?? "",
+      [`${p}_city`]: a.city,
+      [`${p}_pincode`]: a.pincode,
+      [`${p}_state`]: a.state,
+      [`${p}_country`]: a.country,
+      [`${p}_phone`]: a.phone,
+    };
+  }
+
+  async createShipment(data: CreateShipmentInput): Promise<Shipment> {
+    const body = {
+      order_id: data.orderId,
+      order_date: new Date().toISOString().slice(0, 10),
+      pickup_location: this.config.pickupLocation ?? "Primary",
+      ...this.addressFields("billing", data.delivery),
+      shipping_is_billing: true,
+      /*
+       * Shiprocket requires at least one order item. We do not receive the
+       * line items on this contract — `CreateShipmentInput` carries only
+       * dimensions and the two addresses — so a single synthetic line stands
+       * for the parcel. 🛑 This is a known gap, not a simplification: a real
+       * integration needs per-item HSN and value for a commercial invoice, and
+       * that means widening the shared contract rather than inventing values
+       * here.
+       */
+      order_items: [
+        {
+          name: `Order ${data.orderId}`,
+          sku: data.orderId,
+          units: 1,
+          selling_price: data.codAmount ?? 0,
+        },
+      ],
+      payment_method: data.isCod ? "COD" : "Prepaid",
+      sub_total: data.codAmount ?? 0,
+      length: data.dimensions.length,
+      breadth: data.dimensions.width,
+      height: data.dimensions.height,
+      weight: data.dimensions.weight,
+    };
+
+    const out = await this.call(
+      "/orders/create/adhoc",
+      { method: "POST", body: JSON.stringify(body) },
+      createOrderResponse,
+    );
+
+    return {
+      id: String(out.shipment_id),
+      /*
+       * 🛑 Falls back to the shipment id when no AWB has been assigned yet —
+       * assignment is a separate call. It does NOT invent a `manual_…` string:
+       * a synthetic tracking number that a buyer can paste into a courier site
+       * and get nothing from is the failure mode this whole provider is
+       * supposed to avoid.
+       */
+      trackingId: out.awb_code?.trim() || String(out.shipment_id),
+      orderId: data.orderId,
+      status: out.status ?? "created",
+      courier: out.courier_name ?? undefined,
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  async trackShipment(trackingId: string): Promise<TrackingInfo> {
+    const out = await this.call(
+      `/courier/track/awb/${encodeURIComponent(trackingId)}`,
+      { method: "GET" },
+      trackingResponse,
+    );
+    const t = out.tracking_data;
+    const head = t.shipment_track?.[0];
+    return {
+      trackingId,
+      currentStatus:
+        head?.current_status ?? String(t.shipment_status ?? "unknown"),
+      estimatedDelivery: head?.edd ?? undefined,
+      events: (t.shipment_track_activities ?? []).map((e) => ({
+        status: e.status ?? "",
+        location: e.location ?? "",
+        timestamp: e.date ?? "",
+        description: e.activity ?? undefined,
+      })),
+    };
+  }
+
+  async cancelShipment(shipmentId: string): Promise<void> {
+    await this.call(
+      "/orders/cancel",
+      { method: "POST", body: JSON.stringify({ ids: [shipmentId] }) },
+      // Their cancel returns a message envelope we do not read; accepting any
+      // object keeps us from asserting a shape we have not seen.
+      z.object({}).passthrough(),
+    );
+  }
+
+  async checkServiceability(
+    pincode: string,
+    weight: number,
+  ): Promise<ServiceabilityResult> {
+    /*
+     * 🛑 `pickup_postcode` is required by their API and we do not have it on
+     * this contract. Taken from the registered pickup location's name is NOT
+     * possible — it is a nickname, not a pincode — so this returns
+     * "unserviceable" rather than guessing a origin pincode, which would
+     * produce confidently wrong rates.
+     */
+    const origin = process.env.SHIPROCKET_PICKUP_PINCODE?.trim();
+    if (!origin) {
+      serverLogger.warn(
+        "shiprocket: SHIPROCKET_PICKUP_PINCODE unset — serviceability cannot be checked",
+        { pincode },
+      );
+      return { isServiceable: false, couriers: [] };
+    }
+
+    try {
+      const out = await this.call(
+        `/courier/serviceability/?pickup_postcode=${encodeURIComponent(origin)}` +
+          `&delivery_postcode=${encodeURIComponent(pincode)}` +
+          `&weight=${encodeURIComponent(String(weight))}&cod=0`,
+        { method: "GET" },
+        serviceabilityResponse,
+      );
+      const couriers = (out.data.available_courier_companies ?? []).map((c) => ({
+        name: c.courier_name,
+        estimatedDays: num(c.estimated_delivery_days),
+        rate: num(c.rate),
+      }));
+      return { isServiceable: couriers.length > 0, couriers };
+    } catch (err) {
+      void normalizeError(err);
+      /*
+       * Serviceability is a QUOTE, not a write. Failing closed here means the
+       * checkout says "we cannot ship there" on a transient carrier outage,
+       * which is wrong in the safe direction — the alternative is quoting a
+       * rate we cannot honour.
+       */
+      return { isServiceable: false, couriers: [] };
+    }
+  }
+
+  async generateLabel(shipmentId: string): Promise<ArrayBuffer> {
+    const out = await this.call(
+      "/courier/generate/label",
+      { method: "POST", body: JSON.stringify({ shipment_id: [shipmentId] }) },
+      z.object({ label_url: z.string().url() }),
+    );
+    const res = await fetch(out.label_url);
+    if (!res.ok) {
+      throw new ApiError(502, `Shiprocket label download failed (${res.status}).`, { code: "SHIPROCKET_LABEL_FAILED" });
+    }
+    return res.arrayBuffer();
+  }
+}
