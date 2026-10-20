@@ -1595,3 +1595,26 @@ export type {
   CourierRatingVote,
   CourierStats,
 } from "./_internal/shared/features/shipping/courier-rating";
+
+/**
+ * The `/api/checkout/pricing-preview` RESPONSE CONTRACT.
+ *
+ * 🛑 `export type`, from a `_internal/server` module, deliberately. A type-only
+ * re-export is fully erased at compile time — `audit-client-server-only-leak`
+ * states that explicitly — so this pulls no server chain into the client
+ * bundle. It is the one exception worth making for this module.
+ *
+ * The consumer had been keeping a HAND-WRITTEN copy of both shapes in
+ * `src/lib/api/payment-client.ts`, under a comment reading "mirrors
+ * `CheckoutPricingPreviewStore` on the server". It drifted exactly as Root
+ * Cause #42 predicts: the server gained `emiSurcharge`, the mirror did not, and
+ * the preview the cart rendered could not be assigned to the breakdown
+ * component that displays it. Four `tsc` errors across the cart and checkout
+ * clients, all from one missing field in a second definition of one shape.
+ *
+ * A response contract has exactly one owner — the handler that produces it.
+ */
+export type {
+  CheckoutPricingPreview,
+  CheckoutPricingPreviewStore,
+} from "./_internal/server/features/checkout/actions";

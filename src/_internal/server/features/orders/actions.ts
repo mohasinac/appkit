@@ -446,3 +446,115 @@ export async function raiseOrderDisputeAction(
       });
   });
 }
+
+/**
+ * A buyer submits payment for ONE of their own EMI instalments.
+ *
+ * 🛑 Why this exists at all: there was no buyer-side route. The only writer
+ * was the seller's `markEmiInstallmentPaid`, so a buyer on an EMI plan could
+ * not pay an instalment — they waited for the seller to record it. The
+ * schema had anticipated them all along (`EmiInstallment.transactionId` and
+ * `.proofUrl` are documented as "buyer-uploaded"), which is the tell that the
+ * surface, not the model, was missing.
+ *
+ * 🛑 **ANY unpaid instalment, at ANY time — deliberately unbounded.** There is
+ * no due-date check and none should be added. A buyer who wants to clear the
+ * plan early is reducing our exposure, not breaking a rule, and the dueDate is
+ * the date we will CHASE them on, never the first date they may pay. Paying
+ * ahead also keeps `emiComplete` honest: that flag is what
+ * `assertEmiShippable` reads, so early settlement should be able to release a
+ * shipment early rather than waiting out a calendar.
+ *
+ * It mirrors the manual-payment model rather than inventing a second one: the
+ * buyer supplies a UTR and a proof, the seller or an admin confirms. The
+ * status therefore moves to `pending` review here, NOT to `paid` — a buyer
+ * must never be able to mark their own money received. `markEmiInstallmentPaid`
+ * stays the only writer of `paid`, and so stays the only way `emiComplete`
+ * can flip.
+ */
+export async function submitEmiInstallmentPaymentAction(
+  orderId: string,
+  input: { installmentIndex: number; transactionId: string; proofUrl?: string },
+): Promise<ActionResult<void>> {
+  return wrapAction(async () => {
+    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
+    const order = await orderRepository.findById(orderId);
+    if (!order) throw new OrderNotFoundError(orderId);
+    if (!isAdminUser(user) && order.userId !== user.uid) throw new OrderOwnershipError(orderId);
+    if (!order.emiEnabled) throw new ValidationError("This order is not on an EMI plan");
+
+    const installments = order.emiInstallments ?? [];
+    const target = installments.find((i) => i.index === input.installmentIndex);
+    if (!target) {
+      throw new ValidationError(
+        `Installment ${input.installmentIndex} not found on this order`,
+      );
+    }
+    if (target.status === "paid") {
+      throw new ValidationError("This installment is already paid");
+    }
+    // A second submission would overwrite the reference the reviewer is
+    // currently looking at, which reads to them as the buyer changing their
+    // story. Re-submitting needs the reviewer to reject the first one.
+    if (target.transactionId) {
+      throw new ValidationError("A payment reference is already under review for this installment");
+    }
+
+    /*
+     * 🛑 `status` is NOT written here, and writing it would be a lie dressed
+     * as a state change.
+     *
+     * A new instalment is created `status: "pending"` (see
+     * `createOrderForGroup`), so setting `"pending"` again changes nothing
+     * while reading like a transition — and it would leave "nobody has paid"
+     * and "the buyer has reported paying" indistinguishable, which is exactly
+     * the state a reviewer needs to tell apart.
+     *
+     * "Awaiting review" is DERIVED: `transactionId` set and `status !== "paid"`.
+     * Same rule as the manual-payment queue, which derives its four states
+     * from `paymentProofUrl` + `paymentReviewOutcome` rather than storing a
+     * mirror field that any write path could forget to update (Root Cause
+     * #42). Only `markEmiInstallmentPaid` writes `paid`, so a buyer can never
+     * mark their own money received, and `emiComplete` keeps its single writer.
+     */
+    const updatedInstallments = installments.map((i) =>
+      i.index === input.installmentIndex
+        ? { ...i, transactionId: input.transactionId, proofUrl: input.proofUrl }
+        : i,
+    );
+
+    await orderRepository.update(orderId, { emiInstallments: updatedInstallments });
+
+    /*
+     * Tell the seller there is something to confirm. Best-effort: a
+     * notification that fails must not lose the buyer's submitted reference,
+     * which is the only record that they paid.
+     */
+    const store = order.storeId ? await storeRepository.findById(order.storeId) : null;
+    if (store?.ownerId) {
+      await sendNotification({
+        userId: store.ownerId,
+        type: "payment_review",
+        /*
+         * `high`, matching the other `payment_review` send in this file. The
+         * two differ in urgency — that one has a 15-minute re-upload window
+         * and this one has no deadline — but a single notification TYPE whose
+         * priority disagrees between its call sites is the drift this codebase
+         * keeps paying for, and unconfirmed money is a seller action item
+         * either way.
+         */
+        priority: "high",
+        title: "EMI instalment payment reported",
+        message: `A buyer has submitted payment for instalment ${input.installmentIndex} on order ${orderId}.`,
+        relatedId: orderId,
+        relatedType: "order",
+      }).catch((err: unknown) => {
+        void normalizeError(err);
+        serverLogger.error("Failed to notify seller of EMI instalment payment (non-fatal)", {
+          orderId,
+          installmentIndex: input.installmentIndex,
+        });
+      });
+    }
+  });
+}
