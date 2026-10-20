@@ -34,8 +34,7 @@ import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
-import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ProductOwnerQuickActions } from "./ProductOwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import {
   Button,
@@ -586,11 +585,18 @@ export async function ProductDetailPageView({
             <Stack gap="md">
               {/*
                 Owner quick-actions — pencil, admin-only clone, bin.
-                Rendered DIRECTLY rather than through a slot prop:
-                `OwnerQuickActions` is a client component that self-gates on
-                the session, so a Server Component can hand it the record and
-                let it decide whether to appear at all. It renders nothing for
-                a visitor, and nothing until auth resolves.
+
+                🛑 Goes through `ProductOwnerQuickActions`, NOT
+                `OwnerQuickActions` directly. This file is a Server Component,
+                and the latter takes `onClone` / `onDelete` as functions — a
+                closure cannot be serialized across the RSC boundary, so
+                passing them here threw "Event handlers cannot be passed to
+                Client Component props" at render and took down EVERY product
+                detail page in production. The wrapper authors those closures
+                on the client side of the boundary and takes only strings.
+
+                It still self-gates on the session, so it renders nothing for a
+                visitor and nothing until auth resolves.
 
                 Ownership goes in as `storeId`, which is the store SLUG — a
                 product is owned by a store, and `SessionUser.storeId` holds
@@ -598,46 +604,11 @@ export async function ProductDetailPageView({
                 `ProductDocument` does not declare a `sellerId`, even though
                 `createSellerProduct` writes one, so reading it would mean
                 trusting an undeclared field.
-
-                Clone reuses POST /api/store/products/[id]/duplicate, which
-                already strips identity, analytics, bid state and group
-                membership and forces status: draft. Hence no confirmation on
-                it, and admin-only.
               */}
-              <OwnerQuickActions
-                resource="PRODUCT"
-                placement="detail"
+              <ProductOwnerQuickActions
+                productId={String(product.id)}
                 recordLabel={title || String(product.slug ?? product.id)}
                 storeId={product.storeId ? String(product.storeId) : undefined}
-                editHref={String(ROUTES.STORE.PRODUCTS_EDIT(String(product.id)))}
-                onClone={async () => {
-                  const res = await fetch(
-                    SELLER_ENDPOINTS.PRODUCT_DUPLICATE(String(product.id)),
-                    { method: "POST" },
-                  );
-                  if (!res.ok) return;
-                  const json = (await res.json()) as { data?: { id?: string } };
-                  const newId = json?.data?.id;
-                  /*
-                   * Land on the COPY's editor. The endpoint returns the new
-                   * draft's id precisely so a one-click clone ends somewhere
-                   * useful rather than back on the public page, where the
-                   * draft is invisible.
-                   */
-                  if (newId && typeof window !== "undefined") {
-                    window.location.assign(
-                      String(ROUTES.STORE.PRODUCTS_EDIT(newId)),
-                    );
-                  }
-                }}
-                onDelete={async () => {
-                  await fetch(SELLER_ENDPOINTS.PRODUCT_BY_ID(String(product.id)), {
-                    method: "DELETE",
-                  });
-                  if (typeof window !== "undefined") {
-                    window.location.assign(String(ROUTES.PUBLIC.PRODUCTS));
-                  }
-                }}
               />
 
               {/* Title + condition badge */}

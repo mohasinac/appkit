@@ -33,6 +33,8 @@ import {
   type GroupGstSummary,
 } from "../../../shared/checkout/order-math";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
+import { COD_MAX_ORDER_VALUE_FALLBACK } from "../../../../features/admin/schemas/firestore";
+import { CHECKOUT_ERROR_CODES } from "../../../../errors/error-codes";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
@@ -1304,6 +1306,44 @@ export async function createCheckoutOrderAction(
       if (!verified) {
         throw new ApiError(403, "CHECKOUT_VALUE_OTP_REQUIRED");
       }
+    }
+  }
+
+  /*
+   * COD value cap — the SERVER half of the gate.
+   *
+   * 🛑 The checkout UI already disables the COD option above the cap and says
+   * why. That is an affordance, not enforcement: this action is reachable by
+   * POST with `paymentMethod: "cod"` regardless of what the page rendered, and
+   * the whole point of the cap is the cash exposure on a refusal at the door.
+   * A limit enforced only in the browser is not a limit (Root Cause #46 — a
+   * field the schema accepts but the handler never verifies).
+   *
+   * Measured against the WHOLE checkout batch for the same reason the OTP gate
+   * above is: per-seller orders are a split of one cart, so capping each one
+   * would let a buyer clear a ₹3,000 limit with a ₹9,000 cart across three
+   * sellers. Same `cartItems` reduction, deliberately not shared with the OTP
+   * block — that one skips COD entirely, so the two can never be one test.
+   *
+   * `>` not `>=`: the setting is a maximum, so a cart exactly at the cap is
+   * allowed. The client comparison is spelled the same way.
+   */
+  if (!adminBypass && paymentMethod === "cod") {
+    const codMax = siteSettings?.payment?.codMaxOrderValue;
+    const effectiveCodMax =
+      typeof codMax === "number" ? codMax : COD_MAX_ORDER_VALUE_FALLBACK;
+    const cartTotalForCodCheck = cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    if (cartTotalForCodCheck > effectiveCodMax) {
+      failedCheckoutRepository
+        .logCheckout(uid, "cod_over_limit", "Cart exceeds the COD value cap", {
+          addressId: addressId ?? "",
+          paymentMethod,
+        })
+        .catch(() => undefined);
+      throw new ApiError(400, CHECKOUT_ERROR_CODES.COD_LIMIT_EXCEEDED);
     }
   }
 

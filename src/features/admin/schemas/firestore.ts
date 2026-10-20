@@ -562,6 +562,26 @@ export interface SiteSettingsDocument extends BaseDocument {
     phonepeEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
+    /**
+     * Cart total (rupees) ABOVE which cash on delivery is refused. Default
+     * 3000.
+     *
+     * 🛑 Measured against the CART TOTAL, not an item price. COD risk is the
+     * cash a courier carries and the value at stake on a refusal at the door,
+     * and neither cares how many lines the order has — a ₹2,000 item ordered
+     * three times is a ₹6,000 exposure exactly like one ₹6,000 item. Gating
+     * per item would pass that order straight through.
+     *
+     * 🛑 It is a MAXIMUM, so the comparison is `subtotal > value` — strictly
+     * greater. `otpCheckoutThreshold` beside it is a MINIMUM and fires
+     * at/above its value. Two money thresholds on one settings block with
+     * opposite senses is a genuine trap; the names carry it (`Max` vs
+     * `Threshold`) and both comparisons are spelled out at their call sites.
+     *
+     * `0` disables COD outright at any value, which is a real configuration
+     * rather than a bug — `undefined` is what means "no cap".
+     */
+    codMaxOrderValue?: number;
     /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
     otpCheckoutThreshold?: number;
     /**
@@ -1020,6 +1040,17 @@ export const DEFAULT_SITE_SETTINGS_THEME: SiteSettingsTheme = {
   defaultDarkThemeId: "default-dark",
 };
 
+/**
+ * Cart total (rupees) above which cash on delivery is refused, when the
+ * settings document does not say.
+ *
+ * 🛑 ONE number, consumed by both the default document below and every reader
+ * that has to cope with a settings document written before the field existed.
+ * Two spellings of a money limit is how a cap ends up enforced at one value
+ * and displayed at another.
+ */
+export const COD_MAX_ORDER_VALUE_FALLBACK = 3000;
+
 export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   id: "global",
   siteName: "My Store",
@@ -1030,6 +1061,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     phonepeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
+    codMaxOrderValue: COD_MAX_ORDER_VALUE_FALLBACK,
     otpCheckoutThreshold: 5000,
     smsVerification: false,
     adminCheckoutBypass: false,

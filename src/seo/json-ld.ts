@@ -28,8 +28,28 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
  * Leaves already-absolute URLs (and `data:` URIs) alone. Returns undefined for
  * an empty value so `JSON.stringify` drops the key rather than emitting `""`.
  */
-function absoluteUrl(value: string | null | undefined, base: string = SITE_URL): string | undefined {
-  const v = value?.trim();
+function absoluteUrl(value: unknown, base: string = SITE_URL): string | undefined {
+  /*
+   * 🛑 `unknown` + a typeof test, NOT `string | null | undefined` + `?.trim()`.
+   *
+   * This took production down for hours. The signature said `string`, every
+   * caller type-checked, and then `ProductImage[]` replaced `string[]` on the
+   * product document — so `images.map(absoluteUrl)` received OBJECTS, `?.trim`
+   * was not a function, and the throw escaped into the RSC render and 500'd
+   * `/[locale]/products/[slug]` and `/[locale]/auctions/[id]`: **72 recorded
+   * failures**, the whole page lost to a decorative metadata field.
+   *
+   * A declared parameter type is a compile-time claim about CALLERS. It is
+   * worth nothing at the boundary where data arrives from Firestore, which is
+   * exactly where this function sits — and a schema migration is precisely the
+   * event that makes the claim false everywhere at once.
+   *
+   * So the contract is now behavioural: anything that is not a usable string
+   * is DROPPED, and the key is omitted. JSON-LD is optional enrichment —
+   * losing one image costs a rich-result thumbnail, while throwing costs the
+   * entire page. Those are not close.
+   */
+  const v = typeof value === "string" ? value.trim() : undefined;
   if (!v) return undefined;
   if (/^(https?:)?\/\//i.test(v) || v.startsWith("data:")) return v;
   if (!base) return undefined; // no base to resolve against — omit rather than emit a bare path
@@ -68,7 +88,12 @@ export interface ProductJsonLdInput {
   price: number;
   currency: string;
   mainImage?: string;
-  images?: string[];
+  /**
+   * Prefer `productImageUrls(doc.images)`. The object form is accepted so a
+   * document holding `ProductImage[]` cannot take the page down — see the
+   * note on `imageUrlOf` in `productJsonLd`.
+   */
+  images?: readonly (string | { url?: string })[];
   sellerName?: string;
   category?: string;
   status?: string;
@@ -212,11 +237,30 @@ export function productJsonLd(
   const url = `${SITE_URL}${product.detailPath ?? `/products/${product.slug}`}`;
   // Absolutise, then de-duplicate: `mainImage` is very often also `images[0]`,
   // which produced the same URL twice in the emitted array.
+  /*
+   * 🛑 Accepts BOTH shapes on purpose. `absoluteUrl` now drops a non-string
+   * instead of throwing, which stops the 500 — but silently dropping every
+   * image would trade a crash for an invisible loss of the `image` property
+   * that Product rich results REQUIRE. Reading `.url` off an object keeps the
+   * rich result working whichever shape the document holds, so a caller that
+   * forgets `productImageUrls()` degrades to nothing worse than correct.
+   */
+  /*
+   * The cast narrows to `{ url?: string }` rather than `{ url?: unknown }`
+   * (`audit-unknown-leakage` blocks the latter, correctly — an `unknown` in a
+   * member position defeats checking on every read below it). The assertion is
+   * safe without being trusted: `absoluteUrl` tests `typeof value === "string"`
+   * itself, so a document whose `url` is a number is dropped rather than
+   * reaching `.trim()`. Narrow for the compiler, verify at runtime.
+   */
+  const imageUrlOf = (entry: string | { url?: string }): string | undefined =>
+    typeof entry === "string" ? entry : entry?.url;
+
   const images = [
     ...(product.mainImage ? [product.mainImage] : []),
     ...(product.images || []),
   ]
-    .map((img) => absoluteUrl(img))
+    .map((img) => absoluteUrl(imageUrlOf(img)))
     .filter((img): img is string => Boolean(img))
     .filter((img, i, arr) => arr.indexOf(img) === i);
 

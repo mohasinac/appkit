@@ -32,6 +32,12 @@ import {
 } from "../../../_internal/shared/features/auctions/config";
 import { validateGstEnablement } from "../../../_internal/shared/features/site-settings/gst-registration";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
+/*
+ * 🛑 The SAME constant the checkout page and the server-side gate read. An
+ * admin screen that defaulted its own input to a different number would show
+ * a cap that is not the cap being enforced until somebody pressed Save.
+ */
+import { COD_MAX_ORDER_VALUE_FALLBACK } from "../schemas/firestore";
 import { siteSettingsFormSchema } from "../schemas/site-settings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell";
@@ -395,6 +401,9 @@ export function AdminSiteSettingsView({
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
   const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
+  const [codMaxOrderValue, setCodMaxOrderValue] = React.useState(
+    COD_MAX_ORDER_VALUE_FALLBACK,
+  );
 
   // Per-listing-type / per-category-type visibility flags.
   const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
@@ -619,6 +628,7 @@ export function AdminSiteSettingsView({
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
     setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
+    setCodMaxOrderValue(s.payment?.codMaxOrderValue ?? COD_MAX_ORDER_VALUE_FALLBACK);
 
     setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
     setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
@@ -823,7 +833,7 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
+      payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
@@ -1663,6 +1673,22 @@ export function AdminSiteSettingsView({
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
               <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
               <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
+              <Input
+                label="COD maximum order value (₹)"
+                /*
+                  🛑 A MAXIMUM, sitting directly above a THRESHOLD that is a
+                  minimum. The helper text says which way each one runs,
+                  because the two fields look identical and mean opposite
+                  things — and getting it backwards here either refuses every
+                  COD order or refuses none.
+                */
+                helperText="Carts ABOVE this subtotal cannot pay by cash on delivery; the option is shown disabled with the reason. 0 = COD off for every cart."
+                value={String(codMaxOrderValue)}
+                onChange={(e) => setCodMaxOrderValue(parseInt(e.target.value) || 0)}
+                type="number"
+                min={0}
+                disabled={!codEnabled}
+              />
               <Input
                 label="High-value checkout OTP threshold (₹)"
                 helperText="Carts at or above this subtotal require an extra OTP verification step before payment (0 = disabled)."

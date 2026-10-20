@@ -23,6 +23,22 @@ export const BID_ERROR_CODES = {
   AUCTION_ENDED_BEFORE_CHECKOUT: "BID_AUCTION_ENDED_BEFORE_CHECKOUT",
 } as const;
 
+/**
+ * Checkout refusals that are BUSINESS rules rather than malformed requests.
+ *
+ * 🛑 Registered here, not left as a bare string at the throw site. The code is
+ * what `toUserMessage` resolves through `errors.codes.*`, and an unregistered
+ * one terminates at `errors.codes.UNKNOWN` — so a buyer refused for a reason
+ * the site can explain in one sentence would instead read "Something went
+ * wrong. Please try again." and retry the same cart forever.
+ * `audit-error-display-i18n` holds both ends: an enum value with no
+ * `messages/en.json` key fails, and so does a key with no enum value.
+ */
+export const CHECKOUT_ERROR_CODES = {
+  /** Cart total exceeds `siteSettings.payment.codMaxOrderValue`. */
+  COD_LIMIT_EXCEEDED: "COD_LIMIT_EXCEEDED",
+} as const;
+
 export const OFFER_ERROR_CODES = {
   DISABLED: "OFFER_DISABLED",
   PRICE_TOO_LOW: "OFFER_PRICE_TOO_LOW",
