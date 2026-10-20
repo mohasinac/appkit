@@ -21,8 +21,8 @@
  * 🛑 The prose is ours, composed from facts (name, classification, printed
  *    code, weight, model count). No corpus sentence is reproduced.
  *
- * 760 parts -> 760 leaves across 20 part-type nodes.
- * 129 needed a classification-qualified slug because the bare name
+ * 2490 parts -> 2490 leaves across 22 part-type nodes.
+ * 667 needed a classification-qualified slug because the bare name
  * collides across classifications; the rest keep the short URL.
  *
  * @tag domain:categories
@@ -38,55 +38,1567 @@ import type { CategoryTreeNode } from "./category-tree";
 export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
   "category-burst-chips-armour": [
     {
-      id: "category-1b",
+      id: "category-armour-0",
+      name: "0",
+      description:
+        "0 — a armour (13.9 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["0"] },
+    },
+    {
+      id: "category-armour-1",
+      name: "1",
+      description:
+        "1 — a armour (13.1 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["1"] },
+    },
+    {
+      id: "category-armour-10",
+      name: "10",
+      description:
+        "10 — a armour (13.4 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["10"] },
+    },
+    {
+      id: "category-armour-1b",
       name: "1B",
       description:
         "1B — a armour (used by 1 model). Loose examples, spares and pre-owned armours of this part are listed here.",
       extra: { aliases: ["1B","1b"] },
     },
     {
-      id: "category-1d",
+      id: "category-armour-1d",
       name: "1D",
       description:
         "1D — a armour (used by 1 model). Loose examples, spares and pre-owned armours of this part are listed here.",
       extra: { aliases: ["1D","1d"] },
     },
     {
+      id: "category-armour-2",
+      name: "2",
+      description:
+        "2 — a armour (13.7 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["2"] },
+    },
+    {
+      id: "category-armour-3",
+      name: "3",
+      description:
+        "3 — a armour (13.2 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["3"] },
+    },
+    {
+      id: "category-armour-4",
+      name: "4",
+      description:
+        "4 — a armour (13.8 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["4"] },
+    },
+    {
+      id: "category-armour-6",
+      name: "6",
+      description:
+        "6 — a armour (13.4 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["6"] },
+    },
+    {
       id: "category-armour-7",
       name: "7",
       description:
-        "7 — a armour (used by 1 model). Loose examples, spares and pre-owned armours of this part are listed here.",
+        "7 — a armour (13.2 g, used by 1 model). Loose examples, spares and pre-owned armours of this part are listed here.",
       extra: { aliases: ["7"] },
     },
     {
-      id: "category-yard",
+      id: "category-armour-8",
+      name: "8",
+      description:
+        "8 — a armour (13 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["8"] },
+    },
+    {
+      id: "category-armour-9",
+      name: "9",
+      description:
+        "9 — a armour (13.9 g). Loose examples, spares and pre-owned armours of this part are listed here.",
+      extra: { aliases: ["9"] },
+    },
+    {
+      id: "category-superking-chip-achilles",
+      name: "Achilles",
+      description:
+        "Achilles — a superking chip (3.1 g, used by 1 model). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Achilles","achilles","Ac"] },
+    },
+    {
+      id: "category-db-core-achilles",
+      name: "Achilles",
+      description:
+        "Achilles — a db core (8.1 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Achilles","achilles","AC"] },
+    },
+    {
+      id: "category-gatinko-chip-achilles",
+      name: "Achilles",
+      description:
+        "Achilles — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Achilles","achilles","∀"] },
+    },
+    {
+      id: "category-achilles-a5",
+      name: "Achilles A5",
+      description:
+        "Achilles A5 — a gt chip (3.4 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Achilles A5","achilles-a5"] },
+    },
+    {
+      id: "category-achilles-a6",
+      name: "Achilles A6",
+      description:
+        "Achilles A6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Achilles A6","achilles-a6"] },
+    },
+    {
+      id: "category-achilles-a8",
+      name: "Achilles A8",
+      description:
+        "Achilles A8 — a strike chip (4.7 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Achilles A8","achilles-a8"] },
+    },
+    {
+      id: "category-armor-tip-adventure",
+      name: "Adventure",
+      description:
+        "Adventure — a armor tip (3.9 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Adventure","adventure","Ad"] },
+    },
+    {
+      id: "category-armor-tip-almight",
+      name: "Almight",
+      description:
+        "Almight — a armor tip (2.4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Almight","almight"] },
+    },
+    {
+      id: "category-apocalypse-a5",
+      name: "Apocalypse A5",
+      description:
+        "Apocalypse A5 — a gt chip (3.4 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Apocalypse A5","apocalypse-a5"] },
+    },
+    {
+      id: "category-spirit-shield-aries",
+      name: "Aries",
+      description:
+        "Aries — a spirit shield (7.9 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Aries","aries"] },
+    },
+    {
+      id: "category-ashindra-a5",
+      name: "Ashindra A5",
+      description:
+        "Ashindra A5 — a gt chip (3.1 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Ashindra A5","ashindra-a5"] },
+    },
+    {
+      id: "category-ashura",
+      name: "Ashura",
+      description:
+        "Ashura — a gatinko chip (2.8 g). Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Ashura","ashura","A"] },
+    },
+    {
+      id: "category-db-core-bahamut",
+      name: "Bahamut",
+      description:
+        "Bahamut — a db core (7.8 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Bahamut","bahamut","BH"] },
+    },
+    {
+      id: "category-gatinko-chip-bahamut",
+      name: "Bahamut",
+      description:
+        "Bahamut — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Bahamut","bahamut","B","Balkesh (Pro Series)"] },
+    },
+    {
+      id: "category-balderov-b7",
+      name: "Balderov B7",
+      description:
+        "Balderov B7 — a drive chip (5.1 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Balderov B7","balderov-b7"] },
+    },
+    {
+      id: "category-balkesh-b5",
+      name: "Balkesh B5",
+      description:
+        "Balkesh B5 — a gt chip (3.4 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Balkesh B5","balkesh-b5"] },
+    },
+    {
+      id: "category-balkesh-b7",
+      name: "Balkesh B7",
+      description:
+        "Balkesh B7 — a drive chip (4.9 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Balkesh B7","balkesh-b7"] },
+    },
+    {
+      id: "category-bazilisk-b8",
+      name: "Bazilisk B8",
+      description:
+        "Bazilisk B8 — a strike chip (4.8 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Bazilisk B8","bazilisk-b8"] },
+    },
+    {
+      id: "category-belfyre-b7",
+      name: "Belfyre B7",
+      description:
+        "Belfyre B7 — a drive chip (4.5 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Belfyre B7","belfyre-b7"] },
+    },
+    {
+      id: "category-belial-1",
+      name: "Belial 1",
+      description:
+        "Belial 1 — a db core (7 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Belial 1","belial-1","BL"] },
+    },
+    {
+      id: "category-belial-2",
+      name: "Belial 2",
+      description:
+        "Belial 2 — a db core (8.1 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Belial 2","belial-2","BL²"] },
+    },
+    {
+      id: "category-belial-3",
+      name: "Belial 3",
+      description:
+        "Belial 3 — a db core (7.9 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Belial 3","belial-3","BL³"] },
+    },
+    {
+      id: "category-billow",
+      name: "Billow",
+      description:
+        "Billow — a armor tip. Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Billow","billow"] },
+    },
+    {
+      id: "category-armor-tip-blow",
+      name: "Blow",
+      description:
+        "Blow — a armor tip (2.1 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Blow","blow"] },
+    },
+    {
+      id: "category-armor-tip-bounce",
+      name: "Bounce",
+      description:
+        "Bounce — a armor tip (3.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Bounce","bounce","Bn"] },
+    },
+    {
+      id: "category-spirit-shield-bull",
+      name: "Bull",
+      description:
+        "Bull — a spirit shield (7.4 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Bull","bull"] },
+    },
+    {
+      id: "category-spirit-shield-cetus",
+      name: "Cetus",
+      description:
+        "Cetus — a spirit shield (7.9 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Cetus","cetus"] },
+    },
+    {
+      id: "category-cobra-c5",
+      name: "Cobra C5",
+      description:
+        "Cobra C5 — a gt chip (3.4 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Cobra C5","cobra-c5"] },
+    },
+    {
+      id: "category-cobra-c7",
+      name: "Cobra C7",
+      description:
+        "Cobra C7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Cobra C7","cobra-c7"] },
+    },
+    {
+      id: "category-cyclops-c5",
+      name: "Cyclops C5",
+      description:
+        "Cyclops C5 — a gt chip (3.2 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Cyclops C5","cyclops-c5"] },
+    },
+    {
+      id: "category-superking-chip-deathscyther",
+      name: "Deathscyther",
+      description:
+        "Deathscyther — a superking chip (3.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Deathscyther","deathscyther","Dt"] },
+    },
+    {
+      id: "category-armor-tip-defense",
+      name: "Defense",
+      description:
+        "Defense — a armor tip (2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Defense","defense","D"] },
+    },
+    {
+      id: "category-armor-tip-destroy",
+      name: "Destroy",
+      description:
+        "Destroy — a armor tip (2.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Destroy","destroy","Ds"] },
+    },
+    {
+      id: "category-spirit-shield-destroyer",
+      name: "Destroyer",
+      description:
+        "Destroyer — a spirit shield (10.1 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Destroyer","destroyer"] },
+    },
+    {
+      id: "category-devolos-d5",
+      name: "Devolos D5",
+      description:
+        "Devolos D5 — a gt chip (3.2 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Devolos D5","devolos-d5"] },
+    },
+    {
+      id: "category-devolos-d6",
+      name: "Devolos D6",
+      description:
+        "Devolos D6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Devolos D6","devolos-d6"] },
+    },
+    {
+      id: "category-diabolos",
+      name: "Diabolos",
+      description:
+        "Diabolos — a superking chip (4 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Diabolos","diabolos","Db"] },
+    },
+    {
+      id: "category-diabolos-1",
+      name: "Diabolos 1",
+      description:
+        "Diabolos 1 — a gatinko chip (used by 1 model). Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Diabolos 1","diabolos 1","D","Devolos (Pro Series)"] },
+    },
+    {
+      id: "category-diabolos-2",
+      name: "Diabolos 2",
+      description:
+        "Diabolos 2 — a gatinko chip (2.8 g). Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Diabolos 2","diabolos-2","Db","Devolos (Pro Series)"] },
+    },
+    {
+      id: "category-doomscizor-d6",
+      name: "Doomscizor D6",
+      description:
+        "Doomscizor D6 — a storm chip (3 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Doomscizor D6","doomscizor-d6"] },
+    },
+    {
+      id: "category-drago",
+      name: "Drago",
+      description:
+        "Drago — a spirit shield (7.8 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Drago","drago"] },
+    },
+    {
+      id: "category-db-core-dragon",
+      name: "Dragon",
+      description:
+        "Dragon — a db core (7.8 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Dragon","dragon","DR"] },
+    },
+    {
+      id: "category-superking-chip-dragon",
+      name: "Dragon",
+      description:
+        "Dragon — a superking chip (3.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Dragon","dragon","Dr"] },
+    },
+    {
+      id: "category-dragon-1",
+      name: "Dragon 1",
+      description:
+        "Dragon 1 — a gatinko chip (2.8 g). Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Dragon 1","dragon-1","D"] },
+    },
+    {
+      id: "category-dragon-2",
+      name: "Dragon 2",
+      description:
+        "Dragon 2 — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Dragon 2","dragon-2","Dr"] },
+    },
+    {
+      id: "category-dragon-d5",
+      name: "Dragon D5",
+      description:
+        "Dragon D5 — a gt chip (3.1 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Dragon D5","dragon-d5"] },
+    },
+    {
+      id: "category-dragon-d6",
+      name: "Dragon D6",
+      description:
+        "Dragon D6 — a storm chip (3 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Dragon D6","dragon-d6"] },
+    },
+    {
+      id: "category-dragon-d8",
+      name: "Dragon D8",
+      description:
+        "Dragon D8 — a strike chip (5 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Dragon D8","dragon-d8"] },
+    },
+    {
+      id: "category-armor-tip-drift",
+      name: "Drift",
+      description:
+        "Drift — a armor tip (3.6 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Drift","drift","Dr"] },
+    },
+    {
+      id: "category-dullahan-d6",
+      name: "Dullahan D6",
+      description:
+        "Dullahan D6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Dullahan D6","dullahan-d6"] },
+    },
+    {
+      id: "category-eruption",
+      name: "Eruption",
+      description:
+        "Eruption — a armor tip (2.9 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Eruption","eruption"] },
+    },
+    {
+      id: "category-evo-belfyre-b7",
+      name: "Evo Belfyre B7",
+      description:
+        "Evo Belfyre B7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Evo Belfyre B7","evo-belfyre-b7","Evo Belfyre B8 (QuadStrike)"] },
+    },
+    {
+      id: "category-evo-devolos-d5",
+      name: "Evo Devolos D5",
+      description:
+        "Evo Devolos D5 — a gt chip (2.9 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Evo Devolos D5","evo-devolos-d5"] },
+    },
+    {
+      id: "category-evo-dragon-d5",
+      name: "Evo Dragon D5",
+      description:
+        "Evo Dragon D5 — a gt chip (3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Evo Dragon D5","evo-dragon-d5"] },
+    },
+    {
+      id: "category-evo-genesis-g5",
+      name: "Evo Genesis G5",
+      description:
+        "Evo Genesis G5 — a gt chip (3.5 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Evo Genesis G5","evo-genesis-g5"] },
+    },
+    {
+      id: "category-evo-helios-h6",
+      name: "Evo Helios H6",
+      description:
+        "Evo Helios H6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Evo Helios H6","evo-helios-h6"] },
+    },
+    {
+      id: "category-evo-hyperion-h6",
+      name: "Evo Hyperion H6",
+      description:
+        "Evo Hyperion H6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Evo Hyperion H6","evo-hyperion-h6"] },
+    },
+    {
+      id: "category-evo-lucius-l6",
+      name: "Evo Lucius L6",
+      description:
+        "Evo Lucius L6 — a storm chip (2.8 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Evo Lucius L6","evo-lucius-l6"] },
+    },
+    {
+      id: "category-evo-valtryek-v7",
+      name: "Evo Valtryek V7",
+      description:
+        "Evo Valtryek V7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Evo Valtryek V7","evo-valtryek-v7"] },
+    },
+    {
+      id: "category-evo-x-belfyre-b8",
+      name: "Evo-X Belfyre B8",
+      description:
+        "Evo-X Belfyre B8 — a strike chip (4.5 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Evo-X Belfyre B8","evo-x-belfyre-b8"] },
+    },
+    {
+      id: "category-db-core-fafnir",
+      name: "Fafnir",
+      description:
+        "Fafnir — a db core (6.8 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Fafnir","fafnir","FF"] },
+    },
+    {
+      id: "category-gatinko-chip-fafnir",
+      name: "Fafnir",
+      description:
+        "Fafnir — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Fafnir","fafnir","F"] },
+    },
+    {
+      id: "category-superking-chip-fafnir",
+      name: "Fafnir",
+      description:
+        "Fafnir — a superking chip (3.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Fafnir","fafnir","Ff"] },
+    },
+    {
+      id: "category-fafnir-f5",
+      name: "Fafnir F5",
+      description:
+        "Fafnir F5 — a gt chip (3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Fafnir F5","fafnir-f5"] },
+    },
+    {
+      id: "category-fafnir-f6",
+      name: "Fafnir F6",
+      description:
+        "Fafnir F6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Fafnir F6","fafnir-f6"] },
+    },
+    {
+      id: "category-fafnir-f7",
+      name: "Fafnir F7",
+      description:
+        "Fafnir F7 — a drive chip (4.2 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Fafnir F7","fafnir-f7"] },
+    },
+    {
+      id: "category-spirit-shield-fireblaze",
+      name: "Fireblaze",
+      description:
+        "Fireblaze — a spirit shield (8.5 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Fireblaze","fireblaze"] },
+    },
+    {
+      id: "category-flap",
+      name: "Flap",
+      description:
+        "Flap — a armor tip (3.1 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Flap","flap"] },
+    },
+    {
+      id: "category-flexible",
+      name: "Flexible",
+      description:
+        "Flexible — a armor tip (4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Flexible","flexible"] },
+    },
+    {
+      id: "category-armor-tip-flugel",
+      name: "Flugel",
+      description:
+        "Flugel — a armor tip (1.4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Flugel","flugel","Fl"] },
+    },
+    {
+      id: "category-gen",
+      name: "Gen",
+      description:
+        "Gen — a weight (1.1 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Gen","gen"] },
+    },
+    {
+      id: "category-genesis-g5",
+      name: "Genesis G5",
+      description:
+        "Genesis G5 — a gt chip (3.3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Genesis G5","genesis-g5"] },
+    },
+    {
+      id: "category-spirit-shield-gil",
+      name: "Gil",
+      description:
+        "Gil — a spirit shield (7.4 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Gil","gil"] },
+    },
+    {
+      id: "category-goku",
+      name: "Goku",
+      description:
+        "Goku — a weight (10.8 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Goku","goku"] },
+    },
+    {
+      id: "category-gou",
+      name: "Gou",
+      description:
+        "Gou — a weight (9.4 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Gou","gou"] },
+    },
+    {
+      id: "category-core-heavy-metal-core",
+      name: "Heavy Metal Core",
+      description:
+        "Heavy Metal Core — a core (9 g). Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Heavy Metal Core","heavy-metal-core"] },
+    },
+    {
+      id: "category-helios",
+      name: "Helios",
+      description:
+        "Helios — a db core (7.2 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Helios","helios","HL"] },
+    },
+    {
+      id: "category-helios-1",
+      name: "Helios 1",
+      description:
+        "Helios 1 — a superking chip (3.2 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Helios 1","helios-1","Hl"] },
+    },
+    {
+      id: "category-helios-2",
+      name: "Helios 2",
+      description:
+        "Helios 2 — a superking chip (5.5 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Helios 2","helios-2","Hl2"] },
+    },
+    {
+      id: "category-helios-h6",
+      name: "Helios H6",
+      description:
+        "Helios H6 — a storm chip (3 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Helios H6","helios-h6"] },
+    },
+    {
+      id: "category-helios-h8",
+      name: "Helios H8",
+      description:
+        "Helios H8 — a strike chip (4.6 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Helios H8","helios-h8"] },
+    },
+    {
+      id: "category-hello-kitty",
+      name: "Hello Kitty",
+      description:
+        "Hello Kitty — a db core (7.3 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Hello Kitty","hello-kitty","HK"] },
+    },
+    {
+      id: "category-spirit-shield-herculeo",
+      name: "Herculeo",
+      description:
+        "Herculeo — a spirit shield (8 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Herculeo","herculeo"] },
+    },
+    {
+      id: "category-armor-tip-hunter",
+      name: "Hunter",
+      description:
+        "Hunter — a armor tip (1.8 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Hunter","hunter","Hn"] },
+    },
+    {
+      id: "category-gatinko-chip-hydra",
+      name: "Hydra",
+      description:
+        "Hydra — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Hydra","hydra","H","Cobra (Pro Series)"] },
+    },
+    {
+      id: "category-hydrax-h5",
+      name: "Hydrax H5",
+      description:
+        "Hydrax H5 — a gt chip (2.7 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Hydrax H5","hydrax-h5"] },
+    },
+    {
+      id: "category-hyperion",
+      name: "Hyperion",
+      description:
+        "Hyperion — a db core (7.3 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Hyperion","hyperion","HY"] },
+    },
+    {
+      id: "category-hyperion-1",
+      name: "Hyperion 1",
+      description:
+        "Hyperion 1 — a superking chip (3.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Hyperion 1","hyperion-1","Hy"] },
+    },
+    {
+      id: "category-hyperion-2",
+      name: "Hyperion 2",
+      description:
+        "Hyperion 2 — a superking chip (5.7 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Hyperion 2","hyperion-2","Hy2"] },
+    },
+    {
+      id: "category-hyperion-h6",
+      name: "Hyperion H6",
+      description:
+        "Hyperion H6 — a storm chip (2.8 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Hyperion H6","hyperion-h6"] },
+    },
+    {
+      id: "category-hyperion-h8",
+      name: "Hyperion H8",
+      description:
+        "Hyperion H8 — a strike chip (4.7 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Hyperion H8","hyperion-h8"] },
+    },
+    {
+      id: "category-ifritor-i7",
+      name: "Ifritor I7",
+      description:
+        "Ifritor I7 — a drive chip (4.5 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Ifritor I7","ifritor-i7","Ifrit (Takara Tomy)"] },
+    },
+    {
+      id: "category-armor-tip-jaggy",
+      name: "Jaggy",
+      description:
+        "Jaggy — a armor tip (3.6 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Jaggy","jaggy","J","Thorn"] },
+    },
+    {
+      id: "category-joker",
+      name: "Joker",
+      description:
+        "Joker — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Joker","joker","J"] },
+    },
+    {
+      id: "category-joker-j5",
+      name: "Joker J5",
+      description:
+        "Joker J5 — a gt chip (3.3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Joker J5","joker-j5"] },
+    },
+    {
+      id: "category-spirit-shield-kerbecs",
+      name: "Kerbecs",
+      description:
+        "Kerbecs — a spirit shield (7.2 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Kerbecs","kerbecs"] },
+    },
+    {
+      id: "category-kerbeus",
+      name: "Kerbeus",
+      description:
+        "Kerbeus — a db core (8.1 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Kerbeus","kerbeus","KR"] },
+    },
+    {
+      id: "category-kerbeus-k5",
+      name: "Kerbeus K5",
+      description:
+        "Kerbeus K5 — a gt chip (3.2 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Kerbeus K5","kerbeus-k5"] },
+    },
+    {
+      id: "category-kerbeus-k8",
+      name: "Kerbeus K8",
+      description:
+        "Kerbeus K8 — a strike chip (4.6 g, used by 1 model). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Kerbeus K8","kerbeus k8"] },
+    },
+    {
+      id: "category-armor-tip-kick",
+      name: "Kick",
+      description:
+        "Kick — a armor tip (3.5 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Kick","kick","Kc"] },
+    },
+    {
+      id: "category-db-core-knight",
+      name: "Knight",
+      description:
+        "Knight — a db core (7.6 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Knight","knight"] },
+    },
+    {
+      id: "category-knight-k8",
+      name: "Knight K8",
+      description:
+        "Knight K8 — a strike chip (4.7 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Knight K8","knight-k8"] },
+    },
+    {
+      id: "category-kraken-k5",
+      name: "Kraken K5",
+      description:
+        "Kraken K5 — a gt chip (2.9 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Kraken K5","kraken-k5"] },
+    },
+    {
+      id: "category-spirit-shield-lacerta",
+      name: "Lacerta",
+      description:
+        "Lacerta — a spirit shield (10.3 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Lacerta","lacerta"] },
+    },
+    {
+      id: "category-spirit-shield-leone",
+      name: "Leone",
+      description:
+        "Leone — a spirit shield (6.7 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Leone","leone"] },
+    },
+    {
+      id: "category-leviathan-l5",
+      name: "Leviathan L5",
+      description:
+        "Leviathan L5 — a gt chip (3.1 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Leviathan L5","leviathan-l5"] },
+    },
+    {
+      id: "category-linwyrm-l7",
+      name: "Linwyrm L7",
+      description:
+        "Linwyrm L7 — a drive chip (5 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Linwyrm L7","linwyrm-l7"] },
+    },
+    {
+      id: "category-db-core-longinus",
+      name: "Longinus",
+      description:
+        "Longinus — a db core (10.1 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Longinus","longinus","LN"] },
+    },
+    {
+      id: "category-gatinko-chip-longinus",
+      name: "Longinus",
+      description:
+        "Longinus — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Longinus","longinus","L","Lúinor (Pro Series)"] },
+    },
+    {
+      id: "category-superking-chip-longinus",
+      name: "Longinus",
+      description:
+        "Longinus — a superking chip (3 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Longinus","longinus","Ln","Lúinor (Pro Series)"] },
+    },
+    {
+      id: "category-lucent",
+      name: "Lucent",
+      description:
+        "Lucent — a armor tip. Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Lucent","lucent"] },
+    },
+    {
+      id: "category-lucifer",
+      name: "Lucifer",
+      description:
+        "Lucifer — a db core (7.4 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Lucifer","lucifer","LC"] },
+    },
+    {
+      id: "category-lucifer-1",
+      name: "Lucifer 1",
+      description:
+        "Lucifer 1 — a superking chip (5.7 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Lucifer 1","lucifer-1","Lc","Lucius (Pro Series)"] },
+    },
+    {
+      id: "category-lucifer-2",
+      name: "Lucifer 2",
+      description:
+        "Lucifer 2 — a superking chip (6.3 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Lucifer 2","lucifer-2","Lc2"] },
+    },
+    {
+      id: "category-lucius-l6",
+      name: "Lucius L6",
+      description:
+        "Lucius L6 — a storm chip (2.8 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Lucius L6","lucius-l6"] },
+    },
+    {
+      id: "category-luinor-l5",
+      name: "Luinor L5",
+      description:
+        "Luinor L5 — a gt chip (3.3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Luinor L5","luinor-l5"] },
+    },
+    {
+      id: "category-luinor-l6",
+      name: "Luinor L6",
+      description:
+        "Luinor L6 — a storm chip (2.8 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Luinor L6","luinor-l6"] },
+    },
+    {
+      id: "category-luinor-l7",
+      name: "Luinor L7",
+      description:
+        "Luinor L7 — a drive chip (4.6 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Luinor L7","luinor-l7"] },
+    },
+    {
+      id: "category-magnecore",
+      name: "Magnecore",
+      description:
+        "Magnecore — a core (6 g). Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Magnecore","magnecore"] },
+    },
+    {
+      id: "category-magnecore-north-pole",
+      name: "Magnecore (North Pole)",
+      description:
+        "Magnecore (North Pole) — a core (6 g). Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Magnecore (North Pole)","magnecore-north-pole"] },
+    },
+    {
+      id: "category-magnecore-south-pole",
+      name: "Magnecore (South Pole)",
+      description:
+        "Magnecore (South Pole) — a core (6 g). Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Magnecore (South Pole)","magnecore-south-pole"] },
+    },
+    {
+      id: "category-magtram",
+      name: "Magtram",
+      description:
+        "Magtram — a core. Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Magtram","magtram"] },
+    },
+    {
+      id: "category-armor-tip-merge",
+      name: "Merge",
+      description:
+        "Merge — a armor tip (1.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Merge","merge","Mr"] },
+    },
+    {
+      id: "category-metal-weight-core",
+      name: "Metal Weight Core",
+      description:
+        "Metal Weight Core — a core (5 g). Loose examples, spares and pre-owned cores of this part are listed here.",
+      extra: { aliases: ["Metal Weight Core","metal-weight-core"] },
+    },
+    {
+      id: "category-metsu",
+      name: "Metsu",
+      description:
+        "Metsu — a weight (8.1 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Metsu","metsu"] },
+    },
+    {
+      id: "category-armor-tip-moment",
+      name: "Moment",
+      description:
+        "Moment — a armor tip (2.3 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Moment","moment","Mm"] },
+    },
+    {
+      id: "category-muramasa-m7",
+      name: "Muramasa M7",
+      description:
+        "Muramasa M7 — a drive chip (4.8 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Muramasa M7","muramasa-m7"] },
+    },
+    {
+      id: "category-nemesis-n7",
+      name: "Nemesis N7",
+      description:
+        "Nemesis N7 — a drive chip (4.9 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Nemesis N7","nemesis-n7"] },
+    },
+    {
+      id: "category-armor-tip-never",
+      name: "Never",
+      description:
+        "Never — a armor tip (2.3 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Never","never","Nv"] },
+    },
+    {
+      id: "category-nyddhog-n8",
+      name: "Nyddhog N8",
+      description:
+        "Nyddhog N8 — a strike chip (4.8 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Nyddhog N8","nyddhog-n8"] },
+    },
+    {
+      id: "category-armor-tip-octa",
+      name: "Octa",
+      description:
+        "Octa — a armor tip (3.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Octa","octa","Ω"] },
+    },
+    {
+      id: "category-odax-o5",
+      name: "Odax O5",
+      description:
+        "Odax O5 — a gt chip (3.5 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Odax O5","odax-o5"] },
+    },
+    {
+      id: "category-gatinko-chip-odin",
+      name: "Odin",
+      description:
+        "Odin — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Odin","odin","O","Odax (Pro Series)"] },
+    },
+    {
+      id: "category-ogre-o5",
+      name: "Ogre O5",
+      description:
+        "Ogre O5 — a gt chip (3.2 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Ogre O5","ogre-o5"] },
+    },
+    {
+      id: "category-armor-tip-operate",
+      name: "Operate",
+      description:
+        "Operate — a armor tip. Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Operate","operate","Op"] },
+    },
+    {
+      id: "category-pandemonium-p8",
+      name: "Pandemonium P8",
+      description:
+        "Pandemonium P8 — a strike chip (5.1 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Pandemonium P8","pandemonium-p8"] },
+    },
+    {
+      id: "category-pandora-p8",
+      name: "Pandora P8",
+      description:
+        "Pandora P8 — a strike chip (4.5 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Pandora P8","pandora-p8"] },
+    },
+    {
+      id: "category-gatinko-chip-pegasus",
+      name: "Pegasus",
+      description:
+        "Pegasus — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Pegasus","pegasus","P"] },
+    },
+    {
+      id: "category-spirit-shield-pegasus",
+      name: "Pegasus",
+      description:
+        "Pegasus — a spirit shield (7 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Pegasus","pegasus"] },
+    },
+    {
+      id: "category-pegasus-p5",
+      name: "Pegasus P5",
+      description:
+        "Pegasus P5 — a gt chip (3.2 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Pegasus P5","pegasus-p5"] },
+    },
+    {
+      id: "category-db-core-perseus",
+      name: "Perseus",
+      description:
+        "Perseus — a db core (10.7 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Perseus","perseus","πR"] },
+    },
+    {
+      id: "category-perseus-p7",
+      name: "Perseus P7",
+      description:
+        "Perseus P7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Perseus P7","perseus-p7"] },
+    },
+    {
+      id: "category-db-core-phoenix",
+      name: "Phoenix",
+      description:
+        "Phoenix — a db core (7.6 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Phoenix","phoenix","PH"] },
+    },
+    {
+      id: "category-phoenix-p7",
+      name: "Phoenix P7",
+      description:
+        "Phoenix P7 — a drive chip (4.6 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Phoenix P7","phoenix-p7"] },
+    },
+    {
+      id: "category-poseidon-p8",
+      name: "Poseidon P8",
+      description:
+        "Poseidon P8 — a strike chip (4.6 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Poseidon P8","poseidon-p8"] },
+    },
+    {
+      id: "category-armor-tip-press",
+      name: "Press",
+      description:
+        "Press — a armor tip (2.1 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Press","press","P"] },
+    },
+    {
+      id: "category-armor-tip-quake",
+      name: "Quake",
+      description:
+        "Quake — a armor tip (1.4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Quake","quake","Q"] },
+    },
+    {
+      id: "category-quattro-i",
+      name: "Quattro I",
+      description:
+        "Quattro I — a armor tip (2.6 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Quattro I","quattro-i","Qt"] },
+    },
+    {
+      id: "category-quattro-ii",
+      name: "Quattro II",
+      description:
+        "Quattro II — a armor tip. Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Quattro II","quattro-ii","Qt","Quartet"] },
+    },
+    {
+      id: "category-db-core-ragnaruk",
+      name: "Ragnaruk",
+      description:
+        "Ragnaruk — a db core (6.7 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Ragnaruk","ragnaruk","RG"] },
+    },
+    {
+      id: "category-superking-chip-ragnaruk",
+      name: "Ragnaruk",
+      description:
+        "Ragnaruk — a superking chip (3 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Ragnaruk","ragnaruk","Rg"] },
+    },
+    {
+      id: "category-regnar-r7",
+      name: "Regnar R7",
+      description:
+        "Regnar R7 — a drive chip (4.6 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Regnar R7","regnar-r7"] },
+    },
+    {
+      id: "category-weight-retsu",
+      name: "Retsu",
+      description:
+        "Retsu — a weight (8.7 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Retsu","retsu"] },
+    },
+    {
+      id: "category-armor-tip-revolve",
+      name: "Revolve",
+      description:
+        "Revolve — a armor tip. Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Revolve","revolve","R"] },
+    },
+    {
+      id: "category-armor-tip-rise",
+      name: "Rise",
+      description:
+        "Rise — a armor tip (2.3 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Rise","rise","Rs"] },
+    },
+    {
+      id: "category-roktavor-r6",
+      name: "Roktavor R6",
+      description:
+        "Roktavor R6 — a storm chip (2.7 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Roktavor R6","roktavor-r6"] },
+    },
+    {
+      id: "category-roktavor-r7",
+      name: "Roktavor R7",
+      description:
+        "Roktavor R7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Roktavor R7","roktavor-r7"] },
+    },
+    {
+      id: "category-rugged",
+      name: "Rugged",
+      description:
+        "Rugged — a armor tip (3.1 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Rugged","rugged"] },
+    },
+    {
+      id: "category-rumble",
+      name: "Rumble",
+      description:
+        "Rumble — a armor tip (3.7 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Rumble","rumble"] },
+    },
+    {
+      id: "category-salamander-s5",
+      name: "Salamander S5",
+      description:
+        "Salamander S5 — a gt chip (3.1 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Salamander S5","salamander-s5"] },
+    },
+    {
+      id: "category-satan",
+      name: "Satan",
+      description:
+        "Satan — a superking chip (2.9 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Satan","satan","St"] },
+    },
+    {
+      id: "category-satomb-s6",
+      name: "Satomb S6",
+      description:
+        "Satomb S6 — a storm chip (2.8 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Satomb S6","satomb-s6"] },
+    },
+    {
+      id: "category-sen",
+      name: "Sen",
+      description:
+        "Sen — a weight (7.7 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Sen","sen"] },
+    },
+    {
+      id: "category-spirit-shield-serpent",
+      name: "Serpent",
+      description:
+        "Serpent — a spirit shield (8.4 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Serpent","serpent"] },
+    },
+    {
+      id: "category-armor-tip-shot",
+      name: "Shot",
+      description:
+        "Shot — a armor tip (2.1 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Shot","shot","Sh"] },
+    },
+    {
+      id: "category-solomon",
+      name: "Solomon",
+      description:
+        "Solomon — a superking chip (6.2 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Solomon","solomon","Σ"] },
+    },
+    {
+      id: "category-sou",
+      name: "Sou",
+      description:
+        "Sou — a weight (7.9 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Sou","sou"] },
+    },
+    {
+      id: "category-sparky",
+      name: "Sparky",
+      description:
+        "Sparky — a armor tip (3.3 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Sparky","sparky"] },
+    },
+    {
+      id: "category-sphinx-s5",
+      name: "Sphinx S5",
+      description:
+        "Sphinx S5 — a gt chip (3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Sphinx S5","sphinx-s5"] },
+    },
+    {
+      id: "category-spirit-axle",
+      name: "Spirit Axle",
+      description:
+        "Spirit Axle — a spirit axle (1.7 g). Loose examples, spares and pre-owned spirit axles of this part are listed here.",
+      extra: { aliases: ["Spirit Axle","spirit-axle"] },
+    },
+    {
+      id: "category-gatinko-chip-spriggan",
+      name: "Spriggan",
+      description:
+        "Spriggan — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Spriggan","spriggan","S","Spryzen (Pro Series)"] },
+    },
+    {
+      id: "category-superking-chip-spriggan",
+      name: "Spriggan",
+      description:
+        "Spriggan — a superking chip (4.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Spriggan","spriggan","Sp"] },
+    },
+    {
+      id: "category-spriggan-1",
+      name: "Spriggan 1",
+      description:
+        "Spriggan 1 — a db core (7.9 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Spriggan 1","spriggan-1","SP"] },
+    },
+    {
+      id: "category-spriggan-2",
+      name: "Spriggan 2",
+      description:
+        "Spriggan 2 — a db core (8.3 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Spriggan 2","spriggan-2","SP²"] },
+    },
+    {
+      id: "category-spryzen-s5",
+      name: "Spryzen S5",
+      description:
+        "Spryzen S5 — a gt chip (3.9 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Spryzen S5","spryzen-s5"] },
+    },
+    {
+      id: "category-spryzen-s6",
+      name: "Spryzen S6",
+      description:
+        "Spryzen S6 — a storm chip (3.4 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Spryzen S6","spryzen-s6"] },
+    },
+    {
+      id: "category-spryzen-s7",
+      name: "Spryzen S7",
+      description:
+        "Spryzen S7 — a drive chip (4.6 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Spryzen S7","spryzen-s7"] },
+    },
+    {
+      id: "category-spryzen-s8",
+      name: "Spryzen S8",
+      description:
+        "Spryzen S8 — a strike chip (5.2 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Spryzen S8","spryzen-s8"] },
+    },
+    {
+      id: "category-stay",
+      name: "Stay",
+      description:
+        "Stay — a armor tip (2.8 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Stay","stay"] },
+    },
+    {
+      id: "category-still",
+      name: "Still",
+      description:
+        "Still — a armor tip (3.7 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Still","still"] },
+    },
+    {
+      id: "category-stormy",
+      name: "Stormy",
+      description:
+        "Stormy — a armor tip (3.9 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Stormy","stormy"] },
+    },
+    {
+      id: "category-spirit-shield-striker",
+      name: "Striker",
+      description:
+        "Striker — a spirit shield (8.5 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Striker","striker"] },
+    },
+    {
+      id: "category-armor-tip-sword",
+      name: "Sword",
+      description:
+        "Sword — a armor tip (4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Sword","sword","Sw"] },
+    },
+    {
+      id: "category-ten",
+      name: "Ten",
+      description:
+        "Ten — a weight (8.4 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Ten","ten"] },
+    },
+    {
+      id: "category-armor-tip-unite",
+      name: "Unite",
+      description:
+        "Unite — a armor tip (1.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Unite","unite","U"] },
+    },
+    {
+      id: "category-armor-tip-universe",
+      name: "Universe",
+      description:
+        "Universe — a armor tip (3.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Universe","universe","Un"] },
+    },
+    {
+      id: "category-uranus",
+      name: "Uranus",
+      description:
+        "Uranus — a superking chip (3.1 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Uranus","uranus","Ur"] },
+    },
+    {
+      id: "category-gatinko-chip-valkyrie",
+      name: "Valkyrie",
+      description:
+        "Valkyrie — a gatinko chip. Loose examples, spares and pre-owned gatinko chips of this part are listed here.",
+      extra: { aliases: ["Valkyrie","valkyrie","V","Valtryek (Pro Series)"] },
+    },
+    {
+      id: "category-superking-chip-valkyrie",
+      name: "Valkyrie",
+      description:
+        "Valkyrie — a superking chip (2.6 g). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Valkyrie","valkyrie","Vl","Valtryek (Pro Series)"] },
+    },
+    {
+      id: "category-valkyrie-1",
+      name: "Valkyrie 1",
+      description:
+        "Valkyrie 1 — a db core (7.7 g, used by 1 model). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Valkyrie 1","valkyrie 1","VL"] },
+    },
+    {
+      id: "category-valkyrie-2",
+      name: "Valkyrie 2",
+      description:
+        "Valkyrie 2 — a db core (7.5 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Valkyrie 2","valkyrie-2","VL²"] },
+    },
+    {
+      id: "category-valtryek-v5",
+      name: "Valtryek V5",
+      description:
+        "Valtryek V5 — a gt chip (3.3 g). Loose examples, spares and pre-owned gt chips of this part are listed here.",
+      extra: { aliases: ["Valtryek V5","valtryek-v5"] },
+    },
+    {
+      id: "category-valtryek-v6",
+      name: "Valtryek V6",
+      description:
+        "Valtryek V6 — a storm chip (2.6 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Valtryek V6","valtryek-v6"] },
+    },
+    {
+      id: "category-valtryek-v7",
+      name: "Valtryek V7",
+      description:
+        "Valtryek V7 — a drive chip (4.7 g). Loose examples, spares and pre-owned drive chips of this part are listed here.",
+      extra: { aliases: ["Valtryek V7","valtryek-v7"] },
+    },
+    {
+      id: "category-armor-tip-variable",
+      name: "Variable",
+      description:
+        "Variable — a armor tip (4.4 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Variable","variable","V","Rampage"] },
+    },
+    {
+      id: "category-armor-tip-venture",
+      name: "Venture",
+      description:
+        "Venture — a armor tip (2.8 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Venture","venture","Vn"] },
+    },
+    {
+      id: "category-armor-tip-vs-gear",
+      name: "VS Gear",
+      description:
+        "VS Gear — a armor tip (4.2 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["VS Gear","vs-gear"] },
+    },
+    {
+      id: "category-armor-tip-wave",
+      name: "Wave",
+      description:
+        "Wave — a armor tip (2.8 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Wave","wave","Wv"] },
+    },
+    {
+      id: "category-superking-chip-wyvern",
+      name: "Wyvern",
+      description:
+        "Wyvern — a superking chip (3.1 g, used by 1 model). Loose examples, spares and pre-owned superking chips of this part are listed here.",
+      extra: { aliases: ["Wyvern","wyvern","Wy"] },
+    },
+    {
+      id: "category-wyvron-w6",
+      name: "Wyvron W6",
+      description:
+        "Wyvron W6 — a storm chip (2.9 g). Loose examples, spares and pre-owned storm chips of this part are listed here.",
+      extra: { aliases: ["Wyvron W6","wyvron-w6"] },
+    },
+    {
+      id: "category-db-core-xcalibur",
+      name: "Xcalibur",
+      description:
+        "Xcalibur — a db core (10.6 g). Loose examples, spares and pre-owned db cores of this part are listed here.",
+      extra: { aliases: ["Xcalibur","xcalibur","XC"] },
+    },
+    {
+      id: "category-xcalius-x8",
+      name: "Xcalius X8",
+      description:
+        "Xcalius X8 — a strike chip (5 g). Loose examples, spares and pre-owned strike chips of this part are listed here.",
+      extra: { aliases: ["Xcalius X8","xcalius-x8"] },
+    },
+    {
+      id: "category-armor-tip-xplosion",
+      name: "Xplosion",
+      description:
+        "Xplosion — a armor tip (4.6 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Xplosion","xplosion","Xp"] },
+    },
+    {
+      id: "category-armor-tip-xtend",
+      name: "Xtend+",
+      description:
+        "Xtend+ — a armor tip (2.8 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Xtend+","xtend","Xt+"] },
+    },
+    {
+      id: "category-armor-tip-yard",
       name: "Yard",
       description:
-        "Yard — a armour (used by 1 model). Loose examples, spares and pre-owned armours of this part are listed here.",
-      extra: { aliases: ["Yard","yard"] },
+        "Yard — a armor tip (used by 1 model). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Yard","yard","Yr"] },
+    },
+    {
+      id: "category-zan",
+      name: "Zan",
+      description:
+        "Zan — a weight (7.9 g). Loose examples, spares and pre-owned weights of this part are listed here.",
+      extra: { aliases: ["Zan","zan"] },
+    },
+    {
+      id: "category-armor-tip-zeal",
+      name: "Zeal",
+      description:
+        "Zeal — a armor tip (3.9 g). Loose examples, spares and pre-owned armor tips of this part are listed here.",
+      extra: { aliases: ["Zeal","zeal","Zl","Zinger"] },
+    },
+    {
+      id: "category-spirit-shield-zurafa",
+      name: "Zurafa",
+      description:
+        "Zurafa — a spirit shield (7.8 g). Loose examples, spares and pre-owned spirit shields of this part are listed here.",
+      extra: { aliases: ["Zurafa","zurafa"] },
     },
   ],
   "category-burst-discs": [
     {
-      id: "category-0",
+      id: "category-disc-0",
       name: "0",
       description:
-        "0 — a disc (used by 4 models). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "0 — a disc (21 g, used by 4 models). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["0"] },
     },
     {
       id: "category-0-0wall",
       name: "0 / 0Wall",
       description:
-        "0 / 0Wall — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "0 / 0Wall — a disc (23 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["0 / 0Wall","0 / 0wall"] },
     },
     {
       id: "category-00",
       name: "00",
       description:
-        "00 — a disc (used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["00"] },
+        "00 — a disc (25 g, used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["00","Pronounced Double O"] },
     },
     {
       id: "category-00-00turn",
@@ -106,22 +1618,64 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-disc-1",
       name: "1",
       description:
-        "1 — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["1"] },
+        "1 — a disc (14 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["1","Pronounced One Dash"] },
     },
     {
-      id: "category-10",
+      id: "category-disc-10",
       name: "10",
       description:
-        "10 — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "10 — a disc (21 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["10"] },
     },
     {
       id: "category-11",
       name: "11",
       description:
-        "11 — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "11 — a disc (18.5 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["11"] },
+    },
+    {
+      id: "category-12",
+      name: "12",
+      description:
+        "12 — a disc (16.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["12"] },
+    },
+    {
+      id: "category-13",
+      name: "13",
+      description:
+        "13 — a disc (20.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["13"] },
+    },
+    {
+      id: "category-1a-d",
+      name: "1A-D",
+      description:
+        "1A-D — a disc (23.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["1A-D","1a-d","1-Attack Disc"] },
+    },
+    {
+      id: "category-1b-d",
+      name: "1B-D",
+      description:
+        "1B-D — a disc (23.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["1B-D","1b-d","1-Balance Disc"] },
+    },
+    {
+      id: "category-disc-2",
+      name: "2",
+      description:
+        "2 — a disc (21.21 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["2"] },
+    },
+    {
+      id: "category-2d-d",
+      name: "2D-D",
+      description:
+        "2D-D — a disc (22.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["2D-D","2d-d","2-Defense Disc"] },
     },
     {
       id: "category-2glaive",
@@ -136,6 +1690,48 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "2S Chassis — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["2S Chassis","2s chassis"] },
+    },
+    {
+      id: "category-disc-3",
+      name: "3",
+      description:
+        "3 — a disc (21.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["3"] },
+    },
+    {
+      id: "category-3a-d",
+      name: "3A-D",
+      description:
+        "3A-D — a disc (21.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["3A-D","3a-d","3-Attack Disc"] },
+    },
+    {
+      id: "category-disc-4",
+      name: "4",
+      description:
+        "4 — a disc (21.11 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["4"] },
+    },
+    {
+      id: "category-5",
+      name: "5",
+      description:
+        "5 — a disc (22 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["5"] },
+    },
+    {
+      id: "category-disc-6",
+      name: "6",
+      description:
+        "6 — a disc (21.2 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["6"] },
+    },
+    {
+      id: "category-6-rc",
+      name: "6-RC",
+      description:
+        "6-RC — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["6-RC","6-rc"] },
     },
     {
       id: "category-6mobile-ring",
@@ -155,15 +1751,22 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-disc-7",
       name: "7",
       description:
-        "7 — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "7 — a disc (19 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["7"] },
     },
     {
-      id: "category-8",
+      id: "category-disc-8",
       name: "8",
       description:
-        "8 — a disc (used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["8"] },
+        "8 — a disc (20 g, used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["8","Pronounced Eight Dash"] },
+    },
+    {
+      id: "category-8-rc",
+      name: "8-RC",
+      description:
+        "8-RC — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["8-RC","8-rc"] },
     },
     {
       id: "category-8flow",
@@ -173,32 +1776,74 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["8Flow","8flow"] },
     },
     {
+      id: "category-aero",
+      name: "Aero'",
+      description:
+        "Aero' — a disc (16.7 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Aero'","aero-dash","α'","Pronounced Aero Dash"] },
+    },
+    {
       id: "category-aquilon-q",
       name: "Aquilon-Q",
       description:
-        "Aquilon-Q — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Aquilon-Q","aquilon-q"] },
+        "Aquilon-Q — a disc (24.5 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Aquilon-Q","aquilon-q","Aq'-Q","Aquilon Dash-QuadDrive"] },
+    },
+    {
+      id: "category-armed",
+      name: "Armed",
+      description:
+        "Armed — a disc (19.88 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Armed","armed","A"] },
     },
     {
       id: "category-around",
       name: "Around",
       description:
-        "Around — a disc (used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Around","around"] },
+        "Around — a disc (20 g, used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Around","around","Ar","Around-P (Pro Series)"] },
     },
     {
-      id: "category-blitz",
+      id: "category-disc-blitz",
       name: "Blitz",
       description:
-        "Blitz — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Blitz","blitz"] },
+        "Blitz — a disc (28.6 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Blitz","blitz","Bl","Blitz-P (Pro Series)"] },
+    },
+    {
+      id: "category-disc-blitz-hasbro",
+      name: "Blitz (Hasbro)",
+      description:
+        "Blitz (Hasbro) — a disc (18.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Blitz (Hasbro)","blitz-hasbro","Bl"] },
     },
     {
       id: "category-boost",
       name: "Boost",
       description:
-        "Boost — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Boost","boost"] },
+        "Boost — a disc (20 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Boost","boost","B"] },
+    },
+    {
+      id: "category-boost-l",
+      name: "Boost-L",
+      description:
+        "Boost-L — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Boost-L","boost-l"] },
+    },
+    {
+      id: "category-disc-bumper",
+      name: "Bumper",
+      description:
+        "Bumper — a disc (20.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Bumper","bumper","β"] },
+    },
+    {
+      id: "category-central",
+      name: "Central",
+      description:
+        "Central — a disc (20 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Central","central","C"] },
     },
     {
       id: "category-disc-charge",
@@ -208,6 +1853,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Charge","charge"] },
     },
     {
+      id: "category-cho",
+      name: "Cho",
+      description:
+        "Cho — a disc (31.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Cho","cho"] },
+    },
+    {
+      id: "category-ciquex-q",
+      name: "Ciquex-Q",
+      description:
+        "Ciquex-Q — a disc (25.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Ciquex-Q","ciquex-q","Cq-Q","Ciquex-QuadDrive"] },
+    },
+    {
       id: "category-cn",
       name: "Cn",
       description:
@@ -215,116 +1874,445 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cn","cn"] },
     },
     {
-      id: "category-drake",
-      name: "Drake",
+      id: "category-convert",
+      name: "Convert",
       description:
-        "Drake — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Drake","drake"] },
+        "Convert — a disc (28.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Convert","convert","Cn","Convert-P (Pro Series)"] },
     },
     {
-      id: "category-force",
+      id: "category-convert-hasbro",
+      name: "Convert (Hasbro)",
+      description:
+        "Convert (Hasbro) — a disc (19.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Convert (Hasbro)","convert-hasbro","Cn"] },
+    },
+    {
+      id: "category-d-gear-q",
+      name: "D Gear-Q",
+      description:
+        "D Gear-Q — a disc (23.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["D Gear-Q","d-gear-q","DG-Q","D Gear QuadDrive"] },
+    },
+    {
+      id: "category-diagron-q",
+      name: "Diagron-Q",
+      description:
+        "Diagron-Q — a disc (25.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Diagron-Q","diagron-q","Dq-Q","Diagron-QuadDrive"] },
+    },
+    {
+      id: "category-down",
+      name: "Down",
+      description:
+        "Down — a disc (20.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Down","down","D"] },
+    },
+    {
+      id: "category-disc-drake",
+      name: "Drake",
+      description:
+        "Drake — a disc (19 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Drake","drake","Dr","Drake-P"] },
+    },
+    {
+      id: "category-drake-hasbro",
+      name: "Drake (Hasbro)",
+      description:
+        "Drake (Hasbro) — a disc (19.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Drake (Hasbro)","drake-hasbro","Dr"] },
+    },
+    {
+      id: "category-disc-force",
       name: "Force",
       description:
-        "Force — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Force","force"] },
+        "Force — a disc (19.2 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Force","force","F"] },
+    },
+    {
+      id: "category-disc-fortress",
+      name: "Fortress",
+      description:
+        "Fortress — a disc (31.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Fortress","fortress","Fr"] },
+    },
+    {
+      id: "category-fyquor-q",
+      name: "Fyquor-Q",
+      description:
+        "Fyquor-Q — a disc (25.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Fyquor-Q","fyquor-q","Fq-Q","Fyquor-QuadDrive"] },
+    },
+    {
+      id: "category-giga",
+      name: "Giga",
+      description:
+        "Giga — a disc (32.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Giga","giga","Gg"] },
+    },
+    {
+      id: "category-giga-q",
+      name: "Giga-Q",
+      description:
+        "Giga-Q — a disc (25.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Giga-Q","giga-q","Gg-Q","Giga-QuadDrive"] },
+    },
+    {
+      id: "category-disc-gravity",
+      name: "Gravity",
+      description:
+        "Gravity — a disc (21.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Gravity","gravity","G"] },
+    },
+    {
+      id: "category-gravity-l",
+      name: "Gravity-L",
+      description:
+        "Gravity-L — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Gravity-L","gravity-l"] },
+    },
+    {
+      id: "category-disc-heavy",
+      name: "Heavy",
+      description:
+        "Heavy — a disc (21.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Heavy","heavy","H"] },
+    },
+    {
+      id: "category-hurricane-hasbro",
+      name: "Hurricane (Hasbro)",
+      description:
+        "Hurricane (Hasbro) — a disc (19.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Hurricane (Hasbro)","hurricane-hasbro","Hr"] },
+    },
+    {
+      id: "category-hurricane-takara-tomy",
+      name: "Hurricane (Takara Tomy)",
+      description:
+        "Hurricane (Takara Tomy) — a disc (25.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Hurricane (Takara Tomy)","hurricane-takara-tomy","Hr"] },
+    },
+    {
+      id: "category-illegal",
+      name: "Illegal",
+      description:
+        "Illegal — a disc (31.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Illegal","illegal","Il"] },
+    },
+    {
+      id: "category-infinity",
+      name: "Infinity",
+      description:
+        "Infinity — a disc (20 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Infinity","infinity","I"] },
+    },
+    {
+      id: "category-jerk",
+      name: "Jerk",
+      description:
+        "Jerk — a disc (19.4 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Jerk","jerk","J"] },
     },
     {
       id: "category-karma",
       name: "Karma",
       description:
-        "Karma — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Karma","karma"] },
+        "Karma — a disc (29.2 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Karma","karma","Kr"] },
     },
     {
-      id: "category-knuckle",
+      id: "category-karma-q",
+      name: "Karma-Q",
+      description:
+        "Karma-Q — a disc (24.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Karma-Q","karma-q","Kr-Q","Karma-QuadDrive"] },
+    },
+    {
+      id: "category-disc-knuckle",
       name: "Knuckle",
       description:
-        "Knuckle — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Knuckle","knuckle"] },
+        "Knuckle — a disc (18 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Knuckle","knuckle","K"] },
+    },
+    {
+      id: "category-knuckle-l",
+      name: "Knuckle-L",
+      description:
+        "Knuckle-L — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Knuckle-L","knuckle-l"] },
+    },
+    {
+      id: "category-kou",
+      name: "Kou",
+      description:
+        "Kou — a disc (27.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Kou","kou"] },
     },
     {
       id: "category-legacy",
       name: "Legacy",
       description:
-        "Legacy — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Legacy","legacy"] },
+        "Legacy — a disc (22 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Legacy","legacy","Lg"] },
     },
     {
       id: "category-limited",
       name: "Limited",
       description:
-        "Limited — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Limited","limited"] },
+        "Limited — a disc (19.5 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Limited","limited","L"] },
+    },
+    {
+      id: "category-limited-l",
+      name: "Limited-L",
+      description:
+        "Limited-L — a disc (15.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Limited-L","limited-l"] },
+    },
+    {
+      id: "category-lore",
+      name: "Lore",
+      description:
+        "Lore — a disc (20 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Lore","lore","L"] },
     },
     {
       id: "category-magnet",
       name: "Magnet",
       description:
-        "Magnet — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "Magnet — a disc (20 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["Magnet","magnet"] },
+    },
+    {
+      id: "category-magnum",
+      name: "Magnum",
+      description:
+        "Magnum — a disc (19.2 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Magnum","magnum","M"] },
     },
     {
       id: "category-disc-mobius",
       name: "Mobius",
       description:
-        "Mobius — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "Mobius — a disc (22 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["Mobius","mobius"] },
+    },
+    {
+      id: "category-moon",
+      name: "Moon",
+      description:
+        "Moon — a disc (31.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Moon","moon","Mn"] },
     },
     {
       id: "category-nexus",
       name: "Nexus",
       description:
-        "Nexus — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Nexus","nexus"] },
+        "Nexus — a disc (20 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Nexus","nexus","Nx"] },
+    },
+    {
+      id: "category-nexus-q",
+      name: "Nexus-Q",
+      description:
+        "Nexus-Q — a disc (24.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Nexus-Q","nexus-q","Nx-Q","Nexus-QuadDrive"] },
     },
     {
       id: "category-nine",
       name: "Nine",
       description:
-        "Nine — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Nine","nine"] },
+        "Nine — a disc (20.4 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Nine","nine","N"] },
+    },
+    {
+      id: "category-ou",
+      name: "Ou",
+      description:
+        "Ou — a disc (30 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Ou","ou"] },
+    },
+    {
+      id: "category-disc-outer",
+      name: "Outer",
+      description:
+        "Outer — a disc (22.05 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Outer","outer","Ω"] },
+    },
+    {
+      id: "category-oval",
+      name: "Oval",
+      description:
+        "Oval — a disc (18.2 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Oval","oval","O"] },
     },
     {
       id: "category-over",
       name: "Over",
       description:
-        "Over — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Over","over"] },
+        "Over — a disc (33.7 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Over","over","Ov"] },
+    },
+    {
+      id: "category-over-q",
+      name: "Over-Q",
+      description:
+        "Over-Q — a disc (25.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Over-Q","over-q","Ov-Q","Over-QuadDrive"] },
+    },
+    {
+      id: "category-paradox",
+      name: "Paradox",
+      description:
+        "Paradox — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Paradox","paradox","Pr","Paradox-P"] },
+    },
+    {
+      id: "category-polish",
+      name: "Polish",
+      description:
+        "Polish — a disc (20.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Polish","polish","P"] },
+    },
+    {
+      id: "category-python",
+      name: "Python",
+      description:
+        "Python — a disc (19.2 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Python","python","P"] },
+    },
+    {
+      id: "category-quacchu-q",
+      name: "Quacchu-Q",
+      description:
+        "Quacchu-Q — a disc (25.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Quacchu-Q","quacchu-q","Qq-Q"] },
+    },
+    {
+      id: "category-quarter",
+      name: "Quarter",
+      description:
+        "Quarter — a disc (21.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Quarter","quarter","Q"] },
+    },
+    {
+      id: "category-ratchet",
+      name: "Ratchet",
+      description:
+        "Ratchet — a disc (27.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Ratchet","ratchet","Rt","Ratchet-P (Pro Series)"] },
+    },
+    {
+      id: "category-ratchet-hasbro",
+      name: "Ratchet (Hasbro)",
+      description:
+        "Ratchet (Hasbro) — a disc (19.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Ratchet (Hasbro)","ratchet-hasbro","Rt"] },
+    },
+    {
+      id: "category-ring",
+      name: "Ring",
+      description:
+        "Ring — a disc (19.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Ring","ring","R"] },
+    },
+    {
+      id: "category-s-gear-q",
+      name: "S Gear-Q",
+      description:
+        "S Gear-Q — a disc (24.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["S Gear-Q","s-gear-q","SG-Q","S Gear QuadDrive"] },
+    },
+    {
+      id: "category-spread",
+      name: "Spread'",
+      description:
+        "Spread' — a disc (33 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Spread'","spread-dash","S'"] },
+    },
+    {
+      id: "category-squadron-q",
+      name: "Squadron-Q",
+      description:
+        "Squadron-Q — a disc (25.1 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Squadron-Q","squadron-q","Sq-Q","Squadron-QuadDrive"] },
     },
     {
       id: "category-sting",
       name: "Sting",
       description:
-        "Sting — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Sting","sting"] },
+        "Sting — a disc (28.7 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Sting","sting","St","Sting-P (Pro Series)"] },
+    },
+    {
+      id: "category-sting-hasbro",
+      name: "Sting (Hasbro)",
+      description:
+        "Sting (Hasbro) — a disc (18.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Sting (Hasbro)","sting-hasbro","St"] },
+    },
+    {
+      id: "category-swipe",
+      name: "Swipe",
+      description:
+        "Swipe — a disc (18.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Swipe","swipe","Sw"] },
     },
     {
       id: "category-tapered",
       name: "Tapered",
       description:
-        "Tapered — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Tapered","tapered"] },
+        "Tapered — a disc (29.3 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Tapered","tapered","Tp"] },
     },
     {
       id: "category-tapered-metal",
       name: "Tapered Metal",
       description:
-        "Tapered Metal — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+        "Tapered Metal — a disc (23 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["Tapered Metal","tapered metal"] },
+    },
+    {
+      id: "category-tapered-q",
+      name: "Tapered-Q",
+      description:
+        "Tapered-Q — a disc (26.3 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Tapered-Q","tapered-q","Tp-Q","Tapered-QuadDrive"] },
     },
     {
       id: "category-triple",
       name: "Triple",
       description:
-        "Triple — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Triple","triple"] },
+        "Triple — a disc (18 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Triple","triple","T"] },
+    },
+    {
+      id: "category-twist-q",
+      name: "Twist-Q",
+      description:
+        "Twist-Q — a disc (24.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Twist-Q","twist-q","Tq-Q","Twist-QuadStrike"] },
+    },
+    {
+      id: "category-upper",
+      name: "Upper",
+      description:
+        "Upper — a disc (20 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Upper","upper","U"] },
     },
     {
       id: "category-vanguard",
       name: "Vanguard",
       description:
-        "Vanguard — a disc (used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Vanguard","vanguard"] },
+        "Vanguard — a disc (19 g, used by 2 models). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Vanguard","vanguard","Vn","Vanguard-P (Pro Series)"] },
+    },
+    {
+      id: "category-vanguard-hasbro",
+      name: "Vanguard (Hasbro)",
+      description:
+        "Vanguard (Hasbro) — a disc (20.4 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Vanguard (Hasbro)","vanguard-hasbro","Vn"] },
     },
     {
       id: "category-disc-variable-per-combo",
@@ -334,58 +2322,303 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["variable per combo"] },
     },
     {
-      id: "category-vertical",
+      id: "category-disc-vertical",
       name: "Vertical",
       description:
-        "Vertical — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Vertical","vertical"] },
+        "Vertical — a disc (20 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Vertical","vertical","V"] },
+    },
+    {
+      id: "category-vertical-l",
+      name: "Vertical-L",
+      description:
+        "Vertical-L — a disc. Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Vertical-L","vertical-l"] },
+    },
+    {
+      id: "category-disc-wheel",
+      name: "Wheel",
+      description:
+        "Wheel — a disc (30.6 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Wheel","wheel","Wh"] },
+    },
+    {
+      id: "category-wheel-sp",
+      name: "Wheel-SP",
+      description:
+        "Wheel-SP — a disc (25 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Wheel-SP","wheel-sp","Wh-SP"] },
+    },
+    {
+      id: "category-disc-wing",
+      name: "Wing'",
+      description:
+        "Wing' — a disc (31.9 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Wing'","wing-dash","W'"] },
+    },
+    {
+      id: "category-xanthus",
+      name: "Xanthus",
+      description:
+        "Xanthus — a disc (32.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Xanthus","xanthus","Xn"] },
+    },
+    {
+      id: "category-xanthus-q",
+      name: "Xanthus-Q",
+      description:
+        "Xanthus-Q — a disc (23.5 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Xanthus-Q","xanthus-q","Xn-Q","Xanthus-QuadStrike"] },
     },
     {
       id: "category-disc-yell",
       name: "Yell",
       description:
-        "Yell — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Yell","yell"] },
+        "Yell — a disc (21.2 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Yell","yell","Y"] },
     },
     {
       id: "category-zenith",
       name: "Zenith",
       description:
-        "Zenith — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["Zenith","zenith"] },
+        "Zenith — a disc (21 g, used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Zenith","zenith","Z","Zenith-P (Pro Series)"] },
+    },
+    {
+      id: "category-zenith-hasbro",
+      name: "Zenith (Hasbro)",
+      description:
+        "Zenith (Hasbro) — a disc (23.8 g). Loose examples, spares and pre-owned discs of this part are listed here.",
+      extra: { aliases: ["Zenith (Hasbro)","zenith-hasbro","Z"] },
     },
   ],
   "category-burst-drivers": [
     {
-      id: "category-2d",
+      id: "category-driver-2d",
       name: "2D",
       description:
         "2D — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
       extra: { aliases: ["2D","2d"] },
     },
     {
+      id: "category-absorb",
+      name: "Absorb",
+      description:
+        "Absorb — a driver (6.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Absorb","absorb","Ab"] },
+    },
+    {
+      id: "category-absorb-s",
+      name: "Absorb-S",
+      description:
+        "Absorb-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Absorb-S","absorb-s","Absorb-SlingShock"] },
+    },
+    {
+      id: "category-accel-s",
+      name: "Accel-S",
+      description:
+        "Accel-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Accel-S","accel-s","Accel-SlingShock"] },
+    },
+    {
+      id: "category-driver-accel",
+      name: "Accel'",
+      description:
+        "Accel' — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Accel'","accel-dash","A'"] },
+    },
+    {
+      id: "category-driver-adventure",
+      name: "Adventure",
+      description:
+        "Adventure — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Adventure","adventure","Ad"] },
+    },
+    {
+      id: "category-disc-integrated-driver-almight",
+      name: "Almight",
+      description:
+        "Almight — a disc-integrated driver (38.1 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Almight","almight","Al"] },
+    },
+    {
+      id: "category-almight-q",
+      name: "Almight-Q",
+      description:
+        "Almight-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Almight-Q","almight-q","Al-Q","Almighty-Q (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-anchor",
+      name: "Anchor",
+      description:
+        "Anchor — a driver (6.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Anchor","anchor","αn"] },
+    },
+    {
+      id: "category-assault-q",
+      name: "Assault-Q",
+      description:
+        "Assault-Q — a driver (5.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Assault-Q","assault-q","α-Q","Assault-QuadDrive"] },
+    },
+    {
+      id: "category-driver-assault",
+      name: "Assault'",
+      description:
+        "Assault' — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Assault'","assault-dash","α'"] },
+    },
+    {
       id: "category-driver-atomic",
       name: "Atomic",
       description:
-        "Atomic — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Atomic","atomic"] },
+        "Atomic — a driver (7 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Atomic","atomic","At'"] },
+    },
+    {
+      id: "category-atomic-s",
+      name: "Atomic-S",
+      description:
+        "Atomic-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Atomic-S","atomic-s","Atomic-SlingShock"] },
+    },
+    {
+      id: "category-banshee-h",
+      name: "Banshee-H",
+      description:
+        "Banshee-H — a driver (8.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Banshee-H","banshee-h","Banshee-HyperSphere"] },
+    },
+    {
+      id: "category-bearing-drift",
+      name: "Bearing Drift",
+      description:
+        "Bearing Drift — a driver (10.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bearing Drift","bearing-drift","BDr"] },
+    },
+    {
+      id: "category-bearing-mobius",
+      name: "Bearing Mobius",
+      description:
+        "Bearing Mobius — a driver (7.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bearing Mobius","bearing-mobius","BMb"] },
+    },
+    {
+      id: "category-driver-bearing",
+      name: "Bearing'",
+      description:
+        "Bearing' — a driver (6.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bearing'","bearing-dash","Br'"] },
+    },
+    {
+      id: "category-bite",
+      name: "Bite",
+      description:
+        "Bite — a driver (6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bite","bite","β"] },
+    },
+    {
+      id: "category-bite-q",
+      name: "Bite-Q",
+      description:
+        "Bite-Q — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bite-Q","bite-q","β-Q"] },
+    },
+    {
+      id: "category-driver-blow",
+      name: "Blow'",
+      description:
+        "Blow' — a driver (5.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Blow'","blow-dash","B'"] },
+    },
+    {
+      id: "category-driver-bounce",
+      name: "Bounce",
+      description:
+        "Bounce — a driver (6.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bounce","bounce","Bn"] },
     },
     {
       id: "category-driver-bullet",
       name: "Bullet",
       description:
-        "Bullet — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Bullet","bullet"] },
+        "Bullet — a driver (15.4 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bullet","bullet","Bl"] },
+    },
+    {
+      id: "category-bullet-i-h",
+      name: "Bullet I-H",
+      description:
+        "Bullet I-H — a driver (8.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bullet I-H","bullet-i-h","Bullet I-HyperSphere","Pronounced Bullet One Hypersphere"] },
+    },
+    {
+      id: "category-bullet-ii-h",
+      name: "Bullet II-H",
+      description:
+        "Bullet II-H — a driver (8.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Bullet II-H","bullet-ii-h","Bullet II-HyperSphere","Pronounced Bullet Two HyperSphere"] },
     },
     {
       id: "category-driver-charge",
       name: "Charge",
       description:
-        "Charge — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Charge","charge"] },
+        "Charge — a driver (15.2 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge","charge","Ch'"] },
     },
     {
-      id: "category-cross",
+      id: "category-charge-i-h",
+      name: "Charge I-H",
+      description:
+        "Charge I-H — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge I-H","charge-i-h","Charge I-HyperSphere","Pronounced Charge One HyperSphere"] },
+    },
+    {
+      id: "category-charge-ii-h",
+      name: "Charge II-H",
+      description:
+        "Charge II-H — a driver (8.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge II-H","charge-ii-h","Charge II-HyperSphere","Pronounced Charge Two HyperSphere"] },
+    },
+    {
+      id: "category-charge-iii-h",
+      name: "Charge III-H",
+      description:
+        "Charge III-H — a driver (8.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge III-H","charge-iii-h","Charge III-HyperSphere","Pronounced Charge Three HyperSphere"] },
+    },
+    {
+      id: "category-charge-metal-spm",
+      name: "Charge Metal-SPM",
+      description:
+        "Charge Metal-SPM — a driver (17.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge Metal-SPM","charge-metal-spm","Cm-SPM","Charger-SPM (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-charge-metal",
+      name: "Charge Metal'",
+      description:
+        "Charge Metal' — a driver (16.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Charge Metal'","charge-metal-dash","Cm'"] },
+    },
+    {
+      id: "category-claw",
+      name: "Claw",
+      description:
+        "Claw — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Claw","claw","C"] },
+    },
+    {
+      id: "category-coil-h",
+      name: "Coil-H",
+      description:
+        "Coil-H — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Coil-H","coil-h","Coil-HyperSphere"] },
+    },
+    {
+      id: "category-driver-cross",
       name: "Cross",
       description:
         "Cross — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
@@ -399,11 +2632,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cross / Zeta","cross / zeta"] },
     },
     {
+      id: "category-cycle",
+      name: "Cycle",
+      description:
+        "Cycle — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Cycle","cycle","Cy"] },
+    },
+    {
       id: "category-cyclone-aggressive",
       name: "Cyclone (aggressive)",
       description:
         "Cyclone (aggressive) — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
       extra: { aliases: ["Cyclone (aggressive)","cyclone (aggressive)"] },
+    },
+    {
+      id: "category-driver-defense",
+      name: "Defense",
+      description:
+        "Defense — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Defense","defense","D"] },
+    },
+    {
+      id: "category-defense-s",
+      name: "Defense-S",
+      description:
+        "Defense-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Defense-S","defense-s","Defense-SlingShock"] },
+    },
+    {
+      id: "category-destroy-h",
+      name: "Destroy-H",
+      description:
+        "Destroy-H — a driver (8.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Destroy-H","destroy-h","Destroy-HyperSphere","Destroyer-H"] },
+    },
+    {
+      id: "category-destroy-s",
+      name: "Destroy-S",
+      description:
+        "Destroy-S — a driver (6.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Destroy-S","destroy-s","Destroy-SlingShock"] },
+    },
+    {
+      id: "category-destroy-spm",
+      name: "Destroy-SPM",
+      description:
+        "Destroy-SPM — a driver (11.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Destroy-SPM","destroy-spm","Ds-SPM","Destroyer-SPM (Beyblade Burst App)"] },
     },
     {
       id: "category-destroy-dash",
@@ -413,11 +2688,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Destroy'","destroy'"] },
     },
     {
+      id: "category-driver-destroy",
+      name: "Destroy'",
+      description:
+        "Destroy' — a driver (6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Destroy'","destroy-dash","Ds'"] },
+    },
+    {
       id: "category-dimension",
       name: "Dimension",
       description:
-        "Dimension — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Dimension","dimension"] },
+        "Dimension — a driver (7.4 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Dimension","dimension","Dm'"] },
+    },
+    {
+      id: "category-dimension-h",
+      name: "Dimension-H",
+      description:
+        "Dimension-H — a driver (8.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Dimension-H","dimension-h","Dimension-HyperSphere","Dimensional-H"] },
+    },
+    {
+      id: "category-dimension-s",
+      name: "Dimension-S",
+      description:
+        "Dimension-S — a driver (6.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Dimension-S","dimension-s","Dm-S","Pronounced Dimension-SlingShock"] },
+    },
+    {
+      id: "category-dimension-sp",
+      name: "Dimension-SP",
+      description:
+        "Dimension-SP — a driver (6.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Dimension-SP","dimension-sp","Dm-SP","Dimensioning-SP (Beyblade Burst App)"] },
     },
     {
       id: "category-driver-dimension-dash",
@@ -427,11 +2730,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dimension'","dimension'"] },
     },
     {
-      id: "category-drift",
+      id: "category-driver-drift",
       name: "Drift",
       description:
-        "Drift — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Drift","drift"] },
+        "Drift — a driver (10 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Drift","drift","Dr"] },
+    },
+    {
+      id: "category-drift-sp",
+      name: "Drift-SP",
+      description:
+        "Drift-SP — a driver (9.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Drift-SP","drift-sp","Dr-SP"] },
+    },
+    {
+      id: "category-edge",
+      name: "Edge",
+      description:
+        "Edge — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Edge","edge","E"] },
+    },
+    {
+      id: "category-edge-q",
+      name: "Edge-Q",
+      description:
+        "Edge-Q — a driver (5.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Edge-Q","edge-q","E-Q","Edge-QuadDrive"] },
+    },
+    {
+      id: "category-eternal",
+      name: "Eternal",
+      description:
+        "Eternal — a driver (5.93 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Eternal","eternal","Et"] },
+    },
+    {
+      id: "category-eternal-q",
+      name: "Eternal-Q",
+      description:
+        "Eternal-Q — a driver (5.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Eternal-Q","eternal-q","Et-Q"] },
+    },
+    {
+      id: "category-eternal-s",
+      name: "Eternal-S",
+      description:
+        "Eternal-S — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Eternal-S","eternal-s","Eternal-SlingShock"] },
     },
     {
       id: "category-evolution-eternal",
@@ -441,11 +2786,270 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Evolution / Eternal","evolution / eternal"] },
     },
     {
+      id: "category-evolution-s",
+      name: "Evolution-S",
+      description:
+        "Evolution-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Evolution-S","evolution-s","Evolution-SlingShock"] },
+    },
+    {
+      id: "category-evolution-sp",
+      name: "Evolution-SP",
+      description:
+        "Evolution-SP — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Evolution-SP","evolution-sp","Ev-SP","Evolutional-SP (Beyblade Burst App"] },
+    },
+    {
       id: "category-evolution-dash",
       name: "Evolution'",
       description:
         "Evolution' — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
       extra: { aliases: ["Evolution'","evolution'"] },
+    },
+    {
+      id: "category-driver-evolution",
+      name: "Evolution'",
+      description:
+        "Evolution' — a driver (6.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Evolution'","evolution-dash","Ev'"] },
+    },
+    {
+      id: "category-driver-flugel",
+      name: "Flugel",
+      description:
+        "Flugel — a driver (5.88 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Flugel","flugel","Fl"] },
+    },
+    {
+      id: "category-flugel-s",
+      name: "Flugel-S",
+      description:
+        "Flugel-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Flugel-S","flugel-s","Flugel-SlingShock"] },
+    },
+    {
+      id: "category-driver-friction",
+      name: "Friction",
+      description:
+        "Friction — a driver (7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Friction","friction","Fr"] },
+    },
+    {
+      id: "category-friction-h",
+      name: "Friction-H",
+      description:
+        "Friction-H — a driver (8.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Friction-H","friction-h","Friction-HyperSphere"] },
+    },
+    {
+      id: "category-friction-s",
+      name: "Friction-S",
+      description:
+        "Friction-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Friction-S","friction-s","Friction-SlingShock"] },
+    },
+    {
+      id: "category-fusion-q",
+      name: "Fusion-Q",
+      description:
+        "Fusion-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Fusion-Q","fusion-q","F-Q","Fusion-QuadDrive"] },
+    },
+    {
+      id: "category-fusion-s",
+      name: "Fusion-S",
+      description:
+        "Fusion-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Fusion-S","fusion-s","Fusion-SlingShock"] },
+    },
+    {
+      id: "category-fusion-sp",
+      name: "Fusion-SP",
+      description:
+        "Fusion-SP — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Fusion-SP","fusion-sp","F-SP","Fusional-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-driver-fusion",
+      name: "Fusion'",
+      description:
+        "Fusion' — a driver (5.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Fusion'","fusion-dash","F'"] },
+    },
+    {
+      id: "category-generate",
+      name: "Generate",
+      description:
+        "Generate — a disc-integrated driver (36.9 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Generate","generate","Gn"] },
+    },
+    {
+      id: "category-driver-guard",
+      name: "Guard",
+      description:
+        "Guard — a driver (6.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Guard","guard","Gr"] },
+    },
+    {
+      id: "category-guard-h",
+      name: "Guard-H",
+      description:
+        "Guard-H — a driver (8.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Guard-H","guard-h","Guard-HyperSphere","Guardian-H"] },
+    },
+    {
+      id: "category-guard-q",
+      name: "Guard-Q",
+      description:
+        "Guard-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Guard-Q","guard-q","G-Q","Guard-QuadDrive"] },
+    },
+    {
+      id: "category-gyro",
+      name: "Gyro",
+      description:
+        "Gyro — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Gyro","gyro","G"] },
+    },
+    {
+      id: "category-gyro-q",
+      name: "Gyro-Q",
+      description:
+        "Gyro-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Gyro-Q","gyro-q","G-Q"] },
+    },
+    {
+      id: "category-high-accel",
+      name: "High Accel'",
+      description:
+        "High Accel' — a driver (7.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Accel'","high-accel-dash","HA'"] },
+    },
+    {
+      id: "category-high-blow",
+      name: "High Blow'",
+      description:
+        "High Blow' — a driver (7.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Blow'","high-blow-dash","HB'"] },
+    },
+    {
+      id: "category-high-charge",
+      name: "High Charge'",
+      description:
+        "High Charge' — a driver (16.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Charge'","high-charge-dash","HCh'"] },
+    },
+    {
+      id: "category-high-defense",
+      name: "High Defense",
+      description:
+        "High Defense — a driver (7.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Defense","high-defense","HD"] },
+    },
+    {
+      id: "category-high-eternal",
+      name: "High Eternal",
+      description:
+        "High Eternal — a driver (7.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Eternal","high-eternal","HEt"] },
+    },
+    {
+      id: "category-high-hold",
+      name: "High Hold'",
+      description:
+        "High Hold' — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Hold'","high-hold-dash","HH'"] },
+    },
+    {
+      id: "category-high-jaggy",
+      name: "High Jaggy'",
+      description:
+        "High Jaggy' — a driver (7.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Jaggy'","high-jaggy-dash","HJ'"] },
+    },
+    {
+      id: "category-high-massive",
+      name: "High Massive",
+      description:
+        "High Massive — a driver (7.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Massive","high-massive","HM"] },
+    },
+    {
+      id: "category-high-revolve",
+      name: "High Revolve",
+      description:
+        "High Revolve — a driver (7.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Revolve","high-revolve","HR"] },
+    },
+    {
+      id: "category-high-survive",
+      name: "High Survive",
+      description:
+        "High Survive — a driver (7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Survive","high-survive","HS"] },
+    },
+    {
+      id: "category-high-wave",
+      name: "High Wave'",
+      description:
+        "High Wave' — a driver (9.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Wave'","high-wave-dash","HWv'"] },
+    },
+    {
+      id: "category-high-xtend",
+      name: "High Xtend'",
+      description:
+        "High Xtend' — a driver (9.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Xtend'","high-xtend-dash","HXt'"] },
+    },
+    {
+      id: "category-high-zephyr",
+      name: "High Zephyr",
+      description:
+        "High Zephyr — a driver (6.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["High Zephyr","high-zephyr","HZ'"] },
+    },
+    {
+      id: "category-hold",
+      name: "Hold'",
+      description:
+        "Hold' — a driver (6.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Hold'","hold-dash","H'"] },
+    },
+    {
+      id: "category-hunter-s",
+      name: "Hunter-S",
+      description:
+        "Hunter-S — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Hunter-S","hunter-s","Hunter-SlingShock"] },
+    },
+    {
+      id: "category-driver-hunter",
+      name: "Hunter'",
+      description:
+        "Hunter' — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Hunter'","hunter-dash","Hn'"] },
+    },
+    {
+      id: "category-hybrid",
+      name: "Hybrid",
+      description:
+        "Hybrid — a disc-integrated driver (38.6 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Hybrid","hybrid","Hy"] },
+    },
+    {
+      id: "category-hybrid-h",
+      name: "Hybrid-H",
+      description:
+        "Hybrid-H — a driver (9.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Hybrid-H","hybrid-h","Hybrid-HyperSphere"] },
+    },
+    {
+      id: "category-ignition-h",
+      name: "Ignition-H",
+      description:
+        "Ignition-H — a disc-integrated driver (29.4 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Ignition-H","ignition-h","Ignition-HyperSphere"] },
     },
     {
       id: "category-ignition-dash",
@@ -455,25 +3059,116 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Ignition'","ignition'"] },
     },
     {
+      id: "category-disc-integrated-driver-ignition",
+      name: "Ignition'",
+      description:
+        "Ignition' — a disc-integrated driver (39.1 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Ignition'","ignition-dash","Ig'"] },
+    },
+    {
+      id: "category-impact",
+      name: "Impact",
+      description:
+        "Impact — a driver (6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Impact","impact","I"] },
+    },
+    {
       id: "category-iron",
       name: "Iron",
       description:
-        "Iron — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Iron","iron"] },
+        "Iron — a driver (6.7 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Iron","iron","Ir"] },
     },
     {
-      id: "category-jaggy",
+      id: "category-driver-jaggy",
       name: "Jaggy",
       description:
-        "Jaggy — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Jaggy","jaggy"] },
+        "Jaggy — a driver (5.9 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jaggy","jaggy","J'"] },
     },
     {
-      id: "category-jolt",
+      id: "category-jaggy-h",
+      name: "Jaggy-H",
+      description:
+        "Jaggy-H — a driver (8.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jaggy-H","jaggy-h","Jaggy-HyperSphere","Jagged-H"] },
+    },
+    {
+      id: "category-jaggy-q",
+      name: "Jaggy-Q",
+      description:
+        "Jaggy-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jaggy-Q","jaggy-q","J-Q","Jaggy-QuadDrive"] },
+    },
+    {
+      id: "category-jaggy-s",
+      name: "Jaggy-S",
+      description:
+        "Jaggy-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jaggy-S","jaggy-s","Jaggy-SlingShock"] },
+    },
+    {
+      id: "category-driver-jolt",
       name: "Jolt /",
       description:
-        "Jolt / — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Jolt /","jolt /"] },
+        "Jolt / — a driver (5 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jolt /","jolt /","Jl'"] },
+    },
+    {
+      id: "category-jolt-q",
+      name: "Jolt-Q",
+      description:
+        "Jolt-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jolt-Q","jolt-q","Jl-Q"] },
+    },
+    {
+      id: "category-jolt-s",
+      name: "Jolt-S",
+      description:
+        "Jolt-S — a driver (6.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Jolt-S","jolt-s","Jolt-SlingShock"] },
+    },
+    {
+      id: "category-just-q",
+      name: "Just-Q",
+      description:
+        "Just-Q — a driver (5.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Just-Q","just-q","Js-Q"] },
+    },
+    {
+      id: "category-driver-just",
+      name: "Just'",
+      description:
+        "Just' — a driver (8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Just'","just-dash","Js'"] },
+    },
+    {
+      id: "category-keep-h",
+      name: "Keep-H",
+      description:
+        "Keep-H — a driver (8.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Keep-H","keep-h","Keep-HyperSphere"] },
+    },
+    {
+      id: "category-keep-s",
+      name: "Keep-S",
+      description:
+        "Keep-S — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Keep-S","keep-s","Keep-SlingShock","Keeper-S"] },
+    },
+    {
+      id: "category-keep",
+      name: "Keep'",
+      description:
+        "Keep' — a driver (6.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Keep'","keep-dash","Kp'","Pronounced Keep Dash"] },
+    },
+    {
+      id: "category-driver-kick",
+      name: "Kick",
+      description:
+        "Kick — a driver (9.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Kick","kick","Kc"] },
     },
     {
       id: "category-kick-3",
@@ -483,18 +3178,102 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Kick-3","kick-3"] },
     },
     {
+      id: "category-liner-h",
+      name: "Liner-H",
+      description:
+        "Liner-H — a driver (8.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Liner-H","liner-h","Liner-HyperSphere","Linear-H (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-liner-q",
+      name: "Liner-Q",
+      description:
+        "Liner-Q — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Liner-Q","liner-q","L-Q"] },
+    },
+    {
+      id: "category-liner-s",
+      name: "Liner-S",
+      description:
+        "Liner-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Liner-S","liner-s","Liner-SlingShock"] },
+    },
+    {
+      id: "category-liner",
+      name: "Liner'",
+      description:
+        "Liner' — a driver (6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Liner'","liner-dash","L'"] },
+    },
+    {
       id: "category-loop",
       name: "Loop",
       description:
-        "Loop — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Loop","loop"] },
+        "Loop — a driver (4 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Loop","loop","Lp"] },
     },
     {
-      id: "category-merge",
+      id: "category-loop-s",
+      name: "Loop-S",
+      description:
+        "Loop-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Loop-S","loop-s","Loop-SlingShock"] },
+    },
+    {
+      id: "category-driver-low",
+      name: "Low",
+      description:
+        "Low — a driver (9.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Low","low","Lw"] },
+    },
+    {
+      id: "category-low-h",
+      name: "Low-H",
+      description:
+        "Low-H — a driver (8.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Low-H","low-h","Low-HyperSphere"] },
+    },
+    {
+      id: "category-driver-massive",
+      name: "Massive",
+      description:
+        "Massive — a driver (5.34 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Massive","massive","M"] },
+    },
+    {
+      id: "category-massive-q",
+      name: "Massive-Q",
+      description:
+        "Massive-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Massive-Q","massive-q","M-Q","Massive-QuadDrive"] },
+    },
+    {
+      id: "category-massive-s",
+      name: "Massive-S",
+      description:
+        "Massive-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Massive-S","massive-s","Massive-SlingShock"] },
+    },
+    {
+      id: "category-driver-merge",
       name: "Merge",
       description:
-        "Merge — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Merge","merge"] },
+        "Merge — a driver (6.5 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Merge","merge","Mr'"] },
+    },
+    {
+      id: "category-merge-sp",
+      name: "Merge-SP",
+      description:
+        "Merge-SP — a driver (6.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Merge-SP","merge-sp","Mr-SP","Merger-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-merge-spl",
+      name: "Merge-SPL",
+      description:
+        "Merge-SPL — a driver (12.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Merge-SPL","merge-spl","Mr-SPL"] },
     },
     {
       id: "category-metal-1a",
@@ -504,6 +3283,34 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal 1A","metal 1a"] },
     },
     {
+      id: "category-metal-accel",
+      name: "Metal Accel",
+      description:
+        "Metal Accel — a driver (7.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Accel","metal-accel","MA"] },
+    },
+    {
+      id: "category-metal-bearing-drift",
+      name: "Metal Bearing Drift",
+      description:
+        "Metal Bearing Drift — a driver (12.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Bearing Drift","metal-bearing-drift","MBD","Ultimate Driver"] },
+    },
+    {
+      id: "category-driver-metal-defense",
+      name: "Metal Defense",
+      description:
+        "Metal Defense — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Defense","metal-defense","MD"] },
+    },
+    {
+      id: "category-metal-destroy",
+      name: "Metal Destroy",
+      description:
+        "Metal Destroy — a driver (8.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Destroy","metal-destroy","MDs"] },
+    },
+    {
       id: "category-metal-destroy-2",
       name: "Metal Destroy-2",
       description:
@@ -511,25 +3318,277 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Destroy-2","metal destroy-2"] },
     },
     {
+      id: "category-metal-dimension",
+      name: "Metal Dimension",
+      description:
+        "Metal Dimension — a driver (9.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Dimension","metal-dimension","MDm"] },
+    },
+    {
+      id: "category-metal-drift",
+      name: "Metal Drift",
+      description:
+        "Metal Drift — a driver (12.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Drift","metal-drift","MDr"] },
+    },
+    {
+      id: "category-driver-metal-fusion",
+      name: "Metal Fusion",
+      description:
+        "Metal Fusion — a driver (7.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Fusion","metal-fusion","MF"] },
+    },
+    {
+      id: "category-metal-never",
+      name: "Metal Never",
+      description:
+        "Metal Never — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Never","metal-never","MNv"] },
+    },
+    {
+      id: "category-metal-survive",
+      name: "Metal Survive",
+      description:
+        "Metal Survive — a driver (7.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Survive","metal-survive","MS"] },
+    },
+    {
+      id: "category-metal-universe",
+      name: "Metal Universe",
+      description:
+        "Metal Universe — a driver (11.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Universe","metal-universe","MUn"] },
+    },
+    {
+      id: "category-metal-xtreme",
+      name: "Metal Xtreme",
+      description:
+        "Metal Xtreme — a driver (7.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Metal Xtreme","metal-xtreme","MX"] },
+    },
+    {
       id: "category-driver-mobius",
       name: "Mobius",
       description:
-        "Mobius — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Mobius","mobius"] },
+        "Mobius — a driver (9 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Mobius","mobius","Mb"] },
+    },
+    {
+      id: "category-mobius-q",
+      name: "Mobius-Q",
+      description:
+        "Mobius-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Mobius-Q","mobius-q","Mb-Q"] },
+    },
+    {
+      id: "category-mobius-sp",
+      name: "Mobius-SP",
+      description:
+        "Mobius-SP — a driver (7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Mobius-SP","mobius-sp","Mb-SP"] },
+    },
+    {
+      id: "category-driver-moment",
+      name: "Moment'",
+      description:
+        "Moment' — a driver (7.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Moment'","moment-dash","Mm'"] },
+    },
+    {
+      id: "category-mugen",
+      name: "Mugen",
+      description:
+        "Mugen — a disc-integrated driver. Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Mugen","mugen","∞"] },
+    },
+    {
+      id: "category-mugen-l",
+      name: "Mugen-L",
+      description:
+        "Mugen-L — a disc-integrated driver. Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Mugen-L","mugen-l","∞L"] },
+    },
+    {
+      id: "category-driver-needle",
+      name: "Needle",
+      description:
+        "Needle — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Needle","needle","N"] },
+    },
+    {
+      id: "category-needle-q",
+      name: "Needle-Q",
+      description:
+        "Needle-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Needle-Q","needle-q","N-Q","Needle-QuadDrive"] },
+    },
+    {
+      id: "category-needle-s",
+      name: "Needle-S",
+      description:
+        "Needle-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Needle-S","needle-s","Needle-SlingShock"] },
+    },
+    {
+      id: "category-needle-sp",
+      name: "Needle-SP",
+      description:
+        "Needle-SP — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Needle-SP","needle-sp","N-SP","Needling-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-driver-never",
+      name: "Never",
+      description:
+        "Never — a driver (7.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Never","never","Nv"] },
     },
     {
       id: "category-nothing",
       name: "Nothing",
       description:
-        "Nothing — a driver (used by 2 models). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Nothing","nothing"] },
+        "Nothing — a driver (6 g, used by 2 models). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Nothing","nothing","Nt"] },
     },
     {
-      id: "category-press",
+      id: "category-nothing-rc",
+      name: "Nothing-RC",
+      description:
+        "Nothing-RC — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Nothing-RC","nothing-rc","Nt-RC"] },
+    },
+    {
+      id: "category-nothing-sp",
+      name: "Nothing-SP",
+      description:
+        "Nothing-SP — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Nothing-SP","nothing-sp","Nt-SP","Nothingness-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-driver-octa",
+      name: "Octa",
+      description:
+        "Octa — a driver (13.98 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Octa","octa","Ω"] },
+    },
+    {
+      id: "category-octa-h",
+      name: "Octa-H",
+      description:
+        "Octa-H — a driver (8.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Octa-H","octa-h","Octa-HyperSphere","Octave-H"] },
+    },
+    {
+      id: "category-operate-s",
+      name: "Operate-S",
+      description:
+        "Operate-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Operate-S","operate-s","Operate-SlingShock"] },
+    },
+    {
+      id: "category-driver-operate",
+      name: "Operate'",
+      description:
+        "Operate' — a driver (7.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Operate'","operate-dash","Op'"] },
+    },
+    {
+      id: "category-orbit",
+      name: "Orbit",
+      description:
+        "Orbit — a driver (6.14 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Orbit","orbit","O"] },
+    },
+    {
+      id: "category-orbit-metal",
+      name: "Orbit Metal",
+      description:
+        "Orbit Metal — a driver (7.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Orbit Metal","orbit-metal","Om"] },
+    },
+    {
+      id: "category-orbit-h",
+      name: "Orbit-H",
+      description:
+        "Orbit-H — a driver (9.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Orbit-H","orbit-h","Orbit-HyperSphere","Orbital-H"] },
+    },
+    {
+      id: "category-orbit-l",
+      name: "Orbit-L",
+      description:
+        "Orbit-L — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Orbit-L","orbit-l","O-L"] },
+    },
+    {
+      id: "category-orbit-q",
+      name: "Orbit-Q",
+      description:
+        "Orbit-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Orbit-Q","orbit-q","O-Q"] },
+    },
+    {
+      id: "category-planet-h",
+      name: "Planet-H",
+      description:
+        "Planet-H — a driver (8.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Planet-H","planet-h","Planet-HyperSphere","Planetary-H"] },
+    },
+    {
+      id: "category-planet-q",
+      name: "Planet-Q",
+      description:
+        "Planet-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Planet-Q","planet-q","Pl-Q","Planet-QuadDrive"] },
+    },
+    {
+      id: "category-planet",
+      name: "Planet'",
+      description:
+        "Planet' — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Planet'","planet-dash","Pl'"] },
+    },
+    {
+      id: "category-driver-power",
+      name: "Power",
+      description:
+        "Power — a driver (6.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Power","power","Pw"] },
+    },
+    {
+      id: "category-power-h",
+      name: "Power-H",
+      description:
+        "Power-H — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Power-H","power-h","Power-HyperSphere"] },
+    },
+    {
+      id: "category-power-s",
+      name: "Power-S",
+      description:
+        "Power-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Power-S","power-s","Power-SlingShock","Powerful-S"] },
+    },
+    {
+      id: "category-driver-press",
       name: "Press",
       description:
-        "Press — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Press","press"] },
+        "Press — a driver (6 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Press","press","P"] },
+    },
+    {
+      id: "category-press-l",
+      name: "Press-L",
+      description:
+        "Press-L — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Press-L","press-l","P-L"] },
+    },
+    {
+      id: "category-prevail-s",
+      name: "Prevail-S",
+      description:
+        "Prevail-S — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Prevail-S","prevail-s","Prevail-SlingShock"] },
     },
     {
       id: "category-driver-q",
@@ -539,6 +3598,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Q","q"] },
     },
     {
+      id: "category-driver-quake",
+      name: "Quake'",
+      description:
+        "Quake' — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quake'","quake-dash","Q'"] },
+    },
+    {
       id: "category-quattro-0",
       name: "Quattro-0",
       description:
@@ -546,39 +3612,249 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Quattro-0","quattro-0"] },
     },
     {
+      id: "category-quattro-q",
+      name: "Quattro-Q",
+      description:
+        "Quattro-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quattro-Q","quattro-q","Qt-Q","Quattro-QuadDrive"] },
+    },
+    {
+      id: "category-quattro",
+      name: "Quattro'",
+      description:
+        "Quattro' — a driver (10.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quattro'","quattro-dash","Qt'"] },
+    },
+    {
+      id: "category-quest",
+      name: "Quest",
+      description:
+        "Quest — a driver (7.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quest","quest","Qs"] },
+    },
+    {
+      id: "category-quest-s",
+      name: "Quest-S",
+      description:
+        "Quest-S — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quest-S","quest-s","Quest-SlingShock"] },
+    },
+    {
+      id: "category-quick",
+      name: "Quick'",
+      description:
+        "Quick' — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Quick'","quick-dash","Qc'"] },
+    },
+    {
       id: "category-reboot",
       name: "Reboot",
       description:
-        "Reboot — a driver (used by 2 models). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Reboot","reboot"] },
+        "Reboot — a driver (7 g, used by 2 models). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Reboot","reboot","Rb'"] },
     },
     {
-      id: "category-retsu",
+      id: "category-reboot-rc",
+      name: "Reboot-RC",
+      description:
+        "Reboot-RC — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Reboot-RC","reboot-rc","Rb-RC"] },
+    },
+    {
+      id: "category-driver-retsu",
       name: "Retsu",
       description:
         "Retsu — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
       extra: { aliases: ["Retsu","retsu"] },
     },
     {
+      id: "category-revolve-l",
+      name: "Revolve-L",
+      description:
+        "Revolve-L — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Revolve-L","revolve-l","R-L"] },
+    },
+    {
       id: "category-revolve-q",
       name: "Revolve-Q",
       description:
-        "Revolve-Q — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Revolve-Q","revolve-q"] },
+        "Revolve-Q — a driver (5.5 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Revolve-Q","revolve-q","R-Q"] },
+    },
+    {
+      id: "category-revolve-spm",
+      name: "Revolve-SPM",
+      description:
+        "Revolve-SPM — a driver (10.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Revolve-SPM","revolve-spm","R-SPM","Revolver-SPM (Beyblade Burst App)","Revolving-SPM (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-driver-revolve",
+      name: "Revolve'",
+      description:
+        "Revolve' — a driver (5.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Revolve'","revolve-dash","R'"] },
+    },
+    {
+      id: "category-driver-rise",
+      name: "Rise",
+      description:
+        "Rise — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Rise","rise","Rs"] },
+    },
+    {
+      id: "category-rise-h",
+      name: "Rise-H",
+      description:
+        "Rise-H — a driver (8.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Rise-H","rise-h","Rs-H","Rise-HyperSphere"] },
+    },
+    {
+      id: "category-disc-integrated-driver-shot",
+      name: "Shot",
+      description:
+        "Shot — a disc-integrated driver (42.5 g). Loose examples, spares and pre-owned disc-integrated drivers of this part are listed here.",
+      extra: { aliases: ["Shot","shot","Sh"] },
+    },
+    {
+      id: "category-shot-q",
+      name: "Shot-Q",
+      description:
+        "Shot-Q — a driver (5.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Shot-Q","shot-q","Smart-Q (Beyblade Burst App)"] },
     },
     {
       id: "category-driver-spiral",
       name: "Spiral",
       description:
-        "Spiral — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Spiral","spiral"] },
+        "Spiral — a driver (5 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Spiral","spiral","Sp'"] },
     },
     {
-      id: "category-unite",
+      id: "category-spiral-h",
+      name: "Spiral-H",
+      description:
+        "Spiral-H — a driver (8.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Spiral-H","spiral-h","Spiral-HyperSphere","Spiro-H"] },
+    },
+    {
+      id: "category-spiral-q",
+      name: "Spiral-Q",
+      description:
+        "Spiral-Q — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Spiral-Q","spiral-q","Sp-Q","Spiral-QuadDrive"] },
+    },
+    {
+      id: "category-spiral-s",
+      name: "Spiral-S",
+      description:
+        "Spiral-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Spiral-S","spiral-s","Spiral-SlingShock"] },
+    },
+    {
+      id: "category-survive",
+      name: "Survive",
+      description:
+        "Survive — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Survive","survive","S"] },
+    },
+    {
+      id: "category-survive-s",
+      name: "Survive-S",
+      description:
+        "Survive-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Survive-S","survive-s","Survive-SlingShock"] },
+    },
+    {
+      id: "category-survive-sp",
+      name: "Survive-SP",
+      description:
+        "Survive-SP — a driver (5.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Survive-SP","survive-sp","S-SP","Survival-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-sword-s",
+      name: "Sword-S",
+      description:
+        "Sword-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Sword-S","sword-s","Sword-SlingShock"] },
+    },
+    {
+      id: "category-driver-sword",
+      name: "Sword'",
+      description:
+        "Sword' — a driver (9.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Sword'","sword-dash","Sw'"] },
+    },
+    {
+      id: "category-tower",
+      name: "Tower",
+      description:
+        "Tower — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Tower","tower","Tw"] },
+    },
+    {
+      id: "category-tower-s",
+      name: "Tower-S",
+      description:
+        "Tower-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Tower-S","tower-s","Tower-SlingShock"] },
+    },
+    {
+      id: "category-trans",
+      name: "Trans'",
+      description:
+        "Trans' — a driver (6.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Trans'","trans-dash","T'"] },
+    },
+    {
+      id: "category-driver-trick",
+      name: "Trick",
+      description:
+        "Trick — a driver (9.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Trick","trick","Tr"] },
+    },
+    {
+      id: "category-trick-h",
+      name: "Trick-H",
+      description:
+        "Trick-H — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Trick-H","trick-h","Trick-HyperSphere"] },
+    },
+    {
+      id: "category-ultimate-reboot-h",
+      name: "Ultimate Reboot-H",
+      description:
+        "Ultimate Reboot-H — a driver (8.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Ultimate Reboot-H","ultimate-reboot-h","Ultimate Reboot-HyperSphere"] },
+    },
+    {
+      id: "category-ultimate-reboot",
+      name: "Ultimate Reboot'",
+      description:
+        "Ultimate Reboot' — a driver (8.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Ultimate Reboot'","ultimate-reboot-dash","Ul'"] },
+    },
+    {
+      id: "category-driver-unite",
       name: "Unite",
       description:
-        "Unite — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Unite","unite"] },
+        "Unite — a driver (6.1 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Unite","unite","U'"] },
+    },
+    {
+      id: "category-unite-l",
+      name: "Unite-L",
+      description:
+        "Unite-L — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Unite-L","unite-l","U-L"] },
+    },
+    {
+      id: "category-unite-sp",
+      name: "Unite-SP",
+      description:
+        "Unite-SP — a driver (5.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Unite-SP","unite-sp","U-SP","United-SP (Beyblade Burst App)"] },
     },
     {
       id: "category-unite-dash",
@@ -588,6 +3864,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Unite'","unite'"] },
     },
     {
+      id: "category-driver-universe",
+      name: "Universe",
+      description:
+        "Universe — a driver (8.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Universe","universe","Un"] },
+    },
+    {
       id: "category-universe-10",
       name: "Universe-10",
       description:
@@ -595,11 +3878,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Universe-10","universe-10"] },
     },
     {
-      id: "category-variable",
+      id: "category-universe-spm",
+      name: "Universe-SPM",
+      description:
+        "Universe-SPM — a driver (13.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Universe-SPM","universe-spm","Un-SPM"] },
+    },
+    {
+      id: "category-valor-h",
+      name: "Valor-H",
+      description:
+        "Valor-H — a driver (8.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Valor-H","valor-h","Valor-HyperSphere"] },
+    },
+    {
+      id: "category-driver-variable",
       name: "Variable",
       description:
-        "Variable — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Variable","variable"] },
+        "Variable — a driver (5 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Variable","variable","V'"] },
+    },
+    {
+      id: "category-variable-l",
+      name: "Variable-L",
+      description:
+        "Variable-L — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Variable-L","variable-l","V-L"] },
     },
     {
       id: "category-variable-dash",
@@ -609,25 +3913,130 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Variable'","variable'"] },
     },
     {
+      id: "category-driver-venture",
+      name: "Venture",
+      description:
+        "Venture — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Venture","venture","Vn"] },
+    },
+    {
       id: "category-venture-2",
       name: "Venture-2",
       description:
-        "Venture-2 — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+        "Venture-2 — a driver (6 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
       extra: { aliases: ["Venture-2","venture-2"] },
+    },
+    {
+      id: "category-volcanic-s",
+      name: "Volcanic-S",
+      description:
+        "Volcanic-S — a driver (5.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Volcanic-S","volcanic-s","Volcanic-SlingShock"] },
+    },
+    {
+      id: "category-volcanic",
+      name: "Volcanic'",
+      description:
+        "Volcanic' — a driver (6.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Volcanic'","volcanic-dash","Vl'"] },
+    },
+    {
+      id: "category-driver-wave",
+      name: "Wave'",
+      description:
+        "Wave' — a driver (8.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Wave'","wave-dash","Wv'"] },
+    },
+    {
+      id: "category-wedge-s",
+      name: "Wedge-S",
+      description:
+        "Wedge-S — a driver (7.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Wedge-S","wedge-s","Wedge-SlingShock"] },
+    },
+    {
+      id: "category-driver-wedge",
+      name: "Wedge'",
+      description:
+        "Wedge' — a driver (7.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Wedge'","wedge-dash","Wd'"] },
+    },
+    {
+      id: "category-driver-weight",
+      name: "Weight",
+      description:
+        "Weight — a driver (6.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Weight","weight","W"] },
+    },
+    {
+      id: "category-xceed-sp",
+      name: "Xceed-SP",
+      description:
+        "Xceed-SP — a driver (6.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed-SP","xceed-sp","Xc-SP"] },
+    },
+    {
+      id: "category-xceed-spm",
+      name: "Xceed-SPM",
+      description:
+        "Xceed-SPM — a driver (14.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed-SPM","xceed-spm","Xc-SPM"] },
+    },
+    {
+      id: "category-xceed",
+      name: "Xceed'",
+      description:
+        "Xceed' — a driver (6.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed'","xceed-dash","Xc'"] },
     },
     {
       id: "category-xceed-x",
       name: "Xceed'+X",
       description:
-        "Xceed'+X — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Xceed'+X","xceed'+x"] },
+        "Xceed'+X — a driver (10.4 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed'+X","xceed'+x","Xc'+X"] },
     },
     {
-      id: "category-xtend",
+      id: "category-xceed-z",
+      name: "Xceed'+Z",
+      description:
+        "Xceed'+Z — a driver (9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed'+Z","xceed-z","Xc'+Z"] },
+    },
+    {
+      id: "category-xceed-x-sp",
+      name: "Xceed+X-SP",
+      description:
+        "Xceed+X-SP — a driver (6.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xceed+X-SP","xceed-x-sp","Xc+X-SP"] },
+    },
+    {
+      id: "category-driver-xplosion",
+      name: "Xplosion'",
+      description:
+        "Xplosion' — a driver (6.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xplosion'","xplosion-dash","Xp'"] },
+    },
+    {
+      id: "category-driver-xtend",
       name: "Xtend",
       description:
-        "Xtend — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Xtend","xtend"] },
+        "Xtend — a driver (7 g, used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtend","xtend","Xt+","Pronounced Xtend Plus"] },
+    },
+    {
+      id: "category-xtend-s",
+      name: "Xtend-S",
+      description:
+        "Xtend-S — a driver (6.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtend-S","xtend-s","Xtend-SlingShock"] },
+    },
+    {
+      id: "category-xtend-sl",
+      name: "Xtend-SL",
+      description:
+        "Xtend-SL — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtend-SL","xtend-sl","Xt-SL"] },
     },
     {
       id: "category-xtend-zeta-dash",
@@ -637,6 +4046,62 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Xtend+ / Zeta'","xtend+ / zeta'"] },
     },
     {
+      id: "category-xtend-h",
+      name: "Xtend+-H",
+      description:
+        "Xtend+-H — a driver (8.9 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtend+-H","xtend-h","Xtend+-HyperSphere","Xtender-H"] },
+    },
+    {
+      id: "category-xtend-q",
+      name: "Xtend+-Q",
+      description:
+        "Xtend+-Q — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtend+-Q","xtend-q","Xt+-Q","Xtend+-QuadDrive"] },
+    },
+    {
+      id: "category-driver-xtreme",
+      name: "Xtreme'",
+      description:
+        "Xtreme' — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Xtreme'","xtreme-dash","X'"] },
+    },
+    {
+      id: "category-yard-metal",
+      name: "Yard Metal",
+      description:
+        "Yard Metal — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yard Metal","yard-metal","Ym"] },
+    },
+    {
+      id: "category-yard-h",
+      name: "Yard-H",
+      description:
+        "Yard-H — a driver (8.7 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yard-H","yard-h","Yard-HyperSphere","Yardage-H"] },
+    },
+    {
+      id: "category-yard-s",
+      name: "Yard-S",
+      description:
+        "Yard-S — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yard-S","yard-s","Yard-SlingShock"] },
+    },
+    {
+      id: "category-yard-sl",
+      name: "Yard-SL",
+      description:
+        "Yard-SL — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yard-SL","yard-sl","Yr-SL"] },
+    },
+    {
+      id: "category-driver-yard",
+      name: "Yard'",
+      description:
+        "Yard' — a driver (7.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yard'","yard-dash","Yd'"] },
+    },
+    {
       id: "category-driver-yell",
       name: "Yell",
       description:
@@ -644,14 +4109,224 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Yell","yell"] },
     },
     {
+      id: "category-driver-yielding",
+      name: "Yielding",
+      description:
+        "Yielding — a driver (5.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yielding","yielding","Y"] },
+    },
+    {
+      id: "category-yielding-q",
+      name: "Yielding-Q",
+      description:
+        "Yielding-Q — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Yielding-Q","yielding-q","Y-Q","Yielding-QuadDrive"] },
+    },
+    {
+      id: "category-driver-zeal",
+      name: "Zeal",
+      description:
+        "Zeal — a driver (6.6 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zeal","zeal","Zl"] },
+    },
+    {
+      id: "category-zephyr-q",
+      name: "Zephyr-Q",
+      description:
+        "Zephyr-Q — a driver (5.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zephyr-Q","zephyr-q","Z-Q","Zephyr-QuadDrive"] },
+    },
+    {
+      id: "category-zephyr-sp",
+      name: "Zephyr-SP",
+      description:
+        "Zephyr-SP — a driver (5.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zephyr-SP","zephyr-sp","Z-SP","Zephyry-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-zephyr",
+      name: "Zephyr'",
+      description:
+        "Zephyr' — a driver (5.8 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zephyr'","zephyr-dash","Z'"] },
+    },
+    {
+      id: "category-zeta-s",
+      name: "Zeta-S",
+      description:
+        "Zeta-S — a driver (6.5 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zeta-S","zeta-s","Zeta-SlingShock"] },
+    },
+    {
+      id: "category-driver-zeta",
+      name: "Zeta'",
+      description:
+        "Zeta' — a driver (6.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zeta'","zeta-dash","Zt'"] },
+    },
+    {
+      id: "category-zone-q",
+      name: "Zone-Q",
+      description:
+        "Zone-Q — a driver (5.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone-Q","zone-q","Zn-Q"] },
+    },
+    {
+      id: "category-zone-sp",
+      name: "Zone-SP",
+      description:
+        "Zone-SP — a driver (6.2 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone-SP","zone-sp","Zn-SP","Zoning-SP (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-zone-spm",
+      name: "Zone-SPM",
+      description:
+        "Zone-SPM — a driver (14.4 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone-SPM","zone-spm","Zn-SPM","Zoning-SPM"] },
+    },
+    {
+      id: "category-driver-zone",
+      name: "Zone'",
+      description:
+        "Zone' — a driver (6.1 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone'","zone-dash","Zn'"] },
+    },
+    {
+      id: "category-zone-x",
+      name: "Zone'+X",
+      description:
+        "Zone'+X — a driver (10.3 g). Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone'+X","zone-x","Zn'+X"] },
+    },
+    {
       id: "category-zone-z",
       name: "Zone'+Z",
       description:
         "Zone'+Z — a driver (used by 1 model). Loose examples, spares and pre-owned drivers of this part are listed here.",
-      extra: { aliases: ["Zone'+Z","zone'+z"] },
+      extra: { aliases: ["Zone'+Z","zone'+z","Zn'+Z"] },
+    },
+    {
+      id: "category-zone-z-spm",
+      name: "Zone+Z-SPM",
+      description:
+        "Zone+Z-SPM — a driver. Loose examples, spares and pre-owned drivers of this part are listed here.",
+      extra: { aliases: ["Zone+Z-SPM","zone-z-spm","Zn+Z-SPM","Zoning+Z-SPM (Beyblade Burst App)"] },
     },
   ],
   "category-burst-layers": [
+    {
+      id: "category-gravity-ring-0",
+      name: "0'",
+      description:
+        "0' — a gravity ring (1.5 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["0'","0-dash","Pronounced Zero Dash"] },
+    },
+    {
+      id: "category-gravity-ring-1",
+      name: "1",
+      description:
+        "1 — a gravity ring (1.6 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["1"] },
+    },
+    {
+      id: "category-gravity-ring-10",
+      name: "10'",
+      description:
+        "10' — a gravity ring (1.7 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["10'","10-dash","Pronounced Ten Dash"] },
+    },
+    {
+      id: "category-1a",
+      name: "1A",
+      description:
+        "1A — a chassis (45.6 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["1A","1a","1-Attack"] },
+    },
+    {
+      id: "category-chassis-1b",
+      name: "1B",
+      description:
+        "1B — a chassis (43 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["1B","1b","1-Balance"] },
+    },
+    {
+      id: "category-chassis-1d",
+      name: "1D",
+      description:
+        "1D — a chassis (11.4 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["1D","1d","1-Defense"] },
+    },
+    {
+      id: "category-1s",
+      name: "1S",
+      description:
+        "1S — a chassis (16.5 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["1S","1s","1-Stamina"] },
+    },
+    {
+      id: "category-gravity-ring-2",
+      name: "2'",
+      description:
+        "2' — a gravity ring (1.4 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["2'","2-dash","Pronounced Two Dash"] },
+    },
+    {
+      id: "category-2a",
+      name: "2A",
+      description:
+        "2A — a chassis (44.5 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["2A","2a","2-Attack"] },
+    },
+    {
+      id: "category-2b",
+      name: "2B",
+      description:
+        "2B — a chassis (46.9 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["2B","2b","2-Balance"] },
+    },
+    {
+      id: "category-chassis-2d",
+      name: "2D",
+      description:
+        "2D — a chassis (47.1 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["2D","2d","2-Defense"] },
+    },
+    {
+      id: "category-2s",
+      name: "2S",
+      description:
+        "2S — a chassis (45.2 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["2S","2s","2-Stamina"] },
+    },
+    {
+      id: "category-gravity-ring-3",
+      name: "3'",
+      description:
+        "3' — a gravity ring (1.5 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["3'","3-dash","Pronounced Three Dash"] },
+    },
+    {
+      id: "category-3a",
+      name: "3A",
+      description:
+        "3A — a chassis (44 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["3A","3a","3-Attack"] },
+    },
+    {
+      id: "category-gravity-ring-4",
+      name: "4'",
+      description:
+        "4' — a gravity ring (1.7 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["4'","4-dash","Pronounced Four Dash"] },
+    },
+    {
+      id: "category-4a",
+      name: "4A",
+      description:
+        "4A — a chassis (16.7 g). Loose examples, spares and pre-owned chassiss of this part are listed here.",
+      extra: { aliases: ["4A","4a","4-Attack"] },
+    },
     {
       id: "category-4d-clear-wheel-kronos",
       name: "4D CLEAR WHEEL — Kronos",
@@ -688,6 +4363,153 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["4D CLEAR WHEEL — Sagittario II","4d clear wheel — sagittario ii"] },
     },
     {
+      id: "category-gravity-ring-6",
+      name: "6",
+      description:
+        "6 — a gravity ring (1.5 g, used by 1 model). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["6","Pronounced Six Dash"] },
+    },
+    {
+      id: "category-gravity-ring-7",
+      name: "7'",
+      description:
+        "7' — a gravity ring (1.3 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["7'","7-dash","Pronounced Seven Dash"] },
+    },
+    {
+      id: "category-abyss-hasbro",
+      name: "Abyss (Hasbro)",
+      description:
+        "Abyss (Hasbro) — a ring (10 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Abyss (Hasbro)","abyss-hasbro"] },
+    },
+    {
+      id: "category-abyss-takara-tomy",
+      name: "Abyss (Takara Tomy)",
+      description:
+        "Abyss (Takara Tomy) — a ring (9.7 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Abyss (Takara Tomy)","abyss-takara-tomy","A"] },
+    },
+    {
+      id: "category-ace",
+      name: "Ace",
+      description:
+        "Ace — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Ace","ace","A"] },
+    },
+    {
+      id: "category-ace-hasbro",
+      name: "Ace (Hasbro)",
+      description:
+        "Ace (Hasbro) — a base (8 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Ace (Hasbro)","ace-hasbro"] },
+    },
+    {
+      id: "category-acid-anubis",
+      name: "Acid Anubis",
+      description:
+        "Acid Anubis — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Acid Anubis","acid-anubis","A2"] },
+    },
+    {
+      id: "category-air-knight",
+      name: "Air Knight",
+      description:
+        "Air Knight — a layer (20.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Air Knight","air-knight","aK"] },
+    },
+    {
+      id: "category-air-knight-k4",
+      name: "Air Knight K4",
+      description:
+        "Air Knight K4 — a layer (12.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Air Knight K4","air-knight-k4","Air Knight","Air Knight K5 (HyperSphere)"] },
+    },
+    {
+      id: "category-alter-chronos",
+      name: "Alter Chronos",
+      description:
+        "Alter Chronos — a layer (10.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Alter Chronos","alter-chronos","aC"] },
+    },
+    {
+      id: "category-alter-cognite-c3",
+      name: "Alter Cognite C3",
+      description:
+        "Alter Cognite C3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Alter Cognite C3","alter-cognite-c3","Alter Cognite"] },
+    },
+    {
+      id: "category-amaterios",
+      name: "Amaterios",
+      description:
+        "Amaterios — a layer (9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Amaterios","amaterios","α"] },
+    },
+    {
+      id: "category-ambush",
+      name: "Ambush",
+      description:
+        "Ambush — a qs blade (6.2 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Ambush","ambush"] },
+    },
+    {
+      id: "category-angle",
+      name: "Angle",
+      description:
+        "Angle — a frame (2.4 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Angle","angle","α"] },
+    },
+    {
+      id: "category-aqua-leviathan",
+      name: "Aqua Leviathan",
+      description:
+        "Aqua Leviathan — a layer (20.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Aqua Leviathan","aqua-leviathan","AL"] },
+    },
+    {
+      id: "category-layer-arc-bahamut",
+      name: "Arc Bahamut",
+      description:
+        "Arc Bahamut — a layer (12.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Arc Bahamut","arc-bahamut","aB"] },
+    },
+    {
+      id: "category-arc-balkesh-b3",
+      name: "Arc Balkesh B3",
+      description:
+        "Arc Balkesh B3 — a layer (10.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Arc Balkesh B3","arc-balkesh-b3","Arc Balkesh"] },
+    },
+    {
+      id: "category-archer-hercules",
+      name: "Archer Hercules",
+      description:
+        "Archer Hercules — a layer (19.73 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Archer Hercules","archer-hercules","aH"] },
+    },
+    {
+      id: "category-archer-hercules-h4",
+      name: "Archer Hercules H4",
+      description:
+        "Archer Hercules H4 — a layer (12.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Archer Hercules H4","archer-hercules-h4","Archer Hercules"] },
+    },
+    {
+      id: "category-asteroid-zeutron-z3",
+      name: "Asteroid Zeutron Z3",
+      description:
+        "Asteroid Zeutron Z3 — a layer (11.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Asteroid Zeutron Z3","asteroid-zeutron-z3","Asteroid Zeutron"] },
+    },
+    {
+      id: "category-atlas-anubion-a2",
+      name: "Atlas Anubion A2",
+      description:
+        "Atlas Anubion A2 — a layer (7.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Atlas Anubion A2","atlas-anubion-a2","A2","Lava-X Anubion A4 (SlingShock)","Atlas Anubion A6 (SpeedStorm)"] },
+    },
+    {
       id: "category-attack-ring",
       name: "ATTACK RING",
       description:
@@ -695,11 +4517,424 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["ATTACK RING","attack ring"] },
     },
     {
+      id: "category-axe",
+      name: "Axe",
+      description:
+        "Axe — a frame (3.5 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Axe","axe","A"] },
+    },
+    {
+      id: "category-balar-b4",
+      name: "Balar B4",
+      description:
+        "Balar B4 — a layer (10.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Balar B4","balar-b4"] },
+    },
+    {
+      id: "category-baldur",
+      name: "Baldur",
+      description:
+        "Baldur — a layer (10.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Baldur","baldur","β"] },
+    },
+    {
+      id: "category-barricade",
+      name: "Barricade",
+      description:
+        "Barricade — a bu blade (14.8 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Barricade","barricade","Brc"] },
+    },
+    {
+      id: "category-beast-behemoth",
+      name: "Beast Behemoth",
+      description:
+        "Beast Behemoth — a layer (9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Beast Behemoth","beast-behemoth","B2"] },
+    },
+    {
+      id: "category-beast-betromoth-b2",
+      name: "Beast Betromoth B2",
+      description:
+        "Beast Betromoth B2 — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Beast Betromoth B2","beast-betromoth-b2","B2","Beast Betromoth","Gold-X Beast Betromoth B4 (SlingShock)","Beast Betromoth B6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-beat-kukulcan",
+      name: "Beat Kukulcan",
+      description:
+        "Beat Kukulcan — a layer (14.41 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Beat Kukulcan","beat-kukulcan","bK"] },
+    },
+    {
+      id: "category-behemoth-cyclops-c4",
+      name: "Behemoth Cyclops C4",
+      description:
+        "Behemoth Cyclops C4 — a layer (10.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Behemoth Cyclops C4","behemoth-cyclops-c4","Behemoth Cyclops C5 (HyperSphere)"] },
+    },
+    {
+      id: "category-berserk-roktavor-r3",
+      name: "Berserk Roktavor R3",
+      description:
+        "Berserk Roktavor R3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Berserk Roktavor R3","berserk-roktavor-r3","Berserk Roktavor"] },
+    },
+    {
+      id: "category-bigbang-genesis",
+      name: "Bigbang Genesis",
+      description:
+        "Bigbang Genesis — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Bigbang Genesis","bigbang-genesis","Bγ"] },
+    },
+    {
+      id: "category-blast-jinnius",
+      name: "Blast Jinnius",
+      description:
+        "Blast Jinnius — a layer (10.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Blast Jinnius","blast-jinnius","bJ"] },
+    },
+    {
+      id: "category-blast-jinnius-j3",
+      name: "Blast Jinnius J3",
+      description:
+        "Blast Jinnius J3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Blast Jinnius J3","blast-jinnius-j3","Blast Jinnius"] },
+    },
+    {
+      id: "category-blaze-ragnaruk",
+      name: "Blaze Ragnaruk",
+      description:
+        "Blaze Ragnaruk — a layer (9.18 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Blaze Ragnaruk","blaze-ragnaruk","bR"] },
+    },
+    {
+      id: "category-blazebringer",
+      name: "Blazebringer",
+      description:
+        "Blazebringer — a ring (10.8 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Blazebringer","blazebringer"] },
+    },
+    {
+      id: "category-bloody-longinus",
+      name: "Bloody Longinus",
+      description:
+        "Bloody Longinus — a layer (19.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Bloody Longinus","bloody-longinus","bL"] },
+    },
+    {
+      id: "category-bolt",
+      name: "Bolt",
+      description:
+        "Bolt — a qs blade (6.2 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Bolt","bolt"] },
+    },
+    {
+      id: "category-boom-khalzar-k3",
+      name: "Boom Khalzar K3",
+      description:
+        "Boom Khalzar K3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Boom Khalzar K3","boom-khalzar-k3","Boom Khalzar"] },
+    },
+    {
+      id: "category-ring-brave",
+      name: "Brave",
+      description:
+        "Brave — a ring (12.3 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Brave","brave","B"] },
+    },
+    {
+      id: "category-brave-hasbro",
+      name: "Brave (Hasbro)",
+      description:
+        "Brave (Hasbro) — a ring (8.9 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Brave (Hasbro)","brave-hasbro"] },
+    },
+    {
+      id: "category-breaker-xcalius-x4",
+      name: "Breaker Xcalius X4",
+      description:
+        "Breaker Xcalius X4 — a layer (14.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Breaker Xcalius X4","breaker-xcalius-x4","Breaker Xcalius"] },
+    },
+    {
+      id: "category-brutal-luinor-l4",
+      name: "Brutal Luinor L4",
+      description:
+        "Brutal Luinor L4 — a layer (10.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Brutal Luinor L4","brutal-luinor-l4","Brutal Lúinor"] },
+    },
+    {
+      id: "category-bump",
+      name: "Bump",
+      description:
+        "Bump — a frame (3.27 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Bump","bump","B"] },
+    },
+    {
+      id: "category-ring-burn",
+      name: "Burn",
+      description:
+        "Burn — a ring (24.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Burn","burn","B"] },
+    },
+    {
+      id: "category-burn-phoenix",
+      name: "Burn Phoenix",
+      description:
+        "Burn Phoenix — a layer (19.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Burn Phoenix","burn-phoenix","BP"] },
+    },
+    {
+      id: "category-burst",
+      name: "Burst",
+      description:
+        "Burst — a bu blade (15.6 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Burst","burst","Br"] },
+    },
+    {
+      id: "category-bushin-hasbro",
+      name: "Bushin (Hasbro)",
+      description:
+        "Bushin (Hasbro) — a base (9.2 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Bushin (Hasbro)","bushin-hasbro"] },
+    },
+    {
+      id: "category-bushin-takara-tomy",
+      name: "Bushin (Takara Tomy)",
+      description:
+        "Bushin (Takara Tomy) — a base (10.3 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Bushin (Takara Tomy)","bushin-takara-tomy","B"] },
+    },
+    {
+      id: "category-buster-xcalibur",
+      name: "Buster Xcalibur",
+      description:
+        "Buster Xcalibur — a layer (19.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Buster Xcalibur","buster-xcalibur","bX"] },
+    },
+    {
+      id: "category-caynox",
+      name: "Caynox",
+      description:
+        "Caynox — a layer (8.05 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Caynox","caynox","C"] },
+    },
+    {
+      id: "category-qs-blade-chain",
+      name: "Chain",
+      description:
+        "Chain — a qs blade (9.9 g, used by 1 model). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Chain","chain"] },
+    },
+    {
+      id: "category-bu-blade-chain",
+      name: "Chain",
+      description:
+        "Chain — a bu blade (14.8 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Chain","chain","Ch"] },
+    },
+    {
+      id: "category-chaos",
+      name: "Chaos",
+      description:
+        "Chaos — a layer (8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Chaos","chaos","C"] },
+    },
+    {
+      id: "category-cho-z-achilles",
+      name: "Cho-Z Achilles",
+      description:
+        "Cho-Z Achilles — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Cho-Z Achilles","cho-z-achilles","超A (choA)"] },
+    },
+    {
+      id: "category-cho-z-spriggan",
+      name: "Cho-Z Spriggan",
+      description:
+        "Cho-Z Spriggan — a layer (19.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Cho-Z Spriggan","cho-z-spriggan","超S (choS)"] },
+    },
+    {
+      id: "category-cho-z-valkyrie",
+      name: "Cho-Z Valkyrie",
+      description:
+        "Cho-Z Valkyrie — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Cho-Z Valkyrie","cho-z-valkyrie","超V (choV)","Cho-Z Valtryek (Pro Series)"] },
+    },
+    {
+      id: "category-claw-tiger",
+      name: "Claw Tiger",
+      description:
+        "Claw Tiger — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Claw Tiger","claw-tiger","CT"] },
+    },
+    {
+      id: "category-command",
+      name: "Command",
+      description:
+        "Command — a base (10.9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Command","command"] },
+    },
+    {
+      id: "category-base-cosmic",
+      name: "Cosmic",
+      description:
+        "Cosmic — a base (8.2 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Cosmic","cosmic"] },
+    },
+    {
+      id: "category-cosmo",
+      name: "Cosmo",
+      description:
+        "Cosmo — a base (11.4 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Cosmo","cosmo","C"] },
+    },
+    {
+      id: "category-crash-ragnaruk",
+      name: "Crash Ragnaruk",
+      description:
+        "Crash Ragnaruk — a layer (18.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Crash Ragnaruk","crash-ragnaruk","cR"] },
+    },
+    {
+      id: "category-crash-roktavor-r4",
+      name: "Crash Roktavor R4",
+      description:
+        "Crash Roktavor R4 — a layer (9.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Crash Roktavor R4","crash-roktavor-r4","Crash Roktavor","Roktavor R5 (HyperSphere)"] },
+    },
+    {
+      id: "category-frame-cross",
+      name: "Cross",
+      description:
+        "Cross — a frame (2.3 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Cross","cross","C"] },
+    },
+    {
+      id: "category-curse-hasbro",
+      name: "Curse (Hasbro)",
+      description:
+        "Curse (Hasbro) — a ring (10.3 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Curse (Hasbro)","curse-hasbro"] },
+    },
+    {
+      id: "category-curse-takara-tomy",
+      name: "Curse (Takara Tomy)",
+      description:
+        "Curse (Takara Tomy) — a ring (8.6 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Curse (Takara Tomy)","curse-takara-tomy","C"] },
+    },
+    {
+      id: "category-dagger",
+      name: "Dagger",
+      description:
+        "Dagger — a frame (2.6 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Dagger","dagger","D"] },
+    },
+    {
+      id: "category-dark-cerberus",
+      name: "Dark Cerberus",
+      description:
+        "Dark Cerberus — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dark Cerberus","dark-cerberus","Dc"] },
+    },
+    {
       id: "category-dark-deathscyther",
       name: "Dark Deathscyther",
       description:
-        "Dark Deathscyther — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Dark Deathscyther","dark deathscyther"] },
+        "Dark Deathscyther — a layer (7 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dark Deathscyther","dark deathscyther","D2"] },
+    },
+    {
+      id: "category-dark-doomscizor-d2",
+      name: "Dark Doomscizor D2",
+      description:
+        "Dark Doomscizor D2 — a layer (6.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dark Doomscizor D2","dark-doomscizor-d2","D2","Dark Doomscizor"] },
+    },
+    {
+      id: "category-dead-hades",
+      name: "Dead Hades",
+      description:
+        "Dead Hades — a layer (22.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dead Hades","dead-hades","dH"] },
+    },
+    {
+      id: "category-dead-phoenix",
+      name: "Dead Phoenix",
+      description:
+        "Dead Phoenix — a layer (21.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dead Phoenix","dead-phoenix","dP"] },
+    },
+    {
+      id: "category-ring-death",
+      name: "Death",
+      description:
+        "Death — a ring (10 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Death","death","D"] },
+    },
+    {
+      id: "category-layer-deathscyther",
+      name: "Deathscyther",
+      description:
+        "Deathscyther — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Deathscyther","deathscyther","D"] },
+    },
+    {
+      id: "category-deep-caynox-c3",
+      name: "Deep Caynox C3",
+      description:
+        "Deep Caynox C3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Deep Caynox C3","deep-caynox-c3","Deep Caynox"] },
+    },
+    {
+      id: "category-deep-chaos",
+      name: "Deep Chaos",
+      description:
+        "Deep Chaos — a layer (10 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Deep Chaos","deep-chaos","dC"] },
+    },
+    {
+      id: "category-demise",
+      name: "Demise",
+      description:
+        "Demise — a ring (10 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Demise","demise"] },
+    },
+    {
+      id: "category-destined",
+      name: "Destined",
+      description:
+        "Destined — a qs blade (6.6 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Destined","destined"] },
+    },
+    {
+      id: "category-diomedes-d2",
+      name: "Diomedes D2",
+      description:
+        "Diomedes D2 — a layer (8.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Diomedes D2","diomedes-d2","D2","Flame-X Diomedes D4 (SlingShock)"] },
+    },
+    {
+      id: "category-bu-blade-divine",
+      name: "Divine",
+      description:
+        "Divine — a bu blade (9.4 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Divine","divine","Dvn"] },
+    },
+    {
+      id: "category-qs-blade-divine",
+      name: "Divine",
+      description:
+        "Divine — a qs blade (6.6 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Divine","divine"] },
+    },
+    {
+      id: "category-doomscizor",
+      name: "Doomscizor",
+      description:
+        "Doomscizor — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Doomscizor","doomscizor","D"] },
     },
     {
       id: "category-layer-draciel-fortress",
@@ -709,11 +4944,102 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Draciel Fortress","draciel fortress"] },
     },
     {
+      id: "category-draciel-fortress-hasbro",
+      name: "Draciel Fortress (Hasbro)",
+      description:
+        "Draciel Fortress (Hasbro) — a layer (6.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel Fortress (Hasbro)","draciel-fortress-hasbro","Draciel F"] },
+    },
+    {
+      id: "category-draciel-fortress-takara-tomy",
+      name: "Draciel Fortress (Takara Tomy)",
+      description:
+        "Draciel Fortress (Takara Tomy) — a layer (7.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel Fortress (Takara Tomy)","draciel-fortress-takara-tomy","Draciel F or DC"] },
+    },
+    {
+      id: "category-draciel-shield-hasbro",
+      name: "Draciel Shield (Hasbro)",
+      description:
+        "Draciel Shield (Hasbro) — a layer (6.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel Shield (Hasbro)","draciel-shield-hasbro","Draciel S","Guard Draciel Shield (SlingShock)"] },
+    },
+    {
+      id: "category-draciel-shield-takara-tomy",
+      name: "Draciel Shield (Takara Tomy)",
+      description:
+        "Draciel Shield (Takara Tomy) — a layer (7.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel Shield (Takara Tomy)","draciel-shield-takara-tomy","Draciel S or DC"] },
+    },
+    {
+      id: "category-layer-draciel-v2",
+      name: "Draciel V2",
+      description:
+        "Draciel V2 — a layer (15.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel V2","draciel-v2","DC"] },
+    },
+    {
+      id: "category-draciel-viper",
+      name: "Draciel Viper",
+      description:
+        "Draciel Viper — a layer (14 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Draciel Viper","draciel-viper","Draciel V or DC"] },
+    },
+    {
+      id: "category-dragoon-fantom",
+      name: "Dragoon Fantom",
+      description:
+        "Dragoon Fantom — a layer (6.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon Fantom","dragoon-fantom","Dragoon F or DG"] },
+    },
+    {
+      id: "category-dragoon-fighter",
+      name: "Dragoon Fighter",
+      description:
+        "Dragoon Fighter — a layer (6.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon Fighter","dragoon-fighter","Dragoon F","DG","Fang Dragoon Fighter (SlingShock)"] },
+    },
+    {
+      id: "category-dragoon-storm-hasbro",
+      name: "Dragoon Storm (Hasbro)",
+      description:
+        "Dragoon Storm (Hasbro) — a layer (6.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon Storm (Hasbro)","dragoon-storm-hasbro","Dragoon S","DG"] },
+    },
+    {
+      id: "category-dragoon-storm-takara-tomy",
+      name: "Dragoon Storm (Takara Tomy)",
+      description:
+        "Dragoon Storm (Takara Tomy) — a layer (6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon Storm (Takara Tomy)","dragoon-storm-takara-tomy","Dragoon S or DG"] },
+    },
+    {
+      id: "category-layer-dragoon-v2",
+      name: "Dragoon V2",
+      description:
+        "Dragoon V2 — a layer (15.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon V2","dragoon-v2"] },
+    },
+    {
+      id: "category-dragoon-victory",
+      name: "Dragoon Victory",
+      description:
+        "Dragoon Victory — a layer (13.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dragoon Victory","dragoon-victory","Dragoon V or DG"] },
+    },
+    {
       id: "category-drain-fafnir",
       name: "Drain Fafnir",
       description:
-        "Drain Fafnir — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Drain Fafnir","drain fafnir"] },
+        "Drain Fafnir — a layer (12.7 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Drain Fafnir","drain fafnir","dF"] },
+    },
+    {
+      id: "category-drain-fafnir-f3",
+      name: "Drain Fafnir F3",
+      description:
+        "Drain Fafnir F3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Drain Fafnir F3","drain-fafnir-f3","Drain Fafnir"] },
     },
     {
       id: "category-dranzer-flame",
@@ -723,6 +5049,181 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dranzer Flame","dranzer flame"] },
     },
     {
+      id: "category-dranzer-flame-hasbro",
+      name: "Dranzer Flame (Hasbro)",
+      description:
+        "Dranzer Flame (Hasbro) — a layer (6.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer Flame (Hasbro)","dranzer-flame-hasbro","Dranzer F or DZ","Crystal Dranzer Flame (SlingShock)"] },
+    },
+    {
+      id: "category-dranzer-flame-takara-tomy",
+      name: "Dranzer Flame (Takara Tomy)",
+      description:
+        "Dranzer Flame (Takara Tomy) — a layer (6.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer Flame (Takara Tomy)","dranzer-flame-takara-tomy","Dranzer F or DZ"] },
+    },
+    {
+      id: "category-dranzer-spiral-hasbro",
+      name: "Dranzer Spiral (Hasbro)",
+      description:
+        "Dranzer Spiral (Hasbro) — a layer (6.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer Spiral (Hasbro)","dranzer-spiral-hasbro","Dranzer S or DZ"] },
+    },
+    {
+      id: "category-dranzer-spiral-takara-tomy",
+      name: "Dranzer Spiral (Takara Tomy)",
+      description:
+        "Dranzer Spiral (Takara Tomy) — a layer (6.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer Spiral (Takara Tomy)","dranzer-spiral-takara-tomy","Dranzer S or DZ"] },
+    },
+    {
+      id: "category-layer-dranzer-v2",
+      name: "Dranzer V2",
+      description:
+        "Dranzer V2 — a layer (14.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer V2","dranzer-v2","Dranzer Volcano 2"] },
+    },
+    {
+      id: "category-dranzer-volcano",
+      name: "Dranzer Volcano",
+      description:
+        "Dranzer Volcano — a layer (14 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dranzer Volcano","dranzer-volcano","Dranzer V or DZ"] },
+    },
+    {
+      id: "category-dread",
+      name: "Dread",
+      description:
+        "Dread — a base (14.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Dread","dread","D"] },
+    },
+    {
+      id: "category-dread-hades-h3",
+      name: "Dread Hades H3",
+      description:
+        "Dread Hades H3 — a layer (15 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dread Hades H3","dread-hades-h3","Dread Hades"] },
+    },
+    {
+      id: "category-dread-phoenix-p4",
+      name: "Dread Phoenix P4",
+      description:
+        "Dread Phoenix P4 — a layer (12.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dread Phoenix P4","dread-phoenix-p4","Dread Phoenix"] },
+    },
+    {
+      id: "category-driger-fang-hasbro",
+      name: "Driger Fang (Hasbro)",
+      description:
+        "Driger Fang (Hasbro) — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger Fang (Hasbro)","driger-fang-hasbro","Driger Fang","Wraith Driger Fang (F0612)"] },
+    },
+    {
+      id: "category-driger-fang-takara-tomy",
+      name: "Driger Fang (Takara Tomy)",
+      description:
+        "Driger Fang (Takara Tomy) — a layer (7.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger Fang (Takara Tomy)","driger-fang-takara-tomy","Driger F or DR"] },
+    },
+    {
+      id: "category-driger-slash-hasbro",
+      name: "Driger Slash (Hasbro)",
+      description:
+        "Driger Slash (Hasbro) — a layer (6.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger Slash (Hasbro)","driger-slash-hasbro","Driger S","Phantom Driger Slash (SlingShock)"] },
+    },
+    {
+      id: "category-driger-slash-takara-tomy",
+      name: "Driger Slash (Takara Tomy)",
+      description:
+        "Driger Slash (Takara Tomy) — a layer (7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger Slash (Takara Tomy)","driger-slash-takara-tomy","Driger S or DR"] },
+    },
+    {
+      id: "category-layer-driger-v2",
+      name: "Driger V2",
+      description:
+        "Driger V2 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger V2","driger-v2","Driger Vulcan 2"] },
+    },
+    {
+      id: "category-driger-vulcan",
+      name: "Driger Vulcan",
+      description:
+        "Driger Vulcan — a layer (14.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Driger Vulcan","driger-vulcan","Driger V or DR"] },
+    },
+    {
+      id: "category-dullahan-d4",
+      name: "Dullahan D4",
+      description:
+        "Dullahan D4 — a layer (10 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Dullahan D4","dullahan-d4","Dullahan D5 (HyperSphere)"] },
+    },
+    {
+      id: "category-duo-aeclipse",
+      name: "Duo Aeclipse",
+      description:
+        "Duo Aeclipse — a layer (11.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Duo Aeclipse","duo-aeclipse","dα"] },
+    },
+    {
+      id: "category-duo-apollos",
+      name: "Duo Apollos",
+      description:
+        "Duo Apollos — a layer (11.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Duo Apollos","duo-apollos","dα"] },
+    },
+    {
+      id: "category-duo-artemis",
+      name: "Duo Artemis",
+      description:
+        "Duo Artemis — a layer (11.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Duo Artemis","duo-artemis","dα"] },
+    },
+    {
+      id: "category-dusk",
+      name: "Dusk",
+      description:
+        "Dusk — a base (10 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Dusk","dusk"] },
+    },
+    {
+      id: "category-earth-aquila",
+      name: "Earth Aquila",
+      description:
+        "Earth Aquila — a layer (17.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Earth Aquila","earth-aquila","EA"] },
+    },
+    {
+      id: "category-base-eclipse",
+      name: "Eclipse",
+      description:
+        "Eclipse — a base (10.8 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Eclipse","eclipse"] },
+    },
+    {
+      id: "category-emperor-forneus",
+      name: "Emperor Forneus",
+      description:
+        "Emperor Forneus — a layer (17.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Emperor Forneus","emperor-forneus","eF"] },
+    },
+    {
+      id: "category-emperor-forneus-f4",
+      name: "Emperor Forneus F4",
+      description:
+        "Emperor Forneus F4 — a layer (9.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Emperor Forneus F4","emperor-forneus-f4","Emperor Forneus","Emperor Forneus F5 (HyperSphere)"] },
+    },
+    {
+      id: "category-endbringer",
+      name: "Endbringer",
+      description:
+        "Endbringer — a ring (11.6 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Endbringer","endbringer"] },
+    },
+    {
       id: "category-engine-gear",
       name: "ENGINE GEAR",
       description:
@@ -730,46 +5231,732 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["ENGINE GEAR","engine gear"] },
     },
     {
+      id: "category-epic-evipero-e2",
+      name: "Epic Evipero E2",
+      description:
+        "Epic Evipero E2 — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Epic Evipero E2","epic-evipero-e2","E2","Epic Evipero"] },
+    },
+    {
+      id: "category-erase-hasbro",
+      name: "Erase (Hasbro)",
+      description:
+        "Erase (Hasbro) — a base (9.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Erase (Hasbro)","erase-hasbro"] },
+    },
+    {
+      id: "category-erase-takara-tomy",
+      name: "Erase (Takara Tomy)",
+      description:
+        "Erase (Takara Tomy) — a base (10.6 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Erase (Takara Tomy)","erase-takara-tomy","E"] },
+    },
+    {
+      id: "category-evil-eye",
+      name: "Evil-eye",
+      description:
+        "Evil-eye — a layer (8.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Evil-eye","evil-eye","E"] },
+    },
+    {
+      id: "category-evipero",
+      name: "Evipero",
+      description:
+        "Evipero — a layer (8.06 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Evipero","evipero","E"] },
+    },
+    {
+      id: "category-exceed-evil-eye",
+      name: "Exceed Evil-eye",
+      description:
+        "Exceed Evil-eye — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Exceed Evil-eye","exceed-evil-eye","E2"] },
+    },
+    {
+      id: "category-expand",
+      name: "Expand",
+      description:
+        "Expand — a frame (3.4 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Expand","expand","E"] },
+    },
+    {
+      id: "category-fang-fenrir",
+      name: "Fang Fenrir",
+      description:
+        "Fang Fenrir — a layer (7.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Fang Fenrir","fang-fenrir","F2"] },
+    },
+    {
+      id: "category-fang-tiger",
+      name: "Fang Tiger",
+      description:
+        "Fang Tiger — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Fang Tiger","fang-tiger","FT"] },
+    },
+    {
+      id: "category-ferro-fengriff-f2",
+      name: "Ferro Fengriff F2",
+      description:
+        "Ferro Fengriff F2 — a layer (7.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Ferro Fengriff F2","ferro-fengriff-f2","F2","Ferro Fengriff"] },
+    },
+    {
+      id: "category-fierce",
+      name: "Fierce",
+      description:
+        "Fierce — a qs blade (8.8 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Fierce","fierce"] },
+    },
+    {
+      id: "category-fire-lizard",
+      name: "Fire Lizard",
+      description:
+        "Fire Lizard — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Fire Lizard","fire-lizard"] },
+    },
+    {
+      id: "category-first",
+      name: "First",
+      description:
+        "First — a ring (6.1 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["First","first","F"] },
+    },
+    {
+      id: "category-qs-blade-flame",
+      name: "Flame",
+      description:
+        "Flame — a qs blade (6.9 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Flame","flame"] },
+    },
+    {
+      id: "category-flame-sagittario",
+      name: "Flame Sagittario",
+      description:
+        "Flame Sagittario — a layer (20 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Flame Sagittario","flame-sagittario","FS"] },
+    },
+    {
+      id: "category-flamebringer",
+      name: "Flamebringer",
+      description:
+        "Flamebringer — a ring (10.7 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Flamebringer","flamebringer"] },
+    },
+    {
+      id: "category-flare-hasbro",
+      name: "Flare (Hasbro)",
+      description:
+        "Flare (Hasbro) — a base (10.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Flare (Hasbro)","flare-hasbro"] },
+    },
+    {
+      id: "category-flare-takara-tomy",
+      name: "Flare (Takara Tomy)",
+      description:
+        "Flare (Takara Tomy) — a base (15.3 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Flare (Takara Tomy)","flare-takara-tomy","F"] },
+    },
+    {
+      id: "category-flash-sleipnir",
+      name: "Flash Sleipnir",
+      description:
+        "Flash Sleipnir — a layer (19.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Flash Sleipnir","flash-sleipnir","Fs"] },
+    },
+    {
+      id: "category-frame-flow",
+      name: "Flow",
+      description:
+        "Flow — a frame (2.4 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Flow","flow","F"] },
+    },
+    {
+      id: "category-fusion-aether",
+      name: "Fusion Aether",
+      description:
+        "Fusion Aether — a layer (11.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Fusion Aether","fusion-aether"] },
+    },
+    {
       id: "category-gaia-dragoon",
       name: "Gaia Dragoon",
       description:
-        "Gaia Dragoon — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Gaia Dragoon","gaia dragoon"] },
+        "Gaia Dragoon — a layer (17.7 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Gaia Dragoon","gaia dragoon","GD"] },
+    },
+    {
+      id: "category-gaia-dragoon-vurst",
+      name: "Gaia Dragoon Vurst",
+      description:
+        "Gaia Dragoon Vurst — a layer (17.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Gaia Dragoon Vurst","gaia-dragoon-vurst","Gaia Dragoon V or GD"] },
+    },
+    {
+      id: "category-galaxy-pegasis",
+      name: "Galaxy Pegasis",
+      description:
+        "Galaxy Pegasis — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Galaxy Pegasis","galaxy-pegasis"] },
+    },
+    {
+      id: "category-galaxy-zeus",
+      name: "Galaxy Zeus",
+      description:
+        "Galaxy Zeus — a layer (12.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Galaxy Zeus","galaxy-zeus","gZ"] },
+    },
+    {
+      id: "category-galaxy-zeutron-z4",
+      name: "Galaxy Zeutron Z4",
+      description:
+        "Galaxy Zeutron Z4 — a layer (10.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Galaxy Zeutron Z4","galaxy-zeutron-z4","Galaxy Zeutron","Mountain-X Galaxy Zeutron Z4 (Element-X Version)","Galaxy Zeutron Z5 (HyperSphere)"] },
+    },
+    {
+      id: "category-gambit",
+      name: "Gambit",
+      description:
+        "Gambit — a qs blade (9.6 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Gambit","gambit"] },
+    },
+    {
+      id: "category-gargoyle-g4",
+      name: "Gargoyle G4",
+      description:
+        "Gargoyle G4 — a layer (9.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Gargoyle G4","gargoyle-g4","Gargoyle G5 (HyperSphere)"] },
+    },
+    {
+      id: "category-gatling",
+      name: "Gatling",
+      description:
+        "Gatling — a bu blade (16.2 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Gatling","gatling","Gt"] },
+    },
+    {
+      id: "category-geist-fafnir",
+      name: "Geist Fafnir",
+      description:
+        "Geist Fafnir — a layer (20.54 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Geist Fafnir","geist-fafnir","gF"] },
+    },
+    {
+      id: "category-geist-fafnir-f4",
+      name: "Geist Fafnir F4",
+      description:
+        "Geist Fafnir F4 — a layer (15.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Geist Fafnir F4","geist-fafnir-f4","Geist Fafnir"] },
     },
     {
       id: "category-genesis-valtryek-v3",
       name: "Genesis Valtryek V3",
       description:
-        "Genesis Valtryek V3 — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Genesis Valtryek V3","genesis valtryek v3"] },
+        "Genesis Valtryek V3 — a layer (9.4 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Genesis Valtryek V3","genesis valtryek v3","Genesis Valtryek"] },
+    },
+    {
+      id: "category-giga-gaianon-g2",
+      name: "Giga Gaianon G2",
+      description:
+        "Giga Gaianon G2 — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Giga Gaianon G2","giga-gaianon-g2","G2","Giga Gaianon","Blizzard-X Giga Gaianon G4 (SlingShock)","Giga Gaianon G6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-gigant-gaia",
+      name: "Gigant Gaia",
+      description:
+        "Gigant Gaia — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Gigant Gaia","gigant-gaia","G2"] },
+    },
+    {
+      id: "category-glaive",
+      name: "Glaive",
+      description:
+        "Glaive — a frame (2.34 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Glaive","glaive","G"] },
+    },
+    {
+      id: "category-glide-hasbro",
+      name: "Glide (Hasbro)",
+      description:
+        "Glide (Hasbro) — a ring (10.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Glide (Hasbro)","glide-hasbro"] },
+    },
+    {
+      id: "category-glide-takara-tomy",
+      name: "Glide (Takara Tomy)",
+      description:
+        "Glide (Takara Tomy) — a ring (8.3 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Glide (Takara Tomy)","glide-takara-tomy","G"] },
+    },
+    {
+      id: "category-glyph",
+      name: "Glyph",
+      description:
+        "Glyph — a base (9.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Glyph","glyph"] },
     },
     {
       id: "category-god-valkyrie",
       name: "God Valkyrie",
       description:
-        "God Valkyrie — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["God Valkyrie","god valkyrie"] },
+        "God Valkyrie — a layer (10.16 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["God Valkyrie","god valkyrie","gV"] },
+    },
+    {
+      id: "category-base-grand",
+      name: "Grand",
+      description:
+        "Grand — a base (10.4 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Grand","grand","G"] },
+    },
+    {
+      id: "category-gravity-perseus",
+      name: "Gravity Perseus",
+      description:
+        "Gravity Perseus — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Gravity Perseus","gravity-perseus"] },
+    },
+    {
+      id: "category-greatest-armor",
+      name: "Greatest Armor",
+      description:
+        "Greatest Armor — a gravity ring (3.2 g). Loose examples, spares and pre-owned gravity rings of this part are listed here.",
+      extra: { aliases: ["Greatest Armor","greatest-armor"] },
+    },
+    {
+      id: "category-greatest-raphael",
+      name: "Greatest Raphael",
+      description:
+        "Greatest Raphael — a layer (30.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Greatest Raphael","greatest-raphael","GRP"] },
+    },
+    {
+      id: "category-guardian-kerbeus",
+      name: "Guardian Kerbeus",
+      description:
+        "Guardian Kerbeus — a layer (10.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Guardian Kerbeus","guardian-kerbeus","gK"] },
+    },
+    {
+      id: "category-guardian-kerbeus-k4",
+      name: "Guardian Kerbeus K4",
+      description:
+        "Guardian Kerbeus K4 — a layer (10.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Guardian Kerbeus K4","guardian-kerbeus-k4","Inferno-X Kerbeus K4 (Element-X Pack)"] },
+    },
+    {
+      id: "category-harmony",
+      name: "Harmony",
+      description:
+        "Harmony — a base (9.9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Harmony","harmony"] },
+    },
+    {
+      id: "category-hazard-kerbeus",
+      name: "Hazard Kerbeus",
+      description:
+        "Hazard Kerbeus — a layer (18.13 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hazard Kerbeus","hazard-kerbeus","hK"] },
+    },
+    {
+      id: "category-hazard-kerbeus-k4",
+      name: "Hazard Kerbeus K4",
+      description:
+        "Hazard Kerbeus K4 — a layer (12.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hazard Kerbeus K4","hazard-kerbeus-k4","Hazard Kerbeus"] },
+    },
+    {
+      id: "category-heat-salamander-s4",
+      name: "Heat Salamander S4",
+      description:
+        "Heat Salamander S4 — a layer (10.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Heat Salamander S4","heat-salamander-s4","Heat Salamander"] },
+    },
+    {
+      id: "category-heaven",
+      name: "Heaven",
+      description:
+        "Heaven — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Heaven","heaven","H","Harmony (Pro Series)"] },
+    },
+    {
+      id: "category-hell-kerbecs",
+      name: "Hell Kerbecs",
+      description:
+        "Hell Kerbecs — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hell Kerbecs","hell-kerbecs"] },
+    },
+    {
+      id: "category-hell-salamander",
+      name: "Hell Salamander",
+      description:
+        "Hell Salamander — a layer (21.27 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hell Salamander","hell-salamander","hS"] },
+    },
+    {
+      id: "category-hit",
+      name: "Hit",
+      description:
+        "Hit — a frame (2 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Hit","hit","H"] },
+    },
+    {
+      id: "category-hollow-hasbro",
+      name: "Hollow (Hasbro)",
+      description:
+        "Hollow (Hasbro) — a ring (8.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Hollow (Hasbro)","hollow-hasbro"] },
+    },
+    {
+      id: "category-hollow-takara-tomy",
+      name: "Hollow (Takara Tomy)",
+      description:
+        "Hollow (Takara Tomy) — a ring (14.6 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Hollow (Takara Tomy)","hollow-takara-tomy","H"] },
+    },
+    {
+      id: "category-holy-horusood",
+      name: "Holy Horusood",
+      description:
+        "Holy Horusood — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Holy Horusood","holy-horusood","H2"] },
+    },
+    {
+      id: "category-horusood-hasbro",
+      name: "Horusood (Hasbro)",
+      description:
+        "Horusood (Hasbro) — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Horusood (Hasbro)","horusood-hasbro","H"] },
+    },
+    {
+      id: "category-horusood-takara-tomy",
+      name: "Horusood (Takara Tomy)",
+      description:
+        "Horusood (Takara Tomy) — a layer (8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Horusood (Takara Tomy)","horusood-takara-tomy","H"] },
+    },
+    {
+      id: "category-hound-dog",
+      name: "Hound Dog",
+      description:
+        "Hound Dog — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hound Dog","hound-dog","HD"] },
+    },
+    {
+      id: "category-qs-blade-hydra",
+      name: "Hydra",
+      description:
+        "Hydra — a qs blade (8.6 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Hydra","hydra"] },
+    },
+    {
+      id: "category-hyper-horusood-h2",
+      name: "Hyper Horusood H2",
+      description:
+        "Hyper Horusood H2 — a layer (7.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hyper Horusood H2","hyper-horusood-h2","H2","Hyper Horusood"] },
+    },
+    {
+      id: "category-hyrus-h2",
+      name: "Hyrus H2",
+      description:
+        "Hyrus H2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Hyrus H2","hyrus-h2","H2","Poison-X Hyrus H4 (SlingShock)"] },
+    },
+    {
+      id: "category-imperial",
+      name: "Imperial",
+      description:
+        "Imperial — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Imperial","imperial","I","Command (Pro Series)"] },
+    },
+    {
+      id: "category-base-inferno",
+      name: "Inferno",
+      description:
+        "Inferno — a base (7.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Inferno","inferno"] },
+    },
+    {
+      id: "category-inferno-ifrit",
+      name: "Inferno Ifrit",
+      description:
+        "Inferno Ifrit — a layer (8.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Inferno Ifrit","inferno-ifrit","I2"] },
+    },
+    {
+      id: "category-inferno-ifritor-i2",
+      name: "Inferno Ifritor I2",
+      description:
+        "Inferno Ifritor I2 — a layer (7.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Inferno Ifritor I2","inferno-ifritor-i2","I2","Inferno Ifritor"] },
+    },
+    {
+      id: "category-infinite",
+      name: "Infinite",
+      description:
+        "Infinite — a ring. Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Infinite","infinite","I"] },
+    },
+    {
+      id: "category-infinite-hasbro",
+      name: "Infinite (Hasbro)",
+      description:
+        "Infinite (Hasbro) — a ring (10.8 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Infinite (Hasbro)","infinite-hasbro"] },
+    },
+    {
+      id: "category-istros-i2",
+      name: "Istros I2",
+      description:
+        "Istros I2 — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Istros I2","istros-i2","I2","Lightning-X Istros I4 (SlingShock)"] },
+    },
+    {
+      id: "category-jail-jormungand",
+      name: "Jail Jormungand",
+      description:
+        "Jail Jormungand — a layer (8.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Jail Jormungand","jail-jormungand","J2"] },
+    },
+    {
+      id: "category-jet-hasbro",
+      name: "Jet (Hasbro)",
+      description:
+        "Jet (Hasbro) — a ring (10.8 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Jet (Hasbro)","jet-hasbro"] },
+    },
+    {
+      id: "category-jet-takara-tomy",
+      name: "Jet (Takara Tomy)",
+      description:
+        "Jet (Takara Tomy) — a ring (10.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Jet (Takara Tomy)","jet-takara-tomy","J"] },
+    },
+    {
+      id: "category-judgement",
+      name: "Judgement",
+      description:
+        "Judgement — a base (12 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Judgement","judgement","J"] },
+    },
+    {
+      id: "category-judgement-hasbro",
+      name: "Judgement (Hasbro)",
+      description:
+        "Judgement (Hasbro) — a base (8.4 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Judgement (Hasbro)","judgement-hasbro"] },
+    },
+    {
+      id: "category-jumbo-jormuntor-j2",
+      name: "Jumbo Jormuntor J2",
+      description:
+        "Jumbo Jormuntor J2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Jumbo Jormuntor J2","jumbo-jormuntor-j2","J2","Jumbo Jormuntor","Silver-X Jumbo Jormuntor J4 (SlingShock)","Jumbo Jormuntor J6 (SpeedStorm)"] },
     },
     {
       id: "category-kaiser-kerbeus",
       name: "Kaiser Kerbeus",
       description:
-        "Kaiser Kerbeus — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Kaiser Kerbeus","kaiser kerbeus"] },
+        "Kaiser Kerbeus — a layer (7 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kaiser Kerbeus","kaiser kerbeus","K2"] },
+    },
+    {
+      id: "category-kerbeus-hasbro",
+      name: "Kerbeus (Hasbro)",
+      description:
+        "Kerbeus (Hasbro) — a layer (7.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kerbeus (Hasbro)","kerbeus-hasbro","K"] },
+    },
+    {
+      id: "category-kerbeus-takara-tomy",
+      name: "Kerbeus (Takara Tomy)",
+      description:
+        "Kerbeus (Takara Tomy) — a layer (7.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kerbeus (Takara Tomy)","kerbeus-takara-tomy","K"] },
+    },
+    {
+      id: "category-killer-deathscyther",
+      name: "Killer Deathscyther",
+      description:
+        "Killer Deathscyther — a layer (9.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Killer Deathscyther","killer-deathscyther","kD"] },
+    },
+    {
+      id: "category-kinetic-satomb-s3",
+      name: "Kinetic Satomb S3",
+      description:
+        "Kinetic Satomb S3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kinetic Satomb S3","kinetic-satomb-s3","Kinetic Satomb"] },
+    },
+    {
+      id: "category-king",
+      name: "King",
+      description:
+        "King — a ring (5.9 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["King","king","K","Kolossal (Pro Series)"] },
     },
     {
       id: "category-king-kerbeus-k2",
       name: "King Kerbeus K2",
       description:
         "King Kerbeus K2 — a layer (6.8 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["King Kerbeus K2","king kerbeus k2"] },
+      extra: { aliases: ["King Kerbeus K2","king kerbeus k2","K2","King Kerbeus"] },
+    },
+    {
+      id: "category-king-m",
+      name: "King M",
+      description:
+        "King M — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["King M","king-m","K M"] },
+    },
+    {
+      id: "category-king-mr",
+      name: "King MR",
+      description:
+        "King MR — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["King MR","king-mr","K MR"] },
+    },
+    {
+      id: "category-king-r",
+      name: "King R",
+      description:
+        "King R — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["King R","king-r","K R"] },
+    },
+    {
+      id: "category-knife-lizard",
+      name: "Knife Lizard",
+      description:
+        "Knife Lizard — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Knife Lizard","knife-lizard"] },
+    },
+    {
+      id: "category-knockout",
+      name: "Knockout",
+      description:
+        "Knockout — a base (14.3 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Knockout","knockout","K"] },
+    },
+    {
+      id: "category-kolossal",
+      name: "Kolossal",
+      description:
+        "Kolossal — a ring (7.7 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Kolossal","kolossal"] },
+    },
+    {
+      id: "category-komet",
+      name: "Komet",
+      description:
+        "Komet — a qs blade (7 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Komet","komet"] },
+    },
+    {
+      id: "category-kraken-k4",
+      name: "Kraken K4",
+      description:
+        "Kraken K4 — a layer (8.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kraken K4","kraken-k4"] },
+    },
+    {
+      id: "category-kreis-satan",
+      name: "Kreis Satan",
+      description:
+        "Kreis Satan — a layer (9.31 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Kreis Satan","kreis-satan","kS"] },
+    },
+    {
+      id: "category-krusher-doomscizor-d3",
+      name: "Krusher Doomscizor D3",
+      description:
+        "Krusher Doomscizor D3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Krusher Doomscizor D3","krusher-doomscizor-d3","Krusher Doomscizor"] },
+    },
+    {
+      id: "category-left-aeclipse",
+      name: "Left Aeclipse",
+      description:
+        "Left Aeclipse — a layer (19.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Left Aeclipse","left-aeclipse","lα","Fusion Aether (anime, English)"] },
+    },
+    {
+      id: "category-left-apollos",
+      name: "Left Apollos",
+      description:
+        "Left Apollos — a layer (20 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Left Apollos","left-apollos","lα"] },
+    },
+    {
+      id: "category-left-astro-a4",
+      name: "Left Astro A4",
+      description:
+        "Left Astro A4 — a layer (11.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Left Astro A4","left-astro-a4","Left Astro","Left Astro A5 (HyperSphere)"] },
     },
     {
       id: "category-legend-spriggan",
       name: "Legend Spriggan",
       description:
-        "Legend Spriggan — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Legend Spriggan","legend spriggan"] },
+        "Legend Spriggan — a layer (14.5 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Legend Spriggan","legend spriggan","lS"] },
+    },
+    {
+      id: "category-legend-spryzen-s3",
+      name: "Legend Spryzen S3",
+      description:
+        "Legend Spryzen S3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Legend Spryzen S3","legend-spryzen-s3","Legend Spryzen"] },
+    },
+    {
+      id: "category-lift",
+      name: "Lift",
+      description:
+        "Lift — a frame (3.5 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Lift","lift","L"] },
+    },
+    {
+      id: "category-qs-blade-lightning",
+      name: "Lightning",
+      description:
+        "Lightning — a qs blade (6.9 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Lightning","lightning"] },
+    },
+    {
+      id: "category-lightning-l-drago",
+      name: "Lightning L-Drago",
+      description:
+        "Lightning L-Drago — a layer (20.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Lightning L-Drago","lightning-l-drago","LL"] },
+    },
+    {
+      id: "category-lord",
+      name: "Lord",
+      description:
+        "Lord — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Lord","lord","L"] },
+    },
+    {
+      id: "category-lord-hasbro",
+      name: "Lord (Hasbro)",
+      description:
+        "Lord (Hasbro) — a base (8.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Lord (Hasbro)","lord-hasbro"] },
+    },
+    {
+      id: "category-lost-longinus",
+      name: "Lost Longinus",
+      description:
+        "Lost Longinus — a layer (15.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Lost Longinus","lost-longinus","L2"] },
+    },
+    {
+      id: "category-lost-luinor-l2",
+      name: "Lost Luinor L2",
+      description:
+        "Lost Luinor L2 — a layer (15 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Lost Luinor L2","lost-luinor-l2","L2","Lost Lúinor (official stylization)"] },
     },
     {
       id: "category-lost-l-inor-l2",
@@ -779,60 +5966,1110 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Lost Lúinor L2","lost lúinor l2"] },
     },
     {
+      id: "category-mad-minoboros",
+      name: "Mad Minoboros",
+      description:
+        "Mad Minoboros — a layer (8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Mad Minoboros","mad-minoboros","M2"] },
+    },
+    {
+      id: "category-mad-minoboros-m2",
+      name: "Mad Minoboros M2",
+      description:
+        "Mad Minoboros M2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Mad Minoboros M2","mad-minoboros-m2","M2","Mad Minoboros","Thorns-X Mad Minoboros M4 (SlingShock)","Mad Minoboros M6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-magma-lizard",
+      name: "Magma Lizard",
+      description:
+        "Magma Lizard — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Magma Lizard","magma-lizard"] },
+    },
+    {
+      id: "category-master",
+      name: "Master",
+      description:
+        "Master — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Master","master","M"] },
+    },
+    {
+      id: "category-master-hasbro",
+      name: "Master (Hasbro)",
+      description:
+        "Master (Hasbro) — a base (8.6 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Master (Hasbro)","master-hasbro"] },
+    },
+    {
       id: "category-maximum-garuda",
       name: "Maximum Garuda",
       description:
-        "Maximum Garuda — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Maximum Garuda","maximum garuda"] },
+        "Maximum Garuda — a layer (9.8 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Maximum Garuda","maximum garuda","mG"] },
+    },
+    {
+      id: "category-maximus-garuda-g3",
+      name: "Maximus Garuda G3",
+      description:
+        "Maximus Garuda G3 — a layer (9.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Maximus Garuda G3","maximus-garuda-g3","Maximus Garuda"] },
+    },
+    {
+      id: "category-meteo-l-drago",
+      name: "Meteo L-Drago",
+      description:
+        "Meteo L-Drago — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Meteo L-Drago","meteo-l-drago"] },
+    },
+    {
+      id: "category-meteor",
+      name: "Meteor",
+      description:
+        "Meteor — a frame (2.7 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Meteor","meteor","M"] },
+    },
+    {
+      id: "category-minoboros-hasbro",
+      name: "Minoboros (Hasbro)",
+      description:
+        "Minoboros (Hasbro) — a layer (8.25 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Minoboros (Hasbro)","minoboros-hasbro","M"] },
+    },
+    {
+      id: "category-minoboros-takara-tomy",
+      name: "Minoboros (Takara Tomy)",
+      description:
+        "Minoboros (Takara Tomy) — a layer (8.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Minoboros (Takara Tomy)","minoboros-takara-tomy","M"] },
+    },
+    {
+      id: "category-mirage",
+      name: "Mirage",
+      description:
+        "Mirage — a ring (8.3 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Mirage","mirage","M"] },
+    },
+    {
+      id: "category-mirage-hasbro",
+      name: "Mirage (Hasbro)",
+      description:
+        "Mirage (Hasbro) — a ring (10.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Mirage (Hasbro)","mirage-hasbro"] },
+    },
+    {
+      id: "category-monster",
+      name: "Monster",
+      description:
+        "Monster — a base (9.3 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Monster","monster"] },
+    },
+    {
+      id: "category-morrigna-m4",
+      name: "Morrigna M4",
+      description:
+        "Morrigna M4 — a layer (11.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Morrigna M4","morrigna-m4","Morrigna M5 (HyperSphere)"] },
+    },
+    {
+      id: "category-myth",
+      name: "Myth",
+      description:
+        "Myth — a base (7 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Myth","myth"] },
+    },
+    {
+      id: "category-naked",
+      name: "Naked",
+      description:
+        "Naked — a base (9.4 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Naked","naked","N","Soul (Pro Series)"] },
+    },
+    {
+      id: "category-nepstrius",
+      name: "Nepstrius",
+      description:
+        "Nepstrius — a layer (7.35 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Nepstrius","nepstrius","N"] },
+    },
+    {
+      id: "category-neptune",
+      name: "Neptune",
+      description:
+        "Neptune — a layer (7.81 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Neptune","neptune","N"] },
+    },
+    {
+      id: "category-nightmare-longinus",
+      name: "Nightmare Longinus",
+      description:
+        "Nightmare Longinus — a layer (37.34 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Nightmare Longinus","nightmare-longinus","nL"] },
+    },
+    {
+      id: "category-nightmare-luinor-l3",
+      name: "Nightmare Luinor L3",
+      description:
+        "Nightmare Luinor L3 — a layer (36.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Nightmare Luinor L3","nightmare-luinor-l3","Nightmare Lúinor"] },
+    },
+    {
+      id: "category-nova-nepstrius-n2",
+      name: "Nova Nepstrius N2",
+      description:
+        "Nova Nepstrius N2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Nova Nepstrius N2","nova-nepstrius-n2","N2","Nova Nepstrius","Dark-X Nova Nepstrius N4 (SlingShock)"] },
+    },
+    {
+      id: "category-nova-neptune",
+      name: "Nova Neptune",
+      description:
+        "Nova Neptune — a layer (9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Nova Neptune","nova-neptune","N2"] },
     },
     {
       id: "category-obelisk-odin",
       name: "Obelisk Odin",
       description:
-        "Obelisk Odin — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Obelisk Odin","obelisk odin"] },
+        "Obelisk Odin — a layer (9.02 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Obelisk Odin","obelisk odin","O2"] },
+    },
+    {
+      id: "category-odax",
+      name: "Odax",
+      description:
+        "Odax — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Odax","odax","O"] },
+    },
+    {
+      id: "category-layer-odin",
+      name: "Odin",
+      description:
+        "Odin — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Odin","odin","O"] },
+    },
+    {
+      id: "category-ogre-o4",
+      name: "Ogre O4",
+      description:
+        "Ogre O4 — a layer (9.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Ogre O4","ogre-o4","Ogre O5 (HyperSphere)"] },
+    },
+    {
+      id: "category-omni-odax-o2",
+      name: "Omni Odax O2",
+      description:
+        "Omni Odax O2 — a layer (8.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Omni Odax O2","omni-odax-o2","O2","Omni Odax","Odax O6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-orb-egis",
+      name: "Orb Egis",
+      description:
+        "Orb Egis — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Orb Egis","orb-egis","oE","Orb Engaard (Pro Series)"] },
+    },
+    {
+      id: "category-orb-engaard-e4",
+      name: "Orb Engaard E4",
+      description:
+        "Orb Engaard E4 — a layer (9.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Orb Engaard E4","orb-engaard-e4","Orb Engaard","Engaard E5 (HyperSphere)"] },
+    },
+    {
+      id: "category-orichalcum",
+      name: "Orichalcum",
+      description:
+        "Orichalcum — a layer (11.49 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Orichalcum","orichalcum","Ω"] },
+    },
+    {
+      id: "category-orichalcum-o3",
+      name: "Orichalcum O3",
+      description:
+        "Orichalcum O3 — a layer (11.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Orichalcum O3","orichalcum-o3","Orichalcum"] },
+    },
+    {
+      id: "category-origin",
+      name: "Origin",
+      description:
+        "Origin — a ring (8.2 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Origin","origin"] },
+    },
+    {
+      id: "category-orpheus-o2",
+      name: "Orpheus O2",
+      description:
+        "Orpheus O2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Orpheus O2","orpheus-o2","O2"] },
+    },
+    {
+      id: "category-perfect-phoenix",
+      name: "Perfect Phoenix",
+      description:
+        "Perfect Phoenix — a layer (27 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Perfect Phoenix","perfect-phoenix","pP"] },
+    },
+    {
+      id: "category-perfect-phoenix-p4",
+      name: "Perfect Phoenix P4",
+      description:
+        "Perfect Phoenix P4 — a layer (12.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Perfect Phoenix P4","perfect-phoenix-p4","Perfect Phoenix"] },
+    },
+    {
+      id: "category-phrenic-phantazus-p2",
+      name: "Phrenic Phantazus P2",
+      description:
+        "Phrenic Phantazus P2 — a layer (8.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Phrenic Phantazus P2","phrenic-phantazus-p2","P2","Phrenic Phantazus"] },
+    },
+    {
+      id: "category-base-poison",
+      name: "Poison",
+      description:
+        "Poison — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Poison","poison","P"] },
+    },
+    {
+      id: "category-poison-hasbro",
+      name: "Poison (Hasbro)",
+      description:
+        "Poison (Hasbro) — a base (10.3 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Poison (Hasbro)","poison-hasbro"] },
+    },
+    {
+      id: "category-prime",
+      name: "Prime",
+      description:
+        "Prime — a base (8.6 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Prime","prime"] },
+    },
+    {
+      id: "category-prime-apocalypse",
+      name: "Prime Apocalypse",
+      description:
+        "Prime Apocalypse — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Prime Apocalypse","prime-apocalypse","Pα"] },
+    },
+    {
+      id: "category-proof",
+      name: "Proof",
+      description:
+        "Proof — a frame (2.9 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Proof","proof","P"] },
+    },
+    {
+      id: "category-protection-turtle",
+      name: "Protection Turtle",
+      description:
+        "Protection Turtle — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Protection Turtle","protection-turtle","PT"] },
+    },
+    {
+      id: "category-psychic-phantom",
+      name: "Psychic Phantom",
+      description:
+        "Psychic Phantom — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Psychic Phantom","psychic-phantom","P2"] },
+    },
+    {
+      id: "category-quad-quetzalcoatl",
+      name: "Quad Quetzalcoatl",
+      description:
+        "Quad Quetzalcoatl — a layer (8.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Quad Quetzalcoatl","quad-quetzalcoatl","Q2"] },
+    },
+    {
+      id: "category-quill-quetziko-q2",
+      name: "Quill Quetziko Q2",
+      description:
+        "Quill Quetziko Q2 — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Quill Quetziko Q2","quill-quetziko-q2","Q2","Stone-X Quetziko Q4 (SlingShock)"] },
+    },
+    {
+      id: "category-ring-rage",
+      name: "Rage",
+      description:
+        "Rage — a ring (14.4 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Rage","rage","R"] },
+    },
+    {
+      id: "category-raging-roktavor-r2",
+      name: "Raging Roktavor R2",
+      description:
+        "Raging Roktavor R2 — a layer (6.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Raging Roktavor R2","raging-roktavor-r2","R2","Raging Roktavor"] },
+    },
+    {
+      id: "category-layer-ragnaruk",
+      name: "Ragnaruk",
+      description:
+        "Ragnaruk — a layer (8.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Ragnaruk","ragnaruk","R"] },
+    },
+    {
+      id: "category-raid",
+      name: "Raid",
+      description:
+        "Raid — a ring (9.7 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Raid","raid"] },
+    },
+    {
+      id: "category-ray-unicorno",
+      name: "Ray Unicorno",
+      description:
+        "Ray Unicorno — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Ray Unicorno","ray-unicorno"] },
+    },
+    {
+      id: "category-reach",
+      name: "Reach",
+      description:
+        "Reach — a frame (2.5 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Reach","reach","R"] },
+    },
+    {
+      id: "category-regalia-genesis",
+      name: "Regalia Genesis",
+      description:
+        "Regalia Genesis — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Regalia Genesis","regalia-genesis","Rγ"] },
+    },
+    {
+      id: "category-revive-phoenix",
+      name: "Revive Phoenix",
+      description:
+        "Revive Phoenix — a layer (23.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Revive Phoenix","revive-phoenix","rP"] },
+    },
+    {
+      id: "category-revive-phoenix-p4",
+      name: "Revive Phoenix P4",
+      description:
+        "Revive Phoenix P4 — a layer (11.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Revive Phoenix P4","revive-phoenix-p4","Revive Phoenix"] },
+    },
+    {
+      id: "category-right-aeclipse",
+      name: "Right Aeclipse",
+      description:
+        "Right Aeclipse — a layer (19.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Right Aeclipse","right-aeclipse","rα"] },
+    },
+    {
+      id: "category-right-artemis",
+      name: "Right Artemis",
+      description:
+        "Right Artemis — a layer (19.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Right Artemis","right-artemis","rα"] },
+    },
+    {
+      id: "category-right-artemis-a4",
+      name: "Right Artemis A4",
+      description:
+        "Right Artemis A4 — a layer (11.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Right Artemis A4","right-artemis-a4","Right Artemis","Right Artemis A5 (HyperSphere)"] },
+    },
+    {
+      id: "category-rising-ragnaruk",
+      name: "Rising Ragnaruk",
+      description:
+        "Rising Ragnaruk — a layer (7.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Rising Ragnaruk","rising-ragnaruk","R2"] },
+    },
+    {
+      id: "category-rock-hasbro",
+      name: "Rock (Hasbro)",
+      description:
+        "Rock (Hasbro) — a base (8.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Rock (Hasbro)","rock-hasbro"] },
+    },
+    {
+      id: "category-rock-takara-tomy",
+      name: "Rock (Takara Tomy)",
+      description:
+        "Rock (Takara Tomy) — a base (10 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Rock (Takara Tomy)","rock-takara-tomy","R"] },
+    },
+    {
+      id: "category-layer-rock-leone",
+      name: "Rock Leone",
+      description:
+        "Rock Leone — a layer (18.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Rock Leone","rock-leone","RL"] },
+    },
+    {
+      id: "category-roktavor",
+      name: "Roktavor",
+      description:
+        "Roktavor — a layer (8.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Roktavor","roktavor","R"] },
+    },
+    {
+      id: "category-royal",
+      name: "Royal",
+      description:
+        "Royal — a base (8.1 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Royal","royal"] },
+    },
+    {
+      id: "category-rudr-r4",
+      name: "Rudr R4",
+      description:
+        "Rudr R4 — a layer (10 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Rudr R4","rudr-r4","Rudr R5 (HyperSphere)"] },
+    },
+    {
+      id: "category-ruin",
+      name: "Ruin",
+      description:
+        "Ruin — a qs blade (6.2 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Ruin","ruin"] },
+    },
+    {
+      id: "category-screw-trident",
+      name: "Screw Trident",
+      description:
+        "Screw Trident — a layer (14 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Screw Trident","screw-trident","sT"] },
+    },
+    {
+      id: "category-shadow-amaterios",
+      name: "Shadow Amaterios",
+      description:
+        "Shadow Amaterios — a layer (18.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shadow Amaterios","shadow-amaterios","sα","Yamiterios"] },
+    },
+    {
+      id: "category-shadow-orichalcum",
+      name: "Shadow Orichalcum",
+      description:
+        "Shadow Orichalcum — a layer (11.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shadow Orichalcum","shadow-orichalcum","sΩ"] },
+    },
+    {
+      id: "category-shelter-regulus",
+      name: "Shelter Regulus",
+      description:
+        "Shelter Regulus — a layer (13.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shelter Regulus","shelter-regulus","sR"] },
+    },
+    {
+      id: "category-shelter-regulus-r3",
+      name: "Shelter Regulus R3",
+      description:
+        "Shelter Regulus R3 — a layer (12.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shelter Regulus R3","shelter-regulus-r3","Shelter Regulus","Shelter Regulus R6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-shield",
+      name: "Shield",
+      description:
+        "Shield — a base (8.1 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Shield","shield"] },
+    },
+    {
+      id: "category-shining-amaterios",
+      name: "Shining Amaterios",
+      description:
+        "Shining Amaterios — a layer (18.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shining Amaterios","shining-amaterios","sα","Burning Amateriosアマテリオス|Bāningu Amateriosu}} (B-158)"] },
+    },
+    {
+      id: "category-shining-amaterios-a3",
+      name: "Shining Amaterios A3",
+      description:
+        "Shining Amaterios A3 — a layer (9.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Shining Amaterios A3","shining-amaterios-a3","Shining Amaterios"] },
     },
     {
       id: "category-sieg-xcalibur",
       name: "Sieg Xcalibur",
       description:
-        "Sieg Xcalibur — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Sieg Xcalibur","sieg xcalibur"] },
+        "Sieg Xcalibur — a layer (15.9 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Sieg Xcalibur","sieg xcalibur","sX"] },
+    },
+    {
+      id: "category-sky-falcon",
+      name: "Sky Falcon",
+      description:
+        "Sky Falcon — a layer (14.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Sky Falcon","sky-falcon","Dranzer V2"] },
+    },
+    {
+      id: "category-base-slash",
+      name: "Slash",
+      description:
+        "Slash — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Slash","slash","S","Sword (Pro Series)"] },
+    },
+    {
+      id: "category-solar",
+      name: "Solar",
+      description:
+        "Solar — a base (9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Solar","solar"] },
+    },
+    {
+      id: "category-soul",
+      name: "Soul",
+      description:
+        "Soul — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Soul","soul"] },
+    },
+    {
+      id: "category-spark-sleipnir",
+      name: "Spark Sleipnir",
+      description:
+        "Spark Sleipnir — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Spark Sleipnir","spark-sleipnir"] },
+    },
+    {
+      id: "category-spear",
+      name: "Spear",
+      description:
+        "Spear — a ring (8.4 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Spear","spear"] },
+    },
+    {
+      id: "category-sphinx-s4",
+      name: "Sphinx S4",
+      description:
+        "Sphinx S4 — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Sphinx S4","sphinx-s4"] },
+    },
+    {
+      id: "category-spiral-treptune-t4",
+      name: "Spiral Treptune T4",
+      description:
+        "Spiral Treptune T4 — a layer (10.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Spiral Treptune T4","spiral-treptune-t4","Spiral Treptune","Aqua-X Spiral Treptune T4 (Element-X Version)"] },
+    },
+    {
+      id: "category-layer-spriggan",
+      name: "Spriggan",
+      description:
+        "Spriggan — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Spriggan","spriggan","S"] },
+    },
+    {
+      id: "category-spriggan-requiem",
+      name: "Spriggan Requiem",
+      description:
+        "Spriggan Requiem — a layer (16.05 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Spriggan Requiem","spriggan-requiem","Sr","God Slayer"] },
+    },
+    {
+      id: "category-spryzen",
+      name: "Spryzen",
+      description:
+        "Spryzen — a layer (7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Spryzen","spryzen","S"] },
     },
     {
       id: "category-spryzen-requiem-s3",
       name: "Spryzen Requiem S3",
       description:
         "Spryzen Requiem S3 — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Spryzen Requiem S3","spryzen requiem s3"] },
+      extra: { aliases: ["Spryzen Requiem S3","spryzen requiem s3","Spryzen Requiem"] },
+    },
+    {
+      id: "category-star",
+      name: "Star",
+      description:
+        "Star — a frame (2.4 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Star","star","S"] },
+    },
+    {
+      id: "category-stellar",
+      name: "Stellar",
+      description:
+        "Stellar — a qs blade (6.3 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Stellar","stellar"] },
+    },
+    {
+      id: "category-storm-pegasis",
+      name: "Storm Pegasis",
+      description:
+        "Storm Pegasis — a layer (19.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Storm Pegasis","storm-pegasis","SP"] },
     },
     {
       id: "category-storm-spriggan",
       name: "Storm Spriggan",
       description:
-        "Storm Spriggan — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Storm Spriggan","storm spriggan"] },
+        "Storm Spriggan — a layer (8.8 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Storm Spriggan","storm spriggan","S2"] },
     },
     {
-      id: "category-venom",
+      id: "category-storm-spryzen-s2",
+      name: "Storm Spryzen S2",
+      description:
+        "Storm Spryzen S2 — a layer (7.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Storm Spryzen S2","storm-spryzen-s2","S2","Storm Spryzen"] },
+    },
+    {
+      id: "category-storm-tiger",
+      name: "Storm Tiger",
+      description:
+        "Storm Tiger — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Storm Tiger","storm-tiger"] },
+    },
+    {
+      id: "category-strike-god-valkyrie",
+      name: "Strike God Valkyrie",
+      description:
+        "Strike God Valkyrie — a layer (11.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Strike God Valkyrie","strike-god-valkyrie","SgV"] },
+    },
+    {
+      id: "category-strike-valtryek-v3",
+      name: "Strike Valtryek V3",
+      description:
+        "Strike Valtryek V3 — a layer (9.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Strike Valtryek V3","strike-valtryek-v3","Strike Valtryek"] },
+    },
+    {
+      id: "category-super",
+      name: "Super",
+      description:
+        "Super — a ring (6.4 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Super","super","S"] },
+    },
+    {
+      id: "category-super-hasbro",
+      name: "Super (Hasbro)",
+      description:
+        "Super (Hasbro) — a ring (7.7 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Super (Hasbro)","super-hasbro"] },
+    },
+    {
+      id: "category-super-m",
+      name: "Super M",
+      description:
+        "Super M — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Super M","super-m","S M"] },
+    },
+    {
+      id: "category-super-mr",
+      name: "Super MR",
+      description:
+        "Super MR — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Super MR","super-mr","S MR"] },
+    },
+    {
+      id: "category-super-r",
+      name: "Super R",
+      description:
+        "Super R — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Super R","super-r","S R"] },
+    },
+    {
+      id: "category-superking-m",
+      name: "SuperKing M",
+      description:
+        "SuperKing M — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["SuperKing M","superking-m","SK M"] },
+    },
+    {
+      id: "category-superking-mr",
+      name: "SuperKing MR",
+      description:
+        "SuperKing MR — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["SuperKing MR","superking-mr","SK MR"] },
+    },
+    {
+      id: "category-superking-r",
+      name: "SuperKing R",
+      description:
+        "SuperKing R — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["SuperKing R","superking-r","SK R"] },
+    },
+    {
+      id: "category-superking-rm",
+      name: "SuperKing RM",
+      description:
+        "SuperKing RM — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["SuperKing RM","superking-rm","SK RM"] },
+    },
+    {
+      id: "category-surge-xcalius-x3",
+      name: "Surge Xcalius X3",
+      description:
+        "Surge Xcalius X3 — a layer (15.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Surge Xcalius X3","surge-xcalius-x3"] },
+    },
+    {
+      id: "category-surtr-s2",
+      name: "Surtr S2",
+      description:
+        "Surtr S2 — a layer (8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Surtr S2","surtr-s2","S2","Iron-X Surtr S4 (SlingShock)"] },
+    },
+    {
+      id: "category-base-sword",
+      name: "Sword",
+      description:
+        "Sword — a base (8.2 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Sword","sword"] },
+    },
+    {
+      id: "category-tact",
+      name: "Tact",
+      description:
+        "Tact — a base (14.9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Tact","tact","T"] },
+    },
+    {
+      id: "category-tact-hasbro",
+      name: "Tact (Hasbro)",
+      description:
+        "Tact (Hasbro) — a base (10.2 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Tact (Hasbro)","tact-hasbro"] },
+    },
+    {
+      id: "category-tempest",
+      name: "Tempest",
+      description:
+        "Tempest — a ring (13 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Tempest","tempest","T"] },
+    },
+    {
+      id: "category-tempest-wyvron-w3",
+      name: "Tempest Wyvron W3",
+      description:
+        "Tempest Wyvron W3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Tempest Wyvron W3","tempest-wyvron-w3","Tempest Wyvron"] },
+    },
+    {
+      id: "category-the-end",
+      name: "The End",
+      description:
+        "The End — a ring (25.5 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["The End","the-end","T"] },
+    },
+    {
+      id: "category-tidal",
+      name: "Tidal",
+      description:
+        "Tidal — a qs blade (6.8 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Tidal","tidal"] },
+    },
+    {
+      id: "category-tide-treptune-t3",
+      name: "Tide Treptune T3",
+      description:
+        "Tide Treptune T3 — a layer (12.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Tide Treptune T3","tide-treptune-t3","Tide Treptune"] },
+    },
+    {
+      id: "category-tornado-wyvern",
+      name: "Tornado Wyvern",
+      description:
+        "Tornado Wyvern — a layer (9.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Tornado Wyvern","tornado-wyvern","tW"] },
+    },
+    {
+      id: "category-treptune",
+      name: "Treptune",
+      description:
+        "Treptune — a layer (8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Treptune","treptune","T"] },
+    },
+    {
+      id: "category-trident",
+      name: "Trident",
+      description:
+        "Trident — a layer (9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Trident","trident","T"] },
+    },
+    {
+      id: "category-triumph",
+      name: "Triumph",
+      description:
+        "Triumph — a ring (10.8 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Triumph","triumph"] },
+    },
+    {
+      id: "category-turbo-achilles-a4",
+      name: "Turbo Achilles A4",
+      description:
+        "Turbo Achilles A4 — a layer (17.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Turbo Achilles A4","turbo-achilles-a4","Turbo Achilles"] },
+    },
+    {
+      id: "category-turbo-spryzen-s4",
+      name: "Turbo Spryzen S4",
+      description:
+        "Turbo Spryzen S4 — a layer (16.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Turbo Spryzen S4","turbo-spryzen-s4","Turbo Spryzen"] },
+    },
+    {
+      id: "category-turbo-valtryek-v3",
+      name: "Turbo Valtryek V3",
+      description:
+        "Turbo Valtryek V3 — a layer (15.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Turbo Valtryek V3","turbo-valtryek-v3","Turbo Valtryek"] },
+    },
+    {
+      id: "category-frame-turn",
+      name: "Turn",
+      description:
+        "Turn — a frame (3.6 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Turn","turn","T"] },
+    },
+    {
+      id: "category-twin-nemesis",
+      name: "Twin Nemesis",
+      description:
+        "Twin Nemesis — a layer (13.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Twin Nemesis","twin-nemesis","tN"] },
+    },
+    {
+      id: "category-twin-noctemis-n3",
+      name: "Twin Noctemis N3",
+      description:
+        "Twin Noctemis N3 — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Twin Noctemis N3","twin-noctemis-n3","Twin Noctemis"] },
+    },
+    {
+      id: "category-twister",
+      name: "Twister",
+      description:
+        "Twister — a qs blade (7.7 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Twister","twister"] },
+    },
+    {
+      id: "category-typhon-t4",
+      name: "Typhon T4",
+      description:
+        "Typhon T4 — a layer (10.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Typhon T4","typhon-t4","Typhon T5 (HyperSphere)"] },
+    },
+    {
+      id: "category-tyros-t2",
+      name: "Tyros T2",
+      description:
+        "Tyros T2 — a layer (8.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Tyros T2","tyros-t2","T2","Tyros T6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-uber-unicrest-u2",
+      name: "Uber Unicrest U2",
+      description:
+        "Uber Unicrest U2 — a layer (6.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Uber Unicrest U2","uber-unicrest-u2","U2","Über Unicrest (official stylization)"] },
+    },
+    {
+      id: "category-under",
+      name: "Under",
+      description:
+        "Under — a frame (2.38 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Under","under","U"] },
+    },
+    {
+      id: "category-layer-unicorn",
+      name: "Unicorn",
+      description:
+        "Unicorn — a layer (8.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Unicorn","unicorn","U"] },
+    },
+    {
+      id: "category-unicrest",
+      name: "Unicrest",
+      description:
+        "Unicrest — a layer (8.2 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Unicrest","unicrest","U"] },
+    },
+    {
+      id: "category-union",
+      name: "Union",
+      description:
+        "Union — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Union","union","U"] },
+    },
+    {
+      id: "category-union-hasbro",
+      name: "Union (Hasbro)",
+      description:
+        "Union (Hasbro) — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Union (Hasbro)","union-hasbro"] },
+    },
+    {
+      id: "category-unlock-unicorn",
+      name: "Unlock Unicorn",
+      description:
+        "Unlock Unicorn — a layer (7.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Unlock Unicorn","unlock-unicorn","U2"] },
+    },
+    {
+      id: "category-unperfect-phoenix",
+      name: "Unperfect Phoenix",
+      description:
+        "Unperfect Phoenix — a layer (17.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Unperfect Phoenix","unperfect-phoenix","uP"] },
+    },
+    {
+      id: "category-unperfect-phoenix-p4",
+      name: "Unperfect Phoenix P4",
+      description:
+        "Unperfect Phoenix P4 — a layer (11.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Unperfect Phoenix P4","unperfect-phoenix-p4","Unperfect Phoenix"] },
+    },
+    {
+      id: "category-layer-valkyrie",
+      name: "Valkyrie",
+      description:
+        "Valkyrie — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Valkyrie","valkyrie","V"] },
+    },
+    {
+      id: "category-valtryek",
+      name: "Valtryek",
+      description:
+        "Valtryek — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Valtryek","valtryek","V"] },
+    },
+    {
+      id: "category-variant",
+      name: "Variant",
+      description:
+        "Variant — a ring (5.9 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Variant","variant","V"] },
+    },
+    {
+      id: "category-base-venom",
       name: "Venom",
       description:
-        "Venom — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Venom","venom"] },
+        "Venom — a layer base (used by 1 model). Loose examples, spares and pre-owned layer bases of this part are listed here.",
+      extra: { aliases: ["Venom","venom","V"] },
+    },
+    {
+      id: "category-venom-hasbro",
+      name: "Venom (Hasbro)",
+      description:
+        "Venom (Hasbro) — a base (9.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Venom (Hasbro)","venom-hasbro"] },
+    },
+    {
+      id: "category-vex",
+      name: "Vex",
+      description:
+        "Vex — a ring (7.9 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Vex","vex"] },
+    },
+    {
+      id: "category-vice-leopard-l4",
+      name: "Vice Leopard L4",
+      description:
+        "Vice Leopard L4 — a layer (11.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Vice Leopard L4","vice-leopard-l4","Vice Leopard"] },
     },
     {
       id: "category-victory-valkyrie",
       name: "Victory Valkyrie",
       description:
-        "Victory Valkyrie — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Victory Valkyrie","victory valkyrie"] },
+        "Victory Valkyrie — a layer (8.9 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Victory Valkyrie","victory valkyrie","V2"] },
+    },
+    {
+      id: "category-victory-valtryek-v2",
+      name: "Victory Valtryek V2",
+      description:
+        "Victory Valtryek V2 — a layer (8.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Victory Valtryek V2","victory-valtryek-v2","V2","Victory Valtryek"] },
+    },
+    {
+      id: "category-viper",
+      name: "Viper",
+      description:
+        "Viper — a base (9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Viper","viper"] },
+    },
+    {
+      id: "category-vise-leopard",
+      name: "Vise Leopard",
+      description:
+        "Vise Leopard — a layer (18.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Vise Leopard","vise-leopard","vL"] },
+    },
+    {
+      id: "category-volcano",
+      name: "Volcano",
+      description:
+        "Volcano — a ring (21.3 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["Volcano","volcano","V"] },
+    },
+    {
+      id: "category-frame-vortex",
+      name: "Vortex",
+      description:
+        "Vortex — a frame (2.51 g). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Vortex","vortex","V"] },
+    },
+    {
+      id: "category-wall",
+      name: "Wall",
+      description:
+        "Wall — a frame (4.1 g, used by 1 model). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Wall","wall","W"] },
+    },
+    {
+      id: "category-whirl",
+      name: "Whirl",
+      description:
+        "Whirl — a qs blade (7 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Whirl","whirl"] },
     },
     {
       id: "category-wild-wyvern",
       name: "Wild Wyvern",
       description:
-        "Wild Wyvern — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Wild Wyvern","wild wyvern"] },
+        "Wild Wyvern — a layer (8.3 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wild Wyvern","wild wyvern","W2"] },
+    },
+    {
+      id: "category-wild-wyvron-w2",
+      name: "Wild Wyvron W2",
+      description:
+        "Wild Wyvron W2 — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wild Wyvron W2","wild-wyvron-w2","W2","Wild Wyvron","Wild Wyvron W6 (SpeedStorm)"] },
+    },
+    {
+      id: "category-bu-blade-wind",
+      name: "Wind",
+      description:
+        "Wind — a bu blade (13.2 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Wind","wind","Wn"] },
+    },
+    {
+      id: "category-wing-falcon",
+      name: "Wing Falcon",
+      description:
+        "Wing Falcon — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wing Falcon","wing-falcon"] },
+    },
+    {
+      id: "category-winning-valkyrie",
+      name: "Winning Valkyrie",
+      description:
+        "Winning Valkyrie — a layer (19.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Winning Valkyrie","winning-valkyrie","wV"] },
+    },
+    {
+      id: "category-base-wizard",
+      name: "Wizard",
+      description:
+        "Wizard — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Wizard","wizard","W"] },
+    },
+    {
+      id: "category-wizard-hasbro",
+      name: "Wizard (Hasbro)",
+      description:
+        "Wizard (Hasbro) — a base (7.9 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Wizard (Hasbro)","wizard-hasbro"] },
     },
     {
       id: "category-layer-wolborg",
@@ -842,11 +7079,186 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Wolborg","wolborg"] },
     },
     {
+      id: "category-wolborg-hasbro",
+      name: "Wolborg (Hasbro)",
+      description:
+        "Wolborg (Hasbro) — a layer (6.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wolborg (Hasbro)","wolborg-hasbro","Force Wolborg (F0610)"] },
+    },
+    {
+      id: "category-wolborg-takara-tomy",
+      name: "Wolborg (Takara Tomy)",
+      description:
+        "Wolborg (Takara Tomy) — a layer (7.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wolborg (Takara Tomy)","wolborg-takara-tomy","WB"] },
+    },
+    {
+      id: "category-wonder-valtryek-v4",
+      name: "Wonder Valtryek V4",
+      description:
+        "Wonder Valtryek V4 — a layer (9.6 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wonder Valtryek V4","wonder-valtryek-v4","Wonder Valtryek"] },
+    },
+    {
+      id: "category-world-hasbro",
+      name: "World (Hasbro)",
+      description:
+        "World (Hasbro) — a ring (9.4 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["World (Hasbro)","world-hasbro"] },
+    },
+    {
+      id: "category-world-takara-tomy",
+      name: "World (Takara Tomy)",
+      description:
+        "World (Takara Tomy) — a ring (10 g). Loose examples, spares and pre-owned rings of this part are listed here.",
+      extra: { aliases: ["World (Takara Tomy)","world-takara-tomy","W"] },
+    },
+    {
+      id: "category-layer-wyvern",
+      name: "Wyvern",
+      description:
+        "Wyvern — a layer (7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wyvern","wyvern","W"] },
+    },
+    {
+      id: "category-wyvron",
+      name: "Wyvron",
+      description:
+        "Wyvron — a layer (7.16 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Wyvron","wyvron","W"] },
+    },
+    {
+      id: "category-layer-xcalibur",
+      name: "Xcalibur",
+      description:
+        "Xcalibur — a layer (8.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Xcalibur","xcalibur","X"] },
+    },
+    {
+      id: "category-xcalius",
+      name: "Xcalius",
+      description:
+        "Xcalius — a layer (7.8 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Xcalius","xcalius","X"] },
+    },
+    {
       id: "category-xeno-xcalibur",
       name: "Xeno Xcalibur",
       description:
-        "Xeno Xcalibur — a layer (used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
-      extra: { aliases: ["Xeno Xcalibur","xeno xcalibur"] },
+        "Xeno Xcalibur — a layer (9.3 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Xeno Xcalibur","xeno xcalibur","X2"] },
+    },
+    {
+      id: "category-xeno-xcalius-x2",
+      name: "Xeno Xcalius X2",
+      description:
+        "Xeno Xcalius X2 — a layer (9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Xeno Xcalius X2","xeno-xcalius-x2","X2","Xeno Xcalius"] },
+    },
+    {
+      id: "category-bu-blade-xiphoid",
+      name: "Xiphoid",
+      description:
+        "Xiphoid — a bu blade (13 g). Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Xiphoid","xiphoid","Xp"] },
+    },
+    {
+      id: "category-qs-blade-xiphoid",
+      name: "Xiphoid",
+      description:
+        "Xiphoid — a qs blade (9 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Xiphoid","xiphoid"] },
+    },
+    {
+      id: "category-xt",
+      name: "Xt+",
+      description:
+        "Xt+ — a frame (used by 1 model). Loose examples, spares and pre-owned frames of this part are listed here.",
+      extra: { aliases: ["Xt+","xt+"] },
+    },
+    {
+      id: "category-yaeger-yggdrasil",
+      name: "Yaeger Yggdrasil",
+      description:
+        "Yaeger Yggdrasil — a layer (7.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Yaeger Yggdrasil","yaeger-yggdrasil","Y2"] },
+    },
+    {
+      id: "category-yegdrion",
+      name: "Yegdrion",
+      description:
+        "Yegdrion — a layer (7.9 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Yegdrion","yegdrion","Y"] },
+    },
+    {
+      id: "category-yggdrasil",
+      name: "Yggdrasil",
+      description:
+        "Yggdrasil — a layer (7.7 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Yggdrasil","yggdrasil","Y"] },
+    },
+    {
+      id: "category-yugen-yegdrion-y2",
+      name: "Yugen Yegdrion Y2",
+      description:
+        "Yugen Yegdrion Y2 — a layer (7.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Yugen Yegdrion Y2","yugen-yegdrion-y2","Y2","Yugen Yegdrion","Tornado-X Yugen Yegdrion Y4 (SlingShock)"] },
+    },
+    {
+      id: "category-z-achilles",
+      name: "Z Achilles",
+      description:
+        "Z Achilles — a layer (18 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Z Achilles","z-achilles","zA"] },
+    },
+    {
+      id: "category-z-achilles-a4",
+      name: "Z Achilles A4",
+      description:
+        "Z Achilles A4 — a layer (9.1 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Z Achilles A4","z-achilles-a4","Z Achilles"] },
+    },
+    {
+      id: "category-qs-blade-zeal",
+      name: "Zeal",
+      description:
+        "Zeal — a qs blade (8.2 g). Loose examples, spares and pre-owned qs blades of this part are listed here.",
+      extra: { aliases: ["Zeal","zeal"] },
+    },
+    {
+      id: "category-zest",
+      name: "Zest",
+      description:
+        "Zest — a bu blade. Loose examples, spares and pre-owned bu blades of this part are listed here.",
+      extra: { aliases: ["Zest","zest","Zs"] },
+    },
+    {
+      id: "category-zillion-zeus",
+      name: "Zillion Zeus",
+      description:
+        "Zillion Zeus — a layer (8.5 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Zillion Zeus","zillion-zeus","Z2"] },
+    },
+    {
+      id: "category-zillion-zeutron-z2",
+      name: "Zillion Zeutron Z2",
+      description:
+        "Zillion Zeutron Z2 — a layer (8.4 g). Loose examples, spares and pre-owned layers of this part are listed here.",
+      extra: { aliases: ["Zillion Zeutron Z2","zillion-zeutron-z2","Z2","Zillion Zeutron"] },
+    },
+    {
+      id: "category-base-zone",
+      name: "Zone",
+      description:
+        "Zone — a base (8.5 g). Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Zone","zone"] },
+    },
+    {
+      id: "category-zwei",
+      name: "Zwei",
+      description:
+        "Zwei — a base. Loose examples, spares and pre-owned bases of this part are listed here.",
+      extra: { aliases: ["Zwei","zwei","Z"] },
     },
   ],
   "category-metal-chrome-wheels": [
@@ -865,7 +7277,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Bahamoote","bahamoote"] },
     },
     {
-      id: "category-balro",
+      id: "category-chrome-wheel-balro",
       name: "Balro",
       description:
         "Balro — a chrome wheel (29.4 g). Loose examples, spares and pre-owned chrome wheels of this part are listed here.",
@@ -956,7 +7368,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Orojya","orojya"] },
     },
     {
-      id: "category-pegasis",
+      id: "category-chrome-wheel-pegasis",
       name: "Pegasis",
       description:
         "Pegasis — a chrome wheel (used by 1 model). Loose examples, spares and pre-owned chrome wheels of this part are listed here.",
@@ -1012,7 +7424,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Thief Phoenic","thief phoenic"] },
     },
     {
-      id: "category-wyvang",
+      id: "category-chrome-wheel-wyvang",
       name: "Wyvang",
       description:
         "Wyvang — a chrome wheel (30.6 g). Loose examples, spares and pre-owned chrome wheels of this part are listed here.",
@@ -1035,21 +7447,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["4D Clear Wheel: Orion","4d clear wheel: orion"] },
     },
     {
+      id: "category-energy-ring-anubius",
+      name: "Anubius",
+      description:
+        "Anubius — a energy ring (2.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Anubius","anubius","Anubis (B-166)"] },
+    },
+    {
       id: "category-energy-ring-aquario",
       name: "Aquario",
       description:
-        "Aquario — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Aquario — a energy ring (3.2 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Aquario","aquario"] },
     },
     {
       id: "category-aquila",
       name: "Aquila",
       description:
-        "Aquila — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Aquila — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Aquila","aquila"] },
     },
     {
-      id: "category-archer",
+      id: "category-energy-ring-archer",
       name: "Archer",
       description:
         "Archer — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
@@ -1059,18 +7478,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-energy-ring-aries",
       name: "Aries",
       description:
-        "Aries — a energy ring (used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Aries — a energy ring (2.7 g, used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Aries","aries"] },
+    },
+    {
+      id: "category-energy-ring-beelzeb",
+      name: "Beelzeb",
+      description:
+        "Beelzeb — a energy ring (3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Beelzeb","beelzeb"] },
     },
     {
       id: "category-energy-ring-befall",
       name: "Befall",
       description:
-        "Befall — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
-      extra: { aliases: ["Befall","befall"] },
+        "Befall — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Befall","befall","Beafowl (Takara Tomy)"] },
     },
     {
-      id: "category-berserker",
+      id: "category-energy-ring-berserker",
       name: "Berserker",
       description:
         "Berserker — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
@@ -1080,36 +7506,50 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-energy-ring-blaze",
       name: "Blaze",
       description:
-        "Blaze — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Blaze — a energy ring (2.8 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Blaze","blaze"] },
     },
     {
       id: "category-energy-ring-bull",
       name: "Bull",
       description:
-        "Bull — a energy ring (used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Bull — a energy ring (3.3 g, used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Bull","bull"] },
     },
     {
       id: "category-energy-ring-byxis",
       name: "Byxis",
       description:
-        "Byxis — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Byxis — a energy ring (2.7 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Byxis","byxis"] },
     },
     {
-      id: "category-capricorn",
+      id: "category-energy-ring-capricorn",
       name: "Capricorn",
       description:
         "Capricorn — a energy ring (2.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
-      extra: { aliases: ["Capricorn","capricorn"] },
+      extra: { aliases: ["Capricorn","capricorn","Capricorne"] },
     },
     {
       id: "category-energy-ring-capricorne",
       name: "Capricorne",
       description:
-        "Capricorne — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Capricorne — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Capricorne","capricorne"] },
+    },
+    {
+      id: "category-energy-ring-cetus",
+      name: "Cetus",
+      description:
+        "Cetus — a energy ring (2.5 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Cetus","cetus"] },
+    },
+    {
+      id: "category-energy-ring-chimera",
+      name: "Chimera",
+      description:
+        "Chimera — a energy ring (2.8 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Chimera","chimera"] },
     },
     {
       id: "category-clear-wheel-eonis",
@@ -1131,6 +7571,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Clear Wheel: Wolf — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Clear Wheel: Wolf","clear wheel: wolf"] },
+    },
+    {
+      id: "category-energy-ring-comic",
+      name: "Comic",
+      description:
+        "Comic — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Comic","comic"] },
+    },
+    {
+      id: "category-energy-ring-crown",
+      name: "Crown",
+      description:
+        "Crown — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Crown","crown"] },
     },
     {
       id: "category-crystal-wheel-archer",
@@ -1210,18 +7664,81 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cygnus","cygnus"] },
     },
     {
+      id: "category-energy-ring-cygzas",
+      name: "Cygzas",
+      description:
+        "Cygzas — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Cygzas","cygzas"] },
+    },
+    {
+      id: "category-energy-ring-darkhelm",
+      name: "Darkhelm",
+      description:
+        "Darkhelm — a energy ring (3.2 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Darkhelm","darkhelm","Hades (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-destroyer",
+      name: "Destroyer",
+      description:
+        "Destroyer — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Destroyer","destroyer","Perseus","Perseus Defense Ver.","Destroyer Defense"] },
+    },
+    {
+      id: "category-destroyer-attack",
+      name: "Destroyer Attack",
+      description:
+        "Destroyer Attack — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Destroyer Attack","destroyer-attack","Perseus Attack Ver."] },
+    },
+    {
+      id: "category-destroyer-stamina",
+      name: "Destroyer Stamina",
+      description:
+        "Destroyer Stamina — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Destroyer Stamina","destroyer-stamina","Perseus Stamina Ver."] },
+    },
+    {
+      id: "category-energy-ring-dragonis",
+      name: "Dragonis",
+      description:
+        "Dragonis — a energy ring (2.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Dragonis","dragonis"] },
+    },
+    {
       id: "category-energy-ring-eagle",
       name: "Eagle",
       description:
-        "Eagle — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
-      extra: { aliases: ["Eagle","eagle"] },
+        "Eagle — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Eagle","eagle","Aquila"] },
     },
     {
       id: "category-energy-ring-fireblaze",
       name: "Fireblaze",
       description:
-        "Fireblaze — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
-      extra: { aliases: ["Fireblaze","fireblaze"] },
+        "Fireblaze — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Fireblaze","fireblaze","Phoenix (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-fox",
+      name: "Fox",
+      description:
+        "Fox — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Fox","fox"] },
+    },
+    {
+      id: "category-energy-ring-gasher",
+      name: "Gasher",
+      description:
+        "Gasher — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Gasher","gasher","Cancer"] },
+    },
+    {
+      id: "category-energy-ring-gemios",
+      name: "Gemios",
+      description:
+        "Gemios — a energy ring (2.3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Gemios","gemios"] },
     },
     {
       id: "category-gemios-dual-orientation-gimmick",
@@ -1231,24 +7748,45 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gemios DUAL-ORIENTATION GIMMICK","gemios dual-orientation gimmick"] },
     },
     {
-      id: "category-gladiator",
+      id: "category-energy-ring-gil",
+      name: "Gil",
+      description:
+        "Gil — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Gil","gil"] },
+    },
+    {
+      id: "category-energy-ring-giran",
+      name: "Giran",
+      description:
+        "Giran — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Giran","giran"] },
+    },
+    {
+      id: "category-energy-ring-gladiator",
       name: "Gladiator",
       description:
         "Gladiator — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Gladiator","gladiator"] },
     },
     {
-      id: "category-guardian",
+      id: "category-energy-ring-guardian",
       name: "Guardian",
       description:
         "Guardian — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Guardian","guardian"] },
     },
     {
+      id: "category-energy-ring-herculeo",
+      name: "Herculeo",
+      description:
+        "Herculeo — a energy ring (2.8 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Herculeo","herculeo"] },
+    },
+    {
       id: "category-energy-ring-horogium",
       name: "Horogium",
       description:
-        "Horogium — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Horogium — a energy ring (2.71 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Horogium","horogium"] },
     },
     {
@@ -1262,14 +7800,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-energy-ring-horuseus",
       name: "Horuseus",
       description:
-        "Horuseus — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Horuseus — a energy ring (2.92 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Horuseus","horuseus"] },
+    },
+    {
+      id: "category-energy-ring-ice-titan",
+      name: "Ice-Titan",
+      description:
+        "Ice-Titan — a energy ring (2.4 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Ice-Titan","ice-titan","Uranus (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-ionis",
+      name: "Ionis",
+      description:
+        "Ionis — a energy ring (2.8 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Ionis","ionis"] },
     },
     {
       id: "category-energy-ring-jupiter",
       name: "Jupiter",
       description:
-        "Jupiter — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Jupiter — a energy ring (3.11 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Jupiter","jupiter"] },
     },
     {
@@ -1294,39 +7846,151 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Ketos Clear Wheel","ketos clear wheel"] },
     },
     {
+      id: "category-energy-ring-kronos",
+      name: "Kronos",
+      description:
+        "Kronos — a energy ring (2.6 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Kronos","kronos"] },
+    },
+    {
       id: "category-energy-ring-l-drago",
       name: "L-Drago",
       description:
-        "L-Drago — a energy ring (used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "L-Drago — a energy ring (2.7 g, used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["L-Drago","l-drago"] },
+    },
+    {
+      id: "category-l-drago-assault",
+      name: "L-Drago Assault",
+      description:
+        "L-Drago Assault — a energy ring (4.8 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["L-Drago Assault","l-drago-assault"] },
+    },
+    {
+      id: "category-energy-ring-l-drago-i",
+      name: "L-Drago I",
+      description:
+        "L-Drago I — a energy ring (3.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["L-Drago I","l-drago-i"] },
+    },
+    {
+      id: "category-energy-ring-l-drago-ii",
+      name: "L-Drago II",
+      description:
+        "L-Drago II — a energy ring (6 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["L-Drago II","l-drago-ii","L-Drago Absorb Ver.","L-Drago Absorb"] },
+    },
+    {
+      id: "category-l-drago-rush",
+      name: "L-Drago Rush",
+      description:
+        "L-Drago Rush — a energy ring (4.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["L-Drago Rush","l-drago-rush"] },
+    },
+    {
+      id: "category-energy-ring-lacerta",
+      name: "Lacerta",
+      description:
+        "Lacerta — a energy ring (2.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Lacerta","lacerta"] },
+    },
+    {
+      id: "category-energy-ring-leol",
+      name: "Leol",
+      description:
+        "Leol — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Leol","leol"] },
     },
     {
       id: "category-energy-ring-leone",
       name: "Leone",
       description:
-        "Leone — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Leone — a energy ring (3 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Leone","leone"] },
+    },
+    {
+      id: "category-energy-ring-leone-i",
+      name: "Leone I",
+      description:
+        "Leone I — a energy ring (3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Leone I","leone-i"] },
+    },
+    {
+      id: "category-energy-ring-leone-ii",
+      name: "Leone II",
+      description:
+        "Leone II — a energy ring (3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Leone II","leone-ii"] },
+    },
+    {
+      id: "category-energy-ring-leplys",
+      name: "Leplys",
+      description:
+        "Leplys — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Leplys","leplys"] },
     },
     {
       id: "category-energy-ring-libra",
       name: "Libra",
       description:
-        "Libra — a energy ring (used by 3 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Libra — a energy ring (2.8 g, used by 3 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Libra","libra"] },
+    },
+    {
+      id: "category-energy-ring-lyncat",
+      name: "Lyncat",
+      description:
+        "Lyncat — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Lyncat","lyncat"] },
     },
     {
       id: "category-energy-ring-lynx",
       name: "Lynx",
       description:
-        "Lynx — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Lynx — a energy ring (3.06 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Lynx","lynx"] },
     },
     {
-      id: "category-nemesis-x",
+      id: "category-energy-ring-lyre",
+      name: "Lyre",
+      description:
+        "Lyre — a energy ring (2.6 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Lyre","lyre"] },
+    },
+    {
+      id: "category-energy-ring-nemesis-a",
+      name: "Nemesis A",
+      description:
+        "Nemesis A — a energy ring (3.2 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Nemesis A","nemesis-a","Nemesis (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-nemesis-x",
       name: "Nemesis X",
       description:
-        "Nemesis X — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Nemesis X — a energy ring (29.5 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Nemesis X","nemesis x"] },
+    },
+    {
+      id: "category-energy-ring-orion",
+      name: "Orion",
+      description:
+        "Orion — a energy ring (3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Orion","orion"] },
+    },
+    {
+      id: "category-energy-ring-orso",
+      name: "Orso",
+      description:
+        "Orso — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Orso","orso"] },
+    },
+    {
+      id: "category-energy-ring-pavon",
+      name: "Pavon",
+      description:
+        "Pavon — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Pavon","pavon"] },
     },
     {
       id: "category-pegasis-ii-clear-wheel",
@@ -1343,21 +8007,63 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Pegasus","pegasus"] },
     },
     {
-      id: "category-perseus",
+      id: "category-energy-ring-pegasus-i",
+      name: "Pegasus I",
+      description:
+        "Pegasus I — a energy ring (2.9 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Pegasus I","pegasus-i","Pegasis I (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-pegasus-ii",
+      name: "Pegasus II",
+      description:
+        "Pegasus II — a energy ring (3.1 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Pegasus II","pegasus-ii","Pegasis II (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-pegasus-iii",
+      name: "Pegasus III",
+      description:
+        "Pegasus III — a energy ring (3.2 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Pegasus III","pegasus-iii","Pegasis III (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-perseus",
       name: "Perseus",
       description:
-        "Perseus — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Perseus — a energy ring (2.7 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Perseus","perseus"] },
     },
     {
-      id: "category-pirate",
+      id: "category-energy-ring-pirate",
       name: "Pirate",
       description:
         "Pirate — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Pirate","pirate"] },
     },
     {
-      id: "category-ronin",
+      id: "category-energy-ring-pisces",
+      name: "Pisces",
+      description:
+        "Pisces — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Pisces","pisces"] },
+    },
+    {
+      id: "category-energy-ring-quetzalcoatl",
+      name: "Quetzalcoatl",
+      description:
+        "Quetzalcoatl — a energy ring (2.6 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Quetzalcoatl","quetzalcoatl"] },
+    },
+    {
+      id: "category-energy-ring-rex",
+      name: "Rex",
+      description:
+        "Rex — a energy ring (2.73 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Rex","rex"] },
+    },
+    {
+      id: "category-energy-ring-ronin",
       name: "Ronin",
       description:
         "Ronin — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
@@ -1367,22 +8073,36 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-energy-ring-sagittario",
       name: "Sagittario",
       description:
-        "Sagittario — a energy ring (used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Sagittario — a energy ring (2.8 g, used by 2 models). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Sagittario","sagittario"] },
     },
     {
       id: "category-energy-ring-sagittario-i",
       name: "Sagittario I",
       description:
-        "Sagittario I — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Sagittario I — a energy ring (2.8 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Sagittario I","sagittario i"] },
     },
     {
-      id: "category-samurai",
+      id: "category-energy-ring-sagittario-ii",
+      name: "Sagittario II",
+      description:
+        "Sagittario II — a energy ring (3.3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Sagittario II","sagittario-ii"] },
+    },
+    {
+      id: "category-energy-ring-samurai",
       name: "Samurai",
       description:
         "Samurai — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Samurai","samurai"] },
+    },
+    {
+      id: "category-energy-ring-scorpio",
+      name: "Scorpio",
+      description:
+        "Scorpio — a energy ring (2.5 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Scorpio","scorpio"] },
     },
     {
       id: "category-energy-ring-serpent",
@@ -1392,21 +8112,56 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Serpent","serpent"] },
     },
     {
-      id: "category-striker",
+      id: "category-energy-ring-serpenter",
+      name: "Serpenter",
+      description:
+        "Serpenter — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Serpenter","serpenter"] },
+    },
+    {
+      id: "category-energy-ring-shielzam",
+      name: "Shielzam",
+      description:
+        "Shielzam — a energy ring. Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Shielzam","shielzam"] },
+    },
+    {
+      id: "category-energy-ring-striker",
       name: "Striker",
       description:
         "Striker — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Striker","striker"] },
     },
     {
+      id: "category-energy-ring-striker-i",
+      name: "Striker I",
+      description:
+        "Striker I — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Striker I","striker-i","Unicorno I (Takara Tomy)"] },
+    },
+    {
       id: "category-energy-ring-striker-ii",
       name: "Striker II",
       description:
-        "Striker II — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
-      extra: { aliases: ["Striker II","striker ii"] },
+        "Striker II — a energy ring (3.3 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Striker II","striker ii","Unicorno II (Takara Tomy)"] },
     },
     {
-      id: "category-virgo",
+      id: "category-energy-ring-susanow",
+      name: "Susanow",
+      description:
+        "Susanow — a energy ring (3.3 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Susanow","susanow"] },
+    },
+    {
+      id: "category-energy-ring-tempo",
+      name: "Tempo",
+      description:
+        "Tempo — a energy ring (2.7 g). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+      extra: { aliases: ["Tempo","tempo","Horogium (Takara Tomy)"] },
+    },
+    {
+      id: "category-energy-ring-virgo",
       name: "Virgo",
       description:
         "Virgo — a energy ring (2.8 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
@@ -1416,30 +8171,37 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-energy-ring-wolf",
       name: "Wolf",
       description:
-        "Wolf — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Wolf — a energy ring (3 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Wolf","wolf"] },
     },
     {
       id: "category-energy-ring-zurafa",
       name: "Zurafa",
       description:
-        "Zurafa — a energy ring (used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
+        "Zurafa — a energy ring (2.9 g, used by 1 model). Loose examples, spares and pre-owned energy rings of this part are listed here.",
       extra: { aliases: ["Zurafa","zurafa"] },
     },
   ],
   "category-metal-face-bolts": [
     {
+      id: "category-face-bolt-anubius",
+      name: "Anubius",
+      description:
+        "Anubius — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Anubius","anubius","Anubis (B-166)"] },
+    },
+    {
       id: "category-face-bolt-aquario",
       name: "Aquario",
       description:
-        "Aquario — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Aquario — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Aquario","aquario"] },
     },
     {
       id: "category-face-bolt-aries",
       name: "Aries",
       description:
-        "Aries — a face bolt (used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Aries — a face bolt (1 g, used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Aries","aries"] },
     },
     {
@@ -1457,17 +8219,52 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Bahamoote","bahamoote"] },
     },
     {
+      id: "category-shogun-face-bolt-bahamoote",
+      name: "Bahamoote",
+      description:
+        "Bahamoote — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Bahamoote","bahamoote","Bahamdia (Takara Tomy)"] },
+    },
+    {
+      id: "category-shogun-face-bolt-balro",
+      name: "Balro",
+      description:
+        "Balro — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Balro","balro"] },
+    },
+    {
+      id: "category-bearl",
+      name: "Bearl",
+      description:
+        "Bearl — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Bearl","bearl"] },
+    },
+    {
+      id: "category-face-bolt-beelzeb",
+      name: "Beelzeb",
+      description:
+        "Beelzeb — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Beelzeb","beelzeb"] },
+    },
+    {
       id: "category-face-bolt-befall",
       name: "Befall",
       description:
-        "Befall — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
-      extra: { aliases: ["Befall","befall"] },
+        "Befall — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Befall","befall","Beafowl (Takara Tomy)"] },
     },
     {
-      id: "category-behemoth",
+      id: "category-face-bolt-behemoth",
       name: "Behemoth",
       description:
         "Behemoth — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Behemoth","behemoth"] },
+    },
+    {
+      id: "category-shogun-face-bolt-behemoth",
+      name: "Behemoth",
+      description:
+        "Behemoth — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
       extra: { aliases: ["Behemoth","behemoth"] },
     },
     {
@@ -1481,8 +8278,15 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-face-bolt-bull",
       name: "Bull",
       description:
-        "Bull — a face bolt (used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Bull — a face bolt (1 g, used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Bull","bull"] },
+    },
+    {
+      id: "category-shogun-face-bolt-byakko",
+      name: "Byakko",
+      description:
+        "Byakko — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Byakko","byakko","Whiger (Takara Tomy)"] },
     },
     {
       id: "category-face-bolt-byxis",
@@ -1492,6 +8296,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Byxis","byxis"] },
     },
     {
+      id: "category-caesar",
+      name: "Caesar",
+      description:
+        "Caesar — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Caesar","caesar"] },
+    },
+    {
+      id: "category-face-bolt-capricorn",
+      name: "Capricorn",
+      description:
+        "Capricorn — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Capricorn","capricorn","Capricorne (Takara Tomy)"] },
+    },
+    {
       id: "category-face-bolt-capricorne",
       name: "Capricorne",
       description:
@@ -1499,11 +8317,102 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Capricorne","capricorne"] },
     },
     {
+      id: "category-face-bolt-cetus",
+      name: "Cetus",
+      description:
+        "Cetus — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Cetus","cetus","Ketos (Takara Tomy)"] },
+    },
+    {
+      id: "category-cetus-generic",
+      name: "Cetus (Generic)",
+      description:
+        "Cetus (Generic) — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Cetus (Generic)","cetus-generic"] },
+    },
+    {
+      id: "category-face-bolt-chimera",
+      name: "Chimera",
+      description:
+        "Chimera — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Chimera","chimera"] },
+    },
+    {
+      id: "category-face-bolt-comic",
+      name: "Comic",
+      description:
+        "Comic — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Comic","comic"] },
+    },
+    {
+      id: "category-counter-leone",
+      name: "Counter Leone",
+      description:
+        "Counter Leone — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Counter Leone","counter-leone"] },
+    },
+    {
+      id: "category-crow",
+      name: "Crow",
+      description:
+        "Crow — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Crow","crow"] },
+    },
+    {
+      id: "category-face-bolt-crown",
+      name: "Crown",
+      description:
+        "Crown — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Crown","crown"] },
+    },
+    {
+      id: "category-cyber-pegasus",
+      name: "Cyber Pegasus",
+      description:
+        "Cyber Pegasus — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Cyber Pegasus","cyber-pegasus","Cyber Pegasis"] },
+    },
+    {
       id: "category-face-bolt-cygnus",
       name: "Cygnus",
       description:
-        "Cygnus — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Cygnus — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Cygnus","cygnus"] },
+    },
+    {
+      id: "category-face-bolt-cygzas",
+      name: "Cygzas",
+      description:
+        "Cygzas — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Cygzas","cygzas"] },
+    },
+    {
+      id: "category-face-bolt-darkhelm",
+      name: "Darkhelm",
+      description:
+        "Darkhelm — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Darkhelm","darkhelm","Hades (Takara Tomy)"] },
+    },
+    {
+      id: "category-delphis",
+      name: "Delphis",
+      description:
+        "Delphis — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Delphis","delphis"] },
+    },
+    {
+      id: "category-face-bolt-destroyer",
+      name: "Destroyer",
+      description:
+        "Destroyer — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Destroyer","destroyer","Perseus"] },
+    },
+    {
+      id: "category-face-bolt-dragonis",
+      name: "Dragonis",
+      description:
+        "Dragonis — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Dragonis","dragonis"] },
     },
     {
       id: "category-face-bolt-dragoon",
@@ -1513,11 +8422,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dragoon","dragoon"] },
     },
     {
+      id: "category-shogun-face-bolt-dragoon",
+      name: "Dragoon",
+      description:
+        "Dragoon — a shogun face bolt (1.2 g, used by 1 model). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Dragoon","dragoon","Dragooon (Takara Tomy)"] },
+    },
+    {
       id: "category-face-bolt-eagle",
       name: "Eagle",
       description:
         "Eagle — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
-      extra: { aliases: ["Eagle","eagle"] },
+      extra: { aliases: ["Eagle","eagle","Aquila"] },
     },
     {
       id: "category-eagle-aquila",
@@ -1527,25 +8443,74 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Eagle / Aquila","eagle / aquila"] },
     },
     {
+      id: "category-shogun-face-bolt-fenrir",
+      name: "Fenrir",
+      description:
+        "Fenrir — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Fenrir","fenrir"] },
+    },
+    {
       id: "category-face-bolt-fireblaze",
       name: "Fireblaze",
       description:
-        "Fireblaze — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
-      extra: { aliases: ["Fireblaze","fireblaze"] },
+        "Fireblaze — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Fireblaze","fireblaze","Phoenix (Takara Tomy)"] },
     },
     {
-      id: "category-gargoyle",
+      id: "category-five-star-pegasis",
+      name: "Five Star Pegasis",
+      description:
+        "Five Star Pegasis — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Five Star Pegasis","five-star-pegasis"] },
+    },
+    {
+      id: "category-face-bolt-fox",
+      name: "Fox",
+      description:
+        "Fox — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Fox","fox"] },
+    },
+    {
+      id: "category-face-bolt-gargoyle",
       name: "Gargoyle",
       description:
         "Gargoyle — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Gargoyle","gargoyle"] },
     },
     {
-      id: "category-gemios",
+      id: "category-shogun-face-bolt-gargoyle",
+      name: "Gargoyle",
+      description:
+        "Gargoyle — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Gargoyle","gargoyle","Gargole (Takara Tomy)"] },
+    },
+    {
+      id: "category-shogun-face-bolt-garudas",
+      name: "Garudas",
+      description:
+        "Garudas — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Garudas","garudas"] },
+    },
+    {
+      id: "category-face-bolt-gasher",
+      name: "Gasher",
+      description:
+        "Gasher — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Gasher","gasher","Cancer"] },
+    },
+    {
+      id: "category-face-bolt-gemios",
       name: "Gemios",
       description:
-        "Gemios — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Gemios — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Gemios","gemios"] },
+    },
+    {
+      id: "category-shogun-face-bolt-genbu",
+      name: "Genbu",
+      description:
+        "Genbu — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Genbu","genbu","Genbull"] },
     },
     {
       id: "category-face-bolt-genbull",
@@ -1553,6 +8518,48 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Genbull — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Genbull","genbull"] },
+    },
+    {
+      id: "category-face-bolt-gil",
+      name: "Gil",
+      description:
+        "Gil — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Gil","gil"] },
+    },
+    {
+      id: "category-face-bolt-giran",
+      name: "Giran",
+      description:
+        "Giran — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Giran","giran"] },
+    },
+    {
+      id: "category-shogun-face-bolt-golem",
+      name: "Golem",
+      description:
+        "Golem — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Golem","golem","Goreim (Takara Tomy)"] },
+    },
+    {
+      id: "category-shogun-face-bolt-griffin",
+      name: "Griffin",
+      description:
+        "Griffin — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Griffin","griffin","Gryph (Takara Tomy)"] },
+    },
+    {
+      id: "category-gryph-dragooon",
+      name: "Gryph Dragooon",
+      description:
+        "Gryph Dragooon — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Gryph Dragooon","gryph-dragooon"] },
+    },
+    {
+      id: "category-face-bolt-herculeo",
+      name: "Herculeo",
+      description:
+        "Herculeo — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Herculeo","herculeo"] },
     },
     {
       id: "category-face-bolt-horogium",
@@ -1576,6 +8583,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Horuseus","horuseus"] },
     },
     {
+      id: "category-face-bolt-hydra",
+      name: "Hydra",
+      description:
+        "Hydra — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Hydra","hydra"] },
+    },
+    {
+      id: "category-face-bolt-ice-titan",
+      name: "Ice-Titan",
+      description:
+        "Ice-Titan — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Ice-Titan","ice-titan","Uranus (Takara Tomy)"] },
+    },
+    {
       id: "category-face-bolt-ifraid",
       name: "Ifraid",
       description:
@@ -1583,18 +8604,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Ifraid","ifraid"] },
     },
     {
+      id: "category-shogun-face-bolt-ifrit",
+      name: "Ifrit",
+      description:
+        "Ifrit — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Ifrit","ifrit","Ifraid (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-ionis",
+      name: "Ionis",
+      description:
+        "Ionis — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Ionis","ionis"] },
+    },
+    {
       id: "category-face-bolt-jupiter",
       name: "Jupiter",
       description:
-        "Jupiter — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Jupiter — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Jupiter","jupiter"] },
     },
     {
       id: "category-face-bolt-kerbecs",
       name: "Kerbecs",
       description:
-        "Kerbecs — a face bolt (used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Kerbecs — a face bolt (1 g, used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Kerbecs","kerbecs"] },
+    },
+    {
+      id: "category-shogun-face-bolt-kraken",
+      name: "Kraken",
+      description:
+        "Kraken — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Kraken","kraken","Killerken (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-kronos",
+      name: "Kronos",
+      description:
+        "Kronos — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Kronos","kronos"] },
     },
     {
       id: "category-face-bolt-l-drago",
@@ -1604,11 +8653,67 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["L-Drago","l-drago"] },
     },
     {
+      id: "category-face-bolt-l-drago-i",
+      name: "L-Drago I",
+      description:
+        "L-Drago I — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["L-Drago I","l-drago-i"] },
+    },
+    {
+      id: "category-face-bolt-l-drago-ii",
+      name: "L-Drago II",
+      description:
+        "L-Drago II — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["L-Drago II","l-drago-ii"] },
+    },
+    {
+      id: "category-l-drago-iii",
+      name: "L-Drago III",
+      description:
+        "L-Drago III — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["L-Drago III","l-drago-iii"] },
+    },
+    {
+      id: "category-face-bolt-lacerta",
+      name: "Lacerta",
+      description:
+        "Lacerta — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Lacerta","lacerta"] },
+    },
+    {
+      id: "category-face-bolt-leol",
+      name: "Leol",
+      description:
+        "Leol — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Leol","leol"] },
+    },
+    {
       id: "category-face-bolt-leone",
       name: "Leone",
       description:
         "Leone — a face bolt (used by 2 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Leone","leone"] },
+    },
+    {
+      id: "category-face-bolt-leone-i",
+      name: "Leone I",
+      description:
+        "Leone I — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Leone I","leone-i"] },
+    },
+    {
+      id: "category-face-bolt-leone-ii",
+      name: "Leone II",
+      description:
+        "Leone II — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Leone II","leone-ii"] },
+    },
+    {
+      id: "category-face-bolt-leplys",
+      name: "Leplys",
+      description:
+        "Leplys — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Leplys","leplys"] },
     },
     {
       id: "category-face-bolt-leviathan",
@@ -1618,18 +8723,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Leviathan","leviathan"] },
     },
     {
+      id: "category-shogun-face-bolt-leviathan",
+      name: "Leviathan",
+      description:
+        "Leviathan — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Leviathan","leviathan"] },
+    },
+    {
       id: "category-face-bolt-libra",
       name: "Libra",
       description:
-        "Libra — a face bolt (used by 3 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Libra — a face bolt (1 g, used by 3 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Libra","libra"] },
+    },
+    {
+      id: "category-face-bolt-lyncat",
+      name: "Lyncat",
+      description:
+        "Lyncat — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Lyncat","lyncat"] },
     },
     {
       id: "category-face-bolt-lynx",
       name: "Lynx",
       description:
-        "Lynx — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Lynx — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Lynx","lynx"] },
+    },
+    {
+      id: "category-face-bolt-lyre",
+      name: "Lyre",
+      description:
+        "Lyre — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Lyre","lyre","Lyra (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-nemesis-a",
+      name: "Nemesis A",
+      description:
+        "Nemesis A — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Nemesis A","nemesis-a","Nemesis (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-nemesis-x",
+      name: "Nemesis X",
+      description:
+        "Nemesis X — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Nemesis X","nemesis-x"] },
     },
     {
       id: "category-nemesis-x-hasbro-original-design",
@@ -1639,11 +8779,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Nemesis X HASBRO ORIGINAL DESIGN","nemesis x hasbro original design"] },
     },
     {
-      id: "category-orochi",
+      id: "category-northern-cross",
+      name: "Northern Cross",
+      description:
+        "Northern Cross — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Northern Cross","northern-cross"] },
+    },
+    {
+      id: "category-face-bolt-orion",
+      name: "Orion",
+      description:
+        "Orion — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Orion","orion"] },
+    },
+    {
+      id: "category-face-bolt-orochi",
       name: "Orochi",
       description:
         "Orochi — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Orochi","orochi"] },
+    },
+    {
+      id: "category-shogun-face-bolt-orochi",
+      name: "Orochi",
+      description:
+        "Orochi — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Orochi","orochi","Orojya(Takara Tomy)"] },
+    },
+    {
+      id: "category-orojya-revizer",
+      name: "Orojya Revizer",
+      description:
+        "Orojya Revizer — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Orojya Revizer","orojya-revizer"] },
+    },
+    {
+      id: "category-face-bolt-orso",
+      name: "Orso",
+      description:
+        "Orso — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Orso","orso"] },
+    },
+    {
+      id: "category-face-bolt-pavon",
+      name: "Pavon",
+      description:
+        "Pavon — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Pavon","pavon"] },
     },
     {
       id: "category-face-bolt-pegasus",
@@ -1651,6 +8833,34 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Pegasus — a face bolt (used by 4 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Pegasus","pegasus"] },
+    },
+    {
+      id: "category-shogun-face-bolt-pegasus",
+      name: "Pegasus",
+      description:
+        "Pegasus — a shogun face bolt (1.2 g, used by 1 model). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Pegasus","pegasus","Pegasis (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-pegasus-i",
+      name: "Pegasus I",
+      description:
+        "Pegasus I — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Pegasus I","pegasus-i","Pegasis I (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-pegasus-ii",
+      name: "Pegasus II",
+      description:
+        "Pegasus II — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Pegasus II","pegasus-ii","Pegasis II (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-pegasus-iii",
+      name: "Pegasus III",
+      description:
+        "Pegasus III — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Pegasus III","pegasus-iii","Pegasis III (Takara Tomy)"] },
     },
     {
       id: "category-perseus-destroyer",
@@ -1667,11 +8877,81 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Phoenic","phoenic"] },
     },
     {
+      id: "category-shogun-face-bolt-phoenix",
+      name: "Phoenix",
+      description:
+        "Phoenix — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Phoenix","phoenix","Phoenic (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-pisces",
+      name: "Pisces",
+      description:
+        "Pisces — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Pisces","pisces"] },
+    },
+    {
+      id: "category-face-bolt-poseidon",
+      name: "Poseidon",
+      description:
+        "Poseidon — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Poseidon","poseidon"] },
+    },
+    {
+      id: "category-face-bolt-quetzalcoatl",
+      name: "Quetzalcoatl",
+      description:
+        "Quetzalcoatl — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Quetzalcoatl","quetzalcoatl"] },
+    },
+    {
+      id: "category-raven",
+      name: "Raven",
+      description:
+        "Raven — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Raven","raven"] },
+    },
+    {
+      id: "category-face-bolt-rex",
+      name: "Rex",
+      description:
+        "Rex — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Rex","rex"] },
+    },
+    {
       id: "category-face-bolt-sagittario-i",
       name: "Sagittario I",
       description:
-        "Sagittario I — a face bolt (used by 3 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Sagittario I — a face bolt (1 g, used by 3 models). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Sagittario I","sagittario i"] },
+    },
+    {
+      id: "category-face-bolt-sagittario-ii",
+      name: "Sagittario II",
+      description:
+        "Sagittario II — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Sagittario II","sagittario-ii"] },
+    },
+    {
+      id: "category-shogun-face-bolt-salamander",
+      name: "Salamander",
+      description:
+        "Salamander — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Salamander","salamander","Saramanda (Takara Tomy)"] },
+    },
+    {
+      id: "category-saramanda-ifraid",
+      name: "Saramanda Ifraid",
+      description:
+        "Saramanda Ifraid — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Saramanda Ifraid","saramanda-ifraid"] },
+    },
+    {
+      id: "category-face-bolt-scorpio",
+      name: "Scorpio",
+      description:
+        "Scorpio — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Scorpio","scorpio","Escolpio (Takara Tomy)"] },
     },
     {
       id: "category-face-bolt-serpent",
@@ -1681,6 +8961,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Serpent","serpent"] },
     },
     {
+      id: "category-face-bolt-serpenter",
+      name: "Serpenter",
+      description:
+        "Serpenter — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Serpenter","serpenter"] },
+    },
+    {
+      id: "category-face-bolt-shielzam",
+      name: "Shielzam",
+      description:
+        "Shielzam — a face bolt. Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Shielzam","shielzam"] },
+    },
+    {
       id: "category-striker-unicorno",
       name: "Striker / Unicorno",
       description:
@@ -1688,18 +8982,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Striker / Unicorno","striker / unicorno"] },
     },
     {
+      id: "category-face-bolt-striker-i",
+      name: "Striker I",
+      description:
+        "Striker I — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Striker I","striker-i","Unicorno I (Takara Tomy)"] },
+    },
+    {
       id: "category-face-bolt-striker-ii",
       name: "Striker II",
       description:
-        "Striker II — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
-      extra: { aliases: ["Striker II","striker ii"] },
+        "Striker II — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Striker II","striker ii","Unicorno II (Takara Tomy)"] },
     },
     {
-      id: "category-variares",
+      id: "category-face-bolt-susanow",
+      name: "Susanow",
+      description:
+        "Susanow — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Susanow","susanow"] },
+    },
+    {
+      id: "category-face-bolt-tempo",
+      name: "Tempo",
+      description:
+        "Tempo — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Tempo","tempo","Horogium (Takara Tomy)"] },
+    },
+    {
+      id: "category-face-bolt-variares",
       name: "Variares",
       description:
-        "Variares — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Variares — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Variares","variares"] },
+    },
+    {
+      id: "category-face-bolt-virgo",
+      name: "Virgo",
+      description:
+        "Virgo — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Virgo","virgo"] },
     },
     {
       id: "category-virgo-ii",
@@ -1712,15 +9034,36 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-face-bolt-wolf",
       name: "Wolf",
       description:
-        "Wolf — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+        "Wolf — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
       extra: { aliases: ["Wolf","wolf"] },
+    },
+    {
+      id: "category-world-championship-commemorative-model",
+      name: "World Championship Commemorative Model",
+      description:
+        "World Championship Commemorative Model — a face bolt (1 g). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["World Championship Commemorative Model","world-championship-commemorative-model","World Ver."] },
+    },
+    {
+      id: "category-shogun-face-bolt-wyvang",
+      name: "Wyvang",
+      description:
+        "Wyvang — a shogun face bolt (1.2 g). Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Wyvang","wyvang","Wyvern (anime, English)"] },
+    },
+    {
+      id: "category-shogun-face-bolt-zirago",
+      name: "Zirago",
+      description:
+        "Zirago — a shogun face bolt. Loose examples, spares and pre-owned shogun face bolts of this part are listed here.",
+      extra: { aliases: ["Zirago","zirago"] },
     },
     {
       id: "category-face-bolt-zurafa",
       name: "Zurafa",
       description:
-        "Zurafa — a face bolt (used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
-      extra: { aliases: ["Zurafa","zurafa"] },
+        "Zurafa — a face bolt (1 g, used by 1 model). Loose examples, spares and pre-owned face bolts of this part are listed here.",
+      extra: { aliases: ["Zurafa","zurafa","Giraffe (Takara Tomy)"] },
     },
   ],
   "category-metal-fusion-wheels": [
@@ -1753,6 +9096,55 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["4D Metal Wheel: Phantom","4d metal wheel: phantom"] },
     },
     {
+      id: "category-wheel-aquario",
+      name: "Aquario",
+      description:
+        "Aquario — a wheel (35.5 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Aquario","aquario"] },
+    },
+    {
+      id: "category-element-wheel-archer",
+      name: "Archer",
+      description:
+        "Archer — a element wheel (5.2 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Archer","archer"] },
+    },
+    {
+      id: "category-wheel-aries",
+      name: "Aries",
+      description:
+        "Aries — a wheel. Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Aries","aries"] },
+    },
+    {
+      id: "category-warrior-wheel-bahamoote",
+      name: "Bahamoote",
+      description:
+        "Bahamoote — a warrior wheel (29.4 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Bahamoote","bahamoote","Bahamdia (Takara Tomy)"] },
+    },
+    {
+      id: "category-bakushin",
+      name: "Bakushin",
+      description:
+        "Bakushin — a fusion wheel (32.3 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Bakushin","bakushin"] },
+    },
+    {
+      id: "category-warrior-wheel-balro",
+      name: "Balro",
+      description:
+        "Balro — a warrior wheel (31.5 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Balro","balro"] },
+    },
+    {
+      id: "category-bandit",
+      name: "Bandit",
+      description:
+        "Bandit — a element wheel (4.8 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Bandit","bandit","Bandid (Takara Tomy)"] },
+    },
+    {
       id: "category-basalt-twisted",
       name: "Basalt / Twisted",
       description:
@@ -1767,11 +9159,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Basalt HEAVIEST MFB WHEEL","basalt heaviest mfb wheel"] },
     },
     {
+      id: "category-beat",
+      name: "Beat",
+      description:
+        "Beat — a fusion wheel (38.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Beat","beat"] },
+    },
+    {
+      id: "category-beat-hasbro",
+      name: "Beat (Hasbro)",
+      description:
+        "Beat (Hasbro) — a fusion wheel (32.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Beat (Hasbro)","beat-hasbro"] },
+    },
+    {
       id: "category-beat-smash-attack-wings",
       name: "Beat SMASH ATTACK WINGS",
       description:
         "Beat SMASH ATTACK WINGS — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Beat SMASH ATTACK WINGS","beat smash attack wings"] },
+    },
+    {
+      id: "category-warrior-wheel-behemoth",
+      name: "Behemoth",
+      description:
+        "Behemoth — a warrior wheel. Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Behemoth","behemoth"] },
+    },
+    {
+      id: "category-element-wheel-berserker",
+      name: "Berserker",
+      description:
+        "Berserker — a element wheel (4.5 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Berserker","berserker"] },
+    },
+    {
+      id: "category-fusion-wheel-blitz",
+      name: "Blitz",
+      description:
+        "Blitz — a fusion wheel (43.7 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Blitz","blitz","Blitz I (Hasbro)"] },
+    },
+    {
+      id: "category-fusion-wheel-blitz-hasbro",
+      name: "Blitz (Hasbro)",
+      description:
+        "Blitz (Hasbro) — a fusion wheel (31.7 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Blitz (Hasbro)","blitz-hasbro"] },
     },
     {
       id: "category-blitz-dual-mode-4d-attack-wheel",
@@ -1781,6 +9215,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Blitz DUAL-MODE 4D ATTACK WHEEL","blitz dual-mode 4d attack wheel"] },
     },
     {
+      id: "category-wheel-bull",
+      name: "Bull",
+      description:
+        "Bull — a wheel (35.5 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Bull","bull"] },
+    },
+    {
       id: "category-bull-misleading-design",
       name: "Bull MISLEADING DESIGN",
       description:
@@ -1788,18 +9229,95 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Bull MISLEADING DESIGN","bull misleading design"] },
     },
     {
-      id: "category-burn",
+      id: "category-fusion-wheel-burn",
       name: "Burn",
       description:
-        "Burn — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Burn — a fusion wheel (31.51 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Burn","burn"] },
     },
     {
-      id: "category-dark",
+      id: "category-warrior-wheel-byakko",
+      name: "Byakko",
+      description:
+        "Byakko — a warrior wheel. Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Byakko","byakko","Whiger (Takara Tomy)"] },
+    },
+    {
+      id: "category-wheel-capricorne",
+      name: "Capricorne",
+      description:
+        "Capricorne — a wheel (32.5 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Capricorne","capricorne"] },
+    },
+    {
+      id: "category-clay",
+      name: "Clay",
+      description:
+        "Clay — a light wheel. Loose examples, spares and pre-owned light wheels of this part are listed here.",
+      extra: { aliases: ["Clay","clay"] },
+    },
+    {
+      id: "category-fusion-wheel-cosmic",
+      name: "Cosmic",
+      description:
+        "Cosmic — a fusion wheel (41.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Cosmic","cosmic","Big Bang (Takara Tomy)","Cosmic I (Hasbro)"] },
+    },
+    {
+      id: "category-cosmic-hasbro",
+      name: "Cosmic (Hasbro)",
+      description:
+        "Cosmic (Hasbro) — a fusion wheel (32.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Cosmic (Hasbro)","cosmic-hasbro"] },
+    },
+    {
+      id: "category-counter",
+      name: "Counter",
+      description:
+        "Counter — a fusion wheel (29.2 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Counter","counter"] },
+    },
+    {
+      id: "category-crystal",
+      name: "Crystal",
+      description:
+        "Crystal — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Crystal","crystal"] },
+    },
+    {
+      id: "category-cyber",
+      name: "Cyber",
+      description:
+        "Cyber — a fusion wheel (29.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Cyber","cyber"] },
+    },
+    {
+      id: "category-fusion-wheel-cyclone",
+      name: "Cyclone",
+      description:
+        "Cyclone — a fusion wheel (32.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Cyclone","cyclone"] },
+    },
+    {
+      id: "category-fusion-wheel-dark",
       name: "Dark",
       description:
         "Dark — a fusion wheel (31.4 g, used by 3 models). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Dark","dark"] },
+    },
+    {
+      id: "category-fusion-wheel-death",
+      name: "Death",
+      description:
+        "Death — a fusion wheel (43.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Death","death","Death I (Hasbro)"] },
+    },
+    {
+      id: "category-death-hasbro",
+      name: "Death (Hasbro)",
+      description:
+        "Death (Hasbro) — a fusion wheel (31.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Death (Hasbro)","death-hasbro"] },
     },
     {
       id: "category-death-4d-metal-wheel",
@@ -1809,10 +9327,52 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Death 4D Metal Wheel","death 4d metal wheel"] },
     },
     {
+      id: "category-fusion-wheel-devil",
+      name: "Devil",
+      description:
+        "Devil — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Devil","devil"] },
+    },
+    {
+      id: "category-diablo",
+      name: "Diablo",
+      description:
+        "Diablo — a fusion wheel (51.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Diablo","diablo"] },
+    },
+    {
+      id: "category-fusion-wheel-divine",
+      name: "Divine",
+      description:
+        "Divine — a fusion wheel (30.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Divine","divine"] },
+    },
+    {
+      id: "category-warrior-wheel-dragoon",
+      name: "Dragoon",
+      description:
+        "Dragoon — a warrior wheel (30.9 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Dragoon","dragoon","Dragooon"] },
+    },
+    {
+      id: "category-duo",
+      name: "Duo",
+      description:
+        "Duo — a fusion wheel (42.3 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Duo","duo"] },
+    },
+    {
+      id: "category-duo-hasbro",
+      name: "Duo (Hasbro)",
+      description:
+        "Duo (Hasbro) — a fusion wheel (29.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Duo (Hasbro)","duo-hasbro"] },
+    },
+    {
       id: "category-earth",
       name: "Earth",
       description:
-        "Earth — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Earth — a fusion wheel (30.8 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Earth","earth"] },
     },
     {
@@ -1823,17 +9383,59 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Earth TOP-TIER STAMINA/DEFENSE WHEEL","earth top-tier stamina/defense wheel"] },
     },
     {
+      id: "category-escolpio",
+      name: "Escolpio",
+      description:
+        "Escolpio — a wheel (31 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Escolpio","escolpio"] },
+    },
+    {
       id: "category-evil",
       name: "Evil",
       description:
-        "Evil — a fusion wheel (used by 2 models). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Evil — a fusion wheel (31.2 g, used by 2 models). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Evil","evil"] },
     },
     {
-      id: "category-flame",
+      id: "category-fusion-wheel-fang",
+      name: "Fang",
+      description:
+        "Fang — a fusion wheel (39.2 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Fang","fang","Fang I (Hasbro)"] },
+    },
+    {
+      id: "category-fang-hasbro",
+      name: "Fang (Hasbro)",
+      description:
+        "Fang (Hasbro) — a fusion wheel (31 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Fang (Hasbro)","fang-hasbro"] },
+    },
+    {
+      id: "category-warrior-wheel-fenrir",
+      name: "Fenrir",
+      description:
+        "Fenrir — a warrior wheel. Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Fenrir","fenrir","Wanrir"] },
+    },
+    {
+      id: "category-fire",
+      name: "Fire",
+      description:
+        "Fire — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Fire","fire"] },
+    },
+    {
+      id: "category-firefuse",
+      name: "Firefuse",
+      description:
+        "Firefuse — a fusion wheel (30.9 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Firefuse","firefuse"] },
+    },
+    {
+      id: "category-fusion-wheel-flame",
       name: "Flame",
       description:
-        "Flame — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Flame — a fusion wheel (32.5 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Flame","flame"] },
     },
     {
@@ -1851,6 +9453,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Flame STAMINA-CLASS FW","flame stamina-class fw"] },
     },
     {
+      id: "category-flash",
+      name: "Flash",
+      description:
+        "Flash — a fusion wheel (45.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Flash","flash"] },
+    },
+    {
       id: "category-flash-4d-metal-wheel",
       name: "Flash 4D Metal Wheel",
       description:
@@ -1865,11 +9474,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Forbidden","forbidden"] },
     },
     {
+      id: "category-fury",
+      name: "Fury",
+      description:
+        "Fury — a fusion wheel (28.7 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Fury","fury"] },
+    },
+    {
+      id: "category-fusion-wheel-fusion",
+      name: "Fusion",
+      description:
+        "Fusion — a fusion wheel (44.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Fusion","fusion","Firefuse (anime, English)"] },
+    },
+    {
       id: "category-fusion-4d-metal-wheel",
       name: "Fusion 4D Metal Wheel",
       description:
         "Fusion 4D Metal Wheel — a fusion wheel (44 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Fusion 4D Metal Wheel","fusion 4d metal wheel"] },
+    },
+    {
+      id: "category-galaxy",
+      name: "Galaxy",
+      description:
+        "Galaxy — a fusion wheel (29.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Galaxy","galaxy"] },
     },
     {
       id: "category-galaxy-high-spin-generator",
@@ -1886,6 +9516,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Galaxy Metal Wheel","galaxy metal wheel"] },
     },
     {
+      id: "category-warrior-wheel-gargoyle",
+      name: "Gargoyle",
+      description:
+        "Gargoyle — a warrior wheel (29.8 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Gargoyle","gargoyle","Gargole"] },
+    },
+    {
+      id: "category-warrior-wheel-garudas",
+      name: "Garudas",
+      description:
+        "Garudas — a warrior wheel. Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Garudas","garudas"] },
+    },
+    {
+      id: "category-wheel-gemios",
+      name: "Gemios",
+      description:
+        "Gemios — a wheel (36.1 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Gemios","gemios"] },
+    },
+    {
       id: "category-gemios-key-attack-part",
       name: "Gemios KEY ATTACK PART",
       description:
@@ -1893,7 +9544,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gemios KEY ATTACK PART","gemios key attack part"] },
     },
     {
-      id: "category-grand",
+      id: "category-warrior-wheel-genbu",
+      name: "Genbu",
+      description:
+        "Genbu — a warrior wheel (30.8 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Genbu","genbu","Genbull (Takara Tomy)"] },
+    },
+    {
+      id: "category-element-wheel-gladiator",
+      name: "Gladiator",
+      description:
+        "Gladiator — a element wheel (5.4 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Gladiator","gladiator"] },
+    },
+    {
+      id: "category-warrior-wheel-golem",
+      name: "Golem",
+      description:
+        "Golem — a warrior wheel (29.6 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Golem","golem","Goreim (Takara Tomy)"] },
+    },
+    {
+      id: "category-fusion-wheel-grand",
       name: "Grand",
       description:
         "Grand — a fusion wheel (29.3 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
@@ -1907,6 +9579,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Grand Metal Wheel","grand metal wheel"] },
     },
     {
+      id: "category-fusion-wheel-gravity",
+      name: "Gravity",
+      description:
+        "Gravity — a fusion wheel (33.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Gravity","gravity"] },
+    },
+    {
       id: "category-gravity-counter-attack-fw",
       name: "Gravity COUNTER-ATTACK FW",
       description:
@@ -1914,11 +9593,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gravity COUNTER-ATTACK FW","gravity counter-attack fw"] },
     },
     {
+      id: "category-warrior-wheel-griffin",
+      name: "Griffin",
+      description:
+        "Griffin — a warrior wheel (30.4 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Griffin","griffin","Gryph"] },
+    },
+    {
+      id: "category-element-wheel-guardian",
+      name: "Guardian",
+      description:
+        "Guardian — a element wheel. Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Guardian","guardian"] },
+    },
+    {
       id: "category-hades",
       name: "Hades",
       description:
-        "Hades — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
-      extra: { aliases: ["Hades","hades"] },
+        "Hades — a fusion wheel (39.6 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Hades","hades","Hell (Takara Tomy)"] },
     },
     {
       id: "category-hades-maximum-series-wide-wheel",
@@ -1928,11 +9621,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Hades MAXIMUM SERIES WIDE WHEEL","hades maximum series wide wheel"] },
     },
     {
+      id: "category-heat",
+      name: "Heat",
+      description:
+        "Heat — a light wheel. Loose examples, spares and pre-owned light wheels of this part are listed here.",
+      extra: { aliases: ["Heat","heat"] },
+    },
+    {
       id: "category-hell-metal-wheel",
       name: "Hell Metal Wheel",
       description:
         "Hell Metal Wheel — a fusion wheel (39.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Hell Metal Wheel","hell metal wheel"] },
+    },
+    {
+      id: "category-hyper",
+      name: "Hyper",
+      description:
+        "Hyper — a fusion wheel (28.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Hyper","hyper"] },
+    },
+    {
+      id: "category-warrior-wheel-ifrit",
+      name: "Ifrit",
+      description:
+        "Ifrit — a warrior wheel (30.4 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Ifrit","ifrit","Ifraid (Takara Tomy)"] },
+    },
+    {
+      id: "category-fusion-wheel-inferno",
+      name: "Inferno",
+      description:
+        "Inferno — a fusion wheel (29.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Inferno","inferno"] },
+    },
+    {
+      id: "category-inferno-battle-fortress",
+      name: "Inferno (Battle Fortress)",
+      description:
+        "Inferno (Battle Fortress) — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Inferno (Battle Fortress)","inferno-battle-fortress"] },
     },
     {
       id: "category-inferno-smash-recoil-fw",
@@ -1945,8 +9673,29 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-jade",
       name: "Jade",
       description:
-        "Jade — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
-      extra: { aliases: ["Jade","jade"] },
+        "Jade — a fusion wheel (22.28 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Jade","jade","Jade I (Hasbro)"] },
+    },
+    {
+      id: "category-jade-hasbro",
+      name: "Jade (Hasbro)",
+      description:
+        "Jade (Hasbro) — a fusion wheel (29.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Jade (Hasbro)","jade-hasbro"] },
+    },
+    {
+      id: "category-warrior-wheel-kraken",
+      name: "Kraken",
+      description:
+        "Kraken — a warrior wheel (30.4 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Kraken","kraken","Killerken (Takara Tomy)"] },
+    },
+    {
+      id: "category-kreis",
+      name: "Kreis",
+      description:
+        "Kreis — a fusion wheel (42.9 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Kreis","kreis"] },
     },
     {
       id: "category-kreis-dual-mode-wheel",
@@ -1956,11 +9705,81 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Kreis DUAL-MODE WHEEL","kreis dual-mode wheel"] },
     },
     {
+      id: "category-wheel-l-drago",
+      name: "L-Drago",
+      description:
+        "L-Drago — a wheel (31.8 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["L-Drago","l-drago"] },
+    },
+    {
+      id: "category-l-drago-destructor",
+      name: "L-Drago Destructor",
+      description:
+        "L-Drago Destructor — a fusion wheel (43.7 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["L-Drago Destructor","l-drago-destructor","L-Drago Destroy (Takara Tomy)","L-Drago Destructor (Hasbro)"] },
+    },
+    {
+      id: "category-l-drago-destructor-hasbro",
+      name: "L-Drago Destructor (Hasbro)",
+      description:
+        "L-Drago Destructor (Hasbro) — a fusion wheel (33.3 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["L-Drago Destructor (Hasbro)","l-drago-destructor-hasbro"] },
+    },
+    {
+      id: "category-l-drago-guardian",
+      name: "L-Drago Guardian",
+      description:
+        "L-Drago Guardian — a fusion wheel (45.5 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["L-Drago Guardian","l-drago-guardian"] },
+    },
+    {
+      id: "category-l-drago-guardian-hasbro",
+      name: "L-Drago Guardian (Hasbro)",
+      description:
+        "L-Drago Guardian (Hasbro) — a fusion wheel (36.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["L-Drago Guardian (Hasbro)","l-drago-guardian-hasbro"] },
+    },
+    {
+      id: "category-wheel-leone",
+      name: "Leone",
+      description:
+        "Leone — a wheel (37.1 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Leone","leone"] },
+    },
+    {
+      id: "category-leone-first-defense-type-wheel",
+      name: "Leone FIRST DEFENSE-TYPE WHEEL",
+      description:
+        "Leone FIRST DEFENSE-TYPE WHEEL — a wheel (used by 1 model). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Leone FIRST DEFENSE-TYPE WHEEL","leone first defense-type wheel"] },
+    },
+    {
+      id: "category-warrior-wheel-leviathan",
+      name: "Leviathan",
+      description:
+        "Leviathan — a warrior wheel. Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Leviathan","leviathan"] },
+    },
+    {
+      id: "category-wheel-libra",
+      name: "Libra",
+      description:
+        "Libra — a wheel (42.3 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Libra","libra"] },
+    },
+    {
       id: "category-libra-metagame-defining-wheel",
       name: "Libra METAGAME-DEFINING WHEEL",
       description:
         "Libra METAGAME-DEFINING WHEEL — a fusion wheel (40.5 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Libra METAGAME-DEFINING WHEEL","libra metagame-defining wheel"] },
+    },
+    {
+      id: "category-fusion-wheel-lightning",
+      name: "Lightning",
+      description:
+        "Lightning — a fusion wheel (30 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Lightning","lightning"] },
     },
     {
       id: "category-lightning-left-spin-attacker",
@@ -1977,11 +9796,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Lightning Metal Wheel","lightning metal wheel"] },
     },
     {
+      id: "category-mad",
+      name: "Mad",
+      description:
+        "Mad — a light wheel (6 g). Loose examples, spares and pre-owned light wheels of this part are listed here.",
+      extra: { aliases: ["Mad","mad"] },
+    },
+    {
+      id: "category-mercury",
+      name: "Mercury",
+      description:
+        "Mercury — a fusion wheel (29 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Mercury","mercury"] },
+    },
+    {
       id: "category-metal-wheel-mercury",
       name: "Metal Wheel: Mercury",
       description:
         "Metal Wheel: Mercury — a fusion wheel (29 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Metal Wheel: Mercury","metal wheel: mercury"] },
+    },
+    {
+      id: "category-meteo",
+      name: "Meteo",
+      description:
+        "Meteo — a fusion wheel (28.3 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Meteo","meteo"] },
     },
     {
       id: "category-meteo-3-section-spin-steal",
@@ -1991,6 +9831,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Meteo 3-SECTION SPIN-STEAL","meteo 3-section spin-steal"] },
     },
     {
+      id: "category-midnight",
+      name: "Midnight",
+      description:
+        "Midnight — a fusion wheel (25.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Midnight","midnight","Crash (Takara Tomy)"] },
+    },
+    {
+      id: "category-night",
+      name: "Night",
+      description:
+        "Night — a fusion wheel (28.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Night","night"] },
+    },
+    {
       id: "category-night-circular-stamina-wheel",
       name: "Night CIRCULAR STAMINA WHEEL",
       description:
@@ -1998,7 +9852,91 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Night CIRCULAR STAMINA WHEEL","night circular stamina wheel"] },
     },
     {
-      id: "category-poison",
+      id: "category-nightmare",
+      name: "Nightmare",
+      description:
+        "Nightmare — a fusion wheel (32.81 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Nightmare","nightmare"] },
+    },
+    {
+      id: "category-ninja",
+      name: "Ninja",
+      description:
+        "Ninja — a element wheel (5.4 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Ninja","ninja","Shinobi (Takara Tomy)"] },
+    },
+    {
+      id: "category-omega",
+      name: "Omega",
+      description:
+        "Omega — a fusion wheel (37.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Omega","omega"] },
+    },
+    {
+      id: "category-warrior-wheel-orochi",
+      name: "Orochi",
+      description:
+        "Orochi — a warrior wheel (29.4 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Orochi","orochi","Orojya (Takara Tomy)"] },
+    },
+    {
+      id: "category-wheel-pegasis",
+      name: "Pegasis",
+      description:
+        "Pegasis — a wheel (34.9 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Pegasis","pegasis"] },
+    },
+    {
+      id: "category-warrior-wheel-pegasus",
+      name: "Pegasus",
+      description:
+        "Pegasus — a warrior wheel (30.5 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Pegasus","pegasus","Pegasis (Takara Tomy)"] },
+    },
+    {
+      id: "category-element-wheel-phantom",
+      name: "Phantom",
+      description:
+        "Phantom — a element wheel. Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Phantom","phantom","Necromancer (Takara Tomy)"] },
+    },
+    {
+      id: "category-fusion-wheel-phantom",
+      name: "Phantom",
+      description:
+        "Phantom — a fusion wheel (42.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Phantom","phantom","Phantom I (Hasbro)"] },
+    },
+    {
+      id: "category-phantom-hasbro",
+      name: "Phantom (Hasbro)",
+      description:
+        "Phantom (Hasbro) — a fusion wheel (31.9 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Phantom (Hasbro)","phantom-hasbro"] },
+    },
+    {
+      id: "category-warrior-wheel-phoenix",
+      name: "Phoenix",
+      description:
+        "Phoenix — a warrior wheel (29.8 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Phoenix","phoenix","Phoenic (Takara Tomy)"] },
+    },
+    {
+      id: "category-element-wheel-pirate",
+      name: "Pirate",
+      description:
+        "Pirate — a element wheel (3.8 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Pirate","pirate","Pirates (Takara Tomy)"] },
+    },
+    {
+      id: "category-wheel-pisces",
+      name: "Pisces",
+      description:
+        "Pisces — a wheel (35.4 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Pisces","pisces"] },
+    },
+    {
+      id: "category-fusion-wheel-poison",
       name: "Poison",
       description:
         "Poison — a fusion wheel (29.8 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
@@ -2008,8 +9946,29 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-proto",
       name: "Proto",
       description:
-        "Proto — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Proto — a fusion wheel (3.3 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Proto","proto"] },
+    },
+    {
+      id: "category-fusion-wheel-quake",
+      name: "Quake",
+      description:
+        "Quake — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Quake","quake"] },
+    },
+    {
+      id: "category-wheel-quetzalcoatl",
+      name: "Quetzalcoatl",
+      description:
+        "Quetzalcoatl — a wheel (34.5 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Quetzalcoatl","quetzalcoatl","Cancer (Development)"] },
+    },
+    {
+      id: "category-ray",
+      name: "Ray",
+      description:
+        "Ray — a fusion wheel (29.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Ray","ray"] },
     },
     {
       id: "category-ray-counter-smash",
@@ -2022,7 +9981,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-rock",
       name: "Rock",
       description:
-        "Rock — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Rock — a fusion wheel (32.7 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Rock","rock"] },
     },
     {
@@ -2040,11 +9999,60 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Rock HEAVY DEFENSIVE WHEEL","rock heavy defensive wheel"] },
     },
     {
+      id: "category-element-wheel-ronin",
+      name: "Ronin",
+      description:
+        "Ronin — a element wheel (3.9 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Ronin","ronin","Dark Knight (Takara Tomy)"] },
+    },
+    {
       id: "category-fusion-wheel-sagittario",
       name: "Sagittario",
       description:
-        "Sagittario — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Sagittario — a fusion wheel (40.5 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Sagittario","sagittario"] },
+    },
+    {
+      id: "category-wheel-sagittario",
+      name: "Sagittario",
+      description:
+        "Sagittario — a wheel (32.9 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Sagittario","sagittario"] },
+    },
+    {
+      id: "category-warrior-wheel-salamander",
+      name: "Salamander",
+      description:
+        "Salamander — a warrior wheel (30.6 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Salamander","salamander","Saramanda (Takara Tomy)"] },
+    },
+    {
+      id: "category-element-wheel-samurai",
+      name: "Samurai",
+      description:
+        "Samurai — a element wheel (5.4 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Samurai","samurai","Warriors (Sonokong)"] },
+    },
+    {
+      id: "category-scythe",
+      name: "Scythe",
+      description:
+        "Scythe — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Scythe","scythe","Scythe I (Hasbro)"] },
+    },
+    {
+      id: "category-scythe-hasbro",
+      name: "Scythe (Hasbro)",
+      description:
+        "Scythe (Hasbro) — a fusion wheel (34.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Scythe (Hasbro)","scythe-hasbro"] },
+    },
+    {
+      id: "category-fusion-wheel-sol",
+      name: "Sol",
+      description:
+        "Sol — a fusion wheel (33.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Sol","sol"] },
     },
     {
       id: "category-sol-solar-fusion",
@@ -2058,13 +10066,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       name: "Spiral",
       description:
         "Spiral — a fusion wheel (34.2 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
-      extra: { aliases: ["Spiral","spiral"] },
+      extra: { aliases: ["Spiral","spiral","Screw"] },
     },
     {
       id: "category-storm",
       name: "Storm",
       description:
-        "Storm — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+        "Storm — a fusion wheel (30.4 g, used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Storm","storm"] },
     },
     {
@@ -2082,6 +10090,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Storm PRIMARY ATTACK WHEEL","storm primary attack wheel"] },
     },
     {
+      id: "category-thermal",
+      name: "Thermal",
+      description:
+        "Thermal — a fusion wheel (30.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Thermal","thermal"] },
+    },
+    {
+      id: "category-thief",
+      name: "Thief",
+      description:
+        "Thief — a element wheel (5.3 g). Loose examples, spares and pre-owned element wheels of this part are listed here.",
+      extra: { aliases: ["Thief","thief"] },
+    },
+    {
+      id: "category-thunder",
+      name: "Thunder",
+      description:
+        "Thunder — a fusion wheel (29.7 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Thunder","thunder"] },
+    },
+    {
       id: "category-thunder-hws-reimagining",
       name: "Thunder HWS reimagining",
       description:
@@ -2089,11 +10118,109 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Thunder HWS reimagining","thunder hws reimagining"] },
     },
     {
+      id: "category-torch",
+      name: "Torch",
+      description:
+        "Torch — a fusion wheel (26.8 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Torch","torch","Cloud (Takara Tomy)"] },
+    },
+    {
+      id: "category-tornade",
+      name: "Tornade",
+      description:
+        "Tornade — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Tornade","tornade"] },
+    },
+    {
+      id: "category-twisted",
+      name: "Twisted",
+      description:
+        "Twisted — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Twisted","twisted","Basalt (Takara Tomy)"] },
+    },
+    {
+      id: "category-typhoon",
+      name: "Typhoon",
+      description:
+        "Typhoon — a fusion wheel. Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Typhoon","typhoon"] },
+    },
+    {
+      id: "category-fusion-wheel-variares",
+      name: "Variares",
+      description:
+        "Variares — a fusion wheel (43.6 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Variares","variares","Variares I (Hasbro)"] },
+    },
+    {
+      id: "category-variares-hasbro",
+      name: "Variares (Hasbro)",
+      description:
+        "Variares (Hasbro) — a fusion wheel (34.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Variares (Hasbro)","variares-hasbro"] },
+    },
+    {
+      id: "category-wheel-virgo",
+      name: "Virgo",
+      description:
+        "Virgo — a wheel (37 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Virgo","virgo"] },
+    },
+    {
+      id: "category-vulcan",
+      name: "Vulcan",
+      description:
+        "Vulcan — a fusion wheel (33.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Vulcan","vulcan"] },
+    },
+    {
       id: "category-vulcan-attack-gimmick",
       name: "Vulcan ATTACK GIMMICK",
       description:
         "Vulcan ATTACK GIMMICK — a fusion wheel (used by 1 model). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
       extra: { aliases: ["Vulcan ATTACK GIMMICK","vulcan attack gimmick"] },
+    },
+    {
+      id: "category-light-wheel-wind",
+      name: "Wind",
+      description:
+        "Wind — a light wheel. Loose examples, spares and pre-owned light wheels of this part are listed here.",
+      extra: { aliases: ["Wind","wind"] },
+    },
+    {
+      id: "category-fusion-wheel-wing",
+      name: "Wing",
+      description:
+        "Wing — a fusion wheel (45.1 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Wing","wing"] },
+    },
+    {
+      id: "category-wing-hasbro",
+      name: "Wing (Hasbro)",
+      description:
+        "Wing (Hasbro) — a fusion wheel (28.4 g). Loose examples, spares and pre-owned fusion wheels of this part are listed here.",
+      extra: { aliases: ["Wing (Hasbro)","wing-hasbro"] },
+    },
+    {
+      id: "category-wheel-wolf",
+      name: "Wolf",
+      description:
+        "Wolf — a wheel (36 g). Loose examples, spares and pre-owned wheels of this part are listed here.",
+      extra: { aliases: ["Wolf","wolf"] },
+    },
+    {
+      id: "category-warrior-wheel-wyvang",
+      name: "Wyvang",
+      description:
+        "Wyvang — a warrior wheel (32.5 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Wyvang","wyvang","Wyvern (anime, English)"] },
+    },
+    {
+      id: "category-warrior-wheel-zirago",
+      name: "Zirago",
+      description:
+        "Zirago — a warrior wheel (31.8 g). Loose examples, spares and pre-owned warrior wheels of this part are listed here.",
+      extra: { aliases: ["Zirago","zirago","Girago (Takara Tomy)"] },
     },
   ],
   "category-metal-performance-tips": [
@@ -2126,6 +10253,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["X:D","4D Bottom: X:Drive","x:d","extreme defense","4d bottom: x:drive"] },
     },
     {
+      id: "category-around-sharp",
+      name: "Around Sharp",
+      description:
+        "Around Sharp — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Around Sharp","around-sharp","AS"] },
+    },
+    {
       id: "category-as",
       name: "AS",
       description:
@@ -2143,15 +10277,43 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-performance-tip-b",
       name: "B",
       description:
-        "B — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "B — a performance tip (0.6 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["B","b"] },
     },
     {
-      id: "category-bearing",
+      id: "category-performance-tip-ball",
+      name: "Ball",
+      description:
+        "Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Ball","ball","B"] },
+    },
+    {
+      id: "category-performance-tip-bearing",
       name: "Bearing",
       description:
         "Bearing — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Bearing","bearing"] },
+    },
+    {
+      id: "category-bearing-drive",
+      name: "Bearing Drive",
+      description:
+        "Bearing Drive — a performance tip (3.5 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Bearing Drive","bearing-drive","B:D"] },
+    },
+    {
+      id: "category-blade-semi-flat",
+      name: "Blade Semi-Flat",
+      description:
+        "Blade Semi-Flat — a performance tip (1.2 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Blade Semi-Flat","blade-semi-flat","BSF"] },
+    },
+    {
+      id: "category-bottom-spike",
+      name: "Bottom Spike",
+      description:
+        "Bottom Spike — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Bottom Spike","bottom-spike","Ball Sharp (Takara Tomy)","BS"] },
     },
     {
       id: "category-bottom-cs-coat-sharp",
@@ -2165,7 +10327,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       name: "Bottom: Eternal Sharp",
       description:
         "Bottom: Eternal Sharp — a performance tip (printed ES, 1 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
-      extra: { aliases: ["ES","Bottom: Eternal Sharp","es","bottom: eternal sharp"] },
+      extra: { aliases: ["ES","Bottom: Eternal Sharp","es","bottom: eternal sharp","Eternal Sharp (Takara Tomy)"] },
     },
     {
       id: "category-xf",
@@ -2248,7 +10410,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-bsf",
       name: "BSF",
       description:
-        "BSF — a performance tip (used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "BSF — a performance tip (1.19 g, used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["BSF","bsf"] },
     },
     {
@@ -2269,22 +10431,36 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-bwd",
       name: "BWD",
       description:
-        "BWD — a performance tip (used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "BWD — a performance tip (1 g, used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["BWD","bwd"] },
     },
     {
       id: "category-cf",
       name: "CF",
       description:
-        "CF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "CF — a performance tip (2.5 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["CF","cf"] },
+    },
+    {
+      id: "category-circle-flat",
+      name: "Circle Flat",
+      description:
+        "Circle Flat — a performance tip (2.5 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Circle Flat","circle-flat","CF"] },
     },
     {
       id: "category-cs",
       name: "Coat Sharp",
       description:
-        "Coat Sharp — a performance tip (printed CS). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Coat Sharp — a performance tip (printed CS, 0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["CS","Coat Sharp","cs","coat","coat sharp"] },
+    },
+    {
+      id: "category-coating-spike",
+      name: "Coating Spike",
+      description:
+        "Coating Spike — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Coating Spike","coating-spike","Coat Sharp (Takara Tomy)","CS"] },
     },
     {
       id: "category-cs-counter-sharp",
@@ -2297,7 +10473,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-d",
       name: "D",
       description:
-        "D — a performance tip (used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "D — a performance tip (0.68 g, used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["D","d"] },
     },
     {
@@ -2306,6 +10482,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "D DEFENSE — a performance tip (used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["D DEFENSE","d defense"] },
+    },
+    {
+      id: "category-performance-tip-defense",
+      name: "Defense",
+      description:
+        "Defense — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Defense","defense","D"] },
+    },
+    {
+      id: "category-defense-spike",
+      name: "Defense Spike",
+      description:
+        "Defense Spike — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Defense Spike","defense-spike","Defense Sharp (Takara Tomy)","DS"] },
+    },
+    {
+      id: "category-delta-drive",
+      name: "Delta Drive",
+      description:
+        "Delta Drive — a performance tip (5.5 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Delta Drive","delta-drive","D:D"] },
     },
     {
       id: "category-performance-tip-dimension-dash",
@@ -2336,6 +10533,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["EDS","eds"] },
     },
     {
+      id: "category-eternal-defense-spike",
+      name: "Eternal Defense Spike",
+      description:
+        "Eternal Defense Spike — a performance tip (1.1 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Eternal Defense Spike","eternal-defense-spike","EDS"] },
+    },
+    {
       id: "category-ewd",
       name: "Eternal Wide Defense",
       description:
@@ -2343,7 +10547,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["EWD","Eternal Wide Defense","ewd","defense","eternal wide defense"] },
     },
     {
-      id: "category-evolution",
+      id: "category-eternal-wide-defense",
+      name: "Eternal Wide Defense",
+      description:
+        "Eternal Wide Defense — a performance tip (1.2 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Eternal Wide Defense","eternal-wide-defense","EWD"] },
+    },
+    {
+      id: "category-performance-tip-evolution",
       name: "Evolution",
       description:
         "Evolution — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
@@ -2357,7 +10568,49 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["EWD ETERNAL WIDE DEFENSE","ewd eternal wide defense"] },
     },
     {
-      id: "category-friction",
+      id: "category-extreme-flat",
+      name: "Extreme Flat",
+      description:
+        "Extreme Flat — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Extreme Flat","extreme-flat","XF"] },
+    },
+    {
+      id: "category-final-drive",
+      name: "Final Drive",
+      description:
+        "Final Drive — a performance tip (5.9 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Final Drive","final-drive","F:D"] },
+    },
+    {
+      id: "category-final-survive",
+      name: "Final Survive",
+      description:
+        "Final Survive — a performance tip (5.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Final Survive","final-survive","F:S"] },
+    },
+    {
+      id: "category-performance-tip-flat",
+      name: "Flat",
+      description:
+        "Flat — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Flat","flat","F"] },
+    },
+    {
+      id: "category-flat-ball",
+      name: "Flat Ball",
+      description:
+        "Flat Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Flat Ball","flat-ball","FB"] },
+    },
+    {
+      id: "category-flat-spike",
+      name: "Flat Spike",
+      description:
+        "Flat Spike — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Flat Spike","flat-spike","Flat Sharp","FS"] },
+    },
+    {
+      id: "category-performance-tip-friction",
       name: "Friction",
       description:
         "Friction — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
@@ -2367,7 +10620,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-fs",
       name: "FS",
       description:
-        "FS — a performance tip (used by 3 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "FS — a performance tip (0.6 g, used by 3 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["FS","fs"] },
     },
     {
@@ -2381,21 +10634,42 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-gcf",
       name: "GCF",
       description:
-        "GCF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "GCF — a performance tip (2.5 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["GCF","gcf"] },
+    },
+    {
+      id: "category-gear-circle-flat",
+      name: "Gear Circle Flat",
+      description:
+        "Gear Circle Flat — a performance tip (2.4 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Gear Circle Flat","gear-circle-flat","GCF"] },
+    },
+    {
+      id: "category-generate-h",
+      name: "Generate-H",
+      description:
+        "Generate-H — a performance tip (28.9 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Generate-H","generate-h","Generate-HyperSphere"] },
     },
     {
       id: "category-performance-tip-gf",
       name: "GF",
       description:
-        "GF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "GF — a performance tip (0.75 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["GF","gf"] },
+    },
+    {
+      id: "category-giga-flat",
+      name: "Giga Flat",
+      description:
+        "Giga Flat — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Giga Flat","giga-flat","GF"] },
     },
     {
       id: "category-hf",
       name: "HF",
       description:
-        "HF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "HF — a performance tip (0.5 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["HF","hf"] },
     },
     {
@@ -2406,6 +10680,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["HF/S HOLE FLAT / SHARP","hf/s hole flat / sharp"] },
     },
     {
+      id: "category-hole-flat",
+      name: "Hole Flat",
+      description:
+        "Hole Flat — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Hole Flat","hole-flat","HF"] },
+    },
+    {
+      id: "category-hole-flat-spike",
+      name: "Hole Flat Spike",
+      description:
+        "Hole Flat Spike — a performance tip (0.9 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Hole Flat Spike","hole-flat-spike","HF/S"] },
+    },
+    {
       id: "category-hunter-dash",
       name: "Hunter'",
       description:
@@ -2413,39 +10701,88 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Hunter'","hunter'"] },
     },
     {
+      id: "category-jog-ball",
+      name: "Jog Ball",
+      description:
+        "Jog Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Jog Ball","jog-ball","JB"] },
+    },
+    {
       id: "category-jsb",
       name: "Jog Sharp Ball",
       description:
-        "Jog Sharp Ball — a performance tip (printed JSB). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Jog Sharp Ball — a performance tip (printed JSB, 0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["JSB","Jog Sharp Ball","jsb","ball","jog sharp ball"] },
     },
     {
-      id: "category-just",
+      id: "category-jog-spike-ball",
+      name: "Jog Spike Ball",
+      description:
+        "Jog Spike Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Jog Spike Ball","jog-spike-ball","JSB"] },
+    },
+    {
+      id: "category-performance-tip-just",
       name: "Just",
       description:
         "Just — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Just","just"] },
     },
     {
+      id: "category-left-flat",
+      name: "Left Flat",
+      description:
+        "Left Flat — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Left Flat","left-flat","LF"] },
+    },
+    {
+      id: "category-left-rubber-flat",
+      name: "Left Rubber Flat",
+      description:
+        "Left Rubber Flat — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Left Rubber Flat","left-rubber-flat","LRF"] },
+    },
+    {
       id: "category-performance-tip-lf",
       name: "LF",
       description:
-        "LF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "LF — a performance tip (0.8 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["LF","lf"] },
     },
     {
-      id: "category-low",
+      id: "category-performance-tip-low",
       name: "Low",
       description:
         "Low — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Low","low"] },
     },
     {
-      id: "category-massive",
+      id: "category-performance-tip-massive",
       name: "Massive",
       description:
         "Massive — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Massive","massive"] },
+    },
+    {
+      id: "category-performance-tip-metal-ball",
+      name: "Metal Ball",
+      description:
+        "Metal Ball — a performance tip (1.5 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Metal Ball","metal-ball","MB"] },
+    },
+    {
+      id: "category-metal-flat",
+      name: "Metal Flat",
+      description:
+        "Metal Flat — a performance tip (1.1 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Metal Flat","metal-flat","MF"] },
+    },
+    {
+      id: "category-metal-spike",
+      name: "Metal Spike",
+      description:
+        "Metal Spike — a performance tip (1.3 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Metal Spike","metal-spike","Metal Sharp (Takara Tomy)"] },
     },
     {
       id: "category-ms-metal-sharp",
@@ -2455,7 +10792,21 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["MS METAL SHARP","ms metal sharp"] },
     },
     {
-      id: "category-power",
+      id: "category-pf",
+      name: "PF",
+      description:
+        "PF — a performance tip. Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["PF","pf"] },
+    },
+    {
+      id: "category-polish-defense",
+      name: "Polish Defense",
+      description:
+        "Polish Defense — a performance tip (0.9 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Polish Defense","polish-defense","PD"] },
+    },
+    {
+      id: "category-performance-tip-power",
       name: "Power",
       description:
         "Power — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
@@ -2472,8 +10823,15 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-performance-tip-q",
       name: "Quake",
       description:
-        "Quake — a performance tip (printed Q). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Quake — a performance tip (printed Q, 0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Q","Quake","q","quake"] },
+    },
+    {
+      id: "category-quake-metal-saga",
+      name: "Quake (Metal Saga)",
+      description:
+        "Quake (Metal Saga) — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Quake (Metal Saga)","quake-metal-saga","Q"] },
     },
     {
       id: "category-r-f",
@@ -2511,11 +10869,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["RDF","rdf"] },
     },
     {
+      id: "category-revolve-h",
+      name: "Revolve-H",
+      description:
+        "Revolve-H — a performance tip (8.1 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Revolve-H","revolve-h","Revolve-HyperSphere","Revolver-H"] },
+    },
+    {
       id: "category-rf-key-gimmick",
       name: "RF KEY GIMMICK",
       description:
         "RF KEY GIMMICK — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["RF KEY GIMMICK","rf key gimmick"] },
+    },
+    {
+      id: "category-right-rubber-flat",
+      name: "Right Rubber Flat",
+      description:
+        "Right Rubber Flat — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Right Rubber Flat","right-rubber-flat","R²F","R2F"] },
     },
     {
       id: "category-rsf-rubber-semi-flat",
@@ -2525,18 +10897,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["RSF RUBBER SEMI-FLAT","rsf rubber semi-flat"] },
     },
     {
+      id: "category-rubber-ball",
+      name: "Rubber Ball",
+      description:
+        "Rubber Ball — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Rubber Ball","rubber-ball","RB"] },
+    },
+    {
+      id: "category-rubber-defense-flat",
+      name: "Rubber Defense Flat",
+      description:
+        "Rubber Defense Flat — a performance tip (1.1 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Rubber Defense Flat","rubber-defense-flat","RDF"] },
+    },
+    {
       id: "category-rf",
       name: "Rubber Flat",
       description:
-        "Rubber Flat — a performance tip (printed RF). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Rubber Flat — a performance tip (printed RF, 0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["RF","Rubber Flat","rf","rubber flat"] },
+    },
+    {
+      id: "category-rubber-flat",
+      name: "Rubber Flat",
+      description:
+        "Rubber Flat — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Rubber Flat","rubber-flat","RF"] },
     },
     {
       id: "category-rsf",
       name: "Rubber Semi Flat",
       description:
-        "Rubber Semi Flat — a performance tip (printed RSF). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Rubber Semi Flat — a performance tip (printed RSF, 0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["RSF","Rubber Semi Flat","rsf","flat","rubber semi flat"] },
+    },
+    {
+      id: "category-rubber-semi-flat",
+      name: "Rubber Semi-Flat",
+      description:
+        "Rubber Semi-Flat — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Rubber Semi-Flat","rubber-semi-flat"] },
     },
     {
       id: "category-rs",
@@ -2549,14 +10949,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-s",
       name: "S",
       description:
-        "S — a performance tip (used by 4 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "S — a performance tip (0.6 g, used by 4 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["S","s"] },
     },
     {
       id: "category-sb",
       name: "SB",
       description:
-        "SB — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "SB — a performance tip (0.6 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["SB","sb"] },
     },
     {
@@ -2567,18 +10967,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SD Semi-Defense","sd semi-defense"] },
     },
     {
+      id: "category-semi-defense",
+      name: "Semi-Defense",
+      description:
+        "Semi-Defense — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Semi-Defense","semi-defense"] },
+    },
+    {
       id: "category-sf",
       name: "Semi-Flat",
       description:
-        "Semi-Flat — a performance tip (printed SF). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "Semi-Flat — a performance tip (printed SF, 0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["SF","Semi-Flat","sf","semi-flat"] },
     },
     {
-      id: "category-shot",
+      id: "category-semi-flat",
+      name: "Semi-Flat",
+      description:
+        "Semi-Flat — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Semi-Flat","semi-flat","Semi Flat (Takara Tomy)","SF"] },
+    },
+    {
+      id: "category-sharp-wide-defense",
+      name: "Sharp Wide Defense",
+      description:
+        "Sharp Wide Defense — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Sharp Wide Defense","sharp-wide-defense","SWD"] },
+    },
+    {
+      id: "category-performance-tip-shot",
       name: "Shot",
       description:
         "Shot — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Shot","shot"] },
+    },
+    {
+      id: "category-performance-tip-spike",
+      name: "Spike",
+      description:
+        "Spike — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Spike","spike","Sharp","S"] },
+    },
+    {
+      id: "category-spike-ball",
+      name: "Spike Ball",
+      description:
+        "Spike Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Spike Ball","spike-ball"] },
     },
     {
       id: "category-performance-tip-spiral",
@@ -2591,7 +11026,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-tb",
       name: "TB",
       description:
-        "TB — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "TB — a performance tip (1 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["TB","tb"] },
     },
     {
@@ -2609,11 +11044,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Trans'","trans'"] },
     },
     {
-      id: "category-trick",
+      id: "category-performance-tip-trick",
       name: "Trick",
       description:
         "Trick — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Trick","trick"] },
+    },
+    {
+      id: "category-twin-ball",
+      name: "Twin Ball",
+      description:
+        "Twin Ball — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Twin Ball","twin-ball","TB"] },
     },
     {
       id: "category-performance-tip-variable-per-combo",
@@ -2628,6 +11070,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "W2D — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["W2D","w2d"] },
+    },
+    {
+      id: "category-wave-wide-defense",
+      name: "Wave Wide Defense",
+      description:
+        "Wave Wide Defense — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Wave Wide Defense","wave-wide-defense","W²D","W2D"] },
     },
     {
       id: "category-wb-wide-ball",
@@ -2651,21 +11100,63 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["WD WIDE DEFENSE","wd wide defense"] },
     },
     {
+      id: "category-wide-ball",
+      name: "Wide Ball",
+      description:
+        "Wide Ball — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Wide Ball","wide-ball","WB"] },
+    },
+    {
+      id: "category-performance-tip-wide-defense",
+      name: "Wide Defense",
+      description:
+        "Wide Defense — a performance tip (0.8 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Wide Defense","wide-defense","WD"] },
+    },
+    {
+      id: "category-wide-flat",
+      name: "Wide Flat",
+      description:
+        "Wide Flat — a performance tip (0.6 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Wide Flat","wide-flat","WF"] },
+    },
+    {
+      id: "category-wide-semi-flat",
+      name: "Wide Semi-Flat",
+      description:
+        "Wide Semi-Flat — a performance tip (0.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Wide Semi-Flat","wide-semi-flat","WSF"] },
+    },
+    {
       id: "category-wsf",
       name: "WSF",
       description:
-        "WSF — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+        "WSF — a performance tip (0.8 g, used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["WSF","wsf"] },
     },
     {
-      id: "category-xtreme",
+      id: "category-x-drive",
+      name: "X Drive",
+      description:
+        "X Drive — a performance tip (7.2 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["X Drive","x-drive","X:D"] },
+    },
+    {
+      id: "category-performance-tip-xtreme",
       name: "Xtreme",
       description:
         "Xtreme — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
       extra: { aliases: ["Xtreme","xtreme"] },
     },
     {
-      id: "category-zeta",
+      id: "category-zephyr-h",
+      name: "Zephyr-H",
+      description:
+        "Zephyr-H — a performance tip (7.7 g). Loose examples, spares and pre-owned performance tips of this part are listed here.",
+      extra: { aliases: ["Zephyr-H","zephyr-h","Zephyr-HyperSphere","Zephyrus-H (Beyblade Burst App)"] },
+    },
+    {
+      id: "category-performance-tip-zeta",
       name: "Zeta",
       description:
         "Zeta — a performance tip (used by 2 models). Loose examples, spares and pre-owned performance tips of this part are listed here.",
@@ -2677,14 +11168,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-100",
       name: "100",
       description:
-        "100 — a spin track (used by 3 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "100 — a spin track (1 g, used by 3 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["100"] },
     },
     {
       id: "category-105",
       name: "105",
       description:
-        "105 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "105 — a spin track (1 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["105"] },
     },
     {
@@ -2698,29 +11189,36 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-130",
       name: "130",
       description:
-        "130 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "130 — a spin track (1.15 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["130"] },
     },
     {
       id: "category-135",
       name: "135",
       description:
-        "135 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "135 — a spin track (1.2 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["135"] },
     },
     {
       id: "category-145",
       name: "145",
       description:
-        "145 — a spin track (used by 11 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "145 — a spin track (1.35 g, used by 11 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["145"] },
     },
     {
       id: "category-160",
       name: "160",
       description:
-        "160 — a spin track (used by 2 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "160 — a spin track (1.5 g, used by 2 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["160"] },
+    },
+    {
+      id: "category-230",
+      name: "230",
+      description:
+        "230 — a spin track (4.1 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["230"] },
     },
     {
       id: "category-230-key-defense",
@@ -2744,11 +11242,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["500 EXTREME HEIGHT 500","500 extreme height 500"] },
     },
     {
+      id: "category-85",
+      name: "85",
+      description:
+        "85 — a spin track (0.9 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["85"] },
+    },
+    {
       id: "category-88",
       name: "88",
       description:
         "88 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["88"] },
+    },
+    {
+      id: "category-90",
+      name: "90",
+      description:
+        "90 — a spin track (0.9 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["90"] },
     },
     {
       id: "category-ad145-armor-defense-145",
@@ -2758,11 +11270,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["AD145 ARMOR DEFENSE 145","ad145 armor defense 145"] },
     },
     {
+      id: "category-armor-230",
+      name: "Armor 230",
+      description:
+        "Armor 230 — a spin track (5.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Armor 230","armor-230","A230"] },
+    },
+    {
+      id: "category-armor-defense-145",
+      name: "Armor Defense 145",
+      description:
+        "Armor Defense 145 — a spin track (2.8 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Armor Defense 145","armor-defense-145"] },
+    },
+    {
       id: "category-bd145-boost-disk-145",
       name: "BD145 BOOST DISK 145",
       description:
         "BD145 BOOST DISK 145 — a spin track (8 g, used by 2 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["BD145 BOOST DISK 145","bd145 boost disk 145"] },
+    },
+    {
+      id: "category-boost-disk-145",
+      name: "Boost Disk 145",
+      description:
+        "Boost Disk 145 — a spin track (8 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Boost Disk 145","boost-disk-145"] },
     },
     {
       id: "category-c145-claw-145-gimmick-track",
@@ -2772,17 +11305,45 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["C145 CLAW 145 GIMMICK TRACK","c145 claw 145 gimmick track"] },
     },
     {
+      id: "category-change-height-120",
+      name: "Change Height 120",
+      description:
+        "Change Height 120 — a spin track (2.7 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Change Height 120","change-height-120","CH120"] },
+    },
+    {
+      id: "category-claw-145",
+      name: "Claw 145",
+      description:
+        "Claw 145 — a spin track (3.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Claw 145","claw-145"] },
+    },
+    {
       id: "category-d125",
       name: "D125",
       description:
-        "D125 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "D125 — a spin track (1.5 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["D125","d125"] },
+    },
+    {
+      id: "category-defense-125",
+      name: "Defense 125",
+      description:
+        "Defense 125 — a spin track (1.7 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Defense 125","defense-125"] },
+    },
+    {
+      id: "category-deflect-62",
+      name: "Deflect 62",
+      description:
+        "Deflect 62 — a dome spin track. Loose examples, spares and pre-owned dome spin tracks of this part are listed here.",
+      extra: { aliases: ["Deflect 62","deflect-62","D62"] },
     },
     {
       id: "category-df105",
       name: "DF105",
       description:
-        "DF105 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "DF105 — a spin track (1.2 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["DF105","df105"] },
     },
     {
@@ -2800,6 +11361,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["DF145 Down Force 145","df145 down force 145"] },
     },
     {
+      id: "category-down-force-105",
+      name: "Down Force 105",
+      description:
+        "Down Force 105 — a spin track (1.3 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Down Force 105","down-force-105","DF105"] },
+    },
+    {
+      id: "category-down-force-145",
+      name: "Down Force 145",
+      description:
+        "Down Force 145 — a spin track (1.7 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Down Force 145","down-force-145","DF145"] },
+    },
+    {
       id: "category-e230-elevator-230",
       name: "E230 ELEVATOR 230",
       description:
@@ -2814,11 +11389,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["ED145 Eternal Defense 145","ed145 eternal defense 145"] },
     },
     {
+      id: "category-elevator-230",
+      name: "Elevator 230",
+      description:
+        "Elevator 230 — a spin track (7.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Elevator 230","elevator-230","E230"] },
+    },
+    {
+      id: "category-eternal-defense-145",
+      name: "Eternal Defense 145",
+      description:
+        "Eternal Defense 145 — a spin track (3.6 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Eternal Defense 145","eternal-defense-145"] },
+    },
+    {
       id: "category-f230-fusion-230",
       name: "F230 FUSION 230",
       description:
         "F230 FUSION 230 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["F230 FUSION 230","f230 fusion 230"] },
+    },
+    {
+      id: "category-free-230",
+      name: "Free 230",
+      description:
+        "Free 230 — a spin track (4.6 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Free 230","free-230"] },
+    },
+    {
+      id: "category-gravity-ball-145",
+      name: "Gravity Ball 145",
+      description:
+        "Gravity Ball 145 — a spin track (4.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Gravity Ball 145","gravity-ball-145","GB145"] },
+    },
+    {
+      id: "category-gripper-58",
+      name: "Gripper 58",
+      description:
+        "Gripper 58 — a dome spin track. Loose examples, spares and pre-owned dome spin tracks of this part are listed here.",
+      extra: { aliases: ["Gripper 58","gripper-58","G58"] },
     },
     {
       id: "category-h145-gimmick-height",
@@ -2835,24 +11445,38 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["H145 Hole 145","h145 hole 145"] },
     },
     {
+      id: "category-horn-145",
+      name: "Horn 145",
+      description:
+        "Horn 145 — a spin track. Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Horn 145","horn-145"] },
+    },
+    {
+      id: "category-left-wing-105",
+      name: "Left Wing 105",
+      description:
+        "Left Wing 105 — a spin track (1.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Left Wing 105","left-wing-105","LW105"] },
+    },
+    {
       id: "category-left-wing-160",
       name: "Left Wing 160",
       description:
-        "Left Wing 160 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
-      extra: { aliases: ["Left Wing 160","left wing 160"] },
+        "Left Wing 160 — a spin track (2.4 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Left Wing 160","left wing 160","LW160"] },
     },
     {
       id: "category-lw105",
       name: "LW105",
       description:
-        "LW105 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "LW105 — a spin track (1.1 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["LW105","lw105"] },
     },
     {
       id: "category-lw160",
       name: "LW160",
       description:
-        "LW160 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "LW160 — a spin track (1.6 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["LW160","lw160"] },
     },
     {
@@ -2863,11 +11487,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["M145 GIMMICK TRACK","m145 gimmick track"] },
     },
     {
+      id: "category-move-145",
+      name: "Move 145",
+      description:
+        "Move 145 — a spin track (4.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Move 145","move-145","M145"] },
+    },
+    {
       id: "category-r145-rubber-145",
       name: "R145 RUBBER 145",
       description:
         "R145 RUBBER 145 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["R145 RUBBER 145","r145 rubber 145"] },
+    },
+    {
+      id: "category-rubber-145",
+      name: "Rubber 145",
+      description:
+        "Rubber 145 — a spin track (4.7 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Rubber 145","rubber-145","R145"] },
     },
     {
       id: "category-s130-shield-130",
@@ -2880,21 +11518,42 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-sa165",
       name: "SA165",
       description:
-        "SA165 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "SA165 — a spin track (1.8 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["SA165","sa165"] },
+    },
+    {
+      id: "category-sd160",
+      name: "SD160",
+      description:
+        "SD160 — a spin track. Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["SD160","sd160"] },
+    },
+    {
+      id: "category-shield-130",
+      name: "Shield 130",
+      description:
+        "Shield 130 — a spin track (3.3 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Shield 130","shield-130","S130"] },
     },
     {
       id: "category-sp230",
       name: "SP230",
       description:
-        "SP230 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "SP230 — a spin track (4.3 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["SP230","sp230"] },
+    },
+    {
+      id: "category-spike-230",
+      name: "Spike 230",
+      description:
+        "Spike 230 — a spin track (7.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Spike 230","spike-230","SP230"] },
     },
     {
       id: "category-sr200",
       name: "SR200",
       description:
-        "SR200 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "SR200 — a spin track (3.3 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["SR200","sr200"] },
     },
     {
@@ -2905,6 +11564,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SR200 SLIDE-RIDE 200","sr200 slide-ride 200"] },
     },
     {
+      id: "category-stamina-ring-200",
+      name: "Stamina Ring 200",
+      description:
+        "Stamina Ring 200 — a spin track (3.3 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Stamina Ring 200","stamina-ring-200"] },
+    },
+    {
       id: "category-sw145-switch-145-gimmick-track",
       name: "SW145 Switch 145 GIMMICK TRACK",
       description:
@@ -2912,10 +11578,24 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SW145 Switch 145 GIMMICK TRACK","sw145 switch 145 gimmick track"] },
     },
     {
+      id: "category-switch-145",
+      name: "Switch 145",
+      description:
+        "Switch 145 — a spin track (4.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Switch 145","switch-145"] },
+    },
+    {
+      id: "category-switch-attack-165",
+      name: "Switch Attack 165",
+      description:
+        "Switch Attack 165 — a spin track (6.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Switch Attack 165","switch-attack-165","SA165"] },
+    },
+    {
       id: "category-t125",
       name: "T125",
       description:
-        "T125 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "T125 — a spin track (1.5 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["T125","t125"] },
     },
     {
@@ -2933,6 +11613,34 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Track: S130 Shield 130","track: s130 shield 130"] },
     },
     {
+      id: "category-triple-height-170",
+      name: "Triple Height 170",
+      description:
+        "Triple Height 170 — a spin track (4.4 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Triple Height 170","triple-height-170","TH170"] },
+    },
+    {
+      id: "category-tr145",
+      name: "Triple Roller 145",
+      description:
+        "Triple Roller 145 — a spin track (printed TR145, 3.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["TR145","Triple Roller 145","triple-roller-145","tr145"] },
+    },
+    {
+      id: "category-undercut-61",
+      name: "Undercut 61",
+      description:
+        "Undercut 61 — a dome spin track. Loose examples, spares and pre-owned dome spin tracks of this part are listed here.",
+      extra: { aliases: ["Undercut 61","undercut-61","U61"] },
+    },
+    {
+      id: "category-upper-wing-145",
+      name: "Upper Wing 145",
+      description:
+        "Upper Wing 145 — a spin track (3.5 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Upper Wing 145","upper-wing-145","UW145"] },
+    },
+    {
       id: "category-uw145-upper-wing-145",
       name: "UW145 UPPER WING 145",
       description:
@@ -2940,25 +11648,67 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["UW145 UPPER WING 145","uw145 upper wing 145"] },
     },
     {
+      id: "category-v-cut-61",
+      name: "V-Cut 61",
+      description:
+        "V-Cut 61 — a dome spin track. Loose examples, spares and pre-owned dome spin tracks of this part are listed here.",
+      extra: { aliases: ["V-Cut 61","v-cut-61","V61"] },
+    },
+    {
       id: "category-v145",
       name: "V145",
       description:
-        "V145 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "V145 — a spin track (1.5 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["V145","v145"] },
+    },
+    {
+      id: "category-variable-145",
+      name: "Variable 145",
+      description:
+        "Variable 145 — a spin track (3.9 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Variable 145","variable-145","V145"] },
     },
     {
       id: "category-w105",
       name: "W105",
       description:
-        "W105 — a spin track (used by 2 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "W105 — a spin track (1.2 g, used by 2 models). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["W105","w105"] },
     },
     {
       id: "category-w145",
       name: "W145",
       description:
-        "W145 — a spin track (used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+        "W145 — a spin track (1.5 g, used by 1 model). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
       extra: { aliases: ["W145","w145"] },
+    },
+    {
+      id: "category-wide-defense-145",
+      name: "Wide Defense 145",
+      description:
+        "Wide Defense 145 — a spin track (3.6 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Wide Defense 145","wide-defense-145","WD145"] },
+    },
+    {
+      id: "category-wing-105",
+      name: "Wing 105",
+      description:
+        "Wing 105 — a spin track (1.1 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Wing 105","wing-105","W105"] },
+    },
+    {
+      id: "category-wing-145",
+      name: "Wing 145",
+      description:
+        "Wing 145 — a spin track (2.2 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Wing 145","wing-145","W145"] },
+    },
+    {
+      id: "category-wing-attack-130",
+      name: "Wing Attack 130",
+      description:
+        "Wing Attack 130 — a spin track (2.3 g). Loose examples, spares and pre-owned spin tracks of this part are listed here.",
+      extra: { aliases: ["Wing Attack 130","wing-attack-130","WA130"] },
     },
   ],
   "category-original-attack-rings": [
@@ -2968,6 +11718,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Advance Attacker DM — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Advance Attacker DM","advance attacker dm"] },
+    },
+    {
+      id: "category-advance-balancer",
+      name: "Advance Balancer",
+      description:
+        "Advance Balancer — a attack ring (15 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Advance Balancer","advance-balancer"] },
     },
     {
       id: "category-advance-balancer-s-t",
@@ -2984,6 +11741,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Advance Defenser","advance defenser"] },
     },
     {
+      id: "category-advance-survivor",
+      name: "Advance Survivor",
+      description:
+        "Advance Survivor — a attack ring (18 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Advance Survivor","advance-survivor"] },
+    },
+    {
       id: "category-advance-survivor-s-t",
       name: "Advance Survivor S-T",
       description:
@@ -2991,59 +11755,101 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Advance Survivor S-T","advance survivor s-t"] },
     },
     {
+      id: "category-ark-pyramid",
+      name: "Ark Pyramid",
+      description:
+        "Ark Pyramid — a attack ring (5.2 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Ark Pyramid","ark-pyramid"] },
+    },
+    {
+      id: "category-bound-attack-ring",
+      name: "Bound Attack Ring",
+      description:
+        "Bound Attack Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Bound Attack Ring","bound-attack-ring"] },
+    },
+    {
+      id: "category-bound-defense-ring",
+      name: "Bound Defense Ring",
+      description:
+        "Bound Defense Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Bound Defense Ring","bound-defense-ring"] },
+    },
+    {
+      id: "category-attack-ring-circle-heavy",
+      name: "Circle Heavy",
+      description:
+        "Circle Heavy — a attack ring (16.3 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Circle Heavy","circle-heavy"] },
+    },
+    {
       id: "category-circle-upper",
       name: "Circle Upper",
       description:
-        "Circle Upper — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Circle Upper — a attack ring (20 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Circle Upper","circle upper"] },
     },
     {
       id: "category-corona-saber",
       name: "Corona Saber",
       description:
-        "Corona Saber — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Corona Saber — a attack ring (7.4 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Corona Saber","corona saber"] },
     },
     {
       id: "category-cross-attacker",
       name: "Cross Attacker",
       description:
-        "Cross Attacker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Attacker — a attack ring (5.6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Attacker","cross attacker"] },
+    },
+    {
+      id: "category-cross-dragon",
+      name: "Cross Dragon",
+      description:
+        "Cross Dragon — a attack ring (4 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Cross Dragon","cross-dragon"] },
     },
     {
       id: "category-cross-dranzer",
       name: "Cross Dranzer",
       description:
-        "Cross Dranzer — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Dranzer — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Dranzer","cross dranzer"] },
     },
     {
       id: "category-cross-fang",
       name: "Cross Fang",
       description:
-        "Cross Fang — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Fang — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Fang","cross fang"] },
     },
     {
       id: "category-cross-griffon",
       name: "Cross Griffon",
       description:
-        "Cross Griffon — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Griffon — a attack ring (6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Griffon","cross griffon"] },
+    },
+    {
+      id: "category-cross-horn",
+      name: "Cross Horn",
+      description:
+        "Cross Horn — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Cross Horn","cross-horn"] },
     },
     {
       id: "category-cross-spike",
       name: "Cross Spike",
       description:
-        "Cross Spike — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Spike — a attack ring (4.1 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Spike","cross spike"] },
     },
     {
       id: "category-cross-spiker",
       name: "Cross Spiker",
       description:
-        "Cross Spiker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Cross Spiker — a attack ring (6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Cross Spiker","cross spiker"] },
     },
     {
@@ -3054,10 +11860,38 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cybernetic Dragon","cybernetic dragon"] },
     },
     {
+      id: "category-dark-spike",
+      name: "Dark Spike",
+      description:
+        "Dark Spike — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Dark Spike","dark-spike"] },
+    },
+    {
+      id: "category-dark-wing",
+      name: "Dark Wing",
+      description:
+        "Dark Wing — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Dark Wing","dark-wing"] },
+    },
+    {
+      id: "category-defense-ring",
+      name: "Defense Ring",
+      description:
+        "Defense Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Defense Ring","defense-ring"] },
+    },
+    {
+      id: "category-delta-wave",
+      name: "Delta Wave",
+      description:
+        "Delta Wave — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Delta Wave","delta-wave"] },
+    },
+    {
       id: "category-devil-crusher",
       name: "Devil Crusher",
       description:
-        "Devil Crusher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Devil Crusher — a attack ring (19 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Devil Crusher","devil crusher"] },
     },
     {
@@ -3068,6 +11902,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["DJ Spiker","dj spiker"] },
     },
     {
+      id: "category-double-attacker",
+      name: "Double Attacker",
+      description:
+        "Double Attacker — a attack ring (5 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Double Attacker","double-attacker"] },
+    },
+    {
       id: "category-double-horn",
       name: "Double Horn",
       description:
@@ -3075,46 +11916,81 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Double Horn","double horn"] },
     },
     {
+      id: "category-double-snake",
+      name: "Double Snake",
+      description:
+        "Double Snake — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Double Snake","double-snake"] },
+    },
+    {
       id: "category-double-wing",
       name: "Double Wing",
       description:
-        "Double Wing — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Double Wing — a attack ring (4 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Double Wing","double wing"] },
+    },
+    {
+      id: "category-down-force",
+      name: "Down Force",
+      description:
+        "Down Force — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Down Force","down-force"] },
+    },
+    {
+      id: "category-down-force-ring",
+      name: "Down Force Ring",
+      description:
+        "Down Force Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Down Force Ring","down-force-ring"] },
     },
     {
       id: "category-dragon-breaker",
       name: "Dragon Breaker",
       description:
-        "Dragon Breaker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Dragon Breaker — a attack ring (8 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Dragon Breaker","dragon breaker"] },
+    },
+    {
+      id: "category-dragon-head",
+      name: "Dragon Head",
+      description:
+        "Dragon Head — a attack ring (4 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Dragon Head","dragon-head"] },
     },
     {
       id: "category-dragon-saucer",
       name: "Dragon Saucer",
       description:
-        "Dragon Saucer — a attack ring (used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Dragon Saucer — a attack ring (8 g, used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Dragon Saucer","dragon saucer"] },
     },
     {
       id: "category-dual-dragon",
       name: "Dual Dragon",
       description:
-        "Dual Dragon — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Dual Dragon — a attack ring (6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Dual Dragon","dual dragon"] },
     },
     {
       id: "category-eight-attacker",
       name: "Eight Attacker",
       description:
-        "Eight Attacker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Eight Attacker — a attack ring (4.1 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Eight Attacker","eight attacker"] },
     },
     {
       id: "category-eight-spike",
       name: "Eight Spike",
       description:
-        "Eight Spike — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Eight Spike — a attack ring (4.2 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Eight Spike","eight spike"] },
+    },
+    {
+      id: "category-eight-spiker",
+      name: "Eight Spiker",
+      description:
+        "Eight Spiker — a attack ring (5 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Eight Spiker","eight-spiker"] },
     },
     {
       id: "category-fire-cracker",
@@ -3127,21 +12003,21 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-flame-wing",
       name: "Flame Wing",
       description:
-        "Flame Wing — a attack ring (used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Flame Wing — a attack ring (3.8 g, used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Flame Wing","flame wing"] },
     },
     {
       id: "category-flying-defense",
       name: "Flying Defense",
       description:
-        "Flying Defense — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Flying Defense — a attack ring (7 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Flying Defense","flying defense"] },
     },
     {
       id: "category-g-upper",
       name: "G-Upper",
       description:
-        "G-Upper — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "G-Upper — a attack ring (7 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["G-Upper","g-upper"] },
     },
     {
@@ -3155,7 +12031,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-genocide-circle",
       name: "Genocide Circle",
       description:
-        "Genocide Circle — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Genocide Circle — a attack ring (5.9 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Genocide Circle","genocide circle"] },
     },
     {
@@ -3169,7 +12045,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-god-smasher",
       name: "God Smasher",
       description:
-        "God Smasher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "God Smasher — a attack ring (18 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["God Smasher","god smasher"] },
     },
     {
@@ -3180,10 +12056,24 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Great Dragon","great dragon"] },
     },
     {
+      id: "category-great-tiger",
+      name: "Great Tiger",
+      description:
+        "Great Tiger — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Great Tiger","great-tiger"] },
+    },
+    {
+      id: "category-gyro-defense",
+      name: "Gyro Defense",
+      description:
+        "Gyro Defense — a attack ring (3.9 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Gyro Defense","gyro-defense","Bearing Gyros AR","Gyro AR"] },
+    },
+    {
       id: "category-hammer-tusk",
       name: "Hammer Tusk",
       description:
-        "Hammer Tusk — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Hammer Tusk — a attack ring (4.7 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Hammer Tusk","hammer tusk"] },
     },
     {
@@ -3204,14 +12094,35 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-jiraiya-blade",
       name: "Jiraiya Blade",
       description:
-        "Jiraiya Blade — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Jiraiya Blade — a attack ring (22 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Jiraiya Blade","jiraiya blade"] },
+    },
+    {
+      id: "category-jungle-shock",
+      name: "Jungle Shock",
+      description:
+        "Jungle Shock — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Jungle Shock","jungle-shock"] },
+    },
+    {
+      id: "category-knight-claws",
+      name: "Knight Claws",
+      description:
+        "Knight Claws — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Knight Claws","knight-claws"] },
+    },
+    {
+      id: "category-knight-claws-ring",
+      name: "Knight Claws Ring",
+      description:
+        "Knight Claws Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Knight Claws Ring","knight-claws-ring"] },
     },
     {
       id: "category-knight-crusher",
       name: "Knight Crusher",
       description:
-        "Knight Crusher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Knight Crusher — a attack ring (19 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Knight Crusher","knight crusher"] },
     },
     {
@@ -3222,38 +12133,45 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Land Attack","land attack"] },
     },
     {
+      id: "category-lizard-blocker",
+      name: "Lizard Blocker",
+      description:
+        "Lizard Blocker — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Lizard Blocker","lizard-blocker"] },
+    },
+    {
       id: "category-max-shield",
       name: "Max Shield",
       description:
-        "Max Shield — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Max Shield — a attack ring (3.5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Max Shield","max shield"] },
     },
     {
       id: "category-metal-ape",
       name: "Metal Ape",
       description:
-        "Metal Ape — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Metal Ape — a attack ring (20 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Metal Ape","metal ape"] },
     },
     {
       id: "category-metal-attacker",
       name: "Metal Attacker",
       description:
-        "Metal Attacker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Metal Attacker — a attack ring (14 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Metal Attacker","metal attacker"] },
     },
     {
-      id: "category-metal-defense",
+      id: "category-attack-ring-metal-defense",
       name: "Metal Defense",
       description:
-        "Metal Defense — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Metal Defense — a attack ring (17 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Metal Defense","metal defense"] },
     },
     {
       id: "category-metal-saucer",
       name: "Metal Saucer",
       description:
-        "Metal Saucer — a attack ring (used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Metal Saucer — a attack ring (15 g, used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Metal Saucer","metal saucer"] },
     },
     {
@@ -3271,17 +12189,31 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Upper","metal upper"] },
     },
     {
+      id: "category-mirage-goddess",
+      name: "Mirage Goddess",
+      description:
+        "Mirage Goddess — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Mirage Goddess","mirage-goddess"] },
+    },
+    {
       id: "category-mountain-hammer",
       name: "Mountain Hammer",
       description:
-        "Mountain Hammer — a attack ring (used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Mountain Hammer — a attack ring (5.9 g, used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Mountain Hammer","mountain hammer"] },
+    },
+    {
+      id: "category-neo-cross-horn",
+      name: "Neo Cross Horn",
+      description:
+        "Neo Cross Horn — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Neo Cross Horn","neo-cross-horn"] },
     },
     {
       id: "category-panther-claw",
       name: "Panther Claw",
       description:
-        "Panther Claw — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Panther Claw — a attack ring (4.5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Panther Claw","panther claw"] },
     },
     {
@@ -3302,22 +12234,50 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-reverse-dragon",
       name: "Reverse Dragon",
       description:
-        "Reverse Dragon — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Reverse Dragon — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Reverse Dragon","reverse dragon"] },
     },
     {
       id: "category-reverse-wolf",
       name: "Reverse Wolf",
       description:
-        "Reverse Wolf — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Reverse Wolf — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Reverse Wolf","reverse wolf"] },
+    },
+    {
+      id: "category-roller-attack",
+      name: "Roller Attack",
+      description:
+        "Roller Attack — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Roller Attack","roller-attack"] },
     },
     {
       id: "category-samurai-upper",
       name: "Samurai Upper",
       description:
-        "Samurai Upper — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Samurai Upper — a attack ring (21.7 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Samurai Upper","samurai upper"] },
+    },
+    {
+      id: "category-scissor-attacker",
+      name: "Scissor Attacker",
+      description:
+        "Scissor Attacker — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Scissor Attacker","scissor-attacker"] },
+    },
+    {
+      id: "category-scissor-cutter",
+      name: "Scissor Cutter",
+      description:
+        "Scissor Cutter — a attack ring (5 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Scissor Cutter","scissor-cutter"] },
+    },
+    {
+      id: "category-scissors-arm",
+      name: "Scissors Arm",
+      description:
+        "Scissors Arm — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Scissors Arm","scissors-arm"] },
     },
     {
       id: "category-scorpio-claw",
@@ -3330,7 +12290,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-seagon-attacker",
       name: "Seagon Attacker",
       description:
-        "Seagon Attacker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Seagon Attacker — a attack ring (22 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Seagon Attacker","seagon attacker"] },
     },
     {
@@ -3344,21 +12304,21 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-shield-hammer",
       name: "Shield Hammer",
       description:
-        "Shield Hammer — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Shield Hammer — a attack ring (6.3 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Shield Hammer","shield hammer"] },
     },
     {
       id: "category-slash-upper",
       name: "Slash Upper",
       description:
-        "Slash Upper — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Slash Upper — a attack ring (18 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Slash Upper","slash upper"] },
     },
     {
       id: "category-smash-leopard",
       name: "Smash Leopard",
       description:
-        "Smash Leopard — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Smash Leopard — a attack ring (18 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Smash Leopard","smash leopard"] },
     },
     {
@@ -3369,32 +12329,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Smash Phoenix","smash phoenix"] },
     },
     {
+      id: "category-smash-turtle",
+      name: "Smash Turtle",
+      description:
+        "Smash Turtle — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Smash Turtle","smash-turtle"] },
+    },
+    {
       id: "category-sonic-tiger",
       name: "Sonic Tiger",
       description:
-        "Sonic Tiger — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Sonic Tiger — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Sonic Tiger","sonic tiger"] },
+    },
+    {
+      id: "category-spark-attack",
+      name: "Spark Attack",
+      description:
+        "Spark Attack — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Spark Attack","spark-attack"] },
     },
     {
       id: "category-spark-dragon",
       name: "Spark Dragon ⚠",
       description:
-        "Spark Dragon ⚠ — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Spark Dragon ⚠ — a attack ring (14 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Spark Dragon ⚠","spark dragon ⚠"] },
     },
     {
       id: "category-spike-dragon",
       name: "Spike Dragon",
       description:
-        "Spike Dragon — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Spike Dragon — a attack ring (4.9 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Spike Dragon","spike dragon"] },
     },
     {
       id: "category-spiral-upper",
       name: "Spiral Upper",
       description:
-        "Spiral Upper — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Spiral Upper — a attack ring (20 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Spiral Upper","spiral upper"] },
+    },
+    {
+      id: "category-square-edge",
+      name: "Square Edge",
+      description:
+        "Square Edge — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Square Edge","square-edge"] },
     },
     {
       id: "category-star-shape",
@@ -3407,28 +12388,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-star-wolf",
       name: "Star Wolf",
       description:
-        "Star Wolf — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Star Wolf — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Star Wolf","star wolf"] },
     },
     {
       id: "category-strike-turtle",
       name: "Strike Turtle",
       description:
-        "Strike Turtle — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Strike Turtle — a attack ring (4.8 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Strike Turtle","strike turtle"] },
     },
     {
       id: "category-ten-spike",
       name: "Ten Spike",
       description:
-        "Ten Spike — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Ten Spike — a attack ring (4.1 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Ten Spike","ten spike"] },
     },
     {
       id: "category-tiger-defenser",
       name: "Tiger Defenser",
       description:
-        "Tiger Defenser — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Tiger Defenser — a attack ring (3.6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Tiger Defenser","tiger defenser"] },
     },
     {
@@ -3439,11 +12420,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Triangle Wing","triangle wing"] },
     },
     {
+      id: "category-trident-vector",
+      name: "Trident Vector",
+      description:
+        "Trident Vector — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Trident Vector","trident-vector"] },
+    },
+    {
+      id: "category-triple-attacker",
+      name: "Triple Attacker",
+      description:
+        "Triple Attacker — a attack ring (7 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Triple Attacker","triple-attacker"] },
+    },
+    {
       id: "category-triple-beak",
       name: "Triple Beak",
       description:
-        "Triple Beak — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Triple Beak — a attack ring (5 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Triple Beak","triple beak"] },
+    },
+    {
+      id: "category-triple-tiger",
+      name: "Triple Tiger",
+      description:
+        "Triple Tiger — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Triple Tiger","triple-tiger"] },
     },
     {
       id: "category-triple-tiger-s-tier",
@@ -3451,6 +12453,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Triple Tiger S-tier — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Triple Tiger S-tier","triple tiger s-tier"] },
+    },
+    {
+      id: "category-triple-wing",
+      name: "Triple Wing",
+      description:
+        "Triple Wing — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Triple Wing","triple-wing"] },
     },
     {
       id: "category-triple-wing-s-tier",
@@ -3463,7 +12472,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-turtle-crusher",
       name: "Turtle Crusher",
       description:
-        "Turtle Crusher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Turtle Crusher — a attack ring (21 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Turtle Crusher","turtle crusher"] },
     },
     {
@@ -3474,10 +12483,17 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Turtle Survivor","turtle survivor"] },
     },
     {
+      id: "category-twin-horn",
+      name: "Twin Horn",
+      description:
+        "Twin Horn — a attack ring (5 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Twin Horn","twin-horn"] },
+    },
+    {
       id: "category-ultimate-attacker",
       name: "Ultimate Attacker",
       description:
-        "Ultimate Attacker — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Ultimate Attacker — a attack ring (14 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Ultimate Attacker","ultimate attacker"] },
     },
     {
@@ -3491,21 +12507,35 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-upper-dragon",
       name: "Upper Dragon",
       description:
-        "Upper Dragon — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Upper Dragon — a attack ring (19 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Upper Dragon","upper dragon"] },
+    },
+    {
+      id: "category-upper-dragoon",
+      name: "Upper Dragoon",
+      description:
+        "Upper Dragoon — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Upper Dragoon","upper-dragoon"] },
+    },
+    {
+      id: "category-upper-force",
+      name: "Upper Force",
+      description:
+        "Upper Force — a attack ring (4 g). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Upper Force","upper-force"] },
     },
     {
       id: "category-upper-fox",
       name: "Upper Fox",
       description:
-        "Upper Fox — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Upper Fox — a attack ring (19 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Upper Fox","upper fox"] },
     },
     {
       id: "category-upper-wolf",
       name: "Upper Wolf",
       description:
-        "Upper Wolf — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Upper Wolf — a attack ring (5.2 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Upper Wolf","upper wolf"] },
     },
     {
@@ -3526,7 +12556,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-war-lion",
       name: "War Lion",
       description:
-        "War Lion — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "War Lion — a attack ring (6 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["War Lion","war lion"] },
     },
     {
@@ -3537,31 +12567,59 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["War Monkey","war monkey"] },
     },
     {
+      id: "category-whale-attacker",
+      name: "Whale Attacker",
+      description:
+        "Whale Attacker — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Whale Attacker","whale-attacker"] },
+    },
+    {
       id: "category-whale-crusher",
       name: "Whale Crusher",
       description:
-        "Whale Crusher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Whale Crusher — a attack ring (8 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Whale Crusher","whale crusher"] },
+    },
+    {
+      id: "category-wing-attack-ring",
+      name: "Wing Attack Ring",
+      description:
+        "Wing Attack Ring — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Wing Attack Ring","wing-attack-ring"] },
+    },
+    {
+      id: "category-wing-cutter",
+      name: "Wing Cutter",
+      description:
+        "Wing Cutter — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Wing Cutter","wing-cutter"] },
+    },
+    {
+      id: "category-wing-defense",
+      name: "Wing Defense",
+      description:
+        "Wing Defense — a attack ring. Loose examples, spares and pre-owned attack rings of this part are listed here.",
+      extra: { aliases: ["Wing Defense","wing-defense"] },
     },
     {
       id: "category-wing-survivor",
       name: "Wing Survivor",
       description:
-        "Wing Survivor — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Wing Survivor — a attack ring (4.7 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Wing Survivor","wing survivor"] },
     },
     {
       id: "category-wing-upper",
       name: "Wing Upper",
       description:
-        "Wing Upper — a attack ring (used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Wing Upper — a attack ring (6 g, used by 2 models). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Wing Upper","wing upper"] },
     },
     {
       id: "category-wolf-crusher",
       name: "Wolf Crusher",
       description:
-        "Wolf Crusher — a attack ring (used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
+        "Wolf Crusher — a attack ring (20 g, used by 1 model). Loose examples, spares and pre-owned attack rings of this part are listed here.",
       extra: { aliases: ["Wolf Crusher","wolf crusher"] },
     },
     {
@@ -3573,6 +12631,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
     },
   ],
   "category-original-bit-chips": [
+    {
+      id: "category-amphilyon",
+      name: "Amphilyon",
+      description:
+        "Amphilyon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Amphilyon","amphilyon"] },
+    },
     {
       id: "category-ape-emblem",
       name: "Ape Emblem",
@@ -3588,6 +12653,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Apollon","apollon"] },
     },
     {
+      id: "category-bakushin-oh",
+      name: "Bakushin-Oh",
+      description:
+        "Bakushin-Oh — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Bakushin-Oh","bakushin-oh"] },
+    },
+    {
+      id: "category-bistool",
+      name: "Bistool",
+      description:
+        "Bistool — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Bistool","bistool"] },
+    },
+    {
+      id: "category-bit-chips",
+      name: "Bit Chips",
+      description:
+        "Bit Chips — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Bit Chips","bit-chips"] },
+    },
+    {
       id: "category-black-dranzer",
       name: "Black Dranzer",
       description:
@@ -3595,11 +12681,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Black Dranzer","black dranzer"] },
     },
     {
-      id: "category-bloody-devil-emblem",
+      id: "category-bit-chip-bloody-devil-emblem",
       name: "Bloody Devil Emblem",
       description:
         "Bloody Devil Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Bloody Devil Emblem","bloody devil emblem"] },
+    },
+    {
+      id: "category-bit-protector-bloody-devil-emblem",
+      name: "Bloody Devil Emblem",
+      description:
+        "Bloody Devil Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Bloody Devil Emblem","bloody-devil-emblem"] },
+    },
+    {
+      id: "category-bump-king",
+      name: "Bump King",
+      description:
+        "Bump King — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Bump King","bump-king"] },
+    },
+    {
+      id: "category-bit-chip-cerberus",
+      name: "Cerberus",
+      description:
+        "Cerberus — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Cerberus","cerberus","Kerberous (Takara)"] },
     },
     {
       id: "category-cyber-draciel",
@@ -3630,6 +12737,34 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cyber Driger","cyber driger"] },
     },
     {
+      id: "category-dark-draciel",
+      name: "Dark Draciel",
+      description:
+        "Dark Draciel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Dark Draciel","dark-draciel"] },
+    },
+    {
+      id: "category-dark-dragoon",
+      name: "Dark Dragoon",
+      description:
+        "Dark Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Dark Dragoon","dark-dragoon"] },
+    },
+    {
+      id: "category-dark-dranzer",
+      name: "Dark Dranzer",
+      description:
+        "Dark Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Dark Dranzer","dark-dranzer"] },
+    },
+    {
+      id: "category-dark-driger",
+      name: "Dark Driger",
+      description:
+        "Dark Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Dark Driger","dark-driger"] },
+    },
+    {
       id: "category-dark-emblem",
       name: "Dark Emblem",
       description:
@@ -3644,6 +12779,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dark Gargoyle","dark gargoyle"] },
     },
     {
+      id: "category-dark-strata-dragoon",
+      name: "Dark Strata Dragoon",
+      description:
+        "Dark Strata Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Dark Strata Dragoon","dark-strata-dragoon"] },
+    },
+    {
       id: "category-draciel",
       name: "Draciel",
       description:
@@ -3651,11 +12793,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Draciel","draciel"] },
     },
     {
-      id: "category-draciel-emblem",
+      id: "category-bit-chip-draciel-emblem",
       name: "Draciel Emblem",
       description:
         "Draciel Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Draciel Emblem","draciel emblem"] },
+    },
+    {
+      id: "category-bit-protector-draciel-emblem",
+      name: "Draciel Emblem",
+      description:
+        "Draciel Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Draciel Emblem","draciel-emblem"] },
     },
     {
       id: "category-bit-chip-dragoon",
@@ -3665,11 +12814,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dragoon","dragoon"] },
     },
     {
-      id: "category-dragoon-emblem",
+      id: "category-bit-chip-dragoon-emblem",
       name: "Dragoon Emblem",
       description:
         "Dragoon Emblem — a bit chip (used by 3 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Dragoon Emblem","dragoon emblem"] },
+    },
+    {
+      id: "category-bit-protector-dragoon-emblem",
+      name: "Dragoon Emblem",
+      description:
+        "Dragoon Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Dragoon Emblem","dragoon-emblem"] },
     },
     {
       id: "category-dranzer",
@@ -3679,11 +12835,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dranzer","dranzer"] },
     },
     {
-      id: "category-dranzer-emblem",
+      id: "category-bit-chip-dranzer-emblem",
       name: "Dranzer Emblem",
       description:
         "Dranzer Emblem — a bit chip (used by 2 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Dranzer Emblem","dranzer emblem"] },
+    },
+    {
+      id: "category-bit-protector-dranzer-emblem",
+      name: "Dranzer Emblem",
+      description:
+        "Dranzer Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Dranzer Emblem","dranzer-emblem"] },
     },
     {
       id: "category-driger",
@@ -3700,11 +12863,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Driger Emblem","driger emblem"] },
     },
     {
+      id: "category-falborg",
+      name: "Falborg",
+      description:
+        "Falborg — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Falborg","falborg"] },
+    },
+    {
       id: "category-bit-chip-flash-leopard",
       name: "Flash Leopard",
       description:
         "Flash Leopard — a bit chip (used by 2 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Flash Leopard","flash leopard"] },
+    },
+    {
+      id: "category-frostic-dranzer",
+      name: "Frostic Dranzer",
+      description:
+        "Frostic Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Frostic Dranzer","frostic-dranzer"] },
+    },
+    {
+      id: "category-gabriel",
+      name: "Gabriel",
+      description:
+        "Gabriel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Gabriel","gabriel"] },
     },
     {
       id: "category-bit-chip-galeon",
@@ -3721,6 +12905,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Galman","galman"] },
     },
     {
+      id: "category-galux",
+      name: "Galux",
+      description:
+        "Galux — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Galux","galux"] },
+    },
+    {
       id: "category-bit-chip-galzzly",
       name: "Galzzly",
       description:
@@ -3735,6 +12926,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gargoyle Emblem","gargoyle emblem"] },
     },
     {
+      id: "category-gekiryu-oh",
+      name: "Gekiryu-Oh",
+      description:
+        "Gekiryu-Oh — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Gekiryu-Oh","gekiryu-oh"] },
+    },
+    {
       id: "category-bit-chip-gigars",
       name: "Gigars",
       description:
@@ -3742,11 +12940,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gigars","gigars"] },
     },
     {
-      id: "category-god-emblem",
+      id: "category-bit-chip-god-emblem",
       name: "God Emblem",
       description:
         "God Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["God Emblem","god emblem"] },
+    },
+    {
+      id: "category-bit-protector-god-emblem",
+      name: "God Emblem",
+      description:
+        "God Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["God Emblem","god-emblem"] },
     },
     {
       id: "category-bit-chip-griffolyon",
@@ -3756,11 +12961,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Griffolyon","griffolyon"] },
     },
     {
-      id: "category-hard-metal-emblem",
+      id: "category-guardian-driger",
+      name: "Guardian Driger",
+      description:
+        "Guardian Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Guardian Driger","guardian-driger"] },
+    },
+    {
+      id: "category-bit-chip-hard-metal-emblem",
       name: "Hard Metal Emblem",
       description:
         "Hard Metal Emblem — a bit chip (15 g, used by 4 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Hard Metal Emblem","hard metal emblem"] },
+    },
+    {
+      id: "category-bit-protector-hard-metal-emblem",
+      name: "Hard Metal Emblem",
+      description:
+        "Hard Metal Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Hard Metal Emblem","hard-metal-emblem"] },
     },
     {
       id: "category-heavy-metal-emblem",
@@ -3774,14 +12993,49 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       name: "Hopper",
       description:
         "Hopper — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
-      extra: { aliases: ["Hopper","hopper"] },
+      extra: { aliases: ["Hopper","hopper","Einstein"] },
     },
     {
-      id: "category-jiraiya-emblem",
+      id: "category-bit-chip-jiraiya-emblem",
       name: "Jiraiya Emblem",
       description:
         "Jiraiya Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Jiraiya Emblem","jiraiya emblem"] },
+    },
+    {
+      id: "category-bit-protector-jiraiya-emblem",
+      name: "Jiraiya Emblem",
+      description:
+        "Jiraiya Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Jiraiya Emblem","jiraiya-emblem"] },
+    },
+    {
+      id: "category-kid-draciel",
+      name: "Kid Draciel",
+      description:
+        "Kid Draciel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Kid Draciel","kid-draciel"] },
+    },
+    {
+      id: "category-kid-dragoon",
+      name: "Kid Dragoon",
+      description:
+        "Kid Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Kid Dragoon","kid-dragoon"] },
+    },
+    {
+      id: "category-knight-dragoon",
+      name: "Knight Dragoon",
+      description:
+        "Knight Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Knight Dragoon","knight-dragoon"] },
+    },
+    {
+      id: "category-knight-dranzer",
+      name: "Knight Dranzer",
+      description:
+        "Knight Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Knight Dranzer","knight-dranzer"] },
     },
     {
       id: "category-knight-emblem",
@@ -3791,18 +13045,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Knight Emblem","knight emblem"] },
     },
     {
-      id: "category-kronos",
+      id: "category-bit-chip-kronos",
       name: "Kronos",
       description:
         "Kronos — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Kronos","kronos"] },
     },
     {
-      id: "category-leone-ii",
+      id: "category-bit-chip-leone-ii",
       name: "Leone II",
       description:
         "Leone II — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Leone II","leone ii"] },
+    },
+    {
+      id: "category-makendo",
+      name: "Makendo",
+      description:
+        "Makendo — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Makendo","makendo"] },
+    },
+    {
+      id: "category-master-draciel",
+      name: "Master Draciel",
+      description:
+        "Master Draciel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Master Draciel","master-draciel"] },
+    },
+    {
+      id: "category-master-dragoon",
+      name: "Master Dragoon",
+      description:
+        "Master Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Master Dragoon","master-dragoon"] },
     },
     {
       id: "category-master-dranzer",
@@ -3812,11 +13087,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Master Dranzer","master dranzer"] },
     },
     {
+      id: "category-master-driger",
+      name: "Master Driger",
+      description:
+        "Master Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Master Driger","master-driger"] },
+    },
+    {
+      id: "category-megaro-arm",
+      name: "Megaro Arm",
+      description:
+        "Megaro Arm — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Megaro Arm","megaro-arm"] },
+    },
+    {
       id: "category-bit-chip-metal-draciel",
       name: "Metal Draciel",
       description:
         "Metal Draciel — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Metal Draciel","metal draciel"] },
+    },
+    {
+      id: "category-metal-dragoon",
+      name: "Metal Dragoon",
+      description:
+        "Metal Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Metal Dragoon","metal-dragoon"] },
+    },
+    {
+      id: "category-metal-dranzer",
+      name: "Metal Dranzer",
+      description:
+        "Metal Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Metal Dranzer","metal-dranzer"] },
     },
     {
       id: "category-bit-chip-metal-driger",
@@ -3826,11 +13129,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Driger","metal driger"] },
     },
     {
-      id: "category-orion",
+      id: "category-bit-chip-orion",
       name: "Orion",
       description:
         "Orion — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Orion","orion"] },
+    },
+    {
+      id: "category-orthrus",
+      name: "Orthrus",
+      description:
+        "Orthrus — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Orthrus","orthrus","Blizzard Orthrus (Takara)"] },
+    },
+    {
+      id: "category-pegasion",
+      name: "Pegasion",
+      description:
+        "Pegasion — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Pegasion","pegasion"] },
     },
     {
       id: "category-phantom-fox-emblem",
@@ -3840,7 +13157,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Phantom Fox Emblem","phantom fox emblem"] },
     },
     {
-      id: "category-quetzalcoatl",
+      id: "category-pierce-hedgehog",
+      name: "Pierce Hedgehog",
+      description:
+        "Pierce Hedgehog — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Pierce Hedgehog","pierce-hedgehog"] },
+    },
+    {
+      id: "category-polta",
+      name: "Polta",
+      description:
+        "Polta — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Polta","polta"] },
+    },
+    {
+      id: "category-bit-chip-poseidon",
+      name: "Poseidon",
+      description:
+        "Poseidon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Poseidon","poseidon"] },
+    },
+    {
+      id: "category-bit-chip-quetzalcoatl",
       name: "Quetzalcoatl",
       description:
         "Quetzalcoatl — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -3875,11 +13213,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Rushing Boar","rushing boar"] },
     },
     {
-      id: "category-sagittario-ii",
+      id: "category-bit-chip-sagittario-ii",
       name: "Sagittario II",
       description:
         "Sagittario II — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Sagittario II","sagittario ii"] },
+    },
+    {
+      id: "category-saizo",
+      name: "Saizo",
+      description:
+        "Saizo — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Saizo","saizo"] },
     },
     {
       id: "category-bit-chip-salamalyon",
@@ -3889,18 +13234,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Salamalyon","salamalyon"] },
     },
     {
-      id: "category-samurai-emblem",
+      id: "category-bit-chip-samurai-emblem",
       name: "Samurai Emblem",
       description:
         "Samurai Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Samurai Emblem","samurai emblem"] },
     },
     {
-      id: "category-sea-dragon-emblem",
+      id: "category-bit-protector-samurai-emblem",
+      name: "Samurai Emblem",
+      description:
+        "Samurai Emblem — a bit protector (0.7 g). Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Samurai Emblem","samurai-emblem"] },
+    },
+    {
+      id: "category-bit-chip-sea-dragon-emblem",
       name: "Sea Dragon Emblem",
       description:
         "Sea Dragon Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Sea Dragon Emblem","sea dragon emblem"] },
+    },
+    {
+      id: "category-bit-protector-sea-dragon-emblem",
+      name: "Sea Dragon Emblem",
+      description:
+        "Sea Dragon Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Sea Dragon Emblem","sea-dragon-emblem"] },
     },
     {
       id: "category-seaborg",
@@ -3924,6 +13283,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Sharkrash","sharkrash"] },
     },
     {
+      id: "category-spark-knight",
+      name: "Spark Knight",
+      description:
+        "Spark Knight — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Spark Knight","spark-knight"] },
+    },
+    {
+      id: "category-spike-lizard",
+      name: "Spike Lizard",
+      description:
+        "Spike Lizard — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Spike Lizard","spike-lizard"] },
+    },
+    {
       id: "category-bit-chip-strata-dragoon",
       name: "Strata Dragoon",
       description:
@@ -3931,11 +13304,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Strata Dragoon","strata dragoon"] },
     },
     {
-      id: "category-strata-dragoon-emblem",
+      id: "category-bit-protector-strata-dragoon",
+      name: "Strata Dragoon",
+      description:
+        "Strata Dragoon — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Strata Dragoon","strata-dragoon"] },
+    },
+    {
+      id: "category-bit-chip-strata-dragoon-emblem",
       name: "Strata Dragoon Emblem",
       description:
         "Strata Dragoon Emblem — a bit chip (0.6 g, used by 2 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Strata Dragoon Emblem","strata dragoon emblem"] },
+    },
+    {
+      id: "category-bit-protector-strata-dragoon-emblem",
+      name: "Strata Dragoon Emblem",
+      description:
+        "Strata Dragoon Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Strata Dragoon Emblem","strata-dragoon-emblem"] },
     },
     {
       id: "category-thunder-emblem",
@@ -3959,6 +13346,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Torch Pegasus","torch pegasus"] },
     },
     {
+      id: "category-trygator",
+      name: "Trygator",
+      description:
+        "Trygator — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Trygator","trygator"] },
+    },
+    {
       id: "category-bit-chip-trygle",
       name: "Trygle",
       description:
@@ -3980,11 +13374,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Trypio","trypio"] },
     },
     {
-      id: "category-turtle-emblem",
+      id: "category-bit-chip-turtle-emblem",
       name: "Turtle Emblem",
       description:
         "Turtle Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Turtle Emblem","turtle emblem"] },
+    },
+    {
+      id: "category-bit-protector-turtle-emblem",
+      name: "Turtle Emblem",
+      description:
+        "Turtle Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Turtle Emblem","turtle-emblem"] },
+    },
+    {
+      id: "category-ultimate-dragoon",
+      name: "Ultimate Dragoon",
+      description:
+        "Ultimate Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Ultimate Dragoon","ultimate-dragoon"] },
+    },
+    {
+      id: "category-unicolyon",
+      name: "Unicolyon",
+      description:
+        "Unicolyon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Unicolyon","unicolyon"] },
+    },
+    {
+      id: "category-uriel",
+      name: "Uriel",
+      description:
+        "Uriel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Uriel","uriel"] },
     },
     {
       id: "category-bit-chip-vanishing-moot",
@@ -3994,11 +13416,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Vanishing Moot","vanishing moot"] },
     },
     {
+      id: "category-venus",
+      name: "Venus",
+      description:
+        "Venus — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Venus","venus"] },
+    },
+    {
+      id: "category-venus-bit-beast",
+      name: "Venus (Bit-Beast)",
+      description:
+        "Venus (Bit-Beast) — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Venus (Bit-Beast)","venus-bit-beast"] },
+    },
+    {
       id: "category-bit-chip-vortex-ape",
       name: "Vortex Ape",
       description:
-        "Vortex Ape — a bit chip (used by 2 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
+        "Vortex Ape — a bit chip (0.7 g, used by 2 models). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Vortex Ape","vortex ape"] },
+    },
+    {
+      id: "category-vulpes",
+      name: "Vulpes",
+      description:
+        "Vulpes — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Vulpes","vulpes"] },
     },
     {
       id: "category-bit-chip-wolborg",
@@ -4008,11 +13451,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Wolborg","wolborg"] },
     },
     {
-      id: "category-wolborg-emblem",
+      id: "category-wolborg-3",
+      name: "Wolborg 3",
+      description:
+        "Wolborg 3 — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
+      extra: { aliases: ["Wolborg 3","wolborg-3","Wolborg 03 (Takara)"] },
+    },
+    {
+      id: "category-bit-chip-wolborg-emblem",
       name: "Wolborg Emblem",
       description:
         "Wolborg Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Wolborg Emblem","wolborg emblem"] },
+    },
+    {
+      id: "category-bit-protector-wolborg-emblem",
+      name: "Wolborg Emblem",
+      description:
+        "Wolborg Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Wolborg Emblem","wolborg-emblem"] },
     },
     {
       id: "category-bit-chip-wyborg",
@@ -4022,11 +13479,18 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Wyborg","wyborg"] },
     },
     {
-      id: "category-wyvern-emblem",
+      id: "category-bit-chip-wyvern-emblem",
       name: "Wyvern Emblem",
       description:
         "Wyvern Emblem — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Wyvern Emblem","wyvern emblem"] },
+    },
+    {
+      id: "category-bit-protector-wyvern-emblem",
+      name: "Wyvern Emblem",
+      description:
+        "Wyvern Emblem — a bit protector. Loose examples, spares and pre-owned bit protectors of this part are listed here.",
+      extra: { aliases: ["Wyvern Emblem","wyvern-emblem"] },
     },
     {
       id: "category-bit-chip-zeus",
@@ -4038,6 +13502,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
   ],
   "category-original-blade-bases": [
     {
+      id: "category-auto-change",
+      name: "Auto Change",
+      description:
+        "Auto Change — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Auto Change","auto-change"] },
+    },
+    {
+      id: "category-auto-change-base",
+      name: "Auto Change Base",
+      description:
+        "Auto Change Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Auto Change Base","auto-change-base"] },
+    },
+    {
+      id: "category-bearing-base",
+      name: "Bearing Base",
+      description:
+        "Bearing Base — a blade base (8 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Bearing Base","bearing-base"] },
+    },
+    {
       id: "category-custom-metal-change",
       name: "Custom Metal Change",
       description:
@@ -4045,17 +13530,31 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Custom Metal Change","custom metal change"] },
     },
     {
+      id: "category-custom-metal-change-w-upper-attack-support-parts",
+      name: "Custom Metal Change (w  Upper Attack Support Parts)",
+      description:
+        "Custom Metal Change (w  Upper Attack Support Parts) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Custom Metal Change (w  Upper Attack Support Parts)","custom-metal-change-w-upper-attack-support-parts"] },
+    },
+    {
+      id: "category-customize-bearing-base",
+      name: "Customize Bearing Base",
+      description:
+        "Customize Bearing Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Customize Bearing Base","customize-bearing-base"] },
+    },
+    {
       id: "category-customize-clutch-base",
       name: "Customize Clutch Base",
       description:
-        "Customize Clutch Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Customize Clutch Base — a blade base (5.8 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Customize Clutch Base","customize clutch base"] },
     },
     {
       id: "category-customize-grip-base",
       name: "Customize Grip Base",
       description:
-        "Customize Grip Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Customize Grip Base — a blade base (5.1 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Customize Grip Base","customize grip base"] },
     },
     {
@@ -4064,6 +13563,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Customize Metal Sharp — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Customize Metal Sharp","customize metal sharp"] },
+    },
+    {
+      id: "category-customize-sharp",
+      name: "Customize Sharp",
+      description:
+        "Customize Sharp — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Customize Sharp","customize-sharp"] },
+    },
+    {
+      id: "category-defense-grip-2",
+      name: "Defense Grip 2",
+      description:
+        "Defense Grip 2 — a blade base (5.7 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Defense Grip 2","defense-grip-2"] },
+    },
+    {
+      id: "category-defense-grip-base",
+      name: "Defense Grip Base",
+      description:
+        "Defense Grip Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Defense Grip Base","defense-grip-base"] },
     },
     {
       id: "category-defense-grip-base-2",
@@ -4083,7 +13603,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-engine-stopper-base",
       name: "Engine Stopper Base",
       description:
-        "Engine Stopper Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Engine Stopper Base — a blade base (5 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Engine Stopper Base","engine stopper base"] },
     },
     {
@@ -4094,11 +13614,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Fantom Grip Base","fantom grip base"] },
     },
     {
+      id: "category-final-clutch-base",
+      name: "Final Clutch Base",
+      description:
+        "Final Clutch Base — a blade base (7.4 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Final Clutch Base","final-clutch-base"] },
+    },
+    {
       id: "category-first-clutch-base",
       name: "First Clutch Base",
       description:
         "First Clutch Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["First Clutch Base","first clutch base"] },
+    },
+    {
+      id: "category-first-clutch-base-dragoon-gt-version",
+      name: "First Clutch Base (Dragoon GT Version)",
+      description:
+        "First Clutch Base (Dragoon GT Version) — a blade base (7 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["First Clutch Base (Dragoon GT Version)","first-clutch-base-dragoon-gt-version"] },
+    },
+    {
+      id: "category-first-clutch-base-zeus-version",
+      name: "First Clutch Base (Zeus Version)",
+      description:
+        "First Clutch Base (Zeus Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["First Clutch Base (Zeus Version)","first-clutch-base-zeus-version"] },
     },
     {
       id: "category-first-clutch-base-zeus",
@@ -4111,8 +13652,29 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-flame-change-base",
       name: "Flame Change Base",
       description:
-        "Flame Change Base — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Flame Change Base — a blade base (9 g, used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Flame Change Base","flame change base"] },
+    },
+    {
+      id: "category-blade-base-flat",
+      name: "Flat",
+      description:
+        "Flat — a blade base (8 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Flat","flat"] },
+    },
+    {
+      id: "category-flat-base",
+      name: "Flat Base",
+      description:
+        "Flat Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Flat Base","flat-base"] },
+    },
+    {
+      id: "category-blade-base-fortress",
+      name: "Fortress",
+      description:
+        "Fortress — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Fortress","fortress"] },
     },
     {
       id: "category-fortress-base",
@@ -4125,8 +13687,15 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-full-auto-clutch-base",
       name: "Full Auto Clutch Base",
       description:
-        "Full Auto Clutch Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Full Auto Clutch Base — a blade base (15 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Full Auto Clutch Base","full auto clutch base"] },
+    },
+    {
+      id: "category-g-special-base",
+      name: "G Special Base",
+      description:
+        "G Special Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["G Special Base","g-special-base"] },
     },
     {
       id: "category-galaxy-hit-release",
@@ -4143,11 +13712,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Griffolyon Base","griffolyon base"] },
     },
     {
+      id: "category-grip",
+      name: "Grip",
+      description:
+        "Grip — a blade base (7 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Grip","grip"] },
+    },
+    {
+      id: "category-gyro-base",
+      name: "Gyro Base",
+      description:
+        "Gyro Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Gyro Base","gyro-base"] },
+    },
+    {
       id: "category-hit-release",
       name: "Hit Release",
       description:
         "Hit Release — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Hit Release","hit release"] },
+    },
+    {
+      id: "category-hit-release-draciel-version",
+      name: "Hit Release (Draciel Version)",
+      description:
+        "Hit Release (Draciel Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Hit Release (Draciel Version)","hit-release-draciel-version"] },
     },
     {
       id: "category-hit-release-draciel",
@@ -4157,11 +13747,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Hit Release (Draciel)","hit release (draciel)"] },
     },
     {
+      id: "category-hit-release-dranzer-gt-version",
+      name: "Hit Release (Dranzer GT Version)",
+      description:
+        "Hit Release (Dranzer GT Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Hit Release (Dranzer GT Version)","hit-release-dranzer-gt-version"] },
+    },
+    {
       id: "category-hit-release-dranzer-gt",
       name: "Hit Release (Dranzer GT)",
       description:
         "Hit Release (Dranzer GT) — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Hit Release (Dranzer GT)","hit release (dranzer gt)"] },
+    },
+    {
+      id: "category-hit-release-dranzer-version",
+      name: "Hit Release (Dranzer Version)",
+      description:
+        "Hit Release (Dranzer Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Hit Release (Dranzer Version)","hit-release-dranzer-version"] },
+    },
+    {
+      id: "category-hit-release-strata-dragoon-g-version",
+      name: "Hit Release (Strata Dragoon G Version)",
+      description:
+        "Hit Release (Strata Dragoon G Version) — a blade base (8 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Hit Release (Strata Dragoon G Version)","hit-release-strata-dragoon-g-version"] },
     },
     {
       id: "category-hit-release-strata",
@@ -4178,11 +13789,46 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Hit Release Base","hit release base"] },
     },
     {
+      id: "category-hit-release-base-gigars-version",
+      name: "Hit Release Base (Gigars Version)",
+      description:
+        "Hit Release Base (Gigars Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Hit Release Base (Gigars Version)","hit-release-base-gigars-version"] },
+    },
+    {
       id: "category-instant-release",
       name: "Instant Release",
       description:
         "Instant Release — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Instant Release","instant release"] },
+    },
+    {
+      id: "category-instant-release-dragoon-g-version",
+      name: "Instant Release (Dragoon G Version)",
+      description:
+        "Instant Release (Dragoon G Version) — a blade base (7 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Instant Release (Dragoon G Version)","instant-release-dragoon-g-version"] },
+    },
+    {
+      id: "category-instant-release-dragoon-gt-version",
+      name: "Instant Release (Dragoon GT Version)",
+      description:
+        "Instant Release (Dragoon GT Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Instant Release (Dragoon GT Version)","instant-release-dragoon-gt-version"] },
+    },
+    {
+      id: "category-instant-release-driger-g-version",
+      name: "Instant Release (Driger G Version)",
+      description:
+        "Instant Release (Driger G Version) — a blade base (7.3 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Instant Release (Driger G Version)","instant-release-driger-g-version"] },
+    },
+    {
+      id: "category-instant-release-metal-driger-version",
+      name: "Instant Release (Metal Driger Version)",
+      description:
+        "Instant Release (Metal Driger Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Instant Release (Metal Driger Version)","instant-release-metal-driger-version"] },
     },
     {
       id: "category-instant-release-base",
@@ -4195,7 +13841,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-jumping-base",
       name: "Jumping Base",
       description:
-        "Jumping Base — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Jumping Base — a blade base (10 g, used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Jumping Base","jumping base"] },
     },
     {
@@ -4206,11 +13852,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Magne Flat Base","magne flat base"] },
     },
     {
+      id: "category-blade-base-metal-ball",
+      name: "Metal Ball",
+      description:
+        "Metal Ball — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Metal Ball","metal-ball"] },
+    },
+    {
       id: "category-metal-ball-base",
       name: "Metal Ball Base",
       description:
         "Metal Ball Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Metal Ball Base","metal ball base"] },
+    },
+    {
+      id: "category-metal-change",
+      name: "Metal Change",
+      description:
+        "Metal Change — a blade base (5 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Metal Change","metal-change"] },
     },
     {
       id: "category-metal-change-base",
@@ -4227,11 +13887,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Sharp Base","metal sharp base"] },
     },
     {
+      id: "category-blade-base",
+      name: "Metal Sharp Base",
+      description:
+        "Metal Sharp Base — a blade base (printed Blade Base). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Blade Base","Metal Sharp Base","metal-sharp-base","blade-base"] },
+    },
+    {
+      id: "category-metal-sting",
+      name: "Metal Sting",
+      description:
+        "Metal Sting — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Metal Sting","metal-sting"] },
+    },
+    {
       id: "category-metal-sting-base",
       name: "Metal Sting Base",
       description:
         "Metal Sting Base — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Metal Sting Base","metal sting base"] },
+    },
+    {
+      id: "category-neo-right-sg-south-magnecore-dranzer-v-version",
+      name: "Neo Right SG (South Magnecore (Dranzer V Version))",
+      description:
+        "Neo Right SG (South Magnecore (Dranzer V Version)) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (South Magnecore (Dranzer V Version))","neo-right-sg-south-magnecore-dranzer-v-version"] },
     },
     {
       id: "category-normal-base",
@@ -4241,11 +13922,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Normal Base","normal base"] },
     },
     {
+      id: "category-normal-base-rock-bison-version",
+      name: "Normal Base (Rock Bison Version)",
+      description:
+        "Normal Base (Rock Bison Version) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Normal Base (Rock Bison Version)","normal-base-rock-bison-version"] },
+    },
+    {
+      id: "category-normal-base-wolborg-4-version",
+      name: "Normal Base (Wolborg 4 Version)",
+      description:
+        "Normal Base (Wolborg 4 Version) — a blade base (5 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Normal Base (Wolborg 4 Version)","normal-base-wolborg-4-version"] },
+    },
+    {
+      id: "category-phantom-grip",
+      name: "Phantom Grip",
+      description:
+        "Phantom Grip — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Phantom Grip","phantom-grip"] },
+    },
+    {
       id: "category-salamalyon-base",
       name: "Salamalyon Base",
       description:
         "Salamalyon Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Salamalyon Base","salamalyon base"] },
+    },
+    {
+      id: "category-sg-bearing",
+      name: "SG Bearing",
+      description:
+        "SG Bearing — a blade base (10 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Bearing","sg-bearing"] },
     },
     {
       id: "category-sg-bearing-base",
@@ -4265,14 +13974,28 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-sg-flat-base",
       name: "SG Flat Base",
       description:
-        "SG Flat Base — a blade base (used by 3 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "SG Flat Base — a blade base (5 g, used by 3 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["SG Flat Base","sg flat base"] },
+    },
+    {
+      id: "category-sg-grip-base",
+      name: "SG Grip Base",
+      description:
+        "SG Grip Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Grip Base","sg-grip-base"] },
+    },
+    {
+      id: "category-sg-grip-change-base",
+      name: "SG Grip Change Base",
+      description:
+        "SG Grip Change Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Grip Change Base","sg-grip-change-base"] },
     },
     {
       id: "category-sg-jumping-base",
       name: "SG Jumping Base",
       description:
-        "SG Jumping Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "SG Jumping Base — a blade base (7 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["SG Jumping Base","sg jumping base"] },
     },
     {
@@ -4290,25 +14013,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SG Metal Ball","sg metal ball"] },
     },
     {
+      id: "category-sg-metal-ball-base",
+      name: "SG Metal Ball Base",
+      description:
+        "SG Metal Ball Base — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Metal Ball Base","sg-metal-ball-base"] },
+    },
+    {
       id: "category-sg-metal-flat-2",
       name: "SG Metal Flat 2",
       description:
-        "SG Metal Flat 2 — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "SG Metal Flat 2 — a blade base (5 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["SG Metal Flat 2","sg metal flat 2"] },
     },
     {
       id: "category-sg-metal-flat-base",
       name: "SG Metal Flat Base",
       description:
-        "SG Metal Flat Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "SG Metal Flat Base — a blade base (6.2 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["SG Metal Flat Base","sg metal flat base"] },
     },
     {
-      id: "category-sg-semi-flat-base",
-      name: "SG Semi Flat Base",
+      id: "category-sg-roller",
+      name: "SG Roller",
       description:
-        "SG Semi Flat Base — a blade base (used by 4 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
-      extra: { aliases: ["SG Semi Flat Base","sg semi flat base","SG Semi-Flat Base"] },
+        "SG Roller — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Roller","sg-roller"] },
     },
     {
       id: "category-sg-semi-flat",
@@ -4318,10 +14048,17 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SG Semi-Flat","sg semi-flat"] },
     },
     {
+      id: "category-sg-semi-flat-base",
+      name: "SG Semi-Flat Base",
+      description:
+        "SG Semi-Flat Base — a blade base (4.7 g, used by 4 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Semi-Flat Base","sg semi flat base"] },
+    },
+    {
       id: "category-sg-sharp",
       name: "SG Sharp",
       description:
-        "SG Sharp — a blade base (used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "SG Sharp — a blade base (7 g, used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["SG Sharp","sg sharp"] },
     },
     {
@@ -4332,6 +14069,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["SG Sharp Base","sg sharp base"] },
     },
     {
+      id: "category-sg-wing-base",
+      name: "SG Wing Base",
+      description:
+        "SG Wing Base — a blade base (7 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["SG Wing Base","sg-wing-base"] },
+    },
+    {
+      id: "category-shark-tail",
+      name: "Shark Tail",
+      description:
+        "Shark Tail — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Shark Tail","shark-tail"] },
+    },
+    {
       id: "category-spike-base",
       name: "Spike Base",
       description:
@@ -4339,17 +14090,24 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Spike Base","spike base"] },
     },
     {
+      id: "category-spiral-change",
+      name: "Spiral Change",
+      description:
+        "Spiral Change — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Spiral Change","spiral-change"] },
+    },
+    {
       id: "category-spiral-change-base",
       name: "Spiral Change Base",
       description:
-        "Spiral Change Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Spiral Change Base — a blade base (7 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Spiral Change Base","spiral change base"] },
     },
     {
       id: "category-storm-grip",
       name: "Storm Grip",
       description:
-        "Storm Grip — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Storm Grip — a blade base (4 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Storm Grip","storm grip"] },
     },
     {
@@ -4367,6 +14125,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Switch Metal Ball","switch metal ball"] },
     },
     {
+      id: "category-switch-metal-ball-base",
+      name: "Switch Metal Ball Base",
+      description:
+        "Switch Metal Ball Base — a blade base (6 g). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Switch Metal Ball Base","switch-metal-ball-base"] },
+    },
+    {
       id: "category-viper-metal-ball-base",
       name: "Viper Metal Ball Base",
       description:
@@ -4377,11 +14142,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-volcano-change-base",
       name: "Volcano Change Base",
       description:
-        "Volcano Change Base — a blade base (used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
+        "Volcano Change Base — a blade base (6.6 g, used by 1 model). Loose examples, spares and pre-owned blade bases of this part are listed here.",
       extra: { aliases: ["Volcano Change Base","volcano change base"] },
     },
   ],
   "category-original-engine-gears": [
+    {
+      id: "category-a-gear",
+      name: "A Gear",
+      description:
+        "A Gear — a evolution gear (4.4 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["A Gear","a-gear"] },
+    },
+    {
+      id: "category-d-gear",
+      name: "D Gear",
+      description:
+        "D Gear — a evolution gear (4 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["D Gear","d-gear"] },
+    },
+    {
+      id: "category-f-gear",
+      name: "F Gear",
+      description:
+        "F Gear — a evolution gear (5.7 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["F Gear","f-gear"] },
+    },
     {
       id: "category-gyro-engine-gear",
       name: "Gyro Engine Gear",
@@ -4390,10 +14176,31 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Gyro Engine Gear","gyro engine gear"] },
     },
     {
+      id: "category-h-gear",
+      name: "H Gear",
+      description:
+        "H Gear — a evolution gear. Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["H Gear","h-gear"] },
+    },
+    {
+      id: "category-l-gear",
+      name: "L Gear",
+      description:
+        "L Gear — a evolution gear (15.5 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["L Gear","l-gear"] },
+    },
+    {
+      id: "category-left-eg-turbo",
+      name: "Left EG (Turbo)",
+      description:
+        "Left EG (Turbo) — a engine gear (7 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Left EG (Turbo)","left-eg-turbo"] },
+    },
+    {
       id: "category-left-engine-gear",
       name: "Left Engine Gear",
       description:
-        "Left Engine Gear — a engine gear (used by 1 model). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+        "Left Engine Gear — a engine gear (11 g, used by 1 model). Loose examples, spares and pre-owned engine gears of this part are listed here.",
       extra: { aliases: ["Left Engine Gear","left engine gear"] },
     },
     {
@@ -4404,6 +14211,20 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Left Engine Gear Turbo","left engine gear turbo"] },
     },
     {
+      id: "category-left-turbo-eg",
+      name: "Left Turbo EG",
+      description:
+        "Left Turbo EG — a engine gear. Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Left Turbo EG","left-turbo-eg"] },
+    },
+    {
+      id: "category-right-customize-gear-full-auto-clutch-version",
+      name: "Right Customize Gear (Full Auto Clutch Version)",
+      description:
+        "Right Customize Gear (Full Auto Clutch Version) — a engine gear. Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right Customize Gear (Full Auto Clutch Version)","right-customize-gear-full-auto-clutch-version"] },
+    },
+    {
       id: "category-engine-gear-right-eg",
       name: "Right EG",
       description:
@@ -4411,11 +14232,111 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Right EG","right eg"] },
     },
     {
+      id: "category-right-eg-circle-survivor",
+      name: "Right EG (Circle Survivor)",
+      description:
+        "Right EG (Circle Survivor) — a engine gear (12 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG (Circle Survivor)","right-eg-circle-survivor"] },
+    },
+    {
+      id: "category-right-eg-metal-ball",
+      name: "Right EG (Metal Ball)",
+      description:
+        "Right EG (Metal Ball) — a engine gear (11 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG (Metal Ball)","right-eg-metal-ball"] },
+    },
+    {
+      id: "category-right-eg-metal-flat",
+      name: "Right EG (Metal Flat)",
+      description:
+        "Right EG (Metal Flat) — a engine gear (11 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG (Metal Flat)","right-eg-metal-flat"] },
+    },
+    {
+      id: "category-right-eg-metal-semi-flat",
+      name: "Right EG (Metal Semi-Flat)",
+      description:
+        "Right EG (Metal Semi-Flat) — a engine gear (11 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG (Metal Semi-Flat)","right-eg-metal-semi-flat"] },
+    },
+    {
+      id: "category-right-eg-circle-defenser",
+      name: "Right EG Circle Defenser",
+      description:
+        "Right EG Circle Defenser — a engine gear. Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG Circle Defenser","right-eg-circle-defenser"] },
+    },
+    {
+      id: "category-right-eg-reverse",
+      name: "Right EG Reverse",
+      description:
+        "Right EG Reverse — a engine gear. Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right EG Reverse","right-eg-reverse"] },
+    },
+    {
       id: "category-right-engine-gear",
       name: "Right Engine Gear",
       description:
         "Right Engine Gear — a engine gear (used by 6 models). Loose examples, spares and pre-owned engine gears of this part are listed here.",
       extra: { aliases: ["Right Engine Gear","right engine gear"] },
+    },
+    {
+      id: "category-right-engine-gear-metal-semi-flat-version",
+      name: "Right Engine Gear (Metal Semi-Flat Version)",
+      description:
+        "Right Engine Gear (Metal Semi-Flat Version) — a engine gear. Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right Engine Gear (Metal Semi-Flat Version)","right-engine-gear-metal-semi-flat-version"] },
+    },
+    {
+      id: "category-right-engine-gear-mystery-cutter",
+      name: "Right Engine Gear (Mystery Cutter)",
+      description:
+        "Right Engine Gear (Mystery Cutter) — a engine gear (6.9 g). Loose examples, spares and pre-owned engine gears of this part are listed here.",
+      extra: { aliases: ["Right Engine Gear (Mystery Cutter)","right-engine-gear-mystery-cutter"] },
+    },
+    {
+      id: "category-s-gear",
+      name: "S Gear",
+      description:
+        "S Gear — a evolution gear (4.3 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["S Gear","s-gear"] },
+    },
+    {
+      id: "category-v-gear",
+      name: "V Gear",
+      description:
+        "V Gear — a evolution gear (5.6 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["V Gear","v-gear"] },
+    },
+    {
+      id: "category-evolution-gear-vs-gear",
+      name: "VS Gear",
+      description:
+        "VS Gear — a evolution gear (7.6 g). Loose examples, spares and pre-owned evolution gears of this part are listed here.",
+      extra: { aliases: ["VS Gear","vs-gear"] },
+    },
+  ],
+  "category-original-parts": [
+    {
+      id: "category-cross-survivor",
+      name: "Cross Survivor",
+      description:
+        "Cross Survivor — a support parts (2.6 g, used by 1 model). Loose examples, spares and pre-owned support partss of this part are listed here.",
+      extra: { aliases: ["Cross Survivor","cross survivor"] },
+    },
+    {
+      id: "category-reverse-attack",
+      name: "Reverse Attack",
+      description:
+        "Reverse Attack — a support parts (used by 1 model). Loose examples, spares and pre-owned support partss of this part are listed here.",
+      extra: { aliases: ["Reverse Attack","reverse attack"] },
+    },
+    {
+      id: "category-upper-attack-sp",
+      name: "Upper Attack SP",
+      description:
+        "Upper Attack SP — a support part (4 g). Loose examples, spares and pre-owned support parts of this part are listed here.",
+      extra: { aliases: ["Upper Attack SP","upper-attack-sp"] },
     },
   ],
   "category-original-running-cores": [
@@ -4430,8 +14351,15 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-battle-change-core",
       name: "Battle Change Core",
       description:
-        "Battle Change Core — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Battle Change Core — a running core (10.3 g, used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Battle Change Core","battle change core"] },
+    },
+    {
+      id: "category-bearing-core-2",
+      name: "Bearing Core 2",
+      description:
+        "Bearing Core 2 — a running core (4 g). Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Bearing Core 2","bearing-core-2"] },
     },
     {
       id: "category-bearing-core-2-top",
@@ -4446,6 +14374,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Bearing Core S-tier — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Bearing Core S-tier","bearing core s-tier"] },
+    },
+    {
+      id: "category-bunshin-core",
+      name: "Bunshin Core",
+      description:
+        "Bunshin Core — a running core. Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Bunshin Core","bunshin-core"] },
     },
     {
       id: "category-bunshin-core-split",
@@ -4483,11 +14418,25 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Free Wing Core ⚠","free wing core ⚠"] },
     },
     {
+      id: "category-free-wing-cross",
+      name: "Free Wing Cross",
+      description:
+        "Free Wing Cross — a running core. Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Free Wing Cross","free-wing-cross"] },
+    },
+    {
       id: "category-grip-flat-core",
       name: "Grip Flat Core",
       description:
-        "Grip Flat Core — a running core (used by 2 models). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Grip Flat Core — a running core (1 g, used by 2 models). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Grip Flat Core","grip flat core"] },
+    },
+    {
+      id: "category-grip-flat-core-ultimate-mode",
+      name: "Grip Flat Core (Ultimate Mode)",
+      description:
+        "Grip Flat Core (Ultimate Mode) — a running core (1 g). Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Grip Flat Core (Ultimate Mode)","grip-flat-core-ultimate-mode"] },
     },
     {
       id: "category-grip-sharp-core",
@@ -4528,14 +14477,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-metal-semi-flat-core",
       name: "Metal Semi-Flat Core",
       description:
-        "Metal Semi-Flat Core — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Metal Semi-Flat Core — a running core (3 g, used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Metal Semi-Flat Core","metal semi-flat core"] },
     },
     {
       id: "category-metal-sharp-core",
       name: "Metal Sharp Core",
       description:
-        "Metal Sharp Core — a running core (used by 2 models). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Metal Sharp Core — a running core (4 g, used by 2 models). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Metal Sharp Core","metal sharp core"] },
     },
     {
@@ -4546,6 +14495,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Weight Flat","metal weight flat"] },
     },
     {
+      id: "category-metal-weight-flat-core",
+      name: "Metal Weight Flat Core",
+      description:
+        "Metal Weight Flat Core — a running core. Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Metal Weight Flat Core","metal-weight-flat-core"] },
+    },
+    {
       id: "category-metal-weight-grip",
       name: "Metal Weight Grip",
       description:
@@ -4553,24 +14509,31 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Weight Grip","metal weight grip"] },
     },
     {
+      id: "category-metal-weight-grip-core",
+      name: "Metal Weight Grip Core",
+      description:
+        "Metal Weight Grip Core — a running core (3 g). Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Metal Weight Grip Core","metal-weight-grip-core"] },
+    },
+    {
       id: "category-rubber-weight-core",
       name: "Rubber Weight Core",
       description:
-        "Rubber Weight Core — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Rubber Weight Core — a running core (20 g, used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Rubber Weight Core","rubber weight core"] },
     },
     {
       id: "category-semi-flat-core",
       name: "Semi-Flat Core",
       description:
-        "Semi-Flat Core — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Semi-Flat Core — a running core (2 g, used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Semi-Flat Core","semi-flat core"] },
     },
     {
       id: "category-sharp-core",
       name: "Sharp Core",
       description:
-        "Sharp Core — a running core (used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
+        "Sharp Core — a running core (2 g, used by 1 model). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Sharp Core","sharp core"] },
     },
     {
@@ -4579,6 +14542,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Shooter Change Core — a running core (used by 2 models). Loose examples, spares and pre-owned running cores of this part are listed here.",
       extra: { aliases: ["Shooter Change Core","shooter change core"] },
+    },
+    {
+      id: "category-shooter-change-core-alpha",
+      name: "Shooter Change Core Alpha",
+      description:
+        "Shooter Change Core Alpha — a running core (6 g). Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Shooter Change Core Alpha","shooter-change-core-alpha"] },
+    },
+    {
+      id: "category-shooter-change-core-gamma",
+      name: "Shooter Change Core Gamma",
+      description:
+        "Shooter Change Core Gamma — a running core. Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Shooter Change Core Gamma","shooter-change-core-gamma"] },
+    },
+    {
+      id: "category-spring-core",
+      name: "Spring Core",
+      description:
+        "Spring Core — a running core (3 g). Loose examples, spares and pre-owned running cores of this part are listed here.",
+      extra: { aliases: ["Spring Core","spring-core"] },
     },
     {
       id: "category-spring-core-gimmick",
@@ -4597,11 +14581,32 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
   ],
   "category-original-spin-gears": [
     {
-      id: "category-heavy-metal-core",
+      id: "category-flame-change",
+      name: "Flame Change",
+      description:
+        "Flame Change — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Flame Change","flame-change"] },
+    },
+    {
+      id: "category-gyro-spin-gear",
+      name: "Gyro Spin Gear",
+      description:
+        "Gyro Spin Gear — a spin gear (32 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Gyro Spin Gear","gyro-spin-gear","Gyro SG / Gyro Spin Gear"] },
+    },
+    {
+      id: "category-spin-gear-heavy-metal-core",
       name: "Heavy Metal Core",
       description:
-        "Heavy Metal Core — a spin gear (used by 1 model). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+        "Heavy Metal Core — a spin gear (9 g, used by 1 model). Loose examples, spares and pre-owned spin gears of this part are listed here.",
       extra: { aliases: ["Heavy Metal Core","heavy metal core"] },
+    },
+    {
+      id: "category-left-rotation-spin-gear",
+      name: "Left Rotation Spin Gear",
+      description:
+        "Left Rotation Spin Gear — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Left Rotation Spin Gear","left-rotation-spin-gear"] },
     },
     {
       id: "category-left-sg",
@@ -4625,6 +14630,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Neo Left SG","neo left sg"] },
     },
     {
+      id: "category-neo-left-sg-normal-core",
+      name: "Neo Left SG (Normal Core)",
+      description:
+        "Neo Left SG (Normal Core) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Left SG (Normal Core)","neo-left-sg-normal-core"] },
+    },
+    {
       id: "category-neo-left-spin-gear",
       name: "Neo Left Spin Gear",
       description:
@@ -4635,8 +14647,71 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-neo-right-sg",
       name: "Neo Right SG",
       description:
-        "Neo Right SG — a spin gear (used by 16 models). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+        "Neo Right SG — a spin gear (5.6 g, used by 16 models). Loose examples, spares and pre-owned spin gears of this part are listed here.",
       extra: { aliases: ["Neo Right SG","neo right sg"] },
+    },
+    {
+      id: "category-neo-right-sg-double-bearing-version",
+      name: "Neo Right SG (Double Bearing Version)",
+      description:
+        "Neo Right SG (Double Bearing Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (Double Bearing Version)","neo-right-sg-double-bearing-version"] },
+    },
+    {
+      id: "category-neo-right-sg-metal-weight-version",
+      name: "Neo Right SG (Metal Weight Version)",
+      description:
+        "Neo Right SG (Metal Weight Version) — a spin gear (5 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (Metal Weight Version)","neo-right-sg-metal-weight-version"] },
+    },
+    {
+      id: "category-neo-right-sg-mg-core",
+      name: "Neo Right SG (MG Core)",
+      description:
+        "Neo Right SG (MG Core) — a spin gear (6 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (MG Core)","neo-right-sg-mg-core"] },
+    },
+    {
+      id: "category-neo-right-sg-mw-core",
+      name: "Neo Right SG (MW Core)",
+      description:
+        "Neo Right SG (MW Core) — a spin gear (4.8 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (MW Core)","neo-right-sg-mw-core"] },
+    },
+    {
+      id: "category-neo-right-sg-n-mg-core",
+      name: "Neo Right SG (N-MG Core)",
+      description:
+        "Neo Right SG (N-MG Core) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (N-MG Core)","neo-right-sg-n-mg-core"] },
+    },
+    {
+      id: "category-neo-right-sg-north-magnecore-version",
+      name: "Neo Right SG (North Magnecore Version)",
+      description:
+        "Neo Right SG (North Magnecore Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (North Magnecore Version)","neo-right-sg-north-magnecore-version"] },
+    },
+    {
+      id: "category-neo-right-sg-south-core-version",
+      name: "Neo Right SG (South Core version)",
+      description:
+        "Neo Right SG (South Core version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right SG (South Core version)","neo-right-sg-south-core-version"] },
+    },
+    {
+      id: "category-neo-right-spin-gear-south-magnecore-version",
+      name: "Neo Right Spin Gear (South Magnecore Version)",
+      description:
+        "Neo Right Spin Gear (South Magnecore Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo Right Spin Gear (South Magnecore Version)","neo-right-spin-gear-south-magnecore-version"] },
+    },
+    {
+      id: "category-neo-right-metal-weight-version",
+      name: "Neo-Right (Metal Weight Version)",
+      description:
+        "Neo-Right (Metal Weight Version) — a spin gear (4 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Neo-Right (Metal Weight Version)","neo-right-metal-weight-version"] },
     },
     {
       id: "category-neo-right-metal-weight",
@@ -4653,6 +14728,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Right Customize Gear","right customize gear"] },
     },
     {
+      id: "category-right-customize-gear-free-shaft-version",
+      name: "Right Customize Gear (Free Shaft Version)",
+      description:
+        "Right Customize Gear (Free Shaft Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right Customize Gear (Free Shaft Version)","right-customize-gear-free-shaft-version"] },
+    },
+    {
       id: "category-spin-gear-right-eg",
       name: "Right EG",
       description:
@@ -4667,11 +14749,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Right MG South Core","right mg south core"] },
     },
     {
+      id: "category-right-rotation-spin-gear",
+      name: "Right Rotation Spin Gear",
+      description:
+        "Right Rotation Spin Gear — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right Rotation Spin Gear","right-rotation-spin-gear"] },
+    },
+    {
       id: "category-right-sg",
       name: "Right SG",
       description:
         "Right SG — a spin gear (used by 20 models). Loose examples, spares and pre-owned spin gears of this part are listed here.",
       extra: { aliases: ["Right SG","right sg"] },
+    },
+    {
+      id: "category-right-sg-auto-change-version",
+      name: "Right SG (Auto Change Version)",
+      description:
+        "Right SG (Auto Change Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Auto Change Version)","right-sg-auto-change-version"] },
+    },
+    {
+      id: "category-right-sg-bearing-version-2",
+      name: "Right SG (Bearing Version 2)",
+      description:
+        "Right SG (Bearing Version 2) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Bearing Version 2)","right-sg-bearing-version-2"] },
+    },
+    {
+      id: "category-right-sg-bearing-version",
+      name: "Right SG (Bearing Version)",
+      description:
+        "Right SG (Bearing Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Bearing Version)","right-sg-bearing-version"] },
     },
     {
       id: "category-right-sg-bearing",
@@ -4681,11 +14791,60 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Right SG (Bearing)","right sg (bearing)"] },
     },
     {
+      id: "category-right-sg-free-shaft-version",
+      name: "Right SG (Free Shaft Version)",
+      description:
+        "Right SG (Free Shaft Version) — a spin gear (7 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Free Shaft Version)","right-sg-free-shaft-version"] },
+    },
+    {
+      id: "category-right-sg-full-auto-clutch-version",
+      name: "Right SG (Full Auto Clutch Version)",
+      description:
+        "Right SG (Full Auto Clutch Version) — a spin gear (7 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Full Auto Clutch Version)","right-sg-full-auto-clutch-version"] },
+    },
+    {
       id: "category-right-sg-full-auto",
       name: "Right SG (Full Auto)",
       description:
         "Right SG (Full Auto) — a spin gear (used by 1 model). Loose examples, spares and pre-owned spin gears of this part are listed here.",
       extra: { aliases: ["Right SG (Full Auto)","right sg (full auto)"] },
+    },
+    {
+      id: "category-right-sg-g-ball",
+      name: "Right SG (G Ball)",
+      description:
+        "Right SG (G Ball) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (G Ball)","right-sg-g-ball"] },
+    },
+    {
+      id: "category-right-sg-jumping-version",
+      name: "Right SG (Jumping Version)",
+      description:
+        "Right SG (Jumping Version) — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Jumping Version)","right-sg-jumping-version"] },
+    },
+    {
+      id: "category-right-sg-mg-jumping-version",
+      name: "Right SG (MG Jumping Version)",
+      description:
+        "Right SG (MG Jumping Version) — a spin gear (6 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (MG Jumping Version)","right-sg-mg-jumping-version"] },
+    },
+    {
+      id: "category-right-sg-triple-change-version",
+      name: "Right SG (Triple Change Version)",
+      description:
+        "Right SG (Triple Change Version) — a spin gear (5 g). Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right SG (Triple Change Version)","right-sg-triple-change-version"] },
+    },
+    {
+      id: "category-right-spin-auto-change-version",
+      name: "Right Spin Auto Change Version",
+      description:
+        "Right Spin Auto Change Version — a spin gear. Loose examples, spares and pre-owned spin gears of this part are listed here.",
+      extra: { aliases: ["Right Spin Auto Change Version","right-spin-auto-change-version"] },
     },
     {
       id: "category-right-spin-gear",
@@ -4697,24 +14856,31 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
   ],
   "category-original-weight-disks": [
     {
+      id: "category-balance",
+      name: "Balance",
+      description:
+        "Balance — a weight disk (14 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Balance","balance"] },
+    },
+    {
       id: "category-circle-balance",
       name: "Circle Balance",
       description:
-        "Circle Balance — a weight disk (used by 4 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Circle Balance — a weight disk (15 g, used by 4 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Circle Balance","circle balance"] },
     },
     {
-      id: "category-circle-heavy",
+      id: "category-weight-disk-circle-heavy",
       name: "Circle Heavy",
       description:
-        "Circle Heavy — a weight disk (used by 8 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Circle Heavy — a weight disk (16 g, used by 8 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Circle Heavy","circle heavy"] },
     },
     {
       id: "category-circle-wide",
       name: "Circle Wide",
       description:
-        "Circle Wide — a weight disk (used by 6 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Circle Wide — a weight disk (14 g, used by 6 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Circle Wide","circle wide"] },
     },
     {
@@ -4725,6 +14891,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["CWD Chain","cwd chain"] },
     },
     {
+      id: "category-cwd-chain-attacker",
+      name: "CWD Chain Attacker",
+      description:
+        "CWD Chain Attacker — a weight disk (17 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["CWD Chain Attacker","cwd-chain-attacker"] },
+    },
+    {
       id: "category-cwd-circle",
       name: "CWD Circle",
       description:
@@ -4732,10 +14905,17 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["CWD Circle","cwd circle"] },
     },
     {
+      id: "category-cwd-circle-attacker",
+      name: "CWD Circle Attacker",
+      description:
+        "CWD Circle Attacker — a weight disk. Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["CWD Circle Attacker","cwd-circle-attacker"] },
+    },
+    {
       id: "category-cwd-defense-ring",
       name: "CWD Defense Ring",
       description:
-        "CWD Defense Ring — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "CWD Defense Ring — a weight disk (6 g, used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["CWD Defense Ring","cwd defense ring"] },
     },
     {
@@ -4744,6 +14924,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "CWD Devil — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["CWD Devil","cwd devil"] },
+    },
+    {
+      id: "category-cwd-devil-saucer",
+      name: "CWD Devil Saucer",
+      description:
+        "CWD Devil Saucer — a weight disk (17 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["CWD Devil Saucer","cwd-devil-saucer"] },
     },
     {
       id: "category-cwd-free",
@@ -4760,6 +14947,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["CWD Free Cross","cwd free cross"] },
     },
     {
+      id: "category-cwd-free-crusher",
+      name: "CWD Free Crusher",
+      description:
+        "CWD Free Crusher — a weight disk. Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["CWD Free Crusher","cwd-free-crusher"] },
+    },
+    {
       id: "category-cwd-free-survivor",
       name: "CWD Free Survivor",
       description:
@@ -4770,7 +14964,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-cwd-god-ring",
       name: "CWD God Ring",
       description:
-        "CWD God Ring — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "CWD God Ring — a weight disk (5 g, used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["CWD God Ring","cwd god ring"] },
     },
     {
@@ -4784,14 +14978,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-eight-balance",
       name: "Eight Balance",
       description:
-        "Eight Balance — a weight disk (used by 12 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Eight Balance — a weight disk (14.1 g, used by 12 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Eight Balance","eight balance"] },
     },
     {
       id: "category-eight-heavy",
       name: "Eight Heavy",
       description:
-        "Eight Heavy — a weight disk (used by 5 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Eight Heavy — a weight disk (15 g, used by 5 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Eight Heavy","eight heavy"] },
     },
     {
@@ -4802,10 +14996,17 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Eight Wide","eight wide"] },
     },
     {
+      id: "category-gyro-super",
+      name: "Gyro Super",
+      description:
+        "Gyro Super — a weight disk (27.2 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Gyro Super","gyro-super","Bearing Gyros WD","Gyro WD"] },
+    },
+    {
       id: "category-heavy-attack",
       name: "Heavy Attack",
       description:
-        "Heavy Attack — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Heavy Attack — a weight disk (16 g, used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Heavy Attack","heavy attack"] },
     },
     {
@@ -4814,6 +15015,27 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Magne Weight Disk — a weight disk (used by 3 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Magne Weight Disk","magne weight disk"] },
+    },
+    {
+      id: "category-magnetic-weight-disk",
+      name: "Magnetic Weight Disk",
+      description:
+        "Magnetic Weight Disk — a weight disk (15.1 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Magnetic Weight Disk","magnetic-weight-disk","Magne Weight Disk"] },
+    },
+    {
+      id: "category-metal-grip",
+      name: "Metal Grip",
+      description:
+        "Metal Grip — a customize engine weight (used by 1 model). Loose examples, spares and pre-owned customize engine weights of this part are listed here.",
+      extra: { aliases: ["Metal Grip","metal grip"] },
+    },
+    {
+      id: "category-metal-sharp",
+      name: "Metal Sharp",
+      description:
+        "Metal Sharp — a customize engine weight (used by 1 model). Loose examples, spares and pre-owned customize engine weights of this part are listed here.",
+      extra: { aliases: ["Metal Sharp","metal sharp"] },
     },
     {
       id: "category-needle-attacker",
@@ -4830,39 +15052,81 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Random","random"] },
     },
     {
+      id: "category-revolver-attack",
+      name: "Revolver Attack",
+      description:
+        "Revolver Attack — a weight disk (15 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Revolver Attack","revolver-attack"] },
+    },
+    {
+      id: "category-revolver-attacker",
+      name: "Revolver Attacker",
+      description:
+        "Revolver Attacker — a weight disk (15 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Revolver Attacker","revolver-attacker"] },
+    },
+    {
       id: "category-six-heavy",
       name: "Six Heavy",
       description:
-        "Six Heavy — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Six Heavy — a weight disk (9 g, used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Six Heavy","six heavy"] },
+    },
+    {
+      id: "category-spark-disk",
+      name: "Spark Disk",
+      description:
+        "Spark Disk — a weight disk (12.9 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Spark Disk","spark-disk"] },
     },
     {
       id: "category-star-attack",
       name: "Star Attack",
       description:
-        "Star Attack — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Star Attack — a weight disk (15.6 g, used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Star Attack","star attack"] },
     },
     {
       id: "category-ten-balance",
       name: "Ten Balance",
       description:
-        "Ten Balance — a weight disk (used by 13 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Ten Balance — a weight disk (15 g, used by 13 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Ten Balance","ten balance"] },
     },
     {
       id: "category-ten-heavy",
       name: "Ten Heavy",
       description:
-        "Ten Heavy — a weight disk (used by 7 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Ten Heavy — a weight disk (16.4 g, used by 7 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Ten Heavy","ten heavy"] },
     },
     {
       id: "category-ten-wide",
       name: "Ten Wide",
       description:
-        "Ten Wide — a weight disk (used by 11 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+        "Ten Wide — a weight disk (14 g, used by 11 models). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Ten Wide","ten wide"] },
+    },
+    {
+      id: "category-wide",
+      name: "Wide",
+      description:
+        "Wide — a weight disk (13 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Wide","wide"] },
+    },
+    {
+      id: "category-wide-attack",
+      name: "Wide Attack",
+      description:
+        "Wide Attack — a weight disk (13.7 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Wide Attack","wide-attack"] },
+    },
+    {
+      id: "category-weight-disk-wide-defense",
+      name: "Wide Defense",
+      description:
+        "Wide Defense — a weight disk (15 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Wide Defense","wide-defense"] },
     },
     {
       id: "category-wide-series",
@@ -4870,6 +15134,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Wide series — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
       extra: { aliases: ["Wide series","wide series"] },
+    },
+    {
+      id: "category-wide-survivor",
+      name: "Wide Survivor",
+      description:
+        "Wide Survivor — a weight disk (12 g). Loose examples, spares and pre-owned weight disks of this part are listed here.",
+      extra: { aliases: ["Wide Survivor","wide-survivor"] },
     },
     {
       id: "category-wing-attacker",
@@ -4909,11 +15180,11 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["A","a"] },
     },
     {
-      id: "category-accel",
+      id: "category-bit-accel",
       name: "Accel",
       description:
-        "Accel — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Accel","accel"] },
+        "Accel — a bit (2.6 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Accel","accel","A"] },
     },
     {
       id: "category-bit-b",
@@ -4923,11 +15194,53 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["B","b"] },
     },
     {
+      id: "category-bit-ball",
+      name: "Ball",
+      description:
+        "Ball — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Ball","ball","B"] },
+    },
+    {
+      id: "category-bound-spike",
+      name: "Bound Spike",
+      description:
+        "Bound Spike — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Bound Spike","bound-spike","BS"] },
+    },
+    {
+      id: "category-bit-cyclone",
+      name: "Cyclone",
+      description:
+        "Cyclone — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Cyclone","cyclone","C"] },
+    },
+    {
       id: "category-disk-ball",
       name: "Disk Ball",
       description:
-        "Disk Ball — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Disk Ball","disk ball"] },
+        "Disk Ball — a bit (3.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Disk Ball","disk ball","DB"] },
+    },
+    {
+      id: "category-disk-spike",
+      name: "Disk Spike",
+      description:
+        "Disk Spike — a bit (3.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Disk Spike","disk-spike","DS"] },
+    },
+    {
+      id: "category-dot",
+      name: "Dot",
+      description:
+        "Dot — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Dot","dot","D"] },
+    },
+    {
+      id: "category-elevate",
+      name: "Elevate",
+      description:
+        "Elevate — a bit (3.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Elevate","elevate","E"] },
     },
     {
       id: "category-bit-f",
@@ -4944,25 +15257,67 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["F — aggressive Xtreme Line tip","f — aggressive xtreme line tip"] },
     },
     {
-      id: "category-flat",
+      id: "category-bit-flat",
       name: "Flat",
       description:
-        "Flat — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Flat","flat"] },
+        "Flat — a bit (2.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Flat","flat","F"] },
     },
     {
       id: "category-free-ball",
       name: "Free Ball",
       description:
-        "Free Ball — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Free Ball","free ball"] },
+        "Free Ball — a bit (1.9 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Free Ball","free ball","FB"] },
+    },
+    {
+      id: "category-free-flat",
+      name: "Free Flat",
+      description:
+        "Free Flat — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Free Flat","free-flat","FF"] },
     },
     {
       id: "category-gear-ball",
       name: "Gear Ball",
       description:
-        "Gear Ball — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Gear Ball","gear ball"] },
+        "Gear Ball — a bit (2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Ball","gear ball","GB"] },
+    },
+    {
+      id: "category-gear-flat",
+      name: "Gear Flat",
+      description:
+        "Gear Flat — a bit (2.3 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Flat","gear-flat","GF"] },
+    },
+    {
+      id: "category-gear-needle",
+      name: "Gear Needle",
+      description:
+        "Gear Needle — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Needle","gear-needle","GN"] },
+    },
+    {
+      id: "category-gear-point",
+      name: "Gear Point",
+      description:
+        "Gear Point — a bit (2.3 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Point","gear-point","GP"] },
+    },
+    {
+      id: "category-gear-rush",
+      name: "Gear Rush",
+      description:
+        "Gear Rush — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Rush","gear-rush","GR"] },
+    },
+    {
+      id: "category-gear-unite",
+      name: "Gear Unite",
+      description:
+        "Gear Unite — a bit (2.3 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Gear Unite","gear-unite","GU"] },
     },
     {
       id: "category-bit-gf",
@@ -4970,6 +15325,13 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "GF — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
       extra: { aliases: ["GF","gf"] },
+    },
+    {
+      id: "category-glide",
+      name: "Glide",
+      description:
+        "Glide — a bit (2.5 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Glide","glide","G"] },
     },
     {
       id: "category-gp",
@@ -4982,22 +15344,50 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-hexa",
       name: "Hexa",
       description:
-        "Hexa — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Hexa","hexa"] },
+        "Hexa — a bit (2.6 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Hexa","hexa","H"] },
     },
     {
       id: "category-high-needle",
       name: "High Needle",
       description:
-        "High Needle — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["High Needle","high-needle"] },
+        "High Needle — a bit (2.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["High Needle","high-needle","HN"] },
     },
     {
-      id: "category-kick",
+      id: "category-high-taper",
+      name: "High Taper",
+      description:
+        "High Taper — a bit (2.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["High Taper","high-taper","HT"] },
+    },
+    {
+      id: "category-bit-ignition",
+      name: "Ignition",
+      description:
+        "Ignition — a bit (2.4 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Ignition","ignition","I"] },
+    },
+    {
+      id: "category-bit-jolt",
+      name: "Jolt",
+      description:
+        "Jolt — a bit (2.6 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Jolt","jolt","J"] },
+    },
+    {
+      id: "category-bit-kick",
       name: "Kick",
       description:
-        "Kick — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Kick","kick"] },
+        "Kick — a bit (2.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Kick","kick","K"] },
+    },
+    {
+      id: "category-level",
+      name: "Level",
+      description:
+        "Level — a bit (2.7 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Level","level","L"] },
     },
     {
       id: "category-bit-lf",
@@ -5007,18 +15397,60 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["LF","lf"] },
     },
     {
+      id: "category-low-cyclone",
+      name: "Low Cyclone",
+      description:
+        "Low Cyclone — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Cyclone","low-cyclone","LC"] },
+    },
+    {
+      id: "category-low-flat",
+      name: "Low Flat",
+      description:
+        "Low Flat — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Flat","low-flat","LF"] },
+    },
+    {
       id: "category-low-orb",
       name: "Low Orb",
       description:
-        "Low Orb — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Low Orb","low-orb"] },
+        "Low Orb — a bit (1.9 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Orb","low-orb","LO"] },
+    },
+    {
+      id: "category-low-point",
+      name: "Low Point",
+      description:
+        "Low Point — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Point","low-point","LP"] },
     },
     {
       id: "category-low-rush",
       name: "Low Rush",
       description:
-        "Low Rush — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Low Rush","low-rush"] },
+        "Low Rush — a bit (1.9 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Low Rush","low-rush","LR"] },
+    },
+    {
+      id: "category-bit-merge",
+      name: "Merge",
+      description:
+        "Merge — a bit (3.4 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Merge","merge","M"] },
+    },
+    {
+      id: "category-metal-needle",
+      name: "Metal Needle",
+      description:
+        "Metal Needle — a bit (2.8 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Metal Needle","metal-needle","MN"] },
+    },
+    {
+      id: "category-metal-taper",
+      name: "Metal Taper",
+      description:
+        "Metal Taper — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Metal Taper","metal-taper","MT"] },
     },
     {
       id: "category-n",
@@ -5028,11 +15460,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["N","n"] },
     },
     {
+      id: "category-narrow",
+      name: "Narrow",
+      description:
+        "Narrow — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Narrow","narrow","Nr"] },
+    },
+    {
+      id: "category-bit-needle",
+      name: "Needle",
+      description:
+        "Needle — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Needle","needle","N"] },
+    },
+    {
       id: "category-o",
       name: "O",
       description:
         "O — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
       extra: { aliases: ["O","o"] },
+    },
+    {
+      id: "category-ratchet-integrated-bit-operate",
+      name: "Operate",
+      description:
+        "Operate — a ratchet-integrated bit (14.1 g). Loose examples, spares and pre-owned ratchet-integrated bits of this part are listed here.",
+      extra: { aliases: ["Operate","operate","Op"] },
+    },
+    {
+      id: "category-orb",
+      name: "Orb",
+      description:
+        "Orb — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Orb","orb","O"] },
     },
     {
       id: "category-p",
@@ -5045,8 +15505,8 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-point",
       name: "Point",
       description:
-        "Point — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Point","point"] },
+        "Point — a bit (2.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Point","point","P"] },
     },
     {
       id: "category-bit-q",
@@ -5056,11 +15516,39 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Q","q"] },
     },
     {
+      id: "category-bit-quake",
+      name: "Quake",
+      description:
+        "Quake — a bit (2.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Quake","quake","Q"] },
+    },
+    {
       id: "category-r",
       name: "R",
       description:
         "R — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
       extra: { aliases: ["R","r"] },
+    },
+    {
+      id: "category-rubber-accel",
+      name: "Rubber Accel",
+      description:
+        "Rubber Accel — a bit (3.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Rubber Accel","rubber-accel","RA"] },
+    },
+    {
+      id: "category-rush",
+      name: "Rush",
+      description:
+        "Rush — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Rush","rush","R"] },
+    },
+    {
+      id: "category-bit-spike",
+      name: "Spike",
+      description:
+        "Spike — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Spike","spike","S"] },
     },
     {
       id: "category-t",
@@ -5080,29 +15568,92 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-taper",
       name: "Taper",
       description:
-        "Taper — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Taper","taper"] },
+        "Taper — a bit (2.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Taper","taper","T"] },
+    },
+    {
+      id: "category-trans-kick",
+      name: "Trans Kick",
+      description:
+        "Trans Kick — a bit (2.3 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Trans Kick","trans-kick","TK"] },
     },
     {
       id: "category-trans-point",
       name: "Trans Point",
       description:
-        "Trans Point — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Trans Point","trans point"] },
+        "Trans Point — a bit (2.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Trans Point","trans point","TP"] },
+    },
+    {
+      id: "category-turbo",
+      name: "Turbo",
+      description:
+        "Turbo — a ratchet-integrated bit (12.7 g). Loose examples, spares and pre-owned ratchet-integrated bits of this part are listed here.",
+      extra: { aliases: ["Turbo","turbo","Tr"] },
     },
     {
       id: "category-under-flat",
       name: "Under Flat",
       description:
-        "Under Flat — a bit. Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Under Flat","under-flat"] },
+        "Under Flat — a bit (2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Under Flat","under-flat","UF"] },
     },
     {
-      id: "category-vortex",
+      id: "category-under-needle",
+      name: "Under Needle",
+      description:
+        "Under Needle — a bit (1.9 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Under Needle","under-needle","UN"] },
+    },
+    {
+      id: "category-bit-unite",
+      name: "Unite",
+      description:
+        "Unite — a bit (2.1 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Unite","unite","U"] },
+    },
+    {
+      id: "category-bit-vortex",
       name: "Vortex",
       description:
-        "Vortex — a bit (used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
-      extra: { aliases: ["Vortex","vortex"] },
+        "Vortex — a bit (2.2 g, used by 1 model). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Vortex","vortex","V"] },
+    },
+    {
+      id: "category-wall-ball",
+      name: "Wall Ball",
+      description:
+        "Wall Ball — a bit (2.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Wall Ball","wall-ball","WB"] },
+    },
+    {
+      id: "category-wall-wedge",
+      name: "Wall Wedge",
+      description:
+        "Wall Wedge — a bit (2.4 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Wall Wedge","wall-wedge","WW"] },
+    },
+    {
+      id: "category-bit-wedge",
+      name: "Wedge",
+      description:
+        "Wedge — a bit (1.8 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Wedge","wedge","W"] },
+    },
+    {
+      id: "category-bit-yielding",
+      name: "Yielding",
+      description:
+        "Yielding — a bit (4.2 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Yielding","yielding","Y"] },
+    },
+    {
+      id: "category-zap",
+      name: "Zap",
+      description:
+        "Zap — a bit (2.5 g). Loose examples, spares and pre-owned bits of this part are listed here.",
+      extra: { aliases: ["Zap","zap","Z"] },
     },
   ],
   "category-x-blades": [
@@ -5114,173 +15665,1582 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["AeroPegasus","aeropegasus"] },
     },
     {
+      id: "category-astral-hasbro",
+      name: "Astral (Hasbro)",
+      description:
+        "Astral (Hasbro) — a blade (7.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Astral (Hasbro)","astral-hasbro"] },
+    },
+    {
+      id: "category-astral-takara-tomy",
+      name: "Astral (Takara Tomy)",
+      description:
+        "Astral (Takara Tomy) — a blade (11.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Astral (Takara Tomy)","astral-takara-tomy","A"] },
+    },
+    {
+      id: "category-berserk",
+      name: "Berserk",
+      description:
+        "Berserk — a blade (6.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Berserk","berserk"] },
+    },
+    {
+      id: "category-bite-croc",
+      name: "Bite Croc",
+      description:
+        "Bite Croc — a blade (34 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Bite Croc","bite-croc","CrocoCrunch (Takara Tomy)"] },
+    },
+    {
+      id: "category-blackshell",
+      name: "BlackShell",
+      description:
+        "BlackShell — a blade (32.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["BlackShell","blackshell","Obsidian Shell (Hasbro)"] },
+    },
+    {
+      id: "category-bulletgriffon",
+      name: "BulletGriffon",
+      description:
+        "BulletGriffon — a ratchet-integrated blade. Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["BulletGriffon","bulletgriffon","BulletGryphon (Official alternate spelling)","Rocket Griffon (Hasbro)"] },
+    },
+    {
+      id: "category-bumblebee",
+      name: "Bumblebee",
+      description:
+        "Bumblebee — a blade (31.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Bumblebee","bumblebee"] },
+    },
+    {
+      id: "category-captain-america",
+      name: "Captain America",
+      description:
+        "Captain America — a blade (32.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Captain America","captain-america"] },
+    },
+    {
+      id: "category-chewbacca",
+      name: "Chewbacca",
+      description:
+        "Chewbacca — a blade (31.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Chewbacca","chewbacca"] },
+    },
+    {
+      id: "category-clamp-crab",
+      name: "Clamp Crab",
+      description:
+        "Clamp Crab — a blade (27.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Clamp Crab","clamp-crab","CrabClamp (Takara Tomy)"] },
+    },
+    {
+      id: "category-clockmirage",
+      name: "ClockMirage",
+      description:
+        "ClockMirage — a blade (37.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ClockMirage","clockmirage","Mirage Clock (Hasbro)"] },
+    },
+    {
       id: "category-cobaltdragoon",
       name: "CobaltDragoon",
       description:
-        "CobaltDragoon — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["CobaltDragoon","cobaltdragoon"] },
+        "CobaltDragoon — a blade (37.8 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["CobaltDragoon","cobaltdragoon","Cobalt Dragoon (Hasbro)"] },
     },
     {
       id: "category-cobaltdrake",
       name: "CobaltDrake",
       description:
         "CobaltDrake — a blade (used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["CobaltDrake","cobaltdrake"] },
+      extra: { aliases: ["CobaltDrake","cobaltdrake","Cobalt Drake (Hasbro)"] },
     },
     {
       id: "category-crimsongaruda",
       name: "CrimsonGaruda",
       description:
-        "CrimsonGaruda — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["CrimsonGaruda","crimsongaruda"] },
+        "CrimsonGaruda — a blade (35 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["CrimsonGaruda","crimsongaruda","Scarlet Garuda (Hasbro)"] },
+    },
+    {
+      id: "category-cutter-shinobi",
+      name: "Cutter Shinobi",
+      description:
+        "Cutter Shinobi — a ratchet-integrated blade (37.4 g). Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["Cutter Shinobi","cutter-shinobi"] },
+    },
+    {
+      id: "category-cyclone-hasbro",
+      name: "Cyclone (Hasbro)",
+      description:
+        "Cyclone (Hasbro) — a blade (6.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Cyclone (Hasbro)","cyclone-hasbro"] },
+    },
+    {
+      id: "category-cyclone-takara-tomy",
+      name: "Cyclone (Takara Tomy)",
+      description:
+        "Cyclone (Takara Tomy) — a blade (8.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Cyclone (Takara Tomy)","cyclone-takara-tomy","C"] },
+    },
+    {
+      id: "category-dangerous",
+      name: "Dangerous",
+      description:
+        "Dangerous — a blade (10 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Dangerous","dangerous","Dn"] },
+    },
+    {
+      id: "category-darth-vader",
+      name: "Darth Vader",
+      description:
+        "Darth Vader — a blade (30.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Darth Vader","darth-vader"] },
+    },
+    {
+      id: "category-decay",
+      name: "Decay",
+      description:
+        "Decay — a blade (5.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Decay","decay"] },
+    },
+    {
+      id: "category-destruction",
+      name: "Destruction",
+      description:
+        "Destruction — a blade (5.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Destruction","destruction"] },
+    },
+    {
+      id: "category-devastate",
+      name: "Devastate",
+      description:
+        "Devastate — a blade (6.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Devastate","devastate"] },
+    },
+    {
+      id: "category-blade-devil",
+      name: "Devil",
+      description:
+        "Devil — a blade (5.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Devil","devil","Dv"] },
+    },
+    {
+      id: "category-doctor-doom",
+      name: "Doctor Doom",
+      description:
+        "Doctor Doom — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Doctor Doom","doctor-doom"] },
+    },
+    {
+      id: "category-dracielshield",
+      name: "DracielShield",
+      description:
+        "DracielShield — a blade (28 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DracielShield","dracielshield","Draciel Shield (Hasbro)"] },
+    },
+    {
+      id: "category-dragoonstorm",
+      name: "DragoonStorm",
+      description:
+        "DragoonStorm — a blade (25.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DragoonStorm","dragoonstorm"] },
     },
     {
       id: "category-dranbuster",
       name: "DranBuster",
       description:
-        "DranBuster — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["DranBuster","dranbuster"] },
+        "DranBuster — a blade (36.5 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DranBuster","dranbuster","Buster Dran (Hasbro)"] },
     },
     {
       id: "category-drandagger",
       name: "DranDagger",
       description:
         "DranDagger — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["DranDagger","drandagger"] },
+      extra: { aliases: ["DranDagger","drandagger","Dagger Dran (Hasbro)"] },
+    },
+    {
+      id: "category-dranstrike",
+      name: "DranStrike",
+      description:
+        "DranStrike — a blade (41.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DranStrike","dranstrike","Strike Dran (Hasbro)"] },
     },
     {
       id: "category-dransword",
       name: "DranSword",
       description:
         "DranSword — a blade (used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["DranSword","dransword"] },
+      extra: { aliases: ["DranSword","dransword","Sword Dran (Hasbro)"] },
     },
     {
       id: "category-dranzerspiral",
       name: "DranzerSpiral",
       description:
-        "DranzerSpiral — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["DranzerSpiral","dranzerspiral"] },
+        "DranzerSpiral — a blade (27.7 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DranzerSpiral","dranzerspiral","Dranzer Spiral (Hasbro)"] },
     },
     {
       id: "category-drigerslash",
       name: "DrigerSlash",
       description:
-        "DrigerSlash — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["DrigerSlash","drigerslash"] },
+        "DrigerSlash — a blade (28.6 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["DrigerSlash","drigerslash","Driger Slash (Hasbro)"] },
+    },
+    {
+      id: "category-dynamite",
+      name: "Dynamite",
+      description:
+        "Dynamite — a blade (5.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Dynamite","dynamite","D"] },
+    },
+    {
+      id: "category-general-grievous",
+      name: "General Grievous",
+      description:
+        "General Grievous — a blade (31 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["General Grievous","general-grievous"] },
     },
     {
       id: "category-ghostcircle",
       name: "GhostCircle",
       description:
-        "GhostCircle — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["GhostCircle","ghostcircle"] },
+        "GhostCircle — a blade (26.7 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["GhostCircle","ghostcircle","Circle Ghost (Hasbro)"] },
+    },
+    {
+      id: "category-gilded",
+      name: "Gilded",
+      description:
+        "Gilded — a blade (8.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Gilded","gilded"] },
+    },
+    {
+      id: "category-gill-shark",
+      name: "Gill Shark",
+      description:
+        "Gill Shark — a blade (29.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Gill Shark","gill-shark","SharkTorso (Takara Tomy Development Name)"] },
+    },
+    {
+      id: "category-glare-cyclops",
+      name: "Glare Cyclops",
+      description:
+        "Glare Cyclops — a blade (34.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Glare Cyclops","glare-cyclops","CyclopsEye (Takara Tomy)"] },
+    },
+    {
+      id: "category-glory",
+      name: "Glory",
+      description:
+        "Glory — a blade (5.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Glory","glory"] },
+    },
+    {
+      id: "category-gloryvalkyrie",
+      name: "GloryValkyrie",
+      description:
+        "GloryValkyrie — a ratchet-integrated blade (43.3 g). Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["GloryValkyrie","gloryvalkyrie","Glory Valkerion (Hasbro)"] },
+    },
+    {
+      id: "category-golemrock",
+      name: "GolemRock",
+      description:
+        "GolemRock — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["GolemRock","golemrock","Rock Golem (Hasbro)"] },
+    },
+    {
+      id: "category-green-goblin",
+      name: "Green Goblin",
+      description:
+        "Green Goblin — a blade (31.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Green Goblin","green-goblin"] },
+    },
+    {
+      id: "category-grogu",
+      name: "Grogu",
+      description:
+        "Grogu — a blade (33.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Grogu","grogu"] },
+    },
+    {
+      id: "category-guilty-hasbro",
+      name: "Guilty (Hasbro)",
+      description:
+        "Guilty (Hasbro) — a blade (7.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Guilty (Hasbro)","guilty-hasbro"] },
+    },
+    {
+      id: "category-guilty-takara-tomy",
+      name: "Guilty (Takara Tomy)",
+      description:
+        "Guilty (Takara Tomy) — a blade (17.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Guilty (Takara Tomy)","guilty-takara-tomy","G"] },
+    },
+    {
+      id: "category-gust-bat",
+      name: "Gust Bat",
+      description:
+        "Gust Bat — a blade (36.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Gust Bat","gust-bat","BatGust (Takara Tomy)-->"] },
+    },
+    {
+      id: "category-hack-viking",
+      name: "Hack Viking",
+      description:
+        "Hack Viking — a blade (32.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Hack Viking","hack-viking","VikingHack (Takara Tomy)"] },
+    },
+    {
+      id: "category-heavensring",
+      name: "HeavensRing",
+      description:
+        "HeavensRing — a blade (37.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["HeavensRing","heavensring","Ring Aether (Hasbro)"] },
+    },
+    {
+      id: "category-hellschain",
+      name: "HellsChain",
+      description:
+        "HellsChain — a blade (33.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["HellsChain","hellschain","Chain Incendio (Hasbro)"] },
     },
     {
       id: "category-hellshammer",
       name: "HellsHammer",
       description:
-        "HellsHammer — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+        "HellsHammer — a blade (33 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
       extra: { aliases: ["HellsHammer","hellshammer"] },
+    },
+    {
+      id: "category-hellsnether",
+      name: "HellsNether",
+      description:
+        "HellsNether — a ratchet-integrated blade. Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["HellsNether","hellsnether","Nether Incendio (Hasbro)"] },
     },
     {
       id: "category-hellsscythe",
       name: "HellsScythe",
       description:
         "HellsScythe — a blade (used by 3 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["HellsScythe","hellsscythe"] },
+      extra: { aliases: ["HellsScythe","hellsscythe","Scythe Incendio (Hasbro)"] },
+    },
+    {
+      id: "category-hover-wyvern",
+      name: "Hover Wyvern",
+      description:
+        "Hover Wyvern — a blade (35.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Hover Wyvern","hover-wyvern","WyvernHover (Takara Tomy)"] },
+    },
+    {
+      id: "category-hulk",
+      name: "Hulk",
+      description:
+        "Hulk — a blade (33 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Hulk","hulk"] },
+    },
+    {
+      id: "category-impactdrake",
+      name: "ImpactDrake",
+      description:
+        "ImpactDrake — a blade (39 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ImpactDrake","impactdrake"] },
+    },
+    {
+      id: "category-iron-man",
+      name: "Iron Man",
+      description:
+        "Iron Man — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Iron Man","iron-man"] },
+    },
+    {
+      id: "category-katana",
+      name: "Katana",
+      description:
+        "Katana — a blade (6.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Katana","katana"] },
+    },
+    {
+      id: "category-knife-shinobi",
+      name: "Knife Shinobi",
+      description:
+        "Knife Shinobi — a blade (30.9 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Knife Shinobi","knife-shinobi","ShinobiKnife (Takara Tomy)"] },
+    },
+    {
+      id: "category-knightlance",
+      name: "KnightLance",
+      description:
+        "KnightLance — a blade (32.9 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["KnightLance","knightlance"] },
+    },
+    {
+      id: "category-knightmail",
+      name: "KnightMail",
+      description:
+        "KnightMail — a blade (36.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["KnightMail","knightmail","Mail Knight (Hasbro)"] },
     },
     {
       id: "category-knightshield",
       name: "KnightShield",
       description:
         "KnightShield — a blade (used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["KnightShield","knightshield"] },
+      extra: { aliases: ["KnightShield","knightshield","Helm Knight (Hasbro)"] },
     },
     {
       id: "category-leonclaw",
       name: "LeonClaw",
       description:
-        "LeonClaw — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["LeonClaw","leonclaw"] },
+        "LeonClaw — a blade (31 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["LeonClaw","leonclaw","Claw Leon (Hasbro)"] },
+    },
+    {
+      id: "category-leoncrest",
+      name: "LeonCrest",
+      description:
+        "LeonCrest — a blade (35 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["LeonCrest","leoncrest","Crest Leon (Hasbro)"] },
+    },
+    {
+      id: "category-lightning-l-drago-rapid-hit-type",
+      name: "Lightning L-Drago (Rapid-Hit Type)",
+      description:
+        "Lightning L-Drago (Rapid-Hit Type) — a blade (33.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Lightning L-Drago (Rapid-Hit Type)","lightning-l-drago-rapid-hit-type"] },
+    },
+    {
+      id: "category-lightning-l-drago-upper-type",
+      name: "Lightning L-Drago (Upper Type)",
+      description:
+        "Lightning L-Drago (Upper Type) — a blade (34 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Lightning L-Drago (Upper Type)","lightning-l-drago-upper-type"] },
+    },
+    {
+      id: "category-luke-skywalker",
+      name: "Luke Skywalker",
+      description:
+        "Luke Skywalker — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Luke Skywalker","luke-skywalker"] },
+    },
+    {
+      id: "category-lusterdragoon",
+      name: "LusterDragoon",
+      description:
+        "LusterDragoon — a blade (43 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["LusterDragoon","lusterdragoon"] },
+    },
+    {
+      id: "category-magma",
+      name: "Magma",
+      description:
+        "Magma — a blade (6.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Magma","magma"] },
+    },
+    {
+      id: "category-megatron",
+      name: "Megatron",
+      description:
+        "Megatron — a blade (31.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Megatron","megatron"] },
+    },
+    {
+      id: "category-meteordragoon",
+      name: "MeteorDragoon",
+      description:
+        "MeteorDragoon — a blade (39 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["MeteorDragoon","meteordragoon","Meteoroid Dragoon (Hasbro)"] },
+    },
+    {
+      id: "category-miles-morales",
+      name: "Miles Morales",
+      description:
+        "Miles Morales — a blade (31.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Miles Morales","miles-morales"] },
+    },
+    {
+      id: "category-mister-fantastic",
+      name: "Mister Fantastic",
+      description:
+        "Mister Fantastic — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Mister Fantastic","mister-fantastic"] },
+    },
+    {
+      id: "category-moff-gideon",
+      name: "Moff Gideon",
+      description:
+        "Moff Gideon — a blade (30.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Moff Gideon","moff-gideon"] },
+    },
+    {
+      id: "category-mummycurse",
+      name: "MummyCurse",
+      description:
+        "MummyCurse — a blade (37.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["MummyCurse","mummycurse","Curse Mummy (Hasbro)"] },
+    },
+    {
+      id: "category-obi-wan-kenobi",
+      name: "Obi-Wan Kenobi",
+      description:
+        "Obi-Wan Kenobi — a blade (30.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Obi-Wan Kenobi","obi-wan-kenobi"] },
+    },
+    {
+      id: "category-optimus-primal",
+      name: "Optimus Primal",
+      description:
+        "Optimus Primal — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Optimus Primal","optimus-primal"] },
+    },
+    {
+      id: "category-optimus-prime",
+      name: "Optimus Prime",
+      description:
+        "Optimus Prime — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Optimus Prime","optimus-prime"] },
+    },
+    {
+      id: "category-orochicluster",
+      name: "OrochiCluster",
+      description:
+        "OrochiCluster — a blade (36.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["OrochiCluster","orochicluster","Coil Orochi (Hasbro)"] },
+    },
+    {
+      id: "category-phoenixfeather",
+      name: "PhoenixFeather",
+      description:
+        "PhoenixFeather — a blade (33.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["PhoenixFeather","phoenixfeather","Feather Phoenix (Hasbro)"] },
+    },
+    {
+      id: "category-phoenixrudder",
+      name: "PhoenixRudder",
+      description:
+        "PhoenixRudder — a blade (34.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["PhoenixRudder","phoenixrudder","Rudder Phoenix (Hasbro)"] },
     },
     {
       id: "category-phoenixwing",
       name: "PhoenixWing",
       description:
         "PhoenixWing — a blade (used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["PhoenixWing","phoenixwing"] },
+      extra: { aliases: ["PhoenixWing","phoenixwing","PhoenixSoar (Youngtoys)","Soar Phoenix (Hasbro)"] },
+    },
+    {
+      id: "category-prominence-hasbro",
+      name: "Prominence (Hasbro)",
+      description:
+        "Prominence (Hasbro) — a blade (9.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Prominence (Hasbro)","prominence-hasbro"] },
+    },
+    {
+      id: "category-prominence-takara-tomy",
+      name: "Prominence (Takara Tomy)",
+      description:
+        "Prominence (Takara Tomy) — a blade (14.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Prominence (Takara Tomy)","prominence-takara-tomy","P"] },
+    },
+    {
+      id: "category-rampart-aegis",
+      name: "Rampart Aegis",
+      description:
+        "Rampart Aegis — a ratchet-integrated blade (32.7 g). Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["Rampart Aegis","rampart-aegis"] },
+    },
+    {
+      id: "category-red-hulk",
+      name: "Red Hulk",
+      description:
+        "Red Hulk — a blade (36.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Red Hulk","red-hulk"] },
+    },
+    {
+      id: "category-rhinohorn",
+      name: "RhinoHorn",
+      description:
+        "RhinoHorn — a blade (32.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["RhinoHorn","rhinohorn","Horn Rhino (Hasbro)"] },
+    },
+    {
+      id: "category-roar-hasbro",
+      name: "Roar (Hasbro)",
+      description:
+        "Roar (Hasbro) — a blade (6.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Roar (Hasbro)","roar-hasbro"] },
+    },
+    {
+      id: "category-roar-takara-tomy",
+      name: "Roar (Takara Tomy)",
+      description:
+        "Roar (Takara Tomy) — a blade (12.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Roar (Takara Tomy)","roar-takara-tomy","R"] },
+    },
+    {
+      id: "category-roar-tyranno",
+      name: "Roar Tyranno",
+      description:
+        "Roar Tyranno — a blade (36 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Roar Tyranno","roar-tyranno","TyrannoRoar (Takara Tomy)"] },
+    },
+    {
+      id: "category-blade-rock-leone",
+      name: "Rock Leone",
+      description:
+        "Rock Leone — a blade (29.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Rock Leone","rock-leone"] },
+    },
+    {
+      id: "category-salvage",
+      name: "Salvage",
+      description:
+        "Salvage — a blade (7.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Salvage","salvage"] },
+    },
+    {
+      id: "category-samuraicalibur",
+      name: "SamuraiCalibur",
+      description:
+        "SamuraiCalibur — a blade (36 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SamuraiCalibur","samuraicalibur","Calibur Samurai (Hasbro)"] },
+    },
+    {
+      id: "category-samuraisaber",
+      name: "SamuraiSaber",
+      description:
+        "SamuraiSaber — a blade (36.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SamuraiSaber","samuraisaber","Saber Samurai (Hasbro)"] },
+    },
+    {
+      id: "category-savage-bear",
+      name: "Savage Bear",
+      description:
+        "Savage Bear — a blade (29.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Savage Bear","savage-bear","BearScratch (Takara Tomy)"] },
     },
     {
       id: "category-savior",
       name: "Savior",
       description:
-        "Savior — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["Savior","savior"] },
+        "Savior — a blade (11.2 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Savior","savior","S"] },
+    },
+    {
+      id: "category-scorpiospear",
+      name: "ScorpioSpear",
+      description:
+        "ScorpioSpear — a blade (39.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ScorpioSpear","scorpiospear","Spear Scorpio (Hasbro)"] },
+    },
+    {
+      id: "category-seize-jaguar",
+      name: "Seize Jaguar",
+      description:
+        "Seize Jaguar — a ratchet-integrated blade (39.4 g). Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["Seize Jaguar","seize-jaguar"] },
     },
     {
       id: "category-sharkedge",
       name: "SharkEdge",
       description:
-        "SharkEdge — a blade (used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["SharkEdge","sharkedge"] },
+        "SharkEdge — a blade (34.5 g, used by 2 models). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SharkEdge","sharkedge","Keel Shark (Hasbro)"] },
     },
     {
       id: "category-sharkscale",
       name: "SharkScale",
       description:
-        "SharkScale — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["SharkScale","sharkscale"] },
+        "SharkScale — a blade (37.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SharkScale","sharkscale","Scale Shark (Hasbro)"] },
+    },
+    {
+      id: "category-shatter-horus",
+      name: "Shatter Horus",
+      description:
+        "Shatter Horus — a blade (32.9 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Shatter Horus","shatter-horus"] },
+    },
+    {
+      id: "category-shelterdrake",
+      name: "ShelterDrake",
+      description:
+        "ShelterDrake — a blade (32.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ShelterDrake","shelterdrake"] },
+    },
+    {
+      id: "category-shinobishadow",
+      name: "ShinobiShadow",
+      description:
+        "ShinobiShadow — a blade (28.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ShinobiShadow","shinobishadow"] },
+    },
+    {
+      id: "category-shockwave",
+      name: "Shockwave",
+      description:
+        "Shockwave — a blade (32.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Shockwave","shockwave"] },
+    },
+    {
+      id: "category-siegsuperion",
+      name: "SiegSuperion",
+      description:
+        "SiegSuperion — a blade (40 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SiegSuperion","siegsuperion","Suppress Superion (Hasbro)"] },
     },
     {
       id: "category-silverwolf",
       name: "SilverWolf",
       description:
-        "SilverWolf — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["SilverWolf","silverwolf"] },
+        "SilverWolf — a blade (36.8 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SilverWolf","silverwolf","Sterling Wolf (Hasbro)"] },
+    },
+    {
+      id: "category-sphinxcowl",
+      name: "SphinxCowl",
+      description:
+        "SphinxCowl — a blade (32.7 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["SphinxCowl","sphinxcowl","Cowl Sphinx (Hasbro)"] },
+    },
+    {
+      id: "category-spider-man",
+      name: "Spider-Man",
+      description:
+        "Spider-Man — a blade (33 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Spider-Man","spider-man"] },
+    },
+    {
+      id: "category-starscream",
+      name: "Starscream",
+      description:
+        "Starscream — a blade (29.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Starscream","starscream"] },
+    },
+    {
+      id: "category-steel-samurai",
+      name: "Steel Samurai",
+      description:
+        "Steel Samurai — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Steel Samurai","steel-samurai","SamuraiSteel (Takara Tomy)"] },
+    },
+    {
+      id: "category-stone",
+      name: "Stone",
+      description:
+        "Stone — a blade (5.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Stone","stone"] },
+    },
+    {
+      id: "category-stormpegasis",
+      name: "StormPegasis",
+      description:
+        "StormPegasis — a blade (31 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["StormPegasis","stormpegasis"] },
+    },
+    {
+      id: "category-stormspriggan",
+      name: "StormSpriggan",
+      description:
+        "StormSpriggan — a blade (31 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["StormSpriggan","stormspriggan"] },
+    },
+    {
+      id: "category-stormtrooper",
+      name: "Stormtrooper",
+      description:
+        "Stormtrooper — a blade (33.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Stormtrooper","stormtrooper","Snowtrooper (G3061)"] },
+    },
+    {
+      id: "category-stun-medusa",
+      name: "Stun Medusa",
+      description:
+        "Stun Medusa — a blade (27.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Stun Medusa","stun-medusa"] },
+    },
+    {
+      id: "category-tackle-goat",
+      name: "Tackle Goat",
+      description:
+        "Tackle Goat — a blade (31.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Tackle Goat","tackle-goat","GoatTackle (Takara Tomy)"] },
+    },
+    {
+      id: "category-talon-ptera",
+      name: "Talon Ptera",
+      description:
+        "Talon Ptera — a blade (34.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Talon Ptera","talon-ptera","PteraSwing (Takara Tomy)","PteraStroke (Takara Tomy Development Name)"] },
+    },
+    {
+      id: "category-thanos",
+      name: "Thanos",
+      description:
+        "Thanos — a blade (29.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Thanos","thanos"] },
+    },
+    {
+      id: "category-the-mandalorian",
+      name: "The Mandalorian",
+      description:
+        "The Mandalorian — a blade (30.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["The Mandalorian","the-mandalorian"] },
+    },
+    {
+      id: "category-tricerapress",
+      name: "TriceraPress",
+      description:
+        "TriceraPress — a blade (36.5 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["TriceraPress","tricerapress","Brace Triceratops (Hasbro)"] },
+    },
+    {
+      id: "category-triceraspiky",
+      name: "TriceraSpiky",
+      description:
+        "TriceraSpiky — a blade (29.9 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["TriceraSpiky","triceraspiky","Ridge Triceratops (Hasbro)","Mosasaurus (Jurassic World Ver.)"] },
+    },
+    {
+      id: "category-blade-trypio",
+      name: "Trypio",
+      description:
+        "Trypio — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Trypio","trypio"] },
+    },
+    {
+      id: "category-tusk-mammoth",
+      name: "Tusk Mammoth",
+      description:
+        "Tusk Mammoth — a blade. Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Tusk Mammoth","tusk-mammoth","MammothTusk (Takara Tomy)"] },
     },
     {
       id: "category-tyrannobeat",
       name: "TyrannoBeat",
       description:
-        "TyrannoBeat — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["TyrannoBeat","tyrannobeat"] },
+        "TyrannoBeat — a blade (37 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["TyrannoBeat","tyrannobeat","Beat Tyranno (Hasbro)"] },
+    },
+    {
+      id: "category-ultimate-hasbro",
+      name: "Ultimate (Hasbro)",
+      description:
+        "Ultimate (Hasbro) — a blade (5.4 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Ultimate (Hasbro)","ultimate-hasbro"] },
+    },
+    {
+      id: "category-ultimate-takara-tomy",
+      name: "Ultimate (Takara Tomy)",
+      description:
+        "Ultimate (Takara Tomy) — a blade (11.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Ultimate (Takara Tomy)","ultimate-takara-tomy","U"] },
     },
     {
       id: "category-unicornsting",
       name: "UnicornSting",
       description:
         "UnicornSting — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["UnicornSting","unicornsting"] },
+      extra: { aliases: ["UnicornSting","unicornsting","Sting Unicorn (Hasbro)"] },
+    },
+    {
+      id: "category-valor-bison",
+      name: "Valor Bison",
+      description:
+        "Valor Bison — a ratchet-integrated blade (41 g). Loose examples, spares and pre-owned ratchet-integrated blades of this part are listed here.",
+      extra: { aliases: ["Valor Bison","valor-bison"] },
+    },
+    {
+      id: "category-vanish-hasbro",
+      name: "Vanish (Hasbro)",
+      description:
+        "Vanish (Hasbro) — a blade (7.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Vanish (Hasbro)","vanish-hasbro"] },
+    },
+    {
+      id: "category-vanish-takara-tomy",
+      name: "Vanish (Takara Tomy)",
+      description:
+        "Vanish (Takara Tomy) — a blade (12.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Vanish (Takara Tomy)","vanish-takara-tomy","V"] },
+    },
+    {
+      id: "category-blade-venom",
+      name: "Venom",
+      description:
+        "Venom — a blade (34.3 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Venom","venom"] },
+    },
+    {
+      id: "category-victoryvalkyrie",
+      name: "VictoryValkyrie",
+      description:
+        "VictoryValkyrie — a blade (33.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["VictoryValkyrie","victoryvalkyrie"] },
     },
     {
       id: "category-vipertail",
       name: "ViperTail",
       description:
-        "ViperTail — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["ViperTail","vipertail"] },
+        "ViperTail — a blade (34.7 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["ViperTail","vipertail","Tail Viper (Hasbro)"] },
+    },
+    {
+      id: "category-weisstiger",
+      name: "WeissTiger",
+      description:
+        "WeissTiger — a blade (34.6 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["WeissTiger","weisstiger","Pearl Tiger (Hasbro)"] },
+    },
+    {
+      id: "category-whalewave",
+      name: "WhaleWave",
+      description:
+        "WhaleWave — a blade (38.2 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["WhaleWave","whalewave","Tide Whale (Hasbro)"] },
     },
     {
       id: "category-wizardarrow",
       name: "WizardArrow",
       description:
-        "WizardArrow — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["WizardArrow","wizardarrow"] },
+        "WizardArrow — a blade (31.8 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["WizardArrow","wizardarrow","Arrow Wizard (Hasbro)"] },
     },
     {
       id: "category-wizardrod",
       name: "WizardRod",
       description:
-        "WizardRod — a blade (used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
-      extra: { aliases: ["WizardRod","wizardrod"] },
+        "WizardRod — a blade (35.3 g, used by 1 model). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["WizardRod","wizardrod","Wand Wizard (Hasbro)"] },
+    },
+    {
+      id: "category-wrath",
+      name: "Wrath",
+      description:
+        "Wrath — a blade (6.8 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Wrath","wrath"] },
+    },
+    {
+      id: "category-wyverngale",
+      name: "WyvernGale",
+      description:
+        "WyvernGale — a blade (31.9 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["WyvernGale","wyverngale","Gale Wyvern (Hasbro)"] },
+    },
+    {
+      id: "category-xenoxcalibur",
+      name: "XenoXcalibur",
+      description:
+        "XenoXcalibur — a blade (31 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["XenoXcalibur","xenoxcalibur"] },
+    },
+    {
+      id: "category-yell-kong",
+      name: "Yell Kong",
+      description:
+        "Yell Kong — a blade (31.1 g). Loose examples, spares and pre-owned blades of this part are listed here.",
+      extra: { aliases: ["Yell Kong","yell-kong"] },
+    },
+  ],
+  "category-x-custom-cx": [
+    {
+      id: "category-afc",
+      name: "AFC",
+      description:
+        "AFC — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["AFC","afc"] },
+    },
+    {
+      id: "category-antler",
+      name: "Antler",
+      description:
+        "Antler — a main blade (29.1 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Antler","antler","Antlers (Takara Tomy)"] },
+    },
+    {
+      id: "category-arc",
+      name: "Arc",
+      description:
+        "Arc — a main blade (29.2 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Arc","arc"] },
+    },
+    {
+      id: "category-assist-blade-assault",
+      name: "Assault",
+      description:
+        "Assault — a assist blade (5 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Assault","assault"] },
+    },
+    {
+      id: "category-lock-chip-bahamut",
+      name: "Bahamut",
+      description:
+        "Bahamut — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Bahamut","bahamut"] },
+    },
+    {
+      id: "category-blast",
+      name: "Blast",
+      description:
+        "Blast — a main blade (32.8 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Blast","blast"] },
+    },
+    {
+      id: "category-metal-blade-blitz",
+      name: "Blitz",
+      description:
+        "Blitz — a metal blade (29.6 g). Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Blitz","blitz"] },
+    },
+    {
+      id: "category-brachio",
+      name: "Brachio",
+      description:
+        "Brachio — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Brachio","brachio"] },
+    },
+    {
+      id: "category-main-blade-brave",
+      name: "Brave",
+      description:
+        "Brave — a main blade (31.2 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Brave","brave","Courage (Hasbro)"] },
+    },
+    {
+      id: "category-break",
+      name: "Break",
+      description:
+        "Break — a over blade (3.8 g). Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Break","break"] },
+    },
+    {
+      id: "category-brush",
+      name: "Brush",
+      description:
+        "Brush — a main blade (30.3 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Brush","brush"] },
+    },
+    {
+      id: "category-assist-blade-bumper",
+      name: "Bumper",
+      description:
+        "Bumper — a assist blade (5.3 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Bumper","bumper"] },
+    },
+    {
+      id: "category-lock-chip-cerberus",
+      name: "Cerberus",
+      description:
+        "Cerberus — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Cerberus","cerberus"] },
+    },
+    {
+      id: "category-assist-blade-charge",
+      name: "Charge",
+      description:
+        "Charge — a assist blade (5 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Charge","charge"] },
+    },
+    {
+      id: "category-croco",
+      name: "Croco",
+      description:
+        "Croco — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Croco","croco"] },
+    },
+    {
+      id: "category-main-blade-dark",
+      name: "Dark",
+      description:
+        "Dark — a main blade (30.3 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Dark","dark"] },
+    },
+    {
+      id: "category-delta",
+      name: "Delta",
+      description:
+        "Delta — a metal blade (27.9 g). Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Delta","delta"] },
+    },
+    {
+      id: "category-lock-chip-drake",
+      name: "Drake",
+      description:
+        "Drake — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Drake","drake"] },
+    },
+    {
+      id: "category-dran",
+      name: "Dran",
+      description:
+        "Dran — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Dran","dran"] },
+    },
+    {
+      id: "category-dual",
+      name: "Dual",
+      description:
+        "Dual — a assist blade (5.9 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Dual","dual"] },
+    },
+    {
+      id: "category-main-blade-eclipse",
+      name: "Eclipse",
+      description:
+        "Eclipse — a main blade (32.3 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Eclipse","eclipse"] },
+    },
+    {
+      id: "category-emperor",
+      name: "Emperor",
+      description:
+        "Emperor — a lock chip (4.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Emperor","emperor"] },
+    },
+    {
+      id: "category-enlil",
+      name: "Enlil",
+      description:
+        "Enlil — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Enlil","enlil"] },
+    },
+    {
+      id: "category-erase",
+      name: "Erase",
+      description:
+        "Erase — a assist blade (6 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Erase","erase"] },
+    },
+    {
+      id: "category-eva",
+      name: "Eva",
+      description:
+        "Eva — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Eva","eva"] },
+    },
+    {
+      id: "category-main-blade-fang",
+      name: "Fang",
+      description:
+        "Fang — a main blade (30.4 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Fang","fang"] },
+    },
+    {
+      id: "category-main-blade-flame",
+      name: "Flame",
+      description:
+        "Flame — a main blade (28.5 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Flame","flame"] },
+    },
+    {
+      id: "category-flare",
+      name: "Flare",
+      description:
+        "Flare — a main blade (31.1 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Flare","flare"] },
+    },
+    {
+      id: "category-over-blade-flow",
+      name: "Flow",
+      description:
+        "Flow — a over blade (3.7 g). Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Flow","flow"] },
+    },
+    {
+      id: "category-metal-blade-force",
+      name: "Force",
+      description:
+        "Force — a metal blade. Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Force","force"] },
+    },
+    {
+      id: "category-fort",
+      name: "Fort",
+      description:
+        "Fort — a main blade (29 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Fort","fort"] },
+    },
+    {
+      id: "category-metal-blade-fortress",
+      name: "Fortress",
+      description:
+        "Fortress — a metal blade (27.5 g). Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Fortress","fortress","Armor (Hasbro)"] },
+    },
+    {
+      id: "category-lock-chip-fox",
+      name: "Fox",
+      description:
+        "Fox — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Fox","fox","Fox (Hasbro)"] },
+    },
+    {
+      id: "category-free",
+      name: "Free",
+      description:
+        "Free — a assist blade (5.8 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Free","free"] },
+    },
+    {
+      id: "category-assist-blade-gravity",
+      name: "Gravity",
+      description:
+        "Gravity — a assist blade (11.6 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Gravity","gravity"] },
+    },
+    {
+      id: "category-over-blade-guard",
+      name: "Guard",
+      description:
+        "Guard — a over blade (3.3 g). Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Guard","guard"] },
+    },
+    {
+      id: "category-assist-blade-heavy",
+      name: "Heavy",
+      description:
+        "Heavy — a assist blade (7.8 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Heavy","heavy"] },
+    },
+    {
+      id: "category-hells",
+      name: "Hells",
+      description:
+        "Hells — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Hells","hells","Incendio (Hasbro)"] },
+    },
+    {
+      id: "category-hornet",
+      name: "Hornet",
+      description:
+        "Hornet — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Hornet","hornet"] },
+    },
+    {
+      id: "category-hunt",
+      name: "Hunt",
+      description:
+        "Hunt — a main blade (31.6 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Hunt","hunt"] },
+    },
+    {
+      id: "category-hurricane",
+      name: "Hurricane",
+      description:
+        "Hurricane — a metal blade (24.3 g). Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Hurricane","hurricane"] },
+    },
+    {
+      id: "category-i",
+      name: "I",
+      description:
+        "I — a over blade (3.6 g). Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["I","i"] },
+    },
+    {
+      id: "category-assist-blade-jaggy",
+      name: "Jaggy",
+      description:
+        "Jaggy — a assist blade (4.9 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Jaggy","jaggy"] },
+    },
+    {
+      id: "category-kid",
+      name: "Kid",
+      description:
+        "Kid — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Kid","kid"] },
+    },
+    {
+      id: "category-lock-chip-knight",
+      name: "Knight",
+      description:
+        "Knight — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Knight","knight"] },
+    },
+    {
+      id: "category-assist-blade-knuckle",
+      name: "Knuckle",
+      description:
+        "Knuckle — a assist blade (4.9 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Knuckle","knuckle"] },
+    },
+    {
+      id: "category-lock-chip-kraken",
+      name: "Kraken",
+      description:
+        "Kraken — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Kraken","kraken"] },
+    },
+    {
+      id: "category-leon",
+      name: "Leon",
+      description:
+        "Leon — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Leon","leon","Leon (Hasbro)"] },
+    },
+    {
+      id: "category-assist-blade-massive",
+      name: "Massive",
+      description:
+        "Massive — a assist blade (5.3 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Massive","massive"] },
+    },
+    {
+      id: "category-might",
+      name: "Might",
+      description:
+        "Might — a main blade (33.1 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Might","might"] },
+    },
+    {
+      id: "category-nfc",
+      name: "NFC",
+      description:
+        "NFC — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["NFC","nfc"] },
+    },
+    {
+      id: "category-odd",
+      name: "Odd",
+      description:
+        "Odd — a assist blade (4.5 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Odd","odd"] },
+    },
+    {
+      id: "category-over-blade-outer",
+      name: "Outer",
+      description:
+        "Outer — a over blade. Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Outer","outer"] },
+    },
+    {
+      id: "category-peak",
+      name: "Peak",
+      description:
+        "Peak — a over blade (3.5 g). Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Peak","peak"] },
+    },
+    {
+      id: "category-lock-chip-pegasus",
+      name: "Pegasus",
+      description:
+        "Pegasus — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Pegasus","pegasus"] },
+    },
+    {
+      id: "category-lock-chip-perseus",
+      name: "Perseus",
+      description:
+        "Perseus — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Perseus","perseus"] },
+    },
+    {
+      id: "category-lock-chip-phoenix",
+      name: "Phoenix",
+      description:
+        "Phoenix — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Phoenix","phoenix"] },
+    },
+    {
+      id: "category-quell",
+      name: "Quell",
+      description:
+        "Quell — a assist blade. Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Quell","quell"] },
+    },
+    {
+      id: "category-metal-blade-rage",
+      name: "Rage",
+      description:
+        "Rage — a metal blade (27.2 g). Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Rage","rage"] },
+    },
+    {
+      id: "category-ragna",
+      name: "Ragna",
+      description:
+        "Ragna — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Ragna","ragna"] },
+    },
+    {
+      id: "category-reaper",
+      name: "Reaper",
+      description:
+        "Reaper — a main blade (29 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Reaper","reaper"] },
+    },
+    {
+      id: "category-rhino",
+      name: "Rhino",
+      description:
+        "Rhino — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Rhino","rhino","Rhino (Hasbro)"] },
+    },
+    {
+      id: "category-round",
+      name: "Round",
+      description:
+        "Round — a assist blade (4.7 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Round","round"] },
+    },
+    {
+      id: "category-assist-blade-slash",
+      name: "Slash",
+      description:
+        "Slash — a assist blade (4.7 g, used by 1 model). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Slash","slash"] },
+    },
+    {
+      id: "category-lock-chip-sol",
+      name: "Sol",
+      description:
+        "Sol — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Sol","sol"] },
+    },
+    {
+      id: "category-stag",
+      name: "Stag",
+      description:
+        "Stag — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Stag","stag","Bucks (Takara Tomy)"] },
+    },
+    {
+      id: "category-tiga",
+      name: "Tiga",
+      description:
+        "Tiga — a lock chip. Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Tiga","tiga"] },
+    },
+    {
+      id: "category-tough",
+      name: "Tough",
+      description:
+        "Tough — a over blade. Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Tough","tough"] },
+    },
+    {
+      id: "category-tread",
+      name: "Tread",
+      description:
+        "Tread — a metal blade. Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Tread","tread"] },
+    },
+    {
+      id: "category-assist-blade-turn",
+      name: "Turn",
+      description:
+        "Turn — a assist blade (5.8 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Turn","turn"] },
+    },
+    {
+      id: "category-lock-chip-unicorn",
+      name: "Unicorn",
+      description:
+        "Unicorn — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Unicorn","unicorn"] },
+    },
+    {
+      id: "category-lock-chip-valkyrie",
+      name: "Valkyrie",
+      description:
+        "Valkyrie — a lock chip (5.6 g, used by 1 model). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Valkyrie","valkyrie","Valkerion"] },
+    },
+    {
+      id: "category-assist-blade-vertical",
+      name: "Vertical",
+      description:
+        "Vertical — a assist blade (5.3 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Vertical","vertical"] },
+    },
+    {
+      id: "category-volt",
+      name: "Volt",
+      description:
+        "Volt — a main blade (31 g, used by 1 model). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Volt","volt"] },
+    },
+    {
+      id: "category-over-blade-weight",
+      name: "Weight",
+      description:
+        "Weight — a over blade. Loose examples, spares and pre-owned over blades of this part are listed here.",
+      extra: { aliases: ["Weight","weight"] },
+    },
+    {
+      id: "category-whale",
+      name: "Whale",
+      description:
+        "Whale — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Whale","whale"] },
+    },
+    {
+      id: "category-assist-blade-wheel",
+      name: "Wheel",
+      description:
+        "Wheel — a assist blade (7.2 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Wheel","wheel"] },
+    },
+    {
+      id: "category-whip",
+      name: "Whip",
+      description:
+        "Whip — a metal blade. Loose examples, spares and pre-owned metal blades of this part are listed here.",
+      extra: { aliases: ["Whip","whip"] },
+    },
+    {
+      id: "category-lock-chip-wizard",
+      name: "Wizard",
+      description:
+        "Wizard — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Wizard","wizard"] },
+    },
+    {
+      id: "category-lock-chip-wolf",
+      name: "Wolf",
+      description:
+        "Wolf — a lock chip (1.7 g). Loose examples, spares and pre-owned lock chips of this part are listed here.",
+      extra: { aliases: ["Wolf","wolf"] },
+    },
+    {
+      id: "category-wriggle",
+      name: "Wriggle",
+      description:
+        "Wriggle — a main blade (29.3 g). Loose examples, spares and pre-owned main blades of this part are listed here.",
+      extra: { aliases: ["Wriggle","wriggle"] },
+    },
+    {
+      id: "category-zillion",
+      name: "Zillion",
+      description:
+        "Zillion — a assist blade (6.6 g). Loose examples, spares and pre-owned assist blades of this part are listed here.",
+      extra: { aliases: ["Zillion","zillion"] },
     },
   ],
   "category-x-ratchets": [
     {
+      id: "category-0-60",
+      name: "0-60",
+      description:
+        "0-60 — a ratchet (6.8 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["0-60"] },
+    },
+    {
+      id: "category-0-70",
+      name: "0-70",
+      description:
+        "0-70 — a ratchet (7 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["0-70"] },
+    },
+    {
       id: "category-0-80",
       name: "0-80",
       description:
-        "0-80 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "0-80 — a ratchet (8 g, used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["0-80"] },
     },
     {
@@ -5291,88 +17251,207 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["1"] },
     },
     {
+      id: "category-1-50",
+      name: "1-50",
+      description:
+        "1-50 — a ratchet (5.7 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["1-50"] },
+    },
+    {
       id: "category-1-60",
       name: "1-60",
       description:
-        "1-60 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "1-60 — a ratchet (6 g, used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["1-60"] },
     },
     {
       id: "category-1-70",
       name: "1-70",
       description:
-        "1-70 — a ratchet. Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "1-70 — a ratchet (6.1 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["1-70"] },
     },
     {
-      id: "category-2",
+      id: "category-1-80",
+      name: "1-80",
+      description:
+        "1-80 — a ratchet (6.7 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["1-80"] },
+    },
+    {
+      id: "category-ratchet-2",
       name: "2",
       description:
         "2 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["2"] },
     },
     {
+      id: "category-2-60",
+      name: "2-60",
+      description:
+        "2-60 — a ratchet (6.2 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["2-60"] },
+    },
+    {
+      id: "category-2-70",
+      name: "2-70",
+      description:
+        "2-70 — a ratchet (6.3 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["2-70"] },
+    },
+    {
+      id: "category-2-80",
+      name: "2-80",
+      description:
+        "2-80 — a ratchet (6.9 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["2-80"] },
+    },
+    {
       id: "category-3-60",
       name: "3-60",
       description:
-        "3-60 — a ratchet (used by 4 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "3-60 — a ratchet (7 g, used by 4 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["3-60"] },
     },
     {
       id: "category-3-70",
       name: "3-70",
       description:
-        "3-70 — a ratchet (used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "3-70 — a ratchet (7 g, used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["3-70"] },
     },
     {
       id: "category-3-80",
       name: "3-80",
       description:
-        "3-80 — a ratchet (used by 4 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "3-80 — a ratchet (8 g, used by 4 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["3-80"] },
+    },
+    {
+      id: "category-3-85",
+      name: "3-85",
+      description:
+        "3-85 — a ratchet (4.7 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["3-85"] },
+    },
+    {
+      id: "category-4-50",
+      name: "4-50",
+      description:
+        "4-50 — a ratchet (5.9 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["4-50"] },
+    },
+    {
+      id: "category-4-55",
+      name: "4-55",
+      description:
+        "4-55 — a ratchet (4.8 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["4-55"] },
     },
     {
       id: "category-4-60",
       name: "4-60",
       description:
-        "4-60 — a ratchet (used by 6 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "4-60 — a ratchet (7 g, used by 6 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["4-60"] },
     },
     {
       id: "category-4-70",
       name: "4-70",
       description:
-        "4-70 — a ratchet (used by 3 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "4-70 — a ratchet (7 g, used by 3 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["4-70"] },
     },
     {
       id: "category-4-80",
       name: "4-80",
       description:
-        "4-80 — a ratchet (used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "4-80 — a ratchet (8 g, used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["4-80"] },
+    },
+    {
+      id: "category-5-50",
+      name: "5-50",
+      description:
+        "5-50 — a ratchet. Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["5-50","Five Fifty"] },
     },
     {
       id: "category-5-60",
       name: "5-60",
       description:
-        "5-60 — a ratchet (used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "5-60 — a ratchet (7 g, used by 2 models). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["5-60"] },
     },
     {
       id: "category-5-70",
       name: "5-70",
       description:
-        "5-70 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "5-70 — a ratchet (8 g, used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["5-70"] },
     },
     {
       id: "category-5-80",
       name: "5-80",
       description:
-        "5-80 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "5-80 — a ratchet (8 g, used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["5-80"] },
+    },
+    {
+      id: "category-6-60",
+      name: "6-60",
+      description:
+        "6-60 — a ratchet (6.1 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["6-60"] },
+    },
+    {
+      id: "category-6-70",
+      name: "6-70",
+      description:
+        "6-70 — a ratchet (6.3 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["6-70"] },
+    },
+    {
+      id: "category-6-80",
+      name: "6-80",
+      description:
+        "6-80 — a ratchet (6.9 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["6-80"] },
+    },
+    {
+      id: "category-7-55",
+      name: "7-55",
+      description:
+        "7-55 — a ratchet (5.2 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["7-55"] },
+    },
+    {
+      id: "category-7-60",
+      name: "7-60",
+      description:
+        "7-60 — a ratchet (7.1 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["7-60"] },
+    },
+    {
+      id: "category-7-70",
+      name: "7-70",
+      description:
+        "7-70 — a ratchet (7.3 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["7-70"] },
+    },
+    {
+      id: "category-7-80",
+      name: "7-80",
+      description:
+        "7-80 — a ratchet (7.8 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["7-80"] },
+    },
+    {
+      id: "category-8-70",
+      name: "8-70",
+      description:
+        "8-70 — a ratchet (7.7 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["8-70"] },
     },
     {
       id: "category-8-80",
@@ -5382,7 +17461,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["8-80"] },
     },
     {
-      id: "category-9",
+      id: "category-ratchet-9",
       name: "9",
       description:
         "9 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
@@ -5392,8 +17471,43 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       id: "category-9-60",
       name: "9-60",
       description:
-        "9-60 — a ratchet (used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+        "9-60 — a ratchet (8 g, used by 1 model). Loose examples, spares and pre-owned ratchets of this part are listed here.",
       extra: { aliases: ["9-60"] },
+    },
+    {
+      id: "category-9-65",
+      name: "9-65",
+      description:
+        "9-65 — a ratchet (4.5 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["9-65"] },
+    },
+    {
+      id: "category-9-70",
+      name: "9-70",
+      description:
+        "9-70 — a ratchet (6.3 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["9-70"] },
+    },
+    {
+      id: "category-9-80",
+      name: "9-80",
+      description:
+        "9-80 — a ratchet (6.9 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["9-80"] },
+    },
+    {
+      id: "category-m-65",
+      name: "M-65",
+      description:
+        "M-65 — a ratchet. Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["M-65","m-65"] },
+    },
+    {
+      id: "category-m-85",
+      name: "M-85",
+      description:
+        "M-85 — a ratchet (10.6 g). Loose examples, spares and pre-owned ratchets of this part are listed here.",
+      extra: { aliases: ["M-85","m-85"] },
     },
   ],
 };
@@ -5403,4 +17517,4 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
  * SAME string by construction, so this map exists only to let a reader see that
  * stated rather than inferred.
  */
-export const PART_LEAF_COUNT = 760;
+export const PART_LEAF_COUNT = 2490;
