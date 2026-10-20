@@ -851,6 +851,34 @@ export async function ProductDetailPageView({
                     variant="detail"
                   />
                   {/*
+                    🛑 "Incl.", NOT "+ GST". Prices on this site are
+                    tax-INCLUSIVE — `order-math.ts` backs the tax OUT of the
+                    line (₹999 @ 5% → ₹951.43 taxable + ₹47.57 tax = ₹999.00
+                    exactly) and never adds it on top. "+ GST" would promise a
+                    buyer a surcharge at checkout that never arrives, which is
+                    a worse disclosure than none: they would arrive at the
+                    payment step expecting a bigger number and distrust the one
+                    they see.
+
+                    Gated on `siteSettings.gst.enabled` for the same reason the
+                    cart's "Includes GST of ₹X" line is — that flag is false
+                    until a real GSTIN is registered, and naming a tax we are
+                    not yet in a position to charge is a claim we cannot back.
+                    Same condition on both surfaces, so the detail page and the
+                    cart can never disagree about whether tax is being stated.
+
+                    The RATE, never the amount: this sits beside a price that
+                    is hidden from signed-out visitors, and a rupee figure here
+                    would reconstruct it.
+                  */}
+                  {siteSettings?.gst?.enabled === true &&
+                    typeof p.gstRate === "number" &&
+                    p.gstRate > 0 && (
+                      <Text size="xs" color="muted">
+                        Incl. {p.gstRate}% GST
+                      </Text>
+                    )}
+                  {/*
                     * H2 — the anchor, made of measurement rather than a
                     * fabricated RRP. Silent below the confidence threshold and
                     * silent for a guest; states the window and the direction,
