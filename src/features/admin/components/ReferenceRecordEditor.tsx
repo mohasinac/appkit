@@ -97,6 +97,74 @@ export function ReferenceRecordEditor({
     };
   }, [endpoint, fields]);
 
+  /**
+   * Build the PATCH body.
+   *
+   * 🛑 Only NON-EMPTY values are sent, and numbers are coerced.
+   *
+   * An empty input means "I did not set this", not "write an empty string".
+   * Sending it would both blank a real value AND mark the field as
+   * admin-owned, freezing the blank in place against every future reseed —
+   * a one-click way to permanently delete data from a generated row.
+   */
+  const buildPatch = React.useCallback((): Record<string, unknown> => {
+    const patch: Record<string, unknown> = {};
+    for (const f of fields) {
+      const raw = (values[f.name] ?? "").trim();
+      if (!raw) continue;
+      patch[f.name] = f.kind === "number" ? Number(raw) : raw;
+    }
+    return patch;
+  }, [fields, values]);
+
+  /**
+   * Put a failure where the operator can act on it.
+   *
+   * 🛑 Zod issues go to their OWN FIELD; everything else becomes one toast
+   * built by `toUserMessage`. Never the server's own message: a raw fallback
+   * is what rendered a Node MODULE_NOT_FOUND with a full require stack inside
+   * a bid modal (Root Cause #86), and `mapToHttpError` scrubs 5xx text in
+   * production anyway.
+   */
+  const reportFailure = React.useCallback(
+    (
+      err: unknown,
+      /** Already normalized by the caller — see the note at the catch site. */
+      fallbackMessage: string,
+      setFieldError: (field: string, message: string) => void,
+    ) => {
+      const issues = (err as { issues?: { path?: (string | number)[]; message: string }[] })?.issues;
+      if (issues?.length) {
+        for (const issue of issues) setFieldError(String(issue.path?.[0] ?? ""), issue.message);
+        return;
+      }
+      const code = (err as { code?: string })?.code;
+      const message = code ? toUserMessage(code, undefined) : fallbackMessage;
+      showToast(message, "error");
+    },
+    [showToast],
+  );
+
+  const save = React.useCallback(
+    async (
+      setFieldError: (field: string, message: string) => void,
+      clearErrors: () => void,
+    ) => {
+      clearErrors();
+      setSaving(true);
+      try {
+        await apiClient.patch(endpoint, buildPatch());
+        showToast(`${noun[0].toUpperCase()}${noun.slice(1)} updated.`, "success");
+      } catch (err) {
+        const e = normalizeError(err);
+        reportFailure(err, e.message, setFieldError);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [endpoint, buildPatch, noun, showToast, reportFailure],
+  );
+
   if (loading) return <Text color="muted">Loading…</Text>;
   if (loadError) {
     return (
@@ -146,54 +214,7 @@ export function ReferenceRecordEditor({
           <Button
             type="button"
             isLoading={saving}
-            onClick={async () => {
-              clearErrors();
-              setSaving(true);
-              try {
-                /*
-                 * 🛑 Only NON-EMPTY values are sent, and numbers are coerced.
-                 *
-                 * An empty input means "I did not set this", not "write an
-                 * empty string" — sending it would both blank a real value and
-                 * mark the field as admin-owned, freezing the blank in place
-                 * against every future reseed. That is a one-click way to
-                 * permanently delete data from a generated row.
-                 */
-                const patch: Record<string, unknown> = {};
-                for (const f of fields) {
-                  const raw = (values[f.name] ?? "").trim();
-                  if (!raw) continue;
-                  patch[f.name] = f.kind === "number" ? Number(raw) : raw;
-                }
-                await apiClient.patch(endpoint, patch);
-                showToast(`${noun[0].toUpperCase()}${noun.slice(1)} updated.`, "success");
-              } catch (err) {
-                const e = normalizeError(err);
-                /*
-                 * 🛑 `toUserMessage`, never the server's own message. A raw
-                 * fallback is what rendered a Node MODULE_NOT_FOUND with a full
-                 * require stack inside a bid modal (Root Cause #86), and
-                 * `mapToHttpError` scrubs 5xx text in production anyway.
-                 */
-                const code = (err as { code?: string })?.code;
-                const message = code ? toUserMessage(code, undefined) : e.message;
-                /*
-                 * Zod issues come back keyed by field, so an invalid value
-                 * lands on its own input rather than in a banner (Rule #9).
-                 */
-                const issues = (err as { issues?: { path?: (string | number)[]; message: string }[] })
-                  ?.issues;
-                if (issues?.length) {
-                  for (const issue of issues) {
-                    setFieldError(String(issue.path?.[0] ?? ""), issue.message);
-                  }
-                } else {
-                  showToast(message, "error");
-                }
-              } finally {
-                setSaving(false);
-              }
-            }}
+            onClick={() => save(setFieldError, clearErrors)}
           >
             Save correction
           </Button>
