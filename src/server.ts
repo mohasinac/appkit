@@ -60,6 +60,7 @@ export {
   getBeysForCategory,
   getProductsContainingBey,
 } from "./_internal/server/features/beys/data";
+export { renderBeyOg } from "./_internal/server/features/beys/og";
 /*
  * D13's last item — "which models can I build from the parts I hold".
  * Exported because its only caller is a consumer route; the matcher it is built

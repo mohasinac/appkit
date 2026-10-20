@@ -336,7 +336,12 @@ export interface BeyDocument extends BaseDocument {
   toyline?: string;
 
   /** Image filenames, resolved to `/media/<shortId>` at upload time. */
-  images?: { file: string; label?: string | null }[];
+  /**
+   * `lead` marks the one image to show first. Optional because a hand-written
+   * row may omit it and absent reads as false; the generator sets it on all
+   * 2,459 entries, so no reader is relying on the default today.
+   */
+  images?: { file: string; label?: string | null; lead?: boolean }[];
 
   /** Our own prose, composed from the facts above. */
   seoDescription?: string;
@@ -366,6 +371,37 @@ export interface BeyProductAssortmentEntry {
   isPrize?: boolean;
   /** Stated pull odds, where the source gives them. */
   odds?: string;
+  /**
+   * The manufacturer's per-item code within the assortment ("B-101 01"), where
+   * the source lists one. Distinct from the PRODUCT's own code: a random
+   * booster has one code and a different one per bey you can pull from it.
+   */
+  itemCode?: string;
+  /** This bey debuts in the set, rather than being a repackaged earlier release. */
+  newToSeries?: boolean;
+}
+
+/**
+ * One image in a product's gallery.
+ *
+ * `caption` is optional-AND-nullable, mirroring `BeyDocument.images[].label`
+ * beside it: the generator emits the key on all 1,457 entries and leaves 292
+ * of them `null`, while a hand-written row may simply omit it. Both are "no
+ * caption", and the type accepts both rather than forcing one spelling on a
+ * generator that already chose the other.
+ */
+/** One line of a product's per-carton distribution table. */
+export interface BeyProductCartonEntry {
+  /** The bey as the source names it — matches `BeyProductAssortmentEntry.bey`. */
+  bey: string;
+  /** How many of this bey ship in one sealed carton. */
+  perCarton: number;
+}
+
+export interface BeyProductGalleryImage {
+  /** Source filename, as the corpus names it — not a `/media/` slug yet. */
+  file: string;
+  caption?: string | null;
 }
 
 export interface BeyProductDocument extends BaseDocument {
@@ -392,10 +428,17 @@ export interface BeyProductDocument extends BaseDocument {
    * independently is the drift in Root Cause #42.
    */
   assortmentBeyIds?: string[];
-  /** Pull-odds breakdown, on the 24 products that state one. */
-  breakdown?: Record<string, string>;
+  /**
+   * Per-carton distribution, on the 24 products whose source states one.
+   *
+   * 🛑 An ARRAY, not the `Record<string, string>` this was declared as. A map
+   * keyed on the bey name cannot hold two entries for the same name, and it
+   * loses the source's ordering — both of which the carton tables rely on.
+   * Measured across all 24: 137 entries, every one carrying both keys.
+   */
+  breakdown?: BeyProductCartonEntry[];
   boxImage?: string;
-  gallery?: string[];
+  gallery?: BeyProductGalleryImage[];
   seoDescription?: string;
   /** CC-BY-SA link-back — see `BeyDocument.sourceUrl`. */
   sourceUrl: string;
