@@ -244,6 +244,42 @@ export function BeyDetailPageView({
             </Stack>
           )}
 
+          {/* ── modes ────────────────────────────────────────────────────────
+              Only 4 of 1,988 carry this, and the section is simply absent for
+              the rest — `modes` is undefined there, never `[]`, so "we do not
+              know" never renders as "it has none".
+
+              🛑 NO THRESHOLD IS SHOWN because none is stored: every numeric
+              threshold in the source disagreed across its own cases (Cosmic
+              Pegasus F:D is documented twice with the transition running in
+              OPPOSITE directions). `trigger` carries the thing a reader
+              actually needs — whether they set the mode, or the bey changes by
+              itself as spin falls.
+
+              🛑 A SPECIAL MOVE IS NOT A MODE, which is why the "In the anime"
+              block below stays separate: `specialMoves` is fiction about a
+              character, `modes` is a property of the object. Merging them would
+              put anime finishers on a product reference page as though they
+              were specifications. */}
+          {bey.modes?.length ? (
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                Modes
+              </Heading>
+              <Stack gap="md" className="min-w-0">
+                {bey.modes.map((mode) => (
+                  <Stack key={mode.name} gap="xs" className="min-w-0">
+                    <Text weight="semibold">{mode.name}</Text>
+                    <Text size="sm">{mode.behaviour}</Text>
+                    <Text size="sm" color="muted">
+                      {mode.trigger}
+                    </Text>
+                  </Stack>
+                ))}
+              </Stack>
+            </Stack>
+          ) : null}
+
           {/* ── who used it ──────────────────────────────────────────────── */}
           {(bey.ownerNames?.length || bey.specialMoves?.length || bey.appearAnime) && (
             <Stack gap="sm" className="min-w-0">

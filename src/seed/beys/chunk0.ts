@@ -6561,7 +6561,21 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Bandit Genbu F230TB is a Stamina-Type Beyblade from the Synchrome System, spinning right-spin. Released 20th October 2012 as BBG-23 for Beyblade: Shogun Steel. It combines Genbu, Bandit, Genbu, Free 230. Used by Genjuro Kamegaki. Its special move is Spinning Shell Smash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bandit_Genbu_F230TB",
     "source": "fandom-infobox",
-    "categoryId": "category-bandit-genbu-f230tb"
+    "categoryId": "category-bandit-genbu-f230tb",
+    "modes": [
+      {
+        "name": "Ball contact",
+        "behaviour": "On a smooth floor the tip rides on the ball, which keeps friction low and holds spin for a long time.",
+        "trigger": "Running on a smooth surface.",
+        "sourceCase": 1842
+      },
+      {
+        "name": "Cylinder rim contact",
+        "behaviour": "Tipped over onto the rim of the inner cylinder, the contact grips far harder and drives the top around the stadium instead of letting it sit.",
+        "trigger": "Tipping onto the rim on a rough or angled surface.",
+        "sourceCase": 1842
+      }
+    ]
   },
   {
     "id": "bandit-golem-df145bs",

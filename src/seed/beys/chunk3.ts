@@ -20617,7 +20617,21 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "seoDescription": "Variares D D is a Defense-Type Beyblade from the 4D System, spinning dual-spin. Released July 16, 2011 as BB-114 (Takara Tomy) and BB-114-FX (Spark FX) for Beyblade: Metal Fury. It combines Variares, Variares, D:D. Used by King. Special moves: Ares Shield, King of Thunder Sword, Sword of Ares.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Variares_D_D",
     "source": "fandom-infobox",
-    "categoryId": "category-variares-d-d"
+    "categoryId": "category-variares-d-d",
+    "modes": [
+      {
+        "name": "Right-spin",
+        "behaviour": "The standard configuration. Spins clockwise, so it meets the great majority of Beyblades in the same direction and trades spin normally on contact.",
+        "trigger": "Set on the D:D track before launch.",
+        "sourceCase": 1836
+      },
+      {
+        "name": "Left-spin",
+        "behaviour": "Spins anticlockwise. Against a right-spin opponent the two meet in opposition, which raises the force of every exchange and can take spin off the opponent rather than losing it.",
+        "trigger": "Set on the D:D track before launch.",
+        "sourceCase": 1836
+      }
+    ]
   },
   {
     "id": "venom-3-80n",

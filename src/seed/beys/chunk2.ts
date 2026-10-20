@@ -12011,7 +12011,21 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Ninja Salamander SW145SD is a Balance-Type Beyblade from the Synchrome System, spinning right-spin. Released March 31, 2012 as BBG-02 (Takara Tomy) and SS-02 (Hasbro) for Beyblade: Shogun Steel. It combines Salamander, Salamander, Ninja, SW145. Used by Shinobu Hiryūin.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ninja_Salamander_SW145SD",
     "source": "fandom-infobox",
-    "categoryId": "category-ninja-salamander-sw145sd"
+    "categoryId": "category-ninja-salamander-sw145sd",
+    "modes": [
+      {
+        "name": "Defense",
+        "behaviour": "The wings sit rounded-side forward, so a hit is spread along a curve and glances away instead of landing square. Little of the force comes back as recoil.",
+        "trigger": "Mount the SW145 wings rounded-side forward before launch.",
+        "sourceCase": 690
+      },
+      {
+        "name": "Attack",
+        "behaviour": "The wings are reversed so the pointed faces lead, concentrating a hit at a point rather than spreading it.",
+        "trigger": "Reverse the SW145 wings before launch.",
+        "sourceCase": 690
+      }
+    ]
   },
   {
     "id": "ninja-salamander-tt-11",
@@ -16304,7 +16318,21 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Phantom Orion B D is a Stamina-Type Beyblade from the 4D System, spinning right-spin. Released September 17th, 2011 as BB-118 for Beyblade: Metal Fury. It combines Orion, Orion, Phantom, B:D. Used by Chris. Its special move is Barnard's Loop.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Phantom_Orion_B_D",
     "source": "fandom-infobox",
-    "categoryId": "category-phantom-orion-b-d"
+    "categoryId": "category-phantom-orion-b-d",
+    "modes": [
+      {
+        "name": "Attack orbit",
+        "behaviour": "Runs on the outer bearing, giving a wide sweeping orbit around the stadium and an aggressive approach. The broad contact costs spin quickly.",
+        "trigger": "The starting state at launch.",
+        "sourceCase": 678
+      },
+      {
+        "name": "Stamina",
+        "behaviour": "Settles to a centred spin on a much smaller contact point, cutting friction sharply and extending how long it keeps spinning.",
+        "trigger": "Changes by itself as spin falls — an internal spring releases the bearing cage. There is nothing for the owner to do.",
+        "sourceCase": 678
+      }
+    ]
   },
   {
     "id": "phoenixfeather-2-60n",

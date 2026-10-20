@@ -96,6 +96,45 @@ export interface BeyDerivationCoverage {
   complete?: boolean;
 }
 
+/**
+ * One configuration a bey can be set to, or settles into.
+ *
+ * ── 🛑 THERE IS NO THRESHOLD FIELD, AND THAT IS DELIBERATE ────────────────
+ *
+ * Mode data exists only in the local case-study corpus (the wiki carries ZERO:
+ * 0 `Modes=` fields across 2,248 part pages and 2,011 bey pages), and every
+ * numeric threshold cross-checked there DISAGREED across sources. Cosmic
+ * Pegasus F:D is documented twice with the transition running in opposite
+ * directions and three different thresholds between the two cases and the plan.
+ *
+ * So a `thresholdRadPerSec` does not exist here. A field that is absent cannot
+ * be filled with a contested number by someone who assumes the gap was an
+ * oversight — which is why this is a schema decision and not a convention.
+ *
+ * 🛑 `trigger` is FREE TEXT, not an enum. The three authored shapes are
+ * already a pre-launch setting, passive spin decay, and what surface the tip
+ * is running on — and a three-value enum written before the fourth case was
+ * read would have forced the next one into the wrong bucket.
+ */
+export interface BeyMode {
+  /** "Attack orbit", "Stamina", "Left-spin". The source's own vocabulary. */
+  name: string;
+  /** What it does, in a sentence a buyer can read. No formulae. */
+  behaviour: string;
+  /**
+   * How it comes about. The distinction that matters most is whether the owner
+   * chooses it before launch or the bey changes by itself as spin falls — those
+   * are different kinds of mode and a reader needs to know which this is.
+   */
+  trigger: string;
+  /**
+   * The case-study case number the claim was read from. 🛑 Kept because a
+   * claim whose derivation nobody can find is a claim nobody can correct —
+   * the same reason the physical-constants extraction keeps its citation.
+   */
+  sourceCase?: number;
+}
+
 export interface BeyDocument extends BaseDocument {
   /** `id === slug`, and the same slug the category leaf uses. */
   id: string;
@@ -148,6 +187,22 @@ export interface BeyDocument extends BaseDocument {
    */
   ratingsFromParts?: BeyRatings;
   ratingsFromPartsCoverage?: BeyDerivationCoverage;
+
+  /**
+   * Configurations this bey can be set to. **4 of 1,988 carry this.**
+   *
+   * 🛑 ABSENT, NEVER `[]`. An empty array says "this bey has no modes" to
+   * every consumer; absent says "unknown", which is the truth for 1,984 of
+   * them. Do not default it, and do not treat its absence as a gap to fill
+   * mechanically — see `scripts/lib/bey-modes-authored.mjs` for what the
+   * corpus can and cannot support, including the one bey excluded because its
+   * two sources contradict each other outright.
+   *
+   * Most of the corpus's mode content is about PARTS, not beys (135 of 147
+   * candidates were part-level analyses), so the bulk of it belongs on
+   * `partGlossary` if it is ever modelled at all.
+   */
+  modes?: BeyMode[];
 
   /** Mass as the source states it. Only 248 of 1,988 do. */
   weightG?: number;
