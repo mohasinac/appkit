@@ -29,6 +29,7 @@
  * `Record<Generation, Slot[]>` would be the hand-written enumeration of Root
  * Cause #61 with a merge case it structurally cannot hold.
  */
+import type { AdminEditableRecord } from "./admin-edit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export const PART_GLOSSARY_COLLECTION = "partGlossary" as const;
@@ -493,7 +494,7 @@ export type PartRole =
   | "gear"
   | "support";
 
-export interface PartGlossaryDocument extends BaseDocument {
+export interface PartGlossaryDocument extends BaseDocument, AdminEditableRecord {
   /** `${slot}--${codeOrSlug}` — both halves, because a code is not unique. */
   id: string;
   /** Buyer-facing label: "Performance Tip", "Fusion Wheel". */

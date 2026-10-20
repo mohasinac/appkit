@@ -478,6 +478,24 @@ export const DEFAULT_ROUTE_MAP = {
     CATEGORIES: "/admin/categories",
     CATEGORIES_NEW: "/admin/categories/new",
     CATEGORIES_EDIT: (id: string) => `/admin/categories/${id}/edit`,
+    /*
+     * The two GENERATED reference databases — 2,488 parts and 1,988 beys.
+     *
+     * 🛑 THERE IS NO `PARTS_NEW` / `BEYS_NEW`, and that absence is the
+     * design. Both collections are produced by committed generators from a
+     * crawled corpus; a row created by hand would have no source, would not
+     * survive a regeneration, and would sit in a dataset whose whole value is
+     * that it reproduces from `appkit/src/seed/` alone. Admin may CORRECT and
+     * REMOVE a row — the two operations a wrong extraction needs — and adding
+     * one is a change to the generator.
+     *
+     * `audit-nav-page-wiring` is strict-zero on a route key with no page, so
+     * a key added here without its folder is a build failure, not a 404.
+     */
+    PARTS: "/admin/parts",
+    PARTS_EDIT: (id: string) => `/admin/parts/${id}/edit`,
+    BEYS: "/admin/beys",
+    BEYS_EDIT: (id: string) => `/admin/beys/${id}/edit`,
     BRANDS: "/admin/brands",
     BRANDS_NEW: "/admin/brands/new",
     BRANDS_EDIT: (id: string) => `/admin/brands/${id}/edit`,

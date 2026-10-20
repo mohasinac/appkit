@@ -31,6 +31,7 @@
  * discovery happens through the category leaf, which has its own `searchTxt`
  * built from the leaf's name and aliases.
  */
+import type { AdminEditableRecord } from "../../parts/schemas/admin-edit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export const BEYS_COLLECTION = "beys" as const;
@@ -199,7 +200,7 @@ export interface BeyMode {
   sourceCase?: number;
 }
 
-export interface BeyDocument extends BaseDocument {
+export interface BeyDocument extends BaseDocument, AdminEditableRecord {
   /** `id === slug`, and the same slug the category leaf uses. */
   id: string;
   slug: string;

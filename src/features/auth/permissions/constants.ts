@@ -59,6 +59,20 @@ export type Permission =
   | "admin:categories:read"
   | "admin:categories:write"
   | "admin:categories:delete"
+  /*
+   * The two GENERATED reference databases. Separate from
+   * `admin:categories:*` on purpose: a part or a bey row is built by a
+   * committed generator from a crawled corpus, so the person trusted to
+   * re-file a category is not automatically the person who should be
+   * hand-correcting extracted specs. Granting them together is a choice an
+   * operator can still make; conflating them removes the choice.
+   */
+  | "admin:parts:read"
+  | "admin:parts:write"
+  | "admin:parts:delete"
+  | "admin:beys:read"
+  | "admin:beys:write"
+  | "admin:beys:delete"
   | "admin:brands:read"
   | "admin:brands:write"
   | "admin:brands:delete"
@@ -388,6 +402,12 @@ export const PERMISSION_GROUPS: Record<
     "admin:categories:read",
     "admin:categories:write",
     "admin:categories:delete",
+    "admin:parts:read",
+    "admin:parts:write",
+    "admin:parts:delete",
+    "admin:beys:read",
+    "admin:beys:write",
+    "admin:beys:delete",
     "admin:brands:read",
     "admin:brands:write",
     "admin:brands:delete",
@@ -549,6 +569,8 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/catalogue-approvals": "admin:catalogue:read",
   "/admin/grouped-listings": "admin:grouped-listings:read",
   "/admin/categories": "admin:categories:read",
+  "/admin/parts": "admin:parts:read",
+  "/admin/beys": "admin:beys:read",
   "/admin/brands": "admin:brands:read",
   "/admin/coupons": "admin:coupons:read",
   "/admin/deals": "admin:deals:read",
@@ -776,7 +798,11 @@ export const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
   { label: "Orders & Returns", prefix: "admin:orders:|admin:returns:|admin:offers:" },
   { label: "Stores", prefix: "admin:stores:|admin:store-addresses:" },
   { label: "Finance", prefix: "admin:analytics:|admin:payouts:" },
-  { label: "Catalog", prefix: "admin:categories:|admin:brands:|admin:coupons:|admin:deals:|admin:featured:" },
+  {
+    label: "Catalog",
+    prefix:
+      "admin:categories:|admin:parts:|admin:beys:|admin:brands:|admin:coupons:|admin:deals:|admin:featured:",
+  },
   {
     label: "Content",
     prefix: "admin:reviews:|admin:blog:|admin:bids:|admin:media:",

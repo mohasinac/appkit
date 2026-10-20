@@ -179,6 +179,16 @@ export const ADMIN_ENDPOINTS = {
   BUNDLE_REBUILD: (id: string) => `/api/admin/bundles/${id}/rebuild`,
   CATEGORIES: "/api/admin/categories",
   CATEGORY_BY_ID: (id: string) => `/api/admin/categories/${id}`,
+  /*
+   * The generated reference databases. PATCH corrects a wrong extraction;
+   * DELETE removes a row that should not exist. No POST — see the note on
+   * `ROUTES.ADMIN.PARTS` for why creating one by hand is not a supported
+   * operation on generated data.
+   */
+  PARTS: "/api/admin/parts",
+  PART_BY_ID: (id: string) => `/api/admin/parts/${id}`,
+  BEYS: "/api/admin/beys",
+  BEY_BY_ID: (id: string) => `/api/admin/beys/${id}`,
   BRANDS: "/api/admin/brands",
   BRAND_BY_ID: (id: string) => `/api/admin/brands/${id}`,
   FAQS: "/api/admin/faqs",

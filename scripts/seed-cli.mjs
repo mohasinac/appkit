@@ -1036,7 +1036,88 @@ async function loadOneDocPerUser(seed, coll, stats) {
   }
 }
 
+/**
+ * Collections whose rows a human may hand-correct, with the correction
+ * protected from the next reseed.
+ *
+ * 🛑 AN EXPLICIT LIST, not "every collection". Protection costs one query per
+ * load, and more importantly it is only meaningful for GENERATED data: a row
+ * an admin authored from scratch (a coupon, an event) is not competing with a
+ * generator for ownership of its fields, so there is nothing to protect it
+ * from. Adding a collection here is a statement that a generator owns the row
+ * and a human may override named fields of it.
+ */
+/**
+ * Drop the keys a human owns from one payload.
+ *
+ * 🛑 A LOCAL copy of `stripAdminOwnedFields` from
+ * `appkit/src/features/parts/schemas/admin-edit.ts`, and the duplication is
+ * deliberate: this CLI must run without a built appkit. Importing it from
+ * `dist` would reintroduce exactly the build dependency the catalogue
+ * generator just shed, and would make a reseed impossible under a memory cap.
+ * The function is five lines; the dependency would not be.
+ */
+function stripAdminOwned(payload, ownedFields) {
+  if (!ownedFields?.length) return payload;
+  const out = {};
+  for (const [k, v] of Object.entries(payload)) {
+    if (ownedFields.includes(k)) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
+const ADMIN_EDIT_PROTECTED = new Set(["partGlossary", "beys"]);
+
+/**
+ * The fields a human owns, per document id, for one collection.
+ *
+ * 🛑 ONE INDEXED EQUALITY, not a read per document. The alternative is
+ * fetching all 2,488 parts and 1,988 beys to discover the handful that are
+ * protected — 4,476 reads against a 50,000/day free tier, every load, to find
+ * what is usually a dozen rows.
+ *
+ * 🛑 It must be an EQUALITY on a boolean, not an `orderBy` or `!=` on
+ * `adminEditedFields`. Both of those silently exclude every document that
+ * LACKS the field, which is nearly all of them — the trap that made a store's
+ * whole review set return zero (Root Cause #100) and the one `isTestData`
+ * warning in the Known TS Patterns table.
+ *
+ * Fails OPEN to an empty map: if this query errors the load proceeds
+ * unprotected, which loses a hand-edit. The alternative — aborting the load —
+ * loses the entire reseed. A warning names the collection either way.
+ */
+async function fetchAdminOwnedFields(colName, firestoreCollection) {
+  if (!ADMIN_EDIT_PROTECTED.has(colName)) return new Map();
+  try {
+    const snap = await db
+      .collection(firestoreCollection)
+      .where("adminEdited", "==", true)
+      .select("adminEditedFields")
+      .get();
+    const map = new Map();
+    for (const d of snap.docs) {
+      const fields = d.get("adminEditedFields");
+      if (Array.isArray(fields) && fields.length > 0) map.set(d.id, fields);
+    }
+    if (map.size > 0) {
+      console.log(
+        `    ${map.size} row(s) carry admin-owned fields — those keys will not be overwritten`,
+      );
+    }
+    return map;
+  } catch (err) {
+    console.warn(
+      `    ⚠ could not read admin-owned fields for ${colName} (${err?.message ?? err}).
+` +
+        `      Proceeding WITHOUT protection — a hand-correction in this collection may be lost.`,
+    );
+    return new Map();
+  }
+}
+
 async function loadGeneric(colName, seed, firestoreCollection, stats) {
+  const adminOwned = await fetchAdminOwnedFields(colName, firestoreCollection);
   if (REPLACE_ON_LOAD.has(colName)) {
     const removed = await purgeCollection(firestoreCollection);
     if (VERBOSE) console.log(`    purged ${removed} pre-existing docs`);
@@ -1078,7 +1159,19 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
        * `store-letitrip-official` loaded as `test` — the platform's own store,
        * which is one of exactly two rows the keep-list exists to protect.
        */
-      data: encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, docId))),
+      /*
+       * 🛑 Admin-owned keys dropped LAST, after every other transform.
+       *
+       * Stripping earlier would let `stampSeedPurpose` or `encryptSeedPii`
+       * re-add a key a human owns — both of them write fields — and the whole
+       * point is that what reaches Firestore carries none of them. A
+       * merge-write leaves an absent key exactly as it was, which is how the
+       * correction survives.
+       */
+      data: stripAdminOwned(
+        encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, docId))),
+        adminOwned.get(docId),
+      ),
     });
   }
   /*
