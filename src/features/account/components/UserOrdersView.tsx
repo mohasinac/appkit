@@ -14,7 +14,23 @@ import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import { useSearchParams } from "next/navigation";
 
 const CANCELLABLE_STATUSES = new Set(["pending", "confirmed", "processing"]);
-const TRACKABLE_STATUSES = new Set(["shipped"]);
+/*
+ * 🛑 Every PRE-DELIVERY status, not just "shipped".
+ *
+ * It was `["shipped"]` alone, so a buyer whose order was pending, confirmed
+ * or processing had no "where is it" link at all — which is precisely when
+ * they most want one. The timeline on the track page reads correctly for all
+ * of these: it shows the stages reached and the stages still ahead.
+ *
+ * Delivered, cancelled, refunded and returned are excluded because tracking a
+ * finished order is the order detail page's job, not a courier's.
+ */
+const TRACKABLE_STATUSES = new Set([
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+]);
 
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest first" },
@@ -97,12 +113,15 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
     portal: "user",
     title: "My Orders",
     search: {
-      placeholder: "Search by order id…",
-      // `/api/user/orders` filters in memory on `o.id` and nothing else — not
-      // the product titles the rows display, which is what a buyer would try
-      // first. Saying "order id" is the honest promise until the route can
-      // match more.
-      fields: ["id"],
+      placeholder: "Search by item or order id…",
+      /*
+       * The route now matches product titles as well as the order id, so the
+       * placeholder can promise it. It said "order id" because that was all
+       * the route could do, with a comment calling that "the honest promise
+       * until the route can match more" — this is the promise catching up,
+       * not a widened claim.
+       */
+      fields: ["id", "productTitle"],
     },
     emptyLabel: emptyMessage,
     filterKeys: ["status", "orderType"],
