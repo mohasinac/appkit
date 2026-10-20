@@ -173,9 +173,9 @@ export const reviewItemPATCH = createRouteHandler({
      * whose last photo was removed stayed in that filter for ever, and one
      * that gained its first was absent from it.
      */
-    const nextImages = (patch as { images?: unknown }).images;
+    const nextImages = body?.images;
     const derived =
-      Array.isArray(nextImages) ? { hasImages: nextImages.length > 0 } : {};
+      nextImages !== undefined ? { hasImages: nextImages.length > 0 } : {};
 
     /*
      * 🛑 A `Date`, not an ISO string. Everything else in this codebase writes
