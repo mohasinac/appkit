@@ -12,6 +12,7 @@ import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 const __P = {
   p8: "p-[var(--appkit-space-8)]",
@@ -73,7 +74,23 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
         <Span size="xs" weight="medium" className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? ""}`} rounded="full" padding="pill-xs">{post.category}</Span>
         {post.isFeatured && <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>{labels?.featured ?? "Featured"}</Span>}
       </Row>
-      <Heading level={1} className="mb-4" size="3xl" weight="bold">{post.title}</Heading>
+      <Row className="mb-4" gap="sm" align="center" justify="between" wrap>
+        <Heading level={1} size="3xl" weight="bold">{post.title}</Heading>
+        {/*
+          🛑 No `ownerId={post.authorId}`, so this is ADMIN-ONLY — and that is a
+          decision, not an omission. The only blog editor is
+          `/admin/blog/[id]/edit`; handing a non-admin author a pencil would
+          point them at a route their role cannot open, which is worse than no
+          pencil (Root Cause #37's dead-link shape). Products differ because
+          they have a real seller editor at `/store/listings/[id]/edit`.
+        */}
+        <OwnerQuickActions
+          resource="BLOG"
+          placement="detail"
+          editHref={String(ROUTES.ADMIN.BLOG_EDIT(post.id))}
+          recordLabel={post.title}
+        />
+      </Row>
       {post.excerpt && <Text className="mb-6" color="muted" size="lg">{post.excerpt}</Text>}
       <Row color="muted" textSize="sm" wrap gap="md">
         {post.authorName && <Span>{labels?.author ?? "By"} <Span weight="medium" color="muted">{post.authorName}</Span></Span>}

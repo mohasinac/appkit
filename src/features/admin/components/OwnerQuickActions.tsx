@@ -61,12 +61,89 @@ export type OwnerQuickActionsResource =
   | "PRODUCT"
   | "CATEGORY"
   | "BRAND"
+  | "FRANCHISE"
   | "BUNDLE"
   | "GROUP"
   | "SUBLISTING"
   | "EVENT"
   | "BLOG"
-  | "REVIEW";
+  | "REVIEW"
+  | "STORE"
+  | "USER"
+  | "CAROUSEL"
+  | "SECTION";
+
+/**
+ * Which registry LEAF each resource reads, named explicitly.
+ *
+ * 🛑 This replaces `ACTIONS[resource].edit` / `.delete`, which assumed every
+ * bucket spells its leaves exactly `edit` and `delete`. Eight buckets do and
+ * BLOG does not — its leaves are `edit-post` and `delete-post` — so for blog
+ * posts both lookups resolved `undefined` and the controls silently fell back
+ * to the generic "Edit" / "Delete" / "Delete this record?" strings. The
+ * registry was bypassed for that resource while looking wired, which is
+ * exactly what Rule #7 exists to prevent.
+ *
+ * Several of the resources added here cannot use that convention at all:
+ * carousel slides and homepage sections have no bucket of their own and live
+ * under `ADMIN`. So the mapping has to be data, and being a
+ * `Record<OwnerQuickActionsResource, …>` makes a new resource a COMPILE error
+ * until someone names its leaves.
+ */
+interface ResourceLeaves {
+  bucket: keyof typeof ACTIONS;
+  edit: string;
+  /**
+   * The delete leaf. **Omitted means this resource exposes no bin at all**,
+   * regardless of what the caller passes — see the three cases below.
+   */
+  remove?: string;
+  duplicate?: string;
+}
+
+const RESOURCE_LEAVES: Record<OwnerQuickActionsResource, ResourceLeaves> = {
+  PRODUCT: { bucket: "PRODUCT", edit: "edit", remove: "delete", duplicate: "duplicate" },
+  CATEGORY: { bucket: "CATEGORY", edit: "edit", remove: "delete" },
+  BRAND: { bucket: "BRAND", edit: "edit", remove: "delete" },
+  BUNDLE: { bucket: "BUNDLE", edit: "edit", remove: "delete" },
+  GROUP: { bucket: "GROUP", edit: "edit", remove: "delete" },
+  SUBLISTING: { bucket: "SUBLISTING", edit: "edit", remove: "delete" },
+  EVENT: { bucket: "EVENT", edit: "edit", remove: "delete", duplicate: "duplicate" },
+  REVIEW: { bucket: "REVIEW", edit: "edit", remove: "delete" },
+
+  /** 🛑 `edit-post` / `delete-post`, not `edit` / `delete`. See the note above. */
+  BLOG: { bucket: "BLOG", edit: "edit-post", remove: "delete-post", duplicate: "duplicate-post" },
+
+  /**
+   * A franchise row IS a category (`categoryType: "franchise"`), so it reuses
+   * the category leaves rather than duplicating copy that would drift.
+   */
+  FRANCHISE: { bucket: "CATEGORY", edit: "edit", remove: "delete" },
+
+  /** Carousel slides have no bucket of their own; the leaves live under ADMIN. */
+  CAROUSEL: { bucket: "ADMIN", edit: "edit-carousel", remove: "delete-carousel" },
+
+  /*
+   * ── The three PENCIL-ONLY resources ─────────────────────────────────────
+   *
+   * `remove` is omitted on purpose for all three. Each is a delete whose blast
+   * radius is far larger than the page the bin would sit on, and a public
+   * surface is the worst possible place to offer it:
+   *
+   * STORE   — deleting a store orphans its products, orders and payouts. The
+   *           dashboard offers `suspend-store` / `verify-store`, which are the
+   *           operations an admin actually wants from a store page.
+   * USER    — deleting a user cascades across orders, reviews, bids and
+   *           addresses. `ADMIN.ban-user` is the reversible tool, and it has
+   *           its own flow with a reason.
+   * SECTION — homepage section `order` is POSITIONAL, so removing one silently
+   *           renumbers its neighbours. There is also no per-section public
+   *           page; the pencil goes to the list that owns them.
+   */
+  STORE: { bucket: "ADMIN", edit: "manage-store" },
+  USER: { bucket: "ADMIN", edit: "manage-user" },
+  SECTION: { bucket: "ADMIN", edit: "edit-section" },
+};
 
 export interface OwnerQuickActionsProps {
   resource: OwnerQuickActionsResource;
@@ -113,7 +190,8 @@ export function OwnerQuickActions({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const bucket = ACTIONS[resource] as Record<
+  const leaves = RESOURCE_LEAVES[resource];
+  const bucket = ACTIONS[leaves.bucket] as Record<
     string,
     { label: string; ariaLabel?: string; confirmation?: { title: string; body: string; confirmLabel: string } }
   >;
@@ -171,10 +249,17 @@ export function OwnerQuickActions({
    */
   if (!isAdmin && !isOwnerOrAdmin && !ownsStore) return null;
 
-  const editDef = bucket.edit;
-  const deleteDef = bucket.delete;
+  const editDef = bucket[leaves.edit];
+  const deleteDef = leaves.remove ? bucket[leaves.remove] : undefined;
   const confirmation = deleteDef?.confirmation;
-  const showClone = Boolean(onClone) && isAdmin;
+  const showClone = Boolean(onClone) && isAdmin && Boolean(leaves.duplicate);
+  /*
+   * 🛑 `leaves.remove` gates the bin, not just `onDelete`. A resource whose
+   * mapping omits a delete leaf (store, user, homepage section) must render no
+   * bin even if a caller passes `onDelete` — the safety decision belongs to the
+   * resource, not to each of its call sites, or the next call site re-opens it.
+   */
+  const showDelete = Boolean(onDelete) && Boolean(leaves.remove);
 
   return (
     <>
@@ -211,7 +296,7 @@ export function OwnerQuickActions({
         {showClone && (
           <IconButton
             aria-label={
-              (bucket.duplicate?.ariaLabel ?? bucket.duplicate?.label) ||
+              (leaves.duplicate ? bucket[leaves.duplicate]?.ariaLabel ?? bucket[leaves.duplicate]?.label : undefined) ||
               "Duplicate"
             }
             size="touch"
@@ -221,7 +306,7 @@ export function OwnerQuickActions({
           />
         )}
 
-        {onDelete && (
+        {showDelete && (
           <IconButton
             aria-label={deleteDef?.ariaLabel ?? deleteDef?.label ?? "Delete"}
             size="touch"
@@ -240,7 +325,7 @@ export function OwnerQuickActions({
         click-forwarding gets awkward. `CouponCard` — the one existing
         precedent for icon CRUD on a card — made the same choice.
       */}
-      {onDelete && (
+      {showDelete && (
         <ConfirmDeleteModal
           isOpen={confirmOpen}
           onClose={() => setConfirmOpen(false)}

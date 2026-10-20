@@ -14,6 +14,8 @@ import { ShareButton } from "../../products/components/ShareButton";
 import { SellerTrustBadge } from "../../scams/components/SellerTrustBadge";
 import type { SellerTrustResult } from "../../scams/actions/scam-actions";
 import type { StoreDetail } from "../types";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { ROUTES } from "../../../next/routing/route-map";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -78,6 +80,24 @@ export function StoreHeader({
                 </Span>
               )}
               {trust && <SellerTrustBadge trust={trust} />}
+              {/*
+                🛑 PENCIL ONLY — the STORE mapping in `OwnerQuickActions`
+                omits a delete leaf, so no bin renders here however this is
+                called. Deleting a store orphans its products, orders and
+                payouts; `suspend-store` / `verify-store` on the dashboard are
+                the operations an admin actually wants from a store page.
+
+                Admin-only (no `storeId` passed): the target is the admin store
+                page, and a seller editing their own shop goes through
+                /store/settings, which is a different href per viewer and not
+                something one `editHref` can express.
+              */}
+              <OwnerQuickActions
+                resource="STORE"
+                placement="detail"
+                editHref={String(ROUTES.ADMIN.STORE_DETAIL(store.storeSlug))}
+                recordLabel={store.storeName}
+              />
             </Row>
             <Row textSize="xs" className="text-[var(--appkit-color-text-muted)] mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}

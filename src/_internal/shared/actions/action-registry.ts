@@ -1158,6 +1158,22 @@ export const ACTIONS: ActionTree = {
     },
   },
   BLOG: {
+    /*
+     * Clone, admin-only, backed by POST /api/admin/blog/[id]/duplicate. A
+     * templated post is the real use case: same structure and category, new
+     * subject. The copy starts as a DRAFT with a freshly derived slug — blog is
+     * a pure-slug resource, so reusing the source slug would overwrite it.
+     */
+    "duplicate-post": {
+      iconKey: "duplicate",
+      id: "blog.duplicate-post",
+      label: "Duplicate",
+      ariaLabel: "Duplicate this post as a draft",
+      description:
+        "Copy this post into a new draft, without its views or featured flag.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
     "create-post": {
       iconKey: "create",
       id: "blog.create-post",
@@ -1232,6 +1248,24 @@ export const ACTIONS: ActionTree = {
     },
   },
   EVENT: {
+    /*
+     * Clone, admin-only, backed by POST /api/admin/events/[id]/duplicate. A
+     * recurring sale is the real use case: same copy, same prizes, new dates.
+     *
+     * 🛑 The endpoint rebuilds every lottery slot from its prize definition and
+     * resets the booking half — a spread would attribute a real buyer’s
+     * purchased slot to a brand-new event.
+     */
+    duplicate: {
+      iconKey: "duplicate",
+      id: "event.duplicate",
+      label: "Duplicate",
+      ariaLabel: "Duplicate this event as a draft",
+      description:
+        "Copy this event into a new draft, without its entries, winner or slot bookings.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
     /*
      * This bucket had only register / cancel-registration / draw-raffle-winner
      * — no edit, no delete — so the owner affordance on an event card or detail
@@ -2327,6 +2361,27 @@ export const ACTIONS: ActionTree = {
       label: "Edit Slide",
       ariaLabel: "Edit carousel slide",
       description: "Open the edit panel for a carousel slide.",
+      kind: "ghost",
+      permissions: ["admin"],
+    },
+    /*
+     * Homepage sections have no bucket of their own, so their edit leaf lives
+     * here beside the carousel pair for the same reason — both are homepage
+     * chrome an admin edits from a list rather than from a detail page.
+     *
+     * 🛑 There is deliberately NO `delete-section` counterpart. Section `order`
+     * is POSITIONAL, so removing one silently renumbers its neighbours — not
+     * something to offer from the public homepage, where the only confirmation
+     * a person gets is a dialog. `OwnerQuickActions` enforces the absence by
+     * omitting `remove` from the SECTION mapping, so no call site can pass a
+     * delete handler and have it render.
+     */
+    "edit-section": {
+      iconKey: "edit",
+      id: "admin.edit-section",
+      label: "Edit Section",
+      ariaLabel: "Edit this homepage section",
+      description: "Open the homepage sections list, which owns this section's config.",
       kind: "ghost",
       permissions: ["admin"],
     },

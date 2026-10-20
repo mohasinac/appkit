@@ -9,6 +9,8 @@ import { MediaImage } from "../../media/MediaImage";
 import { ProductGrid } from "../../products/components/ProductGrid";
 import { Alert } from "../../../ui/components/Alert";
 import type { CategoryDocument } from "../schemas";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { ROUTES } from "../../../next/routing/route-map";
 
 /**
  * A FRANCHISE page — every listing from one IP.
@@ -87,9 +89,31 @@ export async function FranchiseDetailPageView({
               />
             ) : null}
             <Stack gap="dense">
-              <Heading level={1} color="primary" size="3xl" weight="semibold">
-                {franchise.name}
-              </Heading>
+              <Row gap="sm" align="center" justify="between" wrap>
+                <Heading level={1} color="primary" size="3xl" weight="semibold">
+                  {franchise.name}
+                </Heading>
+                {/*
+                  A franchise row IS a category (`categoryType: "franchise"`),
+                  so it edits through the category editor and the FRANCHISE
+                  mapping reuses the CATEGORY leaves rather than duplicating
+                  copy that would drift.
+
+                  Admin-only in practice: a category has no `ownerId`, so the
+                  owner branch can never match — the component admits admins on
+                  its own term. No clone, for the same reason categories have
+                  none: parentIds / ancestors / tier / path / position are all
+                  derived by buildCategoryTree, so a copy carries stale state.
+                */}
+                {franchise.id ? (
+                  <OwnerQuickActions
+                    resource="FRANCHISE"
+                    placement="detail"
+                    recordLabel={franchise.name ?? slug}
+                    editHref={String(ROUTES.ADMIN.CATEGORIES_EDIT(franchise.id))}
+                  />
+                ) : null}
+              </Row>
               {franchise.description ? (
                 <Text color="muted" className="max-w-2xl">
                   {franchise.description}

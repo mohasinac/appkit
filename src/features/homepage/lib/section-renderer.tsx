@@ -1,5 +1,10 @@
 import React from "react";
 import { ROUTES } from "../../../next/routing/route-map";
+/* Defining module, not the `ui`/root barrel — Root Cause #18. This is the one
+   owner of "what a generated placeholder tile looks like"; the seed helper's
+   `isSeedPlaceholderImage` reads the same prefix from its own copy, and both
+   are documented as mirrors of `public/images/seed-tiles/`. */
+import { SEED_TILE_PREFIX } from "../../../utils/media-url";
 import { cleanTitle, parseWelcomeDescription } from "./section-helpers";
 import { DEFAULT_TRUST_FEATURES, DEFAULT_SECURITY_ITEMS } from "./section-defaults";
 import {
@@ -88,6 +93,7 @@ import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";
 import type { CategoryDocument } from "../../categories/schemas";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 export interface SectionData {
   products?: ProductItem[];
@@ -125,6 +131,15 @@ export interface HomepageBrand {
   name?: string;
   /** Short mark shown in the hero panel, e.g. "LT". */
   shortName?: string;
+  /**
+   * Caption under the hero brand panel's logo, e.g. "Let It Rip India".
+   *
+   * Separate from `name` because that one is a sentence ingredient ("Why
+   * Buyers Trust LetItRip") and this one is a standalone lockup line — they
+   * are spelled differently on purpose and collapsing them would force one of
+   * the two to read wrong.
+   */
+  heroCaption?: string;
 }
 
 const AD_SLOT_MAP: Record<string, keyof MarketplaceHomepageViewAdSlots> = {
@@ -222,23 +237,36 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
       /*
        * Hero imagery, taken from the featured categories' own covers.
        *
-       * Deterministic — the first five in CONFIGURED order, never shuffled, so
+       * Deterministic — the first few in CONFIGURED order, never shuffled, so
        * the server and client render the same mosaic (ImageMosaic's header is
        * explicit about why `Math.random()` is wrong here).
+       *
+       * 🛑 PLACEHOLDERS ARE DROPPED, and on this install that is most of them.
+       * `seedPhoto()` returns one of six flat SVG tiles under
+       * `SEED_TILE_PREFIX` whenever the seed has no real artwork, and
+       * `listTopLevelCategories` returns exactly the rows that have none —
+       * measured against production, 4 of the first 12 covers were tiles and
+       * the hero's large cell was `/images/seed-tiles/312e81.svg`. Those are
+       * not photographs of anything; passing them through meant the hero
+       * advertised the catalogue with coloured rectangles.
+       *
+       * Four, not five: the brand panel now owns the large cell, so the mosaic
+       * has one fewer slot to fill (see `ImageMosaic.leadSlot`).
        *
        * 🛑 `sectionData.categories` is only populated when the page also has a
        * `categories` section enabled, because MarketplaceHomepageView gates
        * each fetch on `activeTypes`. `welcome` is registered as a trigger for
        * that fetch for exactly this reason; without it the mosaic silently
-       * falls back to the brand panel and nothing says why.
+       * collapses to the brand panel alone and nothing says why.
        */
       const heroImages = (sectionData.categories ?? [])
         .map((c) => c.display?.coverImage)
-        .filter((src): src is string => Boolean(src))
-        .slice(0, 5);
+        .filter((src): src is string => Boolean(src) && !src!.startsWith(SEED_TILE_PREFIX))
+        .slice(0, 4);
       return (
         <WelcomeSection
           heroImages={heroImages}
+          brandCaption={brand?.heroCaption}
           title={cleanTitle(cfg?.h1) || SECTION_TITLE.welcome}
           // A real `subtitle` wins; `description` is the legacy source and is
           // still parsed for documents that only carry it.
@@ -873,6 +901,29 @@ export function renderSection(
   const adSlotKey = AD_SLOT_MAP[section.type];
   return (
     <React.Fragment key={section.id}>
+      {/*
+        Admin pencil for this section, above it rather than overlaid — a
+        section is a full-bleed strip with no free corner, and an absolutely
+        positioned control would land on top of whatever art it contains.
+
+        🛑 PENCIL ONLY, enforced by the SECTION mapping omitting a delete leaf.
+        Section `order` is POSITIONAL, so removing one silently renumbers its
+        neighbours — not an operation to offer from the public homepage.
+
+        🛑 Points at the SECTIONS LIST, not a per-section editor, because there
+        is no per-section page: `audit-nav-page-wiring` fails on a route key
+        with no `page.tsx`, and inventing one would be a dead link.
+
+        Renders nothing for visitors — it self-gates on the session — so this
+        costs a signed-out homepage exactly one component that returns null.
+      */}
+      <OwnerQuickActions
+        resource="SECTION"
+        placement="detail"
+        className="justify-end"
+        recordLabel={section.type}
+        editHref={String(ROUTES.ADMIN.SECTIONS)}
+      />
       {/* One section must never be able to take down the whole homepage. A
           throw inside any section used to propagate to [locale]/error.tsx and
           replace the entire page — see HomepageSectionBoundary. */}

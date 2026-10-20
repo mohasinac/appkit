@@ -16,6 +16,8 @@ import type {
   CarouselSlideHeight,
   CarouselHoverEffect,
 } from "../types/index";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { ROUTES } from "../../../next/routing/route-map";
 
 
 export interface HeroCarouselProps {
@@ -178,10 +180,18 @@ function SlideBackground({
         the browser's default priority and delay the only one the visitor can
         actually see.
       */}
+      {/*
+        🛑 `cover`, against MediaImage's `contain` default. This is a
+        full-bleed backdrop with a dim overlay and fixed-inverse headline on
+        top of it — letterboxing it would put that copy on bare surface with
+        the dim layer darkening nothing, which is unreadable rather than
+        merely different. Filling the box is the contract.
+      */}
       <MediaImage
         src={src}
         alt=""
         size="hero"
+        objectFit="cover"
         priority={priority}
         fetchPriority={priority ? "high" : "low"}
       />
@@ -217,7 +227,9 @@ function CardBackground({ bg }: { bg: CarouselBackground }) {
     );
   }
   if (bg.type === "image" && bg.url) {
-    return <MediaImage src={bg.url} alt="" size="card" />;
+    // `cover` for the same reason as the slide backdrop above — this sits
+    // behind the card's eyebrow/title/description, not beside them.
+    return <MediaImage src={bg.url} alt="" size="card" objectFit="cover" />;
   }
   return null;
 }
@@ -451,6 +463,26 @@ export function HeroCarousel({
                 key={slide.id}
                 className={`snap-start flex-none w-full relative self-stretch bg-neutral-900 ${slideHeightClass}`}
               >
+                {/*
+                  Admin edit/delete for THIS slide, at `bottom-2 left-2` — the
+                  one hero corner nothing else claims (top-left is the badge
+                  stack, top-right the wishlist heart, bottom-right the type
+                  pill).
+
+                  🛑 Declared AFTER the background on purpose. The background is
+                  `absolute inset-0`, so a later absolute sibling with a z-index
+                  paints above it; placed before, the artwork would cover the
+                  controls. `scrim` placement is what makes them readable on
+                  photography.
+                */}
+                <Div className="absolute bottom-2 left-2 z-10">
+                  <OwnerQuickActions
+                    resource="CAROUSEL"
+                    placement="card"
+                    recordLabel={slide.title ?? `Slide ${slideIndex + 1}`}
+                    editHref={String(ROUTES.ADMIN.CAROUSEL_EDIT(slide.id))}
+                  />
+                </Div>
                 {/* Background */}
                 <Div className={POSITION_FILL}>
                   <SlideBackground

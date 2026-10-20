@@ -17,6 +17,7 @@ import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -155,6 +156,26 @@ export async function PublicProfileView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
       <Stack gap="2xl" className={`${page.container.md}`} paddingY="y-3xl">
+        {/*
+          Admin quick-link to this person's record. Placed here rather than in
+          `renderProfileHero`, which is a pure presenter that never receives
+          `userId` — threading an id into it only to build one href would widen
+          its contract for a single caller.
+
+          🛑 PENCIL ONLY, enforced by the USER mapping omitting a delete leaf:
+          deleting a user cascades across orders, reviews, bids and addresses.
+          `ADMIN.ban-user` is the reversible tool and has its own flow with a
+          reason — a bin on someone's public profile is the wrong affordance for
+          an irreversible cascade.
+        */}
+        <Row justify="end">
+          <OwnerQuickActions
+            resource="USER"
+            placement="detail"
+            recordLabel={displayName}
+            editHref={String(ROUTES.ADMIN.USER_EDIT(userId))}
+          />
+        </Row>
         <Row gap="md" padding="t-xs" border="bottom">
           <TextLink href={`/profile/${userId}/overview`} variant={activeTab === "overview" ? "default" : "muted"} weight={activeTab === "overview" ? "semibold" : "normal"}>
             Overview

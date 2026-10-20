@@ -2,11 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { reviewRepository } from "../../../repositories";
 import { safeRead } from "../../../errors/safe-read";
-import { Container, Div, Grid, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
+import { Container, Div, Grid, Heading, Main, Nav, Row, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
 import { ReviewCard } from "./ReviewsList";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 export interface ReviewDetailPageViewProps {
   id: string;
@@ -92,6 +93,28 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
           </Span>
         </Nav>
       </Div>
+
+      {/*
+        🛑 The one resource here that is genuinely OWNER-visible rather than
+        admin-only, because it is the one with a real non-admin editor:
+        `/user/reviews/[id]/edit`, built in W3. So `ownerId` is passed and the
+        review's author sees the pencil on their own review — which is exactly
+        what "edit a review you have given without navigating to your reviews
+        page" asked for. Admins see it too, via the component's own term.
+
+        Every other resource in this sweep points at an `/admin/*` editor, so
+        passing an owner id there would hand a non-admin a pencil to a route
+        their role cannot open (Root Cause #37's dead-link shape).
+      */}
+      <Row justify="end" className="mb-2">
+        <OwnerQuickActions
+          resource="REVIEW"
+          placement="detail"
+          ownerId={review.userId}
+          recordLabel={review.title ?? review.id}
+          editHref={String(ROUTES.USER.REVIEW_EDIT(review.id))}
+        />
+      </Row>
 
       <ReviewDetailShell
         review={review}
