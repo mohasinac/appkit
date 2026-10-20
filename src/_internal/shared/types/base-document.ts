@@ -1,4 +1,4 @@
-import type { SeedPurpose } from "../../../seed/seed-purpose";
+import type { SeedPurpose } from "../../../constants/seed-meta";
 
 // Every primary Firestore collection document has these three fields.
 // All document interfaces must extend this — prevents field-list drift across 23 schema files.

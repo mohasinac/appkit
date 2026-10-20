@@ -51,7 +51,7 @@
  * different needs, and one field cannot answer both.
  *
  * `isTestData` therefore stays an explicit per-row opt-in, authored via
- * `testDataExpiresAt()` in `./test-data-ttl.ts`, and this file never writes it.
+ * `testDataExpiresAt()` in `../constants/seed-meta.ts`, and this file never writes it.
  *
  * ## What it replaces
  *
@@ -63,72 +63,41 @@
  * marker and no purge path — and users and orders are the two that were named.
  */
 
-/**
- * Why a seeded row exists — i.e. what a purge is allowed to do with it.
+/*
+ * ── 🛑 THE VOCABULARY MOVED; THE REGISTRIES STAYED ────────────────────────
  *
- * 🛑 Not a severity scale. Three different answers to one question: never,
- * on request, and only on an explicit full purge.
- */
-export type SeedPurpose =
-  /**
-   * Clearable test data. **The default**, and what almost everything is.
-   *
-   * Users, stores, listings, auctions, orders, bids, reviews, offers, carts,
-   * payouts — everything seeded to exercise a path rather than to be read as
-   * content. `appkit-seed purge` removes these and nothing else.
-   *
-   * 🛑 `test` says nothing about PUBLIC VISIBILITY. A demo product is `test`
-   * and fully visible; that is what makes the demo a demo. Hiding a row from
-   * the public is `isTestData`, which is a separate decision (see the header).
-   */
-  | "test"
-  /**
-   * Real content. **A purge must NEVER remove it**, because re-creating it is
-   * not a re-seed, it is authoring.
-   *
-   * The test to apply: *if clearing this means somebody has to WRITE it again
-   * rather than re-run a loader, it is permanent.*
-   *
-   * That is why the **tester checklist cases** are in here and not in some
-   * harness tier — they are the real catalogue of issues the testers test
-   * against and keep updating, which is authored content that happens to be
-   * about testing. Its 1,162 cases are no more disposable than the 85 FAQs.
-   */
-  | "permanent";
-
-/**
- * `Record<SeedPurpose, true>`, so a third value is a compile error in every map
- * keyed on the union rather than a silent gap (Root Cause #61).
- */
-export const SEED_PURPOSE_VALUES: Record<SeedPurpose, true> = {
-  test: true,
-  permanent: true,
-};
-
-export const ALL_SEED_PURPOSES = Object.keys(SEED_PURPOSE_VALUES) as SeedPurpose[];
-
-export function isSeedPurpose(value: unknown): value is SeedPurpose {
-  return typeof value === "string" && value in SEED_PURPOSE_VALUES;
-}
-
-/**
- * 🛑 There is deliberately NO third `fixture` tier.
+ * `SeedPurpose`, `SEED_PURPOSE_VALUES`, `ALL_SEED_PURPOSES`,
+ * `isSeedPurpose` and `PURGEABLE` now live in
+ * `appkit/src/constants/seed-meta.ts`, with their full reasoning.
  *
- * An earlier draft had one, meaning "clearable but only by an explicit full
- * purge", intended for the tester checklist. Once the cases were correctly
- * classified as permanent content it had **nothing in it** — and a union member
- * with no members is the dead-enum-value shape this codebase keeps paying for:
- * a filter chip whose value no row carries returns zero rows forever and reads
- * as a working control (Root Cause #33), and nine section types that exist in a
- * dropdown and have never rendered (F1 #20).
+ * They had to leave because `BaseDocument` carries the `seedPurpose` field,
+ * so the base type of EVERY document in the system imported from this
+ * directory — and this directory is 61% of the package's source bytes in pure
+ * fixture data that is being extracted into its own package. A two-value union
+ * is metadata about seeding, not seed data.
  *
- * Two values answer the question that was actually asked. If a genuine third
- * case appears, add it then — with a row that needs it.
+ * What stayed is everything that names a specific COLLECTION or a specific
+ * seeded ID — registries over the data, read only by `appkit-seed` and
+ * `audit-seed-purpose`. Those belong beside the rows they describe.
  */
-export const PURGEABLE: Record<SeedPurpose, boolean> = {
-  test: true,
-  permanent: false,
-};
+import {
+  type SeedPurpose,
+  SEED_PURPOSE_VALUES,
+  ALL_SEED_PURPOSES,
+  isSeedPurpose,
+  PURGEABLE,
+  TEST_DATA_TTL_DAYS,
+} from "../constants/seed-meta";
+
+/*
+ * Re-exported so existing importers of this module keep working unchanged.
+ * 🛑 These are re-exports of a MOVED declaration, not a second definition —
+ * two declarations of one union is the drift shape Root Cause #42 describes,
+ * and it is exactly what the duplicated TTL day-count used to be.
+ */
+export { SEED_PURPOSE_VALUES, ALL_SEED_PURPOSES, isSeedPurpose, PURGEABLE };
+export type { SeedPurpose };
+
 
 /**
  * The per-collection default, keyed on `COLLECTION_MAP`'s keys in
@@ -541,4 +510,4 @@ export function asSeedPurpose<T>(
  * construction — and when the two names are reconciled, there is exactly one
  * number to change.
  */
-export { TEST_DATA_TTL_DAYS as SEED_TEST_TTL_DAYS } from "./test-data-ttl";
+export { TEST_DATA_TTL_DAYS as SEED_TEST_TTL_DAYS };

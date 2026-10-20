@@ -98,7 +98,7 @@ export const NOTIFICATION_TTL_DAYS = 30;
  * Test-data TTL in days. RE-EXPORTED, not re-declared — this was a second
  * literal `7` whose only tie to the real one was a comment saying it matched.
  */
-export { TEST_DATA_TTL_DAYS } from "../../../../seed/test-data-ttl";
+export { TEST_DATA_TTL_DAYS } from "../../../../constants/seed-meta";
 /** Firestore batch write hard ceiling. */
 export const BATCH_LIMIT = 500;
 /** Firestore single-query soft ceiling for reconcile sweeps. */
