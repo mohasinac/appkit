@@ -10,6 +10,11 @@ import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
 import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
+import type {
+  ActualShipmentCost,
+  SelectedShippingQuote,
+  ShippingReconciliation,
+} from "../../../_internal/shared/shipping/quote";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
@@ -600,6 +605,41 @@ export interface OrderDocument extends BaseDocument {
   shippingMethod?: ShippingMethod;
   shippingCarrier?: string;
   trackingUrl?: string;
+  /**
+   * The courier the BUYER picked at checkout, and what they were charged for
+   * it, frozen at order creation.
+   *
+   * 🛑 Stored, never recomputed. Carrier rates move hourly, so re-quoting at
+   * reconciliation time would compare the seller's real spend against a price
+   * nobody was ever charged, and the buyer's refund would depend on when a job
+   * happened to run. Same reasoning as `sourceContext`.
+   *
+   * `chargedRate` is the ₹50-rounded figure and is the ONLY one that is
+   * billed; `rawRate` is kept for the audit trail and is never rendered.
+   * Absent on orders placed before the picker shipped, and on any order whose
+   * seller ships manually — so every reader must treat absence as "no quote
+   * was taken", never as zero.
+   */
+  selectedShippingQuote?: SelectedShippingQuote;
+  /**
+   * What the seller actually spent on postage, recorded at dispatch.
+   *
+   * Written by the seller's ship action. Its presence is what makes an order
+   * eligible for reconciliation; its absence means the parcel has not been
+   * dispatched or the seller has not told us what it cost.
+   */
+  actualShipmentCost?: ActualShipmentCost;
+  /**
+   * The outcome of comparing the two above — computed ONCE, when the seller
+   * dispatches, and then left alone.
+   *
+   * 🛑 Its presence is the idempotency key for the points credit. Crediting is
+   * an append to a ledger, so a job that ran twice would pay the buyer twice
+   * and nothing downstream could tell the difference between that and two
+   * genuine savings. Every writer must check this field is unset before
+   * writing a `shipping_saving` entry.
+   */
+  shippingReconciliation?: ShippingReconciliation & { reconciledAt: Date };
   /**
    * The carrier's label PDF, once a shipment has been booked.
    *

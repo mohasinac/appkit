@@ -105,6 +105,21 @@ export interface UserDocument extends BaseDocument {
   storeId?: string;
   storeSlug?: string;
   storeStatus?: "pending" | "approved" | "rejected";
+  /**
+   * Denormalised sum of this user's `pointsLedger` entries. 1 point = ₹1.
+   *
+   * 🛑 A MIRROR, and `pointsRepository` is the only thing allowed to write it —
+   * always in the same transaction as the ledger entry that moved it. Root
+   * Cause #42: a mirror maintained by more than one write path drifts, and this
+   * one guards money-shaped value, so drift either invents points or swallows
+   * earned ones.
+   *
+   * 🛑 Absence means "never computed", NOT zero. `getBalance` falls back to
+   * summing the ledger rather than answering 0, because every user document
+   * written before this field existed has no value here and answering zero
+   * would quietly deny people credits they hold.
+   */
+  pointsBalance?: number;
 
   // Tester program — orthogonal to `role`. A tester's `role` stays "seller" so every
   // existing seller-gated dashboard/API check works unmodified; this flag only unlocks
