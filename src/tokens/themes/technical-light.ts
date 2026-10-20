@@ -92,13 +92,13 @@ export const TECHNICAL_LIGHT_THEME: ThemeRecord = {
       "0 0 0 1px rgba(15,143,95,0.14), 0 4px 18px -6px rgba(15,143,95,0.2)",
 
     "appkit-font-display":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
     "appkit-font-sans":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
     "appkit-font-editorial":
-      "var(--font-body), ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "var(--font-body, ui-sans-serif), system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
     "appkit-font-mono":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
   },
   gradients: { ...DEFAULT_LIGHT_THEME.gradients },
 };
