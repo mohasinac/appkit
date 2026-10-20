@@ -27,16 +27,30 @@ import type { FAQCategory } from "../types/index";
  */
 export const HELP_INDEX_PATH = "/help" as const;
 
+/**
+ * The orders guide, named once because THREE categories share it.
+ *
+ * `orders_payment`, `shipping_delivery` and `returns_refunds` all resolve to
+ * the same page — see the per-entry notes below for why — so the path and the
+ * label were written out three times each. Extracted so a retitle is one edit
+ * rather than three, and so the three cannot drift into disagreeing labels for
+ * one destination.
+ */
+const ORDERS_GUIDE = {
+  path: "/help/orders",
+  label: "Orders, Returns & Support guide",
+} as const;
+
 export const FAQ_CATEGORY_HELP_GUIDE: Record<
   FAQCategory,
   { path: string; label: string } | null
 > = {
-  orders_payment: { path: "/help/orders", label: "Orders, Returns & Support guide" },
+  orders_payment: ORDERS_GUIDE,
   // Shipping questions are about an order in flight, which is what the orders
   // guide covers end to end. A separate shipping guide does not exist, and a
   // link to one that did not would be worse than this.
-  shipping_delivery: { path: "/help/orders", label: "Orders, Returns & Support guide" },
-  returns_refunds: { path: "/help/orders", label: "Orders, Returns & Support guide" },
+  shipping_delivery: ORDERS_GUIDE,
+  returns_refunds: ORDERS_GUIDE,
   // "Is my Beyblade original?" — the vocabulary behind most questions about
   // what an item actually is.
   product_information: { path: "/help/authenticity", label: "Is my Beyblade original?" },
