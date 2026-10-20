@@ -1487,27 +1487,6 @@ export { storeSlugGET } from "./features/stores/server";
 // updateStoreAddressForSeller - Helper for update store address for seller.
 export { updateStoreAddressForSeller } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildCheckoutMessageURL - Helper for build checkout message url.
-export { buildCheckoutMessageURL } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildStatusMessage - Helper for build status message.
-export { buildStatusMessage } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildStatusNotificationURL - Helper for build status notification url.
-export { buildStatusNotificationURL } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// isAdminNumber - Shared export for is admin number.
-export { isAdminNumber } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// parseIncomingWebhookPayload - Helper for parse incoming webhook payload.
-export { parseIncomingWebhookPayload } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendWhatsAppMessage - Shared export for send whats app message.
-export { sendWhatsAppMessage } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — Meta Cloud API helpers (WA3).
-export { sendWhatsAppBusinessMessage, syncProductsToCatalog, buildPurchaseAnnouncementMessage, buildGroupShareLink } from "./features/whatsapp-bot/server";
-export type { WaBusinessSendInput, CatalogSyncProduct, CatalogSyncInput, CatalogSyncResult, PurchaseAnnouncementInput } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addToWishlist - Helper for add to wishlist.
 export { addToWishlist } from "./features/wishlist/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

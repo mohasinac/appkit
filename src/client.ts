@@ -1171,11 +1171,6 @@ export type {
   NormalizedZodError,
 } from "./errors/normalize";
 
-// [CLIENT-SAFE] Pure wa.me share-link message builder — imported directly
-// from its isolated file (not ./whatsapp-bot/server) so this barrel's graph
-// never touches the sibling crypto-importing helpers.
-export { buildPaymentProofReviewMessage } from "./features/whatsapp-bot/helpers/payment-proof-message";
-export type { PaymentProofReviewMessageInput } from "./features/whatsapp-bot/types";
 
 // [CLIENT-SAFE] Verified 2026-08-20 (webpack-migration audit): every symbol
 // below is a "use client" component/hook, or a pure function/constant/type

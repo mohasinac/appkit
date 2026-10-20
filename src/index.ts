@@ -8489,8 +8489,6 @@ export { AdminTeamGuideView } from "./features/admin/components/AdminTeamGuideVi
 export { AdminAnalyticsGuideView } from "./features/admin/components/AdminAnalyticsGuideView";
 // [CLIENT-SSR]-Admin trust & safety guide — static view, no firebase-admin.
 export { AdminTrustGuideView } from "./features/admin/components/AdminTrustGuideView";
-// [CLIENT-SSR]-Admin WhatsApp integration guide — static view, no firebase-admin.
-export { AdminWhatsAppGuideView } from "./features/admin/components/AdminWhatsAppGuideView";
 // [CLIENT-SSR]-Admin payments (Razorpay) guide — static view, no firebase-admin.
 export { AdminPaymentsGuideView } from "./features/admin/components/AdminPaymentsGuideView";
 // [CLIENT-SSR]-Buyer shopping guide — static view, no firebase-admin.
@@ -8519,9 +8517,6 @@ export type { StoreCapabilitiesGuideViewProps } from "./features/stores/componen
 // [CLIENT-SSR]-Store settings guide — static view, no firebase-admin.
 export { StoreSettingsGuideView } from "./features/stores/components/StoreSettingsGuideView";
 export type { StoreSettingsGuideViewProps } from "./features/stores/components/StoreSettingsGuideView";
-// [CLIENT-SSR]-Store WhatsApp catalog sync guide — static view, no firebase-admin.
-export { StoreWhatsAppGuideView } from "./features/stores/components/StoreWhatsAppGuideView";
-export type { StoreWhatsAppGuideViewProps } from "./features/stores/components/StoreWhatsAppGuideView";
 export { StorePreOrdersListing } from "./features/stores/components/StorePreOrdersListing";
 export type { StorePreOrdersListingProps } from "./features/stores/components/StorePreOrdersListing";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -8679,59 +8674,12 @@ export type { StoreQueryListParams } from "./features/stores/server";
 // StoreReviewsResult - Type contract for store reviews result.
 export type { StoreReviewsResult } from "./features/stores/server";
 
-// ./features/whatsapp-bot/index
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// WhatsAppChatButton - Component for whats app chat button.
-export { WhatsAppChatButton } from "./features/whatsapp-bot/index";
-export { SellerWhatsAppSettingsView } from "./features/whatsapp-bot/index";
-export type { SellerWhatsAppSettingsViewProps } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CheckoutMessageInput - Type contract for checkout message input.
-export type { CheckoutMessageInput } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// IncomingWebhookPayload - Type contract for incoming webhook payload.
-export type { IncomingWebhookPayload } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// OrderStatusKey - Type contract for order status key.
-export type { OrderStatusKey } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SendWhatsAppInput - Type contract for send whats app input.
-export type { SendWhatsAppInput } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// StatusMessageInput - Type contract for status message input.
-export type { StatusMessageInput } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// StatusNotificationInput - Type contract for status notification input.
-export type { StatusNotificationInput } from "./features/whatsapp-bot/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// WebhookVerifyInput - Type contract for webhook verify input.
-export type { WebhookVerifyInput } from "./features/whatsapp-bot/index";
-
-// ./features/whatsapp-bot/server
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildCheckoutMessageURL - Helper for build checkout message url.
-export { buildCheckoutMessageURL } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildStatusMessage - Helper for build status message.
-export { buildStatusMessage } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildStatusNotificationURL - Helper for build status notification url.
-export { buildStatusNotificationURL } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildPaymentProofReviewMessage - Helper for build payment proof review message (Tier PP).
-export { buildPaymentProofReviewMessage } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// isAdminNumber - Shared export for is admin number.
-export { isAdminNumber } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// parseIncomingWebhookPayload - Helper for parse incoming webhook payload.
-export { parseIncomingWebhookPayload } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendWhatsAppMessage - Shared export for send whats app message.
-export { sendWhatsAppMessage } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY] Meta WhatsApp Business Cloud API helpers (WA1-WA8 integration)
-export { sendWhatsAppBusinessMessage, syncProductsToCatalog, buildPurchaseAnnouncementMessage, buildGroupShareLink } from "./features/whatsapp-bot/server";
-export type { WaBusinessSendInput, CatalogSyncProduct, CatalogSyncInput, CatalogSyncResult, PurchaseAnnouncementInput } from "./features/whatsapp-bot/index";
+// ./features/orders/utils/payment-proof-message
+// [CLIENT-SAFE] Pure wa.me share-link message builder — no crypto, no network.
+// The WhatsApp Cloud API integration was removed 2026-10-20; this survived
+// because a wa.me deep link needs no token, number or Meta billing account.
+export { buildPaymentProofReviewMessage } from "./features/orders/utils/payment-proof-message";
+export type { PaymentProofReviewMessageInput } from "./features/orders/utils/payment-proof-message";
 
 // ./features/wishlist/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

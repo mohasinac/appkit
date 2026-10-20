@@ -15,9 +15,6 @@ import { serverLogger } from "../../../monitoring";
 import { sendEmail } from "../../contact/email";
 import { getAdminDb } from "../../../providers/db-firebase";
 import { resolveDate } from "../../../utils";
-import { addressesRepository } from "../../addresses/repository/addresses.repository";
-import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
-import { sendWhatsAppBusinessMessage } from "../../whatsapp-bot/helpers/whatsapp";
 import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
 import { guardSend, logSuppressedSend } from "../../../_internal/server/notifications/send-guard";
 import {
@@ -31,7 +28,15 @@ import {
   type CheckoutValueOtpDoc,
 } from "../../auth/checkout-value-otp";
 
-export type CheckoutValueOtpChannel = "email" | "whatsapp";
+/**
+ * Email is the only checkout-OTP channel. WhatsApp was the other arm until
+ * 2026-10-20, when the Cloud API integration was removed — see
+ * `features/orders/utils/payment-proof-message.ts` for why the `wa.me`
+ * links survived and the API did not. Kept as a single-member union rather
+ * than deleted so the parameter stays self-documenting and a second channel
+ * has an obvious seam.
+ */
+export type CheckoutValueOtpChannel = "email";
 
 function maskEmail(userEmail: string): string {
   const [local, domain] = userEmail.split("@");
@@ -41,10 +46,7 @@ function maskEmail(userEmail: string): string {
 }
 
 /**
- * Sends a checkout-value OTP either by email (default) or WhatsApp
- * (opt-in — the buyer must explicitly choose it in the UI). WhatsApp phone
- * is always resolved server-side from the selected shipping address —
- * never trust a client-supplied phone number.
+ * Sends a checkout-value OTP by email.
  *
  * If the chosen channel (and, for email, its skip-worthy fallback) is
  * currently circuit-broken or unconfigured, the OTP gate is treated as
@@ -65,95 +67,6 @@ export async function sendCheckoutValueOtp(
   const codeHash = hashOtp(code);
   const expiresAt = new Date(Date.now() + CHECKOUT_VALUE_OTP_EXPIRY_MS);
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "LetItRip";
-
-  if (channel === "whatsapp") {
-    if (!addressId) {
-      throw new ValidationError("Select a delivery address before sending the code via WhatsApp.");
-    }
-    // A failed settings read makes the WhatsApp channel look deliberately
-    // switched off ("send the code by email instead") — a defensible fallback,
-    // but one an operator has to be able to see, since it is indistinguishable
-    // from an admin having disabled it.
-    const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
-      route: "checkout/value-otp",
-      key: "checkoutValueOtp.siteSettings",
-      fallback: null,
-    });
-    const creds = settings?.credentials ?? {};
-    const whatsappOtpEnabled = settings?.notificationChannels?.whatsapp?.otpEnabled === true;
-    const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";
-    const accessToken = creds.whatsappCloudApiToken?.trim() ?? "";
-    const credsReady =
-      phoneNumberId && accessToken && !phoneNumberId.includes("PLACEHOLDER") && !accessToken.includes("PLACEHOLDER");
-
-    if (!whatsappOtpEnabled || !credsReady) {
-      throw new ValidationError("WhatsApp verification isn't available right now — send the code by email instead.");
-    }
-
-    const address = await addressesRepository.findById(addressId);
-    /*
-   * REVEALED: this phone receives the high-value checkout OTP, so it has to
-   * be the real number. `addressesRepository` is ciphertext-by-default, and
-   * `.trim()` on the stored value is what the nominal brand caught — the
-   * old intersection form let `Encrypted<string>` call string methods.
-   */
-  const addressPlain = address ? addressesRepository.revealAddress(address) : null;
-  const phone = addressPlain?.phone?.trim();
-    if (!phone) {
-      throw new ValidationError("The selected address has no phone number on file — send the code by email instead.");
-    }
-
-    if (!(await isChannelHealthy("whatsapp"))) {
-      serverLogger.warn("sendCheckoutValueOtp: WhatsApp channel unhealthy — skipping OTP gate", { uid: userId, channel });
-      return { skipped: true };
-    }
-
-    await checkoutValueOtpRef(db, userId).set({
-      codeHash,
-      expiresAt,
-      attempts: 0,
-      verified: false,
-      createdAt: new Date(),
-    });
-
-    const message = buildCheckoutValueOtpMessage(code, siteName);
-
-    // Same guard as the email branch below, same reasoning: transactional, so
-    // the kill switch does not apply (the buyer cannot check out without the
-    // code), but the daily ceiling does.
-    const waGuard = {
-      channel: "whatsapp" as const,
-      feature: "checkout_value_otp",
-      audience: "user" as const,
-      transactional: true,
-    };
-    const waDecision = await guardSend(waGuard);
-    if (!waDecision.allow) {
-      logSuppressedSend(waGuard, waDecision);
-      throw new ValidationError(
-        "We couldn't send the verification code via WhatsApp — please try again, or send it by email instead.",
-      );
-    }
-
-    try {
-      const sent = await withChannelRetry("whatsapp", async () => {
-        const ok = await sendWhatsAppBusinessMessage({ toPhone: phone, message, phoneNumberId, accessToken });
-        if (!ok) throw new Error("WhatsApp Cloud API returned a non-OK response");
-        return ok;
-      });
-      if (!sent) throw new Error("WhatsApp send failed");
-    } catch (err) {
-      void normalizeError(err);
-      serverLogger.error("Failed to send checkout value OTP via WhatsApp", { uid: userId, err });
-      throw new ValidationError(
-        "We couldn't send the verification code via WhatsApp — please try again, or send it by email instead.",
-      );
-    }
-
-    const maskedPhone = phone.length > 4 ? `${"*".repeat(phone.length - 4)}${phone.slice(-4)}` : "***";
-    serverLogger.info(`Checkout value OTP sent via WhatsApp: uid=${userId}`);
-    return { maskedPhone };
-  }
 
   if (!(await isChannelHealthy("email"))) {
     serverLogger.warn("sendCheckoutValueOtp: email channel unhealthy — skipping OTP gate", { uid: userId, channel });
