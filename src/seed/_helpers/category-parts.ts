@@ -22,7 +22,7 @@
  *    code, weight, model count). No corpus sentence is reproduced.
  *
  * 2488 parts -> 2488 leaves across 26 part-type nodes.
- * 665 needed a classification-qualified slug because the bare name
+ * 703 needed a classification-qualified slug because the bare name
  * collides across classifications; the rest keep the short URL.
  *
  * @tag domain:categories
@@ -5014,7 +5014,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dragoon V2","dragoon-v2"] },
     },
     {
-      id: "category-dragoon-victory",
+      id: "category-layer-dragoon-victory",
       name: "Dragoon Victory",
       description:
         "Dragoon Victory — a layer (13.3 g). Loose examples, spares and pre-owned layers of this part are listed here.",
@@ -5371,7 +5371,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Fusion Aether","fusion-aether"] },
     },
     {
-      id: "category-gaia-dragoon",
+      id: "category-layer-gaia-dragoon",
       name: "Gaia Dragoon",
       description:
         "Gaia Dragoon — a layer (17.7 g, used by 1 model). Loose examples, spares and pre-owned layers of this part are listed here.",
@@ -6008,7 +6008,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Maximus Garuda G3","maximus-garuda-g3","Maximus Garuda"] },
     },
     {
-      id: "category-meteo-l-drago",
+      id: "category-layer-meteo-l-drago",
       name: "Meteo L-Drago",
       description:
         "Meteo L-Drago — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
@@ -6603,7 +6603,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Storm Spryzen S2","storm-spryzen-s2","S2","Storm Spryzen"] },
     },
     {
-      id: "category-storm-tiger",
+      id: "category-layer-storm-tiger",
       name: "Storm Tiger",
       description:
         "Storm Tiger — a layer. Loose examples, spares and pre-owned layers of this part are listed here.",
@@ -12618,7 +12618,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
   ],
   "category-original-bit-chips": [
     {
-      id: "category-amphilyon",
+      id: "category-bit-chip-amphilyon",
       name: "Amphilyon",
       description:
         "Amphilyon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12646,7 +12646,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Bakushin-Oh","bakushin-oh"] },
     },
     {
-      id: "category-bistool",
+      id: "category-bit-chip-bistool",
       name: "Bistool",
       description:
         "Bistool — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12660,7 +12660,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Bit Chips","bit-chips"] },
     },
     {
-      id: "category-black-dranzer",
+      id: "category-bit-chip-black-dranzer",
       name: "Black Dranzer",
       description:
         "Black Dranzer — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12695,14 +12695,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Cerberus","cerberus","Kerberous (Takara)"] },
     },
     {
-      id: "category-cyber-draciel",
+      id: "category-bit-chip-cyber-draciel",
       name: "Cyber Draciel",
       description:
         "Cyber Draciel — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Cyber Draciel","cyber draciel"] },
     },
     {
-      id: "category-cyber-dragoon",
+      id: "category-bit-chip-cyber-dragoon",
       name: "Cyber Dragoon",
       description:
         "Cyber Dragoon — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12730,21 +12730,21 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dark Draciel","dark-draciel"] },
     },
     {
-      id: "category-dark-dragoon",
+      id: "category-bit-chip-dark-dragoon",
       name: "Dark Dragoon",
       description:
         "Dark Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Dark Dragoon","dark-dragoon"] },
     },
     {
-      id: "category-dark-dranzer",
+      id: "category-bit-chip-dark-dranzer",
       name: "Dark Dranzer",
       description:
         "Dark Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Dark Dranzer","dark-dranzer"] },
     },
     {
-      id: "category-dark-driger",
+      id: "category-bit-chip-dark-driger",
       name: "Dark Driger",
       description:
         "Dark Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12758,7 +12758,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Dark Emblem","dark emblem"] },
     },
     {
-      id: "category-dark-gargoyle",
+      id: "category-bit-chip-dark-gargoyle",
       name: "Dark Gargoyle",
       description:
         "Dark Gargoyle — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12849,7 +12849,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Driger Emblem","driger emblem"] },
     },
     {
-      id: "category-falborg",
+      id: "category-bit-chip-falborg",
       name: "Falborg",
       description:
         "Falborg — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12863,14 +12863,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Flash Leopard","flash leopard"] },
     },
     {
-      id: "category-frostic-dranzer",
+      id: "category-bit-chip-frostic-dranzer",
       name: "Frostic Dranzer",
       description:
         "Frostic Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Frostic Dranzer","frostic-dranzer"] },
     },
     {
-      id: "category-gabriel",
+      id: "category-bit-chip-gabriel",
       name: "Gabriel",
       description:
         "Gabriel — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12891,7 +12891,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Galman","galman"] },
     },
     {
-      id: "category-galux",
+      id: "category-bit-chip-galux",
       name: "Galux",
       description:
         "Galux — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12947,7 +12947,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Griffolyon","griffolyon"] },
     },
     {
-      id: "category-guardian-driger",
+      id: "category-bit-chip-guardian-driger",
       name: "Guardian Driger",
       description:
         "Guardian Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -12975,7 +12975,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Heavy Metal Emblem","heavy metal emblem"] },
     },
     {
-      id: "category-hopper",
+      id: "category-bit-chip-hopper",
       name: "Hopper",
       description:
         "Hopper — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13045,7 +13045,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Leone II","leone ii"] },
     },
     {
-      id: "category-makendo",
+      id: "category-bit-chip-makendo",
       name: "Makendo",
       description:
         "Makendo — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13059,21 +13059,21 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Master Draciel","master-draciel"] },
     },
     {
-      id: "category-master-dragoon",
+      id: "category-bit-chip-master-dragoon",
       name: "Master Dragoon",
       description:
         "Master Dragoon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Master Dragoon","master-dragoon"] },
     },
     {
-      id: "category-master-dranzer",
+      id: "category-bit-chip-master-dranzer",
       name: "Master Dranzer",
       description:
         "Master Dranzer — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Master Dranzer","master dranzer"] },
     },
     {
-      id: "category-master-driger",
+      id: "category-bit-chip-master-driger",
       name: "Master Driger",
       description:
         "Master Driger — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13101,7 +13101,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Metal Dragoon","metal-dragoon"] },
     },
     {
-      id: "category-metal-dranzer",
+      id: "category-bit-chip-metal-dranzer",
       name: "Metal Dranzer",
       description:
         "Metal Dranzer — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13143,14 +13143,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Phantom Fox Emblem","phantom fox emblem"] },
     },
     {
-      id: "category-pierce-hedgehog",
+      id: "category-bit-chip-pierce-hedgehog",
       name: "Pierce Hedgehog",
       description:
         "Pierce Hedgehog — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Pierce Hedgehog","pierce-hedgehog"] },
     },
     {
-      id: "category-polta",
+      id: "category-bit-chip-polta",
       name: "Polta",
       description:
         "Polta — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13192,7 +13192,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Rock Bison","rock bison"] },
     },
     {
-      id: "category-rushing-boar",
+      id: "category-bit-chip-rushing-boar",
       name: "Rushing Boar",
       description:
         "Rushing Boar — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13206,7 +13206,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Sagittario II","sagittario ii"] },
     },
     {
-      id: "category-saizo",
+      id: "category-bit-chip-saizo",
       name: "Saizo",
       description:
         "Saizo — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13248,7 +13248,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Sea Dragon Emblem","sea-dragon-emblem"] },
     },
     {
-      id: "category-seaborg",
+      id: "category-bit-chip-seaborg",
       name: "Seaborg",
       description:
         "Seaborg — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13269,14 +13269,14 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Sharkrash","sharkrash"] },
     },
     {
-      id: "category-spark-knight",
+      id: "category-bit-chip-spark-knight",
       name: "Spark Knight",
       description:
         "Spark Knight — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
       extra: { aliases: ["Spark Knight","spark-knight"] },
     },
     {
-      id: "category-spike-lizard",
+      id: "category-bit-chip-spike-lizard",
       name: "Spike Lizard",
       description:
         "Spike Lizard — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13332,7 +13332,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Torch Pegasus","torch pegasus"] },
     },
     {
-      id: "category-trygator",
+      id: "category-bit-chip-trygator",
       name: "Trygator",
       description:
         "Trygator — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13346,7 +13346,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Trygle","trygle"] },
     },
     {
-      id: "category-tryhorn",
+      id: "category-bit-chip-tryhorn",
       name: "Tryhorn",
       description:
         "Tryhorn — a bit chip (used by 1 model). Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13381,7 +13381,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Ultimate Dragoon","ultimate-dragoon"] },
     },
     {
-      id: "category-unicolyon",
+      id: "category-bit-chip-unicolyon",
       name: "Unicolyon",
       description:
         "Unicolyon — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13402,7 +13402,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Vanishing Moot","vanishing moot"] },
     },
     {
-      id: "category-venus",
+      id: "category-bit-chip-venus",
       name: "Venus",
       description:
         "Venus — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13437,7 +13437,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Wolborg","wolborg"] },
     },
     {
-      id: "category-wolborg-3",
+      id: "category-bit-chip-wolborg-3",
       name: "Wolborg 3",
       description:
         "Wolborg 3 — a bit chip. Loose examples, spares and pre-owned bit chips of this part are listed here.",
@@ -13824,7 +13824,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Instant Release Base","instant release base"] },
     },
     {
-      id: "category-jumping-base",
+      id: "category-blade-base-jumping-base",
       name: "Jumping Base",
       description:
         "Jumping Base — a blade base (10 g, used by 2 models). Loose examples, spares and pre-owned blade bases of this part are listed here.",
@@ -15129,7 +15129,7 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Wide Survivor","wide-survivor"] },
     },
     {
-      id: "category-wing-attacker",
+      id: "category-weight-disk-wing-attacker",
       name: "Wing Attacker",
       description:
         "Wing Attacker — a weight disk (used by 1 model). Loose examples, spares and pre-owned weight disks of this part are listed here.",
