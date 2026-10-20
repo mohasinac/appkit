@@ -26,6 +26,16 @@ export interface InteractiveStoreCardProps {
     visitStore?: string;
   };
   className?: string;
+  /**
+   * Owner-only pencil / clone / bin, for an admin or whoever owns this record.
+   * Pass `<OwnerQuickActions>`; it renders nothing for anyone else.
+   *
+   * 🛑 Rendered OUTSIDE this card's own `<Link>`/`<TextLink>`, as a sibling.
+   * A `<button>` inside an `<a>` is invalid HTML that browsers resolve by
+   * closing the anchor early, which breaks the CARD's navigation rather than
+   * just the button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function InteractiveStoreCard({
@@ -36,6 +46,7 @@ export function InteractiveStoreCard({
   onSelect,
   labels = {},
   className = "",
+  renderOwnerActions,
 }: InteractiveStoreCardProps) {
   const initial = store.storeName[0]?.toUpperCase() ?? "S";
   const [logoBroken, setLogoBroken] = useState(false);
@@ -43,7 +54,7 @@ export function InteractiveStoreCard({
   const hasBanner = Boolean(store.storeBannerURL);
   const longPress = useLongPress(() => onSelect?.(store.id, !isSelected));
 
-  return (
+  const card = (
     <Div
       className={[
         "group relative flex flex-col h-full overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] shadow-sm transition-shadow hover:shadow-lg",
@@ -171,6 +182,18 @@ export function InteractiveStoreCard({
           </Row>
         </Stack>
       </Link>
+    </Div>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * beats this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 bottom-2 z-20">{renderOwnerActions()}</Div>
     </Div>
   );
 }

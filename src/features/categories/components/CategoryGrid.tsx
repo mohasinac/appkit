@@ -25,6 +25,16 @@ export interface CategoryCardProps {
   href?: string;
   onClick?: (category: CategoryItem) => void;
   className?: string;
+  /**
+   * Owner-only pencil / clone / bin, for an admin (categories have no owner,
+   * so only an admin ever sees it). Pass `<OwnerQuickActions>`.
+   *
+   * 🛑 Rendered OUTSIDE this card's `<Link>`, as a sibling. A `<button>`
+   * inside an `<a>` is invalid HTML that browsers resolve by closing the
+   * anchor early, which breaks the CARD's navigation rather than just the
+   * button's.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function CategoryCard({
@@ -32,6 +42,7 @@ export function CategoryCard({
   href,
   onClick,
   className = "",
+  renderOwnerActions,
 }: CategoryCardProps) {
   // totalProductCount is the rollup (self + all descendant categories),
   // maintained incrementally by onProductWrite — prefer it over the
@@ -138,7 +149,7 @@ export function CategoryCard({
     );
   }
 
-  return (
+  const card = (
     <Div
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -151,6 +162,18 @@ export function CategoryCard({
       className={cardClass}
     >
       {inner}
+    </Div>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * beats the featured dot at `left-2 top-2`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
     </Div>
   );
 }

@@ -42,6 +42,16 @@ interface EventCardProps {
   selectable?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
+  /**
+   * Owner-only pencil / clone / bin, for an admin or whoever owns this record.
+   * Pass `<OwnerQuickActions>`; it renders nothing for anyone else.
+   *
+   * 🛑 Rendered OUTSIDE this card's own `<Link>`/`<TextLink>`, as a sibling.
+   * A `<button>` inside an `<a>` is invalid HTML that browsers resolve by
+   * closing the anchor early, which breaks the CARD's navigation rather than
+   * just the button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function EventCard({
@@ -52,6 +62,7 @@ export function EventCard({
   selectable = false,
   isSelected = false,
   onSelect,
+  renderOwnerActions,
 }: EventCardProps) {
   const longPress = useLongPress(() => onSelect?.(event.id, !isSelected));
   const safeTitle = event.title?.trim() || "Untitled event";
@@ -62,7 +73,7 @@ export function EventCard({
 
   const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
-  return (
+  const card = (
     <Stack as="article" border="default"
       rounded="xl" shadow="hover-md" gap="none"
       className={`group relative h-full overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
@@ -148,5 +159,17 @@ export function EventCard({
         )}
       </Stack>
     </Stack>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * beats this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }

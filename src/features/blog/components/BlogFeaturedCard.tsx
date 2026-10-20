@@ -45,6 +45,16 @@ export interface BlogFeaturedCardProps {
   showAuthor?: boolean;
   /** Show the cover image. Defaults to `true`. */
   showThumbnail?: boolean;
+  /**
+   * Owner-only pencil / clone / bin, for an admin or whoever owns this record.
+   * Pass `<OwnerQuickActions>`; it renders nothing for anyone else.
+   *
+   * 🛑 Rendered OUTSIDE this card's own `<Link>`/`<TextLink>`, as a sibling.
+   * A `<button>` inside an `<a>` is invalid HTML that browsers resolve by
+   * closing the anchor early, which breaks the CARD's navigation rather than
+   * just the button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function BlogFeaturedCard({
@@ -58,6 +68,7 @@ export function BlogFeaturedCard({
   showReadTime = true,
   showAuthor = true,
   showThumbnail = true,
+  renderOwnerActions,
 }: BlogFeaturedCardProps) {
   const longPress = useLongPress(() => onSelect?.(post.id, !isSelected));
   const safeTitle = post.title?.trim() || "Untitled post";
@@ -70,7 +81,7 @@ export function BlogFeaturedCard({
       })
     : "";
 
-  return (
+  const card = (
     <Article
       rounded="xl" shadow="hover-md"
       className={`group relative h-full overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${isSelected ? "ring-2 ring-primary outline outline-2 outline-primary" : ""} ${className}`}
@@ -164,5 +175,17 @@ export function BlogFeaturedCard({
         </Stack>
       </TextLink>
     </Article>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * beats this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }
