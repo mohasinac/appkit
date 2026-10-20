@@ -5,6 +5,7 @@ import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 import type { CategoryItem } from "../types";
 
@@ -165,7 +166,38 @@ export function CategoryCard({
     </Div>
   );
 
-  if (!renderOwnerActions) return card;
+  /*
+   * 🛑 The quick actions are the DEFAULT, not an opt-in.
+   *
+   * This was `if (!renderOwnerActions) return card;` and NOTHING in either
+   * repo ever passed `renderOwnerActions` — measured across all nine card
+   * components that declare it. So the pencil was unreachable on every grid in
+   * the app, and the slot read as wired because the prop, the docstring and
+   * the positioning were all present. Root Cause #8's shape: a slot shell
+   * rendered with zero render props.
+   *
+   * A card is resource-specific by construction — a CategoryCard is always a
+   * category — so it can name its own resource and needs no threading through
+   * the dozens of listing views that mount it. `RecordOwnerQuickActions` is a
+   * Client Component receiving only strings, which is the ordinary RSC
+   * boundary; the thing that cannot cross it is a FUNCTION prop, which is why
+   * the detail views could not pass `onDelete` directly.
+   *
+   * The override seam stays for a caller that genuinely needs different
+   * actions.
+   */
+  const ownerActions = renderOwnerActions ? (
+    renderOwnerActions()
+  ) : category.id ? (
+    <RecordOwnerQuickActions
+      resource="CATEGORY"
+      recordId={String(category.id)}
+      recordLabel={category.name}
+      placement="card"
+    />
+  ) : null;
+
+  if (!ownerActions) return card;
   /*
    * Sibling of the card, never a child — see the prop's docstring. `z-20`
    * beats the featured dot at `left-2 top-2`.
@@ -173,7 +205,7 @@ export function CategoryCard({
   return (
     <Div className="relative h-full">
       {card}
-      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+      <Div className="absolute right-2 top-2 z-20">{ownerActions}</Div>
     </Div>
   );
 }

@@ -21,6 +21,7 @@ import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
+import { ProductOwnerQuickActions } from "./ProductOwnerQuickActions";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -459,7 +460,32 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       cardBody
     );
 
-  if (!renderOwnerActions || selectionMode || isSelected) return wrapped;
+  /*
+   * 🛑 Default, not opt-in — nothing in either repo ever passed
+   * `renderOwnerActions`, so this toolbar was unreachable on every product
+   * grid in the app despite the prop, the docstring and the positioning all
+   * being present (Root Cause #8).
+   *
+   * `ProductOwnerQuickActions`, not the generic wrapper: a product is the one
+   * collection a SELLER can also own, so its endpoints live under
+   * `SELLER_ENDPOINTS` and its clone has a bespoke redirect to the copy's
+   * editor. `storeId` is the store SLUG, which is what `SessionUser.storeId`
+   * holds — the component renders nothing for anyone who owns neither.
+   */
+  const ownerActions = renderOwnerActions ? (
+    renderOwnerActions()
+  ) : product.id ? (
+    <ProductOwnerQuickActions
+      productId={String(product.id)}
+      storeId={product.storeId ? String(product.storeId) : undefined}
+      recordLabel={product.title}
+      placement="card"
+    />
+  ) : null;
+
+  // Selection is still suppressed: a bulk-select gesture and a per-record edit
+  // are different intents, and offering both at once invites the wrong one.
+  if (!ownerActions || selectionMode || isSelected) return wrapped;
 
   /*
    * 🛑 OUTSIDE the anchor, as a sibling — never inside `cardBody`.
@@ -481,7 +507,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   return (
     <Div className="relative h-full">
       {wrapped}
-      <Div className="absolute right-2 top-14 z-20">{renderOwnerActions()}</Div>
+      <Div className="absolute right-2 top-14 z-20">{ownerActions}</Div>
     </Div>
   );
 }

@@ -9,7 +9,7 @@ import {
   storeRepository,
 } from "../../../repositories";
 import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
-import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { resolveTaxonomyVisual } from "../utils/taxonomy-visual";
@@ -730,12 +730,18 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             derived state.
           */}
           {category?.id && (
-            <OwnerQuickActions
+            <RecordOwnerQuickActions
               resource="CATEGORY"
+              recordId={category.id}
               placement="detail"
+              /*
+               * Same flag the rest of this hero branches on. Without it the
+               * pencil renders `ghost` (zinc-600) on the dark cover and is
+               * invisible — see Root Cause #67 and `OwnerQuickActions.onMedia`.
+               */
+              onMedia={hasCover}
               className="mb-3"
               recordLabel={category.name ?? slug}
-              editHref={String(ROUTES.ADMIN.CATEGORIES_EDIT(category.id))}
             />
           )}
 

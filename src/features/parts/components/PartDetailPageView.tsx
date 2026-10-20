@@ -308,6 +308,34 @@ export function PartDetailPageView({
             </Stack>
           )}
 
+          {/* ── attribution ──────────────────────────────────────────────── */}
+          {part.sourceUrl && (
+            <Div>
+              <Text size="xs" color="faint">
+                {/*
+                 * 🛑 THE LICENCE LINK-BACK, and it was the one real exposure in
+                 * this work. `sourceUrl` is stored on 2,087 of 2,488 parts —
+                 * and across beys, characters and products it is on roughly
+                 * 5,500 rows — while being RENDERED ON NONE of them.
+                 *
+                 * The facts here come from a CC-BY-SA community wiki. Two
+                 * things keep us clear of share-alike: taking facts only (no
+                 * source sentence is reproduced; the prose is composed from the
+                 * facts by our own generator) and linking back. Storing the URL
+                 * discharges neither — only rendering it does.
+                 *
+                 * Do not remove this to tidy the page.
+                 */}
+                Facts on this page are drawn from a community wiki under CC&nbsp;BY-SA.{" "}
+                <Anchor href={part.sourceUrl} tone="muted" underline="always">
+                  Source
+                </Anchor>
+                {" · "}
+                <TextLink href="/credits">Credits</TextLink>
+              </Text>
+            </Div>
+          )}
+
           {/* ── which beys use it ─────────────────────────────────────────── */}
           <Stack gap="sm" className="min-w-0">
             <Heading level={2} size="lg">

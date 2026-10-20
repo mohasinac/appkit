@@ -42,7 +42,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { CategoryGrid } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
-import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../../features/admin/components/RecordOwnerQuickActions";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -111,11 +111,11 @@ export function BundleDetailView({
                   are all resolved at WRITE time, so a copy would carry another
                   bundle's resolved state rather than its own.
                 */}
-                <OwnerQuickActions
+                <RecordOwnerQuickActions
                   resource="BUNDLE"
+                  recordId={String(bundle.id)}
                   placement="detail"
                   recordLabel={String(bundle.name)}
-                  editHref={String(ROUTES.ADMIN.BUNDLES_EDIT(String(bundle.id)))}
                 />
                 <Heading
                   level={1} size="3xl" weight="semibold" color="primary">

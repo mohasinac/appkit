@@ -169,6 +169,23 @@ export interface OwnerQuickActionsProps {
    * `detail` sits in a header row beside the title.
    */
   placement?: "card" | "detail";
+  /**
+   * 🛑 Set this whenever `placement="detail"` sits on a DARK cover hero.
+   *
+   * `detail` otherwise renders the `ghost` variant, which is
+   * `color: var(--appkit-color-zinc-600)` — a dark grey that is correct on a
+   * page-surface header row and invisible on a cover photo. Every detail view
+   * that has a hero already computes a `hasCover` flag and flips each of its
+   * siblings to `color="inverse"`; this toolbar was the one element in that
+   * block that did not, so the pencil rendered near-black on near-black and
+   * read as "admins get no edit button" (Root Cause #67 — a theme-relative ink
+   * on a theme-invariant dark surface).
+   *
+   * Pass the SAME flag the rest of the hero branches on, not a literal `true`:
+   * a coverless hero falls back to the page surface, where the scrim's white
+   * ink would be invisible in the mirror-image way.
+   */
+  onMedia?: boolean;
   className?: string;
 }
 
@@ -181,6 +198,7 @@ export function OwnerQuickActions({
   storeId,
   recordLabel,
   placement = "card",
+  onMedia = false,
   className = "",
 }: OwnerQuickActionsProps) {
   const session = useOptionalSession();
@@ -261,6 +279,26 @@ export function OwnerQuickActions({
    */
   const showDelete = Boolean(onDelete) && Boolean(leaves.remove);
 
+  /*
+   * 🛑 The scrim is for ANY dark backdrop, not only a card.
+   *
+   * `detail` used to hard-map to `ghost` (`color: var(--appkit-color-zinc-600)`),
+   * which is right on a page-surface header row and invisible on a cover photo
+   * — and every detail view with a hero puts this toolbar inside that hero,
+   * beside siblings it has already flipped to `color="inverse"`. The pencil
+   * therefore rendered near-black on near-black and read as "admins get no
+   * edit button at all". See `onMedia` above and Root Cause #67.
+   */
+  const onDark = placement === "card" || onMedia;
+  const neutralVariant = onDark ? "scrim" : "ghost";
+  /*
+   * Danger ink is dropped on a dark backdrop for the same reason: `danger`
+   * resolves to a theme-relative red that disappears against the hero. The bin
+   * keeps its confirm dialog, which is where the destructive intent is
+   * actually communicated — colour was never the safeguard.
+   */
+  const dangerVariant = onDark ? "scrim" : "danger";
+
   return (
     <>
       <Row
@@ -279,7 +317,7 @@ export function OwnerQuickActions({
         <IconButton
           aria-label={editDef?.ariaLabel ?? editDef?.label ?? "Edit"}
           size="touch"
-          variant={placement === "card" ? "scrim" : "ghost"}
+          variant={neutralVariant}
           icon={<Icon name="edit" />}
           onClick={() => {
             /*
@@ -300,7 +338,7 @@ export function OwnerQuickActions({
               "Duplicate"
             }
             size="touch"
-            variant={placement === "card" ? "scrim" : "ghost"}
+            variant={neutralVariant}
             icon={<Icon name="duplicate" />}
             onClick={() => void onClone?.()}
           />
@@ -310,7 +348,7 @@ export function OwnerQuickActions({
           <IconButton
             aria-label={deleteDef?.ariaLabel ?? deleteDef?.label ?? "Delete"}
             size="touch"
-            variant={placement === "card" ? "scrim" : "danger"}
+            variant={dangerVariant}
             icon={<Icon name="delete" />}
             onClick={() => setConfirmOpen(true)}
           />

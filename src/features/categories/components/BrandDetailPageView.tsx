@@ -8,7 +8,7 @@ import {
 } from "../../../repositories";
 import { ROUTES } from "../../../next/routing/route-map";
 import { Anchor, Container, Div, Dl, Dt, Dd, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
-import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
@@ -292,12 +292,14 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                   owner either, so this is admin-only, and they carry the same
                   derived tree fields — hence no clone. */}
               {brand?.id && (
-                <OwnerQuickActions
+                <RecordOwnerQuickActions
                   resource="BRAND"
+                  recordId={brand.id}
                   placement="detail"
+                  /* See CategoryDetailPageView — ghost ink is invisible on the cover hero. */
+                  onMedia={hasCover}
                   className="mb-2"
                   recordLabel={brand.name ?? slug}
-                  editHref={String(ROUTES.ADMIN.BRANDS_EDIT(brand.id))}
                 />
               )}
               <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">

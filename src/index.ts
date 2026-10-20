@@ -9593,6 +9593,8 @@ export type { ListingTypeCapability } from "./_internal/shared/listing-types/cap
 export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
 // Pencil / clone / bin for whoever owns the record, on a PUBLIC surface.
 export { OwnerQuickActions } from "./features/admin/components/OwnerQuickActions";
+export { RecordOwnerQuickActions } from "./features/admin/components/RecordOwnerQuickActions";
+export type { RecordOwnerQuickActionsProps, RecordQuickActionResource } from "./features/admin/components/RecordOwnerQuickActions";
 export type { OwnerQuickActionsProps, OwnerQuickActionsResource } from "./features/admin/components/OwnerQuickActions";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 

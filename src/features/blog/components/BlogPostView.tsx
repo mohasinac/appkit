@@ -12,7 +12,7 @@ import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
-import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 const __P = {
   p8: "p-[var(--appkit-space-8)]",
@@ -84,10 +84,10 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
           pencil (Root Cause #37's dead-link shape). Products differ because
           they have a real seller editor at `/store/listings/[id]/edit`.
         */}
-        <OwnerQuickActions
+        <RecordOwnerQuickActions
           resource="BLOG"
+          recordId={post.id}
           placement="detail"
-          editHref={String(ROUTES.ADMIN.BLOG_EDIT(post.id))}
           recordLabel={post.title}
         />
       </Row>

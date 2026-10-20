@@ -9,8 +9,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { ProductGrid } from "../../products/components/ProductGrid";
 import { Alert } from "../../../ui/components/Alert";
 import type { CategoryDocument } from "../schemas";
-import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
-import { ROUTES } from "../../../next/routing/route-map";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 /**
  * A FRANCHISE page — every listing from one IP.
@@ -106,11 +105,11 @@ export async function FranchiseDetailPageView({
                   derived by buildCategoryTree, so a copy carries stale state.
                 */}
                 {franchise.id ? (
-                  <OwnerQuickActions
+                  <RecordOwnerQuickActions
                     resource="FRANCHISE"
+                    recordId={franchise.id}
                     placement="detail"
                     recordLabel={franchise.name ?? slug}
-                    editHref={String(ROUTES.ADMIN.CATEGORIES_EDIT(franchise.id))}
                   />
                 ) : null}
               </Row>
