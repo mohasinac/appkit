@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { getDigitalCodeForDetail } from "../../../_internal/server/features/digital-code/data";
 
@@ -170,6 +171,27 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
                     <Span size="xs" weight="semibold" className="inline-block" padding="pill-sm" rounded="full" surface="danger-surface" color="error">Sold out</Span>
                   )}
                 </Row>
+                {/*
+                  Owner quick-actions, rendered DIRECTLY rather than through a
+                  slot prop: OwnerQuickActions self-gates on the session, so an
+                  async RSC can hand it the record and let it decide whether to
+                  appear at all.
+
+                  Ownership goes in as the store SLUG, which is what
+                  SessionUser.storeId holds. A listing is owned by its store.
+
+                  🛑 Anchored to the CONTENT heading, not the first h1 in the
+                  file — that one belongs to the "Not Found" branch, where the
+                  record is narrowed to never and the toolbar would describe a
+                  listing that does not exist.
+                */}
+                <OwnerQuickActions
+                  resource="PRODUCT"
+                  placement="detail"
+                  recordLabel={String(p.title ?? p.slug ?? p.id)}
+                  storeId={p.storeId ? String(p.storeId) : undefined}
+                  editHref={String(ROUTES.STORE.PRODUCTS_EDIT(String(p.id)))}
+                />
                 <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">
                   {title}
                 </Heading>
