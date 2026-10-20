@@ -196,15 +196,6 @@ export const SITE_SETTINGS_ENTRIES: readonly SettingsIndexSource[] = [
     kind: "toggle",
   },
   {
-    slug: "whatsapp-notifications",
-    anchored: true,
-    label: "WhatsApp notifications",
-    description: "Send order updates over WhatsApp.",
-    keywords: ["whatsapp", "order updates", "meta"],
-    tab: "notifications",
-    kind: "toggle",
-  },
-  {
     slug: "daily-digest",
     anchored: true,
     label: "Daily status digest",
