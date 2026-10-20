@@ -248,7 +248,26 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
   {
     typeKey: "part",
     collection: "partGlossary",
-    select: ["name", "code", "classification", "slot"],
+    /*
+     * 🛑 `aliases` IS IN THE SELECT BECAUSE AN ABBREVIATION IS HOW PEOPLE
+     * SEARCH FOR A PART.
+     *
+     * The wiki states a part's short form outright, and it reaches 1,072 of
+     * 2,490 rows: `EWD` is Eternal Wide Defense, `BWD` is Big Wide Defense,
+     * `ES` is Eternal Spike. Those are the names printed on the part and the
+     * names the community uses — but they lived only in Firestore, because
+     * this select carried name/code/classification/slot and nothing else.
+     *
+     * So the data was there, the page was there, and searching `EWD` found
+     * NOTHING. A gap between holding a fact and being able to find it is
+     * invisible from either end.
+     *
+     * 🛑 It must be `aliases`, not `aka`. The generator UNIONS the wiki's
+     * `aka` into the pre-existing `aliases` array rather than replacing it,
+     * so `aliases` is the superset — selecting `aka` would silently drop
+     * every alias the corpus contributed.
+     */
+    select: ["name", "code", "classification", "slot", "aliases"],
     slugOf: (id) => (id.includes("--") ? id.replace("--", "/") : null),
     toRecord: (id, d) => {
       const name = str(d.name);
@@ -265,11 +284,31 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
       if (!id.includes("--")) return null;
       const code = str(d.code);
       const classification = str(d.classification);
+      /*
+       * The abbreviations, appended to `detail` because that is the only
+       * other field the record carries and the matcher reads both.
+       *
+       * 🛑 Bounded to four and de-duplicated against the name and code. A
+       * part can carry a dozen aliases, and the artifact is a public file
+       * fetched by every visitor — the whole point of it is that it stays
+       * small enough to ship whole. Four covers the abbreviation plus the
+       * other vendor's name, which is what anyone actually types.
+       */
+      const aliases = Array.isArray(d.aliases) ? d.aliases.map(str).filter(Boolean) : [];
+      const seen = new Set([name.toLowerCase(), (code ?? "").toLowerCase()]);
+      const extra: string[] = [];
+      for (const a of aliases) {
+        const k = String(a).toLowerCase();
+        if (seen.has(k)) continue;
+        seen.add(k);
+        extra.push(String(a));
+        if (extra.length === 4) break;
+      }
       return {
         title: name,
         // The classification IS the disambiguation — it is why a user
         // searching "105" can tell three results apart.
-        detail: [classification, code].filter(Boolean).join(" · "),
+        detail: [classification, code, ...extra].filter(Boolean).join(" · "),
       };
     },
   },

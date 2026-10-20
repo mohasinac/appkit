@@ -113,7 +113,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Yr"
     ],
     "hasbroCode": "D06",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armour--1b",
@@ -239,6 +240,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "セブン",
     "romaji": "Sebun"
   },
@@ -415,6 +417,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "スラッシュ",
     "romaji": "Surasshu"
   },
@@ -552,6 +555,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 58,
       "stamina": 50
     },
+    "role": "ring",
     "jpName": "サークルアッパー",
     "romaji": "Sākuru Appā"
   },
@@ -630,7 +634,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-attacker",
@@ -696,7 +701,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-dranzer",
@@ -762,7 +768,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-fang",
@@ -813,7 +820,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Fang is a Beyblade attack ring from the Spin Gear System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Fang"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Fang",
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-griffon",
@@ -883,7 +891,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-spike",
@@ -949,7 +958,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-spiker",
@@ -1015,7 +1025,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--cybernetic-dragon",
@@ -1094,7 +1105,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--devil-crusher",
@@ -1128,7 +1140,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Devil_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Devil_Crusher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--dj-spiker",
@@ -1150,7 +1163,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "DJ Spiker is a Beyblade attack ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_DJ_Spiker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_DJ_Spiker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--double-horn",
@@ -1225,7 +1239,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--double-wing",
@@ -1294,7 +1309,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Wing",
+    "role": "ring"
   },
   {
     "id": "attack-ring--dragon-breaker",
@@ -1370,7 +1386,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 50,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--dragon-saucer",
@@ -1449,7 +1466,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--dual-dragon",
@@ -1506,7 +1524,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Dual Dragon is a Beyblade attack ring from the Spin Gear System, weighing 6 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dual_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dual_Dragon",
+    "role": "ring"
   },
   {
     "id": "attack-ring--eight-attacker",
@@ -1586,7 +1605,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--eight-spike",
@@ -1637,7 +1657,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Eight Spike is a Beyblade attack ring from the Spin Gear System, weighing 4.2 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Spike",
+    "role": "ring"
   },
   {
     "id": "attack-ring--fire-cracker",
@@ -1704,7 +1725,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Fire Cracker is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Fire_Cracker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Fire_Cracker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--flame-wing",
@@ -1806,7 +1828,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flame_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flame_Wing",
+    "role": "ring"
   },
   {
     "id": "attack-ring--flying-defense",
@@ -1853,7 +1876,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Flying Defense is a Beyblade attack ring, weighing 7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flying_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flying_Defense",
+    "role": "ring"
   },
   {
     "id": "attack-ring--g-upper",
@@ -1913,7 +1937,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--g-upper-attack-profile",
@@ -1974,7 +1999,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Genocide Circle is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Genocide_Circle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Genocide_Circle",
+    "role": "ring"
   },
   {
     "id": "attack-ring--gigantic-claw",
@@ -2039,7 +2065,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--god-smasher",
@@ -2062,7 +2089,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "God Smasher is a Beyblade attack ring, weighing 18 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_God_Smasher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_God_Smasher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--great-dragon",
@@ -2125,7 +2153,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Dragon",
+    "role": "ring"
   },
   {
     "id": "attack-ring--hammer-tusk",
@@ -2176,7 +2205,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hammer Tusk is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Hammer_Tusk"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Hammer_Tusk",
+    "role": "ring"
   },
   {
     "id": "attack-ring--holy-despell",
@@ -2237,7 +2267,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingScale": 6,
     "ratingsNormalised": {
       "defense": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--howling-leo",
@@ -2287,7 +2318,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Howling Leo is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Howling_Leo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Howling_Leo",
+    "role": "ring"
   },
   {
     "id": "attack-ring--jiraiya-blade",
@@ -2328,7 +2360,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jiraiya_Blade"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jiraiya_Blade",
+    "role": "ring"
   },
   {
     "id": "attack-ring--knight-crusher",
@@ -2363,7 +2396,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Knight Crusher is a Beyblade attack ring from the Hard Metal System, weighing 19 g. Part of Gimmick Specialty.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Crusher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--land-attack",
@@ -2430,7 +2464,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Max_Shield"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Max_Shield",
+    "role": "ring"
   },
   {
     "id": "attack-ring--metal-ape",
@@ -2461,7 +2496,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Ape is a Beyblade attack ring from the Hard Metal System, weighing 20 g. Part of New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Ape"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Ape",
+    "role": "ring"
   },
   {
     "id": "attack-ring--metal-attacker",
@@ -2540,7 +2576,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--metal-defense",
@@ -2574,7 +2611,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--metal-saucer",
@@ -2609,7 +2647,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Saucer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Saucer",
+    "role": "ring"
   },
   {
     "id": "attack-ring--metal-spring",
@@ -2704,7 +2743,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--panther-claw",
@@ -2770,7 +2810,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--panther-head",
@@ -2853,7 +2894,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--penta-wing",
@@ -2914,7 +2956,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--reverse-dragon",
@@ -3006,7 +3049,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33,
       "weight": 83
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--reverse-wolf",
@@ -3066,7 +3110,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Wolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Wolf",
+    "role": "ring"
   },
   {
     "id": "attack-ring--samurai-upper",
@@ -3169,6 +3214,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 58,
       "stamina": 50
     },
+    "role": "ring",
     "jpName": "サムライアッパー",
     "romaji": "Samurai Appā"
   },
@@ -3207,7 +3253,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Seagon Attacker is a Beyblade attack ring, weighing 22 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Seagon_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Seagon_Attacker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--sharkrash",
@@ -3287,7 +3334,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 67,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--slash-upper",
@@ -3310,7 +3358,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Slash Upper is a Beyblade attack ring, weighing 18 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Slash_Upper"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Slash_Upper",
+    "role": "ring"
   },
   {
     "id": "attack-ring--smash-leopard",
@@ -3343,7 +3392,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Leopard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Leopard",
+    "role": "ring"
   },
   {
     "id": "attack-ring--smash-phoenix",
@@ -3437,7 +3487,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--spark-dragon",
@@ -3470,7 +3521,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Dragon",
+    "role": "ring"
   },
   {
     "id": "attack-ring--spike-dragon",
@@ -3536,7 +3588,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--spiral-upper",
@@ -3596,6 +3649,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 42
     },
     "partType": "Balance",
+    "role": "ring",
     "jpName": "スパイラルアッパー",
     "romaji": "Supairaru Appā"
   },
@@ -3653,6 +3707,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Star Shape is a Beyblade attack ring.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Star_Shape",
+    "role": "ring",
     "jpName": "スターシェイプ",
     "romaji": "Sutā Sheipu"
   },
@@ -3727,7 +3782,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--strike-turtle",
@@ -3793,7 +3849,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--ten-spike",
@@ -3869,7 +3926,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--tiger-defenser",
@@ -3935,7 +3993,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--triangle-wing",
@@ -4000,7 +4059,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--triple-beak",
@@ -4081,7 +4141,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--triple-tiger-s-tier",
@@ -4143,7 +4204,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Turtle_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Turtle_Crusher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--turtle-survivor",
@@ -4224,7 +4286,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--ultimate-attacker",
@@ -4255,7 +4318,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Ultimate Attacker is a Beyblade attack ring from the Hard Metal System, weighing 14 g. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ultimate_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ultimate_Attacker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--upper-claw",
@@ -4395,7 +4459,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--upper-dragon",
@@ -4418,7 +4483,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Upper Dragon is a Beyblade attack ring, weighing 19 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Dragon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Dragon",
+    "role": "ring"
   },
   {
     "id": "attack-ring--upper-fox",
@@ -4441,7 +4507,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Upper Fox is a Beyblade attack ring, weighing 19 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Fox"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Fox",
+    "role": "ring"
   },
   {
     "id": "attack-ring--upper-wolf",
@@ -4504,7 +4571,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Wolf"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Wolf",
+    "role": "ring"
   },
   {
     "id": "attack-ring--vanishing-moot",
@@ -4569,7 +4637,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "War Bear is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Bear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Bear",
+    "role": "ring"
   },
   {
     "id": "attack-ring--war-lion",
@@ -4631,7 +4700,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--war-monkey",
@@ -4681,7 +4751,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "War Monkey is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Monkey"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Monkey",
+    "role": "ring"
   },
   {
     "id": "attack-ring--whale-crusher",
@@ -4728,7 +4799,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Whale Crusher is a Beyblade attack ring, weighing 8 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Whale_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Whale_Crusher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--wing-survivor",
@@ -4786,7 +4858,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--wing-upper",
@@ -4853,7 +4926,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 50,
       "stamina": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--wolf-crusher",
@@ -4884,7 +4958,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wolf Crusher is a Beyblade attack ring from the Hard Metal System, weighing 20 g. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wolf_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wolf_Crusher",
+    "role": "ring"
   },
   {
     "id": "attack-ring--wyvern-wing",
@@ -5188,6 +5263,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "A"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アクセル",
     "romaji": "Akuseru"
   },
@@ -5392,6 +5468,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "DB"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ディスクボール",
     "romaji": "Disuku Bōru"
   },
@@ -5888,6 +5965,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "F"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "フラット · エフ",
     "romaji": "Furatto · Efu"
   },
@@ -6049,6 +6127,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "FB"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "フリーボール",
     "romaji": "Furī Bōru"
   },
@@ -6287,6 +6366,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "GB"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ギヤボール",
     "romaji": "Giya Bōru"
   },
@@ -6536,6 +6616,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "H"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ヘキサ",
     "romaji": "Hekisa"
   },
@@ -6835,6 +6916,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ポイント",
     "romaji": "Pointo"
   },
@@ -7196,6 +7278,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "テーパー · ティー",
     "romaji": "Tēpā · Tī"
   },
@@ -7334,6 +7417,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "TP"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "トランスポイント",
     "romaji": "Toransu Pointo"
   },
@@ -7524,6 +7608,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ボルテックス",
     "romaji": "Borutekkusu"
   },
@@ -7565,7 +7650,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Apollon is a Beyblade bit chip from the Engine Gear System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Apollon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Apollon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--black-dranzer",
@@ -7632,7 +7718,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Black_Dranzer",
     "owner": "Kai Hiwatari",
-    "appearAnime": "Beyblade - Episode 42"
+    "appearAnime": "Beyblade - Episode 42",
+    "role": "chip"
   },
   {
     "id": "bit-chip--bloody-devil-emblem",
@@ -7674,7 +7761,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Cyber Draciel is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Draciel",
     "owner": "Jim",
-    "appearAnime": "Beyblade: V-Force - Episode 18"
+    "appearAnime": "Beyblade: V-Force - Episode 18",
+    "role": "chip"
   },
   {
     "id": "bit-chip--cyber-dragoon",
@@ -7716,7 +7804,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Dragoon",
     "owner": "Kane",
-    "appearAnime": "Beyblade: V-Force - Episode 20"
+    "appearAnime": "Beyblade: V-Force - Episode 20",
+    "role": "chip"
   },
   {
     "id": "bit-chip--cyber-dranzer",
@@ -7746,7 +7835,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cyber Dranzer is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Dranzer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Dranzer",
+    "role": "chip"
   },
   {
     "id": "bit-chip--cyber-driger",
@@ -7774,7 +7864,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Cyber Driger is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Driger",
     "owner": "Salina",
-    "appearAnime": "Beyblade: V-Force - Episode 20"
+    "appearAnime": "Beyblade: V-Force - Episode 20",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dark-emblem",
@@ -7825,7 +7916,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Gargoyle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Gargoyle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--draciel",
@@ -7894,7 +7986,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Draciel",
     "element": "Water",
     "owner": "Max Tate",
-    "appearAnime": "Draciel of Approval"
+    "appearAnime": "Draciel of Approval",
+    "role": "chip"
   },
   {
     "id": "bit-chip--draciel-emblem",
@@ -7991,6 +8084,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "element": "Wind",
     "owner": "Tyson Granger",
     "appearAnime": "Day of the Dragoon",
+    "role": "chip",
     "jpName": "青龍",
     "romaji": "Seiryū"
   },
@@ -8077,7 +8171,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dranzer",
     "element": "Fire",
     "owner": "Kai Hiwatari",
-    "appearAnime": "Day of the Dragoon"
+    "appearAnime": "Day of the Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dranzer-emblem",
@@ -8160,7 +8255,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Driger",
     "element": "Earth",
     "owner": "Ray Kon",
-    "appearAnime": "Dragoon Storm"
+    "appearAnime": "Dragoon Storm",
+    "role": "chip"
   },
   {
     "id": "bit-chip--driger-emblem",
@@ -8219,7 +8315,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Flash_Leopard",
     "element": "Fire",
     "owner": "Ozuma",
-    "appearAnime": "Shot Down in Flames"
+    "appearAnime": "Shot Down in Flames",
+    "role": "chip"
   },
   {
     "id": "bit-chip--galeon",
@@ -8272,6 +8369,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galeon",
     "owner": "Lee",
     "appearAnime": "Crouching Lion, Hidden Tiger",
+    "role": "chip",
     "jpName": "ガルオン",
     "romaji": "Garuon"
   },
@@ -8313,7 +8411,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Galman is a Beyblade bit chip from the Spin Gear System. Released as A-10 for Beyblade: 2000.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galman",
     "owner": "Kevin",
-    "appearAnime": "Showdown in Hong-Kong"
+    "appearAnime": "Showdown in Hong-Kong",
+    "role": "chip"
   },
   {
     "id": "bit-chip--galzzly",
@@ -8336,7 +8435,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Galzzly is a Beyblade bit chip from the Spin Gear System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galzzly",
-    "owner": "Gary"
+    "owner": "Gary",
+    "role": "chip"
   },
   {
     "id": "bit-chip--gargoyle-emblem",
@@ -8380,7 +8480,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Gigars is a Beyblade bit chip from the Engine Gear System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gigars"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gigars",
+    "role": "chip"
   },
   {
     "id": "bit-chip--god-emblem",
@@ -8410,7 +8511,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "composition",
     "seoDescription": "Griffolyon is a Beyblade bit chip.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--hard-metal-emblem",
@@ -8487,6 +8589,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "owner": "Kenny",
     "appearAnime": "A League of His Own",
+    "role": "chip",
     "jpName": "アインシュタイン",
     "romaji": "Ainshutain"
   },
@@ -8589,7 +8692,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Dranzer",
-    "element": "Fire"
+    "element": "Fire",
+    "role": "chip"
   },
   {
     "id": "bit-chip--metal-draciel",
@@ -8625,7 +8729,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Draciel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Draciel",
+    "role": "chip"
   },
   {
     "id": "bit-chip--metal-driger",
@@ -8641,7 +8746,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "composition",
     "seoDescription": "Metal Driger is a Beyblade bit chip.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger",
+    "role": "chip"
   },
   {
     "id": "bit-chip--orion",
@@ -8720,7 +8826,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Rapid_Eagle",
-    "owner": "Claude"
+    "owner": "Claude",
+    "role": "chip"
   },
   {
     "id": "bit-chip--riger-emblem",
@@ -8782,7 +8889,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "partType": "Balance",
     "element": "Earth",
     "owner": "Rick Anderson",
-    "appearAnime": "Take your Best Shot"
+    "appearAnime": "Take your Best Shot",
+    "role": "chip"
   },
   {
     "id": "bit-chip--rushing-boar",
@@ -8808,7 +8916,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Rushing Boar is a Beyblade bit chip from the Engine Gear System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Rushing_Boar"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Rushing_Boar",
+    "role": "chip"
   },
   {
     "id": "bit-chip--sagittario-ii",
@@ -8863,7 +8972,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Salamalyon",
-    "element": "Fire"
+    "element": "Fire",
+    "role": "chip"
   },
   {
     "id": "bit-chip--samurai-emblem",
@@ -8928,7 +9038,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Seaborg"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Seaborg",
+    "role": "chip"
   },
   {
     "id": "bit-chip--shadow-driger",
@@ -8950,7 +9061,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Shadow Driger is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Shadow_Driger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Shadow_Driger",
+    "role": "chip"
   },
   {
     "id": "bit-chip--sharkrash",
@@ -8982,7 +9094,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Sharkrash is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: V-force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Sharkrash",
     "owner": "Mariam",
-    "appearAnime": "Beyblade: V-Force - Episode 36"
+    "appearAnime": "Beyblade: V-Force - Episode 36",
+    "role": "chip"
   },
   {
     "id": "bit-chip--strata-dragoon",
@@ -9041,7 +9154,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Strata_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Strata_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--strata-dragoon-emblem",
@@ -9093,7 +9207,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Thunder Pegasus is a Beyblade bit chip from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Thunder_Pegasus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Thunder_Pegasus",
+    "role": "chip"
   },
   {
     "id": "bit-chip--torch-pegasus",
@@ -9138,7 +9253,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Torch_Pegasus",
-    "element": "Fire"
+    "element": "Fire",
+    "role": "chip"
   },
   {
     "id": "bit-chip--trygle",
@@ -9185,7 +9301,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--tryhorn",
@@ -9211,7 +9328,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Tryhorn is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Tryhorn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Tryhorn",
+    "role": "chip"
   },
   {
     "id": "bit-chip--trypio",
@@ -9249,7 +9367,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trypio",
-    "owner": "Eddy"
+    "owner": "Eddy",
+    "role": "chip"
   },
   {
     "id": "bit-chip--turtle-emblem",
@@ -9290,7 +9409,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Vanishing Moot is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vanishing_Moot",
-    "owner": "Joseph"
+    "owner": "Joseph",
+    "role": "chip"
   },
   {
     "id": "bit-chip--vortex-ape",
@@ -9333,7 +9453,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vortex_Ape"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vortex_Ape",
+    "role": "chip"
   },
   {
     "id": "bit-chip--wolborg",
@@ -9396,6 +9517,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Wolborg",
     "element": "Ice",
     "owner": "Tala",
+    "role": "chip",
     "jpName": "ウルボーグ",
     "romaji": "Urubōgu"
   },
@@ -9462,6 +9584,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Wyborg",
     "owner": "Ian",
     "appearAnime": "First Strike",
+    "role": "chip",
     "jpName": "ワイボーグ",
     "romaji": "Waibōgu"
   },
@@ -9517,7 +9640,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Zeus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Zeus",
+    "role": "chip"
   },
   {
     "id": "blade--aeropegasus",
@@ -9654,6 +9778,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "エアロペガサス",
     "romaji": "EaroPegasasu"
   },
@@ -9832,6 +9957,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "コバルトドラグーン",
     "romaji": "KobarutoDoragūn"
   },
@@ -9990,6 +10116,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "コバルトドレイク",
     "romaji": "KobarutoDoreiku"
   },
@@ -10115,6 +10242,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "クリムゾンガルーダ",
     "romaji": "KurimuzonGarūda"
   },
@@ -10347,6 +10475,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドランバスター",
     "romaji": "DoranBasutā"
   },
@@ -10556,6 +10685,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドランダガー",
     "romaji": "DoranDagā"
   },
@@ -10864,6 +10994,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドランソード",
     "romaji": "DoranSōdo"
   },
@@ -11027,6 +11158,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドランザースパイラル",
     "romaji": "DoranzāSupairaru"
   },
@@ -11148,6 +11280,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドライガースラッシュ",
     "romaji": "DoraigāSurasshu"
   },
@@ -11288,6 +11421,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ゴーストサークル",
     "romaji": "GōsutoSākuru"
   },
@@ -11448,6 +11582,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヘルズハンマー",
     "romaji": "HeruzuHanmā"
   },
@@ -11686,6 +11821,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヘルズサイズ",
     "romaji": "HeruzuSaizu"
   },
@@ -11899,6 +12035,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ナイトシールド",
     "romaji": "NaitoShīrudo"
   },
@@ -12046,6 +12183,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "レオンクロー",
     "romaji": "ReonKurō"
   },
@@ -12263,6 +12401,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フェニックスウィング",
     "romaji": "FenikkusuUingu"
   },
@@ -12385,6 +12524,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "S"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "セイバー",
     "romaji": "Seibā"
   },
@@ -12624,6 +12764,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シャークエッジ",
     "romaji": "ShākuEjji"
   },
@@ -12774,6 +12915,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シルバーウルフ",
     "romaji": "ShirubāUrufu"
   },
@@ -12946,6 +13088,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ティラノビート",
     "romaji": "TiranoBīto"
   },
@@ -13099,6 +13242,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ユニコーンスティング",
     "romaji": "YunikōnSutingu"
   },
@@ -13268,6 +13412,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヴァイパーテイル",
     "romaji": "VaipāTēru"
   },
@@ -13515,6 +13660,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウィザードアロー",
     "romaji": "WizādoArō"
   },
@@ -13674,6 +13820,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウィザードロッド",
     "romaji": "WizādoRoddo"
   },
@@ -13745,7 +13892,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--customize-grip-base",
@@ -13818,7 +13966,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Grip_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Grip_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--customize-metal-sharp",
@@ -13875,7 +14024,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 67,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--defense-grip-base-2",
@@ -14009,7 +14159,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingScale": 6,
     "ratingsNormalised": {
       "attack": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--fantom-grip-base",
@@ -14065,7 +14216,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Fantom Grip Base is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Fantom_Grip_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Fantom_Grip_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--first-clutch-base",
@@ -14106,7 +14258,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--first-clutch-base-zeus",
@@ -14174,7 +14327,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Flame Change Base is a Beyblade blade base from the Spin Gear System, weighing 9 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--fortress-base",
@@ -14307,7 +14461,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Full_Auto_Clutch_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Full_Auto_Clutch_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--galaxy-hit-release",
@@ -14396,7 +14551,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 50,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release",
@@ -14489,7 +14645,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Instant Release is a Beyblade blade base from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release",
+    "role": "base"
   },
   {
     "id": "blade-base--instant-release-base",
@@ -14603,7 +14760,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingScale": 6,
     "ratingsNormalised": {
       "attack": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--magne-flat-base",
@@ -14670,7 +14828,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--metal-ball-base",
@@ -14732,7 +14891,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Ball Base is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Ball_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Ball_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--metal-change-base",
@@ -14859,7 +15019,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sting_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sting_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--normal-base",
@@ -14962,7 +15123,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-bearing-base",
@@ -15075,7 +15237,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Flat_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Flat_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-jumping-base",
@@ -15126,7 +15289,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-jumping-base-2",
@@ -15167,7 +15331,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-metal-ball",
@@ -15235,7 +15400,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-metal-flat-base",
@@ -15278,7 +15444,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-semi-flat-base",
@@ -15348,7 +15515,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-semi-flat",
@@ -15456,7 +15624,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-sharp-base",
@@ -15544,7 +15713,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spiral Change Base is a Beyblade blade base from the Spin Gear System, weighing 7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Spiral_Change_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Spiral_Change_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--storm-grip",
@@ -15579,7 +15749,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Storm Grip is a Beyblade blade base from the Spin Gear System, weighing 4 g. Released July 2000 for Beyblade: 2000.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Storm_Grip"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Storm_Grip",
+    "role": "base"
   },
   {
     "id": "blade-base--strata-dragoon",
@@ -15678,7 +15849,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 67,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--volcano-change-base",
@@ -15766,7 +15938,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "chrome-wheel--bahamdia",
@@ -16549,6 +16722,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "VL"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヴァルキリー",
     "romaji": "Varukirī"
   },
@@ -17019,6 +17193,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D44",
+    "role": "weight",
     "jpName": "ゼロ",
     "romaji": "Zero"
   },
@@ -17352,6 +17527,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Pronounced Double O"
     ],
     "hasbroCode": "D66 · D66-P (Pro Series Release)",
+    "role": "weight",
     "jpName": "ダブルオー",
     "romaji": "Daburu Ō"
   },
@@ -17587,6 +17763,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Pronounced One Dash"
     ],
     "hasbroCode": "D55",
+    "role": "weight",
     "jpName": "ワンダッシュ",
     "romaji": "Wan Dasshu"
   },
@@ -17966,6 +18143,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D57",
+    "role": "weight",
     "jpName": "テン",
     "romaji": "Ten"
   },
@@ -18261,6 +18439,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D52",
+    "role": "weight",
     "jpName": "イレブン",
     "romaji": "Irebun"
   },
@@ -18712,6 +18891,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D30/D48",
+    "role": "weight",
     "jpName": "セブン",
     "romaji": "Sebun"
   },
@@ -18950,6 +19130,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Pronounced Eight Dash"
     ],
     "hasbroCode": "D59",
+    "role": "weight",
     "jpName": "エイトダッシュ",
     "romaji": "Eito Dasshu"
   },
@@ -19069,7 +19250,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Aq'-Q",
       "Aquilon Dash-QuadDrive"
     ],
-    "hasbroCode": "QD08"
+    "hasbroCode": "QD08",
+    "role": "weight"
   },
   {
     "id": "disc--around",
@@ -19289,6 +19471,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Around-P (Pro Series)"
     ],
     "hasbroCode": "D88-P",
+    "role": "weight",
     "jpName": "アラウンド",
     "romaji": "Araundo"
   },
@@ -19471,6 +19654,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Blitz-P (Pro Series)"
     ],
     "hasbroCode": "D69-P",
+    "role": "weight",
     "jpName": "ブリッツ",
     "romaji": "Burittsu"
   },
@@ -19753,6 +19937,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "B"
     ],
     "hasbroCode": "D01",
+    "role": "weight",
     "jpName": "ブースト",
     "romaji": "Būsuto"
   },
@@ -19917,6 +20102,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Drake-P"
     ],
     "hasbroCode": "D76-P",
+    "role": "weight",
     "jpName": "ドレイク",
     "romaji": "Doreiku"
   },
@@ -20092,6 +20278,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "F"
     ],
     "hasbroCode": "D11",
+    "role": "weight",
     "jpName": "フォース",
     "romaji": "Fōsu"
   },
@@ -20242,6 +20429,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Kr"
     ],
+    "role": "weight",
     "jpName": "カルマ",
     "romaji": "Karuma"
   },
@@ -20421,6 +20609,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "K"
     ],
     "hasbroCode": "D02",
+    "role": "weight",
     "jpName": "ナックル",
     "romaji": "Nakkuru"
   },
@@ -20575,6 +20764,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Lg"
     ],
+    "role": "weight",
     "jpName": "レガシー",
     "romaji": "Regashī"
   },
@@ -20738,6 +20928,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "L"
     ],
     "hasbroCode": "D04",
+    "role": "weight",
     "jpName": "リミテッド",
     "romaji": "Rimiteddo"
   },
@@ -20964,6 +21155,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nx"
     ],
+    "role": "weight",
     "jpName": "ネクサス",
     "romaji": "Nekusasu"
   },
@@ -21153,6 +21345,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "N"
     ],
     "hasbroCode": "D23",
+    "role": "weight",
     "jpName": "ナイン",
     "romaji": "Nain"
   },
@@ -21293,6 +21486,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ov"
     ],
+    "role": "weight",
     "jpName": "オーバー",
     "romaji": "Ōbā"
   },
@@ -21505,6 +21699,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sting-P (Pro Series)"
     ],
     "hasbroCode": "D72-P",
+    "role": "weight",
     "jpName": "スティング",
     "romaji": "Sutingu"
   },
@@ -21632,6 +21827,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Tp"
     ],
+    "role": "weight",
     "jpName": "テーパード",
     "romaji": "Tēpādo"
   },
@@ -21854,6 +22050,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "hasbroCode": "D16",
+    "role": "weight",
     "jpName": "トリプル",
     "romaji": "Toripuru"
   },
@@ -22046,6 +22243,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Vanguard-P (Pro Series)"
     ],
     "hasbroCode": "D75-P",
+    "role": "weight",
     "jpName": "バンガード",
     "romaji": "Bangādo"
   },
@@ -22256,6 +22454,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "hasbroCode": "D12",
+    "role": "weight",
     "jpName": "バーチカル",
     "romaji": "Bāchikaru"
   },
@@ -22443,6 +22642,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Y"
     ],
     "hasbroCode": "D25",
+    "role": "weight",
     "jpName": "エール",
     "romaji": "Ēru"
   },
@@ -22651,6 +22851,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Zenith-P (Pro Series)"
     ],
     "hasbroCode": "D63-P",
+    "role": "weight",
     "jpName": "ゼニス",
     "romaji": "Zenisu"
   },
@@ -22781,6 +22982,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "At'"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "アトミックダッシュ",
     "romaji": "Atomikku Dasshu"
   },
@@ -22917,6 +23119,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Bl"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "バレット",
     "romaji": "Baretto"
   },
@@ -23017,6 +23220,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Ch'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "チャージダッシュ",
     "romaji": "Chāji Dasshu"
   },
@@ -23207,6 +23411,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-28",
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ディメンションダッシュ",
     "romaji": "Dimenshon Dasshu"
   },
@@ -23319,6 +23524,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Dr"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ドリフト",
     "romaji": "Dorifuto"
   },
@@ -23524,6 +23730,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TA13",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アイアン",
     "romaji": "Aian"
   },
@@ -23624,6 +23831,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "J'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ジャギーダッシュ",
     "romaji": "Jagī Dasshu"
   },
@@ -23769,6 +23977,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Jl'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ジョルトダッシュ",
     "romaji": "Joruto Dasshu"
   },
@@ -24009,6 +24218,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD08",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ループ",
     "romaji": "Rūpu"
   },
@@ -24125,6 +24335,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Mr'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "マージダッシュ",
     "romaji": "Māji Dasshu"
   },
@@ -24342,6 +24553,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-24",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メビウス",
     "romaji": "Mebiusu"
   },
@@ -24577,6 +24789,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS10 · PR-27 (Pro Series)",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ナッシング",
     "romaji": "Nasshingu"
   },
@@ -24797,6 +25010,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD04",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "プレス",
     "romaji": "Puresu"
   },
@@ -24965,6 +25179,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Rb'"
     ],
+    "role": "tip",
     "jpName": "リブートダッシュ",
     "romaji": "Ribūto Dasshu"
   },
@@ -25091,7 +25306,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "R-Q"
     ],
     "hasbroCode": "TS19-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--spiral",
@@ -25222,6 +25438,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sp'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "スパイラルダッシュ",
     "romaji": "Supairaru Dasshu"
   },
@@ -25336,6 +25553,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "U'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ユナイトダッシュ",
     "romaji": "Yunaito Dasshu"
   },
@@ -25552,6 +25770,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "V'"
     ],
     "hasbroCode": "PR-20",
+    "role": "tip",
     "jpName": "ヴァリアブルダッシュ",
     "romaji": "Variaburu Dasshu"
   },
@@ -25701,6 +25920,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Xc'+X"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エクシードダッシュエックス",
     "romaji": "Ekushīdo Dasshu Ekkusu"
   },
@@ -25877,6 +26097,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-02",
     "partType": "Balance",
+    "role": "tip",
     "jpName": "エクステンドプラス",
     "romaji": "Ekusutendo Purasu"
   },
@@ -26015,6 +26236,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Zn'+Z"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ゾーンダッシュゼット",
     "romaji": "Zōn Dasshu Zetto"
   },
@@ -26219,6 +26441,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "アクアリオ",
     "romaji": "Akuario"
   },
@@ -26432,6 +26655,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "アリエス",
     "romaji": "Ariesu"
   },
@@ -26558,6 +26782,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Beafowl (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ビフォール",
     "romaji": "Bifōru"
   },
@@ -26686,6 +26911,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "ブレイズ",
     "romaji": "Bureizu"
   },
@@ -26839,7 +27065,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--byxis",
@@ -26918,7 +27145,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Byxis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Byxis",
+    "role": "ring"
   },
   {
     "id": "energy-ring--capricorn",
@@ -27096,6 +27324,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Capricorne"
     ],
+    "role": "ring",
     "jpName": "カプリコーネ",
     "romaji": "Kapurikōne"
   },
@@ -27392,6 +27621,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "シグナス",
     "romaji": "Shigunasu"
   },
@@ -27582,6 +27812,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Aquila"
     ],
+    "role": "ring",
     "jpName": "アクイラ",
     "romaji": "Akuira"
   },
@@ -27760,6 +27991,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phoenix (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "フェニックス",
     "romaji": "Fenikkusu"
   },
@@ -27983,6 +28215,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "ホルセウス",
     "romaji": "Horuseus"
   },
@@ -28108,6 +28341,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "ジュピター",
     "romaji": "Jupitā"
   },
@@ -28280,6 +28514,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 50
     },
+    "role": "ring",
     "jpName": "ケルベクス",
     "romaji": "Kerubekusu"
   },
@@ -28544,7 +28779,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 67
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--lynx",
@@ -28678,6 +28914,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 42,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "リンクス",
     "romaji": "Rinkusu"
   },
@@ -28768,6 +29005,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "ネメシスX",
     "romaji": "Nemeshisu X"
   },
@@ -29017,7 +29255,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 67
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--samurai",
@@ -29166,6 +29405,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "サーペント",
     "romaji": "Sāpento"
   },
@@ -29273,6 +29513,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno II (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ユニコルノII",
     "romaji": "Yunikoruno II"
   },
@@ -29441,6 +29682,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 67
     },
+    "role": "ring",
     "jpName": "ビルゴ",
     "romaji": "Birugo"
   },
@@ -29674,6 +29916,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "ヴォルフ",
     "romaji": "Vorufu"
   },
@@ -29788,7 +30031,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 83,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "engine-gear--gyro-engine-gear",
@@ -29827,7 +30071,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 17,
       "stamina": 50
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--left-engine-gear",
@@ -29878,7 +30123,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 50,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--left-engine-gear-turbo",
@@ -29933,7 +30179,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg",
@@ -30015,7 +30262,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG",
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-engine-gear",
@@ -30223,6 +30471,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Aquario",
+    "role": "chip",
     "jpName": "アクアリオ",
     "romaji": "Akuario"
   },
@@ -30377,6 +30626,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Aries",
+    "role": "chip",
     "jpName": "アリエス",
     "romaji": "Ariesu"
   },
@@ -30516,6 +30766,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Beafowl (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ビフォール",
     "romaji": "Bifōru"
   },
@@ -30631,6 +30882,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Blaze",
+    "role": "chip",
     "jpName": "ブレイズ",
     "romaji": "Bureizu"
   },
@@ -30811,6 +31063,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Bull",
+    "role": "chip",
     "jpName": "ブル",
     "romaji": "Buru"
   },
@@ -30858,7 +31111,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Byxis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Byxis",
+    "role": "chip"
   },
   {
     "id": "face-bolt--capricorne",
@@ -30943,6 +31197,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cygnus",
+    "role": "chip",
     "jpName": "シグナス",
     "romaji": "Shigunasu"
   },
@@ -31131,6 +31386,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Aquila"
     ],
+    "role": "chip",
     "jpName": "アクイラ",
     "romaji": "Akuira"
   },
@@ -31308,6 +31564,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phoenix (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "フェニックス",
     "romaji": "Fenikkusu"
   },
@@ -31450,6 +31707,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Gemios",
+    "role": "chip",
     "jpName": "ジェミオス",
     "romaji": "Jemiosu"
   },
@@ -31563,7 +31821,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Horuseus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Horuseus",
+    "role": "chip"
   },
   {
     "id": "face-bolt--ifraid",
@@ -31668,6 +31927,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Jupiter",
+    "role": "chip",
     "jpName": "ジュピター",
     "romaji": "Jupitā"
   },
@@ -31807,6 +32067,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Kerbecs",
+    "role": "chip",
     "jpName": "ケルベクス",
     "romaji": "Kerubekusu"
   },
@@ -32040,6 +32301,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Libra",
+    "role": "chip",
     "jpName": "リブラ",
     "romaji": "Ribura"
   },
@@ -32142,6 +32404,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lynx",
+    "role": "chip",
     "jpName": "リンクス",
     "romaji": "Rinkusu"
   },
@@ -32411,6 +32674,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Sagittario_I",
+    "role": "chip",
     "jpName": "サジタリオI",
     "romaji": "Sajitario I"
   },
@@ -32482,7 +32746,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpent"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpent",
+    "role": "chip"
   },
   {
     "id": "face-bolt--striker-unicorno",
@@ -32592,6 +32857,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno II (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ユニコルノII",
     "romaji": "Yunikoruno II"
   },
@@ -32717,6 +32983,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Variares",
+    "role": "chip",
     "jpName": "ヴァリアレス",
     "romaji": "Variaresu"
   },
@@ -32941,6 +33208,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Wolf",
+    "role": "chip",
     "jpName": "ヴォルフ",
     "romaji": "Vorufu"
   },
@@ -33068,7 +33336,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Zurafa",
     "aka": [
       "Giraffe (Takara Tomy)"
-    ]
+    ],
+    "role": "chip"
   },
   {
     "id": "frame--wall",
@@ -33236,6 +33505,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "W"
     ],
+    "role": "base",
     "jpName": "ウォール",
     "romaji": "Uōru"
   },
@@ -33614,6 +33884,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 67
     },
+    "role": "wheel",
     "jpName": "バーン",
     "romaji": "Bān"
   },
@@ -33835,6 +34106,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "ダーク",
     "romaji": "Dāku"
   },
@@ -33978,7 +34250,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Earth"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Earth",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--earth-top-tier-stamina-defense-wheel",
@@ -34154,6 +34427,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "キラー",
     "romaji": "Kirā"
   },
@@ -34395,7 +34669,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 67
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--flame-shared-with-flame-sagittario",
@@ -34564,6 +34839,7 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "wheel",
     "jpName": "フォビドゥン",
     "romaji": "Fobidoun"
   },
@@ -34745,7 +35021,8 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 67,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--grand-metal-wheel",
@@ -34971,6 +35248,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hell (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ヘル",
     "romaji": "Heru"
   },
@@ -35141,6 +35419,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Jade I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ジェイド",
     "romaji": "Jeido"
   },
@@ -35408,7 +35687,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--proto",
@@ -35497,6 +35777,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "プロト",
     "romaji": "Puroto"
   },
@@ -35825,6 +36106,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 33
     },
+    "role": "wheel",
     "jpName": "ロック",
     "romaji": "Rokku"
   },
@@ -36045,6 +36327,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Screw"
     ],
+    "role": "wheel",
     "jpName": "スクリュー",
     "romaji": "Sukuryū"
   },
@@ -36378,6 +36661,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "ストーム",
     "romaji": "Sutōmu"
   },
@@ -36626,6 +36910,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Devolos (Pro Series)"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "ディアボロス",
     "romaji": "Diaborosu"
   },
@@ -36743,7 +37028,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Six Dash"
     ],
-    "hasbroCode": "G08"
+    "hasbroCode": "G08",
+    "role": "ring"
   },
   {
     "id": "layer--4d-clear-wheel-kronos",
@@ -37021,6 +37307,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ダークデスサイザー",
     "romaji": "Dāku Desusaizā"
   },
@@ -37200,6 +37487,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ドレインファブニル",
     "romaji": "Dorein Fabuniru"
   },
@@ -37349,6 +37637,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ガイアドラグーン",
     "romaji": "Gaia Doragūn"
   },
@@ -37463,7 +37752,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Genesis Valtryek"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--god-valkyrie",
@@ -37704,6 +37994,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ゴッドヴァルキリー",
     "romaji": "Goddo Varukirī"
   },
@@ -37847,6 +38138,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "カイザーケルベウス",
     "romaji": "Kaizā Kerubeusu"
   },
@@ -37942,7 +38234,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "King Kerbeus"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--legend-spriggan",
@@ -38083,6 +38376,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
+    "role": "ring",
     "jpName": "レジェンドスプリガン",
     "romaji": "Regendo Supurigan"
   },
@@ -38235,6 +38529,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "マキシマムガルーダ",
     "romaji": "Makishimamu Garūda"
   },
@@ -38354,6 +38649,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "オベリスクオーディン",
     "romaji": "Oberisuku Ōdin"
   },
@@ -38494,6 +38790,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ジークエクスカリバー",
     "romaji": "Jīku Ekusukaribā"
   },
@@ -38577,7 +38874,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Spryzen Requiem"
     ],
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--storm-spriggan",
@@ -38745,6 +39043,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ストームスプリガン",
     "romaji": "Sutōmu Supurigan"
   },
@@ -39057,6 +39356,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ビクトリーヴァルキリー",
     "romaji": "Bikutorī Varukirī"
   },
@@ -39226,6 +39526,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ワイルドワイバーン",
     "romaji": "Wairudo Waibān"
   },
@@ -39392,6 +39693,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ゼノエクスカリバー",
     "romaji": "Zeno Ekusukaribā"
   },
@@ -39573,6 +39875,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ベノム",
     "romaji": "Benomu"
   },
@@ -39663,6 +39966,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Valkerion"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ワルキューレ",
     "romaji": "Warukyūre"
   },
@@ -39776,6 +40080,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ボルト",
     "romaji": "Boruto"
   },
@@ -40231,7 +40536,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "Eternal Sharp (Takara Tomy)"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--xf",
@@ -41075,7 +41381,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Big_Wide_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Big_Wide_Defense",
+    "role": "tip"
   },
   {
     "id": "performance-tip--cf",
@@ -42576,7 +42883,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": true,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "tip"
   },
   {
     "id": "performance-tip--s",
@@ -43222,7 +43530,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "ratchet--0-80",
@@ -43375,6 +43684,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ゼロエイティー",
     "romaji": "Zero Eitī"
   },
@@ -43646,6 +43956,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ワンシクスティー",
     "romaji": "Wan Shikusutī"
   },
@@ -44097,6 +44408,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "スリーシクスティー",
     "romaji": "Surī Shikusutī"
   },
@@ -44306,6 +44618,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "スリーセブンティー",
     "romaji": "Surī Sebuntī"
   },
@@ -44659,6 +44972,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "スリーエイティー",
     "romaji": "Surī Eitī"
   },
@@ -45043,6 +45357,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "フォーシクスティー",
     "romaji": "Fō Shikusutī"
   },
@@ -45283,6 +45598,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "フォーセブンティー",
     "romaji": "Fō Sebuntī"
   },
@@ -45607,6 +45923,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "フォーエイティー",
     "romaji": "Fō Eitī"
   },
@@ -45861,6 +46178,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ファイブシクスティー",
     "romaji": "Faibu Shikusutī"
   },
@@ -46067,6 +46385,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ファイブセブンティー",
     "romaji": "Faibu Sebuntī"
   },
@@ -46287,6 +46606,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ファイブエイティー",
     "romaji": "Faibu Eitī"
   },
@@ -46529,6 +46849,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ナインシクスティー",
     "romaji": "Nain Shikusutī"
   },
@@ -46560,7 +46881,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Aero Wing & Aero Core is a Beyblade running core from the Hard Metal System. Part of New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Aero_Wing_%26_Aero_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Aero_Wing_%26_Aero_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--battle-change-core",
@@ -46663,6 +46989,11 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ],
     "jpName": "バトルチェンジコア",
     "romaji": "Batoru Chenji Koa"
   },
@@ -46754,7 +47085,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 50,
       "defense": 17
-    }
+    },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--flat-core-gyro-mode",
@@ -46905,6 +47241,11 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ],
     "jpName": "グリップフラットコア",
     "romaji": "Gurippu Furatto Koa"
   },
@@ -46981,7 +47322,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 50,
       "defense": 17
-    }
+    },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-ball-core",
@@ -46997,7 +47343,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "composition",
     "seoDescription": "Metal Ball Core is a Beyblade running core.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Ball_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Ball_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-change-core",
@@ -47053,7 +47404,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Semi-Flat_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Semi-Flat_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-sharp-core",
@@ -47116,7 +47472,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Sharp_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Sharp_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-weight-flat",
@@ -47172,7 +47533,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Rubber_Weight_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Rubber_Weight_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--semi-flat-core",
@@ -47242,7 +47608,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--sharp-core",
@@ -47312,7 +47683,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--shooter-change-core",
@@ -47454,6 +47830,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dragooon (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ドラグーン",
     "romaji": "Doragūn"
   },
@@ -47542,6 +47919,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ペガシス",
     "romaji": "Pegashisu"
   },
@@ -47603,7 +47981,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--left-sg",
@@ -47646,6 +48025,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Left SG is a Beyblade spin gear from the Spin Gear System. Released July 2000 for Beyblade: 2000.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Left_SG",
+    "role": "gear",
     "jpName": "レフトスピンギア",
     "romaji": "Refuto Supingia"
   },
@@ -47735,6 +48115,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_NEO_Left_SG",
+    "role": "gear",
     "jpName": "NEOレフトスピンギア",
     "romaji": "NEO Refuto Supingia"
   },
@@ -47780,7 +48161,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Left Spin Gear is a Beyblade spin gear from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Left_Spin_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Left_Spin_Gear",
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg",
@@ -47870,6 +48252,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_NEO_Right_SG",
+    "role": "gear",
     "jpName": "NEOレライトピンギア",
     "romaji": "NEO Raito Supingia"
   },
@@ -47960,7 +48343,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg",
@@ -48102,6 +48486,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG",
+    "role": "gear",
     "jpName": "レライトピンギア",
     "romaji": "Raito Supingia"
   },
@@ -48630,6 +49015,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "track",
     "jpName": "イチマルマル",
     "romaji": "Ichi Maru Maru"
   },
@@ -49198,6 +49584,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "track",
     "jpName": "イチマルゴ",
     "romaji": "Ichi Maru Go"
   },
@@ -49489,7 +49876,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": true,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--130",
@@ -49770,7 +50158,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 17
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--135",
@@ -49909,7 +50298,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 17
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--145",
@@ -50465,6 +50855,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "track",
     "jpName": "145"
   },
   {
@@ -50559,7 +50950,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_160"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_160",
+    "role": "track"
   },
   {
     "id": "spin-track--230-key-defense",
@@ -50934,6 +51326,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "LW160"
     ],
+    "role": "track",
     "jpName": "レフトウイングイチロクマル",
     "romaji": "Refuto Uingu Ichi Roku Maru"
   },
@@ -51466,7 +51859,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 17,
       "stamina": 0
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--a230",
@@ -51706,7 +52100,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "superking-chip--achilles",
@@ -51851,6 +52246,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Ac"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "アキレス",
     "romaji": "Akiresu"
   },
@@ -51959,6 +52355,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Wy"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ワイバーン",
     "romaji": "Waibān"
   },
@@ -52016,7 +52413,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 0,
       "stamina": 33
-    }
+    },
+    "role": "support"
   },
   {
     "id": "support-parts--reverse-attack",
@@ -52067,7 +52465,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Balance"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Balance",
+    "role": "weight"
   },
   {
     "id": "weight-disk--circle-heavy",
@@ -52155,7 +52554,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Wide"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Wide",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-chain",
@@ -52215,7 +52615,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "CWD Defense Ring is a Beyblade weight disk.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Defense_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Defense_Ring",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-devil",
@@ -52277,7 +52678,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Cross"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Cross",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-free-survivor",
@@ -52293,7 +52695,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "composition",
     "seoDescription": "CWD Free Survivor is a Beyblade weight disk.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Survivor",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-god-ring",
@@ -52325,7 +52728,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "CWD God Ring is a Beyblade weight disk.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_God_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_God_Ring",
+    "role": "weight"
   },
   {
     "id": "weight-disk--drag-saucer",
@@ -52480,7 +52884,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "weight"
   },
   {
     "id": "weight-disk--eight-heavy",
@@ -52530,7 +52935,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Eight Heavy is a Beyblade weight disk from the Spin Gear System, weighing 15 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Heavy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Heavy",
+    "role": "weight"
   },
   {
     "id": "weight-disk--eight-wide",
@@ -52669,7 +53075,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Wide"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Wide",
+    "role": "weight"
   },
   {
     "id": "weight-disk--heavy-attack",
@@ -52702,7 +53109,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Heavy_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Heavy_Attack",
+    "role": "weight"
   },
   {
     "id": "weight-disk--magne-weight-disk",
@@ -52858,7 +53266,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Star_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Star_Attack",
+    "role": "weight"
   },
   {
     "id": "weight-disk--ten-balance",
@@ -52945,7 +53354,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "weight"
   },
   {
     "id": "weight-disk--ten-heavy",
@@ -53017,7 +53427,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Heavy"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Heavy",
+    "role": "weight"
   },
   {
     "id": "weight-disk--ten-wide",
@@ -53134,7 +53545,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 67
-    }
+    },
+    "role": "weight"
   },
   {
     "id": "weight-disk--wide-series",
@@ -53285,6 +53697,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "ゼロ",
     "romaji": "Zero"
   },
@@ -53398,6 +53811,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "ワン",
     "romaji": "Wan"
   },
@@ -53548,6 +53962,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "テン",
     "romaji": "Ten"
   },
@@ -53730,6 +54145,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "ツー",
     "romaji": "Tsū"
   },
@@ -53888,6 +54304,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "スリー",
     "romaji": "Surī"
   },
@@ -53994,6 +54411,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "フォー",
     "romaji": "Fō"
   },
@@ -54155,6 +54573,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "シックス",
     "romaji": "Shikkusu"
   },
@@ -54253,6 +54672,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "エイト",
     "romaji": "Eito"
   },
@@ -54394,6 +54814,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "ring",
     "jpName": "ナイン",
     "romaji": "Nain"
   },
@@ -54475,7 +54896,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Ad"
     ],
     "hasbroCode": "A09",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--almight",
@@ -54566,7 +54988,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "A07",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--billow",
@@ -54641,7 +55064,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
-    "hasbroCode": "B06"
+    "hasbroCode": "B06",
+    "role": "tip"
   },
   {
     "id": "armor-tip--blow",
@@ -54749,7 +55173,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "A03",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--bounce",
@@ -54827,7 +55252,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Bn"
     ],
     "hasbroCode": "S07",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--defense",
@@ -54930,7 +55356,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "hasbroCode": "D01",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armor-tip--destroy",
@@ -55005,7 +55432,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ds"
     ],
-    "hasbroCode": "A06"
+    "hasbroCode": "A06",
+    "role": "tip"
   },
   {
     "id": "armor-tip--drift",
@@ -55081,7 +55509,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Dr"
     ],
     "hasbroCode": "D04",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armor-tip--eruption",
@@ -55184,7 +55613,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "A08",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--flap",
@@ -55265,7 +55695,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "S08",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--flexible",
@@ -55336,7 +55767,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
-    "hasbroCode": "B10"
+    "hasbroCode": "B10",
+    "role": "tip"
   },
   {
     "id": "armor-tip--flugel",
@@ -55428,7 +55860,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Fl"
     ],
     "hasbroCode": "S03",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--hunter",
@@ -55527,7 +55960,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Hn"
     ],
     "hasbroCode": "A04",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--jaggy",
@@ -55602,7 +56036,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "J",
       "Thorn"
     ],
-    "hasbroCode": "B11"
+    "hasbroCode": "B11",
+    "role": "tip"
   },
   {
     "id": "armor-tip--kick",
@@ -55733,7 +56168,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Kc"
     ],
     "hasbroCode": "S02",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--lucent",
@@ -55803,7 +56239,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
-    "hasbroCode": "B12"
+    "hasbroCode": "B12",
+    "role": "tip"
   },
   {
     "id": "armor-tip--merge",
@@ -55880,7 +56317,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Mr"
     ],
-    "hasbroCode": "B04"
+    "hasbroCode": "B04",
+    "role": "tip"
   },
   {
     "id": "armor-tip--moment",
@@ -55962,7 +56400,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Mm"
     ],
-    "hasbroCode": "D03"
+    "hasbroCode": "D03",
+    "role": "tip"
   },
   {
     "id": "armor-tip--never",
@@ -56057,7 +56496,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nv"
     ],
-    "hasbroCode": "S01"
+    "hasbroCode": "S01",
+    "role": "tip"
   },
   {
     "id": "armor-tip--octa",
@@ -56134,7 +56574,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ω"
     ],
-    "hasbroCode": "S05"
+    "hasbroCode": "S05",
+    "role": "tip"
   },
   {
     "id": "armor-tip--operate",
@@ -56194,7 +56635,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Op"
     ],
-    "hasbroCode": "B03"
+    "hasbroCode": "B03",
+    "role": "tip"
   },
   {
     "id": "armor-tip--press",
@@ -56306,7 +56748,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "hasbroCode": "D02",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armor-tip--quake",
@@ -56411,7 +56854,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Q"
     ],
-    "hasbroCode": "A02"
+    "hasbroCode": "A02",
+    "role": "tip"
   },
   {
     "id": "armor-tip--quattro-i",
@@ -56486,7 +56930,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Qt"
     ],
-    "hasbroCode": "B05"
+    "hasbroCode": "B05",
+    "role": "tip"
   },
   {
     "id": "armor-tip--quattro-ii",
@@ -56565,7 +57010,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Qt",
       "Quartet"
     ],
-    "hasbroCode": "B07"
+    "hasbroCode": "B07",
+    "role": "tip"
   },
   {
     "id": "armor-tip--revolve",
@@ -56625,7 +57071,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R"
     ],
-    "hasbroCode": "S04"
+    "hasbroCode": "S04",
+    "role": "tip"
   },
   {
     "id": "armor-tip--rise",
@@ -56745,7 +57192,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Rs"
     ],
     "hasbroCode": "S06",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--rugged",
@@ -56828,7 +57276,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "D07",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armor-tip--rumble",
@@ -56920,7 +57369,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "D08",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "armor-tip--shot",
@@ -57031,7 +57481,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Sh"
     ],
     "hasbroCode": "A05",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--sparky",
@@ -57103,7 +57554,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "B08",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "armor-tip--stay",
@@ -57186,7 +57638,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "S09",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "armor-tip--still",
@@ -57268,7 +57721,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
-    "hasbroCode": "S10"
+    "hasbroCode": "S10",
+    "role": "tip"
   },
   {
     "id": "armor-tip--stormy",
@@ -57350,7 +57804,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "A10",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--sword",
@@ -57425,7 +57880,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Sw"
     ],
-    "hasbroCode": "A11"
+    "hasbroCode": "A11",
+    "role": "tip"
   },
   {
     "id": "armor-tip--unite",
@@ -57501,7 +57957,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "U"
     ],
     "hasbroCode": "B05",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "armor-tip--universe",
@@ -57591,7 +58048,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Un"
     ],
-    "hasbroCode": "D05"
+    "hasbroCode": "D05",
+    "role": "tip"
   },
   {
     "id": "armor-tip--variable",
@@ -57673,7 +58131,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Rampage"
     ],
     "hasbroCode": "A13",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--venture",
@@ -57784,7 +58243,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Vn"
     ],
-    "hasbroCode": "A01"
+    "hasbroCode": "A01",
+    "role": "tip"
   },
   {
     "id": "armor-tip--vs-gear",
@@ -57860,7 +58320,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "hasbroCode": "A14",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--wave",
@@ -57989,7 +58450,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Wv"
     ],
     "hasbroCode": "B01",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "armor-tip--xplosion",
@@ -58067,7 +58529,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Xp"
     ],
     "hasbroCode": "A12",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "armor-tip--xtend",
@@ -58141,7 +58604,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Xt+"
     ],
     "hasbroCode": "B02",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "armor-tip--zeal",
@@ -58223,7 +58687,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Zinger"
     ],
     "hasbroCode": "B09",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "assist-blade--assault",
@@ -58350,6 +58815,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アサルト",
     "romaji": "Asaruto"
   },
@@ -58499,6 +58965,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "バンパー",
     "romaji": "Banpā"
   },
@@ -58613,6 +59080,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "チャージ",
     "romaji": "Chāji"
   },
@@ -58695,6 +59163,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "デュアル",
     "romaji": "Duaru"
   },
@@ -58799,6 +59268,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "イレイズ",
     "romaji": "Ireizu"
   },
@@ -58890,6 +59360,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フリー",
     "romaji": "Furī"
   },
@@ -58981,6 +59452,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "グラビティ",
     "romaji": "Gurabiti"
   },
@@ -59097,6 +59569,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヘビー",
     "romaji": "Hebī"
   },
@@ -59221,6 +59694,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ジャギー",
     "romaji": "Jagī"
   },
@@ -59338,6 +59812,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ナックル",
     "romaji": "Nakkuru"
   },
@@ -59439,6 +59914,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マッシブ",
     "romaji": "Masshibu"
   },
@@ -59548,6 +60024,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "オッド",
     "romaji": "Oddo"
   },
@@ -59644,6 +60121,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "クエル",
     "romaji": "Kueru"
   },
@@ -59809,6 +60287,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ラウンド",
     "romaji": "Raundo"
   },
@@ -59973,6 +60452,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ターン",
     "romaji": "Tān"
   },
@@ -60073,6 +60553,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヴァーチカル",
     "romaji": "Vuāchikaru"
   },
@@ -60211,6 +60692,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウィール",
     "romaji": "Hoīru"
   },
@@ -60302,6 +60784,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ジリオン",
     "romaji": "Jirion"
   },
@@ -60342,7 +60825,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Balancer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Balancer",
+    "role": "ring"
   },
   {
     "id": "attack-ring--advance-survivor",
@@ -60373,7 +60857,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Survivor",
+    "role": "ring"
   },
   {
     "id": "attack-ring--ark-pyramid",
@@ -60406,6 +60891,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Ark Pyramid is a Beyblade attack ring from the Engine Gear System, weighing 5.2 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ark_Pyramid",
+    "role": "ring",
     "jpName": "アークピラミッド",
     "romaji": "Ākupiramiddo"
   },
@@ -60430,7 +60916,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Bound Attack Ring is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Bound_Attack_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Bound_Attack_Ring",
+    "role": "ring"
   },
   {
     "id": "attack-ring--bound-defense-ring",
@@ -60449,7 +60936,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Bound Defense Ring is a Beyblade attack ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Bound_Defense_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Bound_Defense_Ring",
+    "role": "ring"
   },
   {
     "id": "attack-ring--cross-dragon",
@@ -60511,6 +60999,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "クロスドラゴン",
     "romaji": "Kurosu Doragon"
   },
@@ -60535,7 +61024,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cross Horn is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Horn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Horn",
+    "role": "ring"
   },
   {
     "id": "attack-ring--dark-spike",
@@ -60558,7 +61048,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Dark Spike is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dark_Spike"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dark_Spike",
+    "role": "ring"
   },
   {
     "id": "attack-ring--dark-wing",
@@ -60611,7 +61102,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dark_Wing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dark_Wing",
+    "role": "ring"
   },
   {
     "id": "attack-ring--delta-wave",
@@ -60649,7 +61141,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--double-attacker",
@@ -60698,7 +61191,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--double-snake",
@@ -60721,7 +61215,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Double Snake is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Snake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Snake",
+    "role": "ring"
   },
   {
     "id": "attack-ring--down-force",
@@ -60744,7 +61239,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Down Force is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Down_Force"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Down_Force",
+    "role": "ring"
   },
   {
     "id": "attack-ring--down-force-ring",
@@ -60782,7 +61278,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--dragon-head",
@@ -60802,7 +61299,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Dragon Head is a Beyblade attack ring, weighing 4 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Head"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Head",
+    "role": "ring"
   },
   {
     "id": "attack-ring--eight-spiker",
@@ -60851,7 +61349,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--great-tiger",
@@ -60874,7 +61373,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Great Tiger is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Tiger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Tiger",
+    "role": "ring"
   },
   {
     "id": "attack-ring--gyro-defense",
@@ -60956,6 +61456,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Bearing Gyros AR",
       "Gyro AR"
     ],
+    "role": "ring",
     "jpName": "ジャイロディフェンス",
     "romaji": "Jairodifensu"
   },
@@ -60976,7 +61477,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Jungle Shock is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jungle_Shock"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jungle_Shock",
+    "role": "ring"
   },
   {
     "id": "attack-ring--knight-claws",
@@ -61010,7 +61512,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--knight-claws-ring",
@@ -61047,7 +61550,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Claws_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Knight_Claws_Ring",
+    "role": "ring"
   },
   {
     "id": "attack-ring--lizard-blocker",
@@ -61066,7 +61570,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Lizard Blocker is a Beyblade attack ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Lizard_Blocker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Lizard_Blocker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--mirage-goddess",
@@ -61093,7 +61598,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Mirage Goddess is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Mirage_Goddess"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Mirage_Goddess",
+    "role": "ring"
   },
   {
     "id": "attack-ring--neo-cross-horn",
@@ -61131,7 +61637,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Neo_Cross_Horn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Neo_Cross_Horn",
+    "role": "ring"
   },
   {
     "id": "attack-ring--roller-attack",
@@ -61154,7 +61661,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Roller Attack is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Roller_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Roller_Attack",
+    "role": "ring"
   },
   {
     "id": "attack-ring--scissors-arm",
@@ -61188,7 +61696,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--scissor-attacker",
@@ -61211,7 +61720,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Scissor Attacker is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissor_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissor_Attacker",
+    "role": "ring"
   },
   {
     "id": "attack-ring--scissor-cutter",
@@ -61235,7 +61745,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissor_Cutter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissor_Cutter",
+    "role": "ring"
   },
   {
     "id": "attack-ring--smash-turtle",
@@ -61273,7 +61784,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--spark-attack",
@@ -61296,7 +61808,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spark Attack is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Attack",
+    "role": "ring"
   },
   {
     "id": "attack-ring--square-edge",
@@ -61334,7 +61847,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--trident-vector",
@@ -61386,7 +61900,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--triple-attacker",
@@ -61434,6 +61949,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "トリプルアタッカー",
     "romaji": "Toripuru Atakkā"
   },
@@ -61473,7 +61989,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--triple-wing",
@@ -61521,7 +62038,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--twin-horn",
@@ -61545,7 +62063,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Twin Horn is a Beyblade attack ring from the Magnacore System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Twin_Horn"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Twin_Horn",
+    "role": "ring"
   },
   {
     "id": "attack-ring--upper-dragoon",
@@ -61577,6 +62096,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Upper Dragoon is a Beyblade attack ring from the Spin Gear System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Dragoon",
+    "role": "ring",
     "jpName": "アッパードラグーン",
     "romaji": "Appā Doragūn"
   },
@@ -61598,7 +62118,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Upper Force is a Beyblade attack ring, weighing 4 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Force"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Force",
+    "role": "ring"
   },
   {
     "id": "attack-ring--whale-attacker",
@@ -61632,7 +62153,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 67
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "attack-ring--wing-attack-ring",
@@ -61655,7 +62177,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wing Attack Ring is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Attack_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Attack_Ring",
+    "role": "ring"
   },
   {
     "id": "attack-ring--wing-cutter",
@@ -61678,7 +62201,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wing Cutter is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Cutter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Cutter",
+    "role": "ring"
   },
   {
     "id": "attack-ring--wing-defense",
@@ -61701,7 +62225,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Wing Defense is a Beyblade attack ring from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Defense",
+    "role": "ring"
   },
   {
     "id": "evolution-gear--a-gear",
@@ -61792,6 +62317,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Aギア"
   },
   {
@@ -62010,6 +62536,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "エース",
     "romaji": "Ēsu"
   },
@@ -62091,7 +62618,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--bushin-hasbro",
@@ -62165,7 +62693,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--bushin-takara-tomy",
@@ -62317,6 +62846,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ブシン",
     "romaji": "Bushin"
   },
@@ -62387,7 +62917,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--cosmic",
@@ -62463,7 +62994,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--cosmo",
@@ -62597,6 +63129,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "コスモ",
     "romaji": "Kosumo"
   },
@@ -62730,6 +63263,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "ドレッド",
     "romaji": "Doreddo"
   },
@@ -62806,7 +63340,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--eclipse",
@@ -62875,7 +63410,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--erase-hasbro",
@@ -62956,7 +63492,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--erase-takara-tomy",
@@ -63090,6 +63627,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "イレイズ",
     "romaji": "Ireizu"
   },
@@ -63153,7 +63691,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--flare-takara-tomy",
@@ -63278,6 +63817,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "フレア",
     "romaji": "Furea"
   },
@@ -63355,7 +63895,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--grand",
@@ -63518,6 +64059,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "グラン",
     "romaji": "Guran"
   },
@@ -63585,7 +64127,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--heaven",
@@ -63741,6 +64284,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ヘブン",
     "romaji": "Hebun"
   },
@@ -63918,6 +64462,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "インペリアル",
     "romaji": "Inperiaru"
   },
@@ -63981,7 +64526,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--judgement",
@@ -64132,6 +64678,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ジャッジメント",
     "romaji": "Jajjimento"
   },
@@ -64214,7 +64761,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--knockout",
@@ -64353,6 +64901,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ノックアウト",
     "romaji": "Nokkuauto"
   },
@@ -64503,6 +65052,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
+    "role": "base",
     "jpName": "ロード",
     "romaji": "Rōdo"
   },
@@ -64591,7 +65141,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "base--master",
@@ -64791,6 +65342,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "hasbroCode": "LW07 (Weight)",
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
+    "role": "base",
     "jpName": "マスター",
     "romaji": "Masutā"
   },
@@ -64863,7 +65415,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--monster",
@@ -64934,7 +65487,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--myth",
@@ -65003,7 +65557,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--naked",
@@ -65166,6 +65721,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "ネイキッド",
     "romaji": "Neikiddo"
   },
@@ -65300,6 +65856,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ポイズン",
     "romaji": "Poizun"
   },
@@ -65363,7 +65920,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--prime",
@@ -65427,7 +65985,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--rock-hasbro",
@@ -65491,7 +66050,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--rock-takara-tomy",
@@ -65632,6 +66192,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ロック",
     "romaji": "Rokku"
   },
@@ -65695,7 +66256,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--shield",
@@ -65766,7 +66328,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--slash",
@@ -65935,6 +66498,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "スラッシュ",
     "romaji": "Surasshu"
   },
@@ -66004,7 +66568,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--soul",
@@ -66054,7 +66619,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Base_-_Soul",
     "partType": "Defense",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--sword",
@@ -66148,7 +66714,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--tact",
@@ -66298,6 +66865,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "タクト",
     "romaji": "Takuto"
   },
@@ -66361,7 +66929,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--union",
@@ -66554,6 +67123,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "base",
     "jpName": "ユニオン",
     "romaji": "Yunion"
   },
@@ -66648,7 +67218,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--venom-hasbro",
@@ -66716,7 +67287,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "base--viper",
@@ -66786,7 +67358,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--wizard",
@@ -66939,6 +67512,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "ウィザード",
     "romaji": "Uizādo"
   },
@@ -67015,7 +67589,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Stamina",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--zone",
@@ -67098,7 +67673,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "base--zwei",
@@ -67246,6 +67822,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "base",
     "jpName": "ツヴァイ",
     "romaji": "Tsuvuai"
   },
@@ -67555,6 +68132,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "B"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ボール · ビー",
     "romaji": "Bōru · Bī"
   },
@@ -67682,6 +68260,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "BS"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "バウンドスパイク",
     "romaji": "Baundo Supaiku"
   },
@@ -67833,6 +68412,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "C"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "サイクロン",
     "romaji": "Saikuron"
   },
@@ -67947,6 +68527,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "DS"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ディスクスパイク",
     "romaji": "Disuku Supaiku"
   },
@@ -68113,6 +68694,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ドット",
     "romaji": "Dotto"
   },
@@ -68266,6 +68848,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "E"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "エレベート",
     "romaji": "Erebēto"
   },
@@ -68366,6 +68949,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "FF"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "フリーフラット",
     "romaji": "Furī Furatto"
   },
@@ -68593,6 +69177,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GF"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ギヤフラット",
     "romaji": "Giya Furatto"
   },
@@ -68791,6 +69376,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GN"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ギヤニードル",
     "romaji": "Giya Nīdoru"
   },
@@ -68970,6 +69556,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GP"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ギヤポイント",
     "romaji": "Giya Pointo"
   },
@@ -69081,6 +69668,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GR"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ギヤラッシュ",
     "romaji": "Giya Rasshu"
   },
@@ -69198,6 +69786,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GU"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ギアユナイト",
     "romaji": "Gia Yunaito"
   },
@@ -69315,6 +69904,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "G"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "グライド",
     "romaji": "Guraido"
   },
@@ -69528,6 +70118,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "HN"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ハイニードル · エイチエヌ",
     "romaji": "Hai Nīdoru · Eichi Enu"
   },
@@ -69684,6 +70275,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "HT"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ハイテーパー · エイチティー",
     "romaji": "Hai Tēpā · Eichi Tī"
   },
@@ -69802,6 +70394,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "I"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "イグニッション",
     "romaji": "Igunisshon"
   },
@@ -69909,6 +70502,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "J"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ジョルト",
     "romaji": "Joruto"
   },
@@ -70117,6 +70711,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "K"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "キック",
     "romaji": "Kikku"
   },
@@ -70272,6 +70867,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "L"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "レベル",
     "romaji": "Reberu"
   },
@@ -70363,6 +70959,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "LC"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ローサイクロン",
     "romaji": "Rō Saikuron"
   },
@@ -70594,6 +71191,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "LF"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ローフラット",
     "romaji": "Rō Furatto"
   },
@@ -70747,6 +71345,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "LO"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ローオーブ",
     "romaji": "Rō Ōbu"
   },
@@ -70851,6 +71450,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "LP"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ローポイント",
     "romaji": "Rō Pointo"
   },
@@ -71013,6 +71613,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "LR"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ローラッシュ",
     "romaji": "Rō Rasshu"
   },
@@ -71126,6 +71727,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "M"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "マージ",
     "romaji": "Māji"
   },
@@ -71272,6 +71874,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "MN"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メタルニードル",
     "romaji": "Metaru Nīdoru"
   },
@@ -71365,6 +71968,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "MT"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "メタルテーパー",
     "romaji": "Metaru Tēpā"
   },
@@ -71478,6 +72082,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Nr"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ナロー",
     "romaji": "Narō"
   },
@@ -71748,6 +72353,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "N"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ニードル · エヌ",
     "romaji": "Nīdoru · Enu"
   },
@@ -71940,6 +72546,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "O"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "オーブ",
     "romaji": "Ōbu"
   },
@@ -72094,6 +72701,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Q"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "クエイク",
     "romaji": "Kueiku"
   },
@@ -72241,6 +72849,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "RA"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ラバーアクセル",
     "romaji": "Rabā Akuseru"
   },
@@ -72484,6 +73093,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "R"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ラッシュ",
     "romaji": "Rasshu"
   },
@@ -72636,6 +73246,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "S"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "スパイク",
     "romaji": "Supaiku"
   },
@@ -72734,6 +73345,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "TK"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "トランスキック",
     "romaji": "Toransu Kikku"
   },
@@ -72862,6 +73474,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "UF"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アンダーフラット",
     "romaji": "Andā Furatto"
   },
@@ -72978,6 +73591,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "UN"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "アンダーニードル",
     "romaji": "Andā Nīdoru"
   },
@@ -73121,6 +73735,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "U"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ユナイト",
     "romaji": "Yunaito"
   },
@@ -73257,6 +73872,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "WB"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ウォールボール",
     "romaji": "Uōru Bōru"
   },
@@ -73349,6 +73965,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "WW"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ウォールウェッジ",
     "romaji": "Uōru Wejji"
   },
@@ -73496,6 +74113,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "W"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ウェッジ",
     "romaji": "Wejji"
   },
@@ -73601,6 +74219,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Y"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "イールディング",
     "romaji": "Īrudingu"
   },
@@ -73721,6 +74340,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Z"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ザップ",
     "romaji": "Zappu"
   },
@@ -73745,7 +74365,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Bit Chips is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip",
+    "role": "chip"
   },
   {
     "id": "bit-chip--amphilyon",
@@ -73768,7 +74389,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Amphilyon is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Amphilyon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Amphilyon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--bakushin-oh",
@@ -73797,7 +74419,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bakushin-Oh"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bakushin-Oh",
+    "role": "chip"
   },
   {
     "id": "bit-chip--bistool",
@@ -73820,7 +74443,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Bistool is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bistool"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bistool",
+    "role": "chip"
   },
   {
     "id": "bit-chip--bump-king",
@@ -73843,7 +74467,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bump_King"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bump_King",
+    "role": "chip"
   },
   {
     "id": "bit-chip--cerberus",
@@ -73883,6 +74508,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Kerberous (Takara)"
     ],
+    "role": "chip",
     "jpName": "ケルベロス",
     "romaji": "Keruberosu"
   },
@@ -73913,7 +74539,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Dark Draciel is a Beyblade bit chip from the Magnacore System. Part of Beyblade: The Movie - Fierce Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Draciel",
     "owner": "Steven",
-    "appearAnime": "Beyblade: The Movie - Fierce Battle"
+    "appearAnime": "Beyblade: The Movie - Fierce Battle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dark-dragoon",
@@ -73936,7 +74563,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Dark Dragoon is a Beyblade bit chip from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dark-dranzer",
@@ -73969,7 +74597,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Dark Dranzer is a Beyblade bit chip from the Magnacore System. Released as SP (Engine Gear System Outside Japan) for Beyblade: The Movie - Fierce Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Dranzer",
     "owner": "Ashley",
-    "appearAnime": "Beyblade: The Movie - Fierce Battle"
+    "appearAnime": "Beyblade: The Movie - Fierce Battle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dark-driger",
@@ -73994,7 +74623,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Dark Driger is a Beyblade bit chip from the Magnacore System. Part of Beyblade: The Movie - Fierce Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Driger",
     "owner": "Daniel",
-    "appearAnime": "Beyblade: The Movie - Fierce Battle"
+    "appearAnime": "Beyblade: The Movie - Fierce Battle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--dark-strata-dragoon",
@@ -74022,7 +74652,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Dark Strata Dragoon is a Beyblade bit chip from the Magnacore System. Part of Beyblade: The Movie - Fierce Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Strata_Dragoon",
-    "appearAnime": "Beyblade: The Movie - Fierce Battle"
+    "appearAnime": "Beyblade: The Movie - Fierce Battle",
+    "role": "chip"
   },
   {
     "id": "bit-chip--falborg",
@@ -74060,7 +74691,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Falborg"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Falborg",
+    "role": "chip"
   },
   {
     "id": "bit-chip--frostic-dranzer",
@@ -74107,6 +74739,7 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Frostic_Dranzer",
+    "role": "chip",
     "jpName": "フロスティックドランザー",
     "romaji": "Furosutikku Doranzā"
   },
@@ -74133,7 +74766,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Gabriel is a Beyblade bit chip from the Magnacore System. Part of Beyblade V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gabriel",
     "owner": "Queen",
-    "appearAnime": "Beyblade: V-Force - Episode 42"
+    "appearAnime": "Beyblade: V-Force - Episode 42",
+    "role": "chip"
   },
   {
     "id": "bit-chip--galux",
@@ -74156,7 +74790,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Galux is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galux"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galux",
+    "role": "chip"
   },
   {
     "id": "bit-chip--gekiryu-oh",
@@ -74169,7 +74804,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Gekiryu-Oh is a Beyblade bit chip.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gekiryu-Oh"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gekiryu-Oh",
+    "role": "chip"
   },
   {
     "id": "bit-chip--guardian-driger",
@@ -74192,7 +74828,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Guardian Driger is a Beyblade bit chip from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Guardian_Driger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Guardian_Driger",
+    "role": "chip"
   },
   {
     "id": "bit-chip--kid-draciel",
@@ -74211,7 +74848,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Kid Draciel is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Kid_Draciel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Kid_Draciel",
+    "role": "chip"
   },
   {
     "id": "bit-chip--kid-dragoon",
@@ -74234,7 +74872,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Kid Dragoon is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Kid_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Kid_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--knight-dragoon",
@@ -74257,7 +74896,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Knight Dragoon is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--knight-dranzer",
@@ -74285,7 +74925,8 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Knight Dranzer is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dranzer",
-    "element": "Fire"
+    "element": "Fire",
+    "role": "chip"
   }
 ];
 
@@ -74325,7 +74966,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Makendo"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Makendo",
+    "role": "chip"
   },
   {
     "id": "bit-chip--master-draciel",
@@ -74358,7 +75000,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Draciel"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Draciel",
+    "role": "chip"
   },
   {
     "id": "bit-chip--master-dragoon",
@@ -74377,7 +75020,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Master Dragoon is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--master-driger",
@@ -74406,7 +75050,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Driger"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Driger",
+    "role": "chip"
   },
   {
     "id": "bit-chip--megaro-arm",
@@ -74419,7 +75064,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Megaro Arm is a Beyblade bit chip.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Megaro_Arm"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Megaro_Arm",
+    "role": "chip"
   },
   {
     "id": "bit-chip--metal-dragoon",
@@ -74452,7 +75098,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--metal-dranzer",
@@ -74489,7 +75136,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dranzer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dranzer",
+    "role": "chip"
   },
   {
     "id": "bit-chip--orthrus",
@@ -74532,7 +75180,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Blizzard Orthrus (Takara)"
     ],
-    "appearAnime": "Kai's Royal Flush"
+    "appearAnime": "Kai's Royal Flush",
+    "role": "chip"
   },
   {
     "id": "bit-chip--pegasion",
@@ -74552,7 +75201,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Pegasion is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Pegasion",
-    "owner": "Kaoru Amou"
+    "owner": "Kaoru Amou",
+    "role": "chip"
   },
   {
     "id": "bit-chip--pierce-hedgehog",
@@ -74588,6 +75238,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Pierce Hedgehog is a Beyblade bit chip from the Engine Gear System. Part of Beyblade GRevolution.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Pierce_Hedgehog",
+    "role": "chip",
     "jpName": "ピアスへッジホッグ",
     "romaji": "Piasu Hejjihoggu"
   },
@@ -74612,7 +75263,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Polta is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Polta"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Polta",
+    "role": "chip"
   },
   {
     "id": "bit-chip--poseidon",
@@ -74631,7 +75283,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Poseidon is a Beyblade bit chip from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Poseidon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Poseidon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--saizo",
@@ -74663,6 +75316,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Saizo is a Beyblade bit chip from the Spin Gear System. Released July 17th, 1999.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Saizo",
+    "role": "chip",
     "jpName": "サイゾー",
     "romaji": "Saizo"
   },
@@ -74687,7 +75341,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spark Knight is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spark_Knight"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spark_Knight",
+    "role": "chip"
   },
   {
     "id": "bit-chip--spike-lizard",
@@ -74714,7 +75369,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spike Lizard is a Beyblade bit chip from the Magnacore System. Released June 2002.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spike_Lizard"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spike_Lizard",
+    "role": "chip"
   },
   {
     "id": "bit-chip--trygator",
@@ -74737,7 +75393,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Trygator is a Beyblade bit chip from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygator"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygator",
+    "role": "chip"
   },
   {
     "id": "bit-chip--ultimate-dragoon",
@@ -74784,6 +75441,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Ultimate_Dragoon",
     "owner": "Tyson Granger",
+    "role": "chip",
     "jpName": "アルティメットドラグーン",
     "romaji": "Arutimetto Doragūn"
   },
@@ -74808,7 +75466,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Unicolyon is a Beyblade bit chip from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Unicolyon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Unicolyon",
+    "role": "chip"
   },
   {
     "id": "bit-chip--uriel",
@@ -74853,7 +75512,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Uriel",
     "owner": "King (Original Series)",
-    "appearAnime": "Beyblade: V-Force - Episode 42"
+    "appearAnime": "Beyblade: V-Force - Episode 42",
+    "role": "chip"
   },
   {
     "id": "bit-chip--venus",
@@ -74891,7 +75551,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus",
+    "role": "chip"
   },
   {
     "id": "bit-chip--venus-bit-beast",
@@ -74914,7 +75575,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Venus (Bit-Beast) is a Beyblade bit chip from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus_(Bit-Beast)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus_(Bit-Beast)",
+    "role": "chip"
   },
   {
     "id": "bit-chip--vulpes",
@@ -74934,6 +75596,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Vulpes is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vulpes",
+    "role": "chip",
     "jpName": "ウルペース"
   },
   {
@@ -75002,6 +75665,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Wolborg 03 (Takara)"
     ],
     "element": "Ice",
+    "role": "chip",
     "jpName": "ウルボーグ03",
     "romaji": "Urubōgu 03"
   },
@@ -75033,7 +75697,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Bloody_Devil_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Bloody_Devil_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--draciel-emblem",
@@ -75075,7 +75740,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 17,
       "defense": 50
-    }
+    },
+    "role": "chip"
   },
   {
     "id": "bit-protector--dragoon-emblem",
@@ -75113,7 +75779,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dragoon_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dragoon_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--dranzer-emblem",
@@ -75198,7 +75865,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 17,
       "defense": 33
-    }
+    },
+    "role": "chip"
   },
   {
     "id": "bit-protector--god-emblem",
@@ -75227,7 +75895,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_God_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_God_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--hard-metal-emblem",
@@ -75254,7 +75923,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hard Metal Emblem is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Hard_Metal_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Hard_Metal_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--jiraiya-emblem",
@@ -75303,7 +75973,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Jiraiya_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Jiraiya_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--samurai-emblem",
@@ -75388,6 +76059,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Samurai_Emblem",
+    "role": "chip",
     "jpName": "サムライエンブレム",
     "romaji": "Samurai Enburemu"
   },
@@ -75418,7 +76090,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Sea_Dragon_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Sea_Dragon_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--strata-dragoon",
@@ -75445,7 +76118,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Strata Dragoon is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon",
+    "role": "chip"
   },
   {
     "id": "bit-protector--strata-dragoon-emblem",
@@ -75478,7 +76152,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--turtle-emblem",
@@ -75508,7 +76183,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Turtle_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Turtle_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--wolborg-emblem",
@@ -75537,7 +76213,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem",
+    "role": "chip"
   },
   {
     "id": "bit-protector--wyvern-emblem",
@@ -75566,7 +76243,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wyvern_Emblem"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wyvern_Emblem",
+    "role": "chip"
   },
   {
     "id": "blade--astral-hasbro",
@@ -75637,7 +76315,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--astral-takara-tomy",
@@ -75772,6 +76451,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "A"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "アストラル",
     "romaji": "Asutoraru"
   },
@@ -75863,7 +76543,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--bite-croc",
@@ -75987,6 +76668,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "クロコクランチ",
     "romaji": "KurokoKuranchi"
   },
@@ -76117,6 +76799,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブラックシェル",
     "romaji": "BurakkuSheru"
   },
@@ -76209,7 +76892,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--captain-america",
@@ -76299,7 +76983,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--chewbacca",
@@ -76385,7 +77070,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--clamp-crab",
@@ -76484,6 +77170,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "クラブクランプ",
     "romaji": "Kurabu Kuranpu"
   },
@@ -76604,6 +77291,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "クロックミラージュ",
     "romaji": "KurokkuMirāju"
   },
@@ -76691,7 +77379,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--cyclone-takara-tomy",
@@ -76840,6 +77529,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "C"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サイクロン",
     "romaji": "Saikuron"
   },
@@ -76948,6 +77638,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dn"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "デンジャラス",
     "romaji": "Denjarasu"
   },
@@ -77052,6 +77743,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ダース・ベイダー",
     "romaji": "Dāsu Beidā"
   },
@@ -77120,7 +77812,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--destruction",
@@ -77212,7 +77905,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--devastate",
@@ -77279,7 +77973,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--devil",
@@ -77418,6 +78113,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dv"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "デビル",
     "romaji": "Debiru"
   },
@@ -77486,7 +78182,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--dracielshield",
@@ -77595,6 +78292,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドラシエルシールド",
     "romaji": "DorashieruShīrudo"
   },
@@ -77712,6 +78410,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ドラグーンストーム",
     "romaji": "DoragūnSutōmu"
   },
@@ -77818,6 +78517,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ドランストライク",
     "romaji": "DoranSutoraiku"
   },
@@ -77977,6 +78677,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ダイナマイト",
     "romaji": "Dainamaito"
   },
@@ -78068,7 +78769,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--gilded",
@@ -78152,7 +78854,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--gill-shark",
@@ -78305,6 +79008,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シャークギル",
     "romaji": "ShākuGiru"
   },
@@ -78386,6 +79090,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サイクロプスアイ",
     "romaji": "SaikuropusuAi"
   },
@@ -78457,7 +79162,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--golemrock",
@@ -78581,6 +79287,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ゴーレムロック",
     "romaji": "GōremuRokku"
   },
@@ -78676,7 +79383,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--grogu",
@@ -78756,7 +79464,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--guilty-hasbro",
@@ -78827,7 +79536,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--guilty-takara-tomy",
@@ -78947,6 +79657,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "G"
     ],
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ギルティ",
     "romaji": "Giruti"
   },
@@ -79045,6 +79756,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "バットガスト",
     "romaji": "BattoGasuto"
   },
@@ -79143,6 +79855,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヴァイキングハック",
     "romaji": "Vaikingu Hakku"
   },
@@ -79262,6 +79975,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヘブンズリング",
     "romaji": "HebunzuRingu"
   },
@@ -79408,6 +80122,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヘルズチェイン",
     "romaji": "HeruzuChein"
   },
@@ -79551,6 +80266,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ワイバーンホバー",
     "romaji": "WaibānHobā"
   },
@@ -79624,7 +80340,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--impactdrake",
@@ -79739,6 +80456,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "インパクトドレイク",
     "romaji": "InpakutoDoreiku"
   },
@@ -79850,6 +80568,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アイアンマン",
     "romaji": "Aian Man"
   },
@@ -79943,7 +80662,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--knife-shinobi",
@@ -80062,7 +80782,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "ShinobiKnife (Takara Tomy)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--knightlance",
@@ -80200,6 +80921,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ナイトランス",
     "romaji": "NaitoRansu"
   },
@@ -80324,6 +81046,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ナイトメイル",
     "romaji": "NaitoMeiru"
   },
@@ -80486,6 +81209,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "レオンクレスト",
     "romaji": "ReonKuresuto"
   },
@@ -80584,6 +81308,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ライトニングエルドラゴ (連打型)",
     "romaji": "Raitoningu Erudorago (Renda Gata)"
   },
@@ -80682,6 +81407,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ライトニングエルドラゴ (アッパー型)",
     "romaji": "Raitoningu Erudorago (Appā Gata)"
   },
@@ -80785,6 +81511,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ルーク・スカイウォーカー",
     "romaji": "Rūku Sukaiuōkā"
   },
@@ -80878,6 +81605,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ラスタードラグーン",
     "romaji": "RasutāDoragūn"
   },
@@ -80969,6 +81697,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マグマ",
     "romaji": "Maguma"
   },
@@ -81081,6 +81810,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "メガトロン",
     "romaji": "Megatoron"
   },
@@ -81199,6 +81929,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "メテオドラグーン",
     "romaji": "MeteoDoragūn"
   },
@@ -81294,7 +82025,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--mister-fantastic",
@@ -81361,7 +82093,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--moff-gideon",
@@ -81464,6 +82197,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "モフ・ギデオン",
     "romaji": "Mofu Gideon"
   },
@@ -81583,6 +82317,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マミーカース",
     "romaji": "MamīKāsu"
   },
@@ -81674,7 +82409,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--optimus-primal",
@@ -81784,6 +82520,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "オプティマスプライマル",
     "romaji": "Oputimasu Puraimaru"
   },
@@ -81902,6 +82639,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "オプティマスプライム",
     "romaji": "Oputimasu Puraimu"
   },
@@ -82006,6 +82744,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "オロチクラスタ",
     "romaji": "OrochiKurasuta"
   },
@@ -82114,6 +82853,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フェニックスフェザー",
     "romaji": "FenikkusuFezā"
   },
@@ -82247,6 +82987,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フェニックスラダー",
     "romaji": "FenikkusuRadā"
   },
@@ -82315,7 +83056,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--prominence-takara-tomy",
@@ -82427,6 +83169,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "プロミネンス",
     "romaji": "Purominensu"
   },
@@ -82518,7 +83261,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--rhinohorn",
@@ -82635,6 +83379,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ライノホーン",
     "romaji": "RainoHōn"
   },
@@ -82725,7 +83470,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--roar-takara-tomy",
@@ -82855,6 +83601,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "R"
     ],
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "ロア",
     "romaji": "Roa"
   },
@@ -82986,6 +83733,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ティラノロア",
     "romaji": "TiranoRoa"
   },
@@ -83083,6 +83831,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ロックレオーネ",
     "romaji": "Rokku Reōne"
   },
@@ -83167,7 +83916,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--samuraicalibur",
@@ -83274,6 +84024,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サムライカリバー",
     "romaji": "SamuraiKaribā"
   },
@@ -83423,6 +84174,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サムライセイバー",
     "romaji": "SamuraiSeibā"
   },
@@ -83536,6 +84288,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ベアスクラッチ",
     "romaji": "BeaSukuratchi"
   },
@@ -83633,6 +84386,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "スコーピオスピア",
     "romaji": "SukōpioSupia"
   },
@@ -83769,6 +84523,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シャークスケイル",
     "romaji": "ShākuSukeiru"
   },
@@ -83838,7 +84593,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--shelterdrake",
@@ -83960,6 +84716,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シェルタードレイク",
     "romaji": "SherutāDoreiku"
   },
@@ -84116,6 +84873,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "シノビシャドウ",
     "romaji": "ShinobiShadou"
   },
@@ -84201,7 +84959,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--siegsuperion",
@@ -84310,6 +85069,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ジークスペリオン",
     "romaji": "JīkuSuperion"
   },
@@ -84449,6 +85209,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "スフィンクスカウル",
     "romaji": "SufinkusuKauru"
   },
@@ -84568,6 +85329,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "スパイダーマン",
     "romaji": "Supaidā-Man"
   },
@@ -84680,6 +85442,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "スタースクリーム",
     "romaji": "Sutāsukurīmu"
   },
@@ -84798,6 +85561,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サムライスチール",
     "romaji": "SamuraiSuchīru"
   },
@@ -84888,7 +85652,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--stormpegasis",
@@ -84999,6 +85764,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ストームペガシス",
     "romaji": "SutōmuPegashisu"
   },
@@ -85092,6 +85858,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ストームスプリガン",
     "romaji": "SutōmuSupurigan"
   },
@@ -85193,7 +85960,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Snowtrooper (G3061)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--stun-medusa",
@@ -85275,7 +86043,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--tackle-goat",
@@ -85384,6 +86153,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ゴートタックル",
     "romaji": "GōtoTakkuru"
   },
@@ -85519,6 +86289,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "プテラスイング",
     "romaji": "Putera Suingu"
   },
@@ -85631,6 +86402,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "サノス",
     "romaji": "Sanosu"
   },
@@ -85735,6 +86507,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マンダロリアン",
     "romaji": "Mandarorian"
   },
@@ -85839,6 +86612,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "トリケラプレス",
     "romaji": "TorikeraPuresu"
   },
@@ -85967,6 +86741,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "トリケラスパイキー",
     "romaji": "TorikeraSupaikī"
   },
@@ -86028,6 +86803,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Trypio",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "トライピオ",
     "romaji": "Toraipio"
   },
@@ -86163,6 +86939,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マンモスタスク",
     "romaji": "ManmosuTasuku"
   },
@@ -86236,7 +87013,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--ultimate-takara-tomy",
@@ -86369,6 +87147,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "U"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アルティメット",
     "romaji": "Arutimetto"
   },
@@ -86460,7 +87239,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--vanish-takara-tomy",
@@ -86573,6 +87353,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "spinDirection": "Left-Spin",
+    "role": "blade",
     "jpName": "バニッシュ",
     "romaji": "Banisshu"
   },
@@ -86685,6 +87466,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヴェノム",
     "romaji": "Vuenomu"
   },
@@ -86797,6 +87579,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ビクトリーヴァルキリー",
     "romaji": "BikutorīVarukirī"
   },
@@ -86959,6 +87742,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ヴァイスタイガー",
     "romaji": "VaisuTaigā"
   },
@@ -87108,6 +87892,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ホエールウェーブ",
     "romaji": "HoēruUēbu"
   },
@@ -87185,7 +87970,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "blade--wyverngale",
@@ -87340,6 +88126,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ワイバーンゲイル",
     "romaji": "WaibānGeiru"
   },
@@ -87433,6 +88220,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ゼノエクスカリバー",
     "romaji": "ZenoEkusukaribā"
   },
@@ -87522,7 +88310,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "blade-base--auto-change",
@@ -87545,7 +88334,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Auto Change is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Auto_Change"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Auto_Change",
+    "role": "base"
   },
   {
     "id": "blade-base--auto-change-base",
@@ -87568,7 +88358,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Auto Change Base is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Auto_Change_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Auto_Change_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--bearing-base",
@@ -87582,7 +88373,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Bearing Base is a Beyblade blade base, weighing 8 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Bearing_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Bearing_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--customize-bearing-base",
@@ -87629,6 +88421,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "role": "base",
     "jpName": "カスタマイズベアリングベース",
     "romaji": "Kasutamaizu Bearingu Bēsu"
   },
@@ -87686,7 +88479,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Sharp"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Sharp",
+    "role": "base"
   },
   {
     "id": "blade-base--custom-metal-change-w-upper-attack-support-parts",
@@ -87724,7 +88518,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--defense-grip-2",
@@ -87744,7 +88539,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Defense Grip 2 is a Beyblade blade base, weighing 5.7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_2",
+    "role": "base"
   },
   {
     "id": "blade-base--defense-grip-base",
@@ -87763,7 +88559,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Defense Grip Base is a Beyblade blade base.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--final-clutch-base",
@@ -87796,6 +88593,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Final Clutch Base is a Beyblade blade base from the Engine Gear System, weighing 7.4 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Final_Clutch_Base",
+    "role": "base",
     "jpName": "ファイナルクラッチベース",
     "romaji": "Fainarukuratchibēsu"
   },
@@ -87851,7 +88649,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--first-clutch-base-zeus-version",
@@ -87893,7 +88692,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "spin-gear--flame-change",
@@ -87974,7 +88774,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change",
+    "role": "gear"
   },
   {
     "id": "blade-base--flat",
@@ -88036,6 +88837,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "role": "base",
     "jpName": "フラット",
     "romaji": "Furatto"
   },
@@ -88081,7 +88883,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--fortress",
@@ -88119,7 +88922,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 67,
       "stamina": 67
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--grip",
@@ -88149,7 +88953,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Grip"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Grip",
+    "role": "base"
   },
   {
     "id": "blade-base--gyro-base",
@@ -88172,7 +88977,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Gyro Base is a Beyblade blade base from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Gyro_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Gyro_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--g-special-base",
@@ -88201,7 +89007,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_G_Special_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_G_Special_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release-draciel-version",
@@ -88239,7 +89046,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release-dranzer-gt-version",
@@ -88273,7 +89081,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release-dranzer-version",
@@ -88323,7 +89132,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 33,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release-strata-dragoon-g-version",
@@ -88368,7 +89178,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--hit-release-base-gigars-version",
@@ -88416,7 +89227,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--instant-release-dragoon-gt-version",
@@ -88468,7 +89280,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--instant-release-dragoon-g-version",
@@ -88509,7 +89322,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingScale": 6,
     "ratingsNormalised": {
       "attack": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--instant-release-driger-g-version",
@@ -88546,7 +89360,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 17,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--instant-release-metal-driger-version",
@@ -88578,7 +89393,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 17,
       "defense": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--metal-ball",
@@ -88616,7 +89432,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 67
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--metal-change",
@@ -88665,7 +89482,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--blade-base",
@@ -88704,7 +89522,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--metal-sting",
@@ -88727,7 +89546,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Sting is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sting"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sting",
+    "role": "base"
   },
   {
     "id": "blade-base--normal-base-rock-bison-version",
@@ -88779,7 +89599,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--normal-base-wolborg-4-version",
@@ -88825,7 +89646,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--phantom-grip",
@@ -88848,7 +89670,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Phantom Grip is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Phantom_Grip"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Phantom_Grip",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-bearing",
@@ -88881,7 +89704,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Bearing"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Bearing",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-grip-base",
@@ -88900,7 +89724,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Grip Base is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Grip_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Grip_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-grip-change-base",
@@ -88923,7 +89748,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Grip Change Base is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Grip_Change_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Grip_Change_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-metal-ball-base",
@@ -88957,7 +89783,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 67
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--sg-roller",
@@ -88980,7 +89807,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "SG Roller is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Roller"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Roller",
+    "role": "base"
   },
   {
     "id": "blade-base--sg-wing-base",
@@ -89025,7 +89853,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Wing_Base"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Wing_Base",
+    "role": "base"
   },
   {
     "id": "blade-base--shark-tail",
@@ -89063,7 +89892,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "base"
   },
   {
     "id": "blade-base--spiral-change",
@@ -89086,7 +89916,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spiral Change is a Beyblade blade base from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Spiral_Change"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Spiral_Change",
+    "role": "base"
   },
   {
     "id": "blade-base--switch-metal-ball-base",
@@ -89139,7 +89970,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 67,
       "stamina": 50
-    }
+    },
+    "role": "base"
   },
   {
     "id": "bu-blade--barricade",
@@ -89252,6 +90084,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Brc"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "バリケード",
     "romaji": "Barikēdo"
   },
@@ -89359,6 +90192,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Br"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "バースト",
     "romaji": "Bāsuto"
   },
@@ -89517,6 +90351,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ch"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "チェイン",
     "romaji": "Chēn"
   },
@@ -89673,6 +90508,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dvn"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ディヴァイン",
     "romaji": "Divuain"
   },
@@ -89787,6 +90623,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Gt"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ガトリング",
     "romaji": "Gatoringu"
   },
@@ -89859,6 +90696,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "K M"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "M",
     "romaji": "Kingu M"
   },
@@ -89965,6 +90803,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "K MR"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "MR",
     "romaji": "Kingu MR"
   },
@@ -90037,6 +90876,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "K R"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "R",
     "romaji": "Kingu R"
   },
@@ -90109,6 +90949,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SK M"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "M",
     "romaji": "SupāKingu M"
   },
@@ -90181,6 +91022,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SK MR"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "MR",
     "romaji": "SupāKingu MR"
   },
@@ -90253,6 +91095,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SK R"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "R",
     "romaji": "SupāKingu R"
   },
@@ -90325,6 +91168,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SK RM"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "RM",
     "romaji": "SupāKingu RM"
   },
@@ -90397,6 +91241,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "S M"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "M",
     "romaji": "Sūpā M"
   },
@@ -90503,6 +91348,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "S MR"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "MR",
     "romaji": "Sūpā MR"
   },
@@ -90575,6 +91421,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "S R"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "R",
     "romaji": "Sūpā R"
   },
@@ -90689,6 +91536,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Wn"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウインド",
     "romaji": "Uindo"
   },
@@ -90811,6 +91659,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Xp"
     ],
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ジフォイド",
     "romaji": "Jifoido"
   },
@@ -90926,6 +91775,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Zs"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "blade",
     "jpName": "ゼスト",
     "romaji": "Zesuto"
   },
@@ -91148,7 +91998,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "1-Attack"
     ],
     "hasbroCode": "D06-PSK",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--1b",
@@ -91321,7 +92172,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "1-Balance"
     ],
     "hasbroCode": "D07-PSK",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--1d",
@@ -91480,7 +92332,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "1D",
       "1-Defense"
     ],
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--1s",
@@ -91648,7 +92501,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "1S",
       "1-Stamina"
     ],
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--2a",
@@ -91759,7 +92613,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "2-Attack"
     ],
     "hasbroCode": "D01-PSK",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--2b",
@@ -91883,7 +92738,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D09-PSK",
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--2d",
@@ -92035,7 +92891,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "2-Defense"
     ],
     "hasbroCode": "D02-PSK",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--2s",
@@ -92149,7 +93006,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "2-Stamina"
     ],
     "hasbroCode": "D04-PSK",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--3a",
@@ -92264,7 +93122,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "3-Attack"
     ],
     "hasbroCode": "D03-PSK",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "base"
   },
   {
     "id": "chassis--4a",
@@ -92395,7 +93254,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "4A",
       "4-Attack"
     ],
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "base"
   },
   {
     "id": "core--heavy-metal-core",
@@ -92432,6 +93292,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Heavy Metal Core is a Beyblade core from the Engine Gear System, weighing 9 g. Part of Beyblade: G-Revolution.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Core_-_Heavy_Metal_Core",
+    "role": "chip",
     "jpName": "ヘビーメタルトコア",
     "romaji": "Hebī Metaru Koa"
   },
@@ -92470,6 +93331,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Magnecore (North Pole) is a Beyblade core from the Magnacore System, weighing 6 g. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Core_-_Magnecore_(North_Pole)",
+    "role": "chip",
     "jpName": "ノース極 マグネコア",
     "romaji": "Nōsukyoku Magunekoa"
   },
@@ -92508,6 +93370,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Magnecore (South Pole) is a Beyblade core from the Magnacore System, weighing 6 g. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Core_-_Magnecore_(South_Pole)",
+    "role": "chip",
     "jpName": "サウス極 マグネコア",
     "romaji": "Sausukyoku Magunekoa"
   },
@@ -92546,6 +93409,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Metal Weight Core is a Beyblade core from the Magnacore System, weighing 5 g. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Core_-_Metal_Weight_Core",
+    "role": "chip",
     "jpName": "メタルウエイトコア",
     "romaji": "Metaru Ueito Koa"
   },
@@ -92662,6 +93526,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "AC"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "アキレス",
     "romaji": "Akiresu"
   },
@@ -92785,6 +93650,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "BH"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "バハムート",
     "romaji": "Bahamūto"
   },
@@ -92978,6 +93844,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "BL"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ベリアル",
     "romaji": "Beriaru"
   },
@@ -93129,6 +93996,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Belial 2"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ベリアル",
     "romaji": "Beriaru"
   },
@@ -93251,6 +94119,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Belial 3"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ベリアル",
     "romaji": "Beriaru"
   },
@@ -93365,6 +94234,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "DR"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドラゴン",
     "romaji": "Doragon"
   },
@@ -93501,6 +94371,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "FF"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ファブニル",
     "romaji": "Fabuniru"
   },
@@ -93617,6 +94488,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HL"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ヘリオス",
     "romaji": "Heriosu"
   },
@@ -93722,6 +94594,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HK"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "ハロー・キティ",
     "romaji": "Harō Kiti"
   },
@@ -93838,6 +94711,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HY"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ハイペリオン",
     "romaji": "Haiperion"
   },
@@ -93998,6 +94872,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "KR"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ケルベウス",
     "romaji": "Kerubeusu"
   },
@@ -94108,6 +94983,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ナイト",
     "romaji": "Naito"
   },
@@ -94229,6 +95105,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "LN"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ロンギヌス",
     "romaji": "Ronginusu"
   },
@@ -94343,6 +95220,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "LC"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ルシファー",
     "romaji": "Rushifā"
   },
@@ -94470,6 +95348,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "πR"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
   },
@@ -94591,6 +95470,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "PH"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "フェニックス",
     "romaji": "Fenikkusu"
   },
@@ -94743,6 +95623,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "RG"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ラグナルク",
     "romaji": "Ragunaruku"
   },
@@ -94881,6 +95762,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SP"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "スプリガン",
     "romaji": "Supurigan"
   },
@@ -94990,6 +95872,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Spriggan 2"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "スプリガン",
     "romaji": "Supurigan"
   },
@@ -95163,6 +96046,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Valkyrie 2"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヴァルキリー",
     "romaji": "Varukirī"
   },
@@ -95292,6 +96176,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "XC"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "エクスカリバー",
     "romaji": "Ekusukaribā"
   },
@@ -95389,6 +96274,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Al"
     ],
     "partType": "Attack",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "オールマイト",
     "romaji": "Ōrumaito"
   },
@@ -95469,7 +96359,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Generate-HyperSphere"
     ],
     "hasbroCode": "TH28-F",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "disc-integrated-driver--generate",
@@ -95597,6 +96488,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Gn"
     ],
     "partType": "Balance",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "ジェネレート",
     "romaji": "Jenerēto"
   },
@@ -95694,6 +96590,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Hy"
     ],
     "partType": "Defense",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "ハイブリッド",
     "romaji": "Haiburiddo"
   },
@@ -95824,6 +96725,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ig'"
     ],
     "partType": "Attack",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "イグニッションダッシュ",
     "romaji": "Igunisshon Dasshu"
   },
@@ -95902,7 +96808,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ignition-HyperSphere"
     ],
     "hasbroCode": "TH23-F",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ]
   },
   {
     "id": "disc-integrated-driver--mugen-l",
@@ -95997,6 +96908,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "∞L"
     ],
     "partType": "Stamina",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "無限L",
     "romaji": "Mugen Eru"
   },
@@ -96101,6 +97017,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "∞"
     ],
     "partType": "Stamina",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "無限",
     "romaji": "Mugen"
   },
@@ -96212,6 +97133,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Sh"
     ],
     "partType": "Attack",
+    "role": "tip",
+    "fusedRoles": [
+      "weight",
+      "tip"
+    ],
     "jpName": "ショット",
     "romaji": "Shotto"
   },
@@ -96463,6 +97389,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D51",
+    "role": "weight",
     "jpName": "トゥエルブ",
     "romaji": "Tuerubu"
   },
@@ -96654,6 +97581,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D53",
+    "role": "weight",
     "jpName": "サーティーン",
     "romaji": "Sātīn"
   },
@@ -96733,7 +97661,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "1-Attack Disc"
     ],
-    "hasbroCode": "D83"
+    "hasbroCode": "D83",
+    "role": "weight"
   },
   {
     "id": "disc--1b-d",
@@ -96804,7 +97733,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "1-Balance Disc"
     ],
-    "hasbroCode": "D82"
+    "hasbroCode": "D82",
+    "role": "weight"
   },
   {
     "id": "disc--2",
@@ -97104,6 +98034,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D47",
+    "role": "weight",
     "jpName": "ツー",
     "romaji": "Tsū"
   },
@@ -97166,7 +98097,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "2-Defense Disc"
     ],
-    "hasbroCode": "D86"
+    "hasbroCode": "D86",
+    "role": "weight"
   },
   {
     "id": "disc--3",
@@ -97297,6 +98229,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "role": "weight",
     "jpName": "スリー",
     "romaji": "Surī"
   },
@@ -97381,7 +98314,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "3-Attack Disc"
     ],
-    "hasbroCode": "D84"
+    "hasbroCode": "D84",
+    "role": "weight"
   },
   {
     "id": "disc--4",
@@ -97721,6 +98655,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D50",
+    "role": "weight",
     "jpName": "フォー",
     "romaji": "Fō"
   },
@@ -97988,6 +98923,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D54",
+    "role": "weight",
     "jpName": "ファイブ",
     "romaji": "Faibu"
   },
@@ -98047,7 +98983,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D49RC"
+    "hasbroCode": "D49RC",
+    "role": "weight"
   },
   {
     "id": "disc--6",
@@ -98405,6 +99342,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "D49",
+    "role": "weight",
     "jpName": "シックス",
     "romaji": "Shikkusu"
   },
@@ -98464,7 +99402,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D49RC"
+    "hasbroCode": "D49RC",
+    "role": "weight"
   },
   {
     "id": "disc--aero",
@@ -98595,6 +99534,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Aero Dash"
     ],
     "hasbroCode": "D17",
+    "role": "weight",
     "jpName": "エアロダッシュ",
     "romaji": "Earo Dasshu"
   },
@@ -98748,6 +99688,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "A"
     ],
     "hasbroCode": "D10",
+    "role": "weight",
     "jpName": "アームド",
     "romaji": "Āmudo"
   },
@@ -98860,7 +99801,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bl"
     ],
-    "hasbroCode": "D69"
+    "hasbroCode": "D69",
+    "role": "weight"
   },
   {
     "id": "disc--boost-l",
@@ -98925,7 +99867,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D01L"
+    "hasbroCode": "D01L",
+    "role": "weight"
   },
   {
     "id": "disc--bumper",
@@ -99064,6 +100007,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "β"
     ],
+    "role": "weight",
     "jpName": "バンパー",
     "romaji": "Banpā"
   },
@@ -99276,6 +100220,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "C"
     ],
     "hasbroCode": "D08",
+    "role": "weight",
     "jpName": "セントラル",
     "romaji": "Sentoraru"
   },
@@ -99366,6 +100311,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "weight",
     "jpName": "超",
     "romaji": "Chō"
   },
@@ -99479,7 +100425,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Cq-Q",
       "Ciquex-QuadDrive"
     ],
-    "hasbroCode": "QD06"
+    "hasbroCode": "QD06",
+    "role": "weight"
   },
   {
     "id": "disc--convert",
@@ -99623,6 +100570,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Convert-P (Pro Series)"
     ],
     "hasbroCode": "D77-P",
+    "role": "weight",
     "jpName": "コンバート",
     "romaji": "Konbāto"
   },
@@ -99719,7 +100667,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cn"
     ],
-    "hasbroCode": "D77"
+    "hasbroCode": "D77",
+    "role": "weight"
   },
   {
     "id": "disc--diagron-q",
@@ -99823,7 +100772,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dq-Q",
       "Diagron-QuadDrive"
     ],
-    "hasbroCode": "QD07"
+    "hasbroCode": "QD07",
+    "role": "weight"
   },
   {
     "id": "disc--down",
@@ -99977,6 +100927,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "hasbroCode": "D15",
+    "role": "weight",
     "jpName": "ダウン",
     "romaji": "Daun"
   },
@@ -100053,7 +101004,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dr"
     ],
-    "hasbroCode": "D76"
+    "hasbroCode": "D76",
+    "role": "weight"
   },
   {
     "id": "disc--d-gear-q",
@@ -100130,7 +101082,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "DG-Q",
       "D Gear QuadDrive"
     ],
-    "hasbroCode": "QS03"
+    "hasbroCode": "QS03",
+    "role": "weight"
   },
   {
     "id": "disc--fortress",
@@ -100244,6 +101197,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Fr"
     ],
+    "role": "weight",
     "jpName": "フォートレス",
     "romaji": "Fōtoresu"
   },
@@ -100360,7 +101314,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Fq-Q",
       "Fyquor-QuadDrive"
     ],
-    "hasbroCode": "QD05"
+    "hasbroCode": "QD05",
+    "role": "weight"
   },
   {
     "id": "disc--giga-q",
@@ -100477,7 +101432,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Gg-Q",
       "Giga-QuadDrive"
     ],
-    "hasbroCode": "QD02"
+    "hasbroCode": "QD02",
+    "role": "weight"
   },
   {
     "id": "disc--giga",
@@ -100634,6 +101590,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gg"
     ],
+    "role": "weight",
     "jpName": "ギガ",
     "romaji": "Giga"
   },
@@ -100693,7 +101650,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D03L"
+    "hasbroCode": "D03L",
+    "role": "weight"
   },
   {
     "id": "disc--gravity",
@@ -100903,6 +101861,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "G"
     ],
     "hasbroCode": "D03",
+    "role": "weight",
     "jpName": "グラビティ",
     "romaji": "Gurabiti"
   },
@@ -101241,6 +102200,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "H"
     ],
     "hasbroCode": "D07",
+    "role": "weight",
     "jpName": "ヘビー",
     "romaji": "Hebī"
   },
@@ -101334,7 +102294,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hr"
     ],
-    "hasbroCode": "D71"
+    "hasbroCode": "D71",
+    "role": "weight"
   },
   {
     "id": "disc--hurricane-takara-tomy",
@@ -101478,6 +102439,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hr"
     ],
+    "role": "weight",
     "jpName": "ハリケーン",
     "romaji": "Harikēn"
   },
@@ -101603,6 +102565,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Il"
     ],
+    "role": "weight",
     "jpName": "イリーガル",
     "romaji": "Irīgaru"
   },
@@ -101797,6 +102760,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "I"
     ],
     "hasbroCode": "D20",
+    "role": "weight",
     "jpName": "インフィニティ",
     "romaji": "Infiniti"
   },
@@ -101949,6 +102913,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "J"
     ],
     "hasbroCode": "D24",
+    "role": "weight",
     "jpName": "ジャーク",
     "romaji": "Jāku"
   },
@@ -102046,7 +103011,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Kr-Q",
       "Karma-QuadDrive"
     ],
-    "hasbroCode": "QD11"
+    "hasbroCode": "QD11",
+    "role": "weight"
   },
   {
     "id": "disc--knuckle-l",
@@ -102104,7 +103070,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D02L"
+    "hasbroCode": "D02L",
+    "role": "weight"
   },
   {
     "id": "disc--kou",
@@ -102189,6 +103156,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "weight",
     "jpName": "皇",
     "romaji": "Kō"
   },
@@ -102260,7 +103228,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D04L"
+    "hasbroCode": "D04L",
+    "role": "weight"
   },
   {
     "id": "disc--lore",
@@ -102335,7 +103304,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "L"
     ],
-    "hasbroCode": "D73"
+    "hasbroCode": "D73",
+    "role": "weight"
   },
   {
     "id": "disc--magnum",
@@ -102549,6 +103519,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "M"
     ],
     "hasbroCode": "D19",
+    "role": "weight",
     "jpName": "マグナム",
     "romaji": "Magunamu"
   },
@@ -102658,6 +103629,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Mn"
     ],
+    "role": "weight",
     "jpName": "ムーン",
     "romaji": "Mūn"
   },
@@ -102780,7 +103752,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Nx-Q",
       "Nexus-QuadDrive"
     ],
-    "hasbroCode": "QD01"
+    "hasbroCode": "QD01",
+    "role": "weight"
   },
   {
     "id": "disc--ou",
@@ -102869,6 +103842,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "weight",
     "jpName": "王",
     "romaji": "Ō"
   },
@@ -103125,6 +104099,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ω"
     ],
     "hasbroCode": "D60",
+    "role": "weight",
     "jpName": "アウター",
     "romaji": "Autā"
   },
@@ -103296,6 +104271,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "O"
     ],
     "hasbroCode": "D13",
+    "role": "weight",
     "jpName": "オーバル",
     "romaji": "Ōbaru"
   },
@@ -103386,7 +104362,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ov-Q",
       "Over-QuadDrive"
     ],
-    "hasbroCode": "QD12"
+    "hasbroCode": "QD12",
+    "role": "weight"
   },
   {
     "id": "disc--paradox",
@@ -103521,6 +104498,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Paradox-P"
     ],
     "hasbroCode": "D90-P",
+    "role": "weight",
     "jpName": "パラドックス",
     "romaji": "Paradokkusu"
   },
@@ -103631,6 +104609,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "hasbroCode": "D22",
+    "role": "weight",
     "jpName": "ポリッシュ",
     "romaji": "Porisshu"
   },
@@ -103722,7 +104701,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "P"
     ],
-    "hasbroCode": "D74"
+    "hasbroCode": "D74",
+    "role": "weight"
   },
   {
     "id": "disc--quacchu-q",
@@ -103838,6 +104818,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Qq-Q"
     ],
     "hasbroCode": "QD10",
+    "role": "weight",
     "jpName": "クアッチュキュー",
     "romaji": "Kuatchu Kyū"
   },
@@ -103991,6 +104972,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Q"
     ],
     "hasbroCode": "D21",
+    "role": "weight",
     "jpName": "クオーター",
     "romaji": "Kuōtā"
   },
@@ -104134,6 +105116,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ratchet-P (Pro Series)"
     ],
     "hasbroCode": "D70-P",
+    "role": "weight",
     "jpName": "ラチェット",
     "romaji": "Rachetto"
   },
@@ -104214,7 +105197,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Rt"
     ],
-    "hasbroCode": "D70"
+    "hasbroCode": "D70",
+    "role": "weight"
   },
   {
     "id": "disc--ring",
@@ -104365,6 +105349,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "R"
     ],
     "hasbroCode": "D09",
+    "role": "weight",
     "jpName": "リング",
     "romaji": "Ringu"
   },
@@ -104467,6 +105452,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "S'"
     ],
+    "role": "weight",
     "jpName": "スプレッドダッシュ",
     "romaji": "Supureddo Dasshu"
   },
@@ -104564,7 +105550,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Sq-Q",
       "Squadron-QuadDrive"
     ],
-    "hasbroCode": "QD09"
+    "hasbroCode": "QD09",
+    "role": "weight"
   },
   {
     "id": "disc--sting-hasbro",
@@ -104669,7 +105656,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "St"
     ],
-    "hasbroCode": "D72"
+    "hasbroCode": "D72",
+    "role": "weight"
   },
   {
     "id": "disc--swipe",
@@ -104742,7 +105730,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Sw"
     ],
-    "hasbroCode": "D78"
+    "hasbroCode": "D78",
+    "role": "weight"
   },
   {
     "id": "disc--s-gear-q",
@@ -104815,7 +105804,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "SG-Q",
       "S Gear QuadDrive"
     ],
-    "hasbroCode": "QD14"
+    "hasbroCode": "QD14",
+    "role": "weight"
   },
   {
     "id": "disc--tapered-q",
@@ -104923,7 +105913,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Tp-Q",
       "Tapered-QuadDrive"
     ],
-    "hasbroCode": "QD03"
+    "hasbroCode": "QD03",
+    "role": "weight"
   },
   {
     "id": "disc--twist-q",
@@ -105006,7 +105997,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Tq-Q",
       "Twist-QuadStrike"
     ],
-    "hasbroCode": "QS01"
+    "hasbroCode": "QS01",
+    "role": "weight"
   },
   {
     "id": "disc--upper",
@@ -105163,6 +106155,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "U"
     ],
     "hasbroCode": "D14",
+    "role": "weight",
     "jpName": "アッパー",
     "romaji": "Appā"
   },
@@ -105257,7 +106250,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Vn"
     ],
-    "hasbroCode": "D75"
+    "hasbroCode": "D75",
+    "role": "weight"
   },
   {
     "id": "disc--vertical-l",
@@ -105322,7 +106316,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "hasbroCode": "D12L"
+    "hasbroCode": "D12L",
+    "role": "weight"
   },
   {
     "id": "disc--wheel-sp",
@@ -105413,7 +106408,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Wh-SP"
     ],
-    "hasbroCode": "D81"
+    "hasbroCode": "D81",
+    "role": "weight"
   },
   {
     "id": "disc--wheel",
@@ -105536,6 +106532,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Wh"
     ],
+    "role": "weight",
     "jpName": "ホイール",
     "romaji": "Hoīru"
   },
@@ -105638,6 +106635,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "W'"
     ],
+    "role": "weight",
     "jpName": "ウイングダッシュ",
     "romaji": "Uingu Dasshu"
   },
@@ -105728,7 +106726,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Xn-Q",
       "Xanthus-QuadStrike"
     ],
-    "hasbroCode": "QS02"
+    "hasbroCode": "QS02",
+    "role": "weight"
   },
   {
     "id": "disc--xanthus",
@@ -105844,6 +106843,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Xn"
     ],
+    "role": "weight",
     "jpName": "ザンザス",
     "romaji": "Zanzasu"
   },
@@ -105905,7 +106905,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Z"
     ],
-    "hasbroCode": "D63"
+    "hasbroCode": "D63",
+    "role": "weight"
   },
   {
     "id": "driver--absorb-s",
@@ -105995,7 +106996,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Absorb-SlingShock"
     ],
     "hasbroCode": "TS16-S",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--absorb",
@@ -106159,6 +107161,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-05",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "アブソーブ",
     "romaji": "Abusōbu"
   },
@@ -106298,6 +107301,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "A'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アクセルダッシュ",
     "romaji": "Akuseru Dasshu"
   },
@@ -106403,7 +107407,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Accel-SlingShock"
     ],
     "hasbroCode": "TA01-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--adventure",
@@ -106521,6 +107526,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ad"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アドベンチャー",
     "romaji": "Adobenchā"
   },
@@ -106600,7 +107606,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Almighty-Q (Beyblade Burst App)"
     ],
     "hasbroCode": "TS22-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--anchor",
@@ -106728,6 +107735,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TA18",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アンカー",
     "romaji": "Ankā"
   },
@@ -106843,6 +107851,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "α'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アサルトダッシュ",
     "romaji": "Asaruto Dasshu"
   },
@@ -106955,7 +107964,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Assault-QuadDrive"
     ],
     "hasbroCode": "TA22-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--atomic-s",
@@ -107038,7 +108048,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Atomic-SlingShock"
     ],
     "hasbroCode": "TD07-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--banshee-h",
@@ -107133,7 +108144,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Banshee-HyperSphere"
     ],
     "hasbroCode": "TH17",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--bearing",
@@ -107229,6 +108241,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Br'"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ベアリングダッシュ",
     "romaji": "Bearingu Dasshu"
   },
@@ -107337,6 +108350,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "BDr"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ベアリングドリフト",
     "romaji": "Bearingu Dorifuto"
   },
@@ -107440,6 +108454,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "BMb"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ベアリングメビウス",
     "romaji": "Bearingu Mebiusu"
   },
@@ -107525,7 +108540,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "β-Q"
     ],
     "hasbroCode": "TD21-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--bite",
@@ -107657,6 +108673,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "β"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "バイト",
     "romaji": "Baito"
   },
@@ -107771,6 +108788,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "B'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ブロウダッシュ",
     "romaji": "Burou Dasshu"
   },
@@ -107883,6 +108901,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Bn"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "バウンス",
     "romaji": "Baunsu"
   },
@@ -107976,7 +108995,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Bullet One Hypersphere"
     ],
     "hasbroCode": "TH11",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--bullet-ii-h",
@@ -108067,7 +109087,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Bullet Two HyperSphere"
     ],
     "hasbroCode": "TH18",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--charge-i-h",
@@ -108164,7 +109185,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Charge One HyperSphere"
     ],
     "hasbroCode": "TH08",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--charge-ii-h",
@@ -108252,7 +109274,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Charge Two HyperSphere"
     ],
     "hasbroCode": "TH14",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--charge-iii-h",
@@ -108331,7 +109354,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Charge Three HyperSphere"
     ],
     "hasbroCode": "TH10",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--charge-metal",
@@ -108433,6 +109457,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Cm'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "チャージメタルダッシュ",
     "romaji": "Chāji Metaru Dasshu"
   },
@@ -108514,7 +109539,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Charger-SPM (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP09-M",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--claw",
@@ -108703,6 +109729,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS02",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "クロー",
     "romaji": "Kurō"
   },
@@ -108796,7 +109823,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Coil-HyperSphere"
     ],
     "hasbroCode": "TH15",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--cycle",
@@ -108935,6 +109963,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS08",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "サイクル",
     "romaji": "Saikuru"
   },
@@ -109033,7 +110062,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Defense-SlingShock"
     ],
     "hasbroCode": "TD01-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--defense",
@@ -109218,6 +110248,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD01",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ディフェンス",
     "romaji": "Difensu"
   },
@@ -109406,6 +110437,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-09 (F2292) · PR-25 (F7800)",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "デストロイダッシュ",
     "romaji": "Desutoroi Dasshu"
   },
@@ -109500,7 +110532,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Destroyer-H"
     ],
     "hasbroCode": "TH26",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--destroy-s",
@@ -109581,7 +110614,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Destroy-SlingShock"
     ],
     "hasbroCode": "TA14-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--destroy-spm",
@@ -109671,7 +110705,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Destroyer-SPM (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP05",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--dimension-h",
@@ -109775,7 +110810,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dimensional-H"
     ],
     "hasbroCode": "TH21",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--dimension-s",
@@ -109866,7 +110902,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Dimension-SlingShock"
     ],
     "hasbroCode": "TB11-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--dimension-sp",
@@ -109949,7 +110986,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dimensioning-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP16",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--drift-sp",
@@ -110017,7 +111055,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dr-SP"
     ],
     "hasbroCode": "TSP22",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--edge-q",
@@ -110128,7 +111167,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Edge-QuadDrive"
     ],
     "hasbroCode": "TS21-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--edge",
@@ -110298,6 +111338,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS03",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "エッジ",
     "romaji": "Ejji"
   },
@@ -110379,7 +111420,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Et-Q"
     ],
     "hasbroCode": "TS24-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--eternal-s",
@@ -110478,7 +111520,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Eternal-SlingShock"
     ],
     "hasbroCode": "TS15-S",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--eternal",
@@ -110658,6 +111701,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-08",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "エターナル",
     "romaji": "Etānaru"
   },
@@ -110793,6 +111837,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-23",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エボリューション",
     "romaji": "Eboryūshon Dasshu"
   },
@@ -110870,7 +111915,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Evolution-SlingShock"
     ],
-    "hasbroCode": "TA19-S"
+    "hasbroCode": "TA19-S",
+    "role": "tip"
   },
   {
     "id": "driver--evolution-sp",
@@ -110948,7 +111994,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Evolutional-SP (Beyblade Burst App"
     ],
     "hasbroCode": "TSP11",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--flugel-s",
@@ -111042,7 +112089,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Flugel-SlingShock"
     ],
     "hasbroCode": "TS11-S",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--flugel",
@@ -111249,6 +112297,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS11",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "フリューゲル",
     "romaji": "Furyūgeru"
   },
@@ -111332,7 +112381,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Friction-HyperSphere"
     ],
     "hasbroCode": "TH27",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--friction-s",
@@ -111430,7 +112480,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Friction-SlingShock"
     ],
     "hasbroCode": "TD13-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--friction",
@@ -111610,6 +112661,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-04",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "フリクション",
     "romaji": "Furikushon"
   },
@@ -111772,6 +112824,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-11",
     "partType": "Balance",
+    "role": "tip",
     "jpName": "フュージョンダッシュ",
     "romaji": "Fyūjon Dasshu"
   },
@@ -111889,7 +112942,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Fusion-QuadDrive"
     ],
     "hasbroCode": "TB15-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--fusion-s",
@@ -112002,7 +113056,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Fusion-SlingShock"
     ],
     "hasbroCode": "TB01-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--fusion-sp",
@@ -112101,7 +113156,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Fusional-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP01",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--guard-h",
@@ -112180,7 +113236,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Guardian-H"
     ],
     "hasbroCode": "TH30",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--guard-q",
@@ -112269,7 +113326,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "G-Q",
       "Guard-QuadDrive"
     ],
-    "hasbroCode": "TD18-Q"
+    "hasbroCode": "TD18-Q",
+    "role": "tip"
   },
   {
     "id": "driver--guard",
@@ -112445,6 +113503,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD09",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ガード",
     "romaji": "Gādo"
   },
@@ -112536,7 +113595,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "G-Q"
     ],
     "hasbroCode": "TS23-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--gyro",
@@ -112686,6 +113746,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS04",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ジャイロ",
     "romaji": "Jairo"
   },
@@ -112783,6 +113844,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HA'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハイアクセルダッシュ",
     "romaji": "Hai Akuseru Dasshu"
   },
@@ -112880,6 +113942,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HB'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハイブロウダッシュ",
     "romaji": "Hai Burou Dasshu"
   },
@@ -112986,6 +114049,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HCh'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハイチャージダッシュ",
     "romaji": "Hai Chāji Dasshu"
   },
@@ -113083,6 +114147,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HD"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ハイディフェンス",
     "romaji": "Hai Difensu"
   },
@@ -113188,6 +114253,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HEt"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ハイエターナル",
     "romaji": "Hai Etānaru"
   },
@@ -113285,6 +114351,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HH'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハイホールドダッシュ",
     "romaji": "Hai Hōrudo Dasshu"
   },
@@ -113382,6 +114449,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HJ'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハイジャギーダッシュ",
     "romaji": "Hai Jagī Dasshu"
   },
@@ -113461,6 +114529,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HM"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ハイマッシブ",
     "romaji": "Hai Masshibu"
   },
@@ -113534,6 +114603,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HR"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ハイリボルブ",
     "romaji": "Hai Riborubu"
   },
@@ -113631,6 +114701,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HS"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ハイサバイブ",
     "romaji": "Haisabaibu"
   },
@@ -113736,6 +114807,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HWv'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ハイウェーブダッシュ",
     "romaji": "Hai Uēbu Dasshu"
   },
@@ -113793,6 +114865,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HXt'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ハイエクステンドダッシュ",
     "romaji": "Hai Ekusutendo Dasshu"
   },
@@ -113890,6 +114963,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "HZ'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ハイゼファー",
     "romaji": "Haizefā"
   },
@@ -114006,6 +115080,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "H'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ホールドダッシュ",
     "romaji": "Hōrudo Dasshu"
   },
@@ -114159,6 +115234,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Hn'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ハンターダッシュ",
     "romaji": "Hantā Dasshu"
   },
@@ -114248,7 +115324,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Hunter-SlingShock"
     ],
     "hasbroCode": "TA12-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--hybrid-h",
@@ -114325,7 +115402,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Hybrid-HyperSphere"
     ],
     "hasbroCode": "TH20",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--impact",
@@ -114496,6 +115574,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TA08",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "インパクト",
     "romaji": "Inpakuto"
   },
@@ -114594,7 +115673,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jagged-H"
     ],
     "hasbroCode": "TH01",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--jaggy-q",
@@ -114677,7 +115757,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jaggy-QuadDrive"
     ],
     "hasbroCode": "TA21-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--jaggy-s",
@@ -114767,7 +115848,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jaggy-SlingShock"
     ],
     "hasbroCode": "TA07-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--jolt-q",
@@ -114865,7 +115947,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jl-Q"
     ],
     "hasbroCode": "TA25-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--jolt-s",
@@ -114944,7 +116027,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jolt-SlingShock"
     ],
     "hasbroCode": "TA16-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--just",
@@ -115035,6 +116119,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Js'"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ジャストダッシュ",
     "romaji": "Jasuto Dasshu"
   },
@@ -115123,7 +116208,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Js-Q"
     ],
     "hasbroCode": "TD20-Q",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--keep",
@@ -115229,6 +116315,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pronounced Keep Dash"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "キープダッシュ",
     "romaji": "Kīpu Dasshu"
   },
@@ -115339,7 +116426,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Keep-HyperSphere"
     ],
     "hasbroCode": "TH07",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--keep-s",
@@ -115430,7 +116518,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Keeper-S"
     ],
     "hasbroCode": "TD14-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--kick",
@@ -115532,6 +116621,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Kc"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "キック",
     "romaji": "Kikku"
   },
@@ -115629,6 +116719,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "L'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ライナーダッシュ",
     "romaji": "Rainā Dasshu"
   },
@@ -115736,7 +116827,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Linear-H (Beyblade Burst App)"
     ],
     "hasbroCode": "TH03",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--liner-q",
@@ -115820,7 +116912,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "L-Q"
     ],
     "hasbroCode": "TB17-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--liner-s",
@@ -115905,7 +116998,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Liner-SlingShock"
     ],
     "hasbroCode": "TB05-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--loop-s",
@@ -115985,7 +117079,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Loop-SlingShock"
     ],
     "hasbroCode": "TD08-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--low-h",
@@ -116066,7 +117161,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Low-HyperSphere"
     ],
     "hasbroCode": "TH13",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--low",
@@ -116182,6 +117278,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Lw"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ロウ",
     "romaji": "Rō"
   },
@@ -116282,7 +117379,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Massive-QuadDrive"
     ],
     "hasbroCode": "TD15-Q",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--massive-s",
@@ -116360,7 +117458,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Massive-SlingShock"
     ],
     "hasbroCode": "TD02-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--massive",
@@ -116526,6 +117625,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD02",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "マッシブ",
     "romaji": "Masshibu"
   },
@@ -116609,7 +117709,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Merger-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP13",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--merge-spl",
@@ -116677,7 +117778,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Mr-SPL"
     ],
     "hasbroCode": "TSP19L",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--metal-accel",
@@ -116807,6 +117909,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-31",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "メタルアクセル",
     "romaji": "Metaru Akuseru"
   },
@@ -116901,6 +118004,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ultimate Driver"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メタルベアリングドリフト",
     "romaji": "Metaru Bearingu Dorifuto"
   },
@@ -117006,6 +118110,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MD"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メタルディフェンス",
     "romaji": "Metaru Difensu"
   },
@@ -117101,6 +118206,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MDs"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "メタルデストロイ",
     "romaji": "Metaru Desutoroi"
   },
@@ -117207,6 +118313,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MDm"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "メタルディメンション",
     "romaji": "Metaru Dimenshon"
   },
@@ -117313,6 +118420,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MDr"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メタルドリフト",
     "romaji": "Metaru Dorifuto"
   },
@@ -117408,6 +118516,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MF"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "メタルフュージョン",
     "romaji": "Metaru Fyūjon"
   },
@@ -117510,6 +118619,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MNv"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "メタルネバー",
     "romaji": "Metaru Nebā"
   },
@@ -117605,6 +118715,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MS"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "メタルサバイブ",
     "romaji": "Metaru Sabaibu"
   },
@@ -117702,6 +118813,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MUn"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "メタルユニバース",
     "romaji": "Metaru Yunibāsu"
   },
@@ -117797,6 +118909,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "MX"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "メタルエクストリーム",
     "romaji": "Metaru Ekusutorīmu"
   },
@@ -117897,7 +119010,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Mb-Q"
     ],
     "hasbroCode": "TD17-Q",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--mobius-sp",
@@ -117995,7 +119109,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Mb-SP"
     ],
     "hasbroCode": "TSP10",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--moment",
@@ -118108,6 +119223,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Mm'"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "モーメントダッシュ",
     "romaji": "Mōmento Dasshu"
   },
@@ -118204,7 +119320,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Needle-QuadDrive"
     ],
     "hasbroCode": "TD16-Q",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--needle-s",
@@ -118296,7 +119413,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Needle-SlingShock"
     ],
     "hasbroCode": "TD03-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--needle-sp",
@@ -118383,7 +119501,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Needling-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP15",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--needle",
@@ -118555,6 +119674,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD03",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ニードル",
     "romaji": "Nīdoru"
   },
@@ -118667,6 +119787,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Nv"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ネバー",
     "romaji": "Nebā"
   },
@@ -118743,7 +119864,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Nt-RC"
     ],
     "hasbroCode": "TS10RC",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--nothing-sp",
@@ -118833,7 +119955,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Nothingness-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP08",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--octa-h",
@@ -118928,7 +120051,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Octave-H"
     ],
     "hasbroCode": "TH22",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--octa",
@@ -119074,6 +120198,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS17 · PR-21 (Pro Series)",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "オクタ",
     "romaji": "Okuta"
   },
@@ -119171,6 +120296,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Op'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "オペレートダッシュ",
     "romaji": "Operēto Dasshu"
   },
@@ -119250,7 +120376,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Operate-SlingShock"
     ],
     "hasbroCode": "TB10-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--orbit-h",
@@ -119349,7 +120476,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Orbital-H"
     ],
     "hasbroCode": "TH16",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--orbit-l",
@@ -119416,7 +120544,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "O-L"
     ],
     "hasbroCode": "TD05L",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--orbit-q",
@@ -119492,7 +120621,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "O-Q"
     ],
     "hasbroCode": "TD18-Q",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--orbit",
@@ -119693,6 +120823,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TD05 · PR-34 (Pro Series)",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "オービット",
     "romaji": "Ōbitto"
   },
@@ -119806,6 +120937,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Om"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "オービットメタル",
     "romaji": "Ōbitto Metaru"
   },
@@ -119910,6 +121042,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pl'"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "プラネットダッシュ",
     "romaji": "Puranetto Dasshu"
   },
@@ -119990,7 +121123,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Planetary-H"
     ],
     "hasbroCode": "TH31",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--planet-q",
@@ -120072,7 +121206,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Planet-QuadDrive"
     ],
     "hasbroCode": "TS25-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--power-h",
@@ -120187,7 +121322,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Power-HyperSphere"
     ],
     "hasbroCode": "TH05",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--power-s",
@@ -120270,7 +121406,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Powerful-S"
     ],
     "hasbroCode": "TA20-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--power",
@@ -120387,6 +121524,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Pw"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "パワー",
     "romaji": "Pawā"
   },
@@ -120455,7 +121593,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "P-L"
     ],
     "hasbroCode": "TD04",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--prevail-s",
@@ -120563,6 +121702,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS14-S",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "プリヴェイルエス",
     "romaji": "Puriveiruesu"
   },
@@ -120642,6 +121782,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Q'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "クエイクダッシュ",
     "romaji": "Kueiku Dasshu"
   },
@@ -120747,6 +121888,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Qt'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "クワトロダッシュ",
     "romaji": "Kuwatoro Dasshu"
   },
@@ -120842,7 +121984,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Quattro-QuadDrive"
     ],
     "hasbroCode": "TA24-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--quest-s",
@@ -120927,7 +122070,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Quest-SlingShock"
     ],
     "hasbroCode": "TD12-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--quest",
@@ -121053,6 +122197,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-06",
     "partType": "Defense",
+    "role": "tip",
     "jpName": "クエスト",
     "romaji": "Kuesuto"
   },
@@ -121214,6 +122359,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Qc'"
     ],
     "hasbroCode": "PR-12",
+    "role": "tip",
     "jpName": "クイックダッシュ",
     "romaji": "Kuikku Dasshu"
   },
@@ -121290,7 +122436,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Rb-RC"
     ],
     "hasbroCode": "TA11RC",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--revolve",
@@ -121392,6 +122539,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "R'"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "リボルブダッシュ",
     "romaji": "Riboribu Dasshu"
   },
@@ -121479,7 +122627,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Revolver-H"
     ],
     "hasbroCode": "TH19",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--revolve-l",
@@ -121546,7 +122695,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "R-L"
     ],
     "hasbroCode": "TS05L",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--revolve-spm",
@@ -121627,7 +122777,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Revolving-SPM (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP04-M",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--rise-h",
@@ -121726,7 +122877,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Rise-HyperSphere"
     ],
     "hasbroCode": "TH06",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--rise",
@@ -121877,6 +123029,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Rs"
     ],
     "hasbroCode": "PR-14",
+    "role": "tip",
     "jpName": "ライズ",
     "romaji": "Raizu"
   },
@@ -121963,7 +123116,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Smart-Q (Beyblade Burst App)"
     ],
     "hasbroCode": "TS20-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--spiral-h",
@@ -122060,7 +123214,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Spiro-H"
     ],
     "hasbroCode": "TH04",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--spiral-q",
@@ -122161,7 +123316,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Spiral-QuadDrive"
     ],
     "hasbroCode": "TA23-Q",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--spiral-s",
@@ -122239,7 +123395,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Spiral-SlingShock"
     ],
     "hasbroCode": "TA10-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--survive-s",
@@ -122331,7 +123488,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Survive-SlingShock"
     ],
     "hasbroCode": "TS01-S",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--survive-sp",
@@ -122417,7 +123575,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Survival-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP03",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--survive",
@@ -122634,6 +123793,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS01",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "サバイブ",
     "romaji": "Sabaibu"
   },
@@ -122754,6 +123914,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Sw'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ソードダッシュ",
     "romaji": "Sōdo Dasshu"
   },
@@ -122838,7 +123999,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Sword-SlingShock"
     ],
     "hasbroCode": "TA17-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--tower-s",
@@ -122930,7 +124092,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Tower-SlingShock"
     ],
     "hasbroCode": "TB08-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--tower",
@@ -123054,6 +124217,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TB08",
     "partType": "Balance",
+    "role": "tip",
     "jpName": "タワー",
     "romaji": "Tawā"
   },
@@ -123177,6 +124341,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-22",
     "partType": "Balance",
+    "role": "tip",
     "jpName": "トランスダッシュ",
     "romaji": "Toransu Dasshu"
   },
@@ -123271,7 +124436,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Trick-HyperSphere"
     ],
     "hasbroCode": "TH09",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--trick",
@@ -123373,6 +124539,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Tr"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "トリック",
     "romaji": "Torikku"
   },
@@ -123513,6 +124680,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-19",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "アルティメットリブートダッシュ",
     "romaji": "Arutimetto Ribūto Dasshu"
   },
@@ -123593,7 +124761,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Ultimate Reboot-HyperSphere"
     ],
     "hasbroCode": "TH24",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--unite-l",
@@ -123660,7 +124829,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "U-L"
     ],
     "hasbroCode": "TB03",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--unite-sp",
@@ -123730,7 +124900,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "United-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP14",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--universe-spm",
@@ -123810,7 +124981,8 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Un-SPM"
     ],
     "hasbroCode": "TSP06-M",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--universe",
@@ -123929,6 +125101,7 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Un"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ユニバース",
     "romaji": "Yunibāsu"
   }
@@ -124031,7 +125204,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Valor-HyperSphere"
     ],
     "hasbroCode": "TH02",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--variable-l",
@@ -124098,7 +125272,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "V-L"
     ],
     "hasbroCode": "TA06-L",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--venture",
@@ -124237,6 +125412,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Vn"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ベンチャー",
     "romaji": "Benchā"
   },
@@ -124342,6 +125518,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Vl'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "ボルカニックダッシュ",
     "romaji": "Borukanikku Dasshu"
   },
@@ -124434,7 +125611,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Volcanic-SlingShock"
     ],
     "hasbroCode": "TA15-S",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--wave",
@@ -124528,6 +125706,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Wv'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ウェーブダッシュ",
     "romaji": "Uēbu Dasshu"
   },
@@ -124641,6 +125820,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Wd'"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ウェッジダッシュ",
     "romaji": "Wejji Dasshu"
   },
@@ -124736,7 +125916,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Wedge-SlingShock"
     ],
     "hasbroCode": "TS13-S",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--weight",
@@ -124913,6 +126094,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS09",
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "ウエイト",
     "romaji": "Ueito"
   },
@@ -125000,6 +126182,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc'+Z"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エクシードダッシュゼット",
     "romaji": "Ekushīdo Dasshu Zetto"
   },
@@ -125103,6 +126286,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エクシードダッシュ",
     "romaji": "Ekushīdo Dasshu"
   },
@@ -125172,7 +126356,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc+X-SP"
     ],
     "hasbroCode": "TSP21",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--xceed-sp",
@@ -125260,7 +126445,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc-SP"
     ],
     "hasbroCode": "TSP07",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--xceed-spm",
@@ -125333,7 +126519,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc-SPM"
     ],
     "hasbroCode": "TSP07-M",
-    "partType": "Attack"
+    "partType": "Attack",
+    "role": "tip"
   },
   {
     "id": "driver--xplosion",
@@ -125437,6 +126624,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xp'"
     ],
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エクスプロージョンダッシュ",
     "romaji": "Ekusupurōjon Dasshu"
   },
@@ -125549,7 +126737,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtender-H"
     ],
     "hasbroCode": "TH12",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--xtend-q",
@@ -125650,7 +126839,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtend+-QuadDrive"
     ],
     "hasbroCode": "TB13-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--xtend-s",
@@ -125735,7 +126925,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtend-SlingShock"
     ],
     "hasbroCode": "TB09-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--xtend-sl",
@@ -125802,7 +126993,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xt-SL"
     ],
     "hasbroCode": "TB09L-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--xtreme",
@@ -125979,6 +127171,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "PR-13",
     "partType": "Attack",
+    "role": "tip",
     "jpName": "エクストリームダッシュ",
     "romaji": "Ekusutorīmu Dasshu"
   },
@@ -126084,6 +127277,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yd'"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ヤードダッシュ",
     "romaji": "Yādo Dasshu"
   },
@@ -126171,7 +127365,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yardage-H"
     ],
     "hasbroCode": "TH25",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--yard-s",
@@ -126269,7 +127464,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yard-SlingShock"
     ],
     "hasbroCode": "TD11-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--yard-sl",
@@ -126336,7 +127532,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yr-SL"
     ],
     "hasbroCode": "TD11L-S",
-    "partType": "Defense"
+    "partType": "Defense",
+    "role": "tip"
   },
   {
     "id": "driver--yard-metal",
@@ -126429,6 +127626,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Ym"
     ],
     "partType": "Defense",
+    "role": "tip",
     "jpName": "ヤードメタル",
     "romaji": "Yādo Metaru"
   },
@@ -126522,7 +127720,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yielding-QuadDrive"
     ],
     "hasbroCode": "TS18-Q",
-    "partType": "Stamina"
+    "partType": "Stamina",
+    "role": "tip"
   },
   {
     "id": "driver--yielding",
@@ -126702,6 +127901,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Y"
     ],
     "partType": "Stamina",
+    "role": "tip",
     "jpName": "イールディング",
     "romaji": "Īrudingu"
   },
@@ -126807,6 +128007,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zl"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ジール",
     "romaji": "Jīru"
   },
@@ -126936,6 +128137,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Z'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ゼファーダッシュ",
     "romaji": "Zefā Dasshu"
   },
@@ -127016,7 +128218,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyrus-H (Beyblade Burst App)"
     ],
     "hasbroCode": "TH29",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zephyr-q",
@@ -127121,7 +128324,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyr-QuadDrive"
     ],
     "hasbroCode": "TB14-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zephyr-sp",
@@ -127189,7 +128393,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyry-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP18",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zeta",
@@ -127301,6 +128506,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zt'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ゼータダッシュ",
     "romaji": "Zēta Dasshu"
   },
@@ -127390,7 +128596,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zeta-SlingShock"
     ],
     "hasbroCode": "TB12-S",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zone-x",
@@ -127476,6 +128683,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zn'+X"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ゾーンダッシュエックス",
     "romaji": "Zōn Dasshu Ekkusu"
   },
@@ -127598,6 +128806,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zn'"
     ],
     "partType": "Balance",
+    "role": "tip",
     "jpName": "ゾーンダッシュ",
     "romaji": "Zōn Dasshu"
   },
@@ -127680,7 +128889,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning+Z-SPM (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP20-M",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zone-q",
@@ -127756,7 +128966,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zn-Q"
     ],
     "hasbroCode": "TB16-Q",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zone-sp",
@@ -127844,7 +129055,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP02",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "driver--zone-spm",
@@ -127919,7 +129131,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning-SPM"
     ],
     "hasbroCode": "TSP02-M",
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "drive-chip--balderov-b7",
@@ -128010,7 +129223,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--balkesh-b7",
@@ -128099,7 +129313,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--belfyre-b7",
@@ -128191,7 +129406,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--cobra-c7",
@@ -128274,7 +129490,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--evo-belfyre-b7",
@@ -128355,7 +129572,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Evo Belfyre B8 (QuadStrike)"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--evo-valtryek-v7",
@@ -128430,7 +129648,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--fafnir-f7",
@@ -128517,7 +129736,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--ifritor-i7",
@@ -128604,6 +129824,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Ifrit (Takara Tomy)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "イフリート",
     "romaji": "Ifurīto"
   },
@@ -128688,7 +129909,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--luinor-l7",
@@ -128759,7 +129981,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--muramasa-m7",
@@ -128851,7 +130074,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--nemesis-n7",
@@ -128935,7 +130159,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--perseus-p7",
@@ -129002,7 +130227,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--phoenix-p7",
@@ -129069,7 +130295,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--regnar-r7",
@@ -129134,7 +130361,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--roktavor-r7",
@@ -129220,7 +130448,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--spryzen-s7",
@@ -129291,7 +130520,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "drive-chip--valtryek-v7",
@@ -129384,7 +130614,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "evolution-gear--d-gear",
@@ -129467,6 +130698,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Dギア",
     "romaji": "Di Gia"
   },
@@ -129593,6 +130825,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 0
     },
     "element": "Sky",
+    "role": "wheel",
     "jpName": "アーチャー",
     "romaji": "Āchā"
   },
@@ -129720,6 +130953,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Bandid (Takara Tomy)"
     ],
     "element": "Earth",
+    "role": "wheel",
     "jpName": "バンディッド",
     "romaji": "Bandeiddo"
   },
@@ -129800,6 +131034,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Berserker",
     "element": "Earth",
+    "role": "wheel",
     "jpName": "バーサーカー",
     "romaji": "Bāsākā"
   },
@@ -129887,6 +131122,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 25
     },
     "element": "God",
+    "role": "wheel",
     "jpName": "グラディエーター",
     "romaji": "Guradeieetaa"
   },
@@ -129970,7 +131206,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Guardian",
-    "element": "Water"
+    "element": "Water",
+    "role": "wheel"
   },
   {
     "id": "element-wheel--ninja",
@@ -130119,6 +131356,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Shinobi (Takara Tomy)"
     ],
     "element": "Fire",
+    "role": "wheel",
     "jpName": "シノビ",
     "romaji": "Shinobi"
   },
@@ -130187,6 +131425,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "element": "Darkness",
+    "role": "wheel",
     "jpName": "ネクロマンサー",
     "romaji": "Nekuromansā"
   },
@@ -130261,6 +131500,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pirates (Takara Tomy)"
     ],
     "element": "Water",
+    "role": "wheel",
     "jpName": "パイレーツ",
     "romaji": "Pairētsu"
   },
@@ -130388,6 +131628,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dark Knight (Takara Tomy)"
     ],
     "element": "Sky",
+    "role": "wheel",
     "jpName": "ダークナイト",
     "romaji": "Dāku Naito"
   },
@@ -130588,6 +131829,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Warriors (Sonokong)"
     ],
     "element": "Fire",
+    "role": "wheel",
     "jpName": "サムライ",
     "romaji": "Samurai"
   },
@@ -130720,6 +131962,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 38
     },
     "element": "Fire",
+    "role": "wheel",
     "jpName": "シーフ",
     "romaji": "Shīfu"
   },
@@ -130858,6 +132101,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Anubis (B-166)"
     ],
+    "role": "ring",
     "jpName": "アヌビウス",
     "romaji": "Anubiusu"
   },
@@ -130939,6 +132183,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "ベルゼブ",
     "romaji": "Beruzebu"
   },
@@ -131013,7 +132258,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cetus"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cetus",
+    "role": "ring"
   },
   {
     "id": "energy-ring--chimera",
@@ -131090,6 +132336,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "ring",
     "jpName": "キメラ",
     "romaji": "Kimera"
   },
@@ -131114,7 +132361,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Comic is a Beyblade energy ring from the Hybrid Wheel System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Comic"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Comic",
+    "role": "ring"
   },
   {
     "id": "energy-ring--crown",
@@ -131194,7 +132442,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 0,
       "stamina": 83
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--cygzas",
@@ -131213,7 +132462,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Cygzas is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cygzas"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cygzas",
+    "role": "ring"
   },
   {
     "id": "energy-ring--darkhelm",
@@ -131307,6 +132557,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hades (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ハーデス",
     "romaji": "Hādesu"
   },
@@ -131450,6 +132701,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Perseus Defense Ver.",
       "Destroyer Defense"
     ],
+    "role": "ring",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
   },
@@ -131567,6 +132819,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus Attack Ver."
     ],
+    "role": "ring",
     "jpName": "ペルセウスアタックバージョン",
     "romaji": "Peruseusu Atakku Bājon"
   },
@@ -131705,6 +132958,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus Stamina Ver."
     ],
+    "role": "ring",
     "jpName": "ペルセウススタミナバージョン",
     "romaji": "Peruseusu Sutamina Bājon"
   },
@@ -131796,6 +133050,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "ドラゴニス",
     "romaji": "Doragonisu"
   },
@@ -131903,6 +133158,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "フォックス",
     "romaji": "Fokkusu"
   },
@@ -132051,6 +133307,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cancer"
     ],
+    "role": "ring",
     "jpName": "キャンサー",
     "romaji": "Kyansā"
   },
@@ -132197,6 +133454,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "ジェミオス",
     "romaji": "Jemiosu"
   },
@@ -132301,6 +133559,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "ギル",
     "romaji": "Giru"
   },
@@ -132321,7 +133580,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Giran is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Giran"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Giran",
+    "role": "ring"
   },
   {
     "id": "energy-ring--herculeo",
@@ -132454,6 +133714,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "エルクレオ",
     "romaji": "Erukureo"
   },
@@ -132578,6 +133839,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Uranus (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ウラヌス",
     "romaji": "Uranusu"
   },
@@ -132671,7 +133933,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--kronos",
@@ -132775,6 +134038,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 100
     },
+    "role": "ring",
     "jpName": "クロノス",
     "romaji": "Kuronosu"
   },
@@ -132865,6 +134129,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "エルドラゴアサルトバージョン",
     "romaji": "Erudorago Asaruto Bājon"
   },
@@ -133003,6 +134268,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "エルドラゴI",
     "romaji": "Erudorago I"
   },
@@ -133209,6 +134475,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L-Drago Absorb Ver.",
       "L-Drago Absorb"
     ],
+    "role": "ring",
     "jpName": "エルドラゴII",
     "romaji": "Erudorago II"
   },
@@ -133301,6 +134568,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "エルドラゴラッシュバージョン",
     "romaji": "Erudorago Rasshu Bājon"
   },
@@ -133413,6 +134681,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "role": "ring",
     "jpName": "ラチェルタ",
     "romaji": "Racheruta"
   },
@@ -133433,7 +134702,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Leol is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leol"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leol",
+    "role": "ring"
   },
   {
     "id": "energy-ring--leone-i",
@@ -133674,6 +134944,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "ring",
     "jpName": "レオーネI",
     "romaji": "Reōne I"
   },
@@ -133847,6 +135118,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "レオーネII",
     "romaji": "Reōne II"
   },
@@ -133867,7 +135139,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Leplys is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leplys"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Leplys",
+    "role": "ring"
   },
   {
     "id": "energy-ring--lyncat",
@@ -133886,7 +135159,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Lyncat is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lyncat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Lyncat",
+    "role": "ring"
   },
   {
     "id": "energy-ring--lyre",
@@ -133993,6 +135267,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "レイラー",
     "romaji": "Reirā"
   },
@@ -134112,6 +135387,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nemesis (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ネメシス",
     "romaji": "Nemeshisu"
   },
@@ -134243,6 +135519,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 100
     },
+    "role": "ring",
     "jpName": "オリオン",
     "romaji": "Orion"
   },
@@ -134329,7 +135606,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--pavon",
@@ -134348,7 +135626,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Pavon is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pavon"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Pavon",
+    "role": "ring"
   },
   {
     "id": "energy-ring--pegasus-i",
@@ -134656,6 +135935,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis I (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ペガシスI",
     "romaji": "Pegashisu I"
   },
@@ -134911,6 +136191,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis II (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ペガシスII",
     "romaji": "Pegashisu II"
   },
@@ -135145,6 +136426,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis III (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ペガシスIII",
     "romaji": "Pegashisu III"
   },
@@ -135287,6 +136569,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "ring",
     "jpName": "パイシーズ",
     "romaji": "Paishīzu"
   },
@@ -135370,7 +136653,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 0,
       "stamina": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--rex",
@@ -135504,6 +136788,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "レックス",
     "romaji": "Rekkusu"
   },
@@ -135567,7 +136852,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 67
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--scorpio",
@@ -135698,7 +136984,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 83,
       "stamina": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "energy-ring--serpenter",
@@ -135717,7 +137004,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Serpenter is a Beyblade energy ring.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Serpenter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Serpenter",
+    "role": "ring"
   },
   {
     "id": "energy-ring--shielzam",
@@ -135740,7 +137028,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Shielzam is a Beyblade energy ring from the Metal.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Shielzam"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Shielzam",
+    "role": "ring"
   },
   {
     "id": "energy-ring--striker-i",
@@ -135936,6 +137225,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno I (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ユニコルノ",
     "romaji": "Yunikoruno"
   },
@@ -136057,6 +137347,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "role": "ring",
     "jpName": "スサノオ",
     "romaji": "Susanoo"
   },
@@ -136185,6 +137476,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Horogium (Takara Tomy)"
     ],
+    "role": "ring",
     "jpName": "ホロギウム",
     "romaji": "Horogiumu"
   },
@@ -136221,7 +137513,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_EG_(Turbo)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_EG_(Turbo)",
+    "role": "gear"
   },
   {
     "id": "engine-gear--left-turbo-eg",
@@ -136255,7 +137548,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-customize-gear-full-auto-clutch-version",
@@ -136307,7 +137601,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-circle-survivor",
@@ -136355,7 +137650,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 50,
       "power": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-metal-ball",
@@ -136406,7 +137702,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50,
       "power": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-metal-flat",
@@ -136436,7 +137733,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Flat)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Flat)",
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-metal-semi-flat",
@@ -136498,7 +137796,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 50,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-circle-defenser",
@@ -136546,7 +137845,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-eg-reverse",
@@ -136592,7 +137892,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 67,
       "power": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-engine-gear-metal-semi-flat-version",
@@ -136638,7 +137939,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 50,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "engine-gear--right-engine-gear-mystery-cutter",
@@ -136682,6 +137984,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "role": "gear",
     "jpName": "右エンジンギア（ミステリーカッター）",
     "romaji": "Migi enjin Gia (misuterīkattā)"
   },
@@ -136788,6 +138091,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Anubis (B-166)"
     ],
+    "role": "chip",
     "jpName": "アヌビウス",
     "romaji": "Anubiusu"
   },
@@ -136802,7 +138106,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Bearl is a Beyblade face bolt.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Bearl"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Bearl",
+    "role": "chip"
   },
   {
     "id": "face-bolt--beelzeb",
@@ -136867,6 +138172,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Beelzeb",
+    "role": "chip",
     "jpName": "ベルゼブ",
     "romaji": "Beruzebu"
   },
@@ -136909,6 +138215,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Caesar is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Released October 23rd, 2010 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Caesar",
+    "role": "chip",
     "jpName": "シーザー",
     "romaji": "Shīzā"
   },
@@ -137072,6 +138379,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Capricorne (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "カプリコーネ",
     "romaji": "Kapurikōne"
   },
@@ -137181,6 +138489,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ketos (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ケトス",
     "romaji": "Ketosu"
   },
@@ -137218,6 +138527,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Cetus (Generic) is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cetus_(Generic)",
+    "role": "chip",
     "jpName": "セタス",
     "romaji": "Setasu"
   },
@@ -137281,6 +138591,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "chip",
     "jpName": "キメラ",
     "romaji": "Kimera"
   },
@@ -137309,7 +138620,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Comic is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Comic"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Comic",
+    "role": "chip"
   },
   {
     "id": "face-bolt--counter-leone",
@@ -137380,6 +138692,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Counter_Leone",
+    "role": "chip",
     "jpName": "カウンターレオーネ",
     "romaji": "Kauntā Reōne"
   },
@@ -137408,7 +138721,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Crow is a Beyblade face bolt from the Metal System. Part of Metal Fight Beyblade.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crow"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crow",
+    "role": "chip"
   },
   {
     "id": "face-bolt--crown",
@@ -137473,7 +138787,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crown"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crown",
+    "role": "chip"
   },
   {
     "id": "face-bolt--cyber-pegasus",
@@ -137554,6 +138869,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cyber Pegasis"
     ],
+    "role": "chip",
     "jpName": "サイバーペガシス",
     "romaji": "Saibā Pegashisu"
   },
@@ -137591,6 +138907,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Cygzas is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cygzas",
+    "role": "chip",
     "jpName": "キグザス",
     "romaji": "Kiguzasu"
   },
@@ -137671,6 +138988,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hades (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ハーデス",
     "romaji": "Hādesu"
   },
@@ -137691,7 +139009,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Delphis is a Beyblade face bolt.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Delphis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Delphis",
+    "role": "chip"
   },
   {
     "id": "face-bolt--destroyer",
@@ -137877,6 +139196,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus"
     ],
+    "role": "chip",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
   },
@@ -137953,6 +139273,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Dragonis",
+    "role": "chip",
     "jpName": "ドラゴニス",
     "romaji": "Doragonisu"
   },
@@ -138008,6 +139329,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Five_Star_Pegasis",
+    "role": "chip",
     "jpName": "ファイブスターペガシス",
     "romaji": "Faibu Sutā Pegashisu"
   },
@@ -138100,6 +139422,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Fox",
+    "role": "chip",
     "jpName": "フォックス",
     "romaji": "Fokkusu"
   },
@@ -138225,6 +139548,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cancer"
     ],
+    "role": "chip",
     "jpName": "キャンサー",
     "romaji": "Kyansā"
   },
@@ -138305,7 +139629,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Gil"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Gil",
+    "role": "chip"
   },
   {
     "id": "face-bolt--giran",
@@ -138341,6 +139666,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Giran is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Giran",
+    "role": "chip",
     "jpName": "ジラン",
     "romaji": "Jiran"
   },
@@ -138460,6 +139786,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Herculeo",
+    "role": "chip",
     "jpName": "エルクレオ",
     "romaji": "Erukureo"
   },
@@ -138497,6 +139824,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Hydra is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Hydra",
+    "role": "chip",
     "jpName": "ヒュドラ",
     "romaji": "Hyudora"
   },
@@ -138598,6 +139926,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Uranus (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ウラヌス",
     "romaji": "Uranusu"
   },
@@ -138676,7 +140005,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Ionis"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Ionis",
+    "role": "chip"
   },
   {
     "id": "face-bolt--kronos",
@@ -138765,6 +140095,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Kronos",
+    "role": "chip",
     "jpName": "クロノス",
     "romaji": "Kuronosu"
   },
@@ -138943,6 +140274,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "chip",
     "jpName": "エルドラゴI",
     "romaji": "Erudorago I"
   },
@@ -139079,6 +140411,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_L-Drago_II",
+    "role": "chip",
     "jpName": "エルドラゴII",
     "romaji": "Erudorago II"
   },
@@ -139231,6 +140564,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_L-Drago_III",
+    "role": "chip",
     "jpName": "エルドラゴIII",
     "romaji": "Erudorago III"
   },
@@ -139328,6 +140662,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lacerta",
+    "role": "chip",
     "jpName": "ラチェルタ",
     "romaji": "Racheruta"
   },
@@ -139365,6 +140700,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Leol is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leol",
+    "role": "chip",
     "jpName": "レオル",
     "romaji": "Reoru"
   },
@@ -139587,6 +140923,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leone_I",
+    "role": "chip",
     "jpName": "レオーネI",
     "romaji": "Reōne I"
   },
@@ -139745,6 +141082,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leone_II",
+    "role": "chip",
     "jpName": "レオーネII",
     "romaji": "Reōne II"
   },
@@ -139782,6 +141120,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Leplys is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leplys",
+    "role": "chip",
     "jpName": "レプリス",
     "romaji": "Repurisu"
   },
@@ -139806,7 +141145,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Lyncat is a Beyblade face bolt from the Metal System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lyncat"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lyncat",
+    "role": "chip"
   },
   {
     "id": "face-bolt--lyre",
@@ -139902,6 +141242,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Lyra (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "レイラー",
     "romaji": "Reirā"
   },
@@ -140006,6 +141347,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nemesis (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ネメシス",
     "romaji": "Nemeshisu"
   },
@@ -140078,6 +141420,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Nemesis_X",
+    "role": "chip",
     "jpName": "ネメシスX",
     "romaji": "Nemeshisu X"
   },
@@ -140115,6 +141458,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Northern Cross is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Northern_Cross",
+    "role": "chip",
     "jpName": "ノーザンクロス",
     "romaji": "Nōzan Kurosu"
   },
@@ -140231,6 +141575,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Orion",
+    "role": "chip",
     "jpName": "オリオン",
     "romaji": "Orion"
   },
@@ -140294,7 +141639,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Orso"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Orso",
+    "role": "chip"
   },
   {
     "id": "face-bolt--pavon",
@@ -140330,6 +141676,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Pavon is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Pavon",
+    "role": "chip",
     "jpName": "ーパボン",
     "romaji": "Pabon"
   },
@@ -140702,6 +142049,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis I (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ペガシスI",
     "romaji": "Pegashisu I"
   },
@@ -140943,6 +142291,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis II (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ペガシスII",
     "romaji": "Pegashisu II"
   },
@@ -141163,6 +142512,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis III (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ペガシスIII",
     "romaji": "Pegashisu III"
   },
@@ -141312,6 +142662,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "chip",
     "jpName": "パイシーズ",
     "romaji": "Paishīzu"
   },
@@ -141350,6 +142701,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Poseidon is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Part of Metal Fight Beyblade The Movie: VS The Sun - Sol Blaze, the Scorching Hot Invader.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Poseidon",
+    "role": "chip",
     "jpName": "ポセイドン",
     "romaji": "Poseidon"
   },
@@ -141469,6 +142821,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Quetzalcoatl",
+    "role": "chip",
     "jpName": "ケツァルコアトル",
     "romaji": "Ketsarukoatoru"
   },
@@ -141506,6 +142859,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Raven is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Raven",
+    "role": "chip",
     "jpName": "レイヴン",
     "romaji": "Reivun"
   },
@@ -141626,6 +142980,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Rex",
+    "role": "chip",
     "jpName": "レックス",
     "romaji": "Rekkusu"
   },
@@ -141670,7 +143025,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Sagittario_II"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Sagittario_II",
+    "role": "chip"
   },
   {
     "id": "face-bolt--scorpio",
@@ -141817,6 +143173,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Escolpio (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "エスコルピオ",
     "romaji": "Esukorupio"
   },
@@ -141845,7 +143202,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Serpenter is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpenter"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpenter",
+    "role": "chip"
   },
   {
     "id": "face-bolt--shielzam",
@@ -141881,6 +143239,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Shielzam is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Shielzam",
+    "role": "chip",
     "jpName": "シールザム",
     "romaji": "Shīruzamu"
   },
@@ -142044,6 +143403,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno I (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ユニコルノ",
     "romaji": "Yunikoruno"
   },
@@ -142150,6 +143510,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Susanow",
+    "role": "chip",
     "jpName": "スサノオ",
     "romaji": "Susanoo"
   },
@@ -142255,6 +143616,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Horogium (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ホロギウム",
     "romaji": "Horogiumu"
   },
@@ -142394,6 +143756,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Virgo",
+    "role": "chip",
     "jpName": "ビルゴ",
     "romaji": "Birugo"
   },
@@ -142448,7 +143811,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_World_Championship_Commemorative_Model",
     "aka": [
       "World Ver."
-    ]
+    ],
+    "role": "chip"
   },
   {
     "id": "frame--angle",
@@ -142559,6 +143923,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "α"
     ],
+    "role": "base",
     "jpName": "アングル",
     "romaji": "Anguru"
   },
@@ -142660,6 +144025,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "A"
     ],
+    "role": "base",
     "jpName": "アックス",
     "romaji": "Akkusu"
   },
@@ -142830,6 +144196,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "B"
     ],
+    "role": "base",
     "jpName": "バンプ",
     "romaji": "Banpu"
   },
@@ -143073,6 +144440,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "C"
     ],
+    "role": "base",
     "jpName": "クロス",
     "romaji": "Kurosu"
   },
@@ -143229,6 +144597,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "role": "base",
     "jpName": "ダガー",
     "romaji": "Dagā"
   },
@@ -143403,6 +144772,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E"
     ],
+    "role": "base",
     "jpName": "エキスパンド",
     "romaji": "Ekisupando"
   },
@@ -143556,6 +144926,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F"
     ],
+    "role": "base",
     "jpName": "フロー",
     "romaji": "Furō"
   },
@@ -143917,6 +145288,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "G"
     ],
+    "role": "base",
     "jpName": "グレイブ",
     "romaji": "Gureibu"
   },
@@ -144025,6 +145397,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "H"
     ],
+    "role": "base",
     "jpName": "ヒット",
     "romaji": "Hitto"
   },
@@ -144221,6 +145594,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "L"
     ],
+    "role": "base",
     "jpName": "リフト",
     "romaji": "Rifuto"
   },
@@ -144450,6 +145824,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "M"
     ],
+    "role": "base",
     "jpName": "メテオ",
     "romaji": "Meteo"
   },
@@ -144610,6 +145985,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "P"
     ],
+    "role": "base",
     "jpName": "プルーフ",
     "romaji": "Purūfu"
   },
@@ -144775,6 +146151,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R"
     ],
+    "role": "base",
     "jpName": "リーチ",
     "romaji": "Rīchi"
   },
@@ -144955,6 +146332,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "S"
     ],
+    "role": "base",
     "jpName": "スター",
     "romaji": "Sutā"
   },
@@ -145133,6 +146511,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "T"
     ],
+    "role": "base",
     "jpName": "ターン",
     "romaji": "Tān"
   },
@@ -145257,6 +146636,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "U"
     ],
+    "role": "base",
     "jpName": "アンダー",
     "romaji": "Andā"
   },
@@ -145615,6 +146995,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "V"
     ],
+    "role": "base",
     "jpName": "ボルテックス",
     "romaji": "Borutekkusu"
   },
@@ -145744,6 +147125,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "role": "wheel",
     "jpName": "バクシン",
     "romaji": "Bakushin"
   },
@@ -145828,6 +147210,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ビート",
     "romaji": "Bīto"
   },
@@ -145921,7 +147304,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 42,
       "defense": 42,
       "stamina": 33
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--blitz",
@@ -146021,6 +147405,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Blitz I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ブリッツ",
     "romaji": "Burittsu"
   },
@@ -146097,7 +147482,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 100,
       "defense": 0,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--cosmic",
@@ -146278,6 +147664,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Big Bang (Takara Tomy)",
       "Cosmic I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ビッグバン",
     "romaji": "Biggu Ban"
   },
@@ -146390,7 +147777,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 100,
       "defense": 0,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--counter",
@@ -146574,6 +147962,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "カウンター",
     "romaji": "Kauntā"
   },
@@ -146594,7 +147983,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Crystal is a Beyblade fusion wheel.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Crystal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Crystal",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--cyber",
@@ -146761,6 +148151,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "サイバー",
     "romaji": "Saibā"
   },
@@ -146891,6 +148282,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "role": "wheel",
     "jpName": "トルネード",
     "romaji": "Torunēdo"
   },
@@ -146976,7 +148368,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "Death I (Hasbro)"
-    ]
+    ],
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--death-hasbro",
@@ -147048,7 +148441,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 50,
       "stamina": 0
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--devil",
@@ -147080,7 +148474,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Devil is a Beyblade fusion wheel from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Devil",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--diablo",
@@ -147204,6 +148599,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ディアブロ",
     "romaji": "Diaburo"
   },
@@ -147310,6 +148706,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "wheel",
     "jpName": "ディバイン",
     "romaji": "Dibain"
   },
@@ -147412,6 +148809,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": false
     },
+    "role": "wheel",
     "jpName": "デュオ",
     "romaji": "Deyuo"
   },
@@ -147488,7 +148886,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": true,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--fang",
@@ -147628,6 +149027,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Fang I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ファング",
     "romaji": "Fangu"
   },
@@ -147734,7 +149134,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 83,
       "stamina": 0
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--fire",
@@ -147763,7 +149164,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Fire is a Beyblade fusion wheel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Fire",
     "partType": "Stamina",
-    "spinDirection": "Right"
+    "spinDirection": "Right",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--firefuse",
@@ -147840,7 +149242,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--flash",
@@ -147940,6 +149343,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "フラッシュ",
     "romaji": "Furasshu"
   },
@@ -148022,7 +149426,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--fusion",
@@ -148100,7 +149505,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "Firefuse (anime, English)"
-    ]
+    ],
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--galaxy",
@@ -148325,6 +149731,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "role": "wheel",
     "jpName": "ギャラクシー",
     "romaji": "Gyarakusi"
   },
@@ -148533,6 +149940,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "グラビティ",
     "romaji": "Gurabiti"
   },
@@ -148614,7 +150022,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--inferno",
@@ -148705,7 +150114,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 0,
       "stamina": 67
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--inferno-battle-fortress",
@@ -148724,7 +150134,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Inferno (Battle Fortress) is a Beyblade fusion wheel.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno_(Battle_Fortress)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno_(Battle_Fortress)",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--jade-hasbro",
@@ -148798,7 +150209,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 83,
       "stamina": 33
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--kreis",
@@ -148891,6 +150303,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "クライス",
     "romaji": "Kuraisu"
   },
@@ -149025,6 +150438,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L-Drago Destroy (Takara Tomy)",
       "L-Drago Destructor (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "エルドラゴデストロイ",
     "romaji": "Erudorago Desutoroi"
   },
@@ -149104,7 +150518,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 100,
       "defense": 0,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--l-drago-guardian",
@@ -149187,6 +150602,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "エルドラゴガーディアン",
     "romaji": "Erudorago Gādian"
   },
@@ -149250,7 +150666,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 67,
       "stamina": 0
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--lightning",
@@ -149387,6 +150804,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 8,
       "stamina": 8
     },
+    "role": "wheel",
     "jpName": "ライトニング",
     "romaji": "Raitoningu"
   },
@@ -149521,6 +150939,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "role": "wheel",
     "jpName": "マーキュリー",
     "romaji": "Mākyurī"
   },
@@ -149744,6 +151163,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "メテオ",
     "romaji": "Meteo"
   },
@@ -149845,6 +151265,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Crash (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "クラッシュ",
     "romaji": "Kurasshu"
   },
@@ -149908,7 +151329,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 33,
       "stamina": 67
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--nightmare",
@@ -150042,6 +151464,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 0
     },
+    "role": "wheel",
     "jpName": "ナイトメア",
     "romaji": "Naitomea"
   },
@@ -150143,6 +151566,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "オメガ",
     "romaji": "Omega"
   },
@@ -150258,6 +151682,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phantom I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ファントム",
     "romaji": "Fantomu"
   },
@@ -150341,7 +151766,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 0,
       "stamina": 83
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--quake",
@@ -150360,7 +151786,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Quake is a Beyblade fusion wheel.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Quake"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Quake",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--ray",
@@ -150567,6 +151994,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "wheel",
     "jpName": "レイ",
     "romaji": "Rei"
   },
@@ -150652,6 +152080,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Scythe I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "サイズ",
     "romaji": "Saizu"
   },
@@ -150748,7 +152177,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--sol",
@@ -150851,6 +152281,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "role": "wheel",
     "jpName": "ソル",
     "romaji": "Soru"
   },
@@ -150947,7 +152378,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thermal"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thermal",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--thunder",
@@ -151048,7 +152480,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 67
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--torch",
@@ -151167,6 +152600,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cloud (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "クラウド",
     "romaji": "Kuraudo"
   },
@@ -151197,7 +152631,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Tornade is a Beyblade fusion wheel. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Tornade",
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--twisted",
@@ -151314,6 +152749,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Basalt (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "バサルト",
     "romaji": "Basaruto"
   },
@@ -151344,7 +152780,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Typhoon is a Beyblade fusion wheel from the Hybrid Wheel System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Typhoon",
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--variares",
@@ -151471,6 +152908,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Variares I (Hasbro)"
     ],
+    "role": "wheel",
     "jpName": "ヴァリアレス",
     "romaji": "Variaresu"
   },
@@ -151559,7 +152997,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--vulcan",
@@ -151668,7 +153107,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 67,
       "stamina": 17
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--wing",
@@ -151775,6 +153215,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ウイング",
     "romaji": "Uingu"
   },
@@ -151842,7 +153283,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 100,
       "defense": 17,
       "stamina": 0
-    }
+    },
+    "role": "wheel"
   },
   {
     "id": "evolution-gear--f-gear",
@@ -151950,6 +153392,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Fギア",
     "romaji": "Efu Gia"
   },
@@ -152102,6 +153545,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "∀"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "アキレス",
     "romaji": "Akiresu"
   },
@@ -152259,6 +153703,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "A"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "アシュラ",
     "romaji": "Ashura"
   },
@@ -152441,6 +153886,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Balkesh (Pro Series)"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "バハムート",
     "romaji": "Bahamūto"
   },
@@ -152637,6 +154083,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Devolos (Pro Series)"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "ディアボロス",
     "romaji": "Diaborosu"
   },
@@ -152861,6 +154308,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドラゴン",
     "romaji": "Doragon"
   },
@@ -153057,6 +154505,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dragon 2"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドラゴン",
     "romaji": "Doragon"
   },
@@ -153222,6 +154671,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "F"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ファブニル",
     "romaji": "Fabuniru"
   },
@@ -153359,6 +154809,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Cobra (Pro Series)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヒュドラ",
     "romaji": "Hyudora"
   },
@@ -153516,6 +154967,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "J"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ジョーカー",
     "romaji": "Jōkā"
   },
@@ -153672,6 +155124,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Lúinor (Pro Series)"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ロンギヌス",
     "romaji": "Ronginusu"
   },
@@ -153811,6 +155264,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Odax (Pro Series)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "オーディン",
     "romaji": "Ōdin"
   },
@@ -153972,6 +155426,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ペガサス",
     "romaji": "Pegasasu"
   },
@@ -154132,6 +155587,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Spryzen (Pro Series)"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "スプリガン",
     "romaji": "Supurigan"
   },
@@ -154340,6 +155796,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Valtryek (Pro Series)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヴァルキリー",
     "romaji": "Varukirī"
   },
@@ -154412,7 +155869,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Zero Dash"
     ],
-    "hasbroCode": "G14"
+    "hasbroCode": "G14",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--1",
@@ -154488,7 +155946,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "hasbroCode": "G15"
+    "hasbroCode": "G15",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--10",
@@ -154593,7 +156052,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Ten Dash"
     ],
-    "hasbroCode": "G12"
+    "hasbroCode": "G12",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--2",
@@ -154706,7 +156166,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Two Dash"
     ],
-    "hasbroCode": "G05"
+    "hasbroCode": "G05",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--3",
@@ -154789,7 +156250,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "Pronounced Three Dash"
-    ]
+    ],
+    "role": "ring"
   },
   {
     "id": "gravity-ring--4",
@@ -154883,7 +156345,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Four Dash"
     ],
-    "hasbroCode": "G07"
+    "hasbroCode": "G07",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--7",
@@ -154969,7 +156432,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Seven Dash"
     ],
-    "hasbroCode": "G16"
+    "hasbroCode": "G16",
+    "role": "ring"
   },
   {
     "id": "gravity-ring--greatest-armor",
@@ -155034,7 +156498,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "hasbroCode": "G13"
+    "hasbroCode": "G13",
+    "role": "ring"
   },
   {
     "id": "gt-chip--achilles-a5",
@@ -155119,7 +156584,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--apocalypse-a5",
@@ -155185,7 +156651,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--ashindra-a5",
@@ -155254,7 +156721,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--balkesh-b5",
@@ -155338,7 +156806,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--cobra-c5",
@@ -155395,7 +156864,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--cyclops-c5",
@@ -155452,7 +156922,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--devolos-d5",
@@ -155548,7 +157019,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstGt": true,
       "burstLimited": true,
       "burstClassic": false
-    }
+    },
+    "role": "chip"
   },
   {
     "id": "gt-chip--dragon-d5",
@@ -155649,7 +157121,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--evo-devolos-d5",
@@ -155715,7 +157188,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--evo-dragon-d5",
@@ -155779,7 +157253,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--evo-genesis-g5",
@@ -155836,7 +157311,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--fafnir-f5",
@@ -155906,7 +157382,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--genesis-g5",
@@ -155963,7 +157440,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--hydrax-h5",
@@ -156035,7 +157513,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--joker-j5",
@@ -156096,7 +157575,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--kerbeus-k5",
@@ -156162,7 +157642,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--kraken-k5",
@@ -156237,6 +157718,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "クラーケン",
     "romaji": "Kurāken"
   },
@@ -156295,7 +157777,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--luinor-l5",
@@ -156359,7 +157842,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--odax-o5",
@@ -156416,7 +157900,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--ogre-o5",
@@ -156484,6 +157969,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "オーガ",
     "romaji": "Ōga"
   },
@@ -156553,7 +158039,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--salamander-s5",
@@ -156610,7 +158097,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--sphinx-s5",
@@ -156673,7 +158161,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--spryzen-s5",
@@ -156755,7 +158244,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "chip"
   },
   {
     "id": "gt-chip--valtryek-v5",
@@ -156856,7 +158346,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "evolution-gear--h-gear",
@@ -156951,6 +158442,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Hギア"
   },
   {
@@ -157089,6 +158581,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アシッドアヌビス",
     "romaji": "Ashiddo Anubisu"
   },
@@ -157214,6 +158707,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "エアナイト",
     "romaji": "Ea Naito"
   },
@@ -157322,7 +158816,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Air Knight K5 (HyperSphere)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--alter-chronos",
@@ -157453,6 +158948,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アルタークロノス",
     "romaji": "Arutā Kuronosu"
   },
@@ -157526,7 +159022,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Alter Cognite"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--amaterios",
@@ -157677,6 +159174,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アマテリオス",
     "romaji": "Amateriosu"
   },
@@ -157766,7 +159264,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "AL"
     ],
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--archer-hercules",
@@ -157898,6 +159397,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アーチャーヘラクレス",
     "romaji": "Āchā Herakuresu"
   },
@@ -157983,7 +159483,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Archer Hercules"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--arc-bahamut",
@@ -158100,6 +159601,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "アークバハムート",
     "romaji": "Akū Bahamūto"
   },
@@ -158175,7 +159677,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Arc Balkesh"
     ],
     "partType": "Defense",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--asteroid-zeutron-z3",
@@ -158241,7 +159744,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Asteroid Zeutron"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--atlas-anubion-a2",
@@ -158339,7 +159843,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Atlas Anubion A6 (SpeedStorm)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--balar-b4",
@@ -158409,7 +159914,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--baldur",
@@ -158539,6 +160045,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "バルドゥール",
     "romaji": "Barudūru"
   },
@@ -158674,6 +160181,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ビーストベヒーモス",
     "romaji": "Bīsuto Behīmosu"
   },
@@ -158777,7 +160285,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Beast Betromoth B6 (SpeedStorm)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--beat-kukulcan",
@@ -158888,6 +160397,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ビートククルカン",
     "romaji": "Bīto Kukurukan"
   },
@@ -158967,7 +160477,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Behemoth Cyclops C5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--berserk-roktavor-r3",
@@ -159051,7 +160562,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Berserk Roktavor"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--bigbang-genesis",
@@ -159165,6 +160677,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ビッグバンジェネシス",
     "romaji": "Bigguban Jeneshisu"
   },
@@ -159275,6 +160788,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ブラストジニウス",
     "romaji": "Burasuto Jiniusu"
   },
@@ -159354,7 +160868,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Blast Jinnius"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--blaze-ragnaruk",
@@ -159519,6 +161034,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ブレイズラグナルク",
     "romaji": "Bureizu Ragunaruku"
   },
@@ -159666,6 +161182,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ブラッディロンギヌス",
     "romaji": "Buraddi Ronginusu"
   },
@@ -159738,7 +161255,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Boom Khalzar"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--breaker-xcalius-x4",
@@ -159804,7 +161322,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Breaker Xcalius"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--brutal-luinor-l4",
@@ -159877,7 +161396,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Brutal Lúinor"
     ],
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--burn-phoenix",
@@ -159988,6 +161508,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "バーンフェニックス",
     "romaji": "Bān Fenikkusu"
   },
@@ -160104,6 +161625,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "バスターエクスカリバー",
     "romaji": "Basutā Ekusukaribā"
   },
@@ -160173,7 +161695,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "C"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--chaos",
@@ -160282,6 +161805,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "カオス",
     "romaji": "Kaosu"
   },
@@ -160490,6 +162014,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "超Zアキレス",
     "romaji": "Chō Z Akiresu"
   },
@@ -160613,6 +162138,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
+    "role": "ring",
     "jpName": "超Zスプリガン",
     "romaji": "Chō Z Supurigan"
   },
@@ -160825,6 +162351,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "超Zヴァルキリー",
     "romaji": "Chō Z Varukirī"
   },
@@ -160913,7 +162440,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "CT"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--crash-ragnaruk",
@@ -161032,6 +162560,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "クラッシュラグナルク",
     "romaji": "Kurasshu Ragunaruku"
   },
@@ -161119,7 +162648,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Roktavor R5 (HyperSphere)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dark-cerberus",
@@ -161211,6 +162741,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dc"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "romaji": "Dakeu Kereuberoseu"
   },
   {
@@ -161316,7 +162847,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dark Doomscizor"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dead-hades",
@@ -161435,6 +162967,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デッドハデス",
     "romaji": "Deddo Hadesu"
   },
@@ -161569,6 +163102,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デッドフェニックス",
     "romaji": "Deddo Fenikkusu"
   },
@@ -161694,6 +163228,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デスサイザー",
     "romaji": "Desusaizā"
   },
@@ -161773,7 +163308,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Deep Caynox"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--deep-chaos",
@@ -161890,6 +163426,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ディープカオス",
     "romaji": "Dīpu Kaosu"
   },
@@ -161967,7 +163504,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Flame-X Diomedes D4 (SlingShock)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--doomscizor",
@@ -162039,7 +163577,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--draciel-fortress-hasbro",
@@ -162105,7 +163644,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Draciel F"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--draciel-fortress-takara-tomy",
@@ -162216,6 +163756,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドラシエルフォートレス",
     "romaji": "Dorashieru Fōtoresu"
   },
@@ -162307,7 +163848,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Guard Draciel Shield (SlingShock)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--draciel-shield-takara-tomy",
@@ -162441,6 +163983,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドラシエルシールド",
     "romaji": "Dorashieru Shīru"
   },
@@ -162545,6 +164088,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドラシエルバイパー・ツー",
     "romaji": "Dorashieru Baipā Tsū"
   },
@@ -162657,6 +164201,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドラシエルバイパー",
     "romaji": "Dorashieru Baipā"
   },
@@ -162808,6 +164353,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ドラグーンファントム",
     "romaji": "Doragūn Fantomu"
   },
@@ -162889,7 +164435,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Fang Dragoon Fighter (SlingShock)"
     ],
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dragoon-storm-hasbro",
@@ -162962,7 +164509,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "DG"
     ],
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dragoon-storm-takara-tomy",
@@ -163105,6 +164653,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ドラグーンストーム",
     "romaji": "Doragūn Sutōmu"
   },
@@ -163221,6 +164770,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ドラグーンV2 · ドラグーンビクトリー・ツー",
     "romaji": "Doragūn V2 · Doragūn Bikutorī Tsū"
   },
@@ -163340,6 +164890,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ドラグーンビクトリー",
     "romaji": "Doragūn Bikutorī"
   },
@@ -163443,7 +164994,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Drain Fafnir"
     ],
     "partType": "Stamina",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dranzer-flame-hasbro",
@@ -163529,7 +165081,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Crystal Dranzer Flame (SlingShock)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dranzer-flame-takara-tomy",
@@ -163668,6 +165221,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドランザーフレイム",
     "romaji": "Doranzā Fureimu"
   },
@@ -163744,7 +165298,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dranzer S or DZ"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dranzer-spiral-takara-tomy",
@@ -163869,6 +165424,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドランザースパイラル",
     "romaji": "Doranzā Supairaru"
   },
@@ -163980,6 +165536,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドランザーV2 · ドランザーボルケーノ・ツー",
     "romaji": "Doranzā V2 · Doranzā Borukēno Tsū"
   },
@@ -164092,6 +165649,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドランザーボルケーノ",
     "romaji": "Doranzā Borukēno"
   },
@@ -164159,7 +165717,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dread Hades"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--dread-phoenix-p4",
@@ -164231,7 +165790,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dread Phoenix"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--driger-fang-hasbro",
@@ -164327,7 +165887,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Wraith Driger Fang (F0612)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--driger-fang-takara-tomy",
@@ -164437,6 +165998,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドライガーファング",
     "romaji": "Doraigā Fangu"
   },
@@ -164519,7 +166081,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Phantom Driger Slash (SlingShock)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--driger-slash-takara-tomy",
@@ -164693,6 +166256,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドライガースラッシュ",
     "romaji": "Doraigā Surasshu"
   },
@@ -164808,6 +166372,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドライガーV2 · ドライガーバルカン・ツー",
     "romaji": "Doraigā V2 · Doraigā Barukan Tsū"
   },
@@ -164920,6 +166485,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ドライガーバルカン",
     "romaji": "Doraigā Barukan"
   },
@@ -164999,7 +166565,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dullahan D5 (HyperSphere)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--duo-aeclipse",
@@ -165082,6 +166649,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デュオエクリプス",
     "romaji": "Deyuo Ekuripusu"
   },
@@ -165172,6 +166740,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デュオアポロス",
     "romaji": "Deyuo Aporosu"
   },
@@ -165262,6 +166831,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デュオアルテミス",
     "romaji": "Deyuo Arutemisu"
   },
@@ -165374,6 +166944,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アースアクイラ",
     "romaji": "Āsu Akuira"
   },
@@ -165555,6 +167126,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "エンペラーフォルネウス",
     "romaji": "Enperā Foruneusu"
   },
@@ -165647,7 +167219,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Emperor Forneus F5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--epic-evipero-e2",
@@ -165730,7 +167303,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Epic Evipero"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--evil-eye",
@@ -165855,6 +167429,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "イビルアイ",
     "romaji": "Ibiruai"
   },
@@ -165922,7 +167497,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "E"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--exceed-evil-eye",
@@ -166061,6 +167637,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "イクシードイビルアイ",
     "romaji": "Ikushīdo Ibiruai"
   },
@@ -166186,6 +167763,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ファングフェンリル",
     "romaji": "Fangu Fenriru"
   },
@@ -166274,7 +167852,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "FT"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--ferro-fengriff-f2",
@@ -166349,7 +167928,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Ferro Fengriff"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--fire-lizard",
@@ -166427,7 +168007,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burst": true,
       "burstLimited": true,
       "burstClassic": false
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "layer--flame-sagittario",
@@ -166538,6 +168119,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "フレイムサジタリオ",
     "romaji": "Fureimu Sajitario"
   },
@@ -166643,7 +168225,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Fs"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--fusion-aether",
@@ -166705,7 +168288,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--gaia-dragoon-vurst",
@@ -166808,6 +168392,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ガイアドラグーンバースト",
     "romaji": "Gaia Doragūn Bāsuto"
   },
@@ -166894,6 +168479,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ギャラクシーペガシス",
     "romaji": "Gyarakushī Pegashisu"
   },
@@ -167004,6 +168590,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ギャラクシーゼウス",
     "romaji": "Gyarakushī Zeusu"
   },
@@ -167117,7 +168704,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Galaxy Zeutron Z5 (HyperSphere)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--gargoyle-g4",
@@ -167202,7 +168790,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Gargoyle G5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--geist-fafnir",
@@ -167326,6 +168915,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ガイストファブニル",
     "romaji": "Gaisuto Fabuniru"
   },
@@ -167405,7 +168995,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Geist Fafnir"
     ],
     "partType": "Stamina",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--gigant-gaia",
@@ -167531,6 +169122,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ギガントガイア",
     "romaji": "Giganto Gaia"
   },
@@ -167632,7 +169224,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Giga Gaianon G6 (SpeedStorm)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--gravity-perseus",
@@ -167709,6 +169302,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Dual-Spin",
+    "role": "ring",
     "jpName": "グラビティペルセウス",
     "romaji": "Gurabiti Peruseusu"
   },
@@ -167811,6 +169405,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "グレイテストラファエル",
     "romaji": "Gureitesuto Rafaeru"
   },
@@ -167943,6 +169538,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ガーディアンケルベウス",
     "romaji": "Gādian Kerubeusu"
   },
@@ -168022,7 +169618,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Inferno-X Kerbeus K4 (Element-X Pack)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--hazard-kerbeus",
@@ -168147,6 +169744,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ハザードケルベウス",
     "romaji": "Hazādo Kerubeusu"
   },
@@ -168214,7 +169812,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Hazard Kerbeus"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--heat-salamander-s4",
@@ -168280,7 +169879,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Heat Salamander"
     ],
     "partType": "Balance",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--hell-kerbecs",
@@ -168386,6 +169986,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ヘルケルベクス",
     "romaji": "Heru Kerubekusu"
   },
@@ -168512,6 +170113,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ヘルサラマンダー",
     "romaji": "Heru Saramandā"
   },
@@ -168648,6 +170250,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ホーリーホルスード",
     "romaji": "Hōrī Horusūdo"
   },
@@ -168727,7 +170330,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "H"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--horusood-takara-tomy",
@@ -168847,6 +170451,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ホルスード",
     "romaji": "Horusūdo"
   },
@@ -168943,7 +170548,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "HD"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--hyper-horusood-h2",
@@ -169030,7 +170636,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Hyper Horusood"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--hyrus-h2",
@@ -169106,7 +170713,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Poison-X Hyrus H4 (SlingShock)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--inferno-ifrit",
@@ -169239,6 +170847,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "インフェルノイフリート",
     "romaji": "Inferuno Ifurīto"
   },
@@ -169313,7 +170922,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Inferno Ifritor"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--istros-i2",
@@ -169391,7 +171001,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Lightning-X Istros I4 (SlingShock)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--jail-jormungand",
@@ -169524,6 +171135,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ジェイルヨルムンガンド",
     "romaji": "Jeiru Yorumungando"
   },
@@ -169624,7 +171236,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Jumbo Jormuntor J6 (SpeedStorm)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--kerbeus-hasbro",
@@ -169703,7 +171316,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "K"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--kerbeus-takara-tomy",
@@ -169837,6 +171451,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ケルベウス",
     "romaji": "Kerubeusu"
   },
@@ -169962,6 +171577,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "キラーデスサイザー",
     "romaji": "Kirā Desusaizā"
   },
@@ -170044,7 +171660,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Kinetic Satomb"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--knife-lizard",
@@ -170123,7 +171740,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--kraken-k4",
@@ -170194,6 +171812,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "クラーケン",
     "romaji": "Kurāken"
   },
@@ -170385,6 +172004,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "クライスサタン",
     "romaji": "Kuraisu Satan"
   },
@@ -170458,7 +172078,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Krusher Doomscizor"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--left-aeclipse",
@@ -170561,6 +172182,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "レフトエクリプス",
     "romaji": "Refuto Ekuripusu"
   },
@@ -170673,6 +172295,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "レフトアポロス",
     "romaji": "Refuto Aporosu"
   },
@@ -170754,7 +172377,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Left Astro A5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--legend-spryzen-s3",
@@ -170832,7 +172456,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Legend Spryzen"
     ],
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--lightning-l-drago",
@@ -170951,6 +172576,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ライトニングエルドラゴ",
     "romaji": "Raitoningu Erudorago"
   },
@@ -171118,6 +172744,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ロストロンギヌス",
     "romaji": "Rosuto Ronginusu"
   },
@@ -171195,7 +172822,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Lost Lúinor (official stylization)"
     ],
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--mad-minoboros",
@@ -171312,6 +172940,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "マッドミノボロス",
     "romaji": "Maddo Minoborosu"
   },
@@ -171405,7 +173034,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Mad Minoboros M6 (SpeedStorm)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--magma-lizard",
@@ -171463,7 +173093,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--maximus-garuda-g3",
@@ -171542,7 +173173,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Maximus Garuda"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--meteo-l-drago",
@@ -171619,6 +173251,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "メテオエルドラゴ",
     "romaji": "Meteo Erudorago"
   },
@@ -171698,7 +173331,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "M"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--minoboros-takara-tomy",
@@ -171810,6 +173444,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ミノボロス",
     "romaji": "Minoborosu"
   },
@@ -171894,7 +173529,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Morrigna M5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--nepstrius",
@@ -171968,7 +173604,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "N"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--neptune",
@@ -172075,6 +173712,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ネプチューン",
     "romaji": "Nepuchūn"
   },
@@ -172199,6 +173837,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ナイトメアロンギヌス",
     "romaji": "Naitomea Ronginusu"
   },
@@ -172285,7 +173924,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "LD01",
     "partType": "Attack",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--nova-nepstrius-n2",
@@ -172371,7 +174011,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dark-X Nova Nepstrius N4 (SlingShock)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--nova-neptune",
@@ -172495,6 +174136,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ノヴァネプチューン",
     "romaji": "Noba Nepuchūn"
   },
@@ -172567,7 +174209,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "O"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--odin",
@@ -172706,6 +174349,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "オーディン",
     "romaji": "Ōdin"
   },
@@ -172801,6 +174445,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "オーガ",
     "romaji": "Ōga"
   },
@@ -172901,7 +174546,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Odax O6 (SpeedStorm)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--orb-egis",
@@ -173039,6 +174685,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "オーブイージス",
     "romaji": "Ōbu Ījisu"
   },
@@ -173124,7 +174771,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Engaard E5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--orichalcum",
@@ -173242,6 +174890,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "オリハルコン",
     "romaji": "Oriharukon"
   },
@@ -173313,7 +174962,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Orichalcum"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--orpheus-o2",
@@ -173381,7 +175031,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "O2"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--perfect-phoenix",
@@ -173478,6 +175129,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "パーフェクトフェニックス",
     "romaji": "Pāfekuto Fenikkusu"
   },
@@ -173552,7 +175204,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Perfect Phoenix"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--phrenic-phantazus-p2",
@@ -173620,7 +175273,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Phrenic Phantazus"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--prime-apocalypse",
@@ -173773,6 +175427,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "プライムアポカリプス",
     "romaji": "Puraimu Apokaripusu"
   },
@@ -173861,7 +175516,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "PT"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--psychic-phantom",
@@ -174001,6 +175657,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "サイキックファントム",
     "romaji": "Saikikku Fantomu"
   },
@@ -174135,6 +175792,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "クアッドケツァルカトル",
     "romaji": "Kuaddo Ketsarukatoru"
   },
@@ -174219,7 +175877,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Stone-X Quetziko Q4 (SlingShock)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--raging-roktavor-r2",
@@ -174309,7 +175968,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Raging Roktavor"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--ragnaruk",
@@ -174445,6 +176105,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ラグナルク",
     "romaji": "Ragunaruku"
   },
@@ -174523,6 +176184,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "レイユニコルノ",
     "romaji": "Rei Yunikoruno"
   },
@@ -174641,6 +176303,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "レガリアジェネシス",
     "romaji": "Regaria Jeneshisu"
   },
@@ -174828,6 +176491,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "リヴァイブフェニックス",
     "romaji": "Rivaibu Fenikkusu"
   },
@@ -174897,7 +176561,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Revive Phoenix"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--right-aeclipse",
@@ -174998,6 +176663,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ライトエクリプス",
     "romaji": "Raito Ekuripusu"
   },
@@ -175110,6 +176776,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ライトアルテミス",
     "romaji": "Raito Arutemisu"
   },
@@ -175191,7 +176858,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Right Artemis A5 (HyperSphere)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--rising-ragnaruk",
@@ -175368,6 +177036,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ライジングラグナルク",
     "romaji": "Raijingu Ragunaruku"
   },
@@ -175472,6 +177141,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ロックレオーネ",
     "romaji": "Rokku Reōne"
   },
@@ -175546,7 +177216,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "R"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--rudr-r4",
@@ -175631,7 +177302,8 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Rudr R5 (HyperSphere)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--screw-trident",
@@ -175746,6 +177418,7 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "スクリュートライデント",
     "romaji": "Sukuryū Toraidento"
   }
@@ -175835,6 +177508,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アマテリオス",
     "romaji": "Shadō Amateriosu"
   },
@@ -175925,6 +177599,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "シャドウ・オリハルコン",
     "romaji": "Shadō Oriharukon"
   },
@@ -176043,6 +177718,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "シェルターレグルス",
     "romaji": "Sherutā Regurusu"
   },
@@ -176135,7 +177811,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Shelter Regulus R6 (SpeedStorm)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--shining-amaterios",
@@ -176264,6 +177941,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アマテリオス",
     "romaji": "Shainingu Amateriosu"
   },
@@ -176331,7 +178009,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Shining Amaterios"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--sky-falcon",
@@ -176419,7 +178098,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer V2"
     ],
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--spark-sleipnir",
@@ -176477,7 +178157,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--sphinx-s4",
@@ -176546,7 +178227,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": true
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--spiral-treptune-t4",
@@ -176669,7 +178351,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Aqua-X Spiral Treptune T4 (Element-X Version)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--spriggan",
@@ -176833,6 +178516,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "スプリガン",
     "romaji": "Supurigan"
   },
@@ -177021,6 +178705,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
+    "role": "ring",
     "jpName": "スプリガンレクイエム",
     "romaji": "Supurigan Rekuiemu"
   },
@@ -177095,7 +178780,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "S"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--storm-pegasis",
@@ -177250,6 +178936,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ストームペガシス",
     "romaji": "Sutōmu Pegashisu"
   },
@@ -177343,7 +179030,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Storm Spryzen"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--storm-tiger",
@@ -177401,7 +179089,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--strike-god-valkyrie",
@@ -177514,6 +179203,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ストライクゴッドヴァルキリー",
     "romaji": "Sutoraiku Goddo Varukirī"
   },
@@ -177583,7 +179273,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Strike Valtryek"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--surge-xcalius-x3",
@@ -177659,7 +179350,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--surtr-s2",
@@ -177737,7 +179429,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Iron-X Surtr S4 (SlingShock)"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--tempest-wyvron-w3",
@@ -177821,7 +179514,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Tempest Wyvron"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--tide-treptune-t3",
@@ -177887,7 +179581,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Tide Treptune"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--tornado-wyvern",
@@ -178007,6 +179702,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "トルネードワイバーン",
     "romaji": "Torunēdo Waibān"
   },
@@ -178081,7 +179777,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--trident",
@@ -178204,6 +179901,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "トライデント",
     "romaji": "Toraidento"
   },
@@ -178281,7 +179979,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Turbo Achilles"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--turbo-spryzen-s4",
@@ -178351,7 +180050,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Turbo Spryzen"
     ],
     "partType": "Balance",
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--turbo-valtryek-v3",
@@ -178425,7 +180125,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Turbo Valtryek"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--twin-nemesis",
@@ -178540,6 +180241,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ツインネメシス",
     "romaji": "Tsuin Nemeshisu"
   },
@@ -178608,7 +180310,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Twin Noctemis"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--typhon-t4",
@@ -178682,7 +180385,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Typhon T5 (HyperSphere)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--tyros-t2",
@@ -178766,7 +180470,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Tyros T6 (SpeedStorm)"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--uber-unicrest-u2",
@@ -178847,7 +180552,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Über Unicrest (official stylization)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--unicorn",
@@ -178972,6 +180678,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ユニコーン",
     "romaji": "Yunikōn"
   },
@@ -179044,7 +180751,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "U"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--unlock-unicorn",
@@ -179196,6 +180904,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アンロックユニコーン",
     "romaji": "Anrokku Yunikōn"
   },
@@ -179258,6 +180967,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "アンパーフェクトフェニックス",
     "romaji": "Anpāfekuto Fenikkusu"
   },
@@ -179311,7 +181021,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Unperfect Phoenix"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--valkyrie",
@@ -179549,6 +181260,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ヴァルキリー",
     "romaji": "Varukirī"
   },
@@ -179632,7 +181344,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--vice-leopard-l4",
@@ -179707,7 +181420,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Vice Leopard"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--victory-valtryek-v2",
@@ -179819,7 +181533,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Victory Valtryek"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--vise-leopard",
@@ -179937,6 +181652,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ヴァイスレオパルド",
     "romaji": "Vuaisu Reoparudo"
   },
@@ -180060,7 +181776,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Wild Wyvron W6 (SpeedStorm)"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--wing-falcon",
@@ -180122,7 +181839,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--winning-valkyrie",
@@ -180284,6 +182002,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ウイニングヴァルキリー",
     "romaji": "Uiningu Varukirī"
   },
@@ -180380,7 +182099,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Force Wolborg (F0610)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--wolborg-takara-tomy",
@@ -180516,6 +182236,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ウルボーグ",
     "romaji": "Urubōgu"
   },
@@ -180595,7 +182316,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Wonder Valtryek"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--wyvern",
@@ -180749,6 +182471,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ワイバーン",
     "romaji": "Waibān"
   },
@@ -180815,7 +182538,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "W"
     ],
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--xcalibur",
@@ -180972,6 +182696,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "エクスカリバー",
     "romaji": "Ekusukaribā"
   },
@@ -181051,7 +182776,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "X"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--xeno-xcalius-x2",
@@ -181132,7 +182858,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Xeno Xcalius"
     ],
     "partType": "Attack",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--yaeger-yggdrasil",
@@ -181249,6 +182976,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "イェーガーユグドラシル",
     "romaji": "Yēgā Yugudorashiru"
   },
@@ -181316,7 +183044,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Y"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--yggdrasil",
@@ -181423,6 +183152,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ユグドラシル",
     "romaji": "Yugudorashiru"
   },
@@ -181517,7 +183247,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Tornado-X Yugen Yegdrion Y4 (SlingShock)"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--zillion-zeus",
@@ -181661,6 +183392,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ジリオンゼウス",
     "romaji": "Jirion Zeusu"
   },
@@ -181730,7 +183462,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Zillion Zeutron"
     ],
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "layer--z-achilles",
@@ -181940,6 +183673,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ゼットアキレス",
     "romaji": "Zetto Akiresu"
   },
@@ -182025,7 +183759,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Z Achilles"
     ],
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "light-wheel--clay",
@@ -182127,6 +183862,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": false,
       "mfbLimited": false
     },
+    "role": "wheel",
     "jpName": "クレイ",
     "romaji": "Kurei"
   },
@@ -182230,6 +183966,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": false,
       "mfbLimited": false
     },
+    "role": "wheel",
     "jpName": "ヒート",
     "romaji": "Hīto"
   },
@@ -182334,6 +184071,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": false,
       "mfbLimited": false
     },
+    "role": "wheel",
     "jpName": "マッド",
     "romaji": "Maddo"
   },
@@ -182437,6 +184175,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": false,
       "mfbLimited": false
     },
+    "role": "wheel",
     "jpName": "ウインド",
     "romaji": "Uindo"
   },
@@ -182485,7 +184224,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "lock-chip--bahamut",
@@ -182573,6 +184313,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "バハムート",
     "romaji": "Bahamūto"
   },
@@ -182682,6 +184423,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ブラキオ",
     "romaji": "Burakio"
   },
@@ -182781,6 +184523,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ケルベロス",
     "romaji": "Keruberosu"
   },
@@ -182881,6 +184624,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "クロコ",
     "romaji": "Kuroko"
   },
@@ -182949,6 +184693,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドレイク",
     "romaji": "Doreiku"
   },
@@ -183073,6 +184818,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドラン",
     "romaji": "Doran"
   },
@@ -183159,6 +184905,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "エンペラー",
     "romaji": "Enperā"
   },
@@ -183211,7 +184958,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "lock-chip--eva",
@@ -183317,6 +185065,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "エヴァ",
     "romaji": "Eva"
   },
@@ -183415,6 +185164,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Fox (Hasbro)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "フォックス",
     "romaji": "Fokkusu"
   },
@@ -183526,6 +185276,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Incendio (Hasbro)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヘルズ",
     "romaji": "Heruzu"
   },
@@ -183634,6 +185385,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ホーネット",
     "romaji": "Hōnetto"
   },
@@ -183698,6 +185450,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "キッド",
     "romaji": "Kiddo"
   },
@@ -183776,6 +185529,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ナイト",
     "romaji": "Naito"
   },
@@ -183864,6 +185618,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "クラーケン",
     "romaji": "Kurāken"
   },
@@ -183961,6 +185716,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Leon (Hasbro)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "レオン",
     "romaji": "Reon"
   },
@@ -184009,7 +185765,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "lock-chip--pegasus",
@@ -184105,6 +185862,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ペガサス",
     "romaji": "Pegasasu"
   },
@@ -184202,6 +185960,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
   },
@@ -184279,6 +186038,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "フェニックス",
     "romaji": "Fenikkusu"
   },
@@ -184361,6 +186121,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ラグナ",
     "romaji": "Raguna"
   },
@@ -184449,6 +186210,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Rhino (Hasbro)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ライノ",
     "romaji": "Raino"
   },
@@ -184526,6 +186288,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ソル",
     "romaji": "Soru"
   },
@@ -184612,6 +186375,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Bucks (Takara Tomy)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "バックス",
     "romaji": "Bakkusu"
   },
@@ -184680,6 +186444,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ティガ",
     "romaji": "Tiga"
   },
@@ -184767,6 +186532,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ユニコーン",
     "romaji": "Yunikōn"
   },
@@ -184838,6 +186604,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ホエール",
     "romaji": "Hoēru"
   },
@@ -184933,6 +186700,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ウィザード",
     "romaji": "Wizādo"
   },
@@ -185010,6 +186778,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ウルフ",
     "romaji": "Urufu"
   },
@@ -185119,6 +186888,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Lギア",
     "romaji": "Eru Gia"
   },
@@ -185157,6 +186927,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Magnecore is a Beyblade core from the Magnacore System, weighing 6 g. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Magnecore",
+    "role": "chip",
     "jpName": "マグネコア",
     "romaji": "Magunekoa"
   },
@@ -185194,6 +186965,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Magtram is a Beyblade core from the Magnacore System. Part of Beyblade: V-Force.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Magtram",
+    "role": "chip",
     "jpName": "マグトラム",
     "romaji": "Magutoramu"
   },
@@ -185284,6 +187056,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アントラーズ",
     "romaji": "Antorāzu"
   },
@@ -185452,6 +187225,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アーク",
     "romaji": "Āku"
   },
@@ -185577,6 +187351,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブラスト",
     "romaji": "Burasuto"
   },
@@ -185762,6 +187537,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブレイブ",
     "romaji": "Bureibu"
   },
@@ -185905,6 +187681,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブラッシュ",
     "romaji": "Burasshu"
   },
@@ -186030,6 +187807,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ダーク",
     "romaji": "Dāku"
   },
@@ -186104,6 +187882,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "エクリプス",
     "romaji": "Ekuripusu"
   },
@@ -186217,6 +187996,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ファング",
     "romaji": "Fangu"
   },
@@ -186336,6 +188116,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フレイム",
     "romaji": "Fureimu"
   },
@@ -186425,6 +188206,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フレア",
     "romaji": "Furea"
   },
@@ -186554,6 +188336,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フォート",
     "romaji": "Fōto"
   },
@@ -186649,6 +188432,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ハント",
     "romaji": "Hanto"
   },
@@ -186765,6 +188549,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "マイト",
     "romaji": "Maito"
   },
@@ -186897,6 +188682,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "リーパー",
     "romaji": "Rīpā"
   },
@@ -187005,6 +188791,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "リグル",
     "romaji": "Riguru"
   },
@@ -187114,6 +188901,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブリッツ",
     "romaji": "Burittsu"
   },
@@ -187221,6 +189009,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "デルタ",
     "romaji": "Deruta"
   },
@@ -187295,6 +189084,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フォース",
     "romaji": "Fōsu"
   },
@@ -187397,6 +189187,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フォートレス",
     "romaji": "Fōtoresu"
   },
@@ -187465,7 +189256,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "metal-blade--rage",
@@ -187572,6 +189364,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "レイジ",
     "romaji": "Reiji"
   },
@@ -187671,6 +189464,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "トレッド",
     "romaji": "Toreddo"
   },
@@ -187770,6 +189564,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウィップ",
     "romaji": "Wippu"
   },
@@ -187804,7 +189599,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Neo_Right_SG_(South_Core_version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Neo_Right_SG_(South_Core_version)",
+    "role": "gear"
   },
   {
     "id": "over-blade--break",
@@ -187912,6 +189708,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ブレイク",
     "romaji": "Bureiku"
   },
@@ -188020,6 +189817,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "フロー",
     "romaji": "Furō"
   },
@@ -188118,6 +189916,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ガード",
     "romaji": "Gādo"
   },
@@ -188176,7 +189975,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "over-blade--outer",
@@ -188293,6 +190093,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "アウター",
     "romaji": "Autā"
   },
@@ -188400,6 +190201,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ピーク",
     "romaji": "Pīku"
   },
@@ -188500,6 +190302,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Defense",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "タフ",
     "romaji": "Tafu"
   },
@@ -188577,6 +190380,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
     "jpName": "ウエイト",
     "romaji": "Ueito"
   },
@@ -188670,6 +190474,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "AS"
     ],
+    "role": "tip",
     "jpName": "アラウンドシャープ",
     "romaji": "Araundo Shāpu"
   },
@@ -188974,6 +190779,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "B"
     ],
+    "role": "tip",
     "jpName": "ボール",
     "romaji": "Bōru"
   },
@@ -189083,6 +190889,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "B:D"
     ],
+    "role": "tip",
     "jpName": "ベアリングドライブ",
     "romaji": "Bearingu Doraibu"
   },
@@ -189187,6 +190994,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "BSF"
     ],
+    "role": "tip",
     "jpName": "ブレードセミフラット",
     "romaji": "Burēdo Semi Furatto"
   },
@@ -189428,6 +191236,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Ball Sharp (Takara Tomy)",
       "BS"
     ],
+    "role": "tip",
     "jpName": "ボールシャープ",
     "romaji": "Bōru Shāpu"
   },
@@ -189583,6 +191392,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "CF"
     ],
+    "role": "tip",
     "jpName": "サークルフラット",
     "romaji": "Sākuru Furatto"
   },
@@ -189779,6 +191589,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Coat Sharp (Takara Tomy)",
       "CS"
     ],
+    "role": "tip",
     "jpName": "コートシャープ",
     "romaji": "Kōto Shāpu"
   },
@@ -190141,6 +191952,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "role": "tip",
     "jpName": "ディフェンス",
     "romaji": "Difensu"
   },
@@ -190309,7 +192121,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Defense Sharp (Takara Tomy)",
       "DS"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--delta-drive",
@@ -190426,6 +192239,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D:D"
     ],
+    "role": "tip",
     "jpName": "デルタドライブ",
     "romaji": "Deruta Doraibu"
   },
@@ -190534,7 +192348,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "EDS"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--eternal-wide-defense",
@@ -190664,7 +192479,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Eternal_Wide_Defense",
     "aka": [
       "EWD"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--extreme-flat",
@@ -190883,7 +192699,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "XF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--final-drive",
@@ -191020,6 +192837,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F:D"
     ],
+    "role": "tip",
     "jpName": "ファイナルドライブ",
     "romaji": "Fainaru Doraibu"
   },
@@ -191133,6 +192951,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F:S"
     ],
+    "role": "tip",
     "jpName": "ファイナルサバイブ",
     "romaji": "Fainaru Sabaibu"
   },
@@ -191507,6 +193326,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F"
     ],
+    "role": "tip",
     "jpName": "フラット",
     "romaji": "Furatto"
   },
@@ -191604,7 +193424,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "FB"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--flat-spike",
@@ -191801,6 +193622,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Flat Sharp",
       "FS"
     ],
+    "role": "tip",
     "jpName": "フラットシャープ",
     "romaji": "Furatto Shāpu"
   },
@@ -191934,6 +193756,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "GCF"
     ],
+    "role": "tip",
     "jpName": "ギヤサークルフラット",
     "romaji": "Giya Sākuru Furatto"
   },
@@ -192011,7 +193834,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "GF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--hole-flat",
@@ -192404,6 +194228,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "HF"
     ],
+    "role": "tip",
     "jpName": "ホールフラット",
     "romaji": "Hōru Furatto"
   },
@@ -192495,7 +194320,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Hole_Flat_Spike",
     "aka": [
       "HF/S"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--jog-ball",
@@ -192608,7 +194434,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Jog_Ball",
     "aka": [
       "JB"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--jog-spike-ball",
@@ -192682,7 +194509,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Jog_Spike_Ball",
     "aka": [
       "JSB"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--left-flat",
@@ -192823,6 +194651,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "LF"
     ],
+    "role": "tip",
     "jpName": "レフトフラット",
     "romaji": "Refuto Furatto"
   },
@@ -192923,7 +194752,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "LRF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--metal-ball",
@@ -193050,6 +194880,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "MB"
     ],
+    "role": "tip",
     "jpName": "メタルボール",
     "romaji": "Metaru Bōru"
   },
@@ -193154,6 +194985,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "MF"
     ],
+    "role": "tip",
     "jpName": "メタルフラット",
     "romaji": "Metaru Furatto"
   },
@@ -193348,6 +195180,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Metal Sharp (Takara Tomy)"
     ],
+    "role": "tip",
     "jpName": "メタルシャープ",
     "romaji": "Metaru Shāpu"
   },
@@ -193400,7 +195233,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_PF",
     "aka": [
       "PF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--polish-defense",
@@ -193475,6 +195309,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "PD"
     ],
+    "role": "tip",
     "jpName": "ポリッシュディフェンス",
     "romaji": "Porisshu Difensu"
   },
@@ -193684,6 +195519,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Q"
     ],
+    "role": "tip",
     "jpName": "クエイク",
     "romaji": "Kueiku"
   },
@@ -193973,6 +195809,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "R²F",
       "R2F"
     ],
+    "role": "tip",
     "jpName": "ライトラバーフラット",
     "romaji": "Raito Rabā Furatto"
   },
@@ -194077,7 +195914,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "RB"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--rubber-defense-flat",
@@ -194165,7 +196003,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "RDF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--rubber-flat",
@@ -194423,6 +196262,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "RF"
     ],
+    "role": "tip",
     "jpName": "ラバーフラット",
     "romaji": "Rabā Furatto"
   },
@@ -194552,7 +196392,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "tip"
   },
   {
     "id": "performance-tip--semi-defense",
@@ -194608,7 +196449,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 50
     },
-    "partType": "Balance"
+    "partType": "Balance",
+    "role": "tip"
   },
   {
     "id": "performance-tip--semi-flat",
@@ -194878,7 +196720,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Semi Flat (Takara Tomy)",
       "SF"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--sharp-wide-defense",
@@ -194944,7 +196787,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Sharp_Wide_Defense",
     "aka": [
       "SWD"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--spike",
@@ -195235,6 +197079,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Sharp",
       "S"
     ],
+    "role": "tip",
     "jpName": "シャープ",
     "romaji": "Shāpu"
   },
@@ -195314,7 +197159,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Spike_Ball"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Spike_Ball",
+    "role": "tip"
   },
   {
     "id": "performance-tip--twin-ball",
@@ -195414,6 +197260,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "TB"
     ],
+    "role": "tip",
     "jpName": "ツインボール",
     "romaji": "Tsuin Bōru"
   },
@@ -195597,7 +197444,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "W²D",
       "W2D"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "performance-tip--wide-ball",
@@ -195867,6 +197715,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "WB"
     ],
+    "role": "tip",
     "jpName": "ワイドボール",
     "romaji": "Waido Bōru"
   },
@@ -196254,6 +198103,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "WD"
     ],
+    "role": "tip",
     "jpName": "ワイドディフェンス",
     "romaji": "Waido Difensu"
   },
@@ -196484,6 +198334,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "WF"
     ],
+    "role": "tip",
     "jpName": "ワイドフラット",
     "romaji": "Waido Furatto"
   },
@@ -196608,6 +198459,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "WSF"
     ],
+    "role": "tip",
     "jpName": "ワイドセミフラット",
     "romaji": "Waido Semi Furatto"
   },
@@ -196718,7 +198570,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "X:D"
-    ]
+    ],
+    "role": "tip"
   },
   {
     "id": "qs-blade--ambush",
@@ -196801,7 +198654,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--bolt",
@@ -196870,7 +198724,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--destined",
@@ -196941,7 +198796,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--divine",
@@ -197033,7 +198889,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--fierce",
@@ -197116,7 +198973,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--flame",
@@ -197197,7 +199055,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "partType": "Balance",
     "spinDirection": "Right-Spin",
-    "element": "Fire"
+    "element": "Fire",
+    "role": "blade"
   },
   {
     "id": "qs-blade--gambit",
@@ -197268,7 +199127,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--hydra",
@@ -197344,7 +199204,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--komet",
@@ -197422,7 +199283,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--lightning",
@@ -197511,7 +199373,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
-    "element": "Lightning"
+    "element": "Lightning",
+    "role": "blade"
   },
   {
     "id": "qs-blade--ruin",
@@ -197582,7 +199445,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--stellar",
@@ -197651,7 +199515,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--tidal",
@@ -197733,7 +199598,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
-    "element": "Water"
+    "element": "Water",
+    "role": "blade"
   },
   {
     "id": "qs-blade--twister",
@@ -197817,7 +199683,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "spinDirection": "Right-Spin",
-    "element": "Wind"
+    "element": "Wind",
+    "role": "blade"
   },
   {
     "id": "qs-blade--whirl",
@@ -197886,7 +199753,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--xiphoid",
@@ -197962,7 +199830,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade"
   },
   {
     "id": "qs-blade--zeal",
@@ -198036,7 +199905,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "blade"
   },
   {
     "id": "ratchet-integrated-bit--operate",
@@ -198136,6 +200006,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Op"
     ],
     "partType": "Balance",
+    "role": "tip",
+    "fusedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "オペレート",
     "romaji": "Operēto"
   },
@@ -198240,6 +200115,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Tr"
     ],
     "partType": "Attack",
+    "role": "tip",
+    "fusedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "ターボ",
     "romaji": "Tābo"
   },
@@ -198347,6 +200227,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ],
     "jpName": "バレットグリフォン",
     "romaji": "BarettoGurifon"
   },
@@ -198424,7 +200309,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ]
   },
   {
     "id": "ratchet-integrated-blade--gloryvalkyrie",
@@ -198558,6 +200448,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ],
     "jpName": "グローリーワルキューレ",
     "romaji": "GurōrīWarukyūre"
   },
@@ -198658,6 +200553,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ],
     "jpName": "ヘルズネザー",
     "romaji": "HeruzuNezā"
   },
@@ -198735,7 +200635,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ]
   },
   {
     "id": "ratchet-integrated-blade--seize-jaguar",
@@ -198792,7 +200697,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ]
   },
   {
     "id": "ratchet-integrated-blade--valor-bison",
@@ -198898,7 +200808,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "xStandard": true
     },
     "partType": "Stamina",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "blade",
+    "fusedRoles": [
+      "track",
+      "blade"
+    ]
   },
   {
     "id": "ratchet--0-60",
@@ -198978,6 +200893,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ゼロシックスティー",
     "romaji": "Zero Shikkusutī"
   },
@@ -199102,6 +201018,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ゼロセブンティー",
     "romaji": "Zero Sebunti"
   },
@@ -199207,6 +201124,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ワンフィフティ",
     "romaji": "Wan Fifuti"
   },
@@ -199313,6 +201231,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ワンセブンティー",
     "romaji": "Wan Sebunti"
   },
@@ -199473,6 +201392,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ワンーエイティー",
     "romaji": "Wan Eitī"
   },
@@ -199653,6 +201573,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ツーシクスティー",
     "romaji": "Tsū Shikusutī"
   },
@@ -199806,6 +201727,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ツーセブンティー",
     "romaji": "Tsū Sebuntī"
   },
@@ -199925,6 +201847,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ツーエイティー",
     "romaji": "Tsū Eitī"
   },
@@ -200143,6 +202066,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "スリーエイティーファイブ",
     "romaji": "Surī Eitī Faibu"
   },
@@ -200263,6 +202187,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "フォーフィフティ",
     "romaji": "Fō Fifutī"
   },
@@ -200432,6 +202357,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "フォーフィフティーファイブ",
     "romaji": "Fō Fifutī Faibu"
   },
@@ -200526,6 +202452,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Five Fifty"
     ],
+    "role": "track",
     "jpName": "ファイブフィフティ",
     "romaji": "Faibu Fifuti"
   },
@@ -200672,6 +202599,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "シックスシックスティ",
     "romaji": "Shikkusu Shikkusuti"
   },
@@ -200775,6 +202703,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "シックスセブンティ",
     "romaji": "Shikkusu Sebunti"
   },
@@ -200892,6 +202821,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "シックスエイティー",
     "romaji": "Shikkusu Eitī"
   },
@@ -201024,6 +202954,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "セブンフィフティファイブ",
     "romaji": "Sebun Fifuti Faibu"
   },
@@ -201174,6 +203105,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "セブンシクスティー",
     "romaji": "Sebun Shikusutī"
   },
@@ -201287,6 +203219,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "セブンセブンティー",
     "romaji": "Sebun Sebuntī"
   },
@@ -201389,6 +203322,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "セブンエイティー",
     "romaji": "Sebun Eitī"
   },
@@ -201479,6 +203413,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "エイトセブンティー",
     "romaji": "Eito Sebuntī"
   },
@@ -201567,6 +203502,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "エイトエイティー",
     "romaji": "Eito Eitī"
   },
@@ -201711,6 +203647,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ナインシックスティファイブ",
     "romaji": "Nain Shikkusuti Faibu"
   },
@@ -201834,6 +203771,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ナインセブンティー",
     "romaji": "Nain Sebuntī"
   },
@@ -201998,6 +203936,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "ナインエイティー",
     "romaji": "Nain Eitī"
   },
@@ -202080,6 +204019,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "エムエシックスティファイブ",
     "romaji": "Emu Shikkusuti Faibu"
   },
@@ -202197,6 +204137,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "wboLegality": {
       "xStandard": true
     },
+    "role": "track",
     "jpName": "エムエイティーファイブ",
     "romaji": "Emu Eitī Faibu"
   },
@@ -202276,7 +204217,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--abyss-takara-tomy",
@@ -202382,6 +204324,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "A"
     ],
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "アビス",
     "romaji": "Abisu"
   },
@@ -202459,7 +204402,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--brave",
@@ -202580,6 +204524,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "B"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ブレイブ",
     "romaji": "Bureibu"
   },
@@ -202660,7 +204605,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--burn",
@@ -202758,6 +204704,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "B"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "バーン",
     "romaji": "Bān"
   },
@@ -202821,7 +204768,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--curse-takara-tomy",
@@ -202942,6 +204890,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "C"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "カース",
     "romaji": "Kāsu"
   },
@@ -203047,6 +204996,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "D"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "デス",
     "romaji": "Desu"
   },
@@ -203126,7 +205076,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--endbringer",
@@ -203185,7 +205136,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--first",
@@ -203312,6 +205264,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "F"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ファースト",
     "romaji": "Fāsuto"
   },
@@ -203372,7 +205325,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--glide-hasbro",
@@ -203440,7 +205394,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--glide-takara-tomy",
@@ -203561,6 +205516,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "G"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "グライド",
     "romaji": "Guraido"
   },
@@ -203619,7 +205575,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--hollow-takara-tomy",
@@ -203730,6 +205687,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "H"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ホロウ",
     "romaji": "Horō"
   },
@@ -203893,6 +205851,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "I"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "インフィニット",
     "romaji": "Infinitto"
   },
@@ -203951,7 +205910,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--jet-hasbro",
@@ -204013,7 +205973,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Defense",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--jet-takara-tomy",
@@ -204109,6 +206070,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "J"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ジェット",
     "romaji": "Jetto"
   },
@@ -204283,6 +206245,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Kolossal (Pro Series)"
     ],
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "キング",
     "romaji": "Kingu"
   },
@@ -204368,7 +206331,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--mirage",
@@ -204484,6 +206448,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "M"
     ],
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ミラージュ",
     "romaji": "Mirāju"
   },
@@ -204571,7 +206536,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--origin",
@@ -204638,7 +206604,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--rage",
@@ -204755,6 +206722,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "R"
     ],
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "レイジ",
     "romaji": "Reiji"
   },
@@ -204821,7 +206789,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--spear",
@@ -204903,7 +206872,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "partType": "Balance",
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--super",
@@ -205118,6 +207088,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "S"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "スーパー",
     "romaji": "Sūpā"
   },
@@ -205196,7 +207167,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--tempest",
@@ -205311,6 +207283,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "テンペスト",
     "romaji": "Tenpesuto"
   },
@@ -205408,6 +207381,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "ジエンド",
     "romaji": "Ji Endo"
   },
@@ -205473,7 +207447,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--variant",
@@ -205635,6 +207610,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "spinDirection": "Right-Spin",
+    "role": "ring",
     "jpName": "バリアント",
     "romaji": "Barianto"
   },
@@ -205700,7 +207676,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--volcano",
@@ -205798,6 +207775,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "V"
     ],
     "spinDirection": "Left-Spin",
+    "role": "ring",
     "jpName": "ボルケーノ",
     "romaji": "Borukēno"
   },
@@ -205863,7 +207841,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
   },
   {
     "id": "ring--world-takara-tomy",
@@ -205967,6 +207946,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "W"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "ring",
     "jpName": "ワールド",
     "romaji": "Wārudo"
   },
@@ -206000,7 +207980,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bearing_Core_2"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bearing_Core_2",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--bunshin-core",
@@ -206013,7 +207998,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Bunshin Core is a Beyblade running core.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bunshin_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bunshin_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--free-wing-cross",
@@ -206026,7 +208016,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Free Wing Cross is a Beyblade running core.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Free_Wing_Cross"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Free_Wing_Cross",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--grip-flat-core-ultimate-mode",
@@ -206080,7 +208075,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core_(Ultimate_Mode)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core_(Ultimate_Mode)",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-weight-flat-core",
@@ -206093,7 +208093,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Metal Weight Flat Core is a Beyblade running core.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Flat_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Flat_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--metal-weight-grip-core",
@@ -206113,7 +208118,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Metal Weight Grip Core is a Beyblade running core, weighing 3 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Grip_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Grip_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--shooter-change-core-alpha",
@@ -206138,7 +208148,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Alpha"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Alpha",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--shooter-change-core-gamma",
@@ -206151,7 +208166,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Shooter Change Core Gamma is a Beyblade running core.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Gamma"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Gamma",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "running-core--spring-core",
@@ -206179,7 +208199,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spring Core is a Beyblade running core from the Hard Metal System, weighing 3 g. Part of Beyblade: G-Revolution.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Spring_Core"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Spring_Core",
+    "role": "tip",
+    "fusedRoles": [
+      "gear",
+      "base"
+    ]
   },
   {
     "id": "shogun-face-bolt--bahamoote",
@@ -206249,6 +208274,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bahamdia (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "バハムディア",
     "romaji": "Bahamudeia"
   },
@@ -206316,6 +208342,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Balro",
+    "role": "chip",
     "jpName": "バルロ",
     "romaji": "Baruro"
   },
@@ -206373,6 +208400,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Behemoth",
+    "role": "chip",
     "jpName": "Begirados"
   },
   {
@@ -206430,6 +208458,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Whiger (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ホワイガー",
     "romaji": "Howaigā"
   },
@@ -206484,6 +208513,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Fenrir",
+    "role": "chip",
     "jpName": "ヴァンリル",
     "romaji": "Vanriru"
   },
@@ -206559,6 +208589,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gargole (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ガーゴル",
     "romaji": "Gāgoru"
   },
@@ -206616,6 +208647,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Garudas",
+    "role": "chip",
     "jpName": "ガルダス",
     "romaji": "Garudasu"
   },
@@ -206695,6 +208727,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Genbull"
     ],
+    "role": "chip",
     "jpName": "ゲンブル",
     "romaji": "Genburu"
   },
@@ -206772,6 +208805,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Goreim (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ガーゴル",
     "romaji": "Goreimu"
   },
@@ -206857,6 +208891,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gryph (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "グリフ",
     "romaji": "Gryph"
   },
@@ -206899,6 +208934,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Gryph Dragooon is a Beyblade shogun face bolt from the Synchrome System, weighing 1.2 g. Released January 13, 2013 for Beyblade: Shogun Steel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Gryph_Dragooon",
+    "role": "chip",
     "jpName": "グリフドラグーン",
     "romaji": "Gurifu Doragūn"
   },
@@ -207063,6 +209099,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ifraid (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "イフレイド",
     "romaji": "Ifureido"
   },
@@ -207139,7 +209176,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Kraken",
     "aka": [
       "Killerken (Takara Tomy)"
-    ]
+    ],
+    "role": "chip"
   },
   {
     "id": "shogun-face-bolt--leviathan",
@@ -207225,7 +209263,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Leviathan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Leviathan",
+    "role": "chip"
   },
   {
     "id": "shogun-face-bolt--orochi",
@@ -207337,6 +209376,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Orojya(Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "ロジャ",
     "romaji": "Orojya"
   },
@@ -207417,6 +209457,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Orojya_Revizer",
+    "role": "chip",
     "jpName": "オロジャリヴァイザー",
     "romaji": "Oroja Rivaizā"
   },
@@ -207527,6 +209568,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phoenic (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "フェニック",
     "romaji": "Phoenekku"
   },
@@ -207656,6 +209698,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Saramanda (Takara Tomy)"
     ],
+    "role": "chip",
     "jpName": "サラマンダ",
     "romaji": "Saramanda"
   },
@@ -207736,6 +209779,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Saramanda_Ifraid",
+    "role": "chip",
     "jpName": "サラマンダイフレイド",
     "romaji": "Saramanda Ifureido"
   },
@@ -207799,6 +209843,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Wyvern (anime, English)"
     ],
+    "role": "chip",
     "jpName": "ワイヴァング",
     "romaji": "Waivuangu"
   },
@@ -207851,6 +209896,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shogun_Face_Bolt_-_Zirago",
+    "role": "chip",
     "jpName": "Girago"
   },
   {
@@ -207916,6 +209962,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gyro SG / Gyro Spin Gear"
     ],
+    "role": "gear",
     "jpName": "ジャイロスピンギア",
     "romaji": "Jairo supin gia"
   },
@@ -207940,7 +209987,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Left Rotation Spin Gear is a Beyblade spin gear from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Left_Rotation_Spin_Gear"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Left_Rotation_Spin_Gear",
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-metal-weight-version",
@@ -207975,7 +210023,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingScale": 6,
     "ratingsNormalised": {
       "stamina": 50
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-left-sg-normal-core",
@@ -208019,7 +210068,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg-double-bearing-version",
@@ -208066,6 +210116,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "role": "gear",
     "jpName": "NEOライトスピンギア (ダブルベアリングバージョン)",
     "romaji": "Neo Raito Supin Gia (Daburu Bearingu Bājon)"
   },
@@ -208091,7 +210142,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (Metal Weight Version) is a Beyblade spin gear from the Magnacore System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(Metal_Weight_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(Metal_Weight_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg-mg-core",
@@ -208130,7 +210182,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 50,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg-mw-core",
@@ -208168,7 +210221,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(MW_Core)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(MW_Core)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg-n-mg-core",
@@ -208187,7 +210241,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (N-MG Core) is a Beyblade spin gear from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(N-MG_Core)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(N-MG_Core)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--neo-right-sg-north-magnecore-version",
@@ -208225,7 +210280,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "blade-base--neo-right-sg-south-magnecore-dranzer-v-version",
@@ -208248,7 +210304,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right SG (South Magnecore (Dranzer V Version)) is a Beyblade blade base from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(South_Magnecore_(Dranzer_V_Version))"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(South_Magnecore_(Dranzer_V_Version))",
+    "role": "base"
   },
   {
     "id": "spin-gear--neo-right-spin-gear-south-magnecore-version",
@@ -208271,7 +210328,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Neo Right Spin Gear (South Magnecore Version) is a Beyblade spin gear from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_Spin_Gear_(South_Magnecore_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_Spin_Gear_(South_Magnecore_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-customize-gear-free-shaft-version",
@@ -208305,7 +210363,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 33,
       "stamina": 67
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-rotation-spin-gear",
@@ -208343,7 +210402,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 17,
       "stamina": 33
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-auto-change-version",
@@ -208366,7 +210426,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (Auto Change Version) is a Beyblade spin gear from the Spin Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Auto_Change_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Auto_Change_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-bearing-version",
@@ -208403,7 +210464,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Bearing_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Bearing_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-bearing-version-2",
@@ -208416,7 +210478,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Right SG (Bearing Version 2) is a Beyblade spin gear.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Bearing_Version_2)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Bearing_Version_2)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-free-shaft-version",
@@ -208440,7 +210503,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (Free Shaft Version) is a Beyblade spin gear from the Spin Gear System, weighing 7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Free_Shaft_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Free_Shaft_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-full-auto-clutch-version",
@@ -208464,7 +210528,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (Full Auto Clutch Version) is a Beyblade spin gear from the Spin Gear System, weighing 7 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Full_Auto_Clutch_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Full_Auto_Clutch_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-g-ball",
@@ -208483,7 +210548,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (G Ball) is a Beyblade spin gear.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(G_Ball)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(G_Ball)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-jumping-version",
@@ -208496,7 +210562,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Right SG (Jumping Version) is a Beyblade spin gear.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Jumping_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Jumping_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-mg-jumping-version",
@@ -208535,7 +210602,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 17,
       "stamina": 17
-    }
+    },
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-sg-triple-change-version",
@@ -208555,7 +210623,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Right SG (Triple Change Version) is a Beyblade spin gear from the Spin Gear System, weighing 5 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Triple_Change_Version)"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Triple_Change_Version)",
+    "role": "gear"
   },
   {
     "id": "spin-gear--right-spin-auto-change-version",
@@ -208592,7 +210661,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Spin_Auto_Change_Version"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_Spin_Auto_Change_Version",
+    "role": "gear"
   },
   {
     "id": "spin-track--230",
@@ -208738,7 +210808,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 33
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--85",
@@ -208952,6 +211023,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0
     },
+    "role": "track",
     "jpName": "85"
   },
   {
@@ -209192,6 +211264,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "track",
     "jpName": "90"
   },
   {
@@ -209284,7 +211357,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "A230"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--armor-defense-145",
@@ -209464,6 +211538,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "role": "track",
     "jpName": "アーマーディフェンス145",
     "romaji": "Āmā Difensu 145"
   },
@@ -209630,7 +211705,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--change-height-120",
@@ -209737,7 +211813,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "CH120"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--claw-145",
@@ -209847,7 +211924,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--defense-125",
@@ -210127,6 +212205,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "track",
     "jpName": "ディフェンス125"
   },
   {
@@ -210203,7 +212282,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Deflect_62",
     "aka": [
       "D62"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--down-force-105",
@@ -210323,6 +212403,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "DF105"
     ],
+    "role": "track",
     "jpName": "ダウンフォース105"
   },
   {
@@ -210626,7 +212707,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "DF145"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--elevator-230",
@@ -210768,6 +212850,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E230"
     ],
+    "role": "track",
     "jpName": "エレベーター230",
     "romaji": "Erebētā 230"
   },
@@ -211006,7 +213089,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--free-230",
@@ -211106,7 +213190,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": true,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--gravity-ball-145",
@@ -211313,7 +213398,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "GB145"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "dome-spin-track--gripper-58",
@@ -211372,7 +213458,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Gripper_58",
     "aka": [
       "G58"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--horn-145",
@@ -211475,7 +213562,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 50,
       "stamina": 17
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--left-wing-105",
@@ -211616,6 +213704,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "LW105"
     ],
+    "role": "track",
     "jpName": "レフトウイングイチマルゴ",
     "romaji": "Refuto Uingu Ichi Maru Go"
   },
@@ -211801,7 +213890,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Move_145",
     "aka": [
       "M145"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--rubber-145",
@@ -211925,7 +214015,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "R145"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--sd160",
@@ -211981,6 +214072,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_SD160",
+    "role": "track",
     "jpName": "SD160",
     "romaji": "SD160"
   },
@@ -212142,6 +214234,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "S130"
     ],
+    "role": "track",
     "romaji": "Shīrudo Ichi San Maru"
   },
   {
@@ -212228,7 +214321,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "SP230"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--stamina-ring-200",
@@ -212305,7 +214399,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": true,
       "mfbZeroG": true,
       "mfb4d": true
-    }
+    },
+    "role": "track"
   },
   {
     "id": "spin-track--switch-145",
@@ -212508,7 +214603,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
-    "partType": "High"
+    "partType": "High",
+    "role": "track"
   },
   {
     "id": "spin-track--switch-attack-165",
@@ -212624,7 +214720,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "SA165"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--triple-height-170",
@@ -212701,7 +214798,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "TH170"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--tr145",
@@ -212832,7 +214930,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "track"
   },
   {
     "id": "dome-spin-track--undercut-61",
@@ -212909,7 +215008,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Undercut_61",
     "aka": [
       "U61"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--upper-wing-145",
@@ -213044,7 +215144,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "UW145"
     ],
-    "partType": "High"
+    "partType": "High",
+    "role": "track"
   },
   {
     "id": "dome-spin-track--v-cut-61",
@@ -213103,7 +215204,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_V-Cut_61",
     "aka": [
       "V61"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spin-track--variable-145",
@@ -213195,6 +215297,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "V145"
     ],
+    "role": "track",
     "jpName": "バリアブル145",
     "romaji": "Bariaburu 145"
   },
@@ -213372,6 +215475,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "WD145"
     ],
+    "role": "track",
     "jpName": "ワイドディフェンス145"
   },
   {
@@ -213635,6 +215739,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "W105"
     ],
+    "role": "track",
     "jpName": "ウイングイチマルゴ",
     "romaji": "Uingu Ichi Maru Go"
   },
@@ -213790,6 +215895,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "W145"
     ],
+    "role": "track",
     "jpName": "ウイング145",
     "romaji": "Uingu Ichi Shi Go"
   },
@@ -213913,7 +216019,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     },
     "aka": [
       "WA130"
-    ]
+    ],
+    "role": "track"
   },
   {
     "id": "spirit-axle--spirit-axle",
@@ -213941,7 +216048,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Spirit Axle is a Beyblade spirit axle, weighing 1.7 g. Part of Beywheelz.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Axle"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spirit_Axle",
+    "role": "track"
   },
   {
     "id": "spirit-shield--aries",
@@ -214003,7 +216111,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 17,
       "power": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--bull",
@@ -214075,7 +216184,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 17,
       "power": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--cetus",
@@ -214145,7 +216255,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--destroyer",
@@ -214233,7 +216344,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 17,
       "power": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--drago",
@@ -214362,7 +216474,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 33,
       "power": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--fireblaze",
@@ -214450,7 +216563,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 33,
       "power": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--gil",
@@ -214520,7 +216634,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--herculeo",
@@ -214580,7 +216695,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 17,
       "power": 50
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--kerbecs",
@@ -214646,7 +216762,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--lacerta",
@@ -214708,7 +216825,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 33,
       "power": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--leone",
@@ -214784,7 +216902,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 33,
       "power": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--pegasus",
@@ -214899,7 +217018,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--serpent",
@@ -214959,7 +217079,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 33,
       "power": 33
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--striker",
@@ -215021,7 +217142,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "spirit-shield--zurafa",
@@ -215099,7 +217221,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "speed": 50,
       "power": 17
-    }
+    },
+    "role": "ring"
   },
   {
     "id": "storm-chip--achilles-a6",
@@ -215163,7 +217286,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--devolos-d6",
@@ -215271,7 +217395,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstGt": true,
       "burstLimited": true,
       "burstClassic": false
-    }
+    },
+    "role": "chip"
   },
   {
     "id": "storm-chip--doomscizor-d6",
@@ -215328,7 +217453,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--dragon-d6",
@@ -215392,7 +217518,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--dullahan-d6",
@@ -215469,7 +217596,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--evo-helios-h6",
@@ -215545,7 +217673,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--evo-hyperion-h6",
@@ -215604,7 +217733,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--evo-lucius-l6",
@@ -215663,7 +217793,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--fafnir-f6",
@@ -215742,7 +217873,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--helios-h6",
@@ -215821,7 +217953,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--hyperion-h6",
@@ -215907,7 +218040,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--lucius-l6",
@@ -215964,7 +218098,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--luinor-l6",
@@ -216041,7 +218176,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--roktavor-r6",
@@ -216107,7 +218243,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--satomb-s6",
@@ -216183,7 +218320,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--spryzen-s6",
@@ -216242,7 +218380,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Dual-Spin"
+    "spinDirection": "Dual-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--valtryek-v6",
@@ -216316,7 +218455,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "storm-chip--wyvron-w6",
@@ -216373,7 +218513,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--achilles-a8",
@@ -216454,7 +218595,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--bazilisk-b8",
@@ -216537,7 +218679,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--dragon-d8",
@@ -216615,7 +218758,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--evo-x-belfyre-b8",
@@ -216686,7 +218830,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--helios-h8",
@@ -216764,7 +218909,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--hyperion-h8",
@@ -216829,7 +218975,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--knight-k8",
@@ -216903,7 +219050,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--nyddhog-n8",
@@ -216979,7 +219127,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--pandemonium-p8",
@@ -217050,7 +219199,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--pandora-p8",
@@ -217183,7 +219333,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--poseidon-p8",
@@ -217259,7 +219410,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--spryzen-s8",
@@ -217328,7 +219480,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Left-Spin"
+    "spinDirection": "Left-Spin",
+    "role": "chip"
   },
   {
     "id": "strike-chip--xcalius-x8",
@@ -217420,7 +219573,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
-    "spinDirection": "Right-Spin"
+    "spinDirection": "Right-Spin",
+    "role": "chip"
   },
   {
     "id": "superking-chip--deathscyther",
@@ -217533,6 +219687,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Dt"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "デスサイザー",
     "romaji": "Desusaizā"
   },
@@ -217639,6 +219794,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Db"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "ディアボロス",
     "romaji": "Diaborosu"
   },
@@ -217763,6 +219919,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Dr"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ドラゴン",
     "romaji": "Doragon"
   },
@@ -217888,6 +220045,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Ff"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ファブニル",
     "romaji": "Fabuniru"
   },
@@ -218037,6 +220195,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Hl"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ヘリオス",
     "romaji": "Heriosu"
   },
@@ -218153,6 +220312,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Hl2"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ヘリオス",
     "romaji": "Heriosu"
   },
@@ -218354,6 +220514,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Hy"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ハイペリオン",
     "romaji": "Haiperion"
   },
@@ -218470,6 +220631,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Hy2"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ハイペリオン",
     "romaji": "Haiperion"
   },
@@ -218601,6 +220763,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Lúinor (Pro Series)"
     ],
     "spinDirection": "Left-Spin",
+    "role": "chip",
     "jpName": "ロンギヌス",
     "romaji": "Ronginusu"
   },
@@ -218766,6 +220929,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Lucius (Pro Series)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ルシファー",
     "romaji": "Rushifā"
   },
@@ -218863,6 +221027,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Lc2"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ルシファー",
     "romaji": "Rushifā"
   },
@@ -218991,6 +221156,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Rg"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ラグナルク",
     "romaji": "Ragunaruku"
   },
@@ -219106,6 +221272,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "St"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "サタン",
     "romaji": "Satan"
   },
@@ -219203,6 +221370,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Σ"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ソロモン",
     "romaji": "Soromon"
   },
@@ -219308,6 +221476,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Sp"
     ],
     "spinDirection": "Dual-Spin",
+    "role": "chip",
     "jpName": "スプリガン",
     "romaji": "Supurigan"
   },
@@ -219436,6 +221605,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Ur"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ウラヌス",
     "romaji": "Uranusu"
   },
@@ -219563,6 +221733,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Valtryek (Pro Series)"
     ],
     "spinDirection": "Right-Spin",
+    "role": "chip",
     "jpName": "ヴァルキリー",
     "romaji": "Varukirī"
   },
@@ -219587,7 +221758,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Defense Ring is a Beyblade attack ring from the Magnacore System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Defense_Ring"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Defense_Ring",
+    "role": "ring"
   },
   {
     "id": "support-parts--upper-attack-sp",
@@ -219607,7 +221779,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Upper Attack SP is a Beyblade support parts, weighing 4 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Upper_Attack_SP"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Upper_Attack_SP",
+    "role": "support"
   },
   {
     "id": "evolution-gear--s-gear",
@@ -219715,6 +221888,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "role": "gear",
     "jpName": "Sギア",
     "romaji": "Esu Gia"
   },
@@ -219786,6 +221960,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
+    "role": "gear",
     "jpName": "VSギア"
   },
   {
@@ -219902,6 +222077,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
+    "role": "gear",
     "jpName": "Vギア",
     "romaji": "Bui Gia"
   },
@@ -219988,6 +222164,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bahamdia (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "バハムディア",
     "romaji": "Bahamudeia"
   },
@@ -220075,6 +222252,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 13
     },
     "element": "Darkness",
+    "role": "wheel",
     "jpName": "バルロ",
     "romaji": "Baruro"
   },
@@ -220131,6 +222309,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Behemoth",
+    "role": "wheel",
     "jpName": "Begirados"
   },
   {
@@ -220188,6 +222367,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Whiger (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ホワイガー",
     "romaji": "Howaigā"
   },
@@ -220329,6 +222509,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "spinDirection": "Left-Spin",
+    "role": "wheel",
     "jpName": "ドラグーン",
     "romaji": "Doragūn"
   },
@@ -220392,6 +222573,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Wanrir"
     ],
     "spinDirection": "Right-Spin",
+    "role": "wheel",
     "jpName": "ヴァンリル",
     "romaji": "Vanriru"
   },
@@ -220458,7 +222640,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Gargoyle",
     "aka": [
       "Gargole"
-    ]
+    ],
+    "role": "wheel"
   },
   {
     "id": "warrior-wheel--garudas",
@@ -220514,6 +222697,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Garudas",
+    "role": "wheel",
     "jpName": "ガルダス",
     "romaji": "Garudasu"
   },
@@ -220584,6 +222768,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Genbull (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ゲンブル",
     "romaji": "Genburu"
   },
@@ -220694,6 +222879,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Goreim (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ゴレイム",
     "romaji": "Goreimu"
   },
@@ -220818,6 +223004,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gryph"
     ],
+    "role": "wheel",
     "jpName": "グリフ",
     "romaji": "Gurifu"
   },
@@ -221026,6 +223213,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ifraid (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "イフレイド",
     "romaji": "Ifureido"
   },
@@ -221110,7 +223298,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Kraken",
     "aka": [
       "Killerken (Takara Tomy)"
-    ]
+    ],
+    "role": "wheel"
   },
   {
     "id": "warrior-wheel--leviathan",
@@ -221212,7 +223401,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Leviathan"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Leviathan",
+    "role": "wheel"
   },
   {
     "id": "warrior-wheel--orochi",
@@ -221366,6 +223556,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Orojya (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ロジャ",
     "romaji": "Orojya"
   },
@@ -221466,6 +223657,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ペガシス",
     "romaji": "Pegashisu"
   },
@@ -221608,6 +223800,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phoenic (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "フェニック",
     "romaji": "Fenikku"
   },
@@ -221784,6 +223977,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Saramanda (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "サラマンダ",
     "romaji": "Saramanda"
   },
@@ -221867,6 +224061,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "Wyvern (anime, English)"
     ],
     "element": "Sky",
+    "role": "wheel",
     "jpName": "ワイヴァング",
     "romaji": "Waivuangu"
   },
@@ -221947,6 +224142,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Girago (Takara Tomy)"
     ],
+    "role": "wheel",
     "jpName": "ジラーゴ",
     "romaji": "Jiraago"
   },
@@ -222101,6 +224297,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW06",
+    "role": "weight",
     "jpName": "幻",
     "romaji": "Gen"
   },
@@ -222191,6 +224388,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "role": "weight",
     "jpName": "極",
     "romaji": "Goku"
   },
@@ -222320,6 +224518,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW09",
+    "role": "weight",
     "romaji": "Gō"
   },
   {
@@ -222475,6 +224674,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW02",
+    "role": "weight",
     "jpName": "滅",
     "romaji": "Metsu"
   },
@@ -222682,6 +224882,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW04",
+    "role": "weight",
     "jpName": "烈",
     "romaji": "Retsu"
   },
@@ -222883,6 +225084,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW01",
+    "role": "weight",
     "jpName": "閃",
     "romaji": "Sen"
   },
@@ -223030,6 +225232,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW-10",
+    "role": "weight",
     "jpName": "双",
     "romaji": "Sō"
   },
@@ -223236,6 +225439,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW03",
+    "role": "weight",
     "jpName": "天",
     "romaji": "Ten"
   },
@@ -223481,6 +225685,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "LW-05",
+    "role": "weight",
     "jpName": "斬",
     "romaji": "Zan"
   },
@@ -223521,7 +225726,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 17,
       "defense": 33,
       "stamina": 33
-    }
+    },
+    "role": "weight"
   },
   {
     "id": "attack-ring--circle-heavy",
@@ -223627,6 +225833,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "role": "ring",
     "jpName": "サークルヘビィ",
     "romaji": "Sākuru Hebyi"
   },
@@ -223658,7 +225865,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Chain_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Chain_Attacker",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-circle-attacker",
@@ -223671,7 +225879,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "CWD Circle Attacker is a Beyblade weight disk.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Circle_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Circle_Attacker",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-devil-saucer",
@@ -223696,7 +225905,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Devil_Saucer"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Devil_Saucer",
+    "role": "weight"
   },
   {
     "id": "weight-disk--cwd-free-crusher",
@@ -223709,7 +225919,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "CWD Free Crusher is a Beyblade weight disk.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Crusher"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Crusher",
+    "role": "weight"
   },
   {
     "id": "weight-disk--gyro-super",
@@ -223767,7 +225978,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bearing Gyros WD",
       "Gyro WD"
-    ]
+    ],
+    "role": "weight"
   },
   {
     "id": "weight-disk--magnetic-weight-disk",
@@ -223838,6 +226050,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Magne Weight Disk"
     ],
+    "role": "weight",
     "jpName": "マグネウエイトディスク",
     "romaji": "Magune Ueito Disuku"
   },
@@ -223883,7 +226096,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Revolver_Attack"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Revolver_Attack",
+    "role": "weight"
   },
   {
     "id": "weight-disk--revolver-attacker",
@@ -223923,7 +226137,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Revolver_Attacker"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Revolver_Attacker",
+    "role": "weight"
   },
   {
     "id": "weight-disk--spark-disk",
@@ -223977,6 +226192,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
+    "role": "weight",
     "jpName": "スパークディスク",
     "romaji": "Supāku Disuku"
   },
@@ -224060,6 +226276,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "role": "weight",
     "jpName": "ワイド",
     "romaji": "Waido"
   },
@@ -224092,7 +226309,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 33,
       "defense": 17,
       "stamina": 50
-    }
+    },
+    "role": "weight"
   },
   {
     "id": "weight-disk--wide-defense",
@@ -224106,7 +226324,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Wide Defense is a Beyblade weight disk, weighing 15 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Defense"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Defense",
+    "role": "weight"
   },
   {
     "id": "weight-disk--wide-survivor",
@@ -224120,7 +226339,8 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "fandom-infobox",
     "seoDescription": "Wide Survivor is a Beyblade weight disk, weighing 12 g.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Survivor"
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Survivor",
+    "role": "weight"
   },
   {
     "id": "wheel--aquario",
@@ -224226,6 +226446,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "アクアリオ",
     "romaji": "Akuario"
   },
@@ -224324,6 +226545,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "アリエス",
     "romaji": "Ariesu"
   },
@@ -224485,6 +226707,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ブル",
     "romaji": "Buru"
   },
@@ -224567,6 +226790,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "カプリコーネ",
     "romaji": "Kapurikōne"
   },
@@ -224649,6 +226873,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "エスコルピオ",
     "romaji": "Esukorupio"
   },
@@ -224731,6 +226956,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ジェミオス",
     "romaji": "Jemiosu"
   },
@@ -224839,6 +227065,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "エルドラゴ",
     "romaji": "Erudorago"
   },
@@ -224943,6 +227170,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "レオーネ",
     "romaji": "Reōne"
   },
@@ -225061,6 +227289,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfb4d": true
     },
     "spinDirection": "Right-Spin",
+    "role": "wheel",
     "jpName": "リブラ",
     "romaji": "Ribura"
   },
@@ -225322,6 +227551,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ペガシス",
     "romaji": "Pegashisu"
   },
@@ -225429,6 +227659,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "パイシーズ",
     "romaji": "Paishīzu"
   },
@@ -225543,6 +227774,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cancer (Development)"
     ],
+    "role": "wheel",
     "jpName": "ケツァルコアトル",
     "romaji": "Ketsarukoatoru"
   },
@@ -225646,6 +227878,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "サジタリオ",
     "romaji": "Sajitario"
   },
@@ -225767,6 +228000,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ビルゴ",
     "romaji": "Birugo"
   },
@@ -225870,6 +228104,7 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "role": "wheel",
     "jpName": "ウルフ",
     "romaji": "Urufu"
   }

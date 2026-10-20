@@ -475,6 +475,24 @@ export interface PartWboLegality {
   mfb4d?: boolean;
 }
 
+/**
+ * OUR role vocabulary — 10 values covering all 59 slots.
+ *
+ * Mirrors `PART_ROLE` in `scripts/lib/part-slot-vocab.mjs`, which is the
+ * source. A slot missing from that map yields no `role` rather than a guess.
+ */
+export type PartRole =
+  | "chip"
+  | "ring"
+  | "wheel"
+  | "weight"
+  | "base"
+  | "blade"
+  | "track"
+  | "tip"
+  | "gear"
+  | "support";
+
 export interface PartGlossaryDocument extends BaseDocument {
   /** `${slot}--${codeOrSlug}` — both halves, because a code is not unique. */
   id: string;
@@ -643,6 +661,69 @@ export interface PartGlossaryDocument extends BaseDocument {
   owner?: string;
   /** The episode this part appeared in. 22 rows. */
   appearAnime?: string;
+  /**
+   * OUR OWN classification — what the part DOES, across generations.
+   *
+   * 🛑 `slot` cannot carry this. It mirrors the source's `Classification=`
+   * spelling and it is half of every document id (`${slot}--${code}`), and
+   * those ids are LIVE URLS (`/parts/{classification}/{code}`). Renaming a
+   * slot re-keys 2,490 rows and breaks every inbound link — a slug is the one
+   * field that cannot be quietly corrected later. So this is additive.
+   *
+   * It collapses the source's line-specific names onto one role:
+   * `bu-blade` / `qs-blade` / `blade` are all `blade`; the six Burst chip
+   * variants are all `chip`. Derived in `scripts/lib/part-slot-vocab.mjs`,
+   * which covers all 59 slots with 10 roles.
+   */
+  role?: PartRole;
+  /**
+   * Both roles of a MERGED slot, because a merged slot is real: HMS fuses
+   * spin gear and blade base into a Running Core, 4D fuses track and tip.
+   *
+   * 🛑 Load-bearing for any stack validation. `role` files a merged part
+   * under its PRIMARY function, so a validator reading only that believes the
+   * other slot is still unfilled and offers a part that cannot physically go
+   * there.
+   */
+  fusedRoles?: PartRole[];
+  /**
+   * An owner-uploaded 3D model. Empty by default and deliberately so — the
+   * models are supplied by the owner, not ingested from anywhere.
+   *
+   * 🛑 NEVER served through `/api/media/[...slug]`. That route applies NO
+   * authentication, raw-pipes non-images with a 30-day immutable cache, and
+   * sits over a bucket whose storage rule is `allow read: if true` — so a GLB
+   * there is a public download. A mesh is the asset someone could build a
+   * competing game from, so it needs a signed, short-lived URL and an
+   * authenticated route of its own.
+   *
+   * 🛑 And a browser viewer cannot make a mesh unextractable — WebGL buffers
+   * can be dumped from any page that renders them. The honest mitigation is to
+   * publish a DECIMATED preview and keep the full-resolution mesh server-side;
+   * "protected" here means inconvenient, never impossible.
+   */
+  model3d?: {
+    url: string;
+    format: "glb";
+    sizeBytes: number;
+    /** A low-poly public preview, when the full mesh is held back. */
+    previewUrl?: string;
+    credit?: string;
+    creditUrl?: string;
+  };
+  /**
+   * An owner-uploaded sound, with its waveform for display.
+   *
+   * Renders through the existing `<MediaAudio>` primitive, so this needs no
+   * new UI primitive. `waveform` is a coarse amplitude array for drawing the
+   * trace without decoding the audio client-side.
+   */
+  sound?: {
+    url: string;
+    durationMs?: number;
+    waveform?: number[];
+    label?: string;
+  };
   /**
    * The Japanese name, the romanisation, and the kanji where the source gives
    * one.
