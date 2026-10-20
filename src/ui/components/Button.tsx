@@ -45,6 +45,17 @@ const UI_BUTTON = {
     ghost: "appkit-button--ghost",
     danger: "appkit-button--danger",
     warning: "appkit-button--warning",
+    /**
+     * A surface-coloured pill for use ON a dark or branded background.
+     *
+     * WHY: all six variants above are tuned for a light page surface and none
+     * is legible on a branded one, which is why call sites were overriding the
+     * variant with `!important` instead — `WhatsAppCommunitySection` carried
+     * four (`!bg-…whatsapp !text-white !border-0`) because a green button on a
+     * green card is invisible. Inverting the pairing (surface fill, themed ink)
+     * is legible on any backdrop and needs no overrides.
+     */
+    inverse: "appkit-button--inverse",
   },
   sizes: {
     sm: "appkit-button--sm",

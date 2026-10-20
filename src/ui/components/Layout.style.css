@@ -324,6 +324,12 @@
 .appkit-section--tone-page-header { background-image: var(--appkit-gradient-page-header); }
 .appkit-section--tone-hero        { background-image: var(--appkit-gradient-section-mesh); }
 .appkit-section--tone-accent-banner { background-image: var(--appkit-gradient-accent-banner); }
+/* The variant layer finally exposing --appkit-gradient-whatsapp-card, which
+   had existed in the token layer with that exact name and NO consumer. The
+   community card used `accent-banner` instead — the same primary→secondary
+   gradient as CTABannerSection two sections below it, which is a real part of
+   why the homepage read monotonous. */
+.appkit-section--tone-whatsapp    { background-image: var(--appkit-gradient-whatsapp-card); }
 
 /* Semantic — Ul/Ol marker presets */
 .appkit-list--marker-disc    { list-style: disc; padding-left: 1.25rem; }

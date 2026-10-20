@@ -1,14 +1,21 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { Div, Grid, Heading, Row, Section, Text } from "../../../ui";
+import { Div, Grid, Heading, Icon, Row, Section, Text } from "../../../ui";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Types -------------------------------------------------------------------
 
 export interface StatItem {
   key: string;
   value: string;
   label: string;
-  renderIcon?: (props: { className?: string }) => ReactNode;
+  /**
+   * 🛑 Replaces `renderIcon?: (props) => ReactNode`, which was unreachable — a
+   * function has no representation in the Firestore section config these stats
+   * come from, so the icon box below never rendered once. For a LIVE stat the
+   * renderer derives this from `metric` via STAT_PRESET_ICON, so a correct icon
+   * needs no extra config at all.
+   */
+  iconName?: IconKey;
 }
 
 export interface StatsCounterSectionProps {
@@ -48,9 +55,9 @@ function StatCard({
         !isLast ? "border-r border-[var(--appkit-color-border)]" : "",
       ].join(" ")}
     >
-      {stat.renderIcon && (
+      {stat.iconName && (
         <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-[var(--appkit-color-primary-100)] dark:border-[var(--appkit-color-primary-900)]/30" align="center" justify="center" rounded="2xl">
-          {stat.renderIcon({ className: "w-7 h-7" })}
+          <Icon name={stat.iconName} size="xl" tone="primary" />
         </Row>
       )}
 

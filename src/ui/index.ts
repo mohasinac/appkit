@@ -306,7 +306,7 @@ export type { BreadcrumbProps, BreadcrumbItem } from "./components/Breadcrumb";
 export { Breadcrumb } from "./components/Breadcrumb";
 /* D3 — the collection mosaic, for a hero with no cover photo of its own. */
 export { ImageMosaic, MOSAIC_MIN } from "./components/ImageMosaic";
-export type { ImageMosaicProps } from "./components/ImageMosaic";
+export type { ImageMosaicProps, ImageMosaicSize } from "./components/ImageMosaic";
 /* D3 — two real branches, side by side with real photos and real counts. */
 export { SplitTile } from "./components/SplitTile";
 export type { SplitTileProps, SplitTilePane } from "./components/SplitTile";
@@ -355,6 +355,12 @@ export type {
   PerViewConfig,
 } from "./components/HorizontalScroller";
 export { HorizontalScroller } from "./components/HorizontalScroller";
+
+/* The ONE carousel position/navigation control — replaces the hero's bespoke
+   pill dots, the rail arrows that vanished below 640px, and the testimonial
+   rail's complete absence of an indicator. */
+export { CarouselNav, CAROUSEL_RAIL_MAX } from "./components/CarouselNav";
+export type { CarouselNavProps, CarouselNavTone } from "./components/CarouselNav";
 
 
 // Tab strip with ResizeObserver-driven overflow scroll

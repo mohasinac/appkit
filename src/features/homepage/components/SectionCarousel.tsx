@@ -260,11 +260,20 @@ const headingGradient: "none" | "brand" =
             keyExtractor={keyExtractor}
             rows={rows}
             minItemWidth={minItemWidth}
-            showArrows
-            // Double-row grids (e.g. the homepage Auctions section's
-            // rows:2 config) get the full-height sliver arrows — much
-            // easier to hit than a small circle when the track is tall.
-            arrowStyle={rows > 1 ? "full-height" : "circle"}
+            /*
+             * One in-flow control instead of two absolute arrows.
+             *
+             * The arrows were `display:none` below 640px, so on a phone every
+             * rail on the homepage had no affordance at all — only a hidden
+             * scrollbar and the hope that a visitor would try swiping. They
+             * also cost the rail 2 × 44px of wrapper gutter at EVERY width to
+             * reserve space for themselves. `showNav` carries arrows AND a
+             * position indicator in flow, so the control exists on a phone and
+             * the gutter goes back to the cards.
+             */
+            showArrows={false}
+            showNav
+            navAriaLabel={title}
             snapToItems
             showScrollbar={false}
             pauseOnHover

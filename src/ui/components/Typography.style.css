@@ -165,6 +165,25 @@
   color: var(--appkit-color-text-on-primary, #ffffff);
 }
 
+/* Secondary text on a surface that stays dark/branded in EVERY theme.
+ *
+ * WHY: eight live sites hand-rolled a second tier on a branded surface and
+ * none of them worked the same way. Three in WhatsAppCommunitySection were
+ * `className="/80"` / `"/90"` / `"/75"` — codemod residue from a sweep that
+ * stripped `text-white` off `text-white/80` and left the modifier. Tailwind
+ * cannot generate a class named `/80`, so all three were silent no-ops and
+ * the intended hierarchy rendered flat. Five more in HeroCarousel used raw
+ * `opacity-70`/`-80`/`-90`, which fades the whole element, not just its ink.
+ *
+ * Reads --appkit-color-text-on-primary rather than literal white, so a theme
+ * whose on-primary ink is not #fff still gets a correct second tier. Three
+ * different alphas for one idea is the drift that produced this; there is one
+ * tier here on purpose.
+ */
+.appkit-color--inverse-muted {
+  color: color-mix(in srgb, var(--appkit-color-text-on-primary, #ffffff) 78%, transparent);
+}
+
 .dark .appkit-color--primary {
   color: var(--appkit-color-text);
 }

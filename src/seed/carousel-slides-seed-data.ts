@@ -35,7 +35,6 @@
  */
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
-import { seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
@@ -46,6 +45,45 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 // page below the fold.
 const SLIDE_SETTINGS = { autoplayDelayMs: 6000, height: "medium" as const };
 
+/**
+ * 🛑 Real imagery, from `mediaAssets` rows that already exist.
+ *
+ * Every background and card on this carousel used to be `seedPhoto(...)`, which
+ * since 2026-10-09 returns one of SIX flat solid-colour SVG tiles from
+ * `public/images/seed-tiles/` — so the homepage hero was five grey rectangles,
+ * and the width/height arguments passed beside them were accepted and ignored.
+ * Meanwhile 559 wiki-sourced `mediaAssets` rows were sitting in Storage wired
+ * to leaf categories and to nothing on the homepage.
+ *
+ * These are `/media/<shortId>` paths, which resolve through
+ * `mediaAssets/{slug}` → `storagePath` and stream from OUR bucket behind a
+ * 30-day immutable cache — one invocation per image per edge per month.
+ *
+ * 🛑 Never `seedExtMedia()` and never a third-party host here: persisting a
+ * remote URL through `/api/media/ext` adds an upstream fetch plus a sharp
+ * watermark pass to EVERY render, which is Root Cause #104 — ~900K proxy
+ * responses and 52.52 GB of origin transfer against a 10 GB allowance, and a
+ * suspended project.
+ *
+ * 🛑 These are publisher product shots on white, not action photography. They
+ * are a floor, not a ceiling — see the shot list in the plan for what should
+ * eventually replace them. Each one still carries a `dimOverlay` because the
+ * overlay copy is fixed-inverse ink and needs a guaranteed-dark backdrop
+ * (Root Cause #67).
+ */
+const MEDIA = {
+  franchise: "/media/franchise-beyblade-image",
+  genOriginal: "/media/category-beyblade-original-image",
+  genMetal: "/media/category-beyblade-metal-image",
+  genBurst: "/media/category-beyblade-burst-image",
+  genX: "/media/category-beyblade-x-image",
+  dranzer: "/media/category-dranzer-f-image",
+  dragoon: "/media/category-dragoon-f-image",
+  aeroPegasus: "/media/category-aeropegasus-3-70a-image",
+  spryzen: "/media/category-spryzen-requiem-s3-image",
+  lDrago: "/media/category-l-drago-destructor-f-s-image",
+} as const;
+
 const _rawSlides: Partial<CarouselSlideDocument>[] = [
   {
     id: "slide-hero-homepage",
@@ -54,7 +92,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedPhoto("carousel-hero-homepage-20260101", 1600, 700),
+      url: MEDIA.franchise,
       dimOverlay: { enabled: true, opacity: 0.55 },
     },
     // The ONE cards slide — and therefore the one slide with no `overlay`.
@@ -65,7 +103,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-shop-now",
         zone: 1,
         mobileZone: 2,
-        background: { type: "image", url: seedPhoto("carousel-card-shop-now", 600, 600), dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.dranzer, dimOverlay: { enabled: true, opacity: 0.45 } },
         content: {
           eyebrow: "Buy now",
           title: "Ready to ship",
@@ -78,7 +116,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-bid",
         zone: 2,
         mobileZone: 2,
-        background: { type: "image", url: seedPhoto("carousel-card-bid", 600, 600), dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.lDrago, dimOverlay: { enabled: true, opacity: 0.45 } },
         content: {
           eyebrow: "Bid",
           title: "Live auctions",
@@ -91,7 +129,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-reserve",
         zone: 3,
         mobileZone: 2,
-        background: { type: "image", url: seedPhoto("carousel-card-reserve", 600, 600), dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.aeroPegasus, dimOverlay: { enabled: true, opacity: 0.45 } },
         content: {
           eyebrow: "Reserve",
           title: "Pre-orders",
@@ -118,7 +156,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       // (rejects non-image content-type with 400). MediaVideo watermarks
       // video client-side instead, so the raw external URL is correct here.
       url: "/demo-media/sample-video.mp4",
-      thumbnail: seedPhoto("carousel-auctions-live-20260101", 1600, 700),
+      thumbnail: MEDIA.genMetal,
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     overlay: {
@@ -147,7 +185,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedPhoto("carousel-complete-collection-20260101", 1600, 700),
+      url: MEDIA.genBurst,
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     overlay: {
@@ -176,7 +214,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedPhoto("carousel-preorders-open-20260101", 1600, 700),
+      url: MEDIA.genX,
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     overlay: {
@@ -243,7 +281,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: seedPhoto("carousel-authenticated-originals-20260101", 1600, 700),
+      url: MEDIA.genOriginal,
       dimOverlay: { enabled: true, opacity: 0.55 },
     },
     overlay: {
@@ -311,7 +349,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: false,
     background: {
       type: "image",
-      url: seedPhoto("carousel-tournament-promo-20260101", 1600, 700),
+      url: MEDIA.spryzen,
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     overlay: {

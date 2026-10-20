@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Row, Scrim, Section, Span, Text } from "../../../ui";
+import { Div, Heading, Icon, Row, Scrim, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SECTION_TITLE, SECTION_COPY } from "../constants/section-copy";
@@ -26,6 +26,8 @@ const HEIGHT_PADDING_Y = {
 
 export interface CTABannerSectionProps {
   title?: string;
+  /** Small uppercase label above the headline. Defaults to a generic one. */
+  eyebrow?: string;
   subtitle?: string;
   /** Longer supporting paragraph below the subtitle. */
   description?: string;
@@ -52,12 +54,15 @@ export interface CTABannerSectionProps {
 
 export function CTABannerSection({
   title = SECTION_TITLE.banner,
+  eyebrow = SECTION_COPY.bannerEyebrow,
   subtitle,
   description,
   primaryLabel = SECTION_COPY.bannerPrimaryCta,
   primaryHref = String(ROUTES.PUBLIC.PRODUCTS),
   secondaryLabel = SECTION_COPY.bannerSecondaryCta,
-  secondaryHref = String(ROUTES.PUBLIC.AUCTIONS),
+  // Pairs with SECTION_COPY.bannerSecondaryCta — see the note there for why
+  // this banner must not default to /auctions.
+  secondaryHref = String(ROUTES.PUBLIC.CATEGORIES),
   height = "md",
   backgroundImage,
   className = "",
@@ -79,17 +84,42 @@ export function CTABannerSection({
         </>
       )}
       <Div className="relative mx-auto max-w-3xl text-left">
-        <Span className="mb-4 inline-block" size="2xl" aria-hidden="true">
-          ✨
-        </Span>
+        {/* A labelled eyebrow instead of a bare ✨.
+            An emoji cannot be sized and renders differently per platform; worse,
+            it said nothing — a sparkle is decoration where one word of context
+            is free. `surface="frost"` is the translucent-white-on-dark token
+            that exists precisely for a chip on a surface that stays dark in
+            every theme. */}
+        {/* `Div layout="inline-flex"`, not `Row`: this sits in a block
+            container, and `Row` is `display:flex`, so the pill would stretch
+            the full 3xl column width instead of hugging its label. */}
+        <Div
+          layout="inline-flex"
+          align="center"
+          gap="2"
+          surface="frost"
+          rounded="full"
+          padding="x-sm"
+          className="mb-4 py-[var(--appkit-space-1-5)] backdrop-blur-sm"
+        >
+          <Icon name="deals" size="sm" tone="on-solid" />
+          <Span color="inverse" size="xs" weight="semibold" transform="uppercase" className="tracking-[0.18em]">
+            {eyebrow}
+          </Span>
+        </Div>
         <Heading color="inverse" level={2} mdSize="3xl" lgSize="4xl" size="2xl" weight="bold">
           {title}
         </Heading>
+        {/* `color="inverse-muted"` replaces `className="/80"` and `"/70"` —
+            codemod residue from a sweep that stripped `text-white` off
+            `text-white/80` and left the modifier. Tailwind cannot generate a
+            class named `/80`, so both were silent no-ops and these two lines
+            rendered at the same full-strength white as the heading. */}
         {subtitle && (
-          <Text color="inverse" className="mt-3 /80" size="base">{subtitle}</Text>
+          <Text color="inverse-muted" className="mt-3" size="base">{subtitle}</Text>
         )}
         {description && (
-          <Text color="inverse" className="mt-2 /70 max-w-2xl" size="sm">{description}</Text>
+          <Text color="inverse-muted" className="mt-2 max-w-2xl" size="sm">{description}</Text>
         )}
         <Row className="mt-8" align="center" justify="start" gap="md" wrap>
           <Link

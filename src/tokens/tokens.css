@@ -217,6 +217,10 @@
   --appkit-color-whatsapp:       #25D366;
   --appkit-color-whatsapp-light: #1ebe5d;
   --appkit-color-whatsapp-bg:    #ECE5DD;
+  /* WhatsApp's own deep teal. Needed as a third gradient stop: a green
+     darkened with color-mix() reads olive, not teal, so the brand's dark end
+     cannot be derived from --appkit-color-whatsapp. */
+  --appkit-color-whatsapp-dark:  #075E54;
   --appkit-color-youtube:        #FF0000;
   --appkit-gradient-instagram: linear-gradient(to bottom right, #a855f7, #ec4899, #fb923c);
 }
@@ -346,7 +350,7 @@
   --appkit-gradient-accent-banner:    linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-promotion:        linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
   --appkit-gradient-spotlight:        linear-gradient(to bottom right, var(--appkit-color-info-surface), var(--appkit-color-bg), var(--appkit-color-info-surface));
-  --appkit-gradient-whatsapp-card:    linear-gradient(to bottom right, var(--appkit-color-success), var(--appkit-color-success));
+  --appkit-gradient-whatsapp-card:    linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%);
   --appkit-gradient-glass:            linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
   --appkit-gradient-card-indigo:      linear-gradient(to bottom right, var(--appkit-color-primary-50), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-teal:        linear-gradient(to bottom right, var(--appkit-color-secondary-50), var(--appkit-color-surface), var(--appkit-color-surface));
@@ -459,7 +463,7 @@
   --appkit-gradient-accent-banner:   linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-promotion:       linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
   --appkit-gradient-spotlight:       linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-bg), rgba(6,182,212,0.10));
-  --appkit-gradient-whatsapp-card:   linear-gradient(to bottom right, var(--appkit-color-success), var(--appkit-color-success));
+  --appkit-gradient-whatsapp-card:   linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%);
   --appkit-gradient-glass:           linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
   --appkit-gradient-card-indigo:     linear-gradient(to bottom right, rgba(239,68,68,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-surface), var(--appkit-color-surface));

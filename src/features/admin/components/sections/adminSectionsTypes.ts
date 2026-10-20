@@ -606,10 +606,19 @@ export const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
 export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
   title: "Why LetItRip?",
   indicators: [
-    { id: "ti-1", icon: "🚚", title: "Free Shipping", description: "On orders above ₹999" },
-    { id: "ti-2", icon: "🔒", title: "Secure Payment", description: "Razorpay protected checkout" },
-    { id: "ti-3", icon: "✅", title: LABEL_VERIFIED_SELLERS, description: "Every store is manually verified" },
-    { id: "ti-4", icon: "↩️", title: "Easy Returns", description: "7-day hassle-free returns" },
+    /*
+     * 🛑 `icon` holds an IconKey, not an emoji.
+     *
+     * These shipped "🚚" / "🔒" / "✅" / "↩️", which the component used only as
+     * a React key — every tile rendered the same hardcoded ✓ regardless. Now
+     * that `resolveTrustIcon` reads the field, an emoji resolves to nothing and
+     * the tile would render text-only, so a default that creates a correct
+     * section has to carry real keys. See trust-icon-aliases.ts.
+     */
+    { id: "ti-1", icon: "ship", title: "Free Shipping", description: "On orders above ₹999" },
+    { id: "ti-2", icon: "lock", title: "Secure Payment", description: "Protected checkout" },
+    { id: "ti-3", icon: "verify", title: LABEL_VERIFIED_SELLERS, description: "Every store is manually verified" },
+    { id: "ti-4", icon: "restore", title: "Easy Returns", description: "7-day hassle-free returns" },
   ],
 };
 

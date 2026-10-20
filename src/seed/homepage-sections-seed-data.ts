@@ -1,14 +1,22 @@
 /*
  * WHY: Seeds the homepage layout — which sections render, in what order, with what copy.
- * WHAT: 24 sections (23 enabled + 1 deliberately disabled), ordered 1..24 contiguously.
+ * WHAT: 26 sections (21 enabled + 5 deliberately disabled), ordered 1..26 contiguously.
+ *
+ * 🛑 Four of those five were disabled on 2026-10-20 — auctions (3),
+ * featured-bundles (9), event-raffles (13) and prize-draws (14) — each with its
+ * own note on the switch that did it. A disabled row KEEPS its order slot, so
+ * the range stays contiguous and re-enabling one puts it back where it was
+ * rather than at the end.
  * `google-reviews` is a REGISTERED type with no document — see the note
- * beside the deliberate budget-tile omission below for why. Three more joined
- * it 2026-10-19 (`how-it-works`/`testimonials`/`promo-grid`, promoted out of
- * the orphan-component set into real `SectionType`s + `SECTION_REGISTRY`
- * entries) — deliberately left unseeded too: each is now available in the
- * admin section builder's create picker, so an admin can add one when there is
- * real copy to put in it, rather than this file inventing placeholder "How It
- * Works" steps or testimonials nobody actually said.
+ * beside the deliberate budget-tile omission below for why.
+ *
+ * `how-it-works` (25) and `promo-grid` (26) were in that same unseeded set and
+ * were SEEDED 2026-10-20, on the terms the rule always allowed: there is now
+ * real copy for them. How-it-works quotes the three-tier authenticity policy
+ * the carousel already leads with; promo-grid routes to the four generation
+ * categories using the same `/media/` covers those categories use. Neither
+ * invents a claim. `testimonials` stays unseeded — the site has never had a
+ * customer, so every quote would be fabricated.
  *
  * 🛑 That count and range are ASSERTED, not described — `order` must stay unique
  * and contiguous. Until 2026-10-19 this header read "22 sections … 1..21" while
@@ -73,7 +81,6 @@
  */
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
-import { seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
@@ -89,16 +96,33 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 1,
     enabled: true,
     config: {
-      h1: "Buy, Sell & Auction Collectibles",
+      /*
+       * 🛑 NO AUCTIONS IN THE HERO, and nothing else that the site does not
+       * currently do.
+       *
+       * The h1 read "Buy, Sell & Auction Collectibles" and the second CTA sent
+       * visitors to /auctions — which `listings.listingTypes.auction: false`
+       * now switches off (2026-10-20). The first screen of the site is the
+       * worst place to advertise a type whose browse page returns nothing.
+       *
+       * The description lost "bid in live auctions" for the same reason, and
+       * "escrow-backed payments" because that claim was withdrawn from the
+       * seller guide and the Become-a-Seller copy on the same day.
+       *
+       * ⚠️ This is SEED data. The live hero is a `homepageSections` document and
+       * is NOT rewritten by editing this file — change it in the admin
+       * homepage-sections editor, or re-seed.
+       */
+      h1: "Buy & Sell Collectibles",
       subtitle: "Verified sellers, secure payments, and authenticity checks on every listing.",
       description:
-        "A marketplace built for collectors — browse thousands of listings, bid in live auctions, reserve upcoming releases, and buy with escrow-backed payments.",
+        "A marketplace built for collectors — browse thousands of listings, reserve upcoming releases, and buy with secure, verified payments.",
       showCTA: true,
       pillLabel: "Buy, sell & collect",
       ctaText: "Start Shopping",
       ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
-      secondaryCtaText: "Browse Auctions",
-      secondaryCtaLink: String(ROUTES.PUBLIC.AUCTIONS),
+      secondaryCtaText: "Explore Categories",
+      secondaryCtaLink: String(ROUTES.PUBLIC.CATEGORIES),
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(2),
@@ -142,10 +166,16 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
           description: "Every seller is verified before their first listing goes live.",
         },
         {
+          // Was "Escrow-backed payments". The escrow claim was withdrawn from
+          // the seller guide, the Become-a-Seller copy and the hero description
+          // on 2026-10-20; a trust badge is the last place it should have
+          // survived, because it is the claim a buyer is most likely to rely
+          // on. The `id` is deliberately unchanged — it is this seed document's
+          // identity, not its copy.
           id: "trust-escrow",
           icon: "lock",
-          title: "Escrow-backed payments",
-          description: "Your money is held until the item is delivered and accepted.",
+          title: "Secure payments",
+          description: "Your money reaches the seller after the item is delivered and accepted.",
         },
         {
           id: "trust-returns",
@@ -230,11 +260,24 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
+  /*
+   * 🛑 DISABLED, NOT DELETED — and the `order: 3` slot is held.
+   *
+   * `listings.listingTypes.auction: false` already stops this rail rendering
+   * (HOMEPAGE_SECTION_LISTING_TYPE in MarketplaceHomepageView), so `enabled:
+   * false` is the second of two locks, not the only one. It is worth having
+   * because it is the one an ADMIN sees: a section listed as enabled in the
+   * homepage builder, silently filtered out at render, reads as a bug in the
+   * builder. Both switches say the same thing now.
+   *
+   * The copy and the "⚡ LIVE AUCTIONS" pill stay exactly as they were, so
+   * re-enabling the type and this flag restores the rail intact.
+   */
   {
     id: "section-live-auctions",
     type: "auctions",
     order: 3,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Live Auctions",
       subtitle: "Bidding open now — place yours before the timer runs out.",
@@ -268,11 +311,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
+  // Disabled 2026-10-20 with `listings.categoryTypes.bundle: false`. Same
+  // two-lock arrangement as the auctions rail above — see that note.
   {
     id: "section-featured-bundles",
     type: "featured-bundles",
     order: 9,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Curated Bundles",
       subtitle: "Multiple items, one discounted price.",
@@ -345,8 +390,18 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-event-raffles",
     type: "event-raffles",
+    /*
+     * 🛑 DISABLED, and here `enabled: false` is the ONLY lock there is.
+     *
+     * Raffles and spin wheels are EVENT types, not listing types and not
+     * category types, so no Site Settings toggle reaches them and
+     * `HOMEPAGE_SECTION_LISTING_TYPE` has nothing to map them to. The same gap
+     * put Lotteries, Bundles and Promotions in the footer's hand-written hidden
+     * block (src/constants/navigation.tsx) — a per-document flag is the whole
+     * mechanism for this one, which is exactly why it is spelled out.
+     */
     order: 13,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Raffles & Spin Wheels",
       subtitle: "Enter for free and see if the odds are with you.",
@@ -362,8 +417,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-prize-draws",
     type: "prize-draws",
+    // Disabled 2026-10-20 with `listings.listingTypes.prize-draw: false` — the
+    // same two-lock arrangement as the auctions rail.
     order: 14,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Prize Draws",
       subtitle: "Buy an entry for a shot at something rare.",
@@ -410,7 +467,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       height: "md",
-      backgroundImage: seedPhoto("marketplace-seller-banner", 1600, 500),
+      /* Real imagery instead of a `seedPhoto()` grey tile — see the MEDIA block
+         in carousel-slides-seed-data.ts for why that helper produces one of six
+         flat SVG rectangles and why a third-party host is not the alternative.
+         🛑 A seller pitch wants a HUMAN packing an order, which the wiki corpus
+         does not contain; this generation cover is a stand-in until a real photo
+         exists for the slot. */
+      backgroundImage: "/media/category-beyblade-x-image",
       content: {
         title: "Have collectibles to sell?",
         subtitle: "Open a store in minutes.",
@@ -455,12 +518,40 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 18,
     enabled: true,
     config: {
+      /*
+       * 🛑 VERIFIABLE FACTS, not volume claims.
+       *
+       * This read "200+ Listings · 8+ Verified Sellers · 35+ Buyer Reviews ·
+       * 50+ Orders Completed". Those were `source: "live"` FALLBACKS, shown
+       * whenever the metric fetch fails — and all four were falsifiable in the
+       * same breath as the page that showed them: `realListingsOnly()` in
+       * seed-cli.mjs loads on the order of a dozen products, and the site has
+       * never taken a real order, so "50+ Orders Completed" was a number about
+       * nothing. A visitor who reads it and then browses the catalogue
+       * concludes the whole page is decoration.
+       *
+       * The replacements are things a visitor can CHECK by clicking through,
+       * and each was counted from source in the change that wrote it:
+       *   - parts       `PART_LEAF_COUNT` (_helpers/category-parts.ts:17528) = 2490.
+       *                 🛑 CLAUDE.md says 752; that is stale, the corpus grew.
+       *   - generations 4 tier-1 rows under `category-spinning-tops`.
+       *   - brands      28 `BRAND_SEED_INPUTS` entries (`BRAND_ROW_COUNT`).
+       * Re-count before editing any of them rather than trusting this comment.
+       *
+       * `total_listings` stays LIVE and keeps a `"0"` fallback: a live number is
+       * verifiable by definition, and a zero fallback can only ever understate.
+       * `total_orders` and `total_reviews` are dropped rather than zeroed — a
+       * giant "0" in 48pt type is worse than not raising the subject.
+       *
+       * `iconName` is required on a static stat; a live one derives its glyph
+       * from `metric` via STAT_PRESET_ICON.
+       */
       title: "By the numbers",
       stats: [
-        { key: "products", label: "Listings", value: "200", source: "live", metric: "total_listings", suffix: "+" },
-        { key: "sellers", label: "Verified Sellers", value: "8", source: "live", metric: "verified_sellers", suffix: "+" },
-        { key: "reviews", label: "Buyer Reviews", value: "35", source: "live", metric: "total_reviews", suffix: "+" },
-        { key: "orders", label: "Orders Completed", value: "50", source: "live", metric: "total_orders", suffix: "+" },
+        { key: "products", label: "Listings", value: "0", source: "live", metric: "total_listings", suffix: "+" },
+        { key: "parts", label: "Parts catalogued", value: "2,490", source: "static", iconName: "spares" },
+        { key: "generations", label: "Generations covered", value: "4", source: "static", iconName: "archive" },
+        { key: "brands", label: "Brands", value: "28", source: "static", iconName: "deals" },
       ],
     },
     createdAt: daysAgo(90),
@@ -512,7 +603,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     config: {
       title: "Join the community",
       description: "Deal alerts, auction reminders, and early access to drops.",
-      // Keep this link verbatim — a tester-checklist case asserts it.
+      /* 🛑 The line that used to sit here — "Keep this link verbatim — a
+         tester-checklist case asserts it" — was FALSE and is deleted. Verified:
+         zero hits for `chat.whatsapp.com` anywhere under
+         `appkit/src/features/tester/seed-data/`. It had also outlived its
+         subject: the value it was protecting (a bare `https://chat.whatsapp.com/`
+         with no invite code) is gone, so the comment defended a string that no
+         longer existed while discouraging anyone from touching the field. */
       // Left unset: a bare chat.whatsapp.com URL is not a valid invite code and
       // opens a page that resolves to no group. The real link is env-owned
       // (WHATSAPP_GROUP_INVITE) and reaches the card through appkit.config.
@@ -788,6 +885,127 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         { type: "stores", label: "Verified Sellers", limit: 5 },
       ],
       cta: { label: "View all categories →", href: String(ROUTES.PUBLIC.CATEGORIES), variant: "text" },
+    },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+
+  /*
+   * ---- 25. How it works ----------------------------------------------------
+   *
+   * `how-it-works` and `promo-grid` (26) were registered types with renderers,
+   * admin create-picker entries and ZERO seeded rows — so both returned `null`
+   * and the page was missing the two blocks a 2026 marketplace homepage most
+   * obviously has. They were left unseeded on the principle that this file must
+   * not invent placeholder content, which was the right call: the reason they
+   * can be seeded NOW is that there is real, checkable copy to put in them.
+   *
+   * 🛑 Every step below is a claim the site actually honours. No "ships in 24
+   * hours", no "100% buyer protection" — the authenticity labelling in step 2
+   * is the one genuine differentiator the carousel already leads with, quoted
+   * from the same policy.
+   *
+   * 🛑 NO BIDDING STEP. `listings.listingTypes.auction` is false, so a step
+   * telling visitors to place a bid would route them to a browse page with
+   * nothing in it.
+   *
+   * 🛑 PLACEMENT IS PROVISIONAL. Appended at 25/26 rather than inserted mid-page
+   * (how-it-works belongs nearer the top, after the trust bar) because the
+   * section order is being tuned with the owner in a parallel change and
+   * renumbering 24 rows underneath that would collide. Reposition from
+   * /admin/sections, which is cheaper than a reseed.
+   */
+  {
+    id: "section-how-it-works",
+    type: "how-it-works",
+    order: 25,
+    enabled: true,
+    config: {
+      title: "How buying here works",
+      subtitle: "Three steps, and the second one is the part other marketplaces skip.",
+      pillLabel: "New here?",
+      ctaLabel: "Browse the catalogue →",
+      ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
+      steps: [
+        {
+          number: 1,
+          iconKey: "search",
+          title: "Find the piece",
+          desc: "Filter by generation, part family, condition and price across every seller on the marketplace.",
+        },
+        {
+          number: 2,
+          iconKey: "verify",
+          title: "Read the authenticity label",
+          desc: "Every listing carries one of three labels — original, reproduction or unverified. If a seller does not say which, it reads “unverified”; we will not claim “original” on their behalf.",
+        },
+        {
+          number: 3,
+          iconKey: "lock",
+          title: "Buy with the seller verified",
+          desc: "Identity and payout details are checked before a store can publish, and your address and phone number are encrypted at rest.",
+        },
+      ],
+    },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+  },
+
+  /*
+   * ---- 26. Promo grid ------------------------------------------------------
+   *
+   * The always-dark 4-tile editorial mosaic: one large slot plus three, each a
+   * full-bleed image under a bottom-up scrim. Routes to the four generations,
+   * which is the one set of destinations guaranteed to be populated however the
+   * product catalogue changes — a promo tile pointing at an empty page is worse
+   * than no tile.
+   *
+   * 🛑 `image` is a `/media/<shortId>` slug backed by a real `mediaAssets` row,
+   * never `seedPhoto()` (six flat grey tiles) and never a third-party host
+   * (Root Cause #104). These four covers are the same ones the generation
+   * categories use, so they are known-present.
+   *
+   * 🛑 The component caps at `PROMO_GRID_MAX_BANNERS` (4) and silently drops a
+   * fifth — the layout has exactly one hero slot and three regular ones.
+   */
+  {
+    id: "section-generation-promos",
+    type: "promo-grid",
+    order: 26,
+    enabled: true,
+    config: {
+      eyebrow: "FOUR GENERATIONS",
+      heading: "Pick your era",
+      banners: [
+        {
+          id: "promo-beyblade-x",
+          title: "Beyblade X",
+          ctaLabel: "Shop Beyblade X",
+          ctaUrl: "/categories/category-beyblade-x",
+          image: "/media/category-beyblade-x-image",
+        },
+        {
+          id: "promo-beyblade-burst",
+          title: "Burst",
+          ctaLabel: "Shop Burst",
+          ctaUrl: "/categories/category-beyblade-burst",
+          image: "/media/category-beyblade-burst-image",
+        },
+        {
+          id: "promo-beyblade-metal",
+          title: "Metal Fight",
+          ctaLabel: "Shop Metal Fight",
+          ctaUrl: "/categories/category-beyblade-metal",
+          image: "/media/category-beyblade-metal-image",
+        },
+        {
+          id: "promo-beyblade-original",
+          title: "The Originals",
+          ctaLabel: "Shop the originals",
+          ctaUrl: "/categories/category-beyblade-original",
+          image: "/media/category-beyblade-original-image",
+        },
+      ],
     },
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),

@@ -75,9 +75,23 @@ export function TestimonialsCarousel({
           </Heading>
         </Div>
 
-        {/* 2-row masonry grid — wraps into 2 rows, scrolls horizontally on overflow */}
+        {/*
+          2-row masonry grid — wraps into 2 rows, scrolls horizontally on overflow.
+
+          🛑 `scrollbar-none` was REMOVED: this is a wrapped mass, not a paged
+          rail, and hiding the scrollbar left no indication whatsoever that
+          content continued off-screen — the third of the three indicator
+          systems this pass unified, and the one that had nothing at all.
+
+          Deliberately NOT converted to `HorizontalScroller` + `CarouselNav`:
+          `testimonials` is a registered section type with no seeded content and
+          no rows anywhere (the seed file refuses to invent "testimonials nobody
+          actually said"), so rebuilding it into a paged rail would be designing
+          against data that does not exist. Restoring the native position cue is
+          the part that is true today. Revisit when there are real quotes.
+        */}
         <Stack
-          wrap className="overflow-x-auto scrollbar-none max-h-[50svh] content-start" gap="md"
+          wrap className="overflow-x-auto max-h-[50svh] content-start" gap="md"
         >
           {testimonials.map((t) => (
             <Stack padding="5"

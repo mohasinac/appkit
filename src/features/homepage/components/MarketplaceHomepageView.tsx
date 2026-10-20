@@ -19,8 +19,12 @@ import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
-import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
+import {
+  isListingTypeEnabled,
+  isCategoryTypeEnabled,
+} from "../../../_internal/shared/listing-types/feature-flags";
 import type { ListingType } from "../../products/types/index";
+import type { CategoryType } from "../../categories/types/index";
 import type { SectionType } from "../schemas/firestore";
 
 /**
@@ -32,6 +36,19 @@ const HOMEPAGE_SECTION_LISTING_TYPE: Partial<Record<SectionType, ListingType>> =
   auctions: "auction",
   "pre-orders": "pre-order",
   "prize-draws": "prize-draw",
+};
+
+/**
+ * The same idea for the CATEGORY types, added 2026-10-20.
+ *
+ * 🛑 Bundles are not a `ListingType`, so `featured-bundles` sat outside the
+ * map above and rendered unconditionally — the one merchandise rail on the
+ * homepage with no off switch at all, while every neighbouring rail had one.
+ * `listings.categoryTypes.bundle` is the control that already exists for
+ * exactly this, and the admin Site Settings screen already shows it.
+ */
+const HOMEPAGE_SECTION_CATEGORY_TYPE: Partial<Record<SectionType, CategoryType>> = {
+  "featured-bundles": "bundle",
 };
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
@@ -124,12 +141,19 @@ export async function MarketplaceHomepageView({
   // half of it had a real successor (`settings.listings.listingTypes`).
   //
   // So auctions / pre-orders / prize-draws are gated by the same control that
-  // hides them on every other surface, and the `events` / `blog` sections are
-  // now unconditional — there is no product control for "we don't run events",
-  // and there never was one that anything but this line read.
+  // hides them on every other surface, `featured-bundles` joined them on
+  // 2026-10-20 via the category-type half of the same setting, and the
+  // `events` / `blog` / `event-raffles` sections stay unconditional — there is
+  // no product control for "we don't run events", and there never was one that
+  // anything but this line read. Those are switched off per-document instead
+  // (`enabled: false`), which is the only lever they have.
   const enabledSections = allSections.filter((section) => {
-    const gated = HOMEPAGE_SECTION_LISTING_TYPE[section.type as SectionType];
-    return !gated || isListingTypeEnabled(gated, siteSettings);
+    const type = section.type as SectionType;
+    const gatedListing = HOMEPAGE_SECTION_LISTING_TYPE[type];
+    if (gatedListing && !isListingTypeEnabled(gatedListing, siteSettings)) return false;
+    const gatedCategory = HOMEPAGE_SECTION_CATEGORY_TYPE[type];
+    if (gatedCategory && !isCategoryTypeEnabled(gatedCategory, siteSettings)) return false;
+    return true;
   });
 
   // Collect live metric requests from all enabled stats sections
@@ -189,7 +213,12 @@ export async function MarketplaceHomepageView({
     activeTypes.has("products") ? getFeaturedProducts(12) : null,
     activeTypes.has("auctions") ? getFeaturedAuctions(12) : null,
     activeTypes.has("pre-orders") ? getFeaturedPreOrders(12) : null,
-    activeTypes.has("categories")
+    // `welcome` is a second trigger, not a typo: its hero mosaic is built from
+    // these categories' cover images. Gating the fetch on `categories` alone
+    // meant a homepage without a categories section rendered the hero's
+    // brand-mark fallback with nothing anywhere saying the imagery had simply
+    // not been fetched.
+    activeTypes.has("categories") || activeTypes.has("welcome")
       ? safeRead<Awaited<ReturnType<typeof listTopLevelCategories>> | null>(
           () => listTopLevelCategories(12),
           { route: "/", key: "homepage.categories", fallback: null })

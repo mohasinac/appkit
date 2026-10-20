@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Blockquote, Button, Div, Heading, RichText, Row, Section, Span, Text } from "../../../ui";
-import { Users } from "lucide-react";
+import { Button, Card, Div, Grid, Heading, Icon, RichText, Row, Section, Span, Stack, Text } from "../../../ui";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
-import { useHandMode } from "../../../_internal/client/hand-mode";
+import { WhatsAppGlyph } from "./WhatsAppGlyph";
 
 // --- Types -------------------------------------------------------------------
 
@@ -23,6 +22,34 @@ export interface WhatsAppCommunitySectionProps {
 
 // --- Section -----------------------------------------------------------------
 
+/**
+ * The community invite.
+ *
+ * ## 🛑 It looks like a chat because it IS a chat invite
+ *
+ * This was a single flat card: icon row → heading → description → a 2-column
+ * grid of four identical `✓` circles → an italic blockquote → a button, all
+ * left-aligned in one top-down stack. Two of those blocks (the `✓` grid and the
+ * blockquote) spent a lot of vertical space *telling* you the group is useful.
+ * As bubbles on WhatsApp's own wallpaper they *show* it, in less room.
+ *
+ * Everything needed already existed and had no consumer: `Card`'s
+ * `chat-bubble-mine` / `chat-bubble-theirs` variants (with the correct corner
+ * notches and an auto-margin for right alignment) and the
+ * `--appkit-color-whatsapp-bg` beige token.
+ *
+ * ## 🛑 Three things that are deliberate
+ *
+ * 1. **No fabricated timestamps and no `✓✓` read receipts.** Tempting, and the
+ *    same category of claim as a made-up member count — which this feature
+ *    already refuses to invent. The bubble shape carries the motif on its own.
+ * 2. **`align="start"` on the thread is load-bearing.** `chat-bubble-*` is
+ *    `display:inline-block; max-width:80%`, and a stretched flex item defeats
+ *    both, so the bubbles would become full-width boxes.
+ * 3. **`tone="whatsapp"`, not `tone="accent-banner"`.** The old tone is brand
+ *    primary→secondary — the SAME gradient as `CTABannerSection` a couple of
+ *    sections below, which is a real part of why the page read monotonous.
+ */
 export function WhatsAppCommunitySection({
   title,
   descriptionHtml,
@@ -35,7 +62,6 @@ export function WhatsAppCommunitySection({
   isLoading = false,
   className = "",
 }: WhatsAppCommunitySectionProps) {
-  const { hand } = useHandMode();
   if (isLoading) {
     return (
       <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
@@ -49,116 +75,151 @@ export function WhatsAppCommunitySection({
   if (!title && !groupLink) return null;
 
   const handleJoin = () => {
-    if (groupLink) window.open(groupLink, "_blank");
+    if (groupLink) window.open(groupLink, "_blank", "noopener,noreferrer");
   };
+
+  /* The thread. Benefits read as incoming messages; the testimonial closes it.
+     Below two there is no conversation to show, so the panel stands down and
+     the pitch column takes the full width rather than sitting beside an
+     almost-empty box. */
+  const thread = [...benefits.slice(0, 4), ...(testimonial ? [`“${testimonial}”`] : [])];
+  const showThread = thread.length >= 2;
 
   return (
     <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
       <Div className="w-full max-w-7xl mx-auto">
-
-        {/* Card */}
-        <Section color="inverse" 
-          tone="accent-banner"
-          rounded="2xl"
-          shadow="lg"
+        <Section
+          color="inverse"
+          tone="whatsapp"
+          rounded="3xl"
+          shadow="xl"
           className="relative overflow-hidden"
         >
-          {/* Subtle diagonal-line texture for depth */}
+          {/* A dot field rather than the previous 45° hatch: a diagonal hatch at
+              6% reads as a printing artefact, a dot field reads as material. */}
           <Div
-            className="absolute inset-0 opacity-[0.06] pointer-events-none bg-[repeating-linear-gradient(45deg,white_0,white_1px,transparent_0,transparent_50%)] bg-[size:10px_10px]"
+            className="absolute inset-0 opacity-[0.10] pointer-events-none bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] bg-[size:18px_18px]"
             aria-hidden
           />
 
-          <Div className="relative z-10 px-[1.5rem] sm:px-[2.5rem] sm:py-[3rem]" padding="y-2xl">
-
-            {/* Top row — WhatsApp icon + member pill */}
-            <Row align="center" justify="between" gap="md" wrap className="mb-8" reverse={hand === "left"}>
-              {/* WhatsApp branded icon */}
-              <Row align="center" gap="3">
-                <Row className="w-12 h-12 bg-[var(--appkit-color-whatsapp)] flex-shrink-0" align="center" justify="center" rounded="xl" shadow="lg">
-                  <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                </Row>
-                <Span color="inverse" size="sm" weight="medium" className="/80 tracking-wide" transform="uppercase">
-                  WhatsApp Community
-                </Span>
-              </Row>
-
-              {/* Member count pill */}
-              {/* This pill sits on the dark `accent-banner` gradient card, so its
-                  text is `color="inverse"` (white). It previously used
-                  `surface="default"`, which is the theme's page surface — white
-                  in every light theme — giving white-on-white. `frost` is the
-                  translucent-white-on-dark surface this always wanted, and it
-                  pairs with on-primary text in SURFACE_TEXT_PAIR_MAP. */}
-              {memberCount && (
-                <Row paddingY="y-2xs-tall" className="backdrop-blur-sm" surface="frost" padding="x-md" align="center" gap="sm" rounded="full">
-                  <Users className="w-4 h-4 text-white/80" />
-                  <Span color="inverse" size="sm" weight="semibold">
-                    {memberCount.toLocaleString(getDefaultLocale())}+ {memberCountLabel}
+          <Grid
+            cols={showThread ? "halves" : "autoLg"}
+            gap="hero"
+            align="center"
+            className="relative z-10 px-[1.5rem] py-[2.5rem] sm:px-[2.5rem] sm:py-[3rem]"
+          >
+            {/* ── Left: the pitch ─────────────────────────────────────────── */}
+            <Stack gap="lg">
+              <Row align="center" gap="md" wrap>
+                <Row
+                  surface="frost"
+                  rounded="full"
+                  padding="x-sm"
+                  paddingY="y-2xs-tall"
+                  align="center"
+                  gap="xs"
+                  className="backdrop-blur-sm"
+                >
+                  <WhatsAppGlyph className="h-4 w-4" />
+                  <Span
+                    color="inverse"
+                    size="xs"
+                    weight="semibold"
+                    transform="uppercase"
+                    className="tracking-[0.18em]"
+                  >
+                    WhatsApp Community
                   </Span>
                 </Row>
-              )}
-            </Row>
 
-            {/* Heading + description */}
-            <Heading color="inverse" level={2} className="mb-3 leading-tight" smSize="3xl" size="2xl" weight="bold">
-              {title}
-            </Heading>
-
-            {descriptionHtml && (
-              <RichText
-                html={descriptionHtml}
-                proseClass="prose prose-sm max-w-none prose-invert"
-                className="text-white/80 text-[length:var(--appkit-text-base)] mb-6 max-w-2xl leading-relaxed"
-              />
-            )}
-
-            {/* Benefits grid */}
-            {benefits.length > 0 && (
-              <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 mb-8 max-w-2xl">
-                {benefits.slice(0, 4).map((benefit, i) => (
-                  <Row key={i} align="start" gap="2.5">
-                    <Span layout="flex-center" className="mt-0.5 flex-shrink-0 w-5 h-5 bg-[rgba(255,255,255,0.2)]" rounded="full">
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                {memberCount && (
+                  <Row align="center" gap="xs">
+                    {/* The one piece of motion that earns its place: "this group
+                        is active right now" is the actual pitch. */}
+                    <Span layout="flex" className="relative h-2 w-2" aria-hidden>
+                      <Span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                      <Span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
                     </Span>
-                    <Span color="inverse" size="sm" className="/90 leading-snug">{benefit}</Span>
+                    <Span color="inverse-muted" size="xs" weight="medium" numeric>
+                      {memberCount.toLocaleString(getDefaultLocale())}+ {memberCountLabel}
+                    </Span>
                   </Row>
-                ))}
-              </Div>
-            )}
+                )}
+              </Row>
 
-            {/* Testimonial */}
-            {testimonial && (
-              <Blockquote paddingX="x-md" className="border-l-2 border-white/30 mb-8 max-w-xl">
-                <Text color="inverse" variant="none" className="/75 italic leading-relaxed" size="sm">
-                  &ldquo;{testimonial}&rdquo;
-                </Text>
-              </Blockquote>
-            )}
-
-            {/* CTA */}
-            {groupLink && (
-              <Button gap="md"
-                variant="primary"
-                size="lg"
-                onClick={handleJoin}
-                aria-label={buttonText}
-                className="!bg-[var(--appkit-color-whatsapp)] hover:!bg-[var(--appkit-color-whatsapp-light)] !text-white !border-0 font-[600]"
-                shadow="lg"
+              <Heading
+                color="inverse"
+                level={2}
+                size="3xl"
+                mdSize="4xl"
+                weight="bold"
+                className="leading-[1.1] tracking-tight"
               >
-                <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                {buttonText}
-              </Button>
-            )}
-          </Div>
-        </Section>
+                {title}
+              </Heading>
 
+              {descriptionHtml && (
+                /* No colour class here. `prose-invert` sets `--tw-prose-body`
+                   itself, so ANY wrapper colour loses to it — the previous
+                   `text-white/80` on this element did nothing. */
+                <RichText
+                  html={descriptionHtml}
+                  proseClass="prose prose-sm prose-invert max-w-none"
+                  className="max-w-md text-[length:var(--appkit-text-base)] leading-relaxed"
+                />
+              )}
+
+              {groupLink && (
+                <Row>
+                  {/* `variant="inverse"` replaces four `!important` overrides.
+                      A green button on a green card was invisible, which is
+                      why those existed. */}
+                  <Button
+                    variant="inverse"
+                    size="lg"
+                    shadow="lg"
+                    gap="md"
+                    onClick={handleJoin}
+                    aria-label={buttonText}
+                  >
+                    <WhatsAppGlyph className="h-5 w-5" />
+                    {buttonText}
+                  </Button>
+                </Row>
+              )}
+            </Stack>
+
+            {/* ── Right: a real thread on WhatsApp's own wallpaper ────────── */}
+            {showThread && (
+              <Stack
+                gap="sm"
+                align="start"
+                rounded="2xl"
+                padding="md"
+                shadow="2xl"
+                className="bg-[var(--appkit-color-whatsapp-bg)]"
+                role="img"
+                aria-label="Example messages from the community group"
+              >
+                {thread.map((line, i) => (
+                  <Card
+                    key={i}
+                    padding="none"
+                    variant={i % 2 === 1 ? "chat-bubble-mine" : "chat-bubble-theirs"}
+                  >
+                    <Text size="sm" className="leading-snug">
+                      {line}
+                    </Text>
+                  </Card>
+                ))}
+                <Row align="center" gap="xs" className="self-end pt-[var(--appkit-space-1)]">
+                  <Icon name="lock" size="xs" tone="muted" />
+                  <Span size="xs" color="muted">End-to-end encrypted by WhatsApp</Span>
+                </Row>
+              </Stack>
+            )}
+          </Grid>
+        </Section>
       </Div>
     </Section>
   );

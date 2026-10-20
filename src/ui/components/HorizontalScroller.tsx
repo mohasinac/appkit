@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CarouselNav } from "./CarouselNav";
 
 export interface PerViewConfig {
   base?: number;
@@ -48,6 +49,17 @@ export interface HorizontalScrollerProps<T = unknown> {
   itemClassName?: string;
   /** When the scroller reaches the last item, snap instantly back to the first instead of stopping. */
   loop?: boolean;
+  /**
+   * Render a `CarouselNav` position indicator below the rail.
+   *
+   * Opt-in rather than default: this is a visible layout change and the rail is
+   * used on roughly every listing surface in the app. Pair it with
+   * `showArrows={false}` — the in-flow nav carries its own arrows, so leaving
+   * both on gives a surface two sets of controls that do the same thing.
+   */
+  showNav?: boolean;
+  /** Names the nav group. Defaults to a generic label; pass the rail's subject. */
+  navAriaLabel?: string;
 }
 
 const BREAKPOINTS: [keyof PerViewConfig, number][] = [
@@ -95,12 +107,25 @@ export function HorizontalScroller<T = unknown>({
   pauseOnHover = false,
   itemClassName = "",
   loop = false,
+  showNav = false,
+  navAriaLabel,
 }: HorizontalScrollerProps<T>) {
   const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
   const [colCount, setColCount] = useState<number>(typeof perView === "number" ? perView : 3);
   const [isPaused, setIsPaused] = useState(false);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(true);
+  /*
+   * Page position, for the optional `showNav` indicator.
+   *
+   * 🛑 Derived from scroll geometry, never stored as the source of truth: the
+   * rail is a native scroller and a user can drag it to any offset, so an index
+   * this component *decided* would disagree with where the content actually is
+   * the first time someone swipes. One page = one viewport width, matching what
+   * `scrollBy` already moves.
+   */
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
 
   const internalRef = useRef<HTMLDivElement>(null);
   const containerRef = (externalRef ??
@@ -175,6 +200,11 @@ export function HorizontalScroller<T = unknown>({
     if (!el) return;
     // 1px tolerance for sub-pixel rounding
     const maxScroll = el.scrollWidth - el.clientWidth;
+    const width = el.clientWidth;
+    if (width > 0) {
+      setPageCount(Math.max(1, Math.ceil(el.scrollWidth / width)));
+      setPageIndex(Math.round(el.scrollLeft / width));
+    }
     if (maxScroll <= 1) {
       setAtStart(true);
       setAtEnd(true);
@@ -183,6 +213,15 @@ export function HorizontalScroller<T = unknown>({
     setAtStart(el.scrollLeft <= 1);
     setAtEnd(el.scrollLeft >= maxScroll - 1);
   }, [containerRef]);
+
+  const goToPage = useCallback(
+    (page: number) => {
+      const el = containerRef.current;
+      if (!el) return;
+      el.scrollTo({ left: page * el.clientWidth, behavior: "smooth" });
+    },
+    [containerRef],
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -320,6 +359,40 @@ export function HorizontalScroller<T = unknown>({
     onScroll?.();
   };
 
+  /*
+   * The in-flow position indicator.
+   *
+   * 🛑 This is the fix for "no affordance on a phone", and it deliberately does
+   * NOT un-hide the absolute arrows below 640px. Those are `display:none` there
+   * for a documented reason — a 44px circle has nowhere to go over a
+   * single-column card, and `--with-arrows` reserves 2 × 44px of wrapper gutter
+   * to seat them, which on a narrow screen is width taken from the card itself.
+   * An in-flow control needs no gutter and no breakpoint, so the affordance
+   * exists at every width instead of appearing at one.
+   *
+   * No `progressMs`: a rail's autoScroll advances by 0.8 of a viewport rather
+   * than one page, so a fill timed to the interval would not line up with the
+   * segment it sits in. A position cue that is right beats a progress cue that
+   * is approximately right.
+   */
+  const navNode =
+    showNav && pageCount > 1 ? (
+      <CarouselNav
+        count={pageCount}
+        index={pageIndex}
+        onSelect={goToPage}
+        onPrev={() => scrollBy(-1)}
+        onNext={() => scrollBy(1)}
+        tone="on-surface"
+        atStart={atStart}
+        atEnd={atEnd}
+        loop={loop}
+        paused={isPaused}
+        ariaLabel={navAriaLabel ?? "Scroll position"}
+        className="appkit-hscroller__nav"
+      />
+    ) : null;
+
   if (showArrows) {
     const prevDisabled = !loop && atStart;
     const nextDisabled = !loop && atEnd;
@@ -371,6 +444,7 @@ export function HorizontalScroller<T = unknown>({
           <ChevronRight className="w-4 h-4" />
         </button>
         )}
+        {navNode}
       </div>
     );
   }
@@ -392,6 +466,7 @@ export function HorizontalScroller<T = unknown>({
       >
         {content}
       </div>
+      {navNode}
     </div>
   );
 }

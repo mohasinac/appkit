@@ -1,0 +1,265 @@
+/*
+ * CarouselNav — the ONE carousel position/navigation control.
+ *
+ * ## 🛑 What it replaces, and why three implementations was the bug
+ *
+ * There were three unrelated indicator systems on the homepage alone:
+ *
+ *   1. `features/homepage/constants/hero-carousel-styles.ts` — bespoke Tailwind
+ *      pill dots plus a separate progress bar, and BOTH arrows stacked in one
+ *      bottom corner beside the dots.
+ *   2. `HorizontalScroller.style.css` — 36px translucent circles at mid-height,
+ *      `display:none` below 640px, with a 6px scrollbar as the only position
+ *      cue. Used by SectionCarousel, ShopByCategorySection, BrandsSection and
+ *      CustomCardsSection, i.e. nearly every rail on the site.
+ *   3. `TestimonialsCarousel` — `overflow-x-auto scrollbar-none`, nothing at
+ *      all, so there was no indication that content continued off-screen.
+ *
+ * The thing that had to be shared is the APPEARANCE; the call sites differ only
+ * in their STATE SOURCE (a hero knows its slide index, a rail derives one from
+ * `scrollLeft / clientWidth`). That split is what a presentational primitive is
+ * for, and it is why this is a new component rather than two restyles.
+ *
+ * ## 🛑 Segments, not dots — the active segment IS the progress track
+ *
+ * The hero previously rendered a progress bar as a child of the active dot and
+ * drove it with `animate-[progress-fill_4s_linear_forwards]` — a hardcoded 4s
+ * against a seeded `autoplayDelayMs` of 6000, so the bar finished two seconds
+ * before the slide moved. A literal cannot track a runtime value. Here the fill
+ * is the active segment itself and its duration comes from
+ * `--appkit-carousel-progress-duration`, set by the component from the real
+ * delay, so the two cannot disagree.
+ *
+ * ## 🛑 Arrows sit IN the row, not over the track
+ *
+ * Absolutely-positioning a 44px circle over a single-column card is what forced
+ * `display:none` below 640px in the first place, and it also cost every rail
+ * 2 × 44px of wrapper gutter to reserve space for controls a phone never saw.
+ * In flow, there is no breakpoint at which an affordance disappears and no
+ * gutter to reserve — and the arrows stop overlaying product art at a contrast
+ * nobody can predict.
+ */
+
+.appkit-carousel-nav {
+  --appkit-carousel-seg-w: 1.5rem;
+  --appkit-carousel-seg-w-active: 2.5rem;
+  --appkit-carousel-seg-h: 0.1875rem; /* 3px */
+  --appkit-carousel-arrow-size: 2.75rem; /* 44px — WCAG 2.5.8 target size */
+  /* Overridden inline by the component from the REAL autoplay delay. 0ms means
+     "no autoplay", which the [data-autoplay="false"] rule below renders as a
+     solid active segment rather than an animation of zero length. */
+  --appkit-carousel-progress-duration: 0ms;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--appkit-space-3, 0.75rem);
+  min-height: var(--appkit-carousel-arrow-size);
+}
+
+/* --- Tone: the ONLY colour decision in this file ------------------------- */
+
+/* Over imagery — white ink on a blurred dark scrim, theme-invariant because a
+   product photo is neither light nor dark in a way CSS can know. */
+.appkit-carousel-nav[data-tone="on-media"] {
+  --appkit-carousel-track: color-mix(in srgb, #fff 32%, transparent);
+  --appkit-carousel-fill: #fff;
+  --appkit-carousel-arrow-bg: color-mix(in srgb, #000 38%, transparent);
+  --appkit-carousel-arrow-ink: #fff;
+  --appkit-carousel-arrow-edge: color-mix(in srgb, #fff 45%, transparent);
+}
+
+/* On a themed page surface — follows the active theme in both directions. */
+.appkit-carousel-nav[data-tone="on-surface"] {
+  --appkit-carousel-track: var(--appkit-color-border, #e4e4e7);
+  --appkit-carousel-fill: var(--appkit-color-primary, #0d9488);
+  --appkit-carousel-arrow-bg: var(--appkit-color-surface, #ffffff);
+  --appkit-carousel-arrow-ink: var(--appkit-color-text, #18181b);
+  --appkit-carousel-arrow-edge: var(--appkit-color-border, #e4e4e7);
+}
+
+/* --- Segment rail -------------------------------------------------------- */
+
+.appkit-carousel-nav__rail {
+  display: flex;
+  align-items: center;
+  /* `safe center` rather than `center`: a centred overflowing flex row pushes
+     its LEADING items past the start edge, where they are unreachable by any
+     scroll gesture. See scripts/audit-centred-scroller.mjs. */
+  justify-content: safe center;
+  gap: var(--appkit-space-1-5, 0.375rem);
+  min-width: 0;
+}
+
+/*
+ * A 3px bar inside a 44px transparent hit box — the TARGET is the button, the
+ * VISUAL is the bar. The dots this replaces were `w-2 h-2` with `!min-h-0`,
+ * i.e. they actively defeated Button's own minimum target height to reach an
+ * 8px tap target.
+ */
+.appkit-carousel-nav__seg {
+  display: flex;
+  align-items: center;
+  padding-block: calc((var(--appkit-carousel-arrow-size) - var(--appkit-carousel-seg-h)) / 2);
+  padding-inline: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.appkit-carousel-nav__bar {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: var(--appkit-carousel-seg-w);
+  height: var(--appkit-carousel-seg-h);
+  border-radius: 9999px;
+  background: var(--appkit-carousel-track);
+  transition:
+    width 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 180ms linear;
+}
+
+.appkit-carousel-nav__seg:hover .appkit-carousel-nav__bar,
+.appkit-carousel-nav__seg:focus-visible .appkit-carousel-nav__bar {
+  background: color-mix(in srgb, var(--appkit-carousel-fill) 55%, transparent);
+}
+
+.appkit-carousel-nav__seg[aria-current="true"] .appkit-carousel-nav__bar {
+  width: var(--appkit-carousel-seg-w-active);
+  background: color-mix(in srgb, var(--appkit-carousel-fill) 28%, transparent);
+}
+
+/*
+ * `scaleX`, not `width`: it is compositor-only, and it leaves the bar's own
+ * `width` transition free to animate the 1.5rem → 2.5rem expansion at the same
+ * time without the two fighting over one property.
+ */
+.appkit-carousel-nav__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: var(--appkit-carousel-fill);
+  animation: appkit-carousel-fill var(--appkit-carousel-progress-duration, 0ms) linear forwards;
+}
+
+/* Hover-pause previously stopped the setInterval and left the bar filling, so
+   the indicator claimed the slide was about to advance while it was held. */
+.appkit-carousel-nav[data-paused="true"] .appkit-carousel-nav__fill {
+  animation-play-state: paused;
+}
+
+.appkit-carousel-nav[data-autoplay="false"] .appkit-carousel-nav__fill {
+  animation: none;
+  transform: scaleX(1);
+}
+
+@keyframes appkit-carousel-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Arrows -------------------------------------------------------------- */
+
+.appkit-carousel-nav__arrow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--appkit-carousel-arrow-size);
+  height: var(--appkit-carousel-arrow-size);
+  border-radius: 9999px;
+  border: 0;
+  background: var(--appkit-carousel-arrow-bg);
+  color: var(--appkit-carousel-arrow-ink);
+  box-shadow:
+    inset 0 0 0 1px var(--appkit-carousel-arrow-edge),
+    0 1px 2px color-mix(in srgb, #000 8%, transparent);
+  backdrop-filter: blur(10px) saturate(140%);
+  cursor: pointer;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 180ms linear;
+}
+
+.appkit-carousel-nav__arrow:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.appkit-carousel-nav__arrow:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.appkit-carousel-nav__arrow:disabled,
+.appkit-carousel-nav__arrow[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* --- Counter mode ------------------------------------------------------- */
+
+/*
+ * Above CAROUSEL_RAIL_MAX positions the segments become unhittable slivers and
+ * the row overflows a phone, so a long rail shows one continuous meter plus a
+ * tabular "4 / 17" instead. Dropping to a counter is a real affordance; a row
+ * of forty 2px dots is not.
+ */
+.appkit-carousel-nav__meter {
+  position: relative;
+  overflow: hidden;
+  width: clamp(4rem, 18vw, 9rem);
+  height: var(--appkit-carousel-seg-h);
+  border-radius: 9999px;
+  background: var(--appkit-carousel-track);
+}
+
+.appkit-carousel-nav__meter-thumb {
+  position: absolute;
+  inset-block: 0;
+  border-radius: 9999px;
+  background: var(--appkit-carousel-fill);
+  transition: left 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.appkit-carousel-nav__count {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--appkit-text-xs, 0.75rem);
+  color: var(--appkit-carousel-arrow-ink);
+  white-space: nowrap;
+}
+
+/* --- Compact (phones) --------------------------------------------------- */
+
+@media (max-width: 639px) {
+  .appkit-carousel-nav {
+    --appkit-carousel-seg-w: 1rem;
+    --appkit-carousel-seg-w-active: 1.75rem;
+    gap: var(--appkit-space-2, 0.5rem);
+  }
+}
+
+/* --- Inside a HorizontalScroller ---------------------------------------- */
+
+/* Breathing room between the rail and its indicator. A margin here rather than
+   a gap on `.appkit-hscroller`, because that wrapper is also the positioning
+   context for the absolute arrows and a gap would move them. */
+.appkit-hscroller__nav {
+  margin-top: var(--appkit-space-3, 0.75rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-carousel-nav__fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+  .appkit-carousel-nav__bar,
+  .appkit-carousel-nav__meter-thumb,
+  .appkit-carousel-nav__arrow {
+    transition: none;
+  }
+}

@@ -5,8 +5,10 @@ import { Button, Div, Heading, Row, Scrim, Section, Span, Stack, Text } from "..
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
-import { HERO_CAROUSEL_ARROW, HERO_CAROUSEL_DOT_ACTIVE, HERO_CAROUSEL_DOT_INACTIVE, POSITION_FILL, FLEX_CENTER, HERO_PLACEHOLDER_BG } from "../constants/hero-carousel-styles";
-import { useHandMode } from "../../../_internal/client/hand-mode";
+import { POSITION_FILL, FLEX_CENTER, HERO_PLACEHOLDER_BG } from "../constants/hero-carousel-styles";
+/* The one carousel position/navigation control. The dot and arrow class
+   strings this file used to import are deleted — see CarouselNav.style.css. */
+import { CarouselNav } from "../../../ui/components/CarouselNav";
 import type {
   CarouselBackground,
   CarouselSlide,
@@ -329,7 +331,9 @@ export function HeroCarousel({
   showArrows = true,
   title,
 }: HeroCarouselProps = {}) {
-  const { hand } = useHandMode();
+  /* `useHandMode()` was read only to pick which bottom corner the arrow pair
+     sat in. The nav is centred and symmetrical now, so there is no corner to
+     choose and no reason for this surface to know about handedness. */
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -529,55 +533,40 @@ export function HeroCarousel({
         </Div>
       </Div>
 
-      {/* Navigation Dots */}
-      {showDots && slides.length > 1 && (
-        <Row gap="sm" className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
-          {slides.map((_, index) => (
-            <Button
-              key={index}
-              variant="ghost"
-              className={`relative overflow-hidden rounded-full transition-all duration-500 p-[var(--appkit-space-0)] !min-h-0 ${
- index === currentSlide
- ? HERO_CAROUSEL_DOT_ACTIVE
- : `${HERO_CAROUSEL_DOT_INACTIVE} hover:bg-white/75`
- }`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              {index === currentSlide && (
-                <Span
-                  className="absolute inset-y-0 left-0 bg-[rgba(0,0,0,0.2)] animate-[progress-fill_4s_linear_forwards]" rounded="full"
-                  aria-hidden="true"
-                />
-              )}
-            </Button>
-          ))}
-        </Row>
-      )}
+      {/*
+        One control for position, navigation AND autoplay progress.
 
-      {/* Navigation Arrows */}
-      {showArrows && slides.length > 1 && (
-        <Row gap="sm" className={`absolute bottom-4 ${hand === "left" ? "left-4" : "right-4"} z-20`}>
-          <Button
-            variant="ghost"
-            className={`p-[0] ${HERO_CAROUSEL_ARROW}`}
-            onClick={goPrev}
-            aria-label="Previous slide"
-          >
-            <svg className="w-7 h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Button>
-          <Button
-            variant="ghost"
-            className={`p-[0] ${HERO_CAROUSEL_ARROW}`}
-            onClick={goNext}
-            aria-label="Next slide"
-          >
-            <svg className="w-7 h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </Button>
+        Replaces two separate absolutely-positioned blocks: pill dots at
+        `bottom-4 left-1/2` and BOTH arrows clustered at `bottom-4 right-4`, on
+        the same baseline, so with five slides they shared a visual row anyway.
+        Three defects went with them:
+
+         - the progress bar was `animate-[progress-fill_4s_...]`, a literal that
+           could not track `autoplayDelay` (seeded at 6000ms, so it finished two
+           seconds early, every slide);
+         - it was rendered `{index === currentSlide && …}` and so stayed mounted
+           whenever an index was reused — a CSS animation on a persistent node
+           does not replay, so it filled once and then sat full;
+         - `isPaused` stopped the interval but never the animation, so on hover
+           the bar kept filling while the slide was held.
+
+        `CarouselNav` is keyed on the slide index and reads the real delay, so
+        none of the three is expressible.
+      */}
+      {(showDots || showArrows) && slides.length > 1 && (
+        <Row justify="center" className="absolute bottom-4 inset-x-0 z-20 px-[var(--appkit-space-4)]">
+          <CarouselNav
+            count={slides.length}
+            index={currentSlide}
+            onSelect={showDots ? goToSlide : undefined}
+            onPrev={showArrows ? goPrev : undefined}
+            onNext={showArrows ? goNext : undefined}
+            tone="on-media"
+            progressMs={prefersReducedMotion ? 0 : autoplayDelay}
+            paused={isPaused}
+            loop
+            ariaLabel="Featured promotions"
+          />
         </Row>
       )}
     </Section>

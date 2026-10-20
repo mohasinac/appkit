@@ -9,6 +9,11 @@ import {
   WELCOME_TRUST_CHIPS,
 } from "../constants/section-copy";
 import { FAQ_CATEGORY_LABELS } from "../constants/faq-category-labels";
+/* Root Cause #51 — the stored `icon` string had no reader. These resolve it to
+   a registry key so the trust / security / stats tiles render a real glyph
+   instead of one hardcoded ✓ (or nothing at all). */
+import { resolveTrustIcon } from "../constants/trust-icon-aliases";
+import { STAT_PRESET_ICON } from "../constants/stat-icons";
 import { FAQ_HOMEPAGE_READ_CAP } from "../../faq/constants/read-caps";
 import type { LiveStatsMap } from "./live-stats";
 import { AnnouncementBar, hashBannerMessage } from "../components/AnnouncementBar";
@@ -212,10 +217,28 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
 
   welcome: {
     surfaces: ["homepage"],
-    render: ({ config, brand }) => {
+    render: ({ config, brand, sectionData }) => {
       const cfg = config as WelcomeSectionConfig;
+      /*
+       * Hero imagery, taken from the featured categories' own covers.
+       *
+       * Deterministic — the first five in CONFIGURED order, never shuffled, so
+       * the server and client render the same mosaic (ImageMosaic's header is
+       * explicit about why `Math.random()` is wrong here).
+       *
+       * 🛑 `sectionData.categories` is only populated when the page also has a
+       * `categories` section enabled, because MarketplaceHomepageView gates
+       * each fetch on `activeTypes`. `welcome` is registered as a trigger for
+       * that fetch for exactly this reason; without it the mosaic silently
+       * falls back to the brand panel and nothing says why.
+       */
+      const heroImages = (sectionData.categories ?? [])
+        .map((c) => c.display?.coverImage)
+        .filter((src): src is string => Boolean(src))
+        .slice(0, 5);
       return (
         <WelcomeSection
+          heroImages={heroImages}
           title={cleanTitle(cfg?.h1) || SECTION_TITLE.welcome}
           // A real `subtitle` wins; `description` is the legacy source and is
           // still parsed for documents that only carry it.
@@ -282,6 +305,11 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
                     : `stat-${index}`,
                 label: item.label,
                 value: displayValue,
+                // Derived from the preset, so a live stat gets a correct icon
+                // with no extra config — the preset already says what the
+                // number measures. `iconName` on the config entry wins for a
+                // static stat, which has no metric to derive from.
+                iconName: resolveTrustIcon(item.iconName) ?? (item.metric ? STAT_PRESET_ICON[item.metric] : undefined),
               };
             })
         : [];
@@ -430,6 +458,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
       return (
         <CTABannerSection
           title={cfg?.content?.title || SECTION_TITLE.banner}
+          eyebrow={cfg?.content?.eyebrow || SECTION_COPY.bannerEyebrow}
           subtitle={cfg?.content?.subtitle}
           description={cfg?.content?.description}
           height={cfg?.height}
@@ -450,8 +479,10 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
       const configured = (cfg?.indicators ?? [])
         .filter((ind) => ind?.title?.trim())
         .map((ind) => ({
-          key: ind.id,
-          iconName: ind.icon,
+          // `id` is the React key; `iconName` is the glyph. These were one
+          // field before, so two indicators sharing an icon collided.
+          id: ind.id,
+          iconName: resolveTrustIcon(ind.icon),
           title: ind.title,
           description: ind.description,
         }));
@@ -475,7 +506,13 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
       // becomes title-only cards. Neither reached the component before — it
       // always rendered DEFAULT_SECURITY_ITEMS regardless of config.
       const configured =
-        cfg?.items?.filter((item) => item?.title?.trim()) ??
+        cfg?.items
+          ?.filter((item) => item?.title?.trim())
+          // The stored `key` doubles as the icon hint — the seeded items carry
+          // intent slugs (`escrow`, `scam-registry`, `encrypted-data`) that the
+          // alias map resolves, so these tiles get real glyphs with no new
+          // config field. An explicit `iconName` wins when present.
+          .map((item) => ({ ...item, iconName: resolveTrustIcon(item.iconName ?? item.key) })) ??
         cfg?.features
           ?.filter((label) => label?.trim())
           .map((label, index) => ({ key: `feature-${index}`, title: label, description: "" })) ??
@@ -745,7 +782,11 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           pillLabel={cfg.pillLabel}
           ctaLabel={cfg.ctaLabel}
           ctaLink={cfg.ctaLink}
-          steps={cfg.steps as HowItWorksStep[]}
+          /* `cfg.steps[].iconKey` is a loose `string` (it is admin data) while
+             the component's is an `IconKey`. Resolving rather than casting
+             means an unrecognised stored value renders a step with no icon
+             instead of handing `<Icon>` a key it will silently drop. */
+          steps={cfg.steps.map((s) => ({ ...s, iconKey: resolveTrustIcon(s.iconKey) })) as HowItWorksStep[]}
         />
       );
     },

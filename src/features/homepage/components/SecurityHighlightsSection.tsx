@@ -1,14 +1,21 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
-import { Div, Grid, Heading, Row, Section, Span, Text, TextLink } from "../../../ui";
+import { Div, Grid, Heading, Icon, Row, Section, Span, Text, TextLink } from "../../../ui";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Types -------------------------------------------------------------------
 
 export interface SecurityHighlightItem {
   key: string;
   title: string;
   description: string;
-  renderIcon?: (props: { className?: string }) => React.ReactNode;
+  /**
+   * 🛑 Replaces `renderIcon?: (props) => ReactNode`, which was unreachable: the
+   * items come from a Firestore section config and a function cannot round-trip
+   * through a document, so the renderer never passed one and the icon row below
+   * never rendered at all. See constants/trust-icon-aliases.ts.
+   */
+  iconName?: IconKey;
   colorClass?: string;
   iconColorClass?: string;
 }
@@ -52,11 +59,9 @@ function SecurityCard({
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
      data-section="securityhighlightssection-div-357">
-      {item.renderIcon && (
+      {item.iconName && (
         <Row className="w-10 h-10 mb-3" surface="default" align="center" justify="center" rounded="lg">
-          <Span className={iconColorClass} aria-hidden="true">
-            {item.renderIcon({ className: "w-6 h-6" })}
-          </Span>
+          <Icon name={item.iconName} size="xl" className={iconColorClass} />
         </Row>
       )}
       <Text className="mb-1" weight="semibold">{item.title}</Text>

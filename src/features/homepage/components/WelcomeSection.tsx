@@ -2,12 +2,14 @@
 
 import React from "react";
 import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, Grid, Heading, Icon, ImageMosaic, MOSAIC_MIN, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 
 // --- Props -------------------------------------------------------------------
 export interface WelcomeSectionChip {
   key: string;
-  emoji: string;
+  /** Registry icon key. Replaces `emoji`, which no utility could size. */
+  iconName: IconKey;
   label: string;
 }
 
@@ -23,6 +25,15 @@ export interface WelcomeSectionProps {
   secondaryCtaHref?: string;
   onSecondaryCtaClick?: () => void;
   trustChips?: WelcomeSectionChip[];
+  /**
+   * Decorative hero imagery, MOST IMPORTANT FIRST — the first takes the large
+   * mosaic cell. Below `MOSAIC_MIN` (3) the brand-mark panel is used instead.
+   *
+   * Must be deterministic: `ImageMosaic` is explicit that `Math.random()` here
+   * would break SSR/hydration agreement, so the caller passes a stable
+   * configured order rather than a shuffle.
+   */
+  heroImages?: readonly string[];
   isLoading?: boolean;
   brandLogoText?: string;
   className?: string;
@@ -42,6 +53,7 @@ export function WelcomeSection({
   secondaryCtaHref,
   onSecondaryCtaClick,
   trustChips = [],
+  heroImages,
   isLoading = false,
   brandLogoText = "",
   className = "",
@@ -180,33 +192,63 @@ if (isLoading) {
                   * ever generated and the chip had no border in either theme.
                   * Root Cause #79: remove the light class, don't repair two
                   * classes that fight. */}
+                {/* `surface="default"` + a shadow rather than `surface="subtle"`:
+                    a reassurance row should lift off the page, not sink into it.
+                    One accent tone across all four — four different colours on
+                    four chips reads as a legend, not a reassurance. */}
                 {trustChips.map((chip) => (
-                  <Span layout="inline-flex" gap="xs"
+                  <Row
                     key={chip.key}
-                    size="xs" weight="medium"
-                    className="border border-[var(--appkit-color-border)] px-[0.875rem] py-[0.375rem]" rounded="full" surface="subtle" color="muted"
+                    align="center"
+                    gap="xs"
+                    surface="default"
+                    border="subtle"
+                    rounded="full"
+                    shadow="sm"
+                    className="px-[0.875rem] py-[0.375rem]"
                   >
-                    {chip.emoji} {chip.label}
-                  </Span>
+                    <Icon name={chip.iconName} size="sm" tone="success" />
+                    <Span size="xs" weight="medium" color="muted">{chip.label}</Span>
+                  </Row>
                 ))}
               </Row>
             )}
           </Div>
 
-          {/* Right: brand logo (desktop only) */}
+          {/*
+            Right: real imagery when there is any, the brand panel otherwise.
+
+            🛑 A hero whose hero image is its own wordmark is the "we had no
+            photograph" tell, and this one rendered `<SiteMark>` + `<SiteLogo>`
+            on a gradient mesh — on a site with 559 real `mediaAssets` rows of
+            product art, every one addressable as `/media/<id>`.
+
+            `ImageMosaic` returns null below MOSAIC_MIN (3), so the brand panel
+            is a REAL fallback rather than dead code: a consumer with no
+            imagery, or a homepage with no `categories` section to source it
+            from, still gets the old treatment.
+          */}
           <Div className="hidden lg:block">
-            <Div
-              className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
-            >
-              <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
-              <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} p-[2.5rem]`}>
-                <SiteMark title={brandLogoText || "LetItRip.in"} size="xl" />
-                <SiteLogo
-                  title={brandLogoText || "LetItRip.in"}
-                  size="xl"
-                />
-              </Stack>
-            </Div>
+            {heroImages && heroImages.length >= MOSAIC_MIN ? (
+              <ImageMosaic
+                size="hero"
+                images={heroImages}
+                alt={`${brandLogoText || "Marketplace"} collection highlights`}
+              />
+            ) : (
+              <Div
+                className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
+              >
+                <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
+                <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} p-[2.5rem]`}>
+                  <SiteMark title={brandLogoText || "LetItRip.in"} size="xl" />
+                  <SiteLogo
+                    title={brandLogoText || "LetItRip.in"}
+                    size="xl"
+                  />
+                </Stack>
+              </Div>
+            )}
           </Div>
         </Grid>
       </Div>

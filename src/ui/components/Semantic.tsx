@@ -45,13 +45,14 @@ import { buildSurfaceClasses, ROUNDED_MAP, PADDING_MAP, BORDER_MAP, SURFACE_MAP 
  * `--appkit-gradient-*` CSS variable so admin custom themes restyle the
  * section without consumer changes.
  */
-export type SectionTone = "plain" | "page-header" | "hero" | "accent-banner";
+export type SectionTone = "plain" | "page-header" | "hero" | "accent-banner" | "whatsapp";
 
 const SECTION_TONE_MAP: Record<SectionTone, string> = {
   plain: "",
   "page-header": "appkit-section--tone-page-header",
   hero: "appkit-section--tone-hero",
   "accent-banner": "appkit-section--tone-accent-banner",
+  whatsapp: "appkit-section--tone-whatsapp",
 };
 
 type SemanticColor = "default" | "primary" | "muted" | "faint" | "inverse" | "success" | "warning" | "error" | "info";
@@ -130,7 +131,8 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
   /**
    * Themed background tone. Defaults to `"plain"`. Use `"page-header"` for
    * subtle gradient page-headers, `"hero"` for radial mesh hero backgrounds,
-   * `"accent-banner"` for primary→secondary brand banners.
+   * `"accent-banner"` for primary→secondary brand banners, `"whatsapp"` for
+   * the WhatsApp-brand green→teal community card.
    */
   tone?: SectionTone;
   /** Scoped color/gradient/image background — an alternative to `tone` for admin/CMS-configured section backgrounds. Renders behind `children`, absolutely positioned within the section. */

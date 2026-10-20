@@ -7,7 +7,8 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
-import { Button, Checkbox, Div, Form, FormActions, Input, Modal, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
+import { Button, Checkbox, Div, Form, FormActions, Input, Modal, PaginatedSelect, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
+import { ICON_KEY_OPTIONS } from "./sections/icon-options";
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import {
   homepageSectionFormSchema,
@@ -1675,12 +1676,23 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
             </Row>
-            <Input label="Icon (emoji or text)" value={ind.icon} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: e.target.value }; return { ...prev, indicators: next }; })} />
+            {/* A picker, not free text: an unrecognised value now resolves to
+                no icon at all, so the field must not accept one. */}
+            <Stack gap="xs">
+              <Text color="muted" size="xs" weight="semibold">Icon</Text>
+              <PaginatedSelect
+                options={ICON_KEY_OPTIONS}
+                value={ind.icon || null}
+                ariaLabel={`Icon for indicator ${index + 1}`}
+                placeholder="Choose an icon"
+                onChange={(value) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: value ?? "" }; return { ...prev, indicators: next }; })}
+              />
+            </Stack>
             <Input label="Title" value={ind.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], title: e.target.value }; return { ...prev, indicators: next }; })} />
             <Input label="Description" value={ind.description} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], description: e.target.value }; return { ...prev, indicators: next }; })} />
           </Stack>
         ))}
-        <Button type="button" variant="outline" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: [...prev.indicators, { id: `ti-${Date.now()}`, icon: "✨", title: "", description: "" }] }))}>+ Add indicator</Button>
+        <Button type="button" variant="outline" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: [...prev.indicators, { id: `ti-${Date.now()}`, icon: "verify", title: "", description: "" }] }))}>+ Add indicator</Button>
       </Div>
     );
   }

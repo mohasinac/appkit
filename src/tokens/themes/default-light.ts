@@ -74,6 +74,7 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-star": "#facc15",
     "appkit-color-whatsapp-light": "#1ebe5d",
     "appkit-color-whatsapp-bg": "#ECE5DD",
+    "appkit-color-whatsapp-dark": "#075E54",
 
     "appkit-color-focus-ring": "#0d9488",
 
@@ -144,7 +145,7 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     spotlight:
       "linear-gradient(to bottom right, var(--appkit-color-info-surface), var(--appkit-color-bg), var(--appkit-color-info-surface))",
     "whatsapp-card":
-      "linear-gradient(to bottom right, var(--appkit-color-success), var(--appkit-color-success))",
+      "linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%)",
     glass:
       "linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent))",
     "card-indigo":

@@ -7,11 +7,19 @@ const MOSAIC_MAX = 5;
 /** Below this there is nothing to arrange, so the caller should render nothing. */
 export const MOSAIC_MIN = 3;
 
+/**
+ * `band` — the category-hero strip this was built for (180/260px).
+ * `hero`  — the homepage hero's right column, roughly double height.
+ */
+export type ImageMosaicSize = "band" | "hero";
+
 export interface ImageMosaicProps {
   /** Image URLs, most important first. Fewer than `MOSAIC_MIN` renders null. */
   images: readonly string[];
   /** Describes the SUBJECT, not the images — one alt for a decorative group. */
   alt: string;
+  /** Height preset. Defaults to `"band"`, the original behaviour. */
+  size?: ImageMosaicSize;
   className?: string;
 }
 
@@ -47,15 +55,16 @@ export interface ImageMosaicProps {
  * breaks SSR/hydration agreement and makes the page feel unstable — and it is
  * the shape Root Cause #25 is about on the seed side.
  */
-export function ImageMosaic({ images, alt, className }: ImageMosaicProps) {
+export function ImageMosaic({ images, alt, size = "band", className }: ImageMosaicProps) {
   const tiles = images.filter(Boolean).slice(0, MOSAIC_MAX);
   if (tiles.length < MOSAIC_MIN) return null;
 
   const [lead, ...rest] = tiles;
+  const sizeClass = size === "hero" ? "appkit-image-mosaic--hero" : "";
 
   return (
     <Div
-      className={`appkit-image-mosaic ${className ?? ""}`}
+      className={`appkit-image-mosaic ${sizeClass} ${className ?? ""}`}
       role="img"
       aria-label={alt}
     >

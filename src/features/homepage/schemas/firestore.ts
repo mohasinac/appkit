@@ -11,6 +11,10 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 /* The ONE FAQ-category union. See `FAQCategoryKey` below for why this import
  * replaced a local copy. Type-only, so it adds nothing to the import graph. */
 import type { FAQCategory } from "../../faq/types";
+/* Type-only, so this is erased at compile and adds no runtime import edge. The
+   icon fields below must be a closed union or a typo is a silent blank — which
+   is exactly the state `renderIcon` left these sections in. */
+import type { IconKey } from "../../../ui/icons/icon-registry";
 
 // --- Carousel Slides ----------------------------------------------------------
 
@@ -423,6 +427,12 @@ export interface StatsSectionConfig {
     collectionQuery?: CollectionQueryMetric;
     /** Optional suffix appended after the live value (e.g. "★", "+"). */
     suffix?: string;
+    /**
+     * Registry icon key. Only needed for a `source: "static"` stat — a live
+     * one derives its glyph from `metric` via STAT_PRESET_ICON, because the
+     * preset already says what the number measures.
+     */
+    iconName?: IconKey;
   }>;
 }
 
@@ -484,6 +494,13 @@ export interface FeatureItem {
   key: string;
   title: string;
   description: string;
+  /**
+   * Registry icon key. Optional because the renderer falls back to resolving
+   * `key` through `resolveTrustIcon` — the seeded items carry intent slugs
+   * (`escrow`, `scam-registry`, `encrypted-data`) that already map to a glyph,
+   * so existing documents get icons without being rewritten.
+   */
+  iconName?: IconKey;
 }
 
 /**
@@ -700,7 +717,9 @@ export interface PreOrdersSectionConfig {
 export interface BannerSectionConfig {
   height: "sm" | "md" | "lg" | "xl";
   backgroundImage?: string;
-  content: { title: string; subtitle?: string; description?: string };
+  /** `eyebrow` is the small uppercase label above the headline — it replaced a
+      hardcoded ✨, which was decoration where one word of context is free. */
+  content: { title: string; eyebrow?: string; subtitle?: string; description?: string };
   buttons: Array<{
     text: string;
     link: string;
@@ -955,7 +974,25 @@ export type SectionConfig =
   | FeaturedBundlesSectionConfig
   | PrizeDrawsSectionConfig
   | EventRafflesSectionConfig
-  | CollectionCardsSectionConfig;
+  | CollectionCardsSectionConfig
+  /*
+   * 🛑 These three were MISSING from this union until 2026-10-20, despite being
+   * declared above, registered in `SECTION_REGISTRY`, and offered in the admin
+   * create picker.
+   *
+   * Nothing failed, for two reasons that both deserve naming. The renderer's
+   * `config as HowItWorksSectionConfig` casts compiled only by accident —
+   * `CarouselSectionConfig` is entirely optional, which makes the union
+   * comparable to practically any object type, so the casts were load-bearing
+   * luck rather than a checked narrowing. And the gap was invisible because
+   * nothing had ever tried to WRITE one: `homepageSectionsSeedData` is typed
+   * `config: SectionConfig`, so an object literal carrying `steps` or `banners`
+   * fails excess-property checking against every member — i.e. the two sections
+   * added in this pass could not be seeded until the union admitted them.
+   */
+  | HowItWorksSectionConfig
+  | TestimonialsSectionConfig
+  | PromoGridSectionConfig;
 
 /**
  * Which page a section row belongs to.

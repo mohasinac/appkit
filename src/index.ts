@@ -8882,6 +8882,8 @@ export { ActionRow } from "./ui/index";
 export type { ActionRowProps, ActionRowAlign } from "./ui/index";
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, GatedPrice, PricesOnly, SummaryCard } from "./ui/index";
 export { CountdownDisplay, ItemRow, HorizontalScroller } from "./ui/index";
+export { CarouselNav, CAROUSEL_RAIL_MAX } from "./ui/index";
+export type { CarouselNavProps, CarouselNavTone } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
 export { Tabs, TabsList, TabsTrigger, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
 // TabBarShell - rail + overflow scroll arrows around a role="tablist"; TabBarButton / TabsNavSelect - its two trigger flavours

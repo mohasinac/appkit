@@ -46,6 +46,8 @@ const TYPOGRAPHY = {
     inherit: "",
     accent: "appkit-color--accent",
     inverse: "appkit-color--inverse",
+    /** Second tier on a dark/branded surface. See Typography.style.css. */
+    "inverse-muted": "appkit-color--inverse-muted",
   },
 } as const;
 

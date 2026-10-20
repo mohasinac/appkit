@@ -1,3 +1,5 @@
+import type { IconKey } from "../../../ui/icons/icon-registry";
+
 /**
  * Category-neutral default copy for homepage sections.
  *
@@ -74,9 +76,19 @@ export const SECTION_COPY = {
   featuresPill: "Built for trust",
   featuresLearnMore: "Learn about our security →",
   bannerPrimaryCta: "Shop All Products →",
-  bannerSecondaryCta: "Browse Auctions →",
+  /*
+   * 🛑 Not "Browse Auctions →". The CTA banner is NOT in
+   * `HOMEPAGE_SECTION_LISTING_TYPE`, so unlike the auctions rail it is never
+   * gated — it renders whatever this says on a site running
+   * `listings.listingTypes.auction: false`, which is a button on the homepage
+   * leading to a browse page with nothing in it. The `secondaryHref` default in
+   * CTABannerSection.tsx moved with it; they are one control in two files.
+   */
+  bannerSecondaryCta: "Browse Categories →",
+  /** Eyebrow above the CTA banner headline — replaces a decorative ✨. */
+  bannerEyebrow: "Start here",
   whatsappDescription:
-    "Get deal alerts, auction updates, and exclusive drops before anyone else.",
+    "Get deal alerts, new arrivals, and exclusive drops before anyone else.",
   /**
    * Shown only when `siteSettings.announcementBar` has no message. Was a
    * hardcoded seasonal Pokémon TCG discount, which would have gone out as
@@ -94,8 +106,20 @@ export const SECTION_COPY = {
  * Revisit if a consumer needs different ones.
  */
 export const WELCOME_TRUST_CHIPS = [
-  { key: "delivery", emoji: "🚀", label: "Fast Delivery" },
-  { key: "secure", emoji: "🔒", label: "Secure Payments" },
-  { key: "rating", emoji: "⭐", label: "Buyer Rated" },
-  { key: "returns", emoji: "↩️", label: "Easy Returns" },
-] as const;
+  /*
+   * 🛑 Registry icon keys, not emoji.
+   *
+   * An emoji cannot be sized — no width or height utility reaches a text
+   * character, so it renders at whatever the platform font fallback is, next to
+   * a label that IS sized (Root Cause #80). It is also a different glyph on
+   * every OS, which is the opposite of a design system.
+   *
+   * `🚀` was additionally just wrong: a rocket is not delivery. `ship` is a
+   * truck. Labels are sentence case — Title Case On Four Short Chips reads
+   * dated on its own.
+   */
+  { key: "delivery", iconName: "ship", label: "Fast delivery" },
+  { key: "secure", iconName: "lock", label: "Secure payments" },
+  { key: "rating", iconName: "review", label: "Buyer rated" },
+  { key: "returns", iconName: "restore", label: "Easy returns" },
+] as const satisfies readonly { key: string; iconName: IconKey; label: string }[];

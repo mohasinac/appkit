@@ -27,6 +27,28 @@
   }
 }
 
+/*
+ * `size="hero"` — the homepage hero's right column.
+ *
+ * 🛑 A separate modifier rather than a caller `className` height, because the
+ * fixed-height rule above is this primitive's OWN decision (see the header) and
+ * a consumer utility would simply fight it — with `important: true` in both
+ * Tailwind configs, which of the two wins is decided by emission order, not by
+ * the author. The band height is tuned for a category title; a hero column
+ * standing beside a `size="7xl"` headline needs roughly double or the mosaic
+ * reads as a letterboxed strip next to the copy.
+ */
+.appkit-image-mosaic--hero {
+  height: clamp(320px, 34vw, 460px);
+  border-radius: var(--appkit-radius-2xl);
+}
+
+@media (min-width: 768px) {
+  .appkit-image-mosaic--hero {
+    height: clamp(360px, 34vw, 480px);
+  }
+}
+
 .appkit-image-mosaic__lead,
 .appkit-image-mosaic__tile {
   position: relative;

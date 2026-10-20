@@ -198,6 +198,35 @@
   color: inherit;
 }
 
+/*
+ * `inverse` — a surface-coloured pill for a dark or branded backdrop.
+ *
+ * The pairing is deliberately the inverse of `primary`: the FILL comes from
+ * the page surface and the INK from body text, so it contrasts against
+ * whatever colour the card behind it is, in both themes, with no per-call-site
+ * override. Four `!important` declarations in WhatsAppCommunitySection and one
+ * `!bg-primary` on a TextLink in WelcomeSection existed only because this
+ * variant did not.
+ *
+ * No border: a 1px border between a white pill and a saturated card reads as
+ * a seam rather than an edge.
+ */
+.appkit-button.appkit-button--inverse {
+  background: var(--appkit-color-surface);
+  border-color: transparent;
+  color: var(--appkit-color-text);
+}
+
+.appkit-button.appkit-button--inverse:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--appkit-color-surface) 92%, var(--appkit-color-text));
+}
+
+/* Same child-inheritance rule the warning variant needs: a nested element with
+   no appkit class of its own must not fall back to the themed body colour. */
+.appkit-button.appkit-button--inverse :not([class*="appkit-"]) {
+  color: inherit;
+}
+
 .appkit-button__spinner {
   width: 1rem;
   height: 1rem;

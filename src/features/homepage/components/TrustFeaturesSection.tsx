@@ -1,13 +1,29 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Div, Grid, Heading, Icon, Row, Section, Text } from "../../../ui";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Types -------------------------------------------------------------------
 
+/**
+ * 🛑 `renderIcon?: (props) => ReactNode` was removed, not renamed.
+ *
+ * It was unreachable by construction: every item here comes from a Firestore
+ * section config, and a function has no representation in a document — so the
+ * section renderer never passed one, and all four tiles fell through to a
+ * hardcoded `✓`. Four different promises ("Authenticity checked", "Escrow-backed
+ * payments", "Straightforward returns", "Real human support") rendered the same
+ * glyph. `iconName` is data, so it survives the document round-trip.
+ *
+ * `id` is now a separate field because `iconName` used to serve as BOTH the
+ * icon and the React key — two indicators sharing an icon produced duplicate
+ * keys, and giving the icon a correct default would have made that collision
+ * likely rather than rare.
+ */
 export interface TrustFeatureItem {
-  iconName: string;
+  id: string;
   title: string;
   description: string;
-  renderIcon?: (props: { className?: string }) => React.ReactNode;
+  iconName?: IconKey;
 }
 
 export interface TrustFeaturesSectionProps {
@@ -41,19 +57,13 @@ function TrustFeatureCard({
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
      data-section="trustfeaturessection-div-373">
-      {/* Icon box */}
-      <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-[var(--appkit-color-primary-100)] dark:border-[var(--appkit-color-primary-900)]/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
-        {item.renderIcon ? (
-          item.renderIcon({ className: "w-7 h-7" })
-        ) : (
-          <Span
-            className="text-primary-600 dark:text-secondary-400" size="2xl"
-            aria-hidden="true"
-          >
-            ✓
-          </Span>
-        )}
-      </Row>
+      {/* Icon box. Renders nothing when the stored icon string does not resolve
+          — a text-only tile beats one glyph standing in for every promise. */}
+      {item.iconName && (
+        <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-[var(--appkit-color-primary-100)] dark:border-[var(--appkit-color-primary-900)]/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
+          <Icon name={item.iconName} size="xl" tone="primary" />
+        </Row>
+      )}
 
       <Heading
         level={3}
@@ -73,16 +83,7 @@ function TrustFeatureCard({
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
     <Div layout="inline-flex" gap="2" align="center" className="flex-shrink-0" padding="x-lg">
-      {item.renderIcon ? (
-        item.renderIcon({ className: "w-5 h-5" })
-      ) : (
-        <Span
-          className="text-primary-600 dark:text-primary-400" size="lg"
-          aria-hidden="true"
-        >
-          ✓
-        </Span>
-      )}
+      {item.iconName && <Icon name={item.iconName} size="lg" tone="primary" />}
       <Text className="whitespace-nowrap" color="muted" size="sm" weight="medium">
         {item.title}
       </Text>
@@ -126,7 +127,7 @@ export function TrustFeaturesSection({
       >
         <Div layout="flex" className="animate-marquee">
           {doubled.map((item, i) => (
-            <TrustStripItem key={`${item.iconName}-${i}`} item={item} />
+            <TrustStripItem key={`${item.id}-${i}`} item={item} />
           ))}
         </Div>
       </Section>
@@ -150,7 +151,7 @@ export function TrustFeaturesSection({
         <Grid cols="statTiles" gap="lg">
           {items.map((item, index) => (
             <TrustFeatureCard
-              key={item.iconName}
+              key={item.id}
               item={item}
               visible={visible}
               delayClass={CARD_DELAYS[Math.min(index, CARD_DELAYS.length - 1)]}
