@@ -251,8 +251,6 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           // Straight off the order document — the admin list route returns
           // raw docs, so these need no serializer entry (cf. Root Cause #38).
           addons: {
-            whatsappNotifyAddon: Boolean(item.whatsappNotifyAddon),
-            whatsappNotifyFee: Number(item.whatsappNotifyFee ?? 0) || undefined,
             giftWrapAddon: Boolean(item.giftWrapAddon),
             giftWrapFee: Number(item.giftWrapFee ?? 0) || undefined,
             giftWrapMessage: toStringValue(item.giftWrapMessage) || undefined,

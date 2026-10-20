@@ -98,20 +98,6 @@ export const storeFirestoreSchema = z.object({
     .optional(),
   shippingConfig: storeShippingConfigSchema.optional(),
   emiEnabled: z.boolean().optional(),
-  whatsappConfig: z
-    .object({
-      phoneNumber: z.string().optional(),
-      wabaId: z.string().optional(),
-      catalogId: z.string().optional(),
-      accessToken: z.string().optional(),
-      catalogSyncEnabled: z.boolean(),
-      lastCatalogSyncAt: firestoreDateSchema.optional(),
-      lastSyncCount: z.number().int().optional(),
-      lastSyncStatus: z.enum(["success", "partial", "failed"]).optional(),
-      connected: z.boolean(),
-      connectedAt: firestoreDateSchema.optional(),
-    })
-    .optional(),
   ...auditTimestampsShape,
 });
 

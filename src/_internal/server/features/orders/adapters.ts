@@ -178,7 +178,7 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     couponDiscount: doc.couponDiscount,
     appliedDiscounts: doc.appliedDiscounts,
     // Add-ons are operational, not decorative: the status-change notifier reads
-    // whatsappNotifyAddon, and the packer needs giftWrapMessage in hand. An
+    // the packer needs giftWrapMessage in hand. An
     // adapter that drops them makes every downstream surface render its
     // "not applicable" fallback instead (Root Cause #57).
     giftWrapAddon: doc.giftWrapAddon,

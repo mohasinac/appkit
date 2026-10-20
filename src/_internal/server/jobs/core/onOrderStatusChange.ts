@@ -61,7 +61,6 @@ export type OrderAfter = {
   productTitle: string;
   trackingNumber?: string;
   /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. */
-  whatsappNotifyAddon?: boolean;
 };
 export type OrderBefore = { status: OrderStatus };
 

@@ -164,7 +164,7 @@ export const authored: Record<string, AuthoredCase> = {
        * Measured 2026-09-29: SELLER_ROW_ACTIONS.orders is
        * [VIEW, EDIT, TRACK, RESEND] — no share. SellerOrdersView mentions
        * WhatsApp only as the buyer's purchased add-on flag
-       * (whatsappNotifyAddon / whatsappNotifyFee), and every `wa.me` link in
+       * only as `wa.me` links, and every one of those in
        * the codebase is on the contact page, the chat button or the buyer's own
        * payment page. The registry's WhatsApp actions are store SETUP
        * (whatsapp-connect, catalog-sync, catalog-import).

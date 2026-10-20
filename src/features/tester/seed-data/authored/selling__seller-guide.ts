@@ -26,7 +26,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Click 'All Guides' to reach /store/guide. It is a hub and it links the same six sub-guides, so each one has two routes in — check both agree.",
       "Open each of the six in turn and read its content: /store/guide/listings, /store/guide/orders, /store/guide/finance, /store/guide/settings, /store/guide/capabilities, /store/guide/whatsapp.",
       "Write down any that renders empty, 404s, or repeats another page's text.",
-      "Check each guide against the feature it describes — open that feature and confirm the guide's instructions match what is on screen. The WhatsApp guide is the one to read hardest: no seeded store carries a whatsappConfig, so a guide describing a configured integration describes a state no tester can reach.",
+      "Check each guide against the feature it describes — open that feature and confirm the guide's instructions match what is on screen.",
       "Follow every link inside the guides and note where each lands.",
     ],
     expectedBehaviour:
