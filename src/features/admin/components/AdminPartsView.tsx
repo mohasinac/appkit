@@ -28,6 +28,9 @@ import React from "react";
 import { Heading, ListingLayout, Stack, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { PART_GLOSSARY_FIELDS } from "../../../constants/field-names";
+import { SORT_DIR, sortBy } from "../../../constants/sort";
+import type { JsonValue } from "../../../schemas/types";
 import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
@@ -51,17 +54,17 @@ interface PartRow {
  * categories found" against a 200 carrying 58 rows. This route returns the
  * object shape, and tolerating both is what keeps that from mattering.
  */
-function extractRows(response: unknown): unknown[] {
+function extractRows(response: JsonValue): JsonValue[] {
   if (Array.isArray(response)) return response;
   if (!response || typeof response !== "object") return [];
-  const obj = response as { data?: unknown; items?: unknown };
+  const obj = response as { data?: JsonValue; items?: JsonValue };
   if (Array.isArray(obj.data)) return obj.data;
   return Array.isArray(obj.items) ? obj.items : [];
 }
 
-function extractTotal(response: unknown): number | undefined {
+function extractTotal(response: JsonValue): number | undefined {
   if (Array.isArray(response) || !response || typeof response !== "object") return undefined;
-  const total = (response as { total?: unknown }).total;
+  const total = (response as { total?: JsonValue }).total;
   return typeof total === "number" ? total : undefined;
 }
 
@@ -125,7 +128,7 @@ const COLUMNS: AdminTableColumn<PartRow>[] = [
   },
 ];
 
-const ADMIN_PARTS_CONFIG: ListingViewConfig<unknown, PartRow> = {
+const ADMIN_PARTS_CONFIG: ListingViewConfig<JsonValue, PartRow> = {
   portal: "admin",
   title: "Parts",
   subtitle:
@@ -140,13 +143,30 @@ const ADMIN_PARTS_CONFIG: ListingViewConfig<unknown, PartRow> = {
    * legible: you typed a prefix and asked for it.
    */
   searchCommit: "enter",
+  /*
+   * 🛑 DECLARED, so the placeholder can be CHECKED rather than trusted.
+   * The route matches exactly one field — an indexed prefix range on
+   * `name` — and the placeholder must not imply more. It is a prefix and
+   * it is case-sensitive; `mode` says so where a reader will see it.
+   */
+  search: {
+    placeholder: "Search parts by name — a prefix, case-sensitive",
+    mode: "prefix",
+    fields: ["name"],
+  },
   emptyLabel: "No part matches that name",
   filterKeys: [],
-  defaultSort: "name",
+  /*
+   * 🛑 Through `sortBy`, not a bare "name". The route currently ALWAYS
+   * orders by name and ignores the `sorts` param, so this is the only
+   * option — but writing it as a literal is what lets a field rename
+   * leave a sort string that silently sorts nothing.
+   */
+  defaultSort: sortBy(PART_GLOSSARY_FIELDS.NAME, SORT_DIR.ASC),
   pageSize: 25,
   queryKey: ["admin", "parts"],
   endpoint: ADMIN_ENDPOINTS.PARTS,
-  sortOptions: [{ value: "name", label: "Name A-Z" }],
+  sortOptions: [{ value: sortBy(PART_GLOSSARY_FIELDS.NAME, SORT_DIR.ASC), label: "Name A-Z" }],
   columns: COLUMNS,
   buildFilters: () => undefined,
   getTotal: (response, rows) => extractTotal(response) ?? rows.length,

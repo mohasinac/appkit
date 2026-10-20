@@ -664,6 +664,55 @@ export const STORE_FIELDS = {
 // CATEGORY FIELDS
 // ============================================================================
 
+/**
+ * The two GENERATED reference databases.
+ *
+ * 🛑 NOT reused from `CATEGORY_FIELDS`. `audit-route-nav-field-constants`
+ * suggested `CATEGORY_FIELDS.NAME` for a query against `partGlossary`, and the
+ * string would have been identical — which is exactly why that would be the
+ * wrong fix. A constant's job is to say WHICH collection's field is meant, so
+ * that renaming one collection's field cannot silently retarget another's
+ * query. Same bytes, different claim.
+ */
+/**
+ * `modelComposition` — which parts a model is built from.
+ *
+ * 🛑 ITS OWN `CATEGORY_ID`, not `BEY_FIELDS.CATEGORY_ID`. The audit suggested
+ * the bey constant for a query against THIS collection, and the string is
+ * identical — which is precisely the substitution the comment on
+ * `PART_GLOSSARY_FIELDS` warns about. A composition row's `categoryId` points
+ * at the model leaf it describes; a bey's points at its own paired leaf. Same
+ * bytes, two different facts, and only one of them moves if either is renamed.
+ */
+export const MODEL_COMPOSITION_FIELDS = {
+  ID: "id",
+  CATEGORY_ID: "categoryId",
+  SLOT: "slot",
+} as const;
+
+export const PART_GLOSSARY_FIELDS = {
+  ID: "id",
+  NAME: "name",
+  SLOT: "slot",
+  CLASSIFICATION: "classification",
+  CODE: "code",
+  WEIGHT_G: "weightG",
+  /** Set by `applyAdminEdit`; the seed loader queries on it. */
+  ADMIN_EDITED: "adminEdited",
+  ADMIN_EDITED_FIELDS: "adminEditedFields",
+} as const;
+
+export const BEY_FIELDS = {
+  ID: "id",
+  SLUG: "slug",
+  NAME: "name",
+  TYPE: "type",
+  SYSTEM: "system",
+  CATEGORY_ID: "categoryId",
+  ADMIN_EDITED: "adminEdited",
+  ADMIN_EDITED_FIELDS: "adminEditedFields",
+} as const;
+
 export const CATEGORY_FIELDS = {
   ID: "id",
   NAME: "name",

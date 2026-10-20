@@ -69,11 +69,14 @@ export interface AdminEditableRecord {
  * description tomorrow must leave both protected, so the existing set is
  * unioned rather than replaced.
  */
-export function applyAdminEdit<T extends AdminEditableRecord>(
-  existing: Pick<T, "adminEditedFields"> | null | undefined,
-  changes: Record<string, unknown>,
+export function applyAdminEdit<TChanges extends object>(
+  existing: Pick<AdminEditableRecord, "adminEditedFields"> | null | undefined,
+  changes: TChanges,
   actorUid: string,
-): Record<string, unknown> {
+): TChanges & Required<Pick<AdminEditableRecord, "adminEdited" | "adminEditedFields">> & {
+  adminEditedAt: Date;
+  adminEditedBy: string;
+} {
   const owned = new Set(existing?.adminEditedFields ?? []);
   for (const key of Object.keys(changes)) {
     /*
@@ -100,15 +103,15 @@ export function applyAdminEdit<T extends AdminEditableRecord>(
  * duplicated there so the rule has one definition — the CLI is `.mjs` and
  * reads this through the built package, the same way it reads the seed data.
  */
-export function stripAdminOwnedFields(
-  payload: Record<string, unknown>,
+export function stripAdminOwnedFields<T extends object>(
+  payload: T,
   ownedFields: readonly string[] | undefined,
-): Record<string, unknown> {
+): Partial<T> {
   if (!ownedFields?.length) return payload;
-  const out: Record<string, unknown> = {};
+  const out: Partial<T> = {};
   for (const [k, v] of Object.entries(payload)) {
     if (ownedFields.includes(k)) continue;
-    out[k] = v;
+    (out as Record<string, never>)[k] = v as never;
   }
   return out;
 }

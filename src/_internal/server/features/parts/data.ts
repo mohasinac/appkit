@@ -18,6 +18,10 @@ import {
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
+import {
+  MODEL_COMPOSITION_FIELDS,
+  PART_GLOSSARY_FIELDS,
+} from "../../../../constants/field-names";
 
 /** The bucket cap. 87 is the largest real classification, so this clears it. */
 export const PART_SLOT_PAGE_SIZE = 120;
@@ -139,7 +143,7 @@ export const getCompositionsForCategory = cache(
     try {
       const snap = await getAdminDb()
         .collection(MODEL_COMPOSITION_COLLECTION)
-        .where("categoryId", "==", categoryId)
+        .where(MODEL_COMPOSITION_FIELDS.CATEGORY_ID, "==", categoryId)
         .limit(8)
         .get();
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as ModelCompositionDocument);
@@ -172,7 +176,7 @@ export const listPartsBySlot = cache(
     try {
       const snap = await getAdminDb()
         .collection(PART_GLOSSARY_COLLECTION)
-        .where("slot", "==", slot)
+        .where(PART_GLOSSARY_FIELDS.SLOT, "==", slot)
         .limit(PART_SLOT_PAGE_SIZE)
         .get();
       const parts = snap.docs

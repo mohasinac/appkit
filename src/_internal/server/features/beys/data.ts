@@ -15,6 +15,7 @@ import {
   type BeyProductDocument,
 } from "../../../../features/beys/schemas/firestore";
 import { getAdminDb } from "../../../../providers/db-firebase";
+import { BEY_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
 
@@ -59,7 +60,7 @@ export const getBeysForCategory = cache(
     try {
       const snap = await getAdminDb()
         .collection(BEYS_COLLECTION)
-        .where("categoryId", "==", categoryId)
+        .where(BEY_FIELDS.CATEGORY_ID, "==", categoryId)
         .limit(4)
         .get();
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as BeyDocument);

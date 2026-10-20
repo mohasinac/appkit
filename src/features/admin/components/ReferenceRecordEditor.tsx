@@ -33,6 +33,7 @@ import { Alert, Button, Form, FieldInput, Stack, Text, TextLink } from "../../..
 import { apiClient } from "../../../http";
 import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "../../../schemas/types";
 import { toUserMessage } from "../../../errors/error-display-map";
 
 /** One editable field. `kind` picks the input, nothing more. */
@@ -70,7 +71,7 @@ export function ReferenceRecordEditor({
     let cancelled = false;
     (async () => {
       try {
-        const row = await apiClient.get<Record<string, unknown>>(endpoint);
+        const row = await apiClient.get<Record<string, JsonValue>>(endpoint);
         if (cancelled) return;
         const next: Record<string, string> = {};
         for (const f of fields) {
@@ -107,8 +108,8 @@ export function ReferenceRecordEditor({
    * admin-owned, freezing the blank in place against every future reseed —
    * a one-click way to permanently delete data from a generated row.
    */
-  const buildPatch = React.useCallback((): Record<string, unknown> => {
-    const patch: Record<string, unknown> = {};
+  const buildPatch = React.useCallback((): Record<string, JsonValue> => {
+    const patch: Record<string, JsonValue> = {};
     for (const f of fields) {
       const raw = (values[f.name] ?? "").trim();
       if (!raw) continue;
@@ -175,7 +176,12 @@ export function ReferenceRecordEditor({
   }
 
   return (
-    <Form className="space-y-4">
+    {/*
+      No `className` — the `<Stack gap="md">` inside already owns the spacing,
+      and `space-y-4` on the Form was a second, competing source of it
+      (audit-variant-prop-coverage: a layout token belongs in a variant prop).
+    */}
+    <Form>
       {({ setFieldError, clearErrors }) => (
         <Stack gap="md" className="min-w-0">
           {/*
