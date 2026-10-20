@@ -1944,6 +1944,31 @@ export async function previewCheckoutPricing(
   // deliberately not per store, so it is not added to the per-store rows above.
   const { platformFee, gstOnFee } = computeCheckoutFees(cartSubtotal, commissions);
 
+  /*
+   * 🛑 `gstAmount` is NOT a term, and leaving it in was a shown-vs-charged
+   * drift waiting on a settings flag.
+   *
+   * The per-store `total` above already excludes it, and its own field comment
+   * says so in capitals ("Deliberately NOT added to `total` below"). The
+   * CART-level total here added it anyway, so the two disagreed with each
+   * other and the cart-level one disagreed with `createOrderForGroup`, whose
+   * `orderTotal` excludes product GST for the reason set out there: prices are
+   * tax-INCLUSIVE, so the tax is already inside `cartSubtotal` and adding it
+   * charges it twice.
+   *
+   * It has never fired, which is the only reason it survived: `gstAmount` is
+   * computed solely when `siteSettings.gst.enabled` is true, and that is
+   * deliberately false until a real GSTIN is registered (see the seed's note —
+   * `/api/admin/site` refuses to enable it without a valid check digit). So on
+   * the day someone enters a registration, every cart would have quietly
+   * quoted ~5% more than the order it previews. Measured on the live ₹20,000
+   * listing (gstRate 5, HSN 95030020): the preview would have read ₹952.38
+   * over the amount charged.
+   *
+   * `gstOnFee` IS a term, and the asymmetry is the same one `createOrderForGroup`
+   * documents: that is GST on OUR commission, billed on top of the fee, not
+   * tax on the goods.
+   */
   const total =
     Math.max(0, cartSubtotal - couponDiscount) +
     shippingFee +
@@ -1952,8 +1977,7 @@ export async function previewCheckoutPricing(
     shipmentProtectionFeeTotal +
     saleProtectionFeeTotal +
     platformFee +
-    gstOnFee +
-    gstAmount;
+    gstOnFee;
 
   return {
     subtotal: cartSubtotal,

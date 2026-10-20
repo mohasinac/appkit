@@ -8,7 +8,7 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   minimumTransactionFee: 0,
   platformFeeMax: 10,
   codDepositPercent: 10,
-  codHandlingFeeMin: 200,
+  codHandlingFeeCap: 200,
   codHandlingFeePercent: 10,
   // Mirrors the SiteSettingsDocument defaults, which enable every add-on.
   // Consequence of the mirror: if the settings read fails, an add-on already

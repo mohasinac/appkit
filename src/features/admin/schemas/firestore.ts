@@ -622,8 +622,14 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
     gatewayFeePercent: number;
     codDepositPercent: number;
-    /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). */
-    codHandlingFeeMin: number;
+    /**
+     * COD handling fee charged to the buyer:
+     * min(subtotal × codHandlingFeePercent / 100, codHandlingFeeCap).
+     *
+     * 🛑 A CEILING. It was `codHandlingFeeMin` applied as a floor, which billed
+     * ₹2,000 of "handling" on a ₹20,000 order — see `computeCodHandlingFee`.
+     */ // audit-money-units-ok: rupee ceiling, not paise
+    codHandlingFeeCap: number;
     codHandlingFeePercent: number;
     /** Admin master toggle — whether the gift-wrap addon is offered at checkout at all. */
     giftWrapFeeEnabled: boolean;
@@ -1051,7 +1057,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     platformFeeMax: 10,
     gatewayFeePercent: 2,
     codDepositPercent: 10,
-    codHandlingFeeMin: 200,
+    codHandlingFeeCap: 200,
     codHandlingFeePercent: 10,
     // The buyer add-ons ship ENABLED. They were `false`, which made
     // StoreAddonsPicker return null on both the cart and checkout, so a fresh

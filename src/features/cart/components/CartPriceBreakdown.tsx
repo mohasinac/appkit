@@ -185,8 +185,24 @@ export function CartPriceBreakdown({
       )}
       {/* One commission on one transaction — never multiplied per store. */}
       {preview.platformFee > 0 && <Line label="Platform fee" amount={money(preview.platformFee)} />}
-      {(preview.gstAmount > 0 || preview.gstOnFee > 0) && (
-        <Line label="GST" amount={money(preview.gstAmount + preview.gstOnFee)} />
+      {/*
+        🛑 `gstOnFee` and `gstAmount` are DIFFERENT TAXES and must never share
+        a line. This rendered `gstAmount + gstOnFee` under the single label
+        "GST", and every column above it is additive, so the sum read as "the
+        GST on this order" — on a ₹20,000 cart it said **₹1.80**.
+
+        `gstOnFee` is GST on our ₹10 commission, genuinely charged on top, and
+        it belongs in the additive column. `gstAmount` is the tax already
+        INSIDE the item prices (they are tax-inclusive — see
+        `taxableFromInclusive`), is excluded from `preview.total` by design,
+        and so cannot sit in a column that totals: adding it would make the
+        lines overshoot the Total by its own value.
+
+        It is disclosed below the Total instead, which is both honest and what
+        a tax-inclusive invoice is supposed to say.
+      */}
+      {preview.gstOnFee > 0 && (
+        <Line label="GST on platform fee" amount={money(preview.gstOnFee)} />
       )}
       {preview.couponDiscount > 0 && (
         <Line label="Coupon discount" amount={`−${money(preview.couponDiscount)}`} tone="success" />
@@ -195,6 +211,19 @@ export function CartPriceBreakdown({
       <Div border="top-subtle" paddingY="t-sm">
         <Line label="Total" amount={money(preview.total)} tone="primary" strong />
       </Div>
+
+      {/*
+        Non-additive by construction: it is rendered AFTER the Total, never as
+        a `<Line>` in the list above. Zero whenever product GST reporting is
+        off (`siteSettings.gst.enabled` is false until a real GSTIN is
+        registered), in which case nothing is claimed at all — which is better
+        than naming a tax figure we are not in a position to state.
+      */}
+      {preview.gstAmount > 0 && (
+        <Text size="xs" color="muted">
+          Includes GST of {money(preview.gstAmount)}
+        </Text>
+      )}
 
       {errorNote ? (
         <Text size="xs" color="error">

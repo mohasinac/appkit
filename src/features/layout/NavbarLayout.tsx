@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { Div, IconButton, Li, Nav, Row, Span, Ul } from "../../ui";
@@ -9,6 +10,23 @@ import { useHoldToOpen } from "./useHoldToOpen";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
+
+/**
+ * How long the panel survives the pointer leaving the trigger.
+ *
+ * It is a hover BRIDGE, and it replaces the `pt` padding the in-flow panel used
+ * to carry for the same job: the panel is portalled to `<body>` now, so there is
+ * no shared box the pointer can cross and no padding that would help. 150ms is
+ * long enough for a diagonal flick from the trigger to the first menu row and
+ * short enough that it never reads as a stuck menu.
+ */
+const CLOSE_GRACE_MS = 150;
+
+/** `min-w-[15rem]` on the panel — the width estimate used before it has mounted. */
+const PANEL_MIN_WIDTH_PX = 240;
+
+/** Keeps a right-aligned panel off the viewport edge. */
+const VIEWPORT_MARGIN_PX = 8;
 
 export interface NavbarLayoutItem {
   href: string;
@@ -71,21 +89,114 @@ function DefaultNavItem({
   const hasChildren = Boolean(item.children && item.children.length > 0);
 
   /*
-   * Click-to-open state, which exists ONLY for the caret.
+   * 🛑 OPEN STATE IS JS, AND THE PANEL IS PORTALLED. Neither is a preference.
    *
-   * 🛑 Hover and focus stay pure CSS below, and this does not replace them. The
-   * panel opens on `group-hover` / `group-focus-within` with no JS at all, which
-   * is what keeps it usable for a keyboard user on Tab and before hydration.
-   * This adds the third affordance that was genuinely missing: a pointer user
-   * who CLICKS the caret expecting a menu got a navigation instead, because the
-   * caret was inside the parent `<Link>`.
+   * This used to open on `group-hover` / `group-focus-within` with the panel
+   * `position: absolute` inside the item — and the panel was INVISIBLE on every
+   * surface that renders this navbar, because `NavbarLayout` wraps the items in
+   * `relative flex-1 overflow-hidden` and a `overflow-x-auto` scroller for its
+   * scroll arrows. An absolutely-positioned descendant cannot escape an
+   * ancestor's overflow, and `overflow-x: auto` forces `overflow-y` to `auto`
+   * as well, so the 346px panel was clipped to the 40px nav strip.
+   *
+   * That is also why it was previously measured as working: the computed style
+   * really is `display: block` with a 346px height. Clipping does not show up
+   * in a computed style — only in what you can see.
+   *
+   * The only fix is to take the panel out of the clipping ancestor entirely, so
+   * it renders into `<body>` as `position: fixed` at coordinates read off the
+   * trigger. Hover and focus therefore cannot be CSS any more: there is no
+   * shared ancestor left for `:hover` to descend through. All four affordances
+   * survive — hover, focusing the trigger, the caret button, and hold-to-open
+   * on touch — and what is given up is the pre-hydration open, which was never
+   * real here: a clipped panel is not a working no-JS fallback.
+   *
+   * 🛑 Known limit, deliberately accepted rather than papered over: the panel
+   * is at the END of `<body>`, so TABBING off the caret moves to the next nav
+   * item (closing the menu) instead of into the children. The children stay
+   * reachable because the parent is a real link to a page that lists them all
+   * — the same argument the CSS version made — and Escape returns focus to the
+   * caret. Closing that properly means roving-tabindex menu semantics, which is
+   * its own change and should not ride along with a clipping fix.
    */
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
+  const [mounted, setMounted] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const panelId = `nav-panel-${item.href.replace(/[^a-z0-9]+/gi, "-")}`;
+
+  // `createPortal` needs a DOM node, which does not exist during SSR.
+  useEffect(() => setMounted(true), []);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const openNow = useCallback(() => {
+    cancelClose();
+    setOpen(true);
+  }, [cancelClose]);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => setOpen(false), CLOSE_GRACE_MS);
+  }, [cancelClose]);
+
+  // A pending timer outliving the item would call `setOpen` after unmount; the
+  // nav re-renders its item list whenever the listing-type flags or the session
+  // resolve.
+  useEffect(() => cancelClose, [cancelClose]);
+
+  /*
+   * Re-read the trigger's position whenever anything can move it.
+   *
+   * 🛑 The scroll listener is CAPTURING. The nav items live in their own
+   * horizontal scroller, so the scroll that slides the trigger sideways is that
+   * element's, not the window's — a bubbling listener on `window` never sees
+   * it, and the panel would hang over wherever the trigger used to be.
+   */
+  const measure = useCallback(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const width = panelRef.current?.offsetWidth || PANEL_MIN_WIDTH_PX;
+    const maxLeft = Math.max(
+      VIEWPORT_MARGIN_PX,
+      window.innerWidth - width - VIEWPORT_MARGIN_PX,
+    );
+    setCoords({
+      top: rect.bottom,
+      left: Math.min(Math.max(rect.left, VIEWPORT_MARGIN_PX), maxLeft),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!open) {
+      setCoords(null);
+      return;
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, true);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure, true);
+    };
+  }, [open, measure]);
 
   /*
    * Close on outside click, on Escape, and whenever the route changes.
+   *
+   * 🛑 The outside test has to accept the PANEL too. It is portalled, so it is
+   * not inside `wrapRef` any more — testing the wrapper alone would treat a
+   * click on a menu link as "outside", unmount the link on `mousedown`, and the
+   * `click` that follows would land on nothing. Every menu item would silently
+   * fail to navigate.
    *
    * The route-change close is the one that is easy to miss and the most
    * annoying to live with: the panel's own links navigate, and without this the
@@ -95,10 +206,17 @@ function DefaultNavItem({
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (wrapRef.current?.contains(target)) return;
+      if (panelRef.current?.contains(target)) return;
+      setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      // Escape has to return the caret focus, or the user is left tabbing from
+      // wherever inside a menu that no longer exists.
+      wrapRef.current?.querySelector("button")?.focus();
     };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
@@ -117,7 +235,7 @@ function DefaultNavItem({
    * one gesture is defined once. See `useHoldToOpen` for why the "did we hold"
    * flag has to be a ref.
    */
-  const holdHandlers = useHoldToOpen(() => setOpen(true), hasChildren);
+  const holdHandlers = useHoldToOpen(openNow, hasChildren);
 
   const trigger = (
     <Link
@@ -141,67 +259,43 @@ function DefaultNavItem({
   if (!hasChildren || children.length === 0) return trigger;
 
   /*
-   * 🛑 Hover/focus-within CSS, not React state, and the trigger is still a real
-   * link.
-   *
-   * Two things this buys. The group stays usable without JS and without a
-   * pointer — `focus-within` opens it on Tab, so a keyboard user reaches the
-   * children. And the parent is a real link whose children are also reachable
-   * from the page it leads to, which is the progressive-enhancement shape
-   * rather than a menu that traps people.
-   *
-   * 🛑 The CARET is now a separate button, and `aria-expanded` is real rather
-   * than faked. It used to live INSIDE the parent `<Link>`, so clicking the one
+   * 🛑 The CARET is a separate button, and `aria-expanded` is real rather than
+   * faked. It used to live INSIDE the parent `<Link>`, so clicking the one
    * control that looks like a disclosure navigated away instead of disclosing —
-   * the caret was announcing an affordance the markup did not have. It is the
-   * button that owns `aria-expanded`/`aria-controls`, because it is the only
-   * part that tracks state; the hover and focus paths still open the panel
-   * without touching it, which is why the attribute can be false while the
-   * panel is visible. That asymmetry is honest: the button reports what the
-   * BUTTON did, and a hover is not a disclosure a screen reader user performed.
+   * the caret was announcing an affordance the markup did not have.
    *
-   * The `pt` on the panel is a hover bridge: without it the gap between the
-   * trigger and the panel closes the menu as the pointer crosses it.
+   * The trigger stays a real link, so a tap still follows it and a crawler
+   * still gets a destination; the menu is the affordance on top, never a
+   * replacement for it.
    */
-  return (
-    <Div ref={wrapRef} className="relative group">
-      <Row align="center" gap="none">
-        {trigger}
-        {/*
-          🛑 `<IconButton>`, not a raw `<button>` — the variant catalogue rule.
-          It extends ButtonHTMLAttributes, so aria-expanded/-controls carry
-          through unchanged; the point of the primitive is that the sizing,
-          focus ring and hover surface come from one place rather than from a
-          className only this file would carry.
-        */}
-        <IconButton
-          type="button"
-          size="sm"
-          variant="ghost"
-          rounded="md"
-          aria-expanded={open}
-          aria-haspopup="true"
-          aria-controls={panelId}
-          aria-label={`${item.label} menu`}
-          onClick={() => setOpen((v) => !v)}
-          icon={
-            <ChevronDown
-              className={`w-3.5 h-3.5 shrink-0 opacity-70 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
-              aria-hidden="true"
-            />
-          }
-        />
-      </Row>
-      <Div
-        id={panelId}
-        className={`absolute left-0 top-full z-20 pt-[var(--appkit-space-1)] group-hover:block group-focus-within:block ${open ? "block" : "hidden"}`}
-      >
-        <Div surface="elevated" border="default" rounded="lg" shadow="lg" padding="xs">
+  const panel = (
+    <Div
+      ref={panelRef}
+      id={panelId}
+      // Positioning only — the exception the inline-style rule names, since
+      // these are runtime measurements with no representable class.
+      style={{
+        position: "fixed",
+        top: coords?.top ?? 0,
+        left: coords?.left ?? 0,
+        zIndex: "var(--appkit-z-dropdown)",
+        // Rendered-but-hidden for exactly one frame: the panel has to be in the
+        // DOM for `measure` to read its real width, and `visibility` keeps it
+        // measurable without painting it at the placeholder position.
+        visibility: coords ? "visible" : "hidden",
+      }}
+      onPointerEnter={cancelClose}
+      onPointerLeave={scheduleClose}
+      onFocusCapture={cancelClose}
+      onBlurCapture={scheduleClose}
+    >
+      <Div surface="elevated" border="default" rounded="lg" shadow="lg" padding="xs">
         <Ul className="min-w-[15rem] list-none">
           {children.map((child) => (
             <Li key={child.href}>
               <Link
                 href={child.href}
+                onClick={() => setOpen(false)}
                 className="flex items-start gap-[var(--appkit-space-2)] rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] hover:bg-surface-hover transition-colors duration-150"
               >
                 {child.icon && (
@@ -225,8 +319,47 @@ function DefaultNavItem({
             </Li>
           ))}
         </Ul>
-        </Div>
       </Div>
+    </Div>
+  );
+
+  return (
+    <Div
+      ref={wrapRef}
+      className="relative"
+      onPointerEnter={openNow}
+      onPointerLeave={scheduleClose}
+      onFocusCapture={openNow}
+      onBlurCapture={scheduleClose}
+    >
+      <Row align="center" gap="none">
+        {trigger}
+        {/*
+          🛑 `<IconButton>`, not a raw `<button>` — the variant catalogue rule.
+          It extends ButtonHTMLAttributes, so aria-expanded/-controls carry
+          through unchanged; the point of the primitive is that the sizing,
+          focus ring and hover surface come from one place rather than from a
+          className only this file would carry.
+        */}
+        <IconButton
+          type="button"
+          size="sm"
+          variant="ghost"
+          rounded="md"
+          aria-expanded={open}
+          aria-haspopup="true"
+          aria-controls={panelId}
+          aria-label={`${item.label} menu`}
+          onClick={() => (open ? setOpen(false) : openNow())}
+          icon={
+            <ChevronDown
+              className={`w-3.5 h-3.5 shrink-0 opacity-70 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+              aria-hidden="true"
+            />
+          }
+        />
+      </Row>
+      {open && mounted ? createPortal(panel, document.body) : null}
     </Div>
   );
 }

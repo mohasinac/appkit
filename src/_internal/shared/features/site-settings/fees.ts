@@ -36,7 +36,7 @@ export interface BuyerFacingFees {
   saleProtectionFeeEnabled?: boolean;
   saleProtectionFeePercent?: number;
   saleProtectionFeeMin?: number;
-  codHandlingFeeMin?: number;
+  codHandlingFeeCap?: number;
   codHandlingFeePercent?: number;
   codDepositPercent?: number;
 }
@@ -65,7 +65,7 @@ export function toBuyerFacingFees(
     saleProtectionFeeEnabled: commissions.saleProtectionFeeEnabled,
     saleProtectionFeePercent: commissions.saleProtectionFeePercent,
     saleProtectionFeeMin: commissions.saleProtectionFeeMin,
-    codHandlingFeeMin: commissions.codHandlingFeeMin,
+    codHandlingFeeCap: commissions.codHandlingFeeCap,
     codHandlingFeePercent: commissions.codHandlingFeePercent,
     codDepositPercent: commissions.codDepositPercent,
   };

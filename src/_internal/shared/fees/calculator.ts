@@ -125,21 +125,55 @@ export function computePayoutDeduction(grossAmount: number, commissions: FeeComm
 }
 
 export interface CodHandlingFeeRates {
-  /** Optional so existing `siteSettings` documents saved before this field existed don't produce NaN — falls back to ₹200. */
-  codHandlingFeeMin?: number;
+  /**
+   * Rupee CEILING on the COD handling fee. Optional so a `siteSettings`
+   * document saved before this field existed does not produce NaN — falls
+   * back to ₹200.
+   */ // audit-money-units-ok: rupee ceiling, not paise
+  codHandlingFeeCap?: number;
   /** Optional for the same reason — falls back to 10%. */
   codHandlingFeePercent?: number;
 }
 
-const DEFAULT_COD_HANDLING_FEE_MIN = 200;
+/** Buyer-facing COD handling ceiling, in decimal rupees. */
+const DEFAULT_COD_HANDLING_FEE_CAP = 200;
 const DEFAULT_COD_HANDLING_FEE_PERCENT = 10;
 
-/** COD handling fee charged to the buyer: max(fixed floor, subtotal × percent). */
+/**
+ * COD handling fee charged to the buyer: **min(subtotal × percent, cap)**.
+ *
+ * 🛑 The ₹200 is a CEILING, and it used to be applied as a FLOOR
+ * (`Math.max(min, percentFee)`) by a field called `codHandlingFeeMin`. The
+ * percentage then ran away on anything expensive: a ₹20,000 listing was
+ * charged **₹2,000** of "handling", which is not what handling a parcel costs
+ * — it is a tenth of the order. Measured on the live settings document
+ * (`codHandlingFeeMin: 200`, `codHandlingFeePercent: 10`) in the cart, and the
+ * figure was real: the buyer was quoted ₹22,011.80 on a ₹20,000 item.
+ *
+ * 🛑 What the fee IS, which is what makes the cap the correct shape: it is a
+ * TOKEN covering our cost of having shipped a parcel for free when the buyer
+ * does not pay on delivery. That cost is a courier's return leg — it scales
+ * with the parcel, not with the price of what is inside it. A ₹20,000 top and
+ * a ₹2,000 one cost the same to send back, so a fee that is 10× larger on the
+ * first is not recovering a cost, it is a surcharge on being expensive.
+ *
+ * The percentage survives because it is right at the small end — ₹150 of
+ * handling on a ₹300 order would exceed half the order — so the rule is "10%,
+ * but never more than ₹200". Below ₹2,000 the percentage binds; above it the
+ * cap does.
+ *
+ * The field was RENAMED rather than reinterpreted. A `…Min` read as a maximum
+ * is Root Cause #51's shape — a label describing the reverse of what the code
+ * does — and the next person to read the settings document would have had no
+ * way to tell. A live document carrying the old key now falls through to
+ * `DEFAULT_COD_HANDLING_FEE_CAP`, which is the same ₹200, so the rename
+ * changes no number on its own.
+ */
 export function computeCodHandlingFee(subtotal: number, rates: CodHandlingFeeRates): number {
-  const min = rates.codHandlingFeeMin ?? DEFAULT_COD_HANDLING_FEE_MIN;
+  const cap = rates.codHandlingFeeCap ?? DEFAULT_COD_HANDLING_FEE_CAP;
   const percent = rates.codHandlingFeePercent ?? DEFAULT_COD_HANDLING_FEE_PERCENT;
   const percentFee = roundRupees(subtotal * (percent / 100));
-  return Math.max(min, percentFee);
+  return Math.min(percentFee, cap);
 }
 
 export interface GiftWrapFeeRates {

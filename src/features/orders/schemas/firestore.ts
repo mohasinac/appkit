@@ -494,7 +494,7 @@ export interface OrderDocument extends BaseDocument {
   platformFee?: number;
   depositAmount?: number;
   codRemainingAmount?: number;
-  /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
+  /** COD handling fee charged to the buyer: min(subtotal × codHandlingFeePercent / 100, codHandlingFeeCap). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
   /** Buyer opted into gift wrapping at checkout (unchecked by default). */
   giftWrapAddon?: boolean;

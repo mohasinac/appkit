@@ -483,7 +483,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     minimumTransactionFee: 0,
     gatewayFeePercent: 2,
     codDepositPercent: 10,
-    codHandlingFeeMin: 200,
+    codHandlingFeeCap: 200,
     codHandlingFeePercent: 10,
     // Enabled so a seeded install actually shows the add-ons — see the matching
     // comment on DEFAULT_SITE_SETTINGS_DATA.commissions.
