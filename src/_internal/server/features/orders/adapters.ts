@@ -181,6 +181,13 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     // the packer needs giftWrapMessage in hand. An
     // adapter that drops them makes every downstream surface render its
     // "not applicable" fallback instead (Root Cause #57).
+    // EMI, so the buyer can see and pay their own schedule. Mapped with the
+    // add-ons above for the same reason recorded there: an adapter that drops
+    // a field makes every downstream surface render its not-applicable
+    // fallback (Root Cause #57).
+    emiEnabled: doc.emiEnabled,
+    emiInstallments: doc.emiInstallments,
+    emiRemainingBalance: doc.emiRemainingBalance,
     giftWrapAddon: doc.giftWrapAddon,
     giftWrapFee: doc.giftWrapFee,
     giftWrapMessage: doc.giftWrapMessage,

@@ -1,3 +1,4 @@
+import type { EmiInstallment } from "../schemas/firestore";
 import type { ListingType } from "../../products/types/index";
 import type { OrderType } from "../utils/order-splitter";
 import type { AppliedOrderDiscount, OrderSourceContext } from "../schemas/firestore";
@@ -205,6 +206,20 @@ export interface Order {
    * read it from site settings, because `gst` is in `PRIVATE_SITE_FIELDS`
    * after an earlier deny-list projection shipped it publicly (Root Cause #70).
    */
+  /**
+   * ── EMI, buyer-facing ─────────────────────────────────────────────────
+   *
+   * 🛑 Declared here because `EmiInstallmentsPanel` is useless without it,
+   * and the absence was Root Cause #57's exact shape: the whole EMI schedule
+   * sat on `OrderDocument` and `orderDocumentToOrder` mapped none of it, so
+   * every buyer surface would have rendered its "no EMI plan" fallback with
+   * a real plan on the record. That reads as "this order isn't on EMI"
+   * rather than as a bug, which is why it survives.
+   */
+  emiEnabled?: boolean;
+  emiInstallments?: EmiInstallment[];
+  /** Sum of unpaid instalments. 0 once the plan is settled. */
+  emiRemainingBalance?: number;
   supplierGstin?: string;
   supplierLegalName?: string;
   supplierAddress?: string;
