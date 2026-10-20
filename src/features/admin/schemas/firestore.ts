@@ -19,7 +19,7 @@ export const ADMIN_CHECKOUT_BYPASS_FLAG_KEY = "adminCheckoutBypass" as const;
  *   · `constants/notification-types.ts` (9) — fed the admin filter chips and
  *     the per-channel allow-list, so the admin list could not filter 18 of
  *     the 27 real types and an admin literally could not allow-list
- *     `offer_received` or `payment_review` for email or WhatsApp
+ *     `offer_received` or `payment_review` for email
  *   · `features/account/types/index.ts` (5: order|offer|promo|system|message)
  *     — a different vocabulary entirely, on a `UserNotification` type with
  *     zero real consumers

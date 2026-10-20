@@ -8,10 +8,6 @@
  *      false, and saving any unrelated field silently stripped a real
  *      tester's access.
  *
- *      `SellerWhatsAppSettingsView` writes `accessToken` — a live Meta
- *      credential — plus the WABA and catalog ids the sync runs against. A
- *      malformed id there fails at sync time, hours later, with no obvious
- *      cause.
  *
  *      `LotteryPullForm` is a buyer-facing entry: a transaction id, a payment
  *      time and an item number, all parsed with a bare `parseInt` and a `new

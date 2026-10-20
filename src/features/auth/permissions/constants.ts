@@ -629,10 +629,8 @@ export type StoreCapability =
   | "api_access" // programmatic API credentials (future)
   | "lower_commission_rate" // negotiated reduced platform fee; requires customCommissionRate
   | "early_access_features" // beta features before GA
-  | "advanced_analytics" // cohort/basket analysis beyond summary stats
-
-  // Integrations
-  | "whatsapp_catalog_sync"; // can sync store products to their WhatsApp Business Catalog (admin-granted)
+  // cohort/basket analysis beyond summary stats
+  | "advanced_analytics";
 
 /**
  * Every capability, as a runtime value.
@@ -666,7 +664,6 @@ const STORE_CAPABILITY_MAP: Record<StoreCapability, true> = {
   lower_commission_rate: true,
   early_access_features: true,
   advanced_analytics: true,
-  whatsapp_catalog_sync: true,
 };
 
 export const ALL_STORE_CAPABILITIES = Object.keys(
@@ -741,7 +738,7 @@ export function hasCapability(
  *
  * 🛑 The PURE half of `getStoreCapabilities`, extracted so a caller that
  * already holds the store document does not pay a second Firestore read to ask
- * what it is entitled to (Rule #6). Three WhatsApp routes were reading
+ * what it is entitled to (Rule #6). Several routes were reading
  * `store.capabilities ?? []` inline for exactly that reason, which made them a
  * second, divergent reader of the field — they skipped the default merge, so
  * they and `getStoreCapabilities` could disagree about the same store.

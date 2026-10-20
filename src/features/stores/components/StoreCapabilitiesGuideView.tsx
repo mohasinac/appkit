@@ -79,7 +79,6 @@ const CAPABILITY_GROUPS = [
       { cap: "lower_commission_rate", unlocks: "Negotiated reduced platform fee. Requires a signed agreement and minimum volume.", defaultOn: false },
       { cap: "early_access_features", unlocks: "Access to beta features before they are publicly available.", defaultOn: false },
       { cap: "advanced_analytics", unlocks: "Cohort retention, basket analysis, and top-buyer breakdown (beyond summary stats).", defaultOn: false },
-      { cap: "whatsapp_catalog_sync", unlocks: "Sync your store products to your WhatsApp Business Catalog automatically.", defaultOn: false },
     ],
   },
 ] as const;

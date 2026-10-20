@@ -105,7 +105,7 @@ export async function enforceCheckoutValueOtpRateLimit(
   });
 }
 
-/** Build the checkout-value OTP WhatsApp/SMS message body. */
+/** Build the checkout-value OTP message body. */
 export function buildCheckoutValueOtpMessage(code: string, siteName: string): string {
   return (
     `*${siteName} — Order Verification*\n\n` +

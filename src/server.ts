@@ -1022,7 +1022,7 @@ export {
   processRefundAction,
   type ProcessRefundInput,
 } from "./_internal/server/features/refunds/actions";
-// [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math.
+// [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling/addon fee math.
 export {
   computeCheckoutFees,
   computePayoutDeduction,

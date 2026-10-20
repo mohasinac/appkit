@@ -3776,7 +3776,7 @@ export type { DrawerFormFooterProps } from "./features/admin/index";
 // FeaturedResult - Type contract for featured result.
 export type { FeaturedResult } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// NotificationChannelConfig - Channel configuration for in-app/email/WhatsApp/SMS.
+// NotificationChannelConfig - Channel configuration for in-app/email/SMS.
 export type { NotificationChannelConfig } from "./features/admin/index";
 // NotificationCreateInput - Type contract for notification create input.
 export type { NotificationCreateInput } from "./features/admin/index";
@@ -3911,7 +3911,7 @@ export { markAllNotificationsRead } from "./features/admin/server";
 // markNotificationRead - Shared export for mark notification read.
 export { markNotificationRead } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendNotification - Multi-channel notification dispatcher (in-app + optional email/WhatsApp).
+// sendNotification - Multi-channel notification dispatcher (in-app + optional email).
 export { sendNotification } from "./features/admin/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // revokeSession - Shared export for revoke session.
@@ -7179,7 +7179,7 @@ export {
  type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
 export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
-// Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math (pure, client-safe).
+// Shared fee calculator — platform/gateway/GST/COD handling/addon fee math (pure, client-safe).
 export {
   computeCheckoutFees,
   computePayoutDeduction,
