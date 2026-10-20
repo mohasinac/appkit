@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Alert, Div, EmptyState, Heading, Input, SlottedListingView, Text } from "../../../ui";
+import { Alert, Div, EmptyState, Heading, Input, Row, SlottedListingView, Text, TextLink } from "../../../ui";
 import { sortBy } from "../../../constants/sort";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
@@ -10,6 +10,7 @@ import { FAQSortDropdown, type FAQSortOption } from "./FAQSortDropdown";
 import { FAQAccordion } from "./FAQAccordion";
 import { ContactCTA } from "./ContactCTA";
 import { useFaqList } from "../hooks/useFaqList";
+import { helpGuideFor } from "../constants/help-guides";
 
 interface FAQPageContentProps {
   initialCategory?: FAQCategory | "all";
@@ -174,14 +175,34 @@ export function FAQPageContent({
             portal="public"
             inlineToolbar
             className="space-y-6"
-            renderHeader={() => (
-              <Text size="sm" color="muted">
-                {labels.resultCount(total)}
-                {selectedCategory !== "all"
-                  ? ` ${labels.inCategory(categories.find((c) => c.key === selectedCategory)?.label ?? selectedCategory)}`
-                  : ""}
-              </Text>
-            )}
+            renderHeader={() => {
+              /*
+               * The fuller answer, next to the short ones.
+               *
+               * Only on a chosen category: on "all" there is no single guide
+               * to offer, and a link to the Help Centre index here would
+               * duplicate the footer's for no gain. `helpGuideFor` falls back
+               * to the index for the two categories that span the product, so
+               * a selected category always has somewhere honest to point.
+               */
+              const guide =
+                selectedCategory !== "all" ? helpGuideFor(selectedCategory) : null;
+              return (
+                <Row align="center" justify="between" gap="sm" className="min-w-0">
+                  <Text size="sm" color="muted" className="min-w-0">
+                    {labels.resultCount(total)}
+                    {selectedCategory !== "all"
+                      ? ` ${labels.inCategory(categories.find((c) => c.key === selectedCategory)?.label ?? selectedCategory)}`
+                      : ""}
+                  </Text>
+                  {guide && (
+                    <TextLink href={guide.path} size="sm" variant="muted" className="flex-shrink-0">
+                      {guide.label} →
+                    </TextLink>
+                  )}
+                </Row>
+              );
+            }}
             renderSearch={() => (
               <Input
                 value={searchValue}

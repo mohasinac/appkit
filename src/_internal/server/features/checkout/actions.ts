@@ -2407,7 +2407,7 @@ async function createPhonePeGroupOrder(
   // Reuses the same store/seller lookup as the COD/UPI path above instead
   // of re-implementing it inline — was two sequential findById calls per
   // seller group here, duplicated from resolveShippingCost.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity } = await resolveShippingCost(firstItem.storeId);
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections } = await resolveShippingCost(firstItem.storeId);
 
   /*
    * Same supplier-of-record rule as `createOrderForGroup`, through the same
@@ -2458,11 +2458,44 @@ async function createPhonePeGroupOrder(
   const addons = storeAddons?.[firstItem.storeId] ?? {};
   const giftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates);
   const giftWrapMessage = addons.giftWrapMessage;
-  const shipmentProtectionFee = computeShipmentProtectionFee(
-    groupTotal,
-    addons.shipmentProtectionAddon ?? false,
-    commissionRates,
-  );
+  /*
+   * 🛑 `computeProtectionFees`, not a bare `computeShipmentProtectionFee`.
+   *
+   * This path hand-rolled the shipment fee and computed NO sale-protection fee
+   * at all, which was wrong twice over:
+   *
+   *  1. **Sale protection was never charged here.** Razorpay's create-order
+   *     route DOES charge it (it calls `computeProtectionFees`), so the amount
+   *     captured and the amount this function records on the order disagreed
+   *     by the fee — and the platform absorbs the unconditional refund that
+   *     fee exists to pay for. See `computeSaleProtectionFee`.
+   *  2. **The C5e tiers were skipped.** The bare helper tests only "did the
+   *     buyer tick it" and the site-wide master switch, so shipment protection
+   *     could be billed on a seller who never agreed to back it, or on a
+   *     final-sale item where it cannot apply.
+   *
+   * Latent rather than live when written — `payment.phonepeEnabled` is false
+   * and the one live store has `supportsSaleProtection` unset — but both of
+   * those are a settings toggle away, and an under-charge that appears the
+   * moment a flag flips is worse than one that is visible now.
+   */
+  const groupHasFinalSale = group.some(({ product }) => product?.finalSale === true);
+  const { shippingProtectionFee: shipmentProtectionFee, saleProtectionFee } = computeProtectionFees({
+    subtotal: groupTotal,
+    selected: {
+      shipping: addons.shipmentProtectionAddon ?? false,
+      sale: addons.saleProtectionAddon ?? false,
+    },
+    tiers: {
+      platformShipping: commissionRates.shipmentProtectionFeeEnabled === true,
+      platformSale: commissionRates.saleProtectionFeeEnabled === true,
+      sellerShipping: storeProtections.shipping,
+      sellerSale: storeProtections.sale,
+      finalSale: groupHasFinalSale,
+    },
+    shippingFee: (s, sel) => computeShipmentProtectionFee(s, sel, commissionRates),
+    saleFee: (s, sel) => computeSaleProtectionFee(s, sel, commissionRates),
+  });
   /*
    * P-8 GST — now wired through this path. C0c defect 1.
    *
@@ -2499,7 +2532,7 @@ async function createPhonePeGroupOrder(
    * inside `groupTotal`. Matches the COD/UPI path exactly; `platformFeeGst`
    * stays because that is GST on our fee, charged on top. */
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + platformFee + platformFeeGst;
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst;
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
@@ -2597,6 +2630,9 @@ async function createPhonePeGroupOrder(
     giftWrapMessage: giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
     shipmentProtectionAddon: shipmentProtectionFee > 0 ? true : undefined,
     shipmentProtectionFee: shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
+    // Recorded as well as charged — an order that collects a protection fee
+    // without a record of it cannot be reconciled against a later claim.
+    saleProtectionFee: saleProtectionFee > 0 ? saleProtectionFee : undefined,
     /*
      * The tax breakdown, matching `createOrderForGroup` field for field.
      * This path recorded NONE of it before C0c defect 1 — so an online order

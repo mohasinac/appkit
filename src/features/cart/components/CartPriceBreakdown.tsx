@@ -30,6 +30,7 @@ export interface CartPriceBreakdownStore {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
+  emiSurcharge: number;
   gstAmount: number;
   couponDiscount: number;
   total: number;
@@ -47,6 +48,7 @@ export interface CartPriceBreakdownData {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
+  emiSurcharge: number;
   gstAmount: number;
   couponDiscount: number;
   platformFee: number;
@@ -182,6 +184,14 @@ export function CartPriceBreakdown({
           label={withStoreCount("Sale protection", countCharged((s) => s.saleProtectionFee))}
           amount={money(preview.saleProtectionFee)}
         />
+      )}
+      {/*
+        Additive, and named for what it is. The surcharge is the cost of
+        choosing EMI over paying in full — it belongs in the column, unlike the
+        tax-inclusive item GST below the Total.
+      */}
+      {preview.emiSurcharge > 0 && (
+        <Line label="EMI surcharge" amount={money(preview.emiSurcharge)} />
       )}
       {/* One commission on one transaction — never multiplied per store. */}
       {preview.platformFee > 0 && <Line label="Platform fee" amount={money(preview.platformFee)} />}
