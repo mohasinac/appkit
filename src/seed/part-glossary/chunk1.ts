@@ -11852,9 +11852,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Aero Wing & Aero Core is a Beyblade running core from the Hard Metal System. Part of New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Aero_Wing_%26_Aero_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -11959,9 +11959,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 33
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ],
     "jpName": "バトルチェンジコア",
     "romaji": "Batoru Chenji Koa"
@@ -12056,9 +12056,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12211,9 +12211,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 17
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ],
     "jpName": "グリップフラットコア",
     "romaji": "Gurippu Furatto Koa"
@@ -12293,9 +12293,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12314,9 +12314,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Metal Ball Core is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Ball_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12375,9 +12375,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Semi-Flat_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12443,9 +12443,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Sharp_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12504,9 +12504,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Rubber_Weight_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "weight",
+      "tip"
     ]
   },
   {
@@ -12579,9 +12579,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 33
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12654,9 +12654,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 50
     },
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -12951,7 +12951,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
-    "role": "gear"
+    "role": "gear",
+    "integratedRoles": [
+      "ring",
+      "gear"
+    ]
   },
   {
     "id": "spin-gear--left-sg",
@@ -25861,6 +25865,10 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Ark Pyramid is a Beyblade attack ring from the Engine Gear System, weighing 5.2 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ark_Pyramid",
     "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring"
+    ],
     "jpName": "アークピラミッド",
     "romaji": "Ākupiramiddo"
   },
@@ -26482,7 +26490,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
-    "role": "ring"
+    "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring"
+    ]
   },
   {
     "id": "attack-ring--knight-claws-ring",
@@ -26778,7 +26790,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Spark Attack is a Beyblade attack ring from the Spin Gear System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Attack",
-    "role": "ring"
+    "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring"
+    ]
   },
   {
     "id": "attack-ring--square-edge",
@@ -27147,7 +27163,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Wing Attack Ring is a Beyblade attack ring from the Spin Gear System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Attack_Ring",
-    "role": "ring"
+    "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring"
+    ]
   },
   {
     "id": "attack-ring--wing-cutter",

@@ -15162,6 +15162,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "バリケード",
     "romaji": "Barikēdo"
   },
@@ -15270,6 +15273,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Dual-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "バースト",
     "romaji": "Bāsuto"
   },
@@ -15429,6 +15435,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "チェイン",
     "romaji": "Chēn"
   },
@@ -15586,6 +15595,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "ディヴァイン",
     "romaji": "Divuain"
   },
@@ -15701,6 +15713,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "ガトリング",
     "romaji": "Gatoringu"
   },
@@ -15881,6 +15896,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Dual-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "MR",
     "romaji": "Kingu MR"
   },
@@ -16426,6 +16444,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Dual-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "MR",
     "romaji": "Sūpā MR"
   },
@@ -16614,6 +16635,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "ウインド",
     "romaji": "Uindo"
   },
@@ -16737,6 +16761,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Right-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "ジフォイド",
     "romaji": "Jifoido"
   },
@@ -16853,6 +16880,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "spinDirection": "Dual-Spin",
     "role": "blade",
+    "integratedRoles": [
+      "blade"
+    ],
     "jpName": "ゼスト",
     "romaji": "Zesuto"
   },
@@ -17076,7 +17106,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D06-PSK",
     "spinDirection": "Right-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--1b",
@@ -17250,7 +17284,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D07-PSK",
     "spinDirection": "Dual-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--1d",
@@ -17691,7 +17729,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D01-PSK",
     "spinDirection": "Right-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--2b",
@@ -17816,7 +17858,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "hasbroCode": "D09-PSK",
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--2d",
@@ -17969,7 +18015,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D02-PSK",
     "spinDirection": "Dual-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--2s",
@@ -18084,7 +18134,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D04-PSK",
     "spinDirection": "Dual-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--3a",
@@ -18200,7 +18254,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "D03-PSK",
     "spinDirection": "Left-Spin",
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "chassis--4a",
@@ -21352,7 +21410,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ],
@@ -21566,8 +21624,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "role": "tip",
-    "fusedRoles": [
-      "weight",
+    "integratedRoles": [
       "tip"
     ],
     "jpName": "ジェネレート",
@@ -21668,7 +21725,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ],
@@ -21803,8 +21860,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "role": "tip",
-    "fusedRoles": [
-      "weight",
+    "integratedRoles": [
       "tip"
     ],
     "jpName": "イグニッションダッシュ",
@@ -21887,7 +21943,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "hasbroCode": "TH23-F",
     "partType": "Attack",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ]
@@ -21986,7 +22042,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ],
@@ -22095,7 +22151,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Stamina",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ],
@@ -22211,7 +22267,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "weight",
       "tip"
     ],
@@ -44942,7 +44998,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TS10RC",
     "partType": "Stamina",
-    "role": "tip"
+    "role": "tip",
+    "integratedRoles": [
+      "base",
+      "tip"
+    ]
   },
   {
     "id": "driver--nothing-sp",
@@ -47514,7 +47574,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "hasbroCode": "TA11RC",
     "partType": "Attack",
-    "role": "tip"
+    "role": "tip",
+    "integratedRoles": [
+      "base",
+      "tip"
+    ]
   },
   {
     "id": "driver--revolve",

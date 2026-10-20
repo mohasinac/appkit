@@ -25339,6 +25339,10 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L-Drago Destructor (Hasbro)"
     ],
     "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ],
     "jpName": "エルドラゴデストロイ",
     "romaji": "Erudorago Desutoroi"
   },
@@ -25419,7 +25423,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
-    "role": "wheel"
+    "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ]
   },
   {
     "id": "fusion-wheel--l-drago-guardian",
@@ -25503,6 +25511,10 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfb4d": true
     },
     "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ],
     "jpName": "エルドラゴガーディアン",
     "romaji": "Erudorago Gādian"
   },
@@ -25567,7 +25579,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 0
     },
-    "role": "wheel"
+    "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ]
   },
   {
     "id": "fusion-wheel--lightning",
@@ -27809,6 +27825,10 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Variares I (Hasbro)"
     ],
     "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ],
     "jpName": "ヴァリアレス",
     "romaji": "Variaresu"
   },
@@ -27898,7 +27918,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
-    "role": "wheel"
+    "role": "wheel",
+    "integratedRoles": [
+      "ring",
+      "wheel"
+    ]
   },
   {
     "id": "fusion-wheel--vulcan",
@@ -35578,6 +35602,12 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring",
+      "weight",
+      "base"
+    ],
     "jpName": "ビッグバンジェネシス",
     "romaji": "Bigguban Jeneshisu"
   },
@@ -38545,7 +38575,12 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "spinDirection": "Right-Spin",
-    "role": "ring"
+    "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring",
+      "base"
+    ]
   },
   {
     "id": "layer--draciel-fortress-takara-tomy",
@@ -39671,6 +39706,9 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "ring"
+    ],
     "jpName": "ドラグーンV2 · ドラグーンビクトリー・ツー",
     "romaji": "Doragūn V2 · Doragūn Bikutorī Tsū"
   },
@@ -43380,6 +43418,9 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "ring"
+    ],
     "jpName": "ギャラクシーペガシス",
     "romaji": "Gyarakushī Pegashisu"
   },
@@ -44306,6 +44347,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring",
+      "blade"
+    ],
     "jpName": "グレイテストラファエル",
     "romaji": "Gureitesuto Rafaeru"
   },
@@ -48738,6 +48784,10 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "ring",
+      "weight"
+    ],
     "jpName": "ナイトメアロンギヌス",
     "romaji": "Naitomea Ronginusu"
   },
@@ -48825,7 +48875,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "hasbroCode": "LD01",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
-    "role": "ring"
+    "role": "ring",
+    "integratedRoles": [
+      "ring",
+      "weight"
+    ]
   },
   {
     "id": "layer--nova-nepstrius-n2",
@@ -51204,6 +51258,11 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
+    "integratedRoles": [
+      "chip",
+      "ring",
+      "base"
+    ],
     "jpName": "レガリアジェネシス",
     "romaji": "Regaria Jeneshisu"
   },

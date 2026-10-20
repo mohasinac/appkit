@@ -677,15 +677,37 @@ export interface PartGlossaryDocument extends BaseDocument {
    */
   role?: PartRole;
   /**
-   * Both roles of a MERGED slot, because a merged slot is real: HMS fuses
-   * spin gear and blade base into a Running Core, 4D fuses track and tip.
+   * Every stack role one moulding fills, listed TOP-TO-BOTTOM. A part that
+   * covers a single position does not carry this field at all.
    *
-   * 🛑 Load-bearing for any stack validation. `role` files a merged part
+   * Integration is real and spans generations: HMS merges spin gear and blade
+   * base into a Running Core, a 4D Bottom (`D:D`, `X:D`) is a spin track and
+   * a performance tip in one piece, a Burst `disc-integrated-driver` is a disc
+   * and a driver, and `fusion-wheel--variares` is an energy ring and a fusion
+   * wheel. A Plastic-era base can integrate its Sub Attack Ring.
+   *
+   * 🛑 Load-bearing for any stack validation. `role` files an integrated part
    * under its PRIMARY function, so a validator reading only that believes the
-   * other slot is still unfilled and offers a part that cannot physically go
-   * there.
+   * other position is still empty and offers a part that cannot physically go
+   * there — it will refuse a legal build, and an exploded 3D view will show a
+   * gap where a solid piece is.
+   *
+   * 🛑 PER PART, NOT PER SLOT — that is the whole reason this is a field and
+   * not a lookup. `fusion-wheel--variares` integrates the ring and
+   * `fusion-wheel--jade` does not; same slot, different moulding. Jade is
+   * multi-PIECE, which is a different fact (see `pieceCount` when it lands).
+   *
+   * 🛑 Do NOT re-spell this as "fused". "Fusion Wheel" is a literal MFB slot
+   * name, so `fusedRoles` reads as *the roles of the fusion wheel* — the
+   * opposite of the meaning. The source's own slot names already use the
+   * right word: `disc-integrated-driver`, `ratchet-integrated-bit`.
+   *
+   * Populated by `scripts/derive-part-integration.mjs`, which reads it off the
+   * compositions each part actually appears in — the source states a 4D
+   * Bottom's `Classification` as plain "Performance Tip", so this cannot be
+   * copied from an infobox and is not guessed either.
    */
-  fusedRoles?: PartRole[];
+  integratedRoles?: PartRole[];
   /**
    * An owner-uploaded 3D model. Empty by default and deliberately so — the
    * models are supplied by the owner, not ingested from anywhere.

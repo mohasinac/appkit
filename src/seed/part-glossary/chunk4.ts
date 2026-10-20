@@ -6446,6 +6446,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false
     },
     "role": "wheel",
+    "integratedRoles": [
+      "wheel"
+    ],
     "jpName": "クレイ",
     "romaji": "Kurei"
   },
@@ -6550,6 +6553,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false
     },
     "role": "wheel",
+    "integratedRoles": [
+      "wheel"
+    ],
     "jpName": "ヒート",
     "romaji": "Hīto"
   },
@@ -6655,6 +6661,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false
     },
     "role": "wheel",
+    "integratedRoles": [
+      "wheel"
+    ],
     "jpName": "マッド",
     "romaji": "Maddo"
   },
@@ -6759,6 +6768,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "mfbLimited": false
     },
     "role": "wheel",
+    "integratedRoles": [
+      "wheel"
+    ],
     "jpName": "ウインド",
     "romaji": "Uindo"
   },
@@ -9472,6 +9484,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "role": "gear",
+    "integratedRoles": [
+      "ring",
+      "gear"
+    ],
     "jpName": "Lギア",
     "romaji": "Eru Gia"
   },
@@ -13473,6 +13489,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "B:D"
     ],
     "role": "tip",
+    "integratedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "ベアリングドライブ",
     "romaji": "Bearingu Doraibu"
   },
@@ -14823,6 +14843,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "D:D"
     ],
     "role": "tip",
+    "integratedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "デルタドライブ",
     "romaji": "Deruta Doraibu"
   },
@@ -15421,6 +15445,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "F:D"
     ],
     "role": "tip",
+    "integratedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "ファイナルドライブ",
     "romaji": "Fainaru Doraibu"
   },
@@ -15535,6 +15563,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "F:S"
     ],
     "role": "tip",
+    "integratedRoles": [
+      "track",
+      "tip"
+    ],
     "jpName": "ファイナルサバイブ",
     "romaji": "Fainaru Sabaibu"
   },
@@ -21154,7 +21186,11 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "X:D"
     ],
-    "role": "tip"
+    "role": "tip",
+    "integratedRoles": [
+      "track",
+      "tip"
+    ]
   },
   {
     "id": "qs-blade--ambush",
@@ -22590,7 +22626,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "track",
       "tip"
     ],
@@ -22699,7 +22735,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "role": "tip",
-    "fusedRoles": [
+    "integratedRoles": [
       "track",
       "tip"
     ],
@@ -22811,9 +22847,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ],
     "jpName": "バレットグリフォン",
     "romaji": "BarettoGurifon"
@@ -22894,9 +22930,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ]
   },
   {
@@ -23032,9 +23068,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ],
     "jpName": "グローリーワルキューレ",
     "romaji": "GurōrīWarukyūre"
@@ -23137,9 +23173,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ],
     "jpName": "ヘルズネザー",
     "romaji": "HeruzuNezā"
@@ -23220,9 +23256,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ]
   },
   {
@@ -23282,9 +23318,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ]
   },
   {
@@ -23393,9 +23429,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "blade",
-    "fusedRoles": [
-      "track",
-      "blade"
+    "integratedRoles": [
+      "blade",
+      "track"
     ]
   },
   {
@@ -30565,9 +30601,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bearing_Core_2",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30583,9 +30619,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Bunshin Core is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bunshin_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30601,9 +30637,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Free Wing Cross is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Free_Wing_Cross",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30660,9 +30696,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core_(Ultimate_Mode)",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30678,9 +30714,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Metal Weight Flat Core is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Flat_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30703,9 +30739,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Metal Weight Grip Core is a Beyblade running core, weighing 3 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Grip_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30733,9 +30769,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Alpha",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30751,9 +30787,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Shooter Change Core Gamma is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Gamma",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -30784,9 +30820,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Spring Core is a Beyblade running core from the Hard Metal System, weighing 3 g. Part of Beyblade: G-Revolution.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Spring_Core",
     "role": "tip",
-    "fusedRoles": [
-      "gear",
-      "base"
+    "integratedRoles": [
+      "base",
+      "gear"
     ]
   },
   {
@@ -32726,7 +32762,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Neo Right SG (Metal Weight Version) is a Beyblade spin gear from the Magnacore System, weighing 5 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo_Right_SG_(Metal_Weight_Version)",
-    "role": "gear"
+    "role": "gear",
+    "integratedRoles": [
+      "gear"
+    ]
   },
   {
     "id": "spin-gear--neo-right-sg-mg-core",
@@ -32947,7 +32986,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 67
     },
-    "role": "gear"
+    "role": "gear",
+    "integratedRoles": [
+      "gear"
+    ]
   },
   {
     "id": "spin-gear--right-rotation-spin-gear",

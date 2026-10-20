@@ -2508,7 +2508,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Metal Sharp Base",
-        "partId": "blade-base--metal-sharp-base"
+        "partId": "blade-base--blade-base"
       }
     ],
     "source": "gen1/plastic/flash-leopard-2.md",
@@ -7430,7 +7430,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "DRIVER",
         "partName": "Destroy'",
-        "partId": "driver--destroy-dash"
+        "partId": "driver--destroy"
       }
     ],
     "source": "gen3/db/rage-longinus-s5.md"
@@ -7940,7 +7940,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "PERFORMANCE DRIVER",
         "partName": "Evolution'",
-        "partId": "driver--evolution-dash"
+        "partId": "driver--evolution"
       }
     ],
     "source": "gen3/superking/brave-valtryek.md"
@@ -7987,7 +7987,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "driver",
         "slotLabel": "DRIVER",
         "partName": "Destroy'",
-        "partId": "driver--destroy-dash"
+        "partId": "driver--destroy"
       }
     ],
     "source": "gen3/superking/rage-longinus-d3a.md"

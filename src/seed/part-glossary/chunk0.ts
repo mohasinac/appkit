@@ -14154,7 +14154,11 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratingsNormalised": {
       "attack": 33
     },
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "weight",
+      "base"
+    ]
   },
   {
     "id": "blade-base--fantom-grip-base",
@@ -14546,7 +14550,11 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
-    "role": "base"
+    "role": "base",
+    "integratedRoles": [
+      "base",
+      "gear"
+    ]
   },
   {
     "id": "blade-base--hit-release",
@@ -23519,6 +23527,10 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Defense",
     "role": "tip",
+    "integratedRoles": [
+      "base",
+      "tip"
+    ],
     "jpName": "ドリフト",
     "romaji": "Dorifuto"
   },
@@ -25915,6 +25927,10 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Attack",
     "role": "tip",
+    "integratedRoles": [
+      "base",
+      "tip"
+    ],
     "jpName": "エクシードダッシュエックス",
     "romaji": "Ekushīdo Dasshu Ekkusu"
   },
@@ -26231,6 +26247,10 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "partType": "Balance",
     "role": "tip",
+    "integratedRoles": [
+      "base",
+      "tip"
+    ],
     "jpName": "ゾーンダッシュゼット",
     "romaji": "Zōn Dasshu Zetto"
   },
