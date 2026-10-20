@@ -18,7 +18,6 @@ import {
   moderationQueueSeedData,
   reportsSeedData,
   itemRequestsSeedData,
-  storeWhatsAppConfigSeedData,
   storeGoogleConfigSeedData,
 } from "./store-extensions-seed-data";
 // SB-UNI-C — brandsSeedData merged into categoriesSeedData.
@@ -85,7 +84,7 @@ export type SeedCollectionName =
   | "supportTickets" | "productFeatures" | "taxCodes" | "offers" | "couponUsage" | "claimedCoupons"
   | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
   | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
-  | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
+  | "itemRequests" | "storeGoogleConfig" | "roleOverrides"
   | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
   | "shipmentLots" | "shipmentItems" | "catalogueItems" | "testerChecklistItems";
 
@@ -321,7 +320,6 @@ export const SEED_MANIFEST: SeedManifest = {
   itemRequests: pick(
     asArr(itemRequestsSeedData).map((r) => ({ ...r, name: r.title ?? r.id })),
   ),
-  storeWhatsAppConfig: pick(asArr(storeWhatsAppConfigSeedData)),
   storeGoogleConfig: pick(asArr(storeGoogleConfigSeedData)),
   // RBAC + admin notifications — no seed docs yet; manifest stays empty until populated.
   roleOverrides: [],

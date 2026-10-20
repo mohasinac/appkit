@@ -213,12 +213,11 @@ export interface CartAppliedCoupon {
  *
  * Add-on fees have always been billed per order group (= per store) by
  * `createOrderForGroup` / `previewCheckoutPricing`, but the selection used to be
- * a single cart-wide boolean — so one tick on "WhatsApp updates" quietly billed
+ * a single cart-wide boolean — so one tick on "gift wrap" quietly billed
  * ₹10 × every store in the cart, with no way to opt in for just one seller.
  * Keying the selection by storeId makes the choice match the billing.
  */
 export interface CartStoreAddons {
-  whatsappNotifyAddon?: boolean;
   giftWrapAddon?: boolean;
   giftWrapMessage?: string;
   /** Loss or damage IN TRANSIT. */

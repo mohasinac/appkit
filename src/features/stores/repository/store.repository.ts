@@ -26,8 +26,6 @@ import {
 import { DatabaseError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
 import {
-  encryptSecret,
-  decryptSecret,
 } from "../../../security/settings-encryption";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
@@ -50,62 +48,6 @@ export interface StoreWriteContext {
 export class StoreRepository extends BaseRepository<StoreDocument> {
   constructor() {
     super(STORE_COLLECTION);
-  }
-
-  private encryptSecrets<D extends Partial<StoreDocument>>(data: D): D {
-    const token = data.whatsappConfig?.accessToken;
-    if (!token) return data;
-    return {
-      ...data,
-      whatsappConfig: { ...data.whatsappConfig, accessToken: encryptSecret(token) },
-    };
-  }
-
-  private decryptSecrets<D extends Partial<StoreDocument>>(data: D): D {
-    const token = data.whatsappConfig?.accessToken;
-    if (!token) return data;
-    return {
-      ...data,
-      whatsappConfig: { ...data.whatsappConfig, accessToken: decryptSecret(token) },
-    };
-  }
-
-  protected override mapDoc<D = StoreDocument>(snap: DocumentSnapshot): D {
-    return this.decryptSecrets(super.mapDoc<StoreDocument>(snap)) as unknown as D;
-  }
-
-  /**
-   * LIST reads never carry the WhatsApp token — not even encrypted.
-   *
-   * `mapDoc` above decrypts it, and `listStores(model, activeOnly)` backs the
-   * PUBLIC `/stores` page. Once `sieveQuery` started routing list rows through
-   * `mapDoc` (it previously mapped documents itself and skipped every
-   * override), that decrypt would have put a plaintext Meta OAuth bearer token
-   * on a public listing — the exact shape of Root Cause #70.
-   *
-   * So the list path deliberately does NOT call `decryptSecrets`, and drops
-   * `accessToken` outright: a list has no legitimate use for it, and a value
-   * that is never in the payload cannot be leaked by a projection someone
-   * forgets to write.
-   *
-   * Detail reads are unchanged — `findBySlug`/`findById` still decrypt, so the
-   * WhatsApp settings and catalog-sync routes keep working exactly as before.
-   * Removing the decrypt from `mapDoc` itself is a separate, riskier change
-   * that CLAUDE.md explicitly defers; this closes the public-exposure half
-   * without touching the encryption round-trip at all.
-   */
-  protected override mapDocForList<D = StoreDocument>(snap: DocumentSnapshot): D {
-    const doc = super.mapDoc<StoreDocument>(snap);
-    if (!doc.whatsappConfig) return doc as unknown as D;
-    const { accessToken: _dropped, ...safeConfig } = doc.whatsappConfig;
-    return { ...doc, whatsappConfig: safeConfig } as unknown as D;
-  }
-
-  override async update(
-    id: string,
-    data: Partial<StoreDocument>,
-  ): Promise<StoreDocument> {
-    return super.update(id, this.encryptSecrets(data));
   }
 
   /**
@@ -139,7 +81,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       await this.db
         .collection(this.collection)
         .doc(input.storeSlug)
-        .create(prepareForFirestore(this.encryptSecrets(storeData)));
+        .create(prepareForFirestore(storeData));
     } catch (err: unknown) {
       void normalizeError(err);
       // gRPC ALREADY_EXISTS = code 6
@@ -258,9 +200,8 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
         trigger: ctx?.trigger ?? defaultTrigger,
         reason: ctx?.reason,
         note: ctx?.note,
-        // `mapDoc` decrypts whatsappConfig.accessToken on EVERY read, so a
-        // live Meta credential is in memory whenever this diff runs, and
-        // `encryptPiiFields` never descends into arrays.
+        // `encryptPiiFields` never descends into arrays, so a nested secret
+        // would be stored in plaintext — the list below is the scrub.
         piiFields: STORE_HISTORY_PII_FIELDS,
       },
     );
@@ -338,9 +279,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       options: { maxPageSize: win.maxPageSize(100) },
       fields: sieveFields,
       // Called DIRECTLY, not through `sieveQuery`, so the mapper has to be
-      // passed by hand — and it is the list mapper, never `mapDoc`. With
-      // `activeOnly` this is the public /stores listing; `mapDoc` decrypts the
-      // WhatsApp bearer token and a list has no use for it.
+      // passed by hand. With `activeOnly` this is the public /stores listing.
       mapDoc: (snap) => this.mapDocForList<StoreDocument>(snap),
     });
     const searched = win.finish(result);
@@ -498,7 +437,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     const batch = this.db.batch();
     const newRef = this.db.collection(this.collection).doc(newSlug);
     const oldRef = this.db.collection(this.collection).doc(currentSlug);
-    batch.create(newRef, prepareForFirestore(this.encryptSecrets(newDoc)));
+    batch.create(newRef, prepareForFirestore(newDoc));
     batch.delete(oldRef);
     await batch.commit();
 

@@ -1,7 +1,7 @@
 /*
  * WHY: Seeds the 11 store-extension collections for the Beyblade marketplace (2 stores).
  * WHAT: payoutMethods, shippingConfigs, analyticsCards, analyticsAlerts, storeCategories,
- *       listingTemplates, moderationQueue, reports, itemRequests, storeWhatsAppConfig, storeGoogleConfig.
+ *       listingTemplates, moderationQueue, reports, itemRequests, storeGoogleConfig.
  *
  * EXPORTS:
  *   payoutMethodsSeedData, shippingConfigsSeedData, analyticsCardsSeedData,
@@ -29,7 +29,6 @@ import type {
   ShippingConfigDocument,
   StoreCategoryDocument,
   StoreGoogleConfigDocument,
-  StoreWhatsAppConfigDocument,
 } from "../features/store-extensions/schemas/firestore";
 
 const NOW = new Date();
@@ -294,29 +293,6 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     status: "rejected",
     replyCount: 0,
     replies: [],
-  },
-];
-
-// ───── storeWhatsAppConfig (2 records) ────────────────────────────────────
-export const storeWhatsAppConfigSeedData: Partial<StoreWhatsAppConfigDocument>[] = [
-  {
-    id: "whatsapp-beyblade-arena",
-    storeId: "store-beyblade-arena",
-    isConnected: true,
-    isPaid: true,
-    phoneNumber: "+919876501001",
-    businessProfileName: "Beyblade Arena",
-    catalogUrl: "https://wa.me/c/919876501001",
-    autoReply: "Hi! Thanks for messaging Beyblade Arena. We respond within 2 hours.",
-    welcomeMessage: "Welcome to Beyblade Arena! Browse our full catalog above.",
-    onboardingStatus: "approved",
-  },
-  {
-    id: "whatsapp-letitrip-official",
-    storeId: "store-letitrip-official",
-    isConnected: false,
-    isPaid: false,
-    onboardingStatus: "pending",
   },
 ];
 

@@ -239,15 +239,12 @@ export interface Order {
   /**
    * Paid add-ons the buyer opted into for THIS order (= this store).
    *
-   * These are operational flags, not just billing records: `whatsappNotifyAddon`
-   * is what the status-change notifier checks to decide whether to send a
-   * WhatsApp message, and `giftWrapAddon`/`shipmentProtectionAddon` are what
+   * These are operational flags, not just billing records:
+   * `giftWrapAddon`/`shipmentProtectionAddon` are what
    * the packer needs to see before dispatch. They live on the order itself and
    * are filterable (`orders` SIEVE_FIELDS) precisely so nobody has to keep a
    * separate list of who asked for what.
    */
-  whatsappNotifyAddon?: boolean;
-  whatsappNotifyFee?: number;
   giftWrapAddon?: boolean;
   giftWrapFee?: number;
   /** The buyer's gift message — the packer has to physically include this. */

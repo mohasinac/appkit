@@ -181,8 +181,6 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     // whatsappNotifyAddon, and the packer needs giftWrapMessage in hand. An
     // adapter that drops them makes every downstream surface render its
     // "not applicable" fallback instead (Root Cause #57).
-    whatsappNotifyAddon: doc.whatsappNotifyAddon,
-    whatsappNotifyFee: doc.whatsappNotifyFee,
     giftWrapAddon: doc.giftWrapAddon,
     giftWrapFee: doc.giftWrapFee,
     giftWrapMessage: doc.giftWrapMessage,

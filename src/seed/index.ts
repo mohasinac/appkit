@@ -238,7 +238,6 @@ export {
   moderationQueueSeedData,
   reportsSeedData,
   itemRequestsSeedData,
-  storeWhatsAppConfigSeedData,
   storeGoogleConfigSeedData,
 } from "./store-extensions-seed-data";
 

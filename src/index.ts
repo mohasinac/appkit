@@ -1606,10 +1606,6 @@ export {
   STORE_GOOGLE_CONFIG_COLLECTION,
   STORE_GOOGLE_CONFIG_INDEXED_FIELDS,
   DEFAULT_STORE_GOOGLE_CONFIG_DATA,
-  type StoreWhatsAppConfigDocument,
-  STORE_WHATSAPP_CONFIG_COLLECTION,
-  STORE_WHATSAPP_CONFIG_INDEXED_FIELDS,
-  DEFAULT_STORE_WHATSAPP_CONFIG_DATA,
   // Schemas — RBAC
   type CustomRoleDocument,
   CUSTOM_ROLES_COLLECTION,
@@ -1631,7 +1627,6 @@ export {
   AdminNotificationsRepository,
   ItemRequestsRepository,
   StoreGoogleConfigRepository,
-  StoreWhatsAppConfigRepository,
   CustomRolesRepository,
   RoleOverridesRepository,
   // Repositories — singletons
@@ -1646,7 +1641,6 @@ export {
   adminNotificationsRepository,
   itemRequestsRepository,
   storeGoogleConfigRepository,
-  storeWhatsAppConfigRepository,
   customRolesRepository,
   roleOverridesRepository,
 } from "./features/store-extensions/index";
@@ -1878,7 +1872,6 @@ export {
   moderationQueueSeedData,
   reportsSeedData,
   itemRequestsSeedData,
-  storeWhatsAppConfigSeedData,
   storeGoogleConfigSeedData,
 } from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.

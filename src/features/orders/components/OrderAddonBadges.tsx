@@ -8,7 +8,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 /**
  * Icon badges for an order's paid add-ons and applied coupon.
  *
- * These are fulfilment instructions, not decoration: WhatsApp tells the
+ * These are fulfilment instructions, not decoration: gift wrap tells the
  * status-change notifier to message this buyer, gift wrap tells the packer to
  * wrap the parcel and enclose the message, and either protection changes how a
  * claim is handled. They are recorded on the order (and filterable in the
@@ -21,8 +21,6 @@ import { formatCurrency } from "../../../utils/number.formatter";
  */
 
 export interface OrderAddonBadgesOrder {
-  whatsappNotifyAddon?: boolean;
-  whatsappNotifyFee?: number;
   giftWrapAddon?: boolean;
   giftWrapFee?: number;
   giftWrapMessage?: string;
@@ -83,7 +81,6 @@ export function OrderAddonBadges({
 
   const hasCoupon = showCoupon && !!order.couponCode;
   const hasAny =
-    order.whatsappNotifyAddon ||
     order.giftWrapAddon ||
     order.shipmentProtectionAddon ||
     order.saleProtectionAddon ||
@@ -95,14 +92,6 @@ export function OrderAddonBadges({
   return (
     <Stack gap="xs" className={`min-w-0 ${className}`}>
       <Row gap="xs" align="center" wrap className="min-w-0">
-        {order.whatsappNotifyAddon && (
-          <Chip
-            icon={<MessageCircle size={12} />}
-            label={isDetail && money(order.whatsappNotifyFee) ? `WhatsApp updates · ${money(order.whatsappNotifyFee)}` : "WhatsApp updates"}
-            tone="success"
-            title="Buyer opted into WhatsApp order-status updates — status changes on this order should notify them on WhatsApp."
-          />
-        )}
         {order.giftWrapAddon && (
           <Chip
             icon={<Gift size={12} />}

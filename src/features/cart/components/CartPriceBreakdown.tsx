@@ -27,7 +27,6 @@ export interface CartPriceBreakdownStore {
   subtotal: number;
   shippingFee: number;
   codHandlingFee: number;
-  whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
@@ -45,7 +44,6 @@ export interface CartPriceBreakdownData {
   subtotal: number;
   shippingFee: number;
   codHandlingFee: number;
-  whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
@@ -166,12 +164,6 @@ export function CartPriceBreakdown({
       )}
       {preview.codHandlingFee > 0 && (
         <Line label="COD handling fee" amount={money(preview.codHandlingFee)} />
-      )}
-      {preview.whatsappNotifyFee > 0 && (
-        <Line
-          label={withStoreCount("WhatsApp updates", countCharged((s) => s.whatsappNotifyFee))}
-          amount={money(preview.whatsappNotifyFee)}
-        />
       )}
       {preview.giftWrapFee > 0 && (
         <Line

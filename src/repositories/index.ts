@@ -130,7 +130,6 @@ export {
   moderationQueueRepository,
   reportsRepository,
   itemRequestsRepository,
-  storeWhatsAppConfigRepository,
   storeGoogleConfigRepository,
   PayoutMethodsRepository,
   ShippingConfigsRepository,
@@ -141,7 +140,6 @@ export {
   ModerationQueueRepository,
   ReportsRepository,
   ItemRequestsRepository,
-  StoreWhatsAppConfigRepository,
   StoreGoogleConfigRepository,
 } from "../features/store-extensions/repository/store-extensions.repositories";
 
