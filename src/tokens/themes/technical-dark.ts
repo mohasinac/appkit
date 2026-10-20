@@ -103,16 +103,29 @@ export const TECHNICAL_DARK_THEME: ThemeRecord = {
     "appkit-shadow-glow-pink":
       "0 0 0 1px rgba(86,211,154,0.14), 0 4px 18px -6px rgba(86,211,154,0.22)",
 
-    // Mono-forward: headings, labels, IDs, nav and tables are monospace;
-    // `editorial` is the reading face for lessons and blog prose.
+    /*
+     * Mono-forward: headings, labels, IDs, nav and tables are monospace;
+     * `editorial` is the reading face for lessons and blog prose.
+     *
+     * The optional consumer-supplied face is `--font-code` (e.g. a next/font
+     * loader variable). Two traps are deliberately avoided here:
+     *   - it is NOT named `--font-mono`, because consumers commonly map that
+     *     Tailwind theme key to `--appkit-font-mono` — which would be a
+     *     circular reference, and a cycle invalidates the declaration;
+     *   - every var() carries an in-place fallback, because a bare
+     *     `var(--undefined)` does NOT fall through to the next family in the
+     *     comma list — it invalidates the whole declaration, silently
+     *     dropping the UI back to the browser default.
+     * Both of those were live bugs on the deployed site before this comment.
+     */
     "appkit-font-display":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
     "appkit-font-sans":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
     "appkit-font-editorial":
-      "var(--font-body), ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "var(--font-body, ui-sans-serif), system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
     "appkit-font-mono":
-      "var(--font-mono), \"JetBrains Mono\", \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+      "var(--font-code, \"JetBrains Mono\"), \"IBM Plex Mono\", ui-monospace, \"SFMono-Regular\", Consolas, monospace",
   },
   gradients: { ...DEFAULT_DARK_THEME.gradients },
 };
