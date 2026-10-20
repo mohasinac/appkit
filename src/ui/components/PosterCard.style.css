@@ -1,0 +1,306 @@
+/*
+ * PosterCard — an image-led tile. Artwork fills the whole card, a vertical
+ * scrim carries the type, and the links sit as chips on the dark end.
+ *
+ * 🛑 This family is THEME-INVARIANT on purpose, and that is not the usual
+ * mistake. Root Cause #67 is about pairing a theme-INVERTING token
+ * (`bg-{status}-surface`) with a fixed `text-white`; here the background is a
+ * photograph plus an opaque dark scrim in BOTH themes, so white ink is correct
+ * in both and a theme-relative token would be the bug. Same reasoning as
+ * `surface="media-dark"`.
+ *
+ * 🛑 Colours are `rgb(… / α)`, never hex — `audit-hex-tokens` walks
+ * `appkit/src` and a standalone hex literal is a category-D violation.
+ *
+ * 🛑 The scrim lives here rather than on a call site's className because
+ * `audit-html-wrappers/RAW_GRADIENT_UTILITY` blocks `bg-gradient-to-*` outside
+ * primitive sources, and because both consumers (the homepage systems matrix
+ * and the Shop-by-Category tiles) need the identical ramp — two hand-written
+ * copies is how they drift.
+ */
+
+/* The near-black the whole family composes against. Declared once so the card
+   base, the scrim stops and the solid chip's ink cannot disagree. */
+.appkit-poster {
+  --appkit-poster-ink: 9 9 11;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 20rem;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--appkit-radius-2xl);
+  background-color: rgb(var(--appkit-poster-ink));
+  /* A hairline INSIDE the radius. A `border` would be clipped by
+     `overflow: hidden` on the image corners; an inset ring is not. */
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.appkit-poster--tall {
+  min-height: 26rem;
+}
+
+.appkit-poster--compact {
+  min-height: 14rem;
+}
+
+/* Hover lift. Guarded so a touch device — where `:hover` sticks after a tap —
+   never leaves a card translated. */
+@media (hover: hover) {
+  .appkit-poster:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.16),
+      0 18px 40px -18px rgb(0 0 0 / 0.55);
+  }
+
+  .appkit-poster:hover .appkit-poster__media {
+    transform: scale(1.06);
+  }
+}
+
+/* The whole card is a link on the category tile, so the ring must be visible
+   against the artwork rather than against a surface token. */
+.appkit-poster:focus-visible,
+.appkit-poster:has(:focus-visible) {
+  outline: 2px solid rgb(255 255 255 / 0.9);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-poster,
+  .appkit-poster__media {
+    transition: none;
+  }
+
+  .appkit-poster:hover {
+    transform: none;
+  }
+
+  .appkit-poster:hover .appkit-poster__media {
+    transform: none;
+  }
+}
+
+/* ── Artwork ──────────────────────────────────────────────────────────── */
+
+/*
+ * The positioned parent `MediaImage` needs — it renders `fill`, so without an
+ * absolutely-positioned ancestor Next warns and the image collapses.
+ *
+ * `object-position: center 22%` rather than `center`: every one of the four
+ * generation posters is portrait key art with the cast in the upper half and a
+ * burnt-in wordmark at the bottom, so a centred crop in a landscape-ish box
+ * frames torsos and puts the wordmark straight under the card's own title.
+ */
+.appkit-poster__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform-origin: center 30%;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.appkit-poster__media img {
+  object-position: center 22%;
+}
+
+/* ── Scrim ────────────────────────────────────────────────────────────── */
+
+/*
+ * Two ramps, and both are load-bearing:
+ *
+ *  - the vertical one takes the bottom ~55% to near-opaque so body copy and a
+ *    dozen chips are readable over busy, saturated artwork, while leaving the
+ *    top third nearly clear so the art is still the thing you see;
+ *  - the horizontal one is a shallow left wash, so the first word of every
+ *    line has contrast even where the art happens to be pale.
+ *
+ * The stops are deliberately uneven. A linear fade reads as a grey veil over
+ * the whole image; an eased one looks like light falling off.
+ */
+.appkit-poster__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to top,
+      rgb(var(--appkit-poster-ink) / 0.97) 0%,
+      rgb(var(--appkit-poster-ink) / 0.93) 22%,
+      rgb(var(--appkit-poster-ink) / 0.72) 42%,
+      rgb(var(--appkit-poster-ink) / 0.34) 64%,
+      rgb(var(--appkit-poster-ink) / 0.08) 84%,
+      rgb(var(--appkit-poster-ink) / 0) 100%
+    ),
+    linear-gradient(
+      to right,
+      rgb(var(--appkit-poster-ink) / 0.55) 0%,
+      rgb(var(--appkit-poster-ink) / 0.12) 48%,
+      rgb(var(--appkit-poster-ink) / 0) 100%
+    );
+}
+
+/* ── Content ──────────────────────────────────────────────────────────── */
+
+.appkit-poster__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-space-3);
+  padding: var(--appkit-space-5);
+}
+
+.appkit-poster__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--appkit-space-2);
+  color: rgb(255 255 255 / 0.62);
+  font-size: var(--appkit-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A short rule before the eyebrow — the one piece of ornament in the card, and
+   it earns its place by separating the date range from the artwork behind it. */
+.appkit-poster__eyebrow::before {
+  content: "";
+  width: 1.25rem;
+  height: 1px;
+  flex: none;
+  background: rgb(255 255 255 / 0.45);
+}
+
+.appkit-poster__title {
+  margin: 0;
+  color: rgb(255 255 255);
+  font-size: var(--appkit-text-2xl);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.appkit-poster__text {
+  margin: 0;
+  color: rgb(255 255 255 / 0.68);
+  font-size: var(--appkit-text-sm);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.appkit-poster__meta {
+  color: rgb(255 255 255 / 0.55);
+  font-size: var(--appkit-text-xs);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Chips ────────────────────────────────────────────────────────────── */
+
+/*
+ * A hairline rule above the chip row. The body copy and the links are two
+ * different kinds of thing — prose versus navigation — and on a card with
+ * seven or eight chips that boundary is what stops the block reading as a
+ * paragraph that ran out of punctuation.
+ */
+.appkit-poster__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--appkit-space-2);
+  margin-top: var(--appkit-space-1);
+  padding-top: var(--appkit-space-3);
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+}
+
+.appkit-poster__chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 0.3125rem 0.6875rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: var(--appkit-radius-full);
+  background: rgb(255 255 255 / 0.09);
+  /* Progressive: unsupported browsers get the flat 9% wash, which is already
+     legible against the scrim. Nothing depends on the blur. */
+  backdrop-filter: blur(8px);
+  color: rgb(255 255 255 / 0.88);
+  font-size: var(--appkit-text-xs);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.appkit-poster__chip:hover {
+  background: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.38);
+  color: rgb(255 255 255);
+}
+
+/*
+ * The destination chips — "Parts", "Launchers", "Stadiums". These are the
+ * widest pages behind the card, so they invert to a solid fill and sort to the
+ * end of the row. One emphasis level, never two: a card where three chips all
+ * shout has no hierarchy at all.
+ */
+.appkit-poster__chip--key {
+  background: rgb(255 255 255 / 0.95);
+  border-color: transparent;
+  color: rgb(var(--appkit-poster-ink));
+  font-weight: 600;
+}
+
+.appkit-poster__chip--key:hover {
+  background: rgb(255 255 255);
+  border-color: transparent;
+  color: rgb(var(--appkit-poster-ink));
+}
+
+/* ── Grid ─────────────────────────────────────────────────────────────── */
+
+/*
+ * Posters are tall, so they do NOT use `<Grid cols="cards">` — that ladder's
+ * `auto-fill` tier is tuned for ~240px product tiles and would open a fifth
+ * track on a wide screen, breaking a set of exactly four generations into
+ * "four and a gap". A fixed 1 → 2 → 4 ladder is the honest shape for a fixed
+ * set.
+ */
+.appkit-poster-grid {
+  display: grid;
+  gap: var(--appkit-space-4);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .appkit-poster-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .appkit-poster-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .appkit-poster-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

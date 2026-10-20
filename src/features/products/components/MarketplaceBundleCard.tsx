@@ -15,6 +15,7 @@ import { BaseListingCard, Div, GatedPrice, PricesOnly, Row, Span, Stack, Text, T
 import { MediaImage } from "../../media/MediaImage";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 export type MarketplaceBundleCardData = Pick<
   CategoryDocument,
@@ -260,7 +261,22 @@ export function MarketplaceBundleCard({
     </BaseListingCard>
   );
 
-  if (!renderOwnerActions) return card;
+  /*
+   * 🛑 Default, not opt-in. Nothing in either repo ever passed
+   * `renderOwnerActions`, so this toolbar was unreachable on every grid that
+   * mounts this card (Root Cause #8 — a slot shell rendered with zero render
+   * props). A card is resource-specific by construction, so it names its own
+   * resource rather than being threaded one; the prop stays as an override.
+   */
+  const ownerActions = renderOwnerActions
+    ? renderOwnerActions()
+    : bundle.id
+      ? (
+          <RecordOwnerQuickActions resource="BUNDLE" recordId={String(bundle.id)} recordLabel={String(bundle.name)} placement="card" />
+        )
+      : null;
+
+  if (!ownerActions) return card;
   /*
    * Sibling of the card, never a child — see the prop's docstring. `z-20`
    * clears this card's own overlays, which all sit at `z-10`.
@@ -268,7 +284,7 @@ export function MarketplaceBundleCard({
   return (
     <Div className="relative h-full">
       {card}
-      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+      <Div className="absolute right-2 top-2 z-20">{ownerActions}</Div>
     </Div>
   );
 }

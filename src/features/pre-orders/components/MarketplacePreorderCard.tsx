@@ -20,6 +20,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 import { CardStoreLine } from "../../products/components/CardStoreLine";
+import { ProductOwnerQuickActions } from "../../products/components/ProductOwnerQuickActions";
 
 export type MarketplacePreorderCardData = ProductItem;
 
@@ -294,7 +295,22 @@ export function MarketplacePreorderCard({
     </BaseListingCard>
   );
 
-  if (!renderOwnerActions) return card;
+  /*
+   * 🛑 Default, not opt-in. Nothing in either repo ever passed
+   * `renderOwnerActions`, so this toolbar was unreachable on every grid that
+   * mounts this card (Root Cause #8 — a slot shell rendered with zero render
+   * props). A card is resource-specific by construction, so it names its own
+   * resource rather than being threaded one; the prop stays as an override.
+   */
+  const ownerActions = renderOwnerActions
+    ? renderOwnerActions()
+    : product.id
+      ? (
+          <ProductOwnerQuickActions productId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
+        )
+      : null;
+
+  if (!ownerActions) return card;
   /*
    * Sibling of the card, never a child — see the prop's docstring. `z-20`
    * clears this card's own overlays, which all sit at `z-10`.
@@ -302,7 +318,7 @@ export function MarketplacePreorderCard({
   return (
     <Div className="relative h-full">
       {card}
-      <Div className="absolute right-2 bottom-2 z-20">{renderOwnerActions()}</Div>
+      <Div className="absolute right-2 bottom-2 z-20">{ownerActions}</Div>
     </Div>
   );
 }

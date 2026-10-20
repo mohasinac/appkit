@@ -60,6 +60,26 @@ export type ProductListingMode = ListingType | "bundle";
 
 export interface SellerProductDraft {
   title?: string;
+  /**
+   * LOT or SINGLE — and this had a field and a server rule but no control.
+   *
+   * 🛑 `ProductDocument.isLot` has existed since G3a and
+   * `ProductRepository.deriveTaxonomy` ENFORCES it at line 488
+   * (`assertAssignmentShape(resolved, input.isLot === true, …)`): a lot must
+   * file under a non-leaf category, a single may file anywhere. The form never
+   * set it, so every listing reached that check as a single — and a seller
+   * with a mixed pile had no way to say otherwise.
+   *
+   * The reason the rule exists is a claim about the ITEMS, not about counting:
+   * filing "12 assorted Burst beys" under `category-dragoon-g` asserts all
+   * twelve are Dragoon G.
+   */
+  isLot?: boolean;
+  /** How many items the lot holds. Optional even when `isLot` — a seller who
+   * has not counted the pile yet must still be able to save a draft. */
+  lotSize?: number;
+  /** The named bey this single IS, when the seller picked one. */
+  beyId?: string;
   slug?: string;
   description?: string;
   category?: string;

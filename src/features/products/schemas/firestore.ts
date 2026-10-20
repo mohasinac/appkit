@@ -478,6 +478,25 @@ export interface ProductDocument extends BaseDocument {
   unitLabel?: string;
 
   /**
+   * This listing is a complete BEY, and this is which one.
+   *
+   * The `beys` document id, which is also its slug and also the URL
+   * (`/beys/{beyId}`) with no re-derivation — the same property that made
+   * `partGlossaryId` a single id rather than a pair.
+   *
+   * 🛑 THE EXACT COUNTERPART OF `partGlossaryId`, and the pair is what makes
+   * the seller's "single" choice meaningful: a single item is either one named
+   * bey or one named part, and those are the only two things in the catalogue
+   * that have an identity to point at. A lot has neither, which is why it
+   * files under a non-leaf CATEGORY instead (see `isLot`).
+   *
+   * 🛑 Never set together with `partGlossaryId`. A listing is a whole bey or a
+   * component, not both — and the two link to different reference pages, so a
+   * row carrying both would render two contradictory "what is this" sections.
+   */
+  beyId?: string;
+
+  /**
    * This listing is a COMPONENT, and this is which one.
    *
    * The `partGlossary` document id (`${slot}--${tail}`), stored whole.

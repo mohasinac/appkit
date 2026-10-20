@@ -9,6 +9,7 @@ import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -177,7 +178,22 @@ export function BlogFeaturedCard({
     </Article>
   );
 
-  if (!renderOwnerActions) return card;
+  /*
+   * 🛑 Default, not opt-in. Nothing in either repo ever passed
+   * `renderOwnerActions`, so this toolbar was unreachable on every grid that
+   * mounts this card (Root Cause #8 — a slot shell rendered with zero render
+   * props). A card is resource-specific by construction, so it names its own
+   * resource rather than being threaded one; the prop stays as an override.
+   */
+  const ownerActions = renderOwnerActions
+    ? renderOwnerActions()
+    : post.id
+      ? (
+          <RecordOwnerQuickActions resource="BLOG" recordId={String(post.id)} recordLabel={post.title} placement="card" />
+        )
+      : null;
+
+  if (!ownerActions) return card;
   /*
    * Sibling of the card, never a child — see the prop's docstring. `z-20`
    * beats this card's own overlays, which all sit at `z-10`.
@@ -185,7 +201,7 @@ export function BlogFeaturedCard({
   return (
     <Div className="relative h-full">
       {card}
-      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+      <Div className="absolute right-2 top-2 z-20">{ownerActions}</Div>
     </Div>
   );
 }
