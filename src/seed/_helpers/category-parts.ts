@@ -21,8 +21,8 @@
  * 🛑 The prose is ours, composed from facts (name, classification, printed
  *    code, weight, model count). No corpus sentence is reproduced.
  *
- * 2490 parts -> 2490 leaves across 26 part-type nodes.
- * 667 needed a classification-qualified slug because the bare name
+ * 2488 parts -> 2488 leaves across 26 part-type nodes.
+ * 665 needed a classification-qualified slug because the bare name
  * collides across classifications; the rest keep the short URL.
  *
  * @tag domain:categories
@@ -2313,13 +2313,6 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       description:
         "Vanguard (Hasbro) — a disc (20.4 g). Loose examples, spares and pre-owned discs of this part are listed here.",
       extra: { aliases: ["Vanguard (Hasbro)","vanguard-hasbro","Vn"] },
-    },
-    {
-      id: "category-disc-variable-per-combo",
-      name: "variable per combo",
-      description:
-        "variable per combo — a disc (used by 1 model). Loose examples, spares and pre-owned discs of this part are listed here.",
-      extra: { aliases: ["variable per combo"] },
     },
     {
       id: "category-disc-vertical",
@@ -11058,13 +11051,6 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
       extra: { aliases: ["Twin Ball","twin-ball","TB"] },
     },
     {
-      id: "category-performance-tip-variable-per-combo",
-      name: "variable per combo",
-      description:
-        "variable per combo — a performance tip (used by 1 model). Loose examples, spares and pre-owned performance tips of this part are listed here.",
-      extra: { aliases: ["variable per combo"] },
-    },
-    {
       id: "category-w2d",
       name: "W2D",
       description:
@@ -13531,10 +13517,10 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
     },
     {
       id: "category-custom-metal-change-w-upper-attack-support-parts",
-      name: "Custom Metal Change (w  Upper Attack Support Parts)",
+      name: "Custom Metal Change (w/ Upper Attack Support Parts)",
       description:
-        "Custom Metal Change (w  Upper Attack Support Parts) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
-      extra: { aliases: ["Custom Metal Change (w  Upper Attack Support Parts)","custom-metal-change-w-upper-attack-support-parts"] },
+        "Custom Metal Change (w/ Upper Attack Support Parts) — a blade base. Loose examples, spares and pre-owned blade bases of this part are listed here.",
+      extra: { aliases: ["Custom Metal Change (w/ Upper Attack Support Parts)","custom-metal-change-w-upper-attack-support-parts"] },
     },
     {
       id: "category-customize-bearing-base",
@@ -17525,4 +17511,4 @@ export const PART_LEAVES: Record<string, CategoryTreeNode[]> = {
  * SAME string by construction, so this map exists only to let a reader see that
  * stated rather than inferred.
  */
-export const PART_LEAF_COUNT = 2490;
+export const PART_LEAF_COUNT = 2488;
