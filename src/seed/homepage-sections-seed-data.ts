@@ -21,21 +21,23 @@
  * section type with a renderer and zero seeded rows is the same class of gap,
  * just silent rather than colliding.
  *
- * ORDER: hero → SHOP (products, auctions) → carousel → trust → orient
- * (categories, systems matrix) → shop cont. (pre-orders, bundles) → supply
+ * ORDER: hero → SHOP (products, auctions, pre-orders) → carousel → trust →
+ * orient (categories, systems matrix) → shop cont. (bundles) → supply
  * (stores) → social proof (reviews) → engage (events, raffles, prize draws) →
  * editorial (blog) → convert (seller banner, newsletter) → reassure (stats,
  * security, community, FAQ, brands).
  *
- * 🛑 Products (2) and auctions (3) were lifted above the carousel on
- * 2026-10-20 at the owner's request — real merchandise directly under the
- * hero, promotions below it. That OVERRIDES the research arrangement this
- * header used to describe (trust → orient → shop), so do not "restore" the
- * old order on the strength of the paragraphs below; they explain the
+ * 🛑 Products (2), auctions (3) and pre-orders (4) were lifted above the
+ * carousel on 2026-10-20 at the owner's request — real merchandise directly
+ * under the hero, promotions below it. That OVERRIDES the research arrangement
+ * this header used to describe (trust → orient → shop), so do not "restore"
+ * the old order on the strength of the paragraphs below; they explain the
  * reasoning for the sections that are still in a research-driven position,
- * not a mandate for the two that were deliberately moved.
+ * not a mandate for the three that were deliberately moved. Pre-orders came
+ * up from 8 in a second pass, which is why the carousel/trust/categories/
+ * matrix block reads 5 → 8 rather than 4 → 7.
  *
- * The systems matrix still sits immediately after the generation tiles (6 → 7)
+ * The systems matrix still sits immediately after the generation tiles (7 → 8)
  * because that is where the measured leader puts it: on worldhobbyshop
  * "Browse Beyblade Systems & Series" (25 text links) follows "Shop Beyblades
  * by Generation" (6 image tiles) — taxonomy routing stays together. See
@@ -44,8 +46,8 @@
  * Baymard's finding still drives the hero: a static hero outperforms a
  * carousel, and the one documented carousel win came from demoting it BELOW a
  * static hero. So `welcome` is first and owns the page's single <h1>; the
- * `carousel` is now demoted further still, under the first two product rails,
- * and its slide titles render as <h2>.
+ * `carousel` is now demoted further still, under the first three product
+ * rails, and its slide titles render as <h2>.
  *
  * COPY IS CATALOGUE-NEUTRAL on purpose. "Shop by Category" stays correct
  * however the catalogue changes; "Burst & X Series" goes stale the moment it
@@ -102,13 +104,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ---- 4. Promo carousel ---------------------------------------------------
+  // ---- 5. Promo carousel ---------------------------------------------------
   // "medium" rather than "tall": it now sits UNDER a full hero, so a
   // viewport-height band would push everything else below the fold.
   {
     id: "section-hero-carousel",
     type: "carousel",
-    order: 4,
+    order: 5,
     enabled: true,
     config: {
       title: "Featured promotions",
@@ -122,13 +124,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ---- 5. Trust bar --------------------------------------------------------
+  // ---- 6. Trust bar --------------------------------------------------------
   // Research: ~80% of attention is above the fold and the first 3–4 trust
   // elements carry nearly all of the lift.
   {
     id: "section-trust-indicators",
     type: "trust-indicators",
-    order: 5,
+    order: 6,
     enabled: true,
     config: {
       title: "Why buyers trust us",
@@ -163,12 +165,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(20),
   },
 
-  // ---- 6. Orient: categories ----------------------------------------------
+  // ---- 7. Orient: categories ----------------------------------------------
   // Baymard's top homepage guideline, and the main internal-linking surface.
   {
     id: "section-collectibles-categories",
     type: "categories",
-    order: 6,
+    order: 7,
     enabled: true,
     config: {
       title: "Shop by Category",
@@ -189,10 +191,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(10),
   },
 
-  // ---- 2–3, 8–9. Shop ------------------------------------------------------
-  // Products (2) and auctions (3) sit directly under the hero, ABOVE the
-  // carousel — a merchandising-first top of page, asked for 2026-10-20.
-  // Pre-orders (8) and bundles (9) stay below the orientation band.
+  // ---- 2–4, 9. Shop --------------------------------------------------------
+  // Products (2), auctions (3) and pre-orders (4) sit directly under the hero,
+  // ABOVE the carousel — a merchandising-first top of page, asked for
+  // 2026-10-20. Bundles (9) stay below the orientation band.
   //
   // maxItems stays <= 12 everywhere: SSR supplies exactly 12 via
   // getFeatured*(12), so a larger cap would promise rows that cannot fill.
@@ -250,7 +252,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-pre-orders",
     type: "pre-orders",
-    order: 8,
+    order: 4,
     enabled: true,
     config: {
       title: "Reserve Before It Ships",
@@ -675,7 +677,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-systems-matrix",
     type: "custom-cards",
-    order: 7,
+    order: 8,
     enabled: true,
     config: {
       title: "Every system, every part family",
