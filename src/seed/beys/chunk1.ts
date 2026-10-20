@@ -95,7 +95,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "And Then There Were Two",
     "seoDescription": "Dranzer GT is a Balance-Type Beyblade from the Engine Gear System. Released as A-117 for Beyblade: G-Revolution. It combines Dranzer, Triangle Wing, Ten Balance, Right EG Reverse. Used by Kai Hiwatari. Special moves: Blazing Gigs Tempest, Flame Gigs Turbo, Reverse Flame Gigs.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_GT",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-gt"
   },
   {
     "id": "dranzer-mf",
@@ -169,7 +170,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer MF is a Balance-Type Beyblade from the Hard Metal System, spinning dual-spin. Released January 2004 as N/A for New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle. It combines Dranzer Emblem, Smash Phoenix, Wing Attacker, Free Shaft Core. Used by Kai Hiwatari (Manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_MF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-mf"
   },
   {
     "id": "dranzer-ms",
@@ -249,7 +251,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer MS is a Balance-Type Beyblade from the Hard Metal System, spinning dual-spin. Released as A-131 for Beyblade: G-Revolution. It combines Dranzer Emblem, Spiral Upper, Circle Balance, Manual Change Core. Used by Kai Hiwatari. Its special move is Spiral Fireball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-ms"
   },
   {
     "id": "dranzer-s",
@@ -331,7 +334,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer S is a Balance-Type Beyblade from the Spin Gear System, weighing 31 g. Released as A-2. It combines Dranzer, Double Wing, Eight Balance, Right SG (Free Shaft Version). Used by Kai Hiwatari. Special moves: Fire Arrow Spin Fire, Spiral Survivor.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-s"
   },
   {
     "id": "dranzer-spiral-6cross-spiral",
@@ -405,7 +409,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Spiral 6Cross Spiral is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released July 15th, 2017 as B-87 for Beyblade Burst Evolution. It combines Dranzer Spiral (Takara Tomy), 6, Cross, Spiral.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Spiral_6Cross_Spiral",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-spiral-6cross-spiral"
   },
   {
     "id": "dranzer-spiral-spread-liner",
@@ -471,7 +476,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Spiral Spread Liner is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released as E2458 for Beyblade Burst Evolution. It combines Dranzer Spiral (Hasbro), Spread, Liner.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Spiral_Spread_Liner",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-spiral-spread-liner"
   },
   {
     "id": "dranzer-spiral-spread-trans",
@@ -547,7 +553,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Spiral Spread Trans is a Balance-Type Beyblade from the Burst System, weighing 33.3 g, spinning right-spin. Released November 25th, 2016 as B-00 for Beyblade Burst. It combines Dranzer Spiral (Takara Tomy), Spread, Trans. Used by Kai Hiwatari (Beyblade Rising manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Spiral_Spread_Trans",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-spiral-spread-trans"
   },
   {
     "id": "dranzer-spiral-spread-unite",
@@ -613,7 +620,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Spiral Spread Unite is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released as E2545 for Beyblade Burst Evolution. It combines Dranzer Spiral (Hasbro), Spread, Unite.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Spiral_Spread_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-spiral-spread-unite"
   },
   {
     "id": "dranzer-v",
@@ -700,7 +708,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer V is a Balance-Type Beyblade from the Magnacore System. Released April 2002 as A-47 for Beyblade: V-Force. It combines Dranzer, Cross Attacker, Ten Balance, Neo Right SG (South Magnecore (Dranzer V Version)). Used by Kai Hiwatari. Its special move is Volcano Emission.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_V",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-v"
   },
   {
     "id": "dranzer-v2",
@@ -792,7 +801,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer V2 is a Balance-Type Beyblade from the Magnacore System, spinning right-spin. Released October 2002 as A-81 for Beyblade: V-Force. It combines Dranzer, Cross Dranzer, Ten Balance, Neo Right SG (MW Core). Used by Kai Hiwatari. Its special move is Volcano Excellent Emission.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_V2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-v2"
   },
   {
     "id": "dranzer-v2-0cross-reboot",
@@ -870,7 +880,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer V2 0Cross Reboot' is a Attack-Type Beyblade from the Burst System, weighing 48.8 g, spinning right-spin. Released June 26th, 2021 as B-186 for Beyblade Burst QuadDrive. It combines Dranzer V2, 0, Cross, Reboot'. Used by Kai Hiwatari (Beyblade Rising manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_V2_0Cross_Reboot'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-v2-0cross-reboot"
   },
   {
     "id": "dranzer-volcano-0-charge",
@@ -933,7 +944,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Volcano 0 Charge' is a Attack-Type Beyblade from the Burst System, weighing 53.3 g, spinning right-spin. Released July 23rd, 2020 as B-170 for Beyblade Burst Surge. It combines Dranzer Volcano, 0, Charge'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Volcano_0_Charge'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-volcano-0-charge"
   },
   {
     "id": "dranzer-volcano-hurricane-dimension",
@@ -1000,7 +1012,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dranzer Volcano Hurricane Dimension is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released August 2020 as B-00 for Beyblade Burst Surge. It combines Dranzer Volcano, Hurricane (Takara Tomy), Dimension.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Volcano_Hurricane_Dimension",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dranzer-volcano-hurricane-dimension"
   },
   {
     "id": "dread-bahamut-7wall-orbit-metal-gen",
@@ -1092,7 +1105,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "Flying High! Harmony Pegasus!",
     "seoDescription": "Dread Bahamut 7Wall Orbit Metal Gen is a Defense-Type Beyblade from the Gatinko Layer System, spinning left-spin. Released August 10th, 2019 as B-149 for Beyblade Burst Rise. It combines Bahamut, Gen, Dread, 7. Used by Blind DeVoy. Special moves: Dusk Wing, Dusk Circle, Dusk Crash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dread_Bahamut_7Wall_Orbit_Metal_Gen",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dread-bahamut-7wall-orbit-metal-gen"
   },
   {
     "id": "dread-fafnir-paradox-revolve-metsu",
@@ -1171,7 +1185,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dread Fafnir Paradox Revolve Metsu is a Stamina-Type Beyblade from the Gatinko Layer System, spinning left-spin. Released December 26th, 2019 as B-156 for Beyblade Burst Rise. It combines Fafnir, Metsu, Dread, Paradox.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dread_Fafnir_Paradox_Revolve_Metsu",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dread-fafnir-paradox-revolve-metsu"
   },
   {
     "id": "dread-hades-h3-11turn-zephyr",
@@ -1242,7 +1257,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dread Hades H3 11Turn Zephyr is a Balance-Type Beyblade from the SwitchStrike System, spinning right-spin. Released as E6705 for Beyblade Burst Turbo. It combines Dread Hades H3, 11, Turn, Zephyr.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dread_Hades_H3_11Turn_Zephyr",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dread-hades-h3-11turn-zephyr"
   },
   {
     "id": "dread-phoenix-p4-10-friction-s",
@@ -1308,7 +1324,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dread Phoenix P4 10 Friction-S is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E6168 for Beyblade Burst Turbo. It combines Dread Phoenix P4, 10, Friction-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dread_Phoenix_P4_10_Friction-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dread-phoenix-p4-10-friction-s"
   },
   {
     "id": "drigerslash-4-80p",
@@ -1376,7 +1393,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "DrigerSlash 4-80P is a Balance-Type Beyblade from the Basic Line, weighing 37.8 g, spinning right-spin. Released April 27th, 2024 as BX-00 (Takara Tomy) and G1843 (Hasbro) for Beyblade X. It combines DrigerSlash, 4-80, Point.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/DrigerSlash_4-80P",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-00-Booster-Driger-Slash-4-80P"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-00-Booster-Driger-Slash-4-80P",
+    "categoryId": "category-drigerslash-4-80p"
   },
   {
     "id": "driger-f",
@@ -1461,7 +1479,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger F is a Balance-Type Beyblade from the Spin Gear System. Released as A-24. It combines Driger, Cross Fang, Eight Balance, Right SG (Full Auto Clutch Version). Used by Ray Kon. Special moves: Tiger Claw (Anime only), Tiger Fang.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-f"
   },
   {
     "id": "driger-fang-0-xtend",
@@ -1529,7 +1548,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Fang 0 Xtend is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released February 16th, 2019 as B-132 for Beyblade Burst Turbo. It combines Driger Fang (Takara Tomy), 0, Xtend.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Fang_0_Xtend",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-fang-0-xtend"
   },
   {
     "id": "driger-fang-knuckle-power-s",
@@ -1590,7 +1610,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Fang Knuckle Power-S is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released as F0202 for Beyblade Burst Rise. It combines Driger Fang (Hasbro), Knuckle, Power-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Fang_Knuckle_Power-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-fang-knuckle-power-s"
   },
   {
     "id": "driger-g",
@@ -1676,7 +1697,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger G is a Attack-Type Beyblade from the Engine Gear System. Released as A-94 for Beyblade: G-Revolution. It combines Driger, Triple Tiger, Ten Balance, Right Engine Gear (Metal Semi-Flat Version). Used by Ray Kon.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_G",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-g"
   },
   {
     "id": "driger-ms",
@@ -1755,7 +1777,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger MS is a Balance-Type Beyblade from the Hard Metal System, spinning dual-spin. Released as A-124 for Beyblade: G-Revolution. It combines Driger, Metal Upper, Circle Balance, Semi-Flat Core. Used by Ray Kon.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-ms"
   },
   {
     "id": "driger-s",
@@ -1839,7 +1862,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger S is a Balance-Type Beyblade from the Spin Gear System. Released as 35 for Next Generation Beigoma Battle: Beyblade. It combines Driger, Tiger Defenser, Eight Heavy, Right SG. Used by Ray Kon. Its special move is Tiger Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-s"
   },
   {
     "id": "driger-slash-4vortex-hunter",
@@ -1913,7 +1937,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Slash 4Vortex Hunter is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released October 21st, 2017 as B-95 for Beyblade Burst Evolution. It combines Driger Slash (Takara Tomy), 4, Vortex, Hunter.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Slash_4Vortex_Hunter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-slash-4vortex-hunter"
   },
   {
     "id": "driger-slash-heavy-fusion-hasbro",
@@ -1978,7 +2003,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Slash Heavy Fusion (Hasbro) is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released as E2546 for Beyblade Burst Evolution. It combines Driger Slash (Hasbro), Heavy, Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Slash_Heavy_Fusion_(Hasbro)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-slash-heavy-fusion"
   },
   {
     "id": "driger-slash-heavy-fusion-takara-tomy",
@@ -2054,7 +2080,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Slash Heavy Fusion is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released October 22nd, 2016 as B-61 for Beyblade Burst. It combines Driger Slash (Takara Tomy), Heavy, Fusion. Used by Ray Kon.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Slash_Heavy_Fusion_(Takara_Tomy)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-slash-heavy-fusion"
   },
   {
     "id": "driger-v",
@@ -2153,7 +2180,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger V is a Attack-Type Beyblade from the Magnacore System. Released February 2002 as A-53 and A-48 (Sonokong) for Beyblade: V-Force. It combines Driger, Sonic Tiger, Ten Balance, Neo Right SG (South Core version). Used by Ray Kon. Its special move is Vulcan Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_V",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-v"
   },
   {
     "id": "driger-v2",
@@ -2239,7 +2267,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger V2 is a Balance-Type Beyblade from the Magnacore System. Released August 2002 as A-75 for Beyblade: V-Force. It combines Driger, Upper Claw, Ten Balance, Neo-Right (Metal Weight Version). Used by Ray Kon. Its special move is Vulcan Power Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_V2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-v2"
   },
   {
     "id": "driger-v2-illegal-wedge",
@@ -2308,7 +2337,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger V2 Illegal Wedge' is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released February 2023 as B-00 for Beyblade Burst BU. It combines Driger V2, Illegal, Wedge'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_V2_Illegal_Wedge'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-v2-illegal-wedge"
   },
   {
     "id": "driger-v2-over-wedge",
@@ -2376,7 +2406,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger V2 Over Wedge' is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It combines Driger V2, Over, Wedge'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_V2_Over_Wedge'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-v2-over-wedge"
   },
   {
     "id": "driger-vulcan-0-high-jaggy",
@@ -2439,7 +2470,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Vulcan 0 High Jaggy' is a Attack-Type Beyblade from the Burst System, weighing 44.3 g, spinning right-spin. Released October 24th, 2020 as B-173 for Beyblade Burst Surge. It combines Driger Vulcan, 0, High Jaggy'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Vulcan_0_High_Jaggy'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-vulcan-0-high-jaggy"
   },
   {
     "id": "driger-vulcan-10reach-weight",
@@ -2512,7 +2544,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Driger Vulcan 10Reach Weight is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released August 2020 as B-00 for Beyblade Burst Surge. It combines Driger Vulcan, 10, Reach, Weight.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driger_Vulcan_10Reach_Weight",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-driger-vulcan-10reach-weight"
   },
   {
     "id": "dual-dragoon",
@@ -2586,7 +2619,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dual Dragoon is a Attack-Type Beyblade from the Magnacore System, spinning right-spin. Part of Beyblade VForce. It combines Dual Dragoon, Dragon Breaker, Ten Wide, NEO Right SG. Used by Kenny.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dual_Dragoon",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dual-dragoon"
   },
   {
     "id": "dullahan-d4-7-tower-s",
@@ -2651,7 +2685,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dullahan D4 7 Tower-S is a Balance-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4749 for Beyblade Burst Turbo. It combines Dullahan D4, 7, Tower-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dullahan_D4_7_Tower-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dullahan-d4-7-tower-s"
   },
   {
     "id": "dullahan-d5-11-liner-h",
@@ -2716,7 +2751,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dullahan D5 11 Liner-H is a Balance-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7728 for Beyblade Burst Rise. It combines Dullahan D5, 11, Liner-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dullahan_D5_11_Liner-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dullahan-d5-11-liner-h"
   },
   {
     "id": "duo-aeclipse-7star-unite",
@@ -2807,7 +2843,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Aeclipse 7Star Unite is a Balance-Type Beyblade from the God Layer System, spinning right-spin. Released February 15th, 2018 as B-00 for Beyblade Burst Evolution. It combines Duo Aeclipse, 7, Star, Unite. Used by Valt Aoi (Borrowed; manga). Its special move is Left God Slash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Aeclipse_7Star_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-aeclipse-7star-unite"
   },
   {
     "id": "duo-apollos-7star-unite",
@@ -2895,7 +2932,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Apollos 7Star Unite is a Balance-Type Beyblade from the God Layer System, spinning right-spin. Released February 15th, 2018 as B-00 for Beyblade Burst Evolution. It combines Duo Apollos, 7, Star, Unite. Used by Valt Aoi (Borrowed; manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Apollos_7Star_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-apollos-7star-unite"
   },
   {
     "id": "duo-artemis-7star-unite",
@@ -2983,7 +3021,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Artemis 7Star Unite is a Balance-Type Beyblade from the God Layer System, spinning right-spin. Released February 15th, 2018 as B-00 for Beyblade Burst Evolution. It combines Duo Artemis, 7, Star, Unite. Used by Valt Aoi (Borrowed; manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Artemis_7Star_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-artemis-7star-unite"
   },
   {
     "id": "duo-ice-titan-230wd",
@@ -3054,7 +3093,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Ice-Titan 230WD is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as B-160 for Beyblade: Metal Fury. It combines Ice-Titan, Ice-Titan, Duo (Hasbro), 230.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Ice-Titan_230WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-ice-titan-230wd"
   },
   {
     "id": "duo-uranus-230wd",
@@ -3131,7 +3171,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Uranus 230WD is a Stamina-Type Beyblade from the 4D System, weighing 50.5 g, spinning right-spin. Released November 19, 2011 as BB-121 for Beyblade: Metal Fury. It combines Uranus, Uranus, Duo, 230. Used by Herschel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Uranus_230WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-uranus-230wd"
   },
   {
     "id": "duo-uranus-uw145ewd",
@@ -3197,7 +3238,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Duo Uranus UW145EWD Gunmetallic Ver. is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Fury. It combines Uranus, Uranus, Duo, UW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Uranus_UW145EWD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-duo-uranus-uw145ewd-gunmetallic-ver"
   },
   {
     "id": "dusk-balkesh-b5-7-orbit-h",
@@ -3269,7 +3311,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dusk Balkesh B5 7 Orbit-H is a Defense-Type Beyblade from the HyperSphere System, spinning left-spin. Released as E7731 for Beyblade Burst Rise. It combines Balkesh B5, Dusk, 7, Orbit-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dusk_Balkesh_B5_7_Orbit-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dusk-balkesh-b5-7-orbit-h"
   },
   {
     "id": "dusk-spryzen-s5-infinity-keep-h",
@@ -3340,7 +3383,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dusk Spryzen S5 Infinity Keep-H is a Defense-Type Beyblade from the HyperSphere System, spinning left-spin. Released as F0609 for Beyblade Burst Surge. It combines Spryzen S5, Dusk, Infinity, Keep-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dusk_Spryzen_S5_Infinity_Keep-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dusk-spryzen-s5-infinity-keep-h"
   },
   {
     "id": "dynamite-belial-nexus-venture-2",
@@ -3445,7 +3489,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Dynamite Belial Nexus Venture-2 is a Attack-Type Beyblade from the Dynamite Battle Layer System, weighing 64.5 g, spinning right-spin. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It combines Belial 1, Dynamite, 2, Nexus. Used by Bel Daizora.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Belial_Nexus_Venture-2",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-180-Booster-Dynamite-Belial-Nx-Vn-2"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-180-Booster-Dynamite-Belial-Nx-Vn-2",
+    "categoryId": "category-dynamite-belial-nexus-venture-2"
   },
   {
     "id": "dynamite-belial-nexus-venture-3",
@@ -3519,7 +3564,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dynamite Belial Nexus Venture-3 is a Attack-Type Beyblade from the Dynamite Battle Layer System, weighing 64.3 g, spinning right-spin. Released October 2nd, 2021 as B-190 for Beyblade Burst QuadDrive. It combines Belial 1, Dynamite, 3, Nexus.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Belial_Nexus_Venture-3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dynamite-belial-nexus-venture-3"
   },
   {
     "id": "dynamite-belial-nexus-venture-perfect-gear",
@@ -3619,7 +3665,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Dynamite Belial Nexus Venture (Perfect Gear) is a Attack-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Part of Beyblade Burst QuadDrive. It combines Belial 1, Dynamite, Nexus, Venture. Used by Bel Daizora. Its special move is Destruction Wrecker.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Belial_Nexus_Venture_(Perfect_Gear)",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-180-Booster-Dynamite-Belial-Nx-Vn-2"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-180-Booster-Dynamite-Belial-Nx-Vn-2",
+    "categoryId": "category-dynamite-belial-nexus-venture"
   },
   {
     "id": "dynamite-kerbeus-legacy-moment-9",
@@ -3700,7 +3747,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dynamite Kerbeus Legacy Moment-9 is a Defense-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It combines Kerbeus, Dynamite, 9, Legacy.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Kerbeus_Legacy_Moment-9",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dynamite-kerbeus-legacy-moment-9"
   },
   {
     "id": "dynamite-ragnaruk-nexus-just-6",
@@ -3775,7 +3823,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dynamite Ragnaruk Nexus Just-6 is a Defense-Type Beyblade from the Dynamite Battle Layer System, weighing 64.2 g, spinning right-spin. Released June 26th, 2021 as B-186 for Beyblade Burst QuadDrive. It combines Ragnaruk, Dynamite, 6, Nexus.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Ragnaruk_Nexus_Just-6",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dynamite-ragnaruk-nexus-just-6"
   },
   {
     "id": "dynamite-valkyrie-over-just-6",
@@ -3855,7 +3904,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Dynamite Valkyrie Over Just-6 is a Defense-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Released December 29th, 2021 as B-194 for Beyblade Burst QuadDrive. It combines Valkyrie 1, Dynamite, 6, Over.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dynamite_Valkyrie_Over_Just-6",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-dynamite-valkyrie-over-just-6"
   },
   {
     "id": "earth-aquila-105hf-s",
@@ -3989,7 +4039,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Aquila 2 Yielding is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released December 2019 as B-00 for Beyblade Burst Rise. It combines Earth Aquila, 2, Yielding.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Aquila_2_Yielding",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-aquila-2-yielding"
   },
   {
     "id": "earth-aquila-vanguard-merge",
@@ -4052,7 +4103,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Aquila Vanguard Merge' is a Balance-Type Beyblade from the Burst System, weighing 50.4 g, spinning right-spin. Released April 25th, 2020 as B-164 for Beyblade Burst Surge. It combines Earth Aquila, Vanguard, Merge'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Aquila_Vanguard_Merge'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-aquila-vanguard-merge"
   },
   {
     "id": "earth-cancer-df145es",
@@ -4117,7 +4169,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Cancer DF145ES is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Gasher, Gasher, Earth, DF145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Cancer_DF145ES",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-cancer-df145es"
   },
   {
     "id": "earth-capricorn-125fs",
@@ -4295,7 +4348,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Eagle 145WD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released September 19, 2009 as BB-47 for Beyblade: Metal Fusion. It combines Eagle, Eagle, Earth, 145. Used by Tsubasa Otori · Blader DJ. Special moves: Metal Wing Smash, Stream Slash, Counter Stance.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Eagle_145WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-eagle-145wd"
   },
   {
     "id": "earth-fireblaze-145f",
@@ -4373,7 +4427,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Fireblaze 145F is a Stamina-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fury. It combines Fireblaze, Fireblaze, Earth, 145. Used by Sala.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Fireblaze_145F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-fireblaze-145f"
   },
   {
     "id": "earth-virgo-gb145bs",
@@ -4454,7 +4509,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Virgo GB145BS is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 26, 2009 as BB-60 for Beyblade: Metal Fusion. It combines Virgo, Virgo, Earth, GB145. Used by Teru Saotome.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Virgo_GB145BS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-virgo-gb145bs"
   },
   {
     "id": "earth-virgo-t125es",
@@ -4523,7 +4579,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Virgo T125ES is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 26, 2009 for Beyblade: Metal Fusion. It combines Virgo, Virgo, Earth, T125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Virgo_T125ES",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-virgo-t125es"
   },
   {
     "id": "earth-wolf-105wd",
@@ -4593,7 +4650,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Earth Wolf 105WD is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-108 for Beyblade: Metal Fusion. It combines Wolf, Wolf, Earth, 105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Earth_Wolf_105WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-earth-wolf-105wd"
   },
   {
     "id": "eclipse-evo-devolos-d5-8-rise-h",
@@ -4664,7 +4722,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Eclipse Evo Devolos D5 8' Rise-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as F0610 for Beyblade Burst Surge. It combines Evo Devolos D5, Eclipse, 8', Rise-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Eclipse_Evo_Devolos_D5_8'_Rise-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-eclipse-evo-devolos-d5-8-rise-h"
   },
   {
     "id": "eclipse-genesis-g5-swipe-friction-h",
@@ -4730,7 +4789,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Eclipse Genesis G5 Swipe Friction-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E9242 for Beyblade Burst Rise. It combines Evo Genesis G5, Eclipse, Swipe, Friction-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Eclipse_Genesis_G5_Swipe_Friction-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-eclipse-genesis-g5-swipe-friction-h"
   },
   {
     "id": "eight-beat",
@@ -4782,7 +4842,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Eight Beat is a Balance-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Dual Dragon, Eight Heavy, Right SG, Metal Change Base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Eight_Beat",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-eight-beat"
   },
   {
     "id": "electronic-dark-pegasus",
@@ -4956,7 +5017,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Bull is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Bull",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-bull"
   },
   {
     "id": "electro-destroyer",
@@ -4974,7 +5036,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Destroyer is a Beyblade from the Extreme Top System, spinning dual-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Destroyer",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-destroyer"
   },
   {
     "id": "electro-doom-fire-drago",
@@ -5049,7 +5112,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Fireblaze is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Fireblaze",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-fireblaze"
   },
   {
     "id": "electro-kerbecs",
@@ -5067,7 +5131,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Kerbecs is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Kerbecs",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-kerbecs"
   },
   {
     "id": "electro-l-drago",
@@ -5089,7 +5154,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro L-Drago is a Beyblade from the Extreme Top System, weighing 51 g, spinning left-spin. Released as X-52 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_L-Drago",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-l-drago"
   },
   {
     "id": "electro-leone",
@@ -5107,7 +5173,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Leone is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Leone",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-leone"
   },
   {
     "id": "electro-lynx",
@@ -5125,7 +5192,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Lynx is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Lynx",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-lynx"
   },
   {
     "id": "electro-pegasus",
@@ -5147,7 +5215,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Pegasus is a Beyblade from the Extreme Top System, weighing 51.4 g, spinning right-spin. Released as X-53 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Pegasus",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-pegasus"
   },
   {
     "id": "electro-pisces",
@@ -5158,7 +5227,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "series": "Beyblade: Metal Masters",
     "seoDescription": "Electro Pisces is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Pisces",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-pisces"
   },
   {
     "id": "electro-serpent",
@@ -5176,7 +5246,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Serpent is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Serpent",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-serpent"
   },
   {
     "id": "electro-soaring-wing-pegasus",
@@ -5243,7 +5314,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "series": "Beyblade: Metal Masters",
     "seoDescription": "Electro Striker is a Beyblade from the Extreme Top System, spinning right-spin. Part of Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Striker",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-striker"
   },
   {
     "id": "electro-tornado-l-drago",
@@ -5267,7 +5339,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Tornado L-Drago is a Beyblade from the Extreme Top System, weighing 42.1 g, spinning left-spin. Released as X-62 and X-62A for Beyblade: Metal Fury.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Tornado_L-Drago",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-tornado-l-drago"
   },
   {
     "id": "electro-tornado-pegasus",
@@ -5291,7 +5364,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Electro Tornado Pegasus is a Beyblade from the Extreme Top System, weighing 41.9 g, spinning right-spin. Released as X-61 and X-61A for Beyblade: Metal Fury.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Electro_Tornado_Pegasus",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-electro-tornado-pegasus"
   },
   {
     "id": "elite-valtryek-v3-6vortex-reboot",
@@ -5352,7 +5426,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Elite Valtryek V3 6Vortex Reboot is a Attack-Type Beyblade from the SwitchStrike System. Part of Beyblade Burst App. It combines Elite Valtryek V3, 6, Vortex, Reboot.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Elite_Valtryek_V3_6Vortex_Reboot",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-elite-valtryek-v3-6vortex-reboot"
   },
   {
     "id": "emperormight-hop",
@@ -5452,7 +5527,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "EmperorMight HOp is a Balance-Type Beyblade from the Custom Line, weighing 59.7 g, spinning right-spin. Released November 1st, 2025 as CX-11 (Takara Tomy) and G3028 (Hasbro) for Beyblade X (Season 3). It combines Emperor, Might, Heavy, Operate.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/EmperorMight_HOp",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-11-EmperorMight-Deck-Set-EmperorMight-HOp"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-11-EmperorMight-Deck-Set-EmperorMight-HOp",
+    "categoryId": "category-emperormight-hop"
   },
   {
     "id": "emperor-forneus-0-yard",
@@ -5536,7 +5612,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Emperor Forneus 0 Yard is a Defense-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released March 17th, 2018 as B-106 for Beyblade Burst Turbo. It combines Emperor Forneus, 0, Yard. Used by Fubuki Sumiye. Special moves: Emperor Guard, Emperor Drift, Ultra Emperor Drift.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_0_Yard",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-B-106-Booster-Emperor-Forneus-0-Yr"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-B-106-Booster-Emperor-Forneus-0-Yr",
+    "categoryId": "category-emperor-forneus-0-yard"
   },
   {
     "id": "emperor-forneus-13meteor-survive",
@@ -5610,7 +5687,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus 13Meteor Survive is a Stamina-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released December 27th, 2018 as B-130 for Beyblade Burst Turbo. It combines Emperor Forneus, 13, Meteor, Survive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_13Meteor_Survive",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-13meteor-survive"
   },
   {
     "id": "emperor-forneus-1meteor-hunter",
@@ -5684,7 +5762,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus 1Meteor Hunter is a Attack-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released July 14th, 2018 as B-118 for Beyblade Burst Turbo. It combines Emperor Forneus, 1, Meteor, Hunter.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_1Meteor_Hunter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-1meteor-hunter"
   },
   {
     "id": "emperor-forneus-4glaive-hunter",
@@ -5758,7 +5837,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus 4Glaive Hunter' is a Attack-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released August 25th, 2018 as B-00 for Beyblade Burst Turbo. It combines Emperor Forneus, 4, Glaive, Hunter'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_4Glaive_Hunter'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-4glaive-hunter"
   },
   {
     "id": "emperor-forneus-7-zeta",
@@ -5826,7 +5906,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus 7 Zeta is a Balance-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released April 28th, 2018 as B-111 for Beyblade Burst Turbo. It combines Emperor Forneus, 7, Zeta.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_7_Zeta",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-7-zeta"
   },
   {
     "id": "emperor-forneus-f4-0-yard-s",
@@ -5891,7 +5972,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus F4 0 Yard-S is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4729 for Beyblade Burst Turbo. It combines Emperor Forneus F4, 0, Yard-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_F4_0_Yard-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-f4-0-yard-s"
   },
   {
     "id": "emperor-forneus-f4-vertical-l-yard-sl",
@@ -5944,7 +6026,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus F4 Vertical-L Yard-SL is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E5952 for Beyblade Burst Turbo. It combines Emperor Forneus F4, Vertical-L, Yard-SL.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_F4_Vertical-L_Yard-SL",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-f4-vertical-l-yard-sl"
   },
   {
     "id": "emperor-forneus-f5-drake-orbit-h",
@@ -6003,7 +6086,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus F5 Drake Orbit-H is a Defense-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E9239 for Beyblade Burst Rise. It combines Emperor Forneus F5, Drake (Hasbro), Orbit-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_F5_Drake_Orbit-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-f5-drake-orbit-h"
   },
   {
     "id": "emperor-forneus-wheel-destroy",
@@ -6066,7 +6150,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Emperor Forneus Wheel Destroy is a Attack-Type Beyblade from the Cho-Z Layer System, weighing 54.6 g, spinning right-spin. Released July 23rd, 2020 as B-170 for Beyblade Burst Surge. It combines Emperor Forneus, Wheel, Destroy.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Emperor_Forneus_Wheel_Destroy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-emperor-forneus-wheel-destroy"
   },
   {
     "id": "empress-kraken-1500xs-ii",
@@ -6116,7 +6201,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Empress Kraken 1500XS-II is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Kraken-II, Empress-II, 1500-II, XS-II. Used by Isis.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Empress_Kraken_1500XS-II",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-empress-kraken-1500xs-ii"
   },
   {
     "id": "empress-kraken-1500xs",
@@ -6166,7 +6252,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Empress Kraken 1500XS is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Kraken, Empress, 1500, XS. Used by Isis.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Empress_Kraken_1500XS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-empress-kraken-1500xs"
   },
   {
     "id": "epic-evipero-e2-heavy-edge",
@@ -6231,7 +6318,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Epic Evipero E2 Heavy Edge is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released as C2286 for Beyblade Burst. It combines Epic Evipero E2, Heavy, Edge.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Epic_Evipero_E2_Heavy_Edge",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-epic-evipero-e2-heavy-edge"
   },
   {
     "id": "epic-evipero-e2-nine-gyro",
@@ -6296,7 +6384,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Epic Evipero E2 Nine Gyro is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E2758 for Beyblade Burst Evolution. It combines Epic Evipero E2, Nine, Gyro.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Epic_Evipero_E2_Nine_Gyro",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-epic-evipero-e2-nine-gyro"
   },
   {
     "id": "erase-bahamut-1-star-zeta-sou",
@@ -6395,7 +6484,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Erase Bahamut 1'Star Zeta' Sou is a Balance-Type Beyblade from the Gatinko Layer System, spinning left-spin. Released December 26th, 2019 as B-156 for Beyblade Burst Rise. It combines Bahamut, Sou, Erase (Takara Tomy), 1'. Used by John Kiritani.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Erase_Bahamut_1'Star_Zeta'_Sou",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-erase-bahamut-1-star-zeta-sou"
   },
   {
     "id": "erase-balkesh-b5-down-rise-h",
@@ -6466,7 +6556,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Erase Balkesh B5 Down Rise-H is a Balance-Type Beyblade from the HyperSphere System, spinning left-spin. Released as E9409 for Beyblade Burst Rise. It combines Balkesh B5, Erase (Hasbro), Down, Rise-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Erase_Balkesh_B5_Down_Rise-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-erase-balkesh-b5-down-rise-h"
   },
   {
     "id": "erase-devolos-d5-vanguard-bullet-ii-h",
@@ -6533,7 +6624,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Erase Devolos D5 Vanguard Bullet II-H is a Balance-Type Beyblade from the HyperSphere System, spinning left-spin. Released as E7730 for Beyblade Burst Rise. It combines Devolos D5, Erase (Hasbro), Vanguard (Hasbro), Bullet II-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Erase_Devolos_D5_Vanguard_Bullet_II-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-erase-devolos-d5-vanguard-bullet-ii-h"
   },
   {
     "id": "erase-diabolos-vanguard-bullet",
@@ -6617,7 +6709,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "Dante vs. Delta!",
     "seoDescription": "Erase Diabolos Vanguard Bullet is a Balance-Type Beyblade from the Gatinko Layer System, spinning left-spin. Released July 6th, 2019 as B-145 for Beyblade Burst Rise. It combines Diabolos 1, Erase (Takara Tomy), Vanguard, Bullet. Used by Delta Zakuro.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Erase_Diabolos_Vanguard_Bullet",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-erase-diabolos-vanguard-bullet"
   },
   {
     "id": "erase-fafnir-sting-trick-ten",
@@ -6696,7 +6789,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Erase Fafnir Sting Trick Ten is a Balance-Type Beyblade from the Gatinko Layer System, spinning left-spin. Released October 19th, 2019 as B-153 for Beyblade Burst Rise. It combines Fafnir, Ten, Erase (Takara Tomy), Sting.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Erase_Fafnir_Sting_Trick_Ten",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-erase-fafnir-sting-trick-ten"
   },
   {
     "id": "escolpio-wd145b",
@@ -6778,7 +6872,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Escolpio WD145B is a Defense-Type Beyblade from the Metal System, spinning right-spin. Released February 22nd, 2009 as BB-24 for Metal Fight Beyblade. It combines Escolpio, Escolpio, WD145, B. Used by Busujima (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Escolpio_WD145B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-escolpio-wd145b"
   },
   {
     "id": "etanzel",
@@ -6928,7 +7023,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "EvaArc B0-70E is a Balance-Type Beyblade from the Custom Line, spinning right-spin. Released August 29th, 2026 as CX-00 for Beyblade X (Season 3). It combines Eva, Arc, Bumper, 0-70. Used by Rei Ayanami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/EvaArc_B0-70E",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evaarc-b0-70e"
   },
   {
     "id": "evabrave-a1-70v",
@@ -7011,7 +7107,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "EvaBrave A1-70V is a Attack-Type Beyblade from the Custom Line, spinning right-spin. Released August 29th, 2026 as CX-00 for Beyblade X (Season 3). It combines Eva, Brave, Assault, 1-70. Used by Shinji Ikari.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/EvaBrave_A1-70V",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evabrave-a1-70v"
   },
   {
     "id": "evabrush-t2-70a",
@@ -7094,7 +7191,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "EvaBrush T2-70A is a Attack-Type Beyblade from the Custom Line, spinning right-spin. Released August 29th, 2026 as CX-00 for Beyblade X (Season 3). It combines Eva, Brush, Turn, 2-70. Used by Asuka Shikinami Langley.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/EvaBrush_T2-70A",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evabrush-t2-70a"
   },
   {
     "id": "evil-eye-wing-needle",
@@ -7176,7 +7274,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil-eye Wing Needle is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released December 26th, 2015 as B-24 for Beyblade Burst. It combines Evil-eye, Wing, Needle. Used by Allan Renoir (Generic Version; manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil-eye_Wing_Needle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-eye-wing-needle"
   },
   {
     "id": "evil-aries-145s",
@@ -7252,7 +7351,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Aries 145S is a Balance-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Masters. It combines Aries, Aries, Evil, 145. Used by Zeo Abyss.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Aries_145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-aries-145s"
   },
   {
     "id": "evil-befall-uw145ewd",
@@ -7340,7 +7440,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Befall UW145EWD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 28, 2010 as BB-100 for Beyblade: Metal Masters. It combines Befall, Befall, Evil, UW145. Used by Jack. Its special move is Befall The Ripper Beautiful Dead.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Befall_UW145EWD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-befall-uw145ewd"
   },
   {
     "id": "evil-bull-125fs",
@@ -7494,7 +7595,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Gemios DF145FS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released November 21, 2009 as BB-56 for Beyblade: Metal Fusion. It combines Gemios, Gemios, Evil, DF145. Used by Dan Sodo · Reiki Sodo.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Gemios_DF145FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-gemios-df145fs"
   },
   {
     "id": "evil-getsu-tt-25",
@@ -7605,7 +7707,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Kerbecs 230XF is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-140 for Beyblade: Metal Masters. It combines Kerbecs, Kerbecs, Evil, 230.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Kerbecs_230XF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-kerbecs-230xf"
   },
   {
     "id": "evil-pisces-ed145wd",
@@ -7669,7 +7772,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Pisces ED145WD is a Defense-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fusion. It combines Pisces, Pisces, Evil, ED145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Pisces_ED145WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-pisces-ed145wd"
   },
   {
     "id": "evil-wolf-df145fs",
@@ -7747,7 +7851,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evil Wolf DF145FS is a Balance-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Masters. It combines Wolf, Wolf, Evil, DF145. Used by Anton.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Wolf_DF145FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evil-wolf-df145fs"
   },
   {
     "id": "evipero-wing-needle",
@@ -7813,7 +7918,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evipero Wing Needle is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as C2645 for Beyblade Burst. It combines Evipero, Wing, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evipero_Wing_Needle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evipero-wing-needle"
   },
   {
     "id": "evo-helios-blazebringer-h6-outer-zone-z-spm",
@@ -7881,7 +7987,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evo Helios Blazebringer H6 Outer Zone+Z-SPM is a Balance-Type Beyblade from the SpeedStorm System, spinning left-spin. Released as F2306 for Beyblade Burst Surge. It combines Evo Helios H6, Blazebringer, Outer, Zone+Z-SPM.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evo_Helios_Blazebringer_H6_Outer_Zone%2BZ-SPM",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evo-helios-blazebringer-h6-outer-zone-z-spm"
   },
   {
     "id": "evo-hyperion-flamebringer-h6-6-xceed-x-sp",
@@ -7949,7 +8056,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evo Hyperion Flamebringer H6 6 Xceed+X-SP is a Attack-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0578 for Beyblade Burst Surge. It combines Evo Hyperion H6, Flamebringer, 6, Xceed+X-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evo_Hyperion_Flamebringer_H6_6_Xceed%2BX-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evo-hyperion-flamebringer-h6-6-xceed-x-sp"
   },
   {
     "id": "evo-lucius-endbringer-l6-vertical-drift-sp",
@@ -8017,7 +8125,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Evo Lucius Endbringer L6 Vertical Drift-SP is a Defense-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0578 for Beyblade Burst Surge. It combines Evo Lucius L6, Endbringer, Vertical, Drift-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evo_Lucius_Endbringer_L6_Vertical_Drift-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-evo-lucius-endbringer-l6-vertical-drift-sp"
   },
   {
     "id": "exceed-evil-eye-2glaive-hunter",
@@ -8085,7 +8194,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Exceed Evil-eye 2Glaive Hunter is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Part of Beyblade Burst Evolution. It combines Exceed Evil-eye, 2, Glaive, Hunter. Used by Solkov.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Exceed_Evil-eye_2Glaive_Hunter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-exceed-evil-eye-2glaive-hunter"
   },
   {
     "id": "exceed-evil-eye-2glaive-weight",
@@ -8159,7 +8269,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Exceed Evil-eye 2Glaive Weight is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 29th, 2017 as B-80 for Beyblade Burst. It combines Exceed Evil-eye, 2, Glaive, Weight.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Exceed_Evil-eye_2Glaive_Weight",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-exceed-evil-eye-2glaive-weight"
   },
   {
     "id": "exceed-evil-eye-boost-jaggy",
@@ -8221,7 +8332,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Exceed Evil-eye Boost Jaggy is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Part of Beyblade Burst Evolution. It combines Exceed Evil-eye, Boost, Jaggy.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Exceed_Evil-eye_Boost_Jaggy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-exceed-evil-eye-boost-jaggy"
   },
   {
     "id": "exceed-evil-eye-gravity-atomic",
@@ -8289,7 +8401,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Exceed Evil-eye Gravity Atomic is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 29th, 2017 as B-80 for Beyblade Burst Evolution. It combines Exceed Evil-eye, Gravity, Atomic.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Exceed_Evil-eye_Gravity_Atomic",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-exceed-evil-eye-gravity-atomic"
   },
   {
     "id": "exceed-evil-eye-wing-needle",
@@ -8352,7 +8465,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Exceed Evil-eye Wing Needle is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Part of Beyblade Burst. It combines Exceed Evil-eye, Wing, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Exceed_Evil-eye_Wing_Needle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-exceed-evil-eye-wing-needle"
   },
   {
     "id": "falborg",
@@ -8420,7 +8534,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Falborg is a Attack-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade: 2000. It combines Falborg, Fal Wing, Eight Heavy, Right SG. Used by Bryan Kuznetsov. Its special move is Stroblitz.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Falborg",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-falborg"
   },
   {
     "id": "falborg-burst",
@@ -8459,7 +8574,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Falborg (Burst) is a Attack-Type Beyblade from the Burst System, spinning right-spin. Part of Bakuten Shoot Beyblade: Rising. It combines Falborg. Used by Bryan Kuznetsov (manga). Its special move is Novae Rog.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Falborg_(Burst)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-falborg"
   },
   {
     "id": "falborg-2",
@@ -8510,7 +8626,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Falborg 2 is a Attack-Type Beyblade from the Spin Gear System. Part of Beyblade: 2000. It combines Falborg, Right SG. Used by Bryan Kuznetsov. Its special move is Stroblitz Attack.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Falborg_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-falborg-2"
   },
   {
     "id": "falborg-ms",
@@ -8546,7 +8663,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Falborg MS is a Attack-Type Beyblade from the Hard Metal System, spinning right-spin. Part of Beyblade GRevolution. It combines Falborg Emblem. Used by Bryan Kuznetsov (Manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Falborg_MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-falborg-ms"
   },
   {
     "id": "fang-dragoon-fighter-7-jaggy-s",
@@ -8606,7 +8724,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Dragoon Fighter 7 Jaggy-S is a Attack-Type Beyblade from the Burst System, spinning left-spin. Released as F0216 for Beyblade Burst Rise. It combines Fang Dragoon Fighter, 7, Jaggy-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Dragoon_Fighter_7_Jaggy-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-dragoon-fighter-7-jaggy-s"
   },
   {
     "id": "fang-fenrir-6glaive-liner",
@@ -8680,7 +8799,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Fenrir 6Glaive Liner is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 29th, 2017 as B-80 for Beyblade Burst Evolution. It combines Fang Fenrir, 6, Glaive, Liner.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Fenrir_6Glaive_Liner",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-fenrir-6glaive-liner"
   },
   {
     "id": "fang-fenrir-boost-jaggy",
@@ -8762,7 +8882,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Fenrir Boost Jaggy is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released October 22nd, 2016 as B-62 for Beyblade Burst. It combines Fang Fenrir, Boost, Jaggy. Used by Heinrich (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Fenrir_Boost_Jaggy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-fenrir-boost-jaggy"
   },
   {
     "id": "fang-fenrir-polish-atomic",
@@ -8830,7 +8951,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Fenrir Polish Atomic is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 29th, 2017 as B-80 for Beyblade Burst Evolution. It combines Fang Fenrir, Polish, Atomic.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Fenrir_Polish_Atomic",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-fenrir-polish-atomic"
   },
   {
     "id": "fang-ionis-r145b",
@@ -8900,7 +9022,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Ionis R145B is a Defense-Type Beyblade from the Hybrid Wheel System. Released as B-162 for Beyblade: Metal Fury. It combines Ionis, Ionis, Fang (Hasbro), R145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Ionis_R145B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-ionis-r145b"
   },
   {
     "id": "fang-leone-130w2d",
@@ -8979,7 +9102,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearManga": "A Stormy Fierce Battle!!",
     "seoDescription": "Fang Leone 130W2D is a Defense-Type Beyblade, spinning right-spin. Released March 26, 2011 as BB-106. It combines Leone II, Leone II, Fang, 130. Used by Kyoya Tategami. Special moves: Lion Gale Force Wall, King Lion Reverse Wind Strike, King Lion Crushing Fang.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Leone_130W2D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-leone-130w2d"
   },
   {
     "id": "fang-leone-130w2d-hasbro",
@@ -9052,7 +9176,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Leone 130W2D is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as B-147 and B-147A (Ultimate Gift Set) for Beyblade: Metal Fury. It combines Leone II, Leone II, Fang (Hasbro), 130.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Leone_130W2D_(Hasbro)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-leone-130w2d"
   },
   {
     "id": "fang-leone-w105r-f",
@@ -9186,7 +9311,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Fang Leon T 4-60U is a Balance-Type Beyblade from the Custom Line, weighing 46.3 g, spinning right-spin. Released as G2748 for Beyblade X (Season 2). It combines Leon, Fang, Turn, 4-60.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Leon_T_4-60U",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G2748-Fang-Leon-T-4-60U"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G2748-Fang-Leon-T-4-60U",
+    "categoryId": "category-fang-leon-t-4-60u"
   },
   {
     "id": "fang-tiger-0-high-jaggy",
@@ -9250,7 +9376,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fang Tiger 0 High Jaggy' is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released as B-173 for Beyblade Burst Surge. It combines Fang Tiger, 0, High Jaggy'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fang_Tiger_0_High_Jaggy'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fang-tiger-0-high-jaggy"
   },
   {
     "id": "ferro-fengriff-f2-boost-jaggy",
@@ -9315,7 +9442,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Ferro Fengriff F2 Boost Jaggy is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released as C2356 for Beyblade Burst. It combines Ferro Fengriff F2, Boost, Jaggy.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ferro_Fengriff_F2_Boost_Jaggy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ferro-fengriff-f2-boost-jaggy"
   },
   {
     "id": "ferro-fengriff-f2-force-quake",
@@ -9380,7 +9508,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Ferro Fengriff F2 Force Quake is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E1050 for Beyblade Burst Evolution. It combines Ferro Fengriff F2, Force, Quake.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ferro_Fengriff_F2_Force_Quake",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ferro-fengriff-f2-force-quake"
   },
   {
     "id": "fiegelanzer",
@@ -9427,7 +9556,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fiegelanzer is a Beyblade from the Magnacore System, spinning right-spin. Part of Beyblade: V-Force. It combines Gideon Chamber, Right SG. Used by Figel. Its special move is Tornado Attack.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fiegelanzer",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fiegelanzer"
   },
   {
     "id": "fierce-achilles-a8-aquilon-q-zephyr-q-flap-0",
@@ -9501,7 +9631,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Fierce Achilles A8 Aquilon'-Q Zephyr-Q+Flap-0 is a Balance-Type Beyblade from the QuadDrive System, spinning left-spin. Released as F7777 for Beyblade Burst QuadStrike. It combines Achilles A8, Fierce, 0, Aquilon'-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fierce_Achilles_A8_Aquilon'-Q_Zephyr-Q%2BFlap-0",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Hasbro-Fierce-Achilles-A8-Competitive-Testing-Discussion"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Hasbro-Fierce-Achilles-A8-Competitive-Testing-Discussion",
+    "categoryId": "category-fierce-achilles-a8-aquilon-q-zephyr-q-flap-0"
   },
   {
     "id": "fierce-bazilisk-b8-quacchu-q-jolt-q-flap-4",
@@ -9576,7 +9707,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fierce Bazilisk B8 Quacchu-Q Jolt-Q+Flap-4 is a Attack-Type Beyblade from the QuadDrive System, spinning left-spin. Released as F6812 for Beyblade Burst QuadStrike. It combines Bazilisk B8, Fierce, 4, Quacchu-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fierce_Bazilisk_B8_Quacchu-Q_Jolt-Q%2BFlap-4",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fierce-bazilisk-b8-quacchu-q-jolt-q-flap-4"
   },
   {
     "id": "fierce-helios-h8-squadron-q-quattro-q-stay-3",
@@ -9645,7 +9777,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fierce Helios H8 Squadron-Q Quattro-Q+Stay-3 is a Attack-Type Beyblade from the QuadDrive System, spinning left-spin. Released as F6779 for Beyblade Burst QuadStrike. It combines Helios H8, Fierce, 3, Squadron-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fierce_Helios_H8_Squadron-Q_Quattro-Q%2BStay-3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fierce-helios-h8-squadron-q-quattro-q-stay-3"
   },
   {
     "id": "firefuse-darkhelm-145ds",
@@ -9717,7 +9850,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Firefuse Darkhelm 145DS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as B-157 and B-157A (Legendary Bladers: Nemesis Crisis) for Beyblade: Metal Fury. It combines Darkhelm, Darkhelm, Firefuse, 145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Firefuse_Darkhelm_145DS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-firefuse-darkhelm-145ds"
   },
   {
     "id": "fire-lizard-2expand-eternal",
@@ -9787,7 +9921,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fire Lizard 2Expand Eternal is a Stamina-Type Beyblade from the Burst System, spinning left-spin. Released as B-173 for Beyblade Burst Surge. It combines Fire Lizard, 2, Expand, Eternal.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fire_Lizard_2Expand_Eternal",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fire-lizard-2expand-eternal"
   },
   {
     "id": "fire-pavon-wd145s",
@@ -9865,7 +10000,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fire Pavon WD145S is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Fusion. It combines Pavon, Pavon, Fire, WD145. Used by Kouki Habiro. Its special move is Pavon Rainbow Break.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fire_Pavon_WD145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fire-pavon-wd145s"
   },
   {
     "id": "first-uranus-00-metal-accel-1d",
@@ -9940,7 +10076,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "First Uranus 00 Metal Accel 1D is a Attack-Type Beyblade from the Superking Layer System, weighing 53.5 g, spinning right-spin. Released February 27th, 2021 as B-178 for Beyblade Burst Surge. It combines Uranus, First, 1D, 00.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/First_Uranus_00_Metal_Accel_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-first-uranus-00-metal-accel-1d"
   },
   {
     "id": "first-uranus-metal-accel-2b",
@@ -10092,7 +10229,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "First Uranus Mobius 2D is a Defense-Type Beyblade from the Superking Layer System, spinning right-spin. Part of Beyblade Burst Surge. It combines Uranus, First, 2D, Mobius. Used by Lain Valhalla.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/First_Uranus_Mobius_2D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-first-uranus-mobius-2d"
   },
   {
     "id": "first-uranus-wheel-mobius-1d",
@@ -10175,7 +10313,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "First Uranus Wheel Mobius 1D is a Defense-Type Beyblade from the Superking Layer System, spinning right-spin. Part of Beyblade Burst Surge. It combines Uranus, First, 1D, Wheel. Used by Lain Valhalla (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/First_Uranus_Wheel_Mobius_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-first-uranus-wheel-mobius-1d"
   },
   {
     "id": "flame-x-diomedes-d4-8-defense-s",
@@ -10240,7 +10379,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame-X Diomedes D4 8 Defense-S is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4718 for Beyblade Burst Turbo. It combines Flame-X Diomedes D4, 8, Defense-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame-X_Diomedes_D4_8_Defense-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-x-diomedes-d4-8-defense-s"
   },
   {
     "id": "flame-aquila-100es",
@@ -10316,7 +10456,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Aquila 100ES is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 26th, 2009 as BB-60 for Beyblade: Metal Fusion. It combines Aquila, Aquila, Flame, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Aquila_100ES",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-aquila-100es"
   },
   {
     "id": "flame-aries-h145fs",
@@ -10380,7 +10521,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Aries H145FS is a Balance-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fusion. It combines Aries, Aries, Flame, H145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Aries_H145FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-aries-h145fs"
   },
   {
     "id": "flame-bull-100f",
@@ -10451,7 +10593,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Bull 100F is a Attack-Type Beyblade from the Hybrid Wheel System. Released as B-101 for Beyblade: Metal Fusion. It combines Bull, Bull, Flame, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Bull_100F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-bull-100f"
   },
   {
     "id": "flame-bull-105wb",
@@ -10516,7 +10659,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Bull 105WB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Bull, Bull, Flame, 105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Bull_105WB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-bull-105wb"
   },
   {
     "id": "flame-byxis-230wd",
@@ -10613,7 +10757,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Byxis 230WD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released 20th November 2010 as BB-95 for Beyblade: Metal Masters. It combines Byxis, Byxis, Flame, 230. Used by Zeo Abyss. Special moves: Destiny Needle, Magnetic Needle Storm.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Byxis_230WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-byxis-230wd"
   },
   {
     "id": "flame-cancer-d125rf",
@@ -10684,7 +10829,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Cancer D125RF is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-100 for Beyblade: Metal Masters. It combines Cancer, Cancer, Flame, D125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Cancer_D125RF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-cancer-d125rf"
   },
   {
     "id": "flame-capricorne-t125hf",
@@ -10749,7 +10895,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Capricorne T125HF is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Capricorn, Capricorn, Flame, T125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Capricorne_T125HF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-capricorne-t125hf"
   },
   {
     "id": "flame-gasher-wd145wd",
@@ -10827,7 +10974,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Gasher WD145WD is a Stamina-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fury. It combines Gasher, Gasher, Flame, WD145. Used by Motti Ilio.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Gasher_WD145WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-gasher-wd145wd"
   },
   {
     "id": "flame-gemios-105cs",
@@ -10892,7 +11040,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Gemios 105CS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Gemios, Gemios, Flame, 105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Gemios_105CS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-gemios-105cs"
   },
   {
     "id": "flame-kerbecs-tt-19",
@@ -11000,7 +11149,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Libra DF145BS is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Libra, Libra, Flame, DF145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Libra_DF145BS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-libra-df145bs"
   },
   {
     "id": "flame-libra-t125es",
@@ -11098,7 +11248,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Libra T125ES is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-48 for Beyblade: Metal Fusion. It combines Libra, Libra, Flame, T125. Used by Yu Tendo. Special moves: Sonic Buster, Sonic Wave, Inferno Blast.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Libra_T125ES",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-libra-t125es"
   },
   {
     "id": "flame-pandora-everlasting-p8-aquilon-q-jolt-q-flexible-10",
@@ -11189,7 +11340,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Pandora Everlasting P8 Aquilon-Q Jolt-Q+Flexible-10' is a Attack-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F6810 for Beyblade Burst QuadStrike. It combines Pandora Everlasting P8, Flame, 10', Aquilon-Q. Used by Pri Forsythe.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Pandora_Everlasting_P8_Aquilon-Q_Jolt-Q%2BFlexible-10'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-pandora-everlasting-p8-aquilon-q-jolt-q-flexible-10"
   },
   {
     "id": "flame-sagittario-00-keep",
@@ -11252,7 +11404,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Sagittario 00 Keep' is a Defense-Type Beyblade from the Burst System, weighing 51.4 g, spinning right-spin. Released April 25th, 2020 as B-164 for Beyblade Burst Surge. It combines Flame Sagittario, 00, Keep'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Sagittario_00_Keep'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-sagittario-00-keep"
   },
   {
     "id": "flame-sagittario-8-claw",
@@ -11336,7 +11489,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Sagittario 8' Claw is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released December 2019 as B-00 for Beyblade Burst Rise. It combines Flame Sagittario, 8', Claw. Used by Kenta Yumiya. Its special move is Flame Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Sagittario_8'_Claw",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-sagittario-8-claw"
   },
   {
     "id": "flame-sagittario-c145es",
@@ -11413,7 +11567,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Sagittario C145ES is a Stamina-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fusion. It combines Sagittario I, Sagittario I, Flame, C145. Used by Kenta Yumiya. Its special move is Flame Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Sagittario_C145ES",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-sagittario-c145es"
   },
   {
     "id": "flame-sagittario-c145s",
@@ -11472,7 +11627,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Sagittario Σ C145S is a Beyblade. It combines Sagittario Σ, Sagittario Σ, Flame Σ, C145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Sagittario_%CE%A3_C145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-sagittario-c145s"
   },
   {
     "id": "flame-serpent-sw145f",
@@ -11551,7 +11707,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Serpent SW145F is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as B-120 for Beyblade: Metal Masters. It combines Serpent, Serpent, Flame, SW145. Used by Salhan. Its special move is Burning Mirage.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Serpent_SW145F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-serpent-sw145f"
   },
   {
     "id": "flame-wolf-h145s",
@@ -11615,7 +11772,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flame Wolf H145S is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Wolf, Wolf, Flame, H145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flame_Wolf_H145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flame-wolf-h145s"
   },
   {
     "id": "flare-ashura-5-survive-retsu",
@@ -11708,7 +11866,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flare Ashura 5 Survive Retsu is a Stamina-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released July 20th, 2019 as B-146 for Beyblade Burst Rise. It combines Ashura, Retsu, Flare (Takara Tomy), 5. Used by Chin Taizen.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flare_Ashura_5_Survive_Retsu",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flare-ashura-5-survive-retsu"
   },
   {
     "id": "flare-cobra-c5-2-planet-h",
@@ -11779,7 +11938,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flare Cobra C5 2 Planet-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as F0624 for Beyblade Burst Surge. It combines Cobra C5, Flare (Hasbro), 2, Planet-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flare_Cobra_C5_2_Planet-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flare-cobra-c5-2-planet-h"
   },
   {
     "id": "flare-dragon-around-planet-sen",
@@ -11859,7 +12019,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flare Dragon Around Planet Sen is a Stamina-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released July 20th, 2019 as B-146 for Beyblade Burst Rise. It combines Dragon 1, Sen, Flare (Takara Tomy), Around.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flare_Dragon_Around_Planet_Sen",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flare-dragon-around-planet-sen"
   },
   {
     "id": "flash-leopard",
@@ -11952,7 +12113,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Leopard is a Balance-Type Beyblade from the Magnacore System. Released January 2002 as A-47 for Beyblade: V-Force. It combines Flash Leopard, Panther Claw, Ten Heavy, NEO Right SG. Used by Ozuma. Its special move is Sacred Fire.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Leopard",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-leopard"
   },
   {
     "id": "flash-leopard-2",
@@ -12045,7 +12207,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Leopard 2 is a Balance-Type Beyblade from the Magnacore System. Released March 2002 as A-54 for Beyblade: V-Force. It combines Flash Leopard, Panther Head, Ten Heavy, Right MG South Core. Used by Ozuma. Its special move is Cross Fire.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Leopard_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-leopard-2"
   },
   {
     "id": "flash-sagittario-230wd",
@@ -12141,7 +12304,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Sagittario 230WD is a Stamina-Type Beyblade from the 4D System, spinning right-spin. Released February 18, 2012 as BB-126 for Beyblade: Metal Fury. It combines Sagittario II, Sagittario II, Flash, 230. Used by Kenta Yumiya. Its special move is Diving Arrow.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Sagittario_230WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-sagittario-230wd"
   },
   {
     "id": "flash-sleipnir-10glaive-quick",
@@ -12211,7 +12375,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Sleipnir 10Glaive Quick' is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released as B-140 for Beyblade Burst Rise. It combines Flash Sleipnir, 10, Glaive, Quick'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Sleipnir_10Glaive_Quick'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-sleipnir-10glaive-quick"
   },
   {
     "id": "flash-sleipnir-drake-high-survive",
@@ -12277,7 +12442,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Sleipnir Drake High Survive is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released as B-176 for Beyblade Burst Surge. It combines Flash Sleipnir, Drake, High Survive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Sleipnir_Drake_High_Survive",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-sleipnir-drake-high-survive"
   },
   {
     "id": "flash-sleipnir-hurricane-atomic",
@@ -12341,7 +12507,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flash Sleipnir Hurricane Atomic is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as B-151 for Beyblade Burst Rise. It combines Flash Sleipnir, Hurricane (Takara Tomy), Atomic.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flash_Sleipnir_Hurricane_Atomic",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flash-sleipnir-hurricane-atomic"
   },
   {
     "id": "flat-three",
@@ -12408,7 +12575,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Flat Three is a Defense-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Joint Project, War Monkey, Eight Heavy, Right SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Flat_Three",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-flat-three"
   },
   {
     "id": "foggle",
@@ -12458,7 +12626,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Foggle is a Attack-Type Beyblade from the Spin Gear System, spinning left-spin. Part of Beyblade. It combines Foggle, Fox Ring, Eight Wide, Left SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Foggle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-foggle"
   },
   {
     "id": "forbidden-eonis-130d",
@@ -12525,7 +12694,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Forbidden Eonis 130D is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 for Beyblade: Metal Fury. It combines Ionis, Ionis, Forbidden, 130.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Forbidden_Eonis_130D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-forbidden-eonis-130d"
   },
   {
     "id": "forbidden-ionis-ed145fb",
@@ -12612,7 +12782,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Forbidden Ionis ED145FB is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 as BB-116 (Takara Tomy) and B-135 (Hasbro) for Beyblade: Metal Fury. It combines Ionis, Ionis, Forbidden, ED145. Used by Jigsaw. Its special move is Burst Satellite.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Forbidden_Ionis_ED145FB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-forbidden-ionis-ed145fb"
   },
   {
     "id": "forbidden-striker-df105ds",
@@ -12682,7 +12853,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Forbidden Striker DF105DS is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-153 for Beyblade: Metal Fury. It combines Striker II, Striker I, Forbidden, DF105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Forbidden_Striker_DF105DS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-forbidden-striker-df105ds"
   },
   {
     "id": "force-wolborg-12-flugel-s",
@@ -12743,7 +12915,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Force Wolborg 12 Flugel-S is a Stamina-Type Beyblade from the SlingShock System, spinning right-spin. Released as F0609 for Beyblade Burst Surge. It combines Force Wolborg, 12, Flugel-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Force_Wolborg_12_Flugel-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-force-wolborg-12-flugel-s"
   },
   {
     "id": "fortress-borg-2nd",
@@ -12796,7 +12969,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fortress Borg 2nd is a Defense-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Joint Project, Upper Wolf, Heavy, Right SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fortress_Borg_2nd",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fortress-borg-2nd"
   },
   {
     "id": "fortress-victory",
@@ -12862,7 +13036,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fortress Victory is a Attack-Type Beyblade from the Magnacore System, spinning left-spin. Part of Beyblade VForce. It combines Joint Project, Eight Attacker, Wide Survivor, NEO Left SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fortress_Victory",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fortress-victory"
   },
   {
     "id": "fort-hornet-r-7-60t",
@@ -12945,7 +13120,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fort Hornet R 7-60T is a Balance-Type Beyblade from the Custom Line, weighing 44.7 g, spinning right-spin. Released July 9th, 2026 as G1682 (Hasbro) and CX-00 (Takara Tomy) for Beyblade X (Season 2). It combines Hornet, Fort, Round, 7-60.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fort_Hornet_R_7-60T",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fort-hornet-r-7-60t"
   },
   {
     "id": "foxbrush-j0-80db",
@@ -13024,7 +13200,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "FoxBrush J0-80DB is a Stamina-Type Beyblade from the Custom Line, spinning right-spin. Released May 17th, 2025 as CX-06 for Beyblade X (Season 2). It combines Fox, Brush, Jaggy, 0-80.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/FoxBrush_J0-80DB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-foxbrush-j0-80db"
   },
   {
     "id": "foxbrush-j2-60u",
@@ -13103,7 +13280,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "FoxBrush J2-60U is a Balance-Type Beyblade from the Custom Line, spinning right-spin. Released May 17th, 2025 as CX-06 for Beyblade X (Season 2). It combines Fox, Brush, Jaggy, 2-60.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/FoxBrush_J2-60U",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-foxbrush-j2-60u"
   },
   {
     "id": "foxbrush-j9-70gr",
@@ -13207,7 +13385,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "FoxBrush J9-70GR is a Attack-Type Beyblade from the Custom Line, weighing 45.3 g, spinning right-spin. Released May 17th, 2025 as CX-06 (Takara Tomy) and G1681 (Hasbro) for Beyblade X (Season 2). It combines Fox, Brush, Jaggy, 9-70.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/FoxBrush_J9-70GR",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-foxbrush-j9-70gr"
   },
   {
     "id": "frankes",
@@ -13275,7 +13454,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Frankes is a Attack-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade: 2000. It combines Team WHO, Hammer Attacker, Heavy Attack, Right SG. Used by Zomb.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Frankes",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-frankes"
   },
   {
     "id": "frostic-dranzer",
@@ -13355,7 +13535,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Frostic Dranzer is a Balance-Type Beyblade from the 4 Layer System. Released July 17th, 1999 as 03 for Next Generation Beigoma Battle: Beyblade. It combines Frostic Dranzer, Wing Cross, Balance, Semi-Flat. Used by Kai Hiwatari.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Frostic_Dranzer",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-frostic-dranzer"
   },
   {
     "id": "fury-capricorn-100hf",
@@ -13425,7 +13606,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fury Capricorn 100HF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-27 for Beyblade: Metal Fusion. It combines Capricorn, Capricorn, Fury, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fury_Capricorn_100HF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fury-capricorn-100hf"
   },
   {
     "id": "fusion-hades-ad145swd",
@@ -13505,7 +13687,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Fusion Hades AD145SWD is a Balance-Type Beyblade from the 4D System, spinning right-spin. Released December 28, 2011 as BB-123 for Beyblade: Metal Fury. It combines Hades, Hades, Fusion, AD145. Used by Pluto.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Hades_AD145SWD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-fusion-hades-ad145swd"
   },
   {
     "id": "gabriel",
@@ -13564,7 +13747,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gabriel is a Attack-Type Beyblade from the Magnacore System. Released June 2002 for Beyblade: V-Force. It combines Gabriel, Twin Horn, Revolver Attacker, Neo Right Spin Gear (Metal Weight Version).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gabriel",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gabriel"
   },
   {
     "id": "gabriel-2",
@@ -13640,7 +13824,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gabriel 2 is a Attack-Type Beyblade from the Magnacore System, spinning right-spin. Part of Beyblade VForce. It combines Gabriel, Neo Twin Horn, Star Attack, Neo Right SG (Metal Weight Version). Used by Queen. Special moves: Sky Fire, Double Attack (with King).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gabriel_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gabriel-2"
   },
   {
     "id": "gaia-balancer",
@@ -13707,7 +13892,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gaia Balancer is a Balance-Type Beyblade from the Magnacore System, spinning left-spin. Part of Beyblade VForce. It combines Joint Project, Upper Dragoon, Balance, NEO Left SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gaia_Balancer",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gaia-balancer"
   },
   {
     "id": "gaia-dragoon",
@@ -13774,7 +13960,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gaia Dragoon is a Attack-Type Beyblade from the Spin Gear System. Released September 2001. It combines Strata Dragoon, Great Dragon, Heavy Attack, Right Spin Gear G Ball. Used by Daichi Sumeragi. Its special move is Co-Ring Cutter (Spike Slash).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gaia_Dragoon",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gaia-dragoon"
   },
   {
     "id": "gaia-dragoon-around-hunter",
@@ -13859,7 +14046,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gaia Dragoon Around Hunter' is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released July 20th, 2019 as B-146 for Beyblade Burst Rise. It combines Gaia Dragoon, Around, Hunter'. Used by Daichi Sumeragi (manga). Its special move is Calling Cutter.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gaia_Dragoon_Around_Hunter'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gaia-dragoon-around-hunter"
   },
   {
     "id": "gaia-dragoon-vurst-10expand-iron",
@@ -13932,7 +14120,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gaia Dragoon Vurst 10Expand Iron is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released August 2020 as B-00 for Beyblade Burst Surge. It combines Gaia Dragoon Vurst, 10, Expand, Iron.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gaia_Dragoon_Vurst_10Expand_Iron",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gaia-dragoon-vurst-10expand-iron"
   },
   {
     "id": "galaxy-cancer-d125hf",
@@ -13996,7 +14185,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Cancer D125HF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Gasher, Gasher, Galaxy, D125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Cancer_D125HF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-cancer-d125hf"
   },
   {
     "id": "galaxy-pegasis-5glaive-jolt",
@@ -14069,7 +14259,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Pegasis 5Glaive Jolt' is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released December 30th, 2020 as B-00 for Beyblade Burst Surge. It combines Galaxy Pegasis, 5, Glaive, Jolt'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasis_5Glaive_Jolt'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasis-5glaive-jolt"
   },
   {
     "id": "galaxy-pegasis-legacy-xtreme",
@@ -14136,7 +14327,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Pegasis Legacy Xtreme' is a Attack-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Released December 29th, 2021 as B-194 for Beyblade Burst QuadDrive. It combines Galaxy Pegasis, Legacy, Xtreme'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasis_Legacy_Xtreme'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasis-legacy-xtreme"
   },
   {
     "id": "galaxy-pegasus-ir-spin-control",
@@ -14160,7 +14352,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Pegasus is a IR Spin Control-Type Beyblade from the Extreme Top System, spinning right-spin. Released as X-100 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasus_(IR_Spin_Control)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasus"
   },
   {
     "id": "galaxy-pegasus-gb145ms",
@@ -14229,7 +14422,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "releaseUS": "March 1st, 2012",
     "seoDescription": "Galaxy Pegasus GB145MS is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released April 1st, 2010 as B-133 (Hasbro) for Beyblade: Metal Masters. It combines Pegasus I, Pegasus II, Galaxy, GB145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasus_GB145MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasus-gb145ms"
   },
   {
     "id": "galaxy-pegasus-w105r2f",
@@ -14338,7 +14532,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Pegasus W105R2F is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released April 1, 2010 as BB-70 (Starter) and BB-70A (Triple Battle Set) for Beyblade: Metal Masters. It combines Pegasus II, Pegasus II, Galaxy, W105. Used by Gingka Hagane.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasus_W105R2F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasus-w105r2f"
   },
   {
     "id": "galaxy-sagittario-145cs",
@@ -14401,7 +14596,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Sagittario 145CS is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Sagittario, Sagittario, Galaxy, 145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Sagittario_145CS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-sagittario-145cs"
   },
   {
     "id": "galaxy-zeus-4meteor-planet",
@@ -14475,7 +14671,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Zeus 4Meteor Planet is a Stamina-Type Beyblade from the God Layer System, spinning right-spin. Released August 11th, 2017 as B-90 for Beyblade Burst Evolution. It combines Galaxy Zeus, 4, Meteor, Planet.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Zeus_4Meteor_Planet",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-zeus-4meteor-planet"
   },
   {
     "id": "galaxy-zeutron-z4-4-liner-s",
@@ -14540,7 +14737,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Zeutron Z4 4 Liner-S is a Balance-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4746 for Beyblade Burst Turbo. It combines Galaxy Zeutron Z4, 4, Liner-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Zeutron_Z4_4_Liner-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-zeutron-z4-4-liner-s"
   },
   {
     "id": "galaxy-zeutron-z5-lore-revolve-h",
@@ -14591,7 +14789,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Zeutron Z5 Lore Revolve-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7735 for Beyblade Burst Rise. It combines Galaxy Zeutron Z5, Lore, Revolve-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Zeutron_Z5_Lore_Revolve-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-zeutron-z5-lore-revolve-h"
   },
   {
     "id": "galaxy-pegasis-w105r-f",
@@ -14657,7 +14856,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galaxy Ω Pegasis Ω W105R²F is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Part of Metal Fight Beyblade: Bakushin Susanow Attacks!. It combines Pegasis II Ω, Pegasis II Ω, Galaxy Ω, W105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_%CE%A9_Pegasis_%CE%A9_W105R%C2%B2F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galaxy-pegasis-w105r2f"
   },
   {
     "id": "galeon",
@@ -14741,7 +14941,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galeon is a Balance-Type Beyblade from the Spin Gear System. Released as A-3 for Beyblade. It combines Galeon, War Lion, Eight Heavy, Right SG. Used by Lee. Special moves: Dark Lightning (Black Thunder), Tiger Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galeon",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galeon"
   },
   {
     "id": "galeon-2",
@@ -14821,7 +15022,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galeon 2 is a Balance-Type Beyblade from the Magnacore System. Released as A-3 for Beyblade GRevolution. It combines Galeon, Howling Leo, Ten Wide, Neo Right Spin Gear (Metal Weight Version). Used by Lee. Its special move is Spiral Lightning.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galeon_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galeon-2"
   },
   {
     "id": "galeon-2-engine-gear",
@@ -14897,7 +15099,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galeon 2 is a Balance-Type Beyblade from the Engine Gear System, spinning right-spin. Part of Beyblade GRevolution. It combines Galeon, Howling Leo, Wide Attack, Right EG (Metal Semi-Flat). Used by Lee.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galeon_2_(Engine_Gear)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galeon-2"
   },
   {
     "id": "galeon-ms",
@@ -14938,7 +15141,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galeon MS is a Balance-Type Beyblade from the Hard Metal System, spinning right-spin. Part of Beyblade GRevolution. It combines Galeon Emblem, Howling Leo (HMS). Used by Lee (Manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galeon_MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galeon-ms"
   },
   {
     "id": "galman",
@@ -15017,7 +15221,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galman is a Defense-Type Beyblade from the Spin Gear System. Released as A-10/H-10 for Beyblade: 2000. It combines Galman, War Monkey, Eight Heavy, Right SG. Used by Kevin. Its special move is Crazy Monkey Attack.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galman",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galman"
   },
   {
     "id": "galux",
@@ -15082,7 +15287,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galux is a Balance-Type Beyblade from the Spin Gear System. Part of Beyblade. It combines Galux, War Lynx, Eight Wide, Right SG. Used by Mariah. Its special move is Cat Scratch.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galux",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galux"
   },
   {
     "id": "galzzly",
@@ -15161,7 +15367,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Galzzly is a Attack-Type Beyblade from the Spin Gear System. Released January 2001 as A-9 for Beyblade: 2000. It combines Galzzly, War Bear, Eight Wide, Right SG. Used by Gary. Its special move is Bear Axe Attack.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galzzly",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-galzzly"
   },
   {
     "id": "gambit-dragon-d8-karma-q-zephyr-q-eruption-4",
@@ -15255,7 +15462,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4' is a Balance-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F6813 for Beyblade Burst QuadStrike. It combines Dragon D8, Gambit, 4', Karma-Q. Used by Dante Koryu. Special moves: Dragon Launch, Gambit Break.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gambit_Dragon_D8_Karma-Q_Zephyr-Q%2BEruption-4'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gambit-dragon-d8-karma-q-zephyr-q-eruption-4"
   },
   {
     "id": "gargole-ifraid-sa165gcf",
@@ -15326,7 +15534,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gargole Ifraid SA165GCF is a Attack-Type Beyblade from the Synchrome System, spinning right-spin. Released November 17th, 2012 as BBG-24 for Beyblade: Shogun Steel. It combines Ifraid, Ifraid, Gargole, SA165.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gargole_Ifraid_SA165GCF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gargole-ifraid-sa165gcf"
   },
   {
     "id": "gargoyle-g4-8-massive-s",
@@ -15391,7 +15600,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gargoyle G4 8 Massive-S is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4725 for Beyblade Burst Turbo. It combines Gargoyle G4, 8, Massive-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gargoyle_G4_8_Massive-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gargoyle-g4-8-massive-s"
   },
   {
     "id": "gargoyle-g5-10-keep-h",
@@ -15456,7 +15666,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gargoyle G5 10 Keep-H is a Defense-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7727 for Beyblade Burst Rise. It combines Gargoyle G5, 10, Keep-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gargoyle_G5_10_Keep-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gargoyle-g5-10-keep-h"
   },
   {
     "id": "gatling-dragon-karma-charge-metal-10",
@@ -15541,7 +15752,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Gatling Dragon Karma Charge Metal'-10 is a Attack-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Released June 25th, 2022 as B-199 for Beyblade Burst BU. It combines Dragon, Gatling, 10, Karma. Its special move is Gatling Rush.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gatling_Dragon_Karma_Charge_Metal'-10",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-199-Booster-Gatling-Dragon-Kr-Cm-10"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-199-Booster-Gatling-Dragon-Kr-Cm-10",
+    "categoryId": "category-gatling-dragon-karma-charge-metal-10"
   },
   {
     "id": "geist-fafnir-8-proof-absorb",
@@ -15625,7 +15837,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Geist Fafnir 8'Proof Absorb is a Stamina-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released September 22nd, 2018 for Beyblade Burst Turbo. It combines Geist Fafnir, 8', Proof, Absorb. Used by Free De La Hoya. Special moves: Geist Spin, Geist Claw, Absorb Break.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Geist_Fafnir_8'Proof_Absorb",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-geist-fafnir-8-proof-absorb"
   },
   {
     "id": "geist-fafnir-8-absorb",
@@ -15710,7 +15923,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Geist Fafnir 8' Absorb is a Stamina-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released September 22nd, 2018 as B-122 for Beyblade Burst Turbo. It combines Geist Fafnir, 8', Absorb. Used by Free De La Hoya (Manga). Its special move is Geist Spin.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Geist_Fafnir_8'_Absorb",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-122-Starter-Geist-Fafnir-8-Absorb"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-122-Starter-Geist-Fafnir-8-Absorb",
+    "categoryId": "category-geist-fafnir-8-absorb"
   },
   {
     "id": "geist-fafnir-f4-8-absorb-s",
@@ -15775,7 +15989,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Geist Fafnir F4 8' Absorb-S is a Stamina-Type Beyblade from the SlingShock System, spinning left-spin. Released as E4750 for Beyblade Burst Turbo. It combines Geist Fafnir F4, 8', Absorb-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Geist_Fafnir_F4_8'_Absorb-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-geist-fafnir-f4-8-absorb-s"
   },
   {
     "id": "geist-fafnir-ratchet-gyro",
@@ -15843,7 +16058,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Geist Fafnir Ratchet Gyro is a Stamina-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released July 20th, 2019 as B-146 for Beyblade Burst Rise. It combines Geist Fafnir, Ratchet, Gyro.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Geist_Fafnir_Ratchet_Gyro",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-geist-fafnir-ratchet-gyro"
   },
   {
     "id": "gekiryu-ou",
@@ -15908,7 +16124,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gekiryu-ou is a Balance-Type Beyblade from the 4 Layer System. Released as 4 for Next Generation Beigoma Battle: Beyblade. It combines Gekiryu-Oh, Wing Cross, Wide, Semi-Flat Base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gekiryu-ou",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gekiryu-ou"
   },
   {
     "id": "gemios-df145fs",
@@ -15972,7 +16189,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gemios DF145FS is a Balance-Type Beyblade from the Metal System, spinning right-spin. Released January 24, 2009 as BB-26 for Metal Fight Beyblade. It combines Gemios, Gemios, DF145, FS.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gemios_DF145FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gemios-df145fs"
   },
   {
     "id": "general-grievous-3-80hn",
@@ -16039,7 +16257,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "General Grievous 3-80HN is a Defense-Type Beyblade from the Basic Line, spinning right-spin. Released as G1694 (Hasbro) and BX-00 (Takara Tomy) for Beyblade X (Season 2). It combines General Grievous, 3-80, High Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/General_Grievous_3-80HN",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-general-grievous-3-80hn"
   },
   {
     "id": "genesis-valtryek-v3-4glaive-flugel",
@@ -16110,7 +16329,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Genesis Valtryek V3 4Glaive Flugel is a Stamina-Type Beyblade from the SwitchStrike System, spinning right-spin. Released as E1034 for Beyblade Burst Evolution. It combines Genesis Valtryek V3, 4, Glaive, Flugel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Genesis_Valtryek_V3_4Glaive_Flugel",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-genesis-valtryek-v3-4glaive-flugel"
   },
   {
     "id": "genesis-valtryek-v3-6-rc-reboot-rc",
@@ -16161,7 +16381,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Genesis Valtryek V3 6-RC Reboot-RC is a Attack-Type Beyblade from the SwitchStrike System, spinning right-spin. Released as E3014 for Beyblade Burst Evolution. It combines Genesis Valtryek V3, 6-RC, Reboot-RC.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Genesis_Valtryek_V3_6-RC_Reboot-RC",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-genesis-valtryek-v3-6-rc-reboot-rc"
   },
   {
     "id": "genesis-valtryek-v3-6vortex-reboot",
@@ -16234,7 +16455,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Genesis Valtryek V3 6Vortex Reboot is a Attack-Type Beyblade from the SwitchStrike System, spinning right-spin. Released as E0722 for Beyblade Burst Evolution. It combines Genesis Valtryek V3, 6, Vortex, Reboot.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Genesis_Valtryek_V3_6Vortex_Reboot",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-genesis-valtryek-v3-6vortex-reboot"
   },
   {
     "id": "ghostcircle-0-80gb",
@@ -16323,7 +16545,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "GhostCircle 0-80GB is a Stamina-Type Beyblade from the Unique Line, weighing 36.3 g, spinning right-spin. Released December 28th, 2024 as UX-12 (Takara Tomy) and G1687 (Hasbro) for Beyblade X. It combines GhostCircle, 0-80, Gear Ball. Used by Reiyu Kuwabara.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GhostCircle_0-80GB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ghostcircle-0-80gb"
   },
   {
     "id": "ghostcircle-4-60h",
@@ -16390,7 +16613,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "GhostCircle 4-60H is a Balance-Type Beyblade from the Unique Line, spinning right-spin. Released December 28th, 2024 as UX-12 for Beyblade X. It combines GhostCircle, 4-60, Hexa.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GhostCircle_4-60H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ghostcircle-4-60h"
   },
   {
     "id": "ghostcircle-m-85ds",
@@ -16456,7 +16680,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "GhostCircle M-85DS is a Defense-Type Beyblade from the Unique Line, spinning right-spin. Released July 11th, 2026 as BX-50 for Beyblade X (Season 3). It combines GhostCircle, M-85, Disk Spike.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GhostCircle_M-85DS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ghostcircle-m-85ds"
   },
   {
     "id": "gigant-dynamoth-1200xb-ii",
@@ -16506,7 +16731,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigant Dynamoth 1200XB-II is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Dynamoth-II, Gigant-II, 1200-II, XB-II. Used by Osiris.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigant_Dynamoth_1200XB-II",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigant-dynamoth-1200xb-ii"
   },
   {
     "id": "gigant-dynamoth-1200xb",
@@ -16556,7 +16782,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigant Dynamoth 1200XB is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Dynamoth, Gigant, 1200, XB. Used by Osiris.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigant_Dynamoth_1200XB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigant-dynamoth-1200xb"
   },
   {
     "id": "gigant-gaia-8under-quake",
@@ -16630,7 +16857,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigant Gaia 8Under Quake is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Released December 28th, 2017 as B-101 for Beyblade Burst Evolution. It combines Gigant Gaia, 8, Under, Quake.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigant_Gaia_8Under_Quake",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigant-gaia-8under-quake"
   },
   {
     "id": "gigant-gaia-quarter-fusion",
@@ -16721,7 +16949,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigant Gaia Quarter Fusion is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released December 28th, 2016 as B-67 for Beyblade Burst. It combines Gigant Gaia, Quarter, Fusion. Used by Gabe Brunai. Special moves: Swing Launch, Swing Counter.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigant_Gaia_Quarter_Fusion",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigant-gaia-quarter-fusion"
   },
   {
     "id": "gigant-gaia-vertical-cycle",
@@ -16791,7 +17020,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigant Gaia Vertical Cycle is a Stamina-Type Beyblade from the Dual Layer System. Part of Beyblade Burst Evolution. It combines Gigant Gaia, Vertical, Cycle. Used by Shasa Guten.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigant_Gaia_Vertical_Cycle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigant-gaia-vertical-cycle"
   },
   {
     "id": "gigars",
@@ -16875,7 +17105,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gigars is a Balance-Type Beyblade from the Engine Gear System. Released as A-127 for Beyblade: G-Revolution. It combines Gigars, Gigantic Claw, Ten Balance, Right Customize Gear (Full Auto Clutch Version). Used by Crusher. Its special move is Demolition Axe.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gigars",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gigars"
   },
   {
     "id": "giga-gaianon-g2-quarter-fusion",
@@ -16940,7 +17171,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Giga Gaianon G2 Quarter Fusion is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released as C2358 for Beyblade Burst. It combines Giga Gaianon G2, Quarter, Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Giga_Gaianon_G2_Quarter_Fusion",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-giga-gaianon-g2-quarter-fusion"
   },
   {
     "id": "giga-gaianon-g6-5-merge-sp",
@@ -17000,7 +17232,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Giga Gaianon G6 5 Merge-SP is a Balance-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F2303 for Beyblade Burst Surge. It combines Giga Gaianon G6, 5, Merge-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Giga_Gaianon_G6_5_Merge-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-giga-gaianon-g6-5-merge-sp"
   },
   {
     "id": "gilded-balderov-b7-diagron-q-zephyr-q-press-6",
@@ -17086,7 +17319,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6' is a Balance-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F3963 for Beyblade Burst QuadDrive. It combines Balderov B7, Gilded, 6', Diagron-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gilded_Balderov_B7_Diagron-Q_Zephyr-Q%2BPress-6'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gilded-balderov-b7-diagron-q-zephyr-q-press-6"
   },
   {
     "id": "gilded-nemesis-n7-aquilon-q-fusion-q-press-6",
@@ -17168,7 +17402,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gilded Nemesis N7 Aquilon'-Q Fusion-Q+Press-6' is a Balance-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F4491 for Beyblade Burst QuadDrive. It combines Nemesis N7, Gilded, 6', Aquilon'-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gilded_Nemesis_N7_Aquilon'-Q_Fusion-Q%2BPress-6'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gilded-nemesis-n7-aquilon-q-fusion-q-press-6"
   },
   {
     "id": "gill-shark-4-70o",
@@ -17226,7 +17461,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gill Shark 4-70O is a Stamina-Type Beyblade from the Basic Line, weighing 38 g, spinning right-spin. Released as G1686 for Beyblade X. It combines Gill Shark, 4-70, Orb.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gill_Shark_4-70O",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gill-shark-4-70o"
   },
   {
     "id": "gladiator-bahamoote-sp230gf",
@@ -17328,7 +17564,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gladiator Bahamoote SP230GF is a Balance-Type Beyblade from the Synchrome System, spinning right-spin. Released December 1, 2012 as BBG-27 (Takara Tomy) and SS-27 (Hasbro) for Beyblade: Shogun Steel. It combines Bahamoote, Bahamoote, Gladiator, SP230. Used by Kira Hayama.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gladiator_Bahamoote_SP230GF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gladiator-bahamoote-sp230gf"
   },
   {
     "id": "gladiator-bahamoote-tt-19",
@@ -17438,7 +17675,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gladiator Megatron Aquilon'-Q Needle-Q+Hunter-2 is a Defense-Type Beyblade from the QuadDrive System. Part of Beyblade Burst QuadDrive. It combines Megatron, Gladiator, 2, Aquilon'-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gladiator_Megatron_Aquilon'-Q_Needle-Q%2BHunter-2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gladiator-megatron-aquilon-q-needle-q-hunter-2"
   },
   {
     "id": "glare-cyclops-7-55fb",
@@ -17504,7 +17742,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glare Cyclops 7-55FB is a Stamina-Type Beyblade from the Basic Line, spinning right-spin. Released as G4569 for Beyblade X (Season 3). It combines Glare Cyclops, 7-55, Free Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glare_Cyclops_7-55FB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glare-cyclops-7-55fb"
   },
   {
     "id": "glide-dullahan-d6-ring-revolve-spm",
@@ -17571,7 +17810,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glide Dullahan D6 Ring Revolve-SPM is a Stamina-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F2300 for Beyblade Burst Surge. It combines Dullahan D6, Glide (Hasbro), Ring, Revolve-SPM.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glide_Dullahan_D6_Ring_Revolve-SPM",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glide-dullahan-d6-ring-revolve-spm"
   },
   {
     "id": "glide-hyperion-7bump-survive-1d",
@@ -17652,7 +17892,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glide Hyperion 7Bump Survive 1D is a Stamina-Type Beyblade from the Superking Layer System, weighing 55.4 g, spinning right-spin. Released April 25th, 2020 as B-164 for Beyblade Burst Surge. It combines Hyperion 1, Glide (Takara Tomy), 1D, 7.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glide_Hyperion_7Bump_Survive_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glide-hyperion-7bump-survive-1d"
   },
   {
     "id": "glide-ragnaruk-5-trans-1s",
@@ -17727,7 +17968,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glide Ragnaruk 5 Trans 1S is a Balance-Type Beyblade from the Superking Layer System, weighing 57.2 g, spinning right-spin. Released February 27th, 2021 as B-178 for Beyblade Burst Surge. It combines Ragnaruk, Glide (Takara Tomy), 1S, 5.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glide_Ragnaruk_5_Trans_1S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glide-ragnaruk-5-trans-1s"
   },
   {
     "id": "glide-ragnaruk-wheel-revolve-1s",
@@ -17838,7 +18080,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glide Ragnaruk Wheel Revolve 1S is a Stamina-Type Beyblade from the Superking Layer System, weighing 64.5 g, spinning right-spin. Released March 28th, 2020 as B-161 for Beyblade Burst Surge. It combines Ragnaruk, Glide (Takara Tomy), 1S, Wheel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glide_Ragnaruk_Wheel_Revolve_1S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glide-ragnaruk-wheel-revolve-1s"
   },
   {
     "id": "glide-roktavor-r6-wheel-sp-revolve-spm",
@@ -17894,7 +18137,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glide Roktavor R6 Wheel-SP Revolve-SPM is a Stamina-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0552 for Beyblade Burst Surge. It combines Roktavor R6, Glide (Hasbro), Wheel-SP, Revolve-SPM.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glide_Roktavor_R6_Wheel-SP_Revolve-SPM",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glide-roktavor-r6-wheel-sp-revolve-spm"
   },
   {
     "id": "gloryvalkyrie-lf",
@@ -17979,7 +18223,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "GloryValkyrie LF is a Attack-Type Beyblade from the Unique Line, weighing 45.4 g, spinning right-spin. Released July 11th, 2026 as UX-20 (Takara Tomy) and G4568 (Hasbro) for Beyblade X (Season 3). It combines GloryValkyrie, Low Flat. Used by One Cross. Its special move is Xtreme Dash Chrono Tempest.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GloryValkyrie_LF",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-20-Starter-GloryValkyrie-LF"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-20-Starter-GloryValkyrie-LF",
+    "categoryId": "category-gloryvalkyrie-lf"
   },
   {
     "id": "glory-regnar-r7-over-q-just-q-xtend-greatest-armor",
@@ -18051,7 +18296,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glory Regnar R7 Over-Q Just-Q+Xtend+-Greatest Armor is a Defense-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F4075 for Beyblade Burst QuadDrive. It combines Regnar R7, Glory, Greatest Armor, Over-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glory_Regnar_R7_Over-Q_Just-Q%2BXtend%2B-Greatest_Armor",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glory-regnar-r7-over-q-just-q-xtend-greatest-armor"
   },
   {
     "id": "glyph-dragon-d5-sting-charge-iii-h",
@@ -18118,7 +18364,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glyph Dragon D5 Sting Charge III-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7716 for Beyblade Burst Rise. It combines Dragon D5, Glyph, Sting (Hasbro), Charge III-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glyph_Dragon_D5_Sting_Charge_III-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glyph-dragon-d5-sting-charge-iii-h"
   },
   {
     "id": "glyph-pegasus-p5-oval-yard-h",
@@ -18189,7 +18436,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glyph Pegasus P5 Oval Yard-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E9409 for Beyblade Burst Rise. It combines Pegasus P5, Glyph, Oval, Yard-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glyph_Pegasus_P5_Oval_Yard-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glyph-pegasus-p5-oval-yard-h"
   },
   {
     "id": "glyph-valtryek-v5-1-orbit-h",
@@ -18259,7 +18507,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Glyph Valtryek V5 1' Orbit-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as F0839 for Beyblade Burst Rise. It combines Valtryek V5, Glyph, 1', Orbit-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Glyph_Valtryek_V5_1'_Orbit-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-glyph-valtryek-v5-1-orbit-h"
   },
   {
     "id": "goattackle-7-70t",
@@ -18320,7 +18569,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "GoatTackle 7-70T is a Balance-Type Beyblade from the Basic Line, weighing 41 g, spinning right-spin. Released October 11th, 2025 as BX-46 for Beyblade X (Season 3). It combines GoatTackle, 7-70, Taper.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GoatTackle_7-70T",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-goattackle-7-70t"
   },
   {
     "id": "god-valkyrie-2-flugel",
@@ -18388,7 +18638,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "God Valkyrie 2 Flugel is a Stamina-Type Beyblade from the God Layer System, spinning right-spin. Released July 15th, 2017 as B-87 for Beyblade Burst Evolution. It combines God Valkyrie, 2, Flugel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Valkyrie_2_Flugel",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-god-valkyrie-2-flugel"
   },
   {
     "id": "god-valkyrie-6vortex-reboot",
@@ -18496,7 +18747,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "God Valkyrie 6Vortex Reboot is a Attack-Type Beyblade from the God Layer System, spinning right-spin. Released March 18th, 2017 as B-73 for Beyblade Burst Evolution. It combines God Valkyrie, 6, Vortex, Reboot. Used by Valt Aoi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Valkyrie_6Vortex_Reboot",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-god-valkyrie-6vortex-reboot"
   },
   {
     "id": "god-valkyrie-6vortex-ultimate-reboot",
@@ -18580,7 +18832,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "God Valkyrie 6Vortex Ultimate Reboot is a Attack-Type Beyblade from the God Layer System, spinning right-spin. Part of Beyblade Burst Evolution. It combines God Valkyrie, 6, Vortex, Ultimate Reboot. Used by Valt Aoi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Valkyrie_6Vortex_Ultimate_Reboot",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-god-valkyrie-6vortex-ultimate-reboot"
   },
   {
     "id": "god-valkyrie-6-reboot",
@@ -18664,7 +18917,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "God Valkyrie 6 Reboot is a Attack-Type Beyblade from the God Layer System, spinning right-spin. Released as B-73 for Beyblade Burst Evolution. It combines God Valkyrie, 6, Reboot. Used by Valt Aoi. Special moves: Spring Attack, Genesis Reboot, Winged Launch.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Valkyrie_6_Reboot",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-god-valkyrie-6-reboot"
   },
   {
     "id": "god-valkyrie-mugen",
@@ -18733,7 +18987,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "God Valkyrie Mugen is a Attack-Type Beyblade from the God Layer System, spinning right-spin. Part of Beyblade Burst Evolution. It combines God Valkyrie, Mugen. Used by Raul Comas.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Valkyrie_Mugen",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-god-valkyrie-mugen"
   },
   {
     "id": "gold-x-beast-betromoth-b4-6-flugel-s",
@@ -18797,7 +19052,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gold-X Beast Betromoth B4 6 Flugel-S is a Stamina-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4746 for Beyblade Burst Turbo. It combines Gold-X Beast Betromoth B4, 6, Flugel-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gold-X_Beast_Betromoth_B4_6_Flugel-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gold-x-beast-betromoth-b4-6-flugel-s"
   },
   {
     "id": "golden-judgement-dragon-d5-triple-bullet-i-h",
@@ -18866,7 +19122,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Golden Judgement Dragon D5 Triple Bullet I-H is a Balance-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7621 for Beyblade Burst Rise. It combines Dragon D5, Golden Judgement, Triple, Bullet I-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Golden_Judgement_Dragon_D5_Triple_Bullet_I-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-golden-judgement-dragon-d5-triple-bullet-i-h"
   },
   {
     "id": "golemrock-1-60un",
@@ -18958,7 +19215,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "GolemRock 1-60UN is a Defense-Type Beyblade from the Unique Line, weighing 41.9 g, spinning right-spin. Released January 25th, 2025 as UX-13 (Takara Tomy) and G1676 (Hasbro) for Beyblade X. It combines GolemRock, 1-60, Under Needle. Used by Iwao Gogo · Spin-Off: · Meteo Iwai (Beytrainer Kiba).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GolemRock_1-60UN",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-13-Booster-GolemRock-1-60UN"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-13-Booster-GolemRock-1-60UN",
+    "categoryId": "category-golemrock-1-60un"
   },
   {
     "id": "golemrock-m-85hn",
@@ -19027,7 +19285,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "GolemRock M-85HN is a Defense-Type Beyblade from the Unique Line, spinning right-spin. Released November 1st, 2025 as CX-11 (Takara Tomy) and G3028 (Hasbro) for Beyblade X (Season 3). It combines GolemRock, M-85, High Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/GolemRock_M-85HN",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-golemrock-m-85hn"
   },
   {
     "id": "golem-behemoth-sr200bwd",
@@ -19109,7 +19368,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Golem Behemoth SR200BWD is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Part of Beyblade: Shogun Steel. It combines Behemoth, Behemoth, Golem, SR200. Used by Kira Hayama. Its special move is Gaia Hammer.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Golem_Behemoth_SR200BWD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-golem-behemoth-sr200bwd"
   },
   {
     "id": "goreim-revizer-e230sb",
@@ -19178,7 +19438,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Goreim Revizer E230SB is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Released November 17th, 2012 as BBG-25 for Beyblade: Shogun Steel. It combines Revizer, Revizer, Goreim, E230.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Goreim_Revizer_E230SB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-goreim-revizer-e230sb"
   },
   {
     "id": "grand-capricorn-145d",
@@ -19257,7 +19518,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "The Axe of Destruction",
     "seoDescription": "Grand Capricorn 145D is a Defense-Type Beyblade from the Hybrid Wheel System. Released as B-134 for Beyblade: Metal Masters. It combines Capricorn, Capricorn, Grand, 145. Used by Klaus. Special moves: Claw of the Storm, Steel Darkness.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Capricorn_145D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-capricorn-145d"
   },
   {
     "id": "grand-cetus-t125rs",
@@ -19345,7 +19607,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Cetus T125RS is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released 24th July 2010 as BB-82 (Takara Tomy) and BB-82B (Hasbro) for Beyblade: Metal Masters. It combines Cetus, Cetus, Grand, T125. Used by Sophie.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Cetus_T125RS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-cetus-t125rs"
   },
   {
     "id": "grand-cetus-wd145rs",
@@ -19431,7 +19694,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Cetus WD145RS is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released 24th July 2010 as BB-82 (Takara Tomy) and BB-82A (Hasbro) for Beyblade: Metal Masters. It combines Cetus, Cetus, Grand, WD145. Used by Wales. Its special move is Grand Fleet Grand Deucalion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Cetus_WD145RS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-cetus-wd145rs"
   },
   {
     "id": "grand-crow",
@@ -19491,7 +19755,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Crow is a Beyblade from the Spin Gear System. Part of Bakuten Shoot Beyblade - Gekitou! Saikyou Blader. It combines Grand Crone, Triple Feather, Wide Defense, Right SG. Used by Haruka Chizan. Special moves: Rolling Smash, Poyopoyo Hopping, Noisy Crow.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Crow",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-crow"
   },
   {
     "id": "grand-dragon-aero-lift-flugel-gou",
@@ -19577,7 +19842,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Dragon Aero'Lift Flugel Gou is a Stamina-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released February 22nd, 2020 as B-158 for Beyblade Burst Rise. It combines Dragon 1, Gou, Grand, Aero'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Dragon_Aero'Lift_Flugel_Gou",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-dragon-aero-lift-flugel-gou"
   },
   {
     "id": "grand-dragon-sting-charge-zan",
@@ -19664,7 +19930,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "Abracadabra! Wizard Fafnir!",
     "seoDescription": "Grand Dragon Sting Charge Zan is a Attack-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released March 16, 2019 as B-133 for Beyblade Burst Rise. It combines Dragon 1, Zan, Grand, Sting. Used by Dante Koryu. Special moves: Dragon Launch, Spring Cannon, Glyph Strike.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Dragon_Sting_Charge_Zan",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-dragon-sting-charge-zan"
   },
   {
     "id": "grand-pegasus-85mb",
@@ -19734,7 +20001,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Pegasus 85MB is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-144 for Beyblade: Metal Masters. It combines Pegasus II, Pegasus II, Grand, 85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Pegasus_85MB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-pegasus-85mb"
   },
   {
     "id": "grand-valkyrie-outer-variable-ten",
@@ -19818,7 +20086,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Valkyrie Outer Variable' Ten is a Attack-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released August 11th and 12th, 2019 as B-00 for Beyblade Burst Rise. It combines Valkyrie, Ten, Grand, Outer.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Valkyrie_Outer_Variable'_Ten",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-valkyrie-outer-variable-ten"
   },
   {
     "id": "grand-valkyrie-zenith-hold-ten",
@@ -19898,7 +20167,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grand Valkyrie Zenith Hold' Ten is a Attack-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released April 27th, 2019 as B-00 for Beyblade Burst Rise. It combines Valkyrie, Ten, Grand, Zenith.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grand_Valkyrie_Zenith_Hold'_Ten",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grand-valkyrie-zenith-hold-ten"
   },
   {
     "id": "gravity-destroyer-ir-spin-control",
@@ -19922,7 +20192,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Destroyer (IR Spin Control) is a IR Spin Control-Type Beyblade from the Extreme Top System, spinning dual-spin. Released as X-102 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Destroyer_(IR_Spin_Control)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-destroyer"
   },
   {
     "id": "gravity-destroyer-ad145wd",
@@ -20026,7 +20297,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Destroyer AD145WD is a Defense-Type Beyblade from the Hybrid Wheel System, spinning dual-spin. Released June 26, 2010 as BB-80 and BB-80A (Gravity Demolition 2-Pack) for Beyblade: Metal Masters. It combines Destroyer, Destroyer, Gravity, AD145. Used by Julian Konzern.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Destroyer_AD145WD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-destroyer-ad145wd"
   },
   {
     "id": "gravity-perseus-00bump-yielding",
@@ -20099,7 +20371,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Perseus 00Bump Yielding is a Stamina-Type Beyblade from the Burst System, spinning dual-spin. Released December 30th, 2020 as B-00 for Beyblade Burst Surge. It combines Gravity Perseus, 00, Bump, Yielding.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Perseus_00Bump_Yielding",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-perseus-00bump-yielding"
   },
   {
     "id": "gravity-perseus-85ds-stamina-version",
@@ -20174,7 +20447,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Perseus 85DS (Stamina Version) is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning dual-spin. Released April 23, 2011 as BB-106 for Beyblade: Metal Fury. It combines Destroyer, Destroyer Stamina, Gravity, 85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Perseus_85DS_(Stamina_Version)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-perseus-85ds"
   },
   {
     "id": "gravity-perseus-bd145xf-attack-version",
@@ -20248,7 +20522,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Perseus BD145XF (Attack Version) is a Attack-Type Beyblade from the Hybrid Wheel System, spinning dual-spin. Released April 23, 2011 as BB-106 for Beyblade: Metal Fury. It combines Destroyer, Destroyer Attack, Gravity, BD145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Perseus_BD145XF_(Attack_Version)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-perseus-bd145xf"
   },
   {
     "id": "gravity-perseus-s130mb-stamina-version",
@@ -20316,7 +20591,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gravity Perseus S130MB (Stamina Version) is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning dual-spin. Part of Beyblade: Metal Masters. It combines Destroyer, Destroyer Stamina, Gravity, S130.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gravity_Perseus_S130MB_(Stamina_Version)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gravity-perseus-s130mb"
   },
   {
     "id": "greatest-raphael-over-high-xtend",
@@ -20419,7 +20695,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Greatest Raphael Over High Xtend+' is a Balance-Type Beyblade from the Dynamite Battle Layer System, spinning right-spin. Released November 13th, 2021 as B-192 for Beyblade Burst QuadDrive. It combines Greatest Raphael, Over, High Xtend+'. Used by Rashad Goodman.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Greatest_Raphael_Over_High_Xtend%2B'",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-192-Booster-Greatest-Raphael-Ov-HXt"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-192-Booster-Greatest-Raphael-Ov-HXt",
+    "categoryId": "category-greatest-raphael-over-high-xtend"
   },
   {
     "id": "green-goblin-9-80ht",
@@ -20485,7 +20762,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Green Goblin 9-80HT is a Balance-Type Beyblade from the Basic Line, spinning right-spin. Released as G1691 for Beyblade X (Season 2). It combines Green Goblin, 9-80, High Taper.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Green_Goblin_9-80HT",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-green-goblin-9-80ht"
   },
   {
     "id": "griffin-dragoon-lw160bsf",
@@ -20565,7 +20843,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Griffin Dragoon LW160BSF is a Attack-Type Beyblade from the Synchrome System, spinning left-spin. Part of Beyblade: Shogun Steel. It combines Dragoon, Dragoon, Griffin, LW160. Used by Sakyo Kurayami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Griffin_Dragoon_LW160BSF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-griffin-dragoon-lw160bsf"
   },
   {
     "id": "griffolyon",
@@ -20649,7 +20928,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Griffolyon is a Attack-Type Beyblade from the Spin Gear System. Released July 2001 as A-28 for Beyblade: 2000. It combines Griffolyon, Cross Griffon, Eight Balance, Griffolyon Base. Used by Robert Jürgens. Special moves: Wing Dagger, Wind Swords.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Griffolyon",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-griffolyon"
   },
   {
     "id": "griffolyon-shield",
@@ -20716,7 +20996,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Griffolyon Shield is a Defense-Type Beyblade from the Spin Gear System, spinning left-spin. Part of Beyblade. It combines Joint Project, Cross Griffon, Eight Heavy, Left SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Griffolyon_Shield",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-griffolyon-shield"
   },
   {
     "id": "grisalis-god-absorb",
@@ -20783,7 +21064,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grisalis GOD Absorb is a Balance-Type Beyblade from the Burst System, spinning right-spin. Part of Metal Fight Beyblade: Soul Burst. It combines Grisalis, GOD, Absorb. Used by Doji.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grisalis_GOD_Absorb",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grisalis-god-absorb"
   },
   {
     "id": "grogu-3-85e",
@@ -20846,7 +21128,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Grogu 3-85E is a Balance-Type Beyblade from the Basic Line, spinning right-spin. Released as G3061 for Beyblade X (Season 2). It combines Grogu, 3-85, Elevate.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Grogu_3-85E",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-grogu-3-85e"
   },
   {
     "id": "gryph-dragooon-sa165wsf",
@@ -20910,7 +21193,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gryph Dragooon SA165WSF Coro Dragon Model is a Attack-Type Beyblade from the Synchrome System, weighing 69.4 g, spinning left-spin. Released June 2012 for Beyblade: Shogun Steel. It combines Coro Dragon, Dragooon, Gryph, SA165.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gryph_Dragooon_SA165WSF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gryph-dragooon-sa165wsf-coro-dragon-model"
   },
   {
     "id": "gryph-girago-wa130hf",
@@ -21051,7 +21335,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Driger is a Beyblade from the Magnacore System. Released December 2001 as SP for Beyblade: V-Force. It combines Guardian Driger, Great Tiger, Eight Heavy, Neo Right SG (Metal Weight Version). Used by Kennosuke Shishi. Its special move is Driger Hit.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Driger",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-driger"
   },
   {
     "id": "guardian-gargole-m145sb",
@@ -21110,7 +21395,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Gargole M145SB is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Released July 21, 2012 as BBG-17. It combines Gargoyle, Gargoyle, Guardian, M145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Gargole_M145SB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-gargole-m145sb"
   },
   {
     "id": "guardian-garudas-sd160pf",
@@ -21173,7 +21459,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Garudas SD160PF is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Part of Beyblade: Shogun Steel. It combines Garudas, Garudas, Guardian, SD160. Used by Karura.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Garudas_SD160PF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-garudas-sd160pf"
   },
   {
     "id": "guardian-kerbeus-7-nothing",
@@ -21241,7 +21528,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Kerbeus 7 Nothing is a Stamina-Type Beyblade from the God Layer System, spinning right-spin. Released December 28th, 2017 as B-101 for Beyblade Burst Evolution. It combines Guardian Kerbeus, 7, Nothing.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Kerbeus_7_Nothing",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-kerbeus-7-nothing"
   },
   {
     "id": "guardian-kerbeus-heavy-revolve",
@@ -21317,7 +21605,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Kerbeus Heavy Revolve is a Stamina-Type Beyblade from the God Layer System, spinning right-spin. Released August 11th, 2017 as B-90 for Beyblade Burst Evolution. It combines Guardian Kerbeus, Heavy, Revolve. Used by Ken Midori (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Kerbeus_Heavy_Revolve",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-kerbeus-heavy-revolve"
   },
   {
     "id": "guardian-kerbeus-k4-heavy-survive-s",
@@ -21382,7 +21671,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Kerbeus K4 Heavy Survive-S is a Stamina-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4745 for Beyblade Burst Turbo. It combines Guardian Kerbeus K4, Heavy, Survive-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Kerbeus_K4_Heavy_Survive-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-kerbeus-k4-heavy-survive-s"
   },
   {
     "id": "guardian-leviathan-160sb",
@@ -21473,7 +21763,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Leviathan 160SB is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Released May 19, 2012 as BBG-10 (Takara Tomy) and BBG-21 (First ZeroG Battle Set) for Beyblade: Shogun Steel. It combines Leviathan, Leviathan, Guardian, 160. Used by Kite Unabara.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Leviathan_160SB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-leviathan-160sb"
   },
   {
     "id": "guardian-leviathan-a230jsb",
@@ -21545,7 +21836,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Leviathan A230JSB is a Defense-Type Beyblade from the Synchrome System, spinning right-spin. Released as SS-101 for Beyblade: Shogun Steel. It combines Leviathan, Leviathan, Guardian, A230.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Leviathan_A230JSB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-leviathan-a230jsb"
   },
   {
     "id": "guardian-leviathan-tt-11",
@@ -21662,7 +21954,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guardian Saramanda W145Q is a Attack-Type Beyblade from the Synchrome System, spinning right-spin. Released July 21, 2012 as BBG-17. It combines Salamander, Salamander, Guardian, W145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guardian_Saramanda_W145Q",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guardian-saramanda-w145q"
   },
   {
     "id": "guard-draciel-shield-1-atomic-s",
@@ -21722,7 +22015,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guard Draciel Shield 1 Atomic-S is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as F0215 for Beyblade Burst Rise. It combines Guard Draciel Shield, 1, Atomic-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guard_Draciel_Shield_1_Atomic-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guard-draciel-shield-1-atomic-s"
   },
   {
     "id": "guilty-longinus-karma-metal-destroy-2",
@@ -21826,7 +22120,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Guilty Longinus Karma Metal Destroy-2 is a Attack-Type Beyblade from the Dynamite Battle Layer System, weighing 79.2 g, spinning left-spin. Released September 11th, 2021 as B-189 for Beyblade Burst QuadDrive. It combines Longinus, Guilty (Takara Tomy), 2, Karma. Used by Lui Shirosagi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guilty_Longinus_Karma_Metal_Destroy-2",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-189-Booster-Guilty-Longinus-Kr-MDs-2"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-189-Booster-Guilty-Longinus-Kr-MDs-2",
+    "categoryId": "category-guilty-longinus-karma-metal-destroy-2"
   },
   {
     "id": "guilty-luinor-l7-karma-q-guard-q-destroy-2",
@@ -21898,7 +22193,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guilty Luinor L7 Karma-Q Guard-Q+Destroy-2 is a Defense-Type Beyblade from the QuadDrive System, spinning left-spin. Released as F4073 for Beyblade Burst QuadDrive. It combines Luinor L7, Guilty (Hasbro), 2, Karma-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guilty_Luinor_L7_Karma-Q_Guard-Q%2BDestroy-2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guilty-luinor-l7-karma-q-guard-q-destroy-2"
   },
   {
     "id": "guilty-spriggan-outer-never-2",
@@ -21978,7 +22274,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Guilty Spriggan Outer Never-2 is a Stamina-Type Beyblade from the Dynamite Battle Layer System, spinning left-spin. Released December 29th, 2021 as B-194 for Beyblade Burst QuadDrive. It combines Spriggan 1, Guilty (Takara Tomy), 2, Outer.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Guilty_Spriggan_Outer_Never-2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-guilty-spriggan-outer-never-2"
   },
   {
     "id": "gust-bat-3-85gp",
@@ -22038,7 +22335,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Gust Bat 3-85GP is a Balance-Type Beyblade from the Basic Line, weighing 43.2 g, spinning right-spin. Released as G2733 for Beyblade X (Season 2). It combines Gust Bat, 3-85, Gear Point.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Gust_Bat_3-85GP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-gust-bat-3-85gp"
   },
   {
     "id": "hack-viking-4-55o",
@@ -22103,7 +22401,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hack Viking 4-55O is a Stamina-Type Beyblade from the Unique Line, spinning right-spin. Released as G2755 for Beyblade X (Season 2). It combines Hack Viking, 4-55, Orb.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hack_Viking_4-55O",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hack-viking-4-55o"
   },
   {
     "id": "hades-gil-100r2f",
@@ -22172,7 +22471,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hades Gil 100R2F is a Attack-Type Beyblade from the Hybrid Wheel System. Released as B-128 for Beyblade: Metal Fury. It combines Gil, Gil, Hades, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hades_Gil_100R2F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hades-gil-100r2f"
   },
   {
     "id": "hades-kerbecs-bd145ds",
@@ -22268,7 +22568,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hades Kerbecs BD145DS is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 28, 2010 as BB-99 for Beyblade: Metal Masters. It combines Kerbecs, Kerbecs, Hades, BD145. Used by Damian Hart.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hades_Kerbecs_BD145DS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hades-kerbecs-bd145ds"
   },
   {
     "id": "hammer-shark-attacker",
@@ -22317,7 +22618,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hammer Shark Attacker is a Balance-Type Beyblade from the Spin Gear System, spinning left-spin. Part of Beyblade. It combines Hammer Shark, Hammer Attack, 5-Sided Wide, Left SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hammer_Shark_Attacker",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hammer-shark-attacker"
   },
   {
     "id": "harmony-pegasus-10expand-revolve-sen",
@@ -22468,7 +22770,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Harmony Pegasus P5 10 Low-H is a Stamina-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7719 for Beyblade Burst Rise. It combines Pegasus P5, Harmony, 10, Low-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Harmony_Pegasus_P5_10_Low-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-harmony-pegasus-p5-10-low-h"
   },
   {
     "id": "hayate",
@@ -22614,7 +22917,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hazard Kerbeus 00Hit Guard is a Defense-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released July 20th, 2019 as B-146 for Beyblade Burst Rise. It combines Hazard Kerbeus, 00, Hit, Guard.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hazard_Kerbeus_00Hit_Guard",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hazard-kerbeus-00hit-guard"
   },
   {
     "id": "hazard-kerbeus-4-merge",
@@ -22682,7 +22986,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hazard Kerbeus 4 Merge' is a Balance-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released December 27th, 2018 as B-130 for Beyblade Burst Turbo. It combines Hazard Kerbeus, 4, Merge'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hazard_Kerbeus_4_Merge'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hazard-kerbeus-4-merge"
   },
   {
     "id": "hazard-kerbeus-7-atomic",
@@ -22763,7 +23068,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hazard Kerbeus 7 Atomic is a Defense-Type Beyblade from the Cho-Z Layer System, spinning right-spin. Released August 11th, 2018 as B-121 for Beyblade Burst Turbo. It combines Hazard Kerbeus, 7, Atomic. Used by Kyle Hakim. Special moves: Chain Protection, Chain Counter.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hazard_Kerbeus_7_Atomic",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hazard-kerbeus-7-atomic"
   },
   {
     "id": "hazard-kerbeus-k4-7-atomic-s",
@@ -22828,7 +23134,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hazard Kerbeus K4 7 Atomic-S is a Defense-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4736 for Beyblade Burst Turbo. It combines Hazard Kerbeus K4, 7, Atomic-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hazard_Kerbeus_K4_7_Atomic-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hazard-kerbeus-k4-7-atomic-s"
   },
   {
     "id": "heat-bull-d125wb",
@@ -22892,7 +23199,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Bull D125WB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Bull, Bull, Heat, D125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Bull_D125WB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-bull-d125wb"
   },
   {
     "id": "heat-cetus-125fs",
@@ -23170,7 +23478,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Leone D125FS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Leone, Leone, Heat, D125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Leone_D125FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-leone-d125fs"
   },
   {
     "id": "heat-leone-h145s",
@@ -23232,7 +23541,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Leone H145S is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Leone, Leone, Heat, H145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Leone_H145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-leone-h145s"
   },
   {
     "id": "heat-pegasis-100wb",
@@ -23295,7 +23605,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Pegasis 100WB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Pegasis, Pegasis, Heat, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Pegasis_100WB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-pegasis-100wb"
   },
   {
     "id": "heat-pegasis-df145wb",
@@ -23361,7 +23672,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Pegasis DF145WB is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-37. It combines Pegasis, Pegasis, Heat, DF145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Pegasis_DF145WB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-pegasis-df145wb"
   },
   {
     "id": "heat-salamander-s4-12-operate-s",
@@ -23426,7 +23738,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Salamander S4 12 Operate-S is a Balance-Type Beyblade from the SlingShock System, spinning left-spin. Released as E4731 for Beyblade Burst Turbo. It combines Heat Salamander S4, 12, Operate-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Salamander_S4_12_Operate-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-salamander-s4-12-operate-s"
   },
   {
     "id": "heat-wolf-wd145sf",
@@ -23491,7 +23804,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heat Wolf WD145SF is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Wolf, Wolf, Heat, WD145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heat_Wolf_WD145SF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heat-wolf-wd145sf"
   },
   {
     "id": "heavensring-0-80ds",
@@ -23584,7 +23898,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HeavensRing 0-80DS is a Defense-Type Beyblade from the Basic Line, weighing 48.1 g, spinning right-spin. Released July 11th, 2026 as BX-50 (Takara Tomy) and G4571 (Hasbro) for Beyblade X (Season 3). It combines HeavensRing, 0-80, Disk Spike.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HeavensRing_0-80DS",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G4571-Starter-Ring-Aether-0-80DS"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G4571-Starter-Ring-Aether-0-80DS",
+    "categoryId": "category-heavensring-0-80ds"
   },
   {
     "id": "heavensring-6-60tp",
@@ -23651,7 +23966,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HeavensRing 6-60TP is a Balance-Type Beyblade from the Basic Line, spinning right-spin. Released July 11th, 2026 as BX-50 for Beyblade X (Season 3). It combines HeavensRing, 6-60, Trans Point.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HeavensRing_6-60TP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heavensring-6-60tp"
   },
   {
     "id": "heaven-joker-gravity-operate-gou",
@@ -23731,7 +24047,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heaven Joker Gravity Operate Gou is a Balance-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released December 26th, 2019 as B-156 for Beyblade Burst Rise. It combines Joker, Gou, Heaven, Gravity.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heaven_Joker_Gravity_Operate_Gou",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heaven-joker-gravity-operate-gou"
   },
   {
     "id": "heaven-pegasus-10proof-low-sen",
@@ -23825,7 +24142,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Heaven Pegasus 10Proof Low Sen is a Stamina-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released August 10th, 2019 as B-148 for Beyblade Burst Rise. It combines Pegasus, Sen, Heaven, 10. Used by Pheng Hope. Special moves: Reverse Heal, Feather Storm, Harmonic Thunder.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heaven_Pegasus_10Proof_Low_Sen",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-148-Booster-Heaven-Pegasus-10P-Low-%E9%96%83-Sen"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-148-Booster-Heaven-Pegasus-10P-Low-%E9%96%83-Sen",
+    "categoryId": "category-heaven-pegasus-10proof-low-sen"
   },
   {
     "id": "heavy-metal",
@@ -23878,7 +24196,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Heavy Metal is a Defense-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Dual Dragon, Eight Heavy, Right SG, Metal Ball Base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heavy_Metal",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-heavy-metal"
   },
   {
     "id": "helios-volcano-ou-zone-z",
@@ -23970,7 +24289,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Helios Volcano Ou Zone'+Z is a Balance-Type Beyblade from the Superking Layer System, weighing 65.6 g, spinning left-spin. Released November 14th, 2020 as B-174 for Beyblade Burst Surge. It combines Helios 2, Volcano, Ou, Zone'+Z. Used by Hikaru Hizashi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Helios_Volcano_Ou_Zone'%2BZ",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-helios-volcano-ou-zone-z"
   },
   {
     "id": "hellfire-delphis-145fs",
@@ -24046,7 +24366,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hellfire Delphis 145FS is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Fusion. It combines Delphis, Delphis, Hellfire, 145. Used by Kai Nangoku. Its special move is Delphis Blitz Splash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hellfire_Delphis_145FS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellfire-delphis-145fs"
   },
   {
     "id": "hellsarc-t3-85o",
@@ -24125,7 +24446,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsArc T3-85O is a Stamina-Type Beyblade from the Custom Line, spinning right-spin. Released April 26th, 2025 as CX-05 for Beyblade X (Season 2). It combines Hells, Arc, Turn, 3-85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsArc_T3-85O",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsarc-t3-85o"
   },
   {
     "id": "hellsbrave-j3-60gf",
@@ -24199,7 +24521,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsBrave J3-60GF is a Attack-Type Beyblade from the Custom Line, weighing 46.5 g, spinning right-spin. Released August 9th, 2025 as UX-15 for Beyblade X (Season 2). It combines Hells, Brave, Jaggy, 3-60.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsBrave_J3-60GF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsbrave-j3-60gf"
   },
   {
     "id": "hellschain-5-60ht",
@@ -24298,7 +24621,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HellsChain 5-60HT is a Balance-Type Beyblade from the Basic Line, weighing 42 g, spinning right-spin. Released November 2nd, 2023 as BX-21 (Takara Tomy) and G0196 (Hasbro) for Beyblade X. It combines HellsChain, 5-60, High Taper. Used by Robin Kazami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsChain_5-60HT",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-21-HellsChain-Deck-Set-HellsChain-5-60HT"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-21-HellsChain-Deck-Set-HellsChain-5-60HT",
+    "categoryId": "category-hellschain-5-60ht"
   },
   {
     "id": "hellschain-9-80o",
@@ -24365,7 +24689,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsChain 9-80O is a Attack-Type Beyblade from the Basic Line, spinning right-spin. Released April 27th, 2024 as BX-31 for Beyblade X. It combines HellsChain, 9-80, Orb.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsChain_9-80O",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellschain-9-80o"
   },
   {
     "id": "hellshammer-3-70h",
@@ -24472,7 +24797,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HellsHammer 3-70H is a Balance-Type Beyblade from the Unique Line, weighing 42 g, spinning right-spin. Released March 30th, 2024 as UX-02 (Takara Tomy) and G1752 (Hasbro) for Beyblade X. It combines HellsHammer, 3-70, Hexa.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsHammer_3-70H",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-02-Starter-HellsHammer-3-70H"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-02-Starter-HellsHammer-3-70H",
+    "categoryId": "category-hellshammer-3-70h"
   },
   {
     "id": "hellshammer-3-85gu",
@@ -24539,7 +24865,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsHammer 3-85GU is a Balance-Type Beyblade from the Unique Line, spinning right-spin. Released April 25th, 2026 as CX-17 for Beyblade X (Season 3). It combines HellsHammer, 3-85, Gear Unite.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsHammer_3-85GU",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellshammer-3-85gu"
   },
   {
     "id": "hellsnether-z",
@@ -24631,7 +24958,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsNether Z is a Balance-Type Beyblade from the Unique Line, spinning right-spin. Released August 8th, 2026 as UX-21 (Takara Tomy) and G4564 (Hasbro) for Beyblade X (Season 3). It combines HellsNether, Zap. Used by Robin Kazami · Spin-Off: · Kibajirou Deimon (Beytrainer Kiba).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsNether_Z",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsnether-z"
   },
   {
     "id": "hellsreaper-t4-70k",
@@ -24738,7 +25066,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HellsReaper T4-70K is a Balance-Type Beyblade from the Custom Line, weighing 45.1 g, spinning right-spin. Released April 26th, 2025 as CX-05 (Takara Tomy) and G1678 (Hasbro) for Beyblade X (Season 2). It combines Hells, Reaper, Turn, 4-70.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsReaper_T4-70K",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-05-Random-Booster-Vol-6-Rares-HellsReaper-T4-70K-RhinoReaper-C4-55D"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-05-Random-Booster-Vol-6-Rares-HellsReaper-T4-70K-RhinoReaper-C4-55D",
+    "categoryId": "category-hellsreaper-t4-70k"
   },
   {
     "id": "hellsreaper-top",
@@ -24828,7 +25157,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsReaper TOp is a Balance-Type Beyblade from the Custom Line, weighing 50.6 g, spinning right-spin. Part of Beyblade X (Season 3). It combines Hells, Reaper, Turn, Operate. Used by Robin Kazami. Special moves: Xtreme Dash Ultimate Judgment, Xtreme Dash Dissection Judgment.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsReaper_TOp",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsreaper-top"
   },
   {
     "id": "hellsscythe-3-80b",
@@ -24899,7 +25229,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsScythe 3-80B is a Stamina-Type Beyblade from the Basic Line, spinning right-spin. Released July 15th, 2023 as BX-08 (Takara Tomy) and G0285 (Hasbro) for Beyblade X. It combines HellsScythe, 3-80, Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsScythe_3-80B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsscythe-3-80b"
   },
   {
     "id": "hellsscythe-3-80f",
@@ -24977,7 +25308,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HellsScythe 3-80F is a Attack-Type Beyblade from the Basic Line, weighing 42.2 g, spinning right-spin. Released January 27th, 2024 as BX-00 for Beyblade X. It combines HellsScythe, 3-80, Flat. Used by Robin Kazami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsScythe_3-80F",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-HellsScythe-3-80F-SP-X-Bey-CoroCoro-Mail-Order-Bey"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-HellsScythe-3-80F-SP-X-Bey-CoroCoro-Mail-Order-Bey",
+    "categoryId": "category-hellsscythe-3-80f"
   },
   {
     "id": "hellsscythe-3-85gb",
@@ -25044,7 +25376,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsScythe 3-85GB is a Stamina-Type Beyblade from the Basic Line, spinning right-spin. Released February 14th, 2026 as BX-48 for Beyblade X (Season 3). It combines HellsScythe, 3-85, Gear Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsScythe_3-85GB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsscythe-3-85gb"
   },
   {
     "id": "hellsscythe-4-60t",
@@ -25134,7 +25467,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "HellsScythe 4-60T is a Balance-Type Beyblade from the Basic Line, weighing 41.4 g, spinning right-spin. Released June 10th, 2023 (CoroCoro Spirit Festival) as BX-02 (Takara Tomy) and F9583 (Hasbro) for Beyblade X. It combines HellsScythe, 4-60, Taper.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsScythe_4-60T",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-02-Starter-Hells-Scythe-4-60T"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-02-Starter-Hells-Scythe-4-60T",
+    "categoryId": "category-hellsscythe-4-60t"
   },
   {
     "id": "hellsscythe-4-80lf",
@@ -25201,7 +25535,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "HellsScythe 4-80LF is a Attack-Type Beyblade from the Basic Line, spinning right-spin. Released September 9th, 2023 as BX-14 for Beyblade X. It combines HellsScythe, 4-80, Low Flat.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsScythe_4-80LF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hellsscythe-4-80lf"
   },
   {
     "id": "hell-beelzeb-125xf",
@@ -25272,7 +25607,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Beelzeb 125XF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 28, 2011 as BB-123 for Beyblade: Metal Fury. It combines Beelzeb, Beelzeb, Hell, 125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Beelzeb_125XF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-beelzeb-125xf"
   },
   {
     "id": "hell-crown-130fb",
@@ -25358,7 +25694,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Crown 130FB is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 as BB-116 for Beyblade: Metal Fury. It combines Crown, Crown, Hades, 130. Used by Bao. Its special move is Flash Attack.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Crown_130FB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-crown-130fb"
   },
   {
     "id": "hell-herculeo-100xf",
@@ -25426,7 +25763,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Herculeo 100XF is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released April 23, 2011 as BB-109. It combines Herculeo, Herculeo, Hell, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Herculeo_100XF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-herculeo-100xf"
   },
   {
     "id": "hell-horuseus-85rs",
@@ -25492,7 +25830,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Horuseus 85RS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released April 23, 2011 for Beyblade: Metal Fury. It combines Horuseus, Horuseus, Hell, 85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Horuseus_85RS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-horuseus-85rs"
   },
   {
     "id": "hell-kerbecs-0lift-mobius",
@@ -25565,7 +25904,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Kerbecs 0Lift Mobius is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released December 30th, 2020 as B-00 for Beyblade Burst Surge. It combines Hell Kerbecs, 0, Lift, Mobius.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Kerbecs_0Lift_Mobius",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-kerbecs-0lift-mobius"
   },
   {
     "id": "hell-kerbecs-bd145ewd",
@@ -25645,7 +25985,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Kerbecs BD145EWD Blue Inferno Ver. is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released April 2011 for Beyblade: Metal Masters. It combines Kerbecs, Kerbecs, Hell, BD145. Used by Damian Heart (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Kerbecs_BD145EWD",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-kerbecs-bd145ewd-blue-inferno-ver"
   },
   {
     "id": "hell-kerbecs-giga-wave",
@@ -25707,7 +26048,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Kerbecs Giga Wave is a Balance-Type Beyblade from the Burst System, weighing 65.5 g, spinning right-spin. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It combines Hell Kerbecs, Giga, Wave.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Kerbecs_Giga_Wave",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-kerbecs-giga-wave"
   },
   {
     "id": "hell-salamander-12-operate",
@@ -25801,7 +26143,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Hell Salamander 12 Operate is a Balance-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released May 26th, 2018 as B-113 for Beyblade Burst Turbo. It combines Hell Salamander, 12, Operate. Used by Suoh Genji. Special moves: Swirling Inferno, Rain of Swordfire, Crimson Lotus Blaze.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Salamander_12_Operate",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-113-Booster-Hell-Salamander-12-Op"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-113-Booster-Hell-Salamander-12-Op",
+    "categoryId": "category-hell-salamander-12-operate"
   },
   {
     "id": "hell-salamander-13-blow",
@@ -25869,7 +26212,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Salamander 13 Blow' is a Attack-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released December 27th, 2018 as B-130 for Beyblade Burst Turbo. It combines Hell Salamander, 13, Blow'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Salamander_13_Blow'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-salamander-13-blow"
   },
   {
     "id": "hell-salamander-gravity-yielding",
@@ -25937,7 +26281,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Salamander Gravity Yielding is a Stamina-Type Beyblade from the Cho-Z Layer System, spinning left-spin. Released October 20th, 2018 as B-125 for Beyblade Burst Turbo. It combines Hell Salamander, Gravity, Yielding.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Salamander_Gravity_Yielding",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-salamander-gravity-yielding"
   },
   {
     "id": "hell-salamander-outer-universe",
@@ -26000,7 +26345,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hell Salamander Outer Universe is a Defense-Type Beyblade from the Cho-Z Layer System, weighing 51.8 g, spinning left-spin. Released October 24th, 2020 as B-173 for Beyblade Burst Surge. It combines Hell Salamander, Outer, Universe.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hell_Salamander_Outer_Universe",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hell-salamander-outer-universe"
   },
   {
     "id": "herculeo-defender",
@@ -26025,7 +26371,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Herculeo Defender is a Beyblade from the Extreme Top System, weighing 42.8 g, spinning right-spin. Released as X-207 and X-207A (Spark FX) for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Herculeo_Defender",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-herculeo-defender"
   },
   {
     "id": "hollow-deathscyther-12axe-high-accel-4a",
@@ -26120,7 +26467,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hollow Deathscyther 12Axe High Accel' 4A is a Attack-Type Beyblade from the Superking Layer System, weighing 62.1 g, spinning right-spin. Released December 26th, 2020 as B-176 for Beyblade Burst Surge. It combines Deathscyther, Hollow (Takara Tomy), 4A, 12. Used by Daigo Kurogami (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hollow_Deathscyther_12Axe_High_Accel'_4A",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hollow-deathscyther-12axe-high-accel-4a"
   },
   {
     "id": "hollow-doomscizor-d6-12-xceed-sp",
@@ -26188,7 +26536,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hollow Doomscizor D6 12 Xceed-SP is a Attack-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0619 for Beyblade Burst Surge. It combines Doomscizor D6, Hollow (Hasbro), 12, Xceed-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hollow_Doomscizor_D6_12_Xceed-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hollow-doomscizor-d6-12-xceed-sp"
   },
   {
     "id": "hollow-valkyrie-11-absorb-1d",
@@ -26263,7 +26612,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hollow Valkyrie 11 Absorb 1D is a Stamina-Type Beyblade from the Superking Layer System, weighing 55.2 g, spinning right-spin. Released December 26th, 2020 as B-176 for Beyblade Burst Surge. It combines Valkyrie, Hollow (Takara Tomy), 1D, 11.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hollow_Valkyrie_11_Absorb_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hollow-valkyrie-11-absorb-1d"
   },
   {
     "id": "holy-horusood-gravity-xtreme",
@@ -26334,7 +26684,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Holy Horusood Gravity Xtreme is a Attack-Type Beyblade from the Dual Layer System. Part of Beyblade Burst Evolution. It combines Holy Horusood, Gravity, Xtreme. Used by Spark Torres · Jorge.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Holy_Horusood_Gravity_Xtreme",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-holy-horusood-gravity-xtreme"
   },
   {
     "id": "holy-horusood-triple-orbit",
@@ -26402,7 +26753,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Holy Horusood Triple Orbit is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released October 22nd, 2016 as B-61 for Beyblade Burst. It combines Holy Horusood, Triple, Orbit.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Holy_Horusood_Triple_Orbit",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-holy-horusood-triple-orbit"
   },
   {
     "id": "holy-horusood-upper-claw",
@@ -26475,7 +26827,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "The Flash Launch! It's Crazy Fast!",
     "seoDescription": "Holy Horusood Upper Claw is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released May 28th, 2016 as B-44 for Beyblade Burst. It combines Holy Horusood, Upper, Claw. Used by Hoji Konda. Its special move is Horusood Field.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Holy_Horusood_Upper_Claw",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-holy-horusood-upper-claw"
   },
   {
     "id": "holy-horusood-vertical-jaggy",
@@ -26543,7 +26896,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Holy Horusood Vertical Jaggy is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Released October 22nd, 2016 as B-61 for Beyblade Burst. It combines Holy Horusood, Vertical, Jaggy.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Holy_Horusood_Vertical_Jaggy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-holy-horusood-vertical-jaggy"
   },
   {
     "id": "hopper",
@@ -26634,7 +26988,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hopper is a Endurance-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Hopper, Star Shape, Right SG, Eight Balance. Used by Kenny. Special moves: Hopper Attack, Frog Splash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hopper",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hopper"
   },
   {
     "id": "hopper-2",
@@ -26718,7 +27073,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hopper 2 is a Endurance-Type Beyblade from the Engine Gear System, spinning right-spin. Part of Beyblade. It combines Hopper, Smash Turtle, Eight Balance, Right EG. Used by Kenny · Hilary Tachibana (Borrowed). Its special move is Frog Splash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hopper_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hopper-2"
   },
   {
     "id": "hopper-attack",
@@ -26787,7 +27143,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hopper Attack is a Balance-Type Beyblade from the Hard Metal System. Released as A-136 for Beyblade: G-Revolution. It combines Heavy Metal Emblem, Metal Spring, Circle Heavy, Spring Core. Used by Kenny (Manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hopper_Attack",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hopper-attack"
   },
   {
     "id": "horusood-spread-edge-hasbro",
@@ -26853,7 +27210,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Horusood Spread Edge is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released as B9497 for Beyblade Burst. It combines Horusood (Hasbro), Spread, Edge.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Horusood_Spread_Edge_(Hasbro)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-horusood-spread-edge"
   },
   {
     "id": "horusood-spread-edge-takara-tomy",
@@ -26921,7 +27279,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Horusood Spread Edge is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released November 14th, 2015 as B-20 for Beyblade Burst. It combines Horusood (Takara Tomy), Spread, Edge.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Horusood_Spread_Edge_(Takara_Tomy)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-horusood-spread-edge"
   },
   {
     "id": "hound-dog-0expand-atomic",
@@ -26991,7 +27350,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hound Dog 0Expand Atomic is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as B-130 for Beyblade Burst Turbo. It combines Hound Dog, 0, Expand, Atomic.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hound_Dog_0Expand_Atomic",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hound-dog-0expand-atomic"
   },
   {
     "id": "hound-dog-8-bearing",
@@ -27055,7 +27415,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hound Dog 8 Bearing is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released as B-121 for Beyblade Burst Turbo. It combines Hound Dog, 8, Bearing.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hound_Dog_8_Bearing",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hound-dog-8-bearing"
   },
   {
     "id": "hover-wyvern-3-85n",
@@ -27119,7 +27480,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Hover Wyvern 3-85N is a Defense-Type Beyblade from the Unique Line, weighing 41.7 g, spinning right-spin. Released as G0842 for Beyblade X. It combines Hover Wyvern, 3-85, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hover_Wyvern_3-85N",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G0842-Drop-Attack-Battle-Set-Hover-Wyvern-3-85N"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-G0842-Drop-Attack-Battle-Set-Hover-Wyvern-3-85N",
+    "categoryId": "category-hover-wyvern-3-85n"
   },
   {
     "id": "hulk-3-85n",
@@ -27180,7 +27542,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hulk 3-85N is a Defense-Type Beyblade from the Basic Line, weighing 39.7 g, spinning right-spin. Released as G3064<!-- (Hasbro) and BX-00 (Takara Tomy)--> for Beyblade X (Season 3). It combines Hulk, 3-85, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hulk_3-85N",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hulk-3-85n"
   },
   {
     "id": "hurricane-crusher-pisces",
@@ -27308,7 +27671,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hurricane Enlil IS 7-55T is a Balance-Type Beyblade from the Custom Line, spinning right-spin. Released as G2750 for Beyblade X (Season 3). It combines Enlil, I, Hurricane, Slash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hurricane_Enlil_IS_7-55T",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hurricane-enlil-is-7-55t"
   },
   {
     "id": "hydra-akheilos-tt-11",
@@ -27422,7 +27786,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hydra Kerbeus K8 Ciquex-Q Gyro-Q+Sparky-3 is a Stamina-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F6812 for Beyblade Burst QuadStrike. It combines Kerbeus K8, Hydra, 3, Ciquex-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hydra_Kerbeus_K8_Ciquex-Q_Gyro-Q%2BSparky-3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hydra-kerbeus-k8-ciquex-q-gyro-q-sparky-3"
   },
   {
     "id": "hydra-poseidon-p8-nexus-q-bite-q-billow-2",
@@ -27497,7 +27862,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hydra Poseidon P8 Nexus-Q Bite-Q+Billow-2' is a Defense-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F6805 for Beyblade Burst QuadStrike. It combines Poseidon P8, Hydra, 2', Nexus-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hydra_Poseidon_P8_Nexus-Q_Bite-Q%2BBillow-2'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hydra-poseidon-p8-nexus-q-bite-q-billow-2"
   },
   {
     "id": "hyperion-burn-cho-xceed-x",
@@ -27588,7 +27954,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyperion Burn Cho Xceed'+X is a Attack-Type Beyblade from the Superking Layer System, weighing 72.1 g, spinning right-spin. Released November 14th, 2020 as B-174 for Beyblade Burst Surge. It combines Hyperion 2, Burn, Cho, Xceed'+X. Used by Hyuga Hizashi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyperion_Burn_Cho_Xceed'%2BX",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyperion-burn-cho-xceed-x"
   },
   {
     "id": "hyperion-burn-cho-xceed-z",
@@ -27664,7 +28031,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyperion Burn Cho Xceed'+Z is a Attack-Type Beyblade from the Superking Layer System, spinning right-spin. Part of Beyblade Burst Surge. It combines Hyperion 2, Burn, Cho, Xceed'+Z. Used by Hyuga Hizashi (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyperion_Burn_Cho_Xceed'%2BZ",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyperion-burn-cho-xceed-z"
   },
   {
     "id": "hyper-aquario-105f",
@@ -27735,7 +28103,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyper Aquario 105F is a Attack-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-21 for Beyblade: Metal Fusion. It combines Aquario, Aquario, Hyper, 105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyper_Aquario_105F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyper-aquario-105f"
   },
   {
     "id": "hyper-horusood-h2-quarter-liner",
@@ -27800,7 +28169,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyper Horusood H2 Quarter Liner is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E2756 for Beyblade Burst Evolution. It combines Hyper Horusood H2, Quarter, Liner.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyper_Horusood_H2_Quarter_Liner",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyper-horusood-h2-quarter-liner"
   },
   {
     "id": "hyper-horusood-h2-upper-claw",
@@ -27867,7 +28237,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyper Horusood H2 Upper Claw is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released as C0602 for Beyblade Burst. It combines Hyper Horusood H2, Upper, Claw.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyper_Horusood_H2_Upper_Claw",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyper-horusood-h2-upper-claw"
   },
   {
     "id": "hyper-orso-sw145jb",
@@ -27935,7 +28306,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyper Orso SW145JB is a Defense-Type Beyblade from the Hybrid Wheel System. Released as B-116 for Beyblade: Metal Masters. It combines Orso, Orso, Hyper, SW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyper_Orso_SW145JB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyper-orso-sw145jb"
   },
   {
     "id": "hyrus-h2-yell-needle",
@@ -28002,7 +28374,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Hyrus H2 Yell Needle is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E1061 for Beyblade Burst Evolution. It combines Hyrus H2, Yell, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyrus_H2_Yell_Needle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-hyrus-h2-yell-needle"
   },
   {
     "id": "impactdrake-7-55fb",
@@ -28069,7 +28442,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "ImpactDrake 7-55FB is a Stamina-Type Beyblade from the Unique Line, spinning right-spin. Released July 11th, 2026 as BX-50 for Beyblade X (Season 3). It combines ImpactDrake, 7-55, Free Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/ImpactDrake_7-55FB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-impactdrake-7-55fb"
   },
   {
     "id": "impactdrake-7-80gp",
@@ -28139,7 +28513,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "ImpactDrake 7-80GP is a Balance-Type Beyblade from the Unique Line, weighing 49.1 g, spinning right-spin. Part of Beyblade X. It combines ImpactDrake, 7-80, Gear Point. Used by Khrome Ryugu. Its special move is Xtreme Dash Dragonic Drive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/ImpactDrake_7-80GP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-impactdrake-7-80gp"
   },
   {
     "id": "impactdrake-9-60lr",
@@ -28234,7 +28609,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "ImpactDrake 9-60LR is a Attack-Type Beyblade from the Unique Line, weighing 47.1 g, spinning right-spin. Released December 28th, 2024 as UX-11 (Takara Tomy) and G0842 (Hasbro) for Beyblade X. It combines ImpactDrake, 9-60, Low Rush. Used by Khrome Ryugu · Spin-Off: · Yaiba Sakai (Beytrainer Kiba).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/ImpactDrake_9-60LR",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-11-Starter-ImpactDrake-9-60LR"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-11-Starter-ImpactDrake-9-60LR",
+    "categoryId": "category-impactdrake-9-60lr"
   },
   {
     "id": "imperial-dragon-7-eternal",
@@ -28303,7 +28679,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Imperial Dragon 7 Eternal is a Stamina-Type Beyblade from the Gatinko Layer System, weighing 58.5 g, spinning right-spin. Released February 27th, 2021 as B-178 for Beyblade Burst Surge. It combines Dragon 2, Imperial, 7, Eternal.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Imperial_Dragon_7_Eternal",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-imperial-dragon-7-eternal"
   },
   {
     "id": "imperial-dragon-ignition",
@@ -28391,7 +28768,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Imperial Dragon Ignition' is a Attack-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released November 16th, 2019 as B-154 for Beyblade Burst Rise. It combines Dragon 2, Imperial, Ignition'. Used by Dante Koryu. Special moves: Dragon Launch, Ignition Force, Winged Recoil.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Imperial_Dragon_Ignition'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-imperial-dragon-ignition"
   },
   {
     "id": "impulse",
@@ -28426,7 +28804,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Impulse is a Attack-Type Beyblade from the Magnacore System. Part of Beyblade: V-Force. It combines Impulse. Used by Alan McKenzie.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Impulse",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-impulse"
   },
   {
     "id": "infernal-salamand-900xf-ii",
@@ -28476,7 +28855,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infernal Salamand 900XF-II is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Salamand-II, Infernal-II, 900-II, XF-II. Used by Set.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infernal_Salamand_900XF-II",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infernal-salamand-900xf-ii"
   },
   {
     "id": "infernal-salamand-900xf",
@@ -28542,7 +28922,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infernal Salamand 900XF is a Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Salamand, Infernal, 900, XF. Used by Set.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infernal_Salamand_900XF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infernal-salamand-900xf"
   },
   {
     "id": "inferno-x-guardian-kerbeus-k4-2-tower-s",
@@ -28606,7 +28987,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno-X Guardian Kerbeus K4 2 Tower-S is a Balance-Type Beyblade from the SlingShock System, spinning right-spin. Released as E6780 for Beyblade Burst Turbo. It combines Inferno-X Guardian Kerbeus K4, 2, Tower-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno-X_Guardian_Kerbeus_K4_2_Tower-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-x-guardian-kerbeus-k4-2-tower-s"
   },
   {
     "id": "inferno-byxis-ch120rs",
@@ -28676,7 +29058,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Byxis CH120RS is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-121 for Beyblade: Metal Masters. It combines Byxis, Byxis, Inferno, CH120.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Byxis_CH120RS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-byxis-ch120rs"
   },
   {
     "id": "inferno-cygzas-125b",
@@ -28753,7 +29136,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Cygzas 125B is a Stamina-Type Beyblade from the Hybrid Wheel System. Part of Beyblade: Metal Fusion. It combines Cygzas, Cygzas, Inferno (Battle Fortress), 125. Used by Mariko Shiratori. Its special move is Frost Wing.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Cygzas_125B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-cygzas-125b"
   },
   {
     "id": "inferno-firedrake-tt-19",
@@ -28866,7 +29250,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Gasher SW145SF is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-114 for Beyblade: Metal Masters. It combines Gasher, Gasher, Inferno, SW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Gasher_SW145SF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-gasher-sw145sf"
   },
   {
     "id": "inferno-ifritor-i2-infinity-zephyr",
@@ -28929,7 +29314,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Ifritor I2 Infinity Zephyr is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E1051 for Beyblade Burst Evolution. It combines Inferno Ifritor I2, Infinity, Zephyr.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Ifritor_I2_Infinity_Zephyr",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-ifritor-i2-infinity-zephyr"
   },
   {
     "id": "inferno-ifritor-i2-magnum-liner",
@@ -28994,7 +29380,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Ifritor I2 Magnum Liner is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released as C3179 for Beyblade Burst. It combines Inferno Ifritor I2, Magnum, Liner.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Ifritor_I2_Magnum_Liner",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-ifritor-i2-magnum-liner"
   },
   {
     "id": "inferno-ifrit-2vortex-hold",
@@ -29068,7 +29455,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Ifrit 2Vortex Hold is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 29th, 2017 as B-80 for Beyblade Burst Evolution. It combines Inferno Ifrit, 2, Vortex, Hold.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Ifrit_2Vortex_Hold",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-ifrit-2vortex-hold"
   },
   {
     "id": "inferno-ifrit-magnum-liner",
@@ -29150,7 +29538,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Ifrit Magnum Liner is a Balance-Type Beyblade from the Dual Layer System, spinning right-spin. Released November 12th, 2016 as B-64 for Beyblade Burst. It combines Inferno Ifrit, Magnum, Liner. Used by Django Del Toro (manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Ifrit_Magnum_Liner",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-ifrit-magnum-liner"
   },
   {
     "id": "inferno-sagittario-145s",
@@ -29221,7 +29610,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Sagittario 145S is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-03 for Beyblade: Metal Fusion. It combines Sagittario I, Sagittario I, Inferno, 145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Sagittario_145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-sagittario-145s"
   },
   {
     "id": "inferno-salamander-s5-wing-jaggy-h",
@@ -29293,7 +29683,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Inferno Salamander S5 Wing Jaggy-H is a Balance-Type Beyblade from the HyperSphere System, spinning left-spin. Released as E9235 for Beyblade Burst Rise. It combines Salamander S5, Inferno, Wing, Jaggy-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Salamander_S5_Wing_Jaggy-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-inferno-salamander-s5-wing-jaggy-h"
   },
   {
     "id": "infinite-achilles-7-loop-1d",
@@ -29368,7 +29759,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinite Achilles 7 Loop 1D is a Defense-Type Beyblade from the Superking Layer System, weighing 54 g, spinning right-spin. Released October 24th, 2020 as B-173 for Beyblade Burst Surge. It combines Achilles, Infinite, 1D, 7.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinite_Achilles_7_Loop_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinite-achilles-7-loop-1d"
   },
   {
     "id": "infinite-achilles-a6-1b-d-dimension-sp",
@@ -29424,7 +29816,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinite Achilles A6 1B-D Dimension-SP is a Balance-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0571 for Beyblade Burst Surge. It combines Achilles A6, Infinite (Hasbro), 1B-D, Dimension-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinite_Achilles_A6_1B-D_Dimension-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinite-achilles-a6-1b-d-dimension-sp"
   },
   {
     "id": "infinite-achilles-dimension-1b",
@@ -29527,7 +29920,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinite Achilles Dimension' 1B is a Balance-Type Beyblade from the Superking Layer System, spinning right-spin. Released October 24th, 2020 as B-173 (Takara Tomy) and F7803 (Hasbro) for Beyblade Burst Surge. It combines Achilles, Infinite, 1B, Dimension'. Used by Aiger Akabane.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinite_Achilles_Dimension'_1B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinite-achilles-dimension-1b"
   },
   {
     "id": "infinite-deathscyther-universe-1a",
@@ -29596,7 +29990,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinite Deathscyther Universe 1A is a Defense-Type Beyblade from the Superking Layer System, weighing 68.5 g, spinning right-spin. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It combines Deathscyther, Infinite, 1A, Universe.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinite_Deathscyther_Universe_1A",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinite-deathscyther-universe-1a"
   },
   {
     "id": "infinite-dragon-zone-x-1a",
@@ -29670,7 +30065,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinite Dragon Zone'+X 1A is a Balance-Type Beyblade from the Superking Layer System, spinning right-spin. Released March 19th, 2021 as B-196 for Beyblade Burst QuadDrive. It combines Dragon, Infinite, 1A, Zone'+X.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinite_Dragon_Zone'%2BX_1A",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinite-dragon-zone-x-1a"
   },
   {
     "id": "infinity-libra-gb145s",
@@ -29734,7 +30130,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Infinity Libra GB145S is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. It combines Libra, Libra, Infinity, GB145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinity_Libra_GB145S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-infinity-libra-gb145s"
   },
   {
     "id": "invel-baal-zebul-t125hf-s",
@@ -29802,7 +30199,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Invel Baal Zebul T125HF S is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Part of Beyblade: Metal Fusion. It combines Baal Zebul, Baal Zebul, Invel, T125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Invel_Baal_Zebul_T125HF_S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-invel-baal-zebul-t125hf-s"
   },
   {
     "id": "ion-optimus-prime-nexus-q-assault-q-rise-4",
@@ -29874,7 +30272,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Ion Optimus Prime Nexus-Q Assault-Q+Rise-4 is a Attack-Type Beyblade from the QuadDrive System, spinning right-spin. Part of Beyblade Burst QuadDrive. It combines Optimus Prime, Ion, 4, Nexus-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ion_Optimus_Prime_Nexus-Q_Assault-Q%2BRise-4",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-ion-optimus-prime-nexus-q-assault-q-rise-4"
   },
   {
     "id": "iron-x-surtr-s4-2-fusion-s",
@@ -29939,7 +30338,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Iron-X Surtr S4 2 Fusion-S is a Balance-Type Beyblade from the SlingShock System, spinning right-spin. Released as E4719 for Beyblade Burst Turbo. It combines Iron-X Surtr S4, 2, Fusion-S.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Iron-X_Surtr_S4_2_Fusion-S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-iron-x-surtr-s4-2-fusion-s"
   },
   {
     "id": "iron-bearl-wd145wb",
@@ -30015,7 +30415,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Iron Bearl WD145WB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Fusion. It combines Bearl, Bearl, Iron, WD145. Used by Tsuyoshi Kumade. Its special move is Bearl Break Fang.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Iron_Bearl_WD145WB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-iron-bearl-wd145wb"
   },
   {
     "id": "iron-man-4-80b",
@@ -30085,7 +30486,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Iron Man 4-80B is a Stamina-Type Beyblade from the Basic Line, spinning right-spin. Released April 26th, 2025 as G0287 (Hasbro) and BX-00 (Takara Tomy) for Beyblade X. It combines Iron Man, 4-80, Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Iron_Man_4-80B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-iron-man-4-80b"
   },
   {
     "id": "iron-minotaurus-tt-19",
@@ -30191,7 +30593,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Istros I2 Upper Survive is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released as E3881 for Beyblade Burst Evolution. It combines Istros I2, Upper, Survive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Istros_I2_Upper_Survive",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-istros-i2-upper-survive"
   },
   {
     "id": "jade-jupiter-130b",
@@ -30264,7 +30667,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jade Jupiter 130B is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as B-138 and B-138A (Howling Smash 2-Pack) for Beyblade: Metal Fury. It combines Jupiter, Jupiter, Jade (Hasbro), 130.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jade_Jupiter_130B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jade-jupiter-130b"
   },
   {
     "id": "jade-jupiter-s130rb",
@@ -30356,7 +30760,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jade Jupiter S130RB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 as BB-116 (Takara Tomy) and BB-116FX (Hasbro) for Beyblade: Metal Fury. It combines Jupiter, Jupiter, Jade, S130. Used by Dynamis. Special moves: Satellite Move, Grand Lightning.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jade_Jupiter_S130RB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jade-jupiter-s130rb"
   },
   {
     "id": "jail-jormungand-6glaive-nothing",
@@ -30430,7 +30835,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jail Jormungand 6Glaive Nothing is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released July 15th, 2017 as B-87 for Beyblade Burst Evolution. It combines Jail Jormungand, 6, Glaive, Nothing.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jail_Jormungand_6Glaive_Nothing",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jail-jormungand-6glaive-nothing"
   },
   {
     "id": "jail-jormungand-infinity-cycle",
@@ -30521,7 +30927,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jail Jormungand Infinity Cycle is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released January 21st, 2017 as B-69 for Beyblade Burst. It combines Jail Jormungand, Infinity, Cycle. Used by Jin Aizawa. Its special move is Zombie Launch.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jail_Jormungand_Infinity_Cycle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jail-jormungand-infinity-cycle"
   },
   {
     "id": "jail-jormungand-jerk-unite",
@@ -30590,7 +30997,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jail Jormungand Jerk Unite is a Balance-Type Beyblade from the Dual Layer System. Part of Beyblade Burst Evolution. It combines Jail Jormungand, Jerk, Unite. Used by Rickson Clay.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jail_Jormungand_Jerk_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jail-jormungand-jerk-unite"
   },
   {
     "id": "jet-wyvern-around-just-1d",
@@ -30670,7 +31078,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearManga": "Ultimate Valkyrie, Extreme Awakening!!",
     "seoDescription": "Jet Wyvern Around Just 1D is a Defense-Type Beyblade from the Superking Layer System, weighing 59.6 g, spinning right-spin. Released January 23rd, 2021 as B-177 for Beyblade Burst Surge. It combines Wyvern, Jet (Takara Tomy), 1D, Around. Used by Wakiya Murasaki. Its special move is Jet Shield.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jet_Wyvern_Around_Just_1D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jet-wyvern-around-just-1d"
   },
   {
     "id": "jet-wyvron-w6-central-needle-sp",
@@ -30737,7 +31146,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jet Wyvron W6 Central Needle-SP is a Defense-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F0572 for Beyblade Burst Surge. It combines Wyvron W6, Jet (Hasbro), Central, Needle-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jet_Wyvron_W6_Central_Needle-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jet-wyvron-w6-central-needle-sp"
   },
   {
     "id": "jiraiya-ms",
@@ -30766,7 +31176,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jiraiya MS is a Stamina-Type Beyblade from the Hard Metal System. Released as MA-22 for New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jiraiya_MS",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jiraiya-ms"
   },
   {
     "id": "judgement-joker-00turn-trick-zan",
@@ -30858,7 +31269,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "appearAnime": "Inspiration! Challenging Valt!",
     "seoDescription": "Judgement Joker 00Turn Trick Zan is a Balance-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released May 25th, 2019 as B-142 for Beyblade Burst Rise. It combines Joker, Zan, Judgement, 00. Used by Joe Lazure. Special moves: Fate's Judgement, Fortune's Trick, Joker Wheel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Judgement_Joker_00Turn_Trick_Zan",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-judgement-joker-00turn-trick-zan"
   },
   {
     "id": "judgement-joker-0glaive-ultimate-reboot-sen",
@@ -31011,7 +31423,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Judgement Joker J5 00 Trick-H is a Balance-Type Beyblade from the HyperSphere System, spinning right-spin. Released as E7715 for Beyblade Burst Rise. It combines Joker J5, Judgement (Hasbro), 00, Trick-H.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Judgement_Joker_J5_00_Trick-H",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-judgement-joker-j5-00-trick-h"
   },
   {
     "id": "judgement-pegasus-8-glaive-keep-metsu",
@@ -31105,7 +31518,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Judgement Pegasus 8'Glaive Keep' Metsu is a Defense-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released October 19th, 2019 as B-151 for Beyblade Burst Rise. It combines Pegasus, Metsu, Judgement, 8'. Used by Alexander Bottom.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Judgement_Pegasus_8'Glaive_Keep'_Metsu",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-judgement-pegasus-8-glaive-keep-metsu"
   },
   {
     "id": "judgement-valkyrie-zenith-quake-gou",
@@ -31191,7 +31605,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Judgement Valkyrie Zenith Quake' Gou is a Attack-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released August 2019 as B-00 for Beyblade Burst Rise. It combines Valkyrie, Gou, Judgement, Zenith. Used by Dante Koryu (Borrowed; manga).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Judgement_Valkyrie_Zenith_Quake'_Gou",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-judgement-valkyrie-zenith-quake-gou"
   },
   {
     "id": "jumbo-jormuntor-j2-infinity-cycle",
@@ -31256,7 +31671,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jumbo Jormuntor J2 Infinity Cycle is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released as C2356 for Beyblade Burst. It combines Jumbo Jormuntor J2, Infinity, Cycle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jumbo_Jormuntor_J2_Infinity_Cycle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jumbo-jormuntor-j2-infinity-cycle"
   },
   {
     "id": "jumbo-jormuntor-j6-python-needle-sp",
@@ -31306,7 +31722,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jumbo Jormuntor J6 Python Needle-SP is a Defense-Type Beyblade from the SpeedStorm System, spinning right-spin. Released as F2306 for Beyblade Burst Surge. It combines Jumbo Jormuntor J6, Python, Needle-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jumbo_Jormuntor_J6_Python_Needle-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jumbo-jormuntor-j6-python-needle-sp"
   },
   {
     "id": "jumping-base",
@@ -31377,7 +31794,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Jumping Base is a Attack-Type Beyblade from the 4 Layer System. Released as 13 for Bakuten Shoot Beyblade. It combines Driger, Tiger Defenser, Eight Heavy, Right SG.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jumping_Base",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-jumping-base"
   },
   {
     "id": "kaiser-kerbeus-down-orbit",
@@ -31445,7 +31863,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Down Orbit is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released November 12th, 2016 as B-65 for Beyblade Burst. It combines Kaiser Kerbeus, Down, Orbit.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Down_Orbit",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-down-orbit"
   },
   {
     "id": "kaiser-kerbeus-force-jaggy",
@@ -31514,7 +31933,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Force Jaggy is a Attack-Type Beyblade from the Dual Layer System. Part of Beyblade Burst. It combines Kaiser Kerbeus, Force, Jaggy. Used by Haruto Aota.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Force_Jaggy",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-force-jaggy"
   },
   {
     "id": "kaiser-kerbeus-gravity-revolve",
@@ -31586,7 +32006,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Gravity Revolve is a Stamina-Type Beyblade from the Dual Layer System. Part of Beyblade Burst Evolution. It combines Kaiser Kerbeus, Gravity, Revolve. Used by Kyoji Aranami · Ghasem Madal (Formerly).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Gravity_Revolve",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-gravity-revolve"
   },
   {
     "id": "kaiser-kerbeus-gravity-variable",
@@ -31654,7 +32075,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Gravity Variable is a Attack-Type Beyblade from the Dual Layer System, spinning right-spin. Released July 16th, 2016 as B-49 for Beyblade Burst. It combines Kaiser Kerbeus, Gravity, Variable.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Gravity_Variable",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-gravity-variable"
   },
   {
     "id": "kaiser-kerbeus-knuckle-revolve",
@@ -31722,7 +32144,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Knuckle Revolve is a Stamina-Type Beyblade from the Dual Layer System, spinning right-spin. Released July 16th, 2016 as B-49 for Beyblade Burst. It combines Kaiser Kerbeus, Knuckle, Revolve.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Knuckle_Revolve",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-knuckle-revolve"
   },
   {
     "id": "kaiser-kerbeus-knuckle-unite",
@@ -31796,7 +32219,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Knuckle Unite is a Balance-Type Beyblade from the Dual Layer System. Part of Beyblade Burst. It combines Kaiser Kerbeus, Knuckle, Unite. Used by Nika Aoi · Arthur Lawrence · Xavier Kappa · Lionel Mecca.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Knuckle_Unite",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-knuckle-unite"
   },
   {
     "id": "kaiser-kerbeus-limited-press",
@@ -31887,7 +32311,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kaiser Kerbeus Limited Press is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released April 2nd, 2016 as B-37 for Beyblade Burst. It combines Kaiser Kerbeus, Limited, Press. Used by Ken Midori. Its special move is Chain Launch.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kaiser_Kerbeus_Limited_Press",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kaiser-kerbeus-limited-press"
   },
   {
     "id": "katana-muramasa-m7-quacchu-q-mobius-q-rise-10",
@@ -31968,7 +32393,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Katana Muramasa M7 Quacchu-Q Mobius-Q+Rise-10' is a Defense-Type Beyblade from the QuadDrive System, weighing 46.5 g, spinning right-spin. Released as F4488 for Beyblade Burst QuadDrive. It combines Muramasa M7, Katana, 10', Quacchu-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Katana_Muramasa_M7_Quacchu-Q_Mobius-Q%2BRise-10'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-katana-muramasa-m7-quacchu-q-mobius-q-rise-10"
   },
   {
     "id": "katana-valtryek-v7-aquilon-q-spiral-q-kick-2",
@@ -32051,7 +32477,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Katana Valtryek V7 Aquilon'-Q Spiral-Q+Kick-2' is a Attack-Type Beyblade from the QuadDrive System, spinning right-spin. Released as F3317 for Beyblade Burst QuadDrive. It combines Valtryek V7, Katana, 2', Aquilon'-Q.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Katana_Valtryek_V7_Aquilon'-Q_Spiral-Q%2BKick-2'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-katana-valtryek-v7-aquilon-q-spiral-q-kick-2"
   },
   {
     "id": "kerbecs-blade-blast",
@@ -32071,7 +32498,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "price": "USD$9.99",
     "seoDescription": "Kerbecs Blade Blast is a Beyblade from the Extreme Top System, weighing 44.6 g, spinning right-spin. Released as X-201 and X-201A (Half-Pipe Battle Set) for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbecs_Blade_Blast",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbecs-blade-blast"
   },
   {
     "id": "kerbeus-central-defense-hasbro",
@@ -32138,7 +32566,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Central Defense (Hasbro) is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as B9497 for Beyblade Burst. It combines Kerbeus (Hasbro), Central, Defense.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Central_Defense_(Hasbro)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-central-defense"
   },
   {
     "id": "kerbeus-central-defense-takara-tomy",
@@ -32223,7 +32652,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Central Defense (Takara Tomy) is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released July 18th, 2015 as B-04 for Beyblade Burst. It combines Kerbeus (Takara Tomy), Central, Defense.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Central_Defense_(Takara_Tomy)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-central-defense"
   },
   {
     "id": "kerbeus-heavy-survive",
@@ -32291,7 +32721,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Heavy Survive is a Stamina-Type Beyblade from the Burst System, spinning right-spin. Released September 19th, 2015 as B-15 for Beyblade Burst. It combines Kerbeus (Takara Tomy), Heavy, Survive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Heavy_Survive",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-heavy-survive"
   },
   {
     "id": "kerbeus-spread-accel",
@@ -32359,7 +32790,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Spread Accel is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released September 19th, 2015 as B-15 for Beyblade Burst. It combines Kerbeus (Takara Tomy), Spread, Accel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Spread_Accel",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-spread-accel"
   },
   {
     "id": "kerbeus-wing-fusion-hasbro",
@@ -32426,7 +32858,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Wing Fusion is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released as B9504 for Beyblade Burst. It combines Kerbeus (Hasbro), Wing, Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Wing_Fusion_(Hasbro)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-wing-fusion"
   },
   {
     "id": "kerbeus-wing-fusion-takara-tomy",
@@ -32494,7 +32927,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kerbeus Wing Fusion (Takara Tomy) is a Balance-Type Beyblade from the Burst System, spinning right-spin. Released July 18th, 2015 as B-07 for Beyblade Burst. It combines Kerbeus (Takara Tomy), Wing, Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kerbeus_Wing_Fusion_(Takara_Tomy)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kerbeus-wing-fusion"
   },
   {
     "id": "kidhunt-k4-70tk",
@@ -32586,7 +33020,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "KidHunt K4-70TK is a Balance-Type Beyblade from the Custom Line, spinning right-spin. Released as CX-00 for Beyblade X (Season 4). It combines Kid, Hunt, Knuckle, 4-70. Used by Kaito Kid · Conan Edogawa (borrowed). Its special move is Xtreme Dash The Magician Under the Moonlight.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KidHunt_K4-70TK",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kidhunt-k4-70tk"
   },
   {
     "id": "kids-dragoon",
@@ -32664,7 +33099,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kids Dragoon is a Attack-Type Beyblade from the Spin Gear System. Released as A-31 for Next Generation Beigoma Battle: Beyblade. It combines Kid Dragoon, Upper Dragoon, Eight Wide, Right Rotation Spin Gear.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kids_Dragoon",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kids-dragoon"
   },
   {
     "id": "kid-draciel",
@@ -32903,7 +33339,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Killer Deathscyther 2Vortex Hunter is a Attack-Type Beyblade from the God Layer System, spinning right-spin. Released July 1st, 2017 as B-85 for Beyblade Burst Evolution. It combines Killer Deathscyther, 2, Vortex, Hunter. Used by Daigo Kurogami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Killer_Deathscyther_2Vortex_Hunter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-killer-deathscyther-2vortex-hunter"
   },
   {
     "id": "killer-deathscyther-quarter-loop",
@@ -32971,7 +33408,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Killer Deathscyther Quarter Loop is a Defense-Type Beyblade from the God Layer System, spinning right-spin. Released October 21st, 2017 as B-95 for Beyblade Burst Evolution. It combines Killer Deathscyther, Quarter, Loop.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Killer_Deathscyther_Quarter_Loop",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-killer-deathscyther-quarter-loop"
   },
   {
     "id": "killer-eagle",
@@ -33051,7 +33489,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Killer Eagle is a Balance-Type Beyblade from the Engine Gear System. Part of Beyblade: G-Revolution. It combines Rapid Eagle, Penta Wing, Ten Wide, Neo Right Spin Gear (Metal Weight Version). Used by Claude. Its special move is Twin Saber.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Killer_Eagle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-killer-eagle"
   },
   {
     "id": "killer-escolpio-100d",
@@ -33117,7 +33556,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Killer Escolpio 100D is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Scorpio, Scorpio, Evil, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Killer_Escolpio_100D",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-killer-escolpio-100d"
   },
   {
     "id": "kinetic-satomb-s3-2glaive-loop",
@@ -33190,7 +33630,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kinetic Satomb S3 2Glaive Loop is a Defense-Type Beyblade from the SwitchStrike System, spinning right-spin. Released as E0722 for Beyblade Burst Evolution. It combines Kinetic Satomb S3, 2, Glaive, Loop.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kinetic_Satomb_S3_2Glaive_Loop",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kinetic-satomb-s3-2glaive-loop"
   },
   {
     "id": "king-fafnir-8-defense-1s",
@@ -33265,7 +33706,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Fafnir 8' Defense 1S is a Defense-Type Beyblade from the Superking Layer System, weighing 52.5 g, spinning left-spin. Released July 23rd, 2020 as B-170 for Beyblade Burst Surge. It combines Fafnir, King, 1S, 8'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Fafnir_8'_Defense_1S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-fafnir-8-defense-1s"
   },
   {
     "id": "king-helios-karma-high-charge-1s",
@@ -33345,7 +33787,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Helios Karma High Charge' 1S is a Attack-Type Beyblade from the Superking Layer System, spinning left-spin. Released March 19th, 2022 as B-196 for Beyblade Burst QuadDrive. It combines Helios 2, King, 1S, Karma.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Helios_Karma_High_Charge'_1S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-helios-karma-high-charge-1s"
   },
   {
     "id": "king-helios-mr-giga-zeal-10",
@@ -33430,7 +33873,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "King Helios MR Giga Zeal-10 is a Balance-Type Beyblade from the Dynamite Battle Layer System, spinning left-spin. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It combines Helios, King MR, 10, Giga. Its special move is Ultimate Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Helios_MR_Giga_Zeal-10",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-203-Ultimate-Fusion-DX-Set-Super-Hyperion-MR-Tp-Xp-2-King-Helios-MR-Gg-Zl-10"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-B-203-Ultimate-Fusion-DX-Set-Super-Hyperion-MR-Tp-Xp-2-King-Helios-MR-Gg-Zl-10",
+    "categoryId": "category-king-helios-mr-giga-zeal-10"
   },
   {
     "id": "king-helios-survive-1b",
@@ -33499,7 +33943,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Helios Survive 1B is a Stamina-Type Beyblade from the Superking Layer System, weighing 58.1 g, spinning left-spin. Released February 27th, 2021 as B-178 for Beyblade Burst Surge. It combines Helios 1, King, 1B, Survive.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Helios_Survive_1B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-helios-survive-1b"
   },
   {
     "id": "king-helios-zone-1b",
@@ -33599,7 +34044,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Helios Zone 1B is a Balance-Type Beyblade from the Superking Layer System, weighing 58.6 g, spinning left-spin. Released March 28th, 2020 as B-160 (Takara Tomy) and F7802 (Hasbro) for Beyblade Burst Surge. It combines Helios 1, King, 1B, Zone. Used by Hikaru Hizashi.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Helios_Zone_1B",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-helios-zone-1b"
   },
   {
     "id": "king-kerbeus-k2-limited-l-press-l",
@@ -33652,7 +34098,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Kerbeus K2 Limited-L Press-L is a Defense-Type Beyblade from the Burst System, spinning right-spin. Released as C3067 for Beyblade Burst. It combines King Kerbeus K2, Limited-L, Press-L.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Kerbeus_K2_Limited-L_Press-L",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-kerbeus-k2-limited-l-press-l"
   },
   {
     "id": "king-kerbeus-k2-limited-press",
@@ -33719,7 +34166,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "King Kerbeus K2 Limited Press is a Defense-Type Beyblade from the Dual Layer System, spinning right-spin. Released as B9490 for Beyblade Burst. It combines King Kerbeus K2, Limited, Press.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/King_Kerbeus_K2_Limited_Press",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-king-kerbeus-k2-limited-press"
   },
   {
     "id": "klarken",
@@ -33756,7 +34204,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Klarken is a Beyblade from the Magnacore System. Part of Beyblade VForce. It combines Klarken. Used by Denny.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Klarken",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-klarken"
   },
   {
     "id": "knife-lizard-around-hunter",
@@ -33819,7 +34268,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Knife Lizard Around Hunter' is a Attack-Type Beyblade from the Burst System, spinning right-spin. Released as B-146 for Beyblade Burst Rise. It combines Knife Lizard, Around, Hunter'.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knife_Lizard_Around_Hunter'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knife-lizard-around-hunter"
   },
   {
     "id": "knife-shinobi-4-80hn",
@@ -33899,7 +34349,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Knife Shinobi 4-80HN is a Defense-Type Beyblade from the Basic Line, weighing 40.1 g, spinning right-spin. Released as G0190 for Beyblade X. It combines Knife Shinobi, 4-80, High Needle. Used by Quinn Manju (anime).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knife_Shinobi_4-80HN",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knife-shinobi-4-80hn"
   },
   {
     "id": "knightfortress-gv8-70un",
@@ -34010,7 +34461,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightFortress GV8-70UN is a Defense-Type Beyblade from the Custom Line, weighing 47.4 g, spinning right-spin. Released March 28th, 2026 as CX-14 (Takara Tomy) and G4563 (Hasbro) for Beyblade X (Season 3). It combines Knight, Guard, Fortress, Vertical.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightFortress_GV8-70UN",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-14-Starter-KnightFortress-GV8-70UN"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-CX-14-Starter-KnightFortress-GV8-70UN",
+    "categoryId": "category-knightfortress-gv8-70un"
   },
   {
     "id": "knightlance-3-60lf",
@@ -34081,7 +34533,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightLance 3-60LF is a Attack-Type Beyblade from the Basic Line, spinning right-spin. Released November 2nd, 2023 as BX-21 (Takara Tomy) and G1671 (Hasbro) for Beyblade X. It combines KnightLance, 3-60, Low Flat.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightLance_3-60LF",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-21-HellsChain-Deck-Set-HellsChain-5-60HT"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-21-HellsChain-Deck-Set-HellsChain-5-60HT",
+    "categoryId": "category-knightlance-3-60lf"
   },
   {
     "id": "knightlance-4-60gb",
@@ -34149,7 +34602,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightLance 4-60GB is a Defense-Type Beyblade from the Basic Line, spinning right-spin. Released December 27th, 2023 as BX-24 for Beyblade X. It combines KnightLance, 4-60, Gear Ball.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightLance_4-60GB",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-24-Random-Booster-Vol-2-Rare-WyvernGale-5-80GB"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-24-Random-Booster-Vol-2-Rare-WyvernGale-5-80GB",
+    "categoryId": "category-knightlance-4-60gb"
   },
   {
     "id": "knightlance-4-80hn",
@@ -34244,7 +34698,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightLance 4-80HN is a Defense-Type Beyblade from the Basic Line, weighing 42.1 g, spinning right-spin. Released August 10th, 2023 as BX-13 (Takara Tomy) and G0184 (Hasbro) for Beyblade X. It combines KnightLance, 4-80, High Needle. Used by Multi Nana-iro. Its special move is Raining Lance.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightLance_4-80HN",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-13-Booster-KnightLance-4-80HN"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-13-Booster-KnightLance-4-80HN",
+    "categoryId": "category-knightlance-4-80hn"
   },
   {
     "id": "knightmail-3-85bs",
@@ -34339,7 +34794,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightMail 3-85BS is a Defense-Type Beyblade from the Unique Line, weighing 43.4 g, spinning right-spin. Released November 2nd, 2024 as UX-10 (Takara Tomy) and G3195 (Hasbro) for Beyblade X. It combines KnightMail, 3-85, Bound Spike.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightMail_3-85BS",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-10-Customize-Set-U-KnightMail-3-85BS-PteraSwing"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-UX-10-Customize-Set-U-KnightMail-3-85BS-PteraSwing",
+    "categoryId": "category-knightmail-3-85bs"
   },
   {
     "id": "knightshield-3-80n",
@@ -34444,7 +34900,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightShield 3-80N is a Defense-Type Beyblade from the Basic Line, spinning right-spin. Released July 15th, 2023 as BX-04 (Takara Tomy) and F9581 (Hasbro) for Beyblade X. It combines KnightShield, 3-80, Needle.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightShield_3-80N",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-04-Starter-Knight-Shield-3-80N"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-04-Starter-Knight-Shield-3-80N",
+    "categoryId": "category-knightshield-3-80n"
   },
   {
     "id": "knightshield-4-60lf",
@@ -34511,7 +34968,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "KnightShield 4-60LF is a Attack-Type Beyblade from the Basic Line, spinning right-spin. Released September 9th, 2023 as BX-14 for Beyblade X. It combines KnightShield, 4-60, Low Flat.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightShield_4-60LF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knightshield-4-60lf"
   },
   {
     "id": "knightshield-4-80t",
@@ -34578,7 +35036,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "KnightShield 4-80T is a Balance-Type Beyblade from the Basic Line, spinning right-spin. Released July 15th, 2023 as BX-08 for Beyblade X. It combines KnightShield, 4-80, Taper.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightShield_4-80T",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knightshield-4-80t"
   },
   {
     "id": "knightshield-5-80t",
@@ -34650,7 +35109,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "KnightShield 5-80T is a Balance-Type Beyblade from the Basic Line, spinning right-spin. Released November 2nd, 2023 as BX-20 (Takara Tomy) and G0198 (Hasbro) for Beyblade X. It combines KnightShield, 5-80, Taper.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/KnightShield_5-80T",
     "source": "fandom-infobox",
-    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-20-DranDagger-Deck-Set-DranDagger-4-60R"
+    "wboThreadUrl": "https://worldbeyblade.org/Thread-Product-BX-20-DranDagger-Deck-Set-DranDagger-4-60R",
+    "categoryId": "category-knightshield-5-80t"
   },
   {
     "id": "knight-changer",
@@ -34705,7 +35165,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Knight Changer is a Balance-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Knight Claws, Heavy, Right SG, Auto Change Base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knight_Changer",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knight-changer"
   },
   {
     "id": "knight-dranzer",
@@ -34840,7 +35301,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Knight Driger is a Balance-Type Beyblade from the Engine Gear System. Part of Beyblade: G-Revolution. It combines Knight Driger, Ten Heavy, Heavy Metal Core, Instant Release Base (Metal Driger Version).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knight_Driger",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knight-driger"
   },
   {
     "id": "knockout-odax-11lift-octa-gou",
@@ -35001,7 +35463,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Knockout Odin 12 Operate' Ten is a Balance-Type Beyblade from the Gatinko Layer System, spinning right-spin. Released February 22nd, 2020 as B-158 for Beyblade Burst Rise. It combines Odin, Ten, Knockout, 12.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knockout_Odin_12_Operate'_Ten",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-knockout-odin-12-operate-ten"
   },
   {
     "id": "kolossal-fafnir-f6-1a-d-zone-sp",
@@ -35057,7 +35520,8 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kolossal Fafnir F6 1A-D Zone-SP is a Balance-Type Beyblade from the SpeedStorm System, spinning left-spin. Released as F2304 for Beyblade Burst Surge. It combines Fafnir F6, Kolossal, 1A-D, Zone-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kolossal_Fafnir_F6_1A-D_Zone-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kolossal-fafnir-f6-1a-d-zone-sp"
   },
   {
     "id": "kolossal-helios-h6-10-zone-sp",
@@ -35125,6 +35589,7 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     ],
     "seoDescription": "Kolossal Helios H6 10 Zone-SP is a Balance-Type Beyblade from the SpeedStorm System, spinning left-spin. Released as F0525 for Beyblade Burst Surge. It combines Helios H6, Kolossal, 10, Zone-SP.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kolossal_Helios_H6_10_Zone-SP",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "categoryId": "category-kolossal-helios-h6-10-zone-sp"
   }
 ];

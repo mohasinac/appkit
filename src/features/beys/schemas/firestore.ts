@@ -122,6 +122,18 @@ export interface BeyDocument extends BaseDocument {
   series?: string;
   series2?: string;
 
+  /**
+   * The paired tier-4 category leaf — where this model's LISTINGS live.
+   *
+   * 🛑 NOT derivable from `slug`. The leaf id comes from the bey's NAME with
+   * the trailing parenthetical stripped, so `…-press-hasbro` pairs with
+   * `category-…-press`; guessing would 404 on every vendor-qualified bey.
+   * Resolved by the generator with the leaf generator's own helper and then
+   * CHECKED against the leaves it emitted, so this is present only when the
+   * page really exists — 116 beys have no leaf because their `system` is
+   * deliberately unmapped.
+   */
+  categoryId?: string;
   /** The build, top to bottom. 1,911 of 1,988 carry one. */
   composition?: BeyCompositionEntry[];
 
@@ -250,6 +262,17 @@ export interface BeyProductDocument extends BaseDocument {
   romaji?: string;
   /** What is in the box, or what can be pulled from it. */
   assortment?: BeyProductAssortmentEntry[];
+  /**
+   * Every resolved `beys` id in `assortment`, flat.
+   *
+   * 🛑 A denormalised MIRROR of `assortment[].beyId`, and it exists for one
+   * reason: Firestore cannot `array-contains` a field nested inside objects
+   * in an array, so "which products contain this bey" is otherwise
+   * unanswerable. Derived by the generator in the same pass that resolves the
+   * ids — never hand-maintained, because a mirror somebody can edit
+   * independently is the drift in Root Cause #42.
+   */
+  assortmentBeyIds?: string[];
   /** Pull-odds breakdown, on the 24 products that state one. */
   breakdown?: Record<string, string>;
   boxImage?: string;

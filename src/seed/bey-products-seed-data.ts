@@ -53,7 +53,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/3on3_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hellsscythe-3-80b",
+      "wizardarrow-4-60n",
+      "knightshield-4-80t"
+    ]
   },
   {
     "id": "ali-10-stadium",
@@ -131,7 +136,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/All_In_One_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "aeropegasus-3-70a",
+      "wizardarrow-4-80b",
+      "knightshield-3-80n"
+    ]
   },
   {
     "id": "astral-spriggan-customize-set",
@@ -187,7 +197,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Astral_Spriggan_Customize_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "astral-spriggan-over-quattro-0"
+    ]
   },
   {
     "id": "avatar-attack-battle-set",
@@ -228,7 +241,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Avatar_Attack_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valtryek-v2-boost-variable",
+      "king-kerbeus-k2-limited-press"
+    ]
   },
   {
     "id": "bakuten-shoot-beyblade-2020-v-set",
@@ -269,7 +286,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bakuten_Shoot_Beyblade_2020_V_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "draciel-viper-around-orbit-metal",
+      "dragoon-victory-sting-evolution",
+      "dranzer-volcano-hurricane-dimension",
+      "driger-vulcan-10reach-weight",
+      "gaia-dragoon-vurst-10expand-iron"
+    ]
   },
   {
     "id": "bakuten-shoot-beyblade-2023-v2-set",
@@ -337,7 +361,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bakuten_Shoot_Beyblade_2023_V2_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-v2-wheel-xplosion",
+      "dranzer-v2-0cross-reboot",
+      "driger-v2-illegal-wedge",
+      "draciel-v2-10turn-planet"
+    ]
   },
   {
     "id": "bakuten-shoot-beyblade-20th-anniversary-set",
@@ -424,7 +454,18 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bakuten_Shoot_Beyblade_20th_Anniversary_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "draciel-shield-central-press-takara-tomy",
+      "draciel-fortress-10-planet",
+      "dragoon-storm-wing-xtreme-takara-tomy",
+      "dragoon-fantom-gravity-variable",
+      "dranzer-spiral-spread-trans",
+      "dranzer-flame-yell-zeta-takara-tomy",
+      "driger-slash-heavy-fusion-takara-tomy",
+      "driger-fang-0-xtend",
+      "wolborg-8-bearing"
+    ]
   },
   {
     "id": "basic-beystadium",
@@ -505,7 +546,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Battle_Entry_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dransword-3-60f",
+      "wizardarrow-4-80b"
+    ]
   },
   {
     "id": "battle-entry-set-c",
@@ -561,7 +606,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Battle_Entry_Set_C",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranbrave-s6-60v",
+      "perseusdark-b6-80w"
+    ]
   },
   {
     "id": "battle-entry-set-infinity",
@@ -617,7 +666,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Battle_Entry_Set_Infinity",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cobaltdrake-9-60r",
+      "goattackle-7-70t"
+    ]
   },
   {
     "id": "battle-entry-set-u",
@@ -677,7 +730,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Battle_Entry_Set_U",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranbuster-1-60a",
+      "wizardrod-5-70db"
+    ]
   },
   {
     "id": "battle-tower",
@@ -714,7 +771,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Battle_Tower",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "twin-noctemis-n3-2-jaggy",
+      "strike-valtryek-v3-6vortex-reboot"
+    ]
   },
   {
     "id": "bbld-booster",
@@ -755,7 +816,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
     ],
     "boxImage": "X BBLD Booster Box.jpeg",
     "sourceUrl": "https://beyblade.fandom.com/wiki/BBLD_Booster",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "drandagger-4-60r",
+      "unicornsting-5-60gp",
+      "knightlance-4-80hn",
+      "wyverngale-5-80gb"
+    ]
   },
   {
     "id": "beybattle-set",
@@ -782,7 +849,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/BeyBattle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "spin-dragoon",
+      "saizo",
+      "frostic-dranzer"
+    ]
   },
   {
     "id": "beybattle-try-set",
@@ -827,7 +899,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beybattle_Try_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "pegasis-105f",
+      "wolf-d125b"
+    ]
   },
   {
     "id": "beyblade-25th-anniversary-set",
@@ -963,7 +1039,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_25th_Anniversary_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoonstorm-4-60ra",
+      "stormpegasis-3-70ra",
+      "victoryvalkyrie-2-60ra",
+      "dransword-3-60f"
+    ]
   },
   {
     "id": "beyblade-burst-entry-set",
@@ -1018,7 +1100,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Burst_Entry_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valkyrie-boost-variable"
+    ]
   },
   {
     "id": "beyblade-burst-ultimate-all-in-one-set",
@@ -1074,7 +1159,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Burst_Ultimate_All-in-One_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "divine-belial-nexus-adventure-6",
+      "chain-kerbeus-karma-moment-3"
+    ]
   },
   {
     "id": "beyblade-burst-vs-dual-battle-set",
@@ -1106,7 +1195,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Burst_VS_Dual_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valkyrie-boost-variable",
+      "xeno-xcalibur-magnum-impact"
+    ]
   },
   {
     "id": "beyblade-cho-z-battle-set",
@@ -1179,7 +1272,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Cho-Z_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "winning-valkyrie-12-volcanic",
+      "z-achilles-11-xtend",
+      "bloody-longinus-13-jolt"
+    ]
   },
   {
     "id": "beyblade-custom-set-attack-balance",
@@ -1225,7 +1323,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Custom_Set_Attack_%26_Balance",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "minoboros-oval-quake-takara-tomy",
+      "deathscyther-wing-fusion",
+      "spriggan-spread-blow"
+    ]
   },
   {
     "id": "beyblade-custom-set-defense-stamina",
@@ -1271,7 +1374,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Custom_Set_Defense_%26_Stamina",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "unicorn-ring-defense",
+      "wyvern-heavy-survive",
+      "ragnaruk-central-massive"
+    ]
   },
   {
     "id": "beyblade-deck-attack-defense-set",
@@ -1320,7 +1428,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Deck_Attack_%26_Defense_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyber-aquario-105rf",
+      "counter-scorpio-145d"
+    ]
   },
   {
     "id": "beyblade-deck-entry-set",
@@ -1362,7 +1474,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Deck_Entry_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasis-w105r-f",
+      "earth-virgo-t125es",
+      "rock-orso-ed145d"
+    ]
   },
   {
     "id": "beyblade-dynamite-battle-all-in-one-set",
@@ -1418,7 +1535,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Dynamite_Battle_All-in-One_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dynamite-belial-nexus-venture-3",
+      "roar-bahamut-karma-metal-drift-6"
+    ]
   },
   {
     "id": "beyblade-dynamite-battle-entry-set",
@@ -1462,7 +1583,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Dynamite_Battle_Entry_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dynamite-belial-nexus-venture-2"
+    ]
   },
   {
     "id": "beyblade-engine-gear-try-set",
@@ -1552,7 +1676,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Gatinko_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ace-dragon-sting-charge-zan",
+      "slash-valkyrie-blitz-power-retsu"
+    ]
   },
   {
     "id": "beyblade-god-battle-set",
@@ -1578,7 +1706,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_God_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "god-valkyrie-6vortex-reboot",
+      "kreis-satan-2glaive-loop"
+    ]
   },
   {
     "id": "beyblade-god-entry-set",
@@ -1625,7 +1757,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_God_Entry_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "god-valkyrie-6vortex-reboot"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2000",
@@ -1676,7 +1811,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_(2000)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "spin-dragoon",
+      "bakushin-ou",
+      "frostic-dranzer",
+      "saizo",
+      "pumpking"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2001",
@@ -1715,7 +1857,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_2001",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "driger-s",
+      "metal-draciel",
+      "shadow-driger",
+      "knight-dranzer"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2002",
@@ -1754,7 +1902,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_2002",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranzer-f",
+      "driger-f",
+      "draciel-f",
+      "trypio",
+      "wyborg"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2003",
@@ -1793,7 +1948,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_2003",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "blizzard-orthrus",
+      "driger-v2",
+      "dranzer-v2",
+      "flash-leopard",
+      "metal-dranzer"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2004",
@@ -1830,7 +1992,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_2004",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-ms",
+      "strata-dragoon-ms",
+      "driger-ms",
+      "draciel-ms"
+    ]
   },
   {
     "id": "beyblade-limited-edition-2005",
@@ -1877,7 +2045,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limited_Edition_2005",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "slash-riger-ms",
+      "phantom-fox-ms",
+      "dark-leopard-ms",
+      "samurai-changer-ms"
+    ]
   },
   {
     "id": "beyblade-limit-break-dx-set",
@@ -1929,7 +2103,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Limit_Break_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hyperion-burn-cho-xceed-x",
+      "helios-volcano-ou-zone-z"
+    ]
   },
   {
     "id": "beyblade-metal-masters-ultimate-gift-set",
@@ -1966,7 +2144,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Metal_Masters__Ultimate_Gift_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasus-w105r2f",
+      "ray-striker-d125cs",
+      "earth-eagle-145wd",
+      "flame-libra-t125es"
+    ]
   },
   {
     "id": "beyblade-micros-battle-set",
@@ -2024,7 +2208,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Shogun_Steel__Ultimate_Gift_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "pirate-orochi-145d",
+      "pirate-kraken-a230jsb",
+      "archer-griffin-c145s",
+      "bandit-golem-df145bs"
+    ]
   },
   {
     "id": "beyblade-start-dash-set-burst",
@@ -2072,7 +2262,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Start_Dash_Set_(Burst)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "valkyrie-wing-accel"
+    ]
   },
   {
     "id": "beyblade-superking-battle-set",
@@ -2120,7 +2313,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Superking_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "king-helios-zone-1b",
+      "super-hyperion-xceed-1a"
+    ]
   },
   {
     "id": "beyblade-super-custom-set-heavy-ver",
@@ -2173,7 +2370,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Super_Custom_Set_Heavy_Ver.",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valkyrie-triple-unite",
+      "inferno-ifrit-magnum-liner",
+      "storm-spriggan-boost-impact"
+    ]
   },
   {
     "id": "beyblade-super-deck",
@@ -2210,7 +2412,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Super_Deck",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "libra-100d"
+    ]
   },
   {
     "id": "beyblade-synchrom-battle-set",
@@ -2286,7 +2491,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Twin_Dragoon_Special_Box",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-f",
+      "dragoon-storm"
+    ]
   },
   {
     "id": "beyblade-ultimate-customize-set-l-drago-ver",
@@ -2509,7 +2718,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_VS_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "valkyrie-wing-accel",
+      "spriggan-spread-fusion"
+    ]
   },
   {
     "id": "beyblade-zero-g-ultimate-synchrom-dx-set-attack-balance-type",
@@ -2560,7 +2773,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Zero-G_Ultimate_Synchrom_DX_Set_Attack_%26_Balance_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "gargole-ifraid-sa165gcf",
+      "saramanda-balro-df145swd",
+      "gryph-girago-wa130hf"
+    ]
   },
   {
     "id": "beyblade-zero-g-ultimate-synchrom-dx-set-defense-stamina-type",
@@ -2603,7 +2821,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beyblade_Zero-G_Ultimate_Synchrom_DX_Set_Defense_%26_Stamina_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "goreim-revizer-e230sb",
+      "killerken-balro-a230wb",
+      "orojya-wyvang-145eds"
+    ]
   },
   {
     "id": "beycube-booster",
@@ -3022,7 +3245,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Booster_F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-f",
+      "dranzer-f",
+      "driger-f",
+      "draciel-f",
+      "gabriel"
+    ]
   },
   {
     "id": "bey-booster-s",
@@ -3067,7 +3297,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Booster_S",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranzer-s",
+      "driger-s",
+      "draciel-s",
+      "gaia-dragoon"
+    ]
   },
   {
     "id": "bey-character-custom-set",
@@ -3098,7 +3334,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Character_Custom_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "gravity-destroyer-ad145wd"
+    ]
   },
   {
     "id": "bey-custom-set-attack-balance-type",
@@ -3129,7 +3368,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Custom_Set_Attack_%26_Balance_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "black-pegasis-100hf",
+      "aquario-105f",
+      "wolf-125sf"
+    ]
   },
   {
     "id": "bey-custom-set-stamina-defense-type",
@@ -3164,7 +3408,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Custom_Set_Stamina_%26_Defense_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "virgo-df145bs",
+      "libra-145s",
+      "leone-d125b"
+    ]
   },
   {
     "id": "bey-kick-off-set",
@@ -3205,7 +3454,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Kick_Off_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hellshammer-3-70h"
+    ]
   },
   {
     "id": "bey-magne-dome",
@@ -3275,7 +3527,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Magne_Dome_DX",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranzer-v"
+    ]
   },
   {
     "id": "bey-ultimate-stadium",
@@ -3288,7 +3543,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bey_Ultimate_Stadium",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "black-dranzer"
+    ]
   },
   {
     "id": "big-bang-bladers-set",
@@ -3313,7 +3571,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Big_Bang_Bladers_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasis-w105r-f"
+    ]
   },
   {
     "id": "big-bang-pegasis-dx-set",
@@ -3461,7 +3722,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Burst_Ultimate_VS_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "burst-spriggan-spread-fusion-8",
+      "ultimate-valkyrie-wing-accel-9"
+    ]
   },
   {
     "id": "challenger-grip-set",
@@ -3477,7 +3742,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Challenger_Grip_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "torch-aries-125d"
+    ]
   },
   {
     "id": "championship-clash",
@@ -3549,7 +3817,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Championship_Clash",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wonder-valtryek-v4-12-volcanic-s",
+      "air-knight-k4-12expand-eternal-s",
+      "dread-phoenix-p4-10-friction-s",
+      "crash-roktavor-r4-11-wedge-s",
+      "geist-fafnir-f4-8-absorb-s",
+      "turbo-achilles-a4-00-dimension-s"
+    ]
   },
   {
     "id": "chaos-core-beystadium",
@@ -3608,7 +3884,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cho-Z_Customize_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "bloody-longinus-1-dagger-cycle",
+      "cho-z-spriggan-0wall-zeta",
+      "crash-ragnaruk-5cross-volcanic",
+      "orb-egis-outer-quest"
+    ]
   },
   {
     "id": "cho-z-customize-set-corocoro-ver",
@@ -3649,7 +3931,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cho-Z_Customize_Set_CoroCoro_Ver.",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "emperor-forneus-0-yard",
+      "winning-valkyrie-12-volcanic",
+      "z-achilles-11-xtend"
+    ]
   },
   {
     "id": "cho-z-triple-booster-set",
@@ -3704,7 +3991,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cho-Z_Triple_Booster_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hazard-kerbeus-7-atomic",
+      "z-achilles-3dagger-destroy",
+      "wolborg-8-bearing"
+    ]
   },
   {
     "id": "clash-carry-beystadium",
@@ -3811,7 +4103,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Collision_Nebula_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "katana-valtryek-v7-aquilon-q-spiral-q-kick-2",
+      "salvage-roktavor-r7-fyquor-q-fusion-q-moment-7",
+      "roar-fafnir-f7-squadron-q-massive-q-shot-6",
+      "vanish-balkesh-b7-quacchu-q-assault-q-flugel-10",
+      "berserk-muramasa-m7-ciquex-q-edge-q-hunter-2",
+      "magma-linwyrm-l7-diagron-q-shot-q-wave-4"
+    ]
   },
   {
     "id": "colossus-beystadium",
@@ -3892,7 +4192,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cosmic_Vector_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "destruction-belfyre-b7-nexus-q-yielding-q-venture-2",
+      "magma-ifritor-i7-ciquex-q-jaggy-q-wave-4"
+    ]
   },
   {
     "id": "crash-course-battle-set",
@@ -3966,7 +4270,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cross_Collision_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "left-astro-a4-10-needle-s",
+      "right-artemis-a4-6-jaggy-s"
+    ]
   },
   {
     "id": "customize-set-c",
@@ -4027,7 +4335,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Customize_Set_C",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "phoenixforce-whm-65mt"
+    ]
   },
   {
     "id": "customize-set-u",
@@ -4084,7 +4395,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Customize_Set_U",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "knightmail-3-85bs"
+    ]
   },
   {
     "id": "custom-beylauncher-lr-bladers-edition",
@@ -4229,7 +4543,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Destroyer_Dome_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyclone-herculeo-105f",
+      "spiral-fox-130d",
+      "beat-lynx-ad145wd",
+      "fang-leone-130w2d-hasbro"
+    ]
   },
   {
     "id": "destroyer-stadium",
@@ -4383,7 +4703,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Double_Stadium_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranzer-s",
+      "draciel-f"
+    ]
   },
   {
     "id": "double-xtreme-stadium",
@@ -4441,7 +4765,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Double_Xtreme_Stadium_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "bearscratch-5-60f"
+    ]
   },
   {
     "id": "drandagger-deck-set",
@@ -4480,7 +4807,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/DranDagger_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "drandagger-4-60r",
+      "knightshield-5-80t",
+      "sharkedge-3-80f"
+    ]
   },
   {
     "id": "dran-deck-starter",
@@ -4510,7 +4842,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dran_Deck_Starter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dransword-4-80db",
+      "drandagger-9-60lf",
+      "dranbuster-3-70n"
+    ]
   },
   {
     "id": "driver-coil-h",
@@ -4604,7 +4941,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Drop_Attack_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hover-wyvern-3-85n"
+    ]
   },
   {
     "id": "drop-attack-beystadium",
@@ -4665,7 +5005,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dual_Cyclone_Beystadium_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "fang-fenrir-boost-jaggy"
+    ]
   },
   {
     "id": "dual-fight-zero-g-set",
@@ -4749,7 +5092,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Elite_Champions_Pro_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cho-z-valtryek-zenith-p-destroy",
+      "cho-z-achilles-1-absorb"
+    ]
   },
   {
     "id": "emperormight-deck-set",
@@ -4820,7 +5167,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/EmperorMight_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "emperormight-hop",
+      "golemrock-m-85hn",
+      "sharkgill-5-60fb"
+    ]
   },
   {
     "id": "energy-ring-blaze",
@@ -4885,7 +5237,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Epic_Rivals_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valtryek-v2-boost-variable",
+      "storm-spryzen-s2-knuckle-unite"
+    ]
   },
   {
     "id": "epic-rivals-beystadium",
@@ -4970,7 +5326,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evangelion_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "evaarc-b0-70e",
+      "evabrave-a1-70v",
+      "evabrush-t2-70a"
+    ]
   },
   {
     "id": "evo-elite-champions-pro-set",
@@ -5024,7 +5385,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evo_Elite_Champions_Pro_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "sword-valtryek-sting-p-xtreme-retsu",
+      "wizard-fafnir-ratchet-p-rise-zan"
+    ]
   },
   {
     "id": "extreme-beystadium",
@@ -5045,7 +5410,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
     ],
     "boxImage": "Extreme stadium.jpg",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Extreme_Beystadium",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "rock-orso-d125b"
+    ]
   },
   {
     "id": "face-bolt-blaze",
@@ -5123,7 +5491,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fire_Team_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "samurai-ifrit-w145cf",
+      "ninja-salamander-sw145sd",
+      "thief-phoenix-e230gcf"
+    ]
   },
   {
     "id": "first-zerog-battle-set",
@@ -5194,7 +5567,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Five_Star_Super_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "phantom-orion-b-d"
+    ]
   },
   {
     "id": "fusion-wheel-beat",
@@ -5360,7 +5736,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/G-Blade_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-g",
+      "dranzer-g",
+      "draciel-g",
+      "driger-g"
+    ]
   },
   {
     "id": "g-challenge-set",
@@ -5395,7 +5777,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/G-Challenge_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-g",
+      "draciel-g"
+    ]
   },
   {
     "id": "galaxy-orbit-battle-set",
@@ -5453,7 +5839,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Orbit_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyclone-valtryek-v7-aquilon-q-yielding-q-defense-10",
+      "vanish-cobra-c7-giga-q-xtend-q-blow-3"
+    ]
   },
   {
     "id": "galaxy-pegasis-dx-set",
@@ -5484,7 +5874,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Galaxy_Pegasis_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasis-w105r-f"
+    ]
   },
   {
     "id": "god-customize-set",
@@ -5531,7 +5924,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/God_Customize_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "arc-bahamut-2bump-atomic",
+      "deep-chaos-4flow-bearing",
+      "drain-fafnir-7star-zephyr",
+      "tornado-wyvern-1meteor-spiral"
+    ]
   },
   {
     "id": "gt-triple-booster-set",
@@ -5574,7 +5973,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/GT_Triple_Booster_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dread-bahamut-7wall-orbit-metal-gen",
+      "lord-spriggan-blitz-dimension",
+      "slash-dragon-00-octa-metsu"
+    ]
   },
   {
     "id": "hades-gate-beystadium",
@@ -5622,7 +6026,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Half-Pipe_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "pegasus-jumper",
+      "kerbecs-blade-blast"
+    ]
   },
   {
     "id": "half-pipe-beystadium",
@@ -5714,7 +6122,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Heavy_Metal_System_Award",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-ms-ultimate-version",
+      "driger-ms",
+      "draciel-ms",
+      "dranzer-ms"
+    ]
   },
   {
     "id": "hellschain-deck-set",
@@ -5753,7 +6167,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsChain_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hellschain-5-60ht",
+      "knightlance-3-60lf",
+      "wizardarrow-4-80n"
+    ]
   },
   {
     "id": "hellsnether-deck-set",
@@ -5796,7 +6215,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/HellsNether_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hellsnether-z",
+      "silverwolf-9-70r",
+      "wyvernhover-8-80b"
+    ]
   },
   {
     "id": "hms-5-saint-beasts-booster",
@@ -5846,7 +6270,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/HMS_Random_Booster_Act_2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-ms-ultimate-version"
+    ]
   },
   {
     "id": "hms-random-booster-act-3",
@@ -5864,7 +6291,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
     ],
     "boxImage": "HMSRandomBoosterAct3.jpg",
     "sourceUrl": "https://beyblade.fandom.com/wiki/HMS_Random_Booster_Act_3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-mf"
+    ]
   },
   {
     "id": "hms-random-booster-act-4",
@@ -5905,7 +6335,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/HMS_Random_Booster_Act_4",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dranzer-mf",
+      "advance-guardian",
+      "dranzer-ms",
+      "advance-eterner"
+    ]
   },
   {
     "id": "hms-random-booster-act-5",
@@ -5940,7 +6376,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/HMS_Random_Booster_Act_5",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "jiraiya-ms",
+      "dragoon-mf",
+      "dranzer-mf"
+    ]
   },
   {
     "id": "hybrid-wheel-battle-set",
@@ -5974,7 +6415,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hybrid_Wheel_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "storm-pegasis-105rf",
+      "dark-wolf-df145fs"
+    ]
   },
   {
     "id": "hybrid-wheel-custom-set-attack-balance-type",
@@ -6007,7 +6452,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hybrid_Wheel_Custom_Set_Attack_%26_Balance_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "storm-aquario-m145q",
+      "dark-capricorne-105rf"
+    ]
   },
   {
     "id": "hybrid-wheel-custom-set-stamina-defense-type",
@@ -6037,7 +6486,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hybrid_Wheel_Custom_Set_Stamina_%26_Defense_Type",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "thermal-pisces-t125es",
+      "rock-aries-145d",
+      "flame-libra-df145bs"
+    ]
   },
   {
     "id": "hyper-strike-battle-set",
@@ -6071,7 +6525,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Hyper-Strike_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cosmic-pegasus-f-d",
+      "l-drago-destructor-f-s",
+      "diablo-nemesis-x-d",
+      "omega-dragonis-85xf"
+    ]
   },
   {
     "id": "hyper-strike-beystadium",
@@ -6142,7 +6602,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinity_Brink_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "sword-dragon-d5-spread-valor-h",
+      "wizard-luinor-l5-upper-liner-h"
+    ]
   },
   {
     "id": "infinity-rail-battle-set",
@@ -6197,7 +6661,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Infinity_Rail_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cutter-shinobi-gf",
+      "rampart-aegis-b"
+    ]
   },
   {
     "id": "infinity-rail-battle-set-beystadium",
@@ -6292,7 +6760,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Interstellar_Drop_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "devastate-evo-belfyre-b7-ciquex-q-almight-q-almight-2",
+      "prominence-phoenix-p7-tapered-q-zone-q-universe-10"
+    ]
   },
   {
     "id": "l-drago-battle-set",
@@ -6326,7 +6798,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/L-Drago_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "lightning-l-drago-100hf",
+      "meteo-l-drago-lw105lf",
+      "ultimate-meteo-l-drago-rush-125sf"
+    ]
   },
   {
     "id": "legendary-bladers-set",
@@ -6365,7 +6842,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Legendary_Bladers_(set)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cosmic-pegasus-w105r2f",
+      "fang-leone-130w2d-hasbro",
+      "phantom-orion-145es"
+    ]
   },
   {
     "id": "legendary-bladers-descendants",
@@ -6404,7 +6886,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Legendary_Bladers__Descendants",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "scythe-kronos-t125eds-hasbro",
+      "jade-jupiter-130b",
+      "variares-145wb"
+    ]
   },
   {
     "id": "legendary-bladers-nemesis-crisis",
@@ -6451,7 +6938,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Legendary_Bladers__Nemesis_Crisis",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "death-quetzalcoatl-125sf",
+      "proto-nemesis-ad145d",
+      "firefuse-darkhelm-145ds"
+    ]
   },
   {
     "id": "legend-beyblade-set",
@@ -6579,7 +7071,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Legend_Beyblade_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "phantom-orion-b-d"
+    ]
   },
   {
     "id": "legend-star-bey-set",
@@ -6636,7 +7131,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Legend_Star_Bey_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ace-dragon-0glaive-zephyr-ten",
+      "cho-z-achilles-4bump-yard",
+      "dragoon-fantom-00star-power",
+      "slash-valkyrie-8-cross-revolve-retsu",
+      "storm-pegasis-hurricane-liner"
+    ]
   },
   {
     "id": "level-chip",
@@ -6741,7 +7243,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Light_Ignite_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "destined-evo-x-belfyre-b8-d-gear-q-gyro-q-vs-gear-2",
+      "ruin-pandemonium-p8-karma-q-spiral-q-lucent-4"
+    ]
   },
   {
     "id": "light-wheel-clay",
@@ -6977,7 +7483,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Max_Stampede_Stadium_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "grand-cetus-wd145rs",
+      "thermal-lacerta-wa130hf",
+      "ultimate-gravity-destroyer-attack-105f",
+      "gravity-destroyer-ad145wd"
+    ]
   },
   {
     "id": "mega-value-6-pack",
@@ -7020,7 +7532,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Challenge_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "strata-dragoon-ms",
+      "draciel-ms"
+    ]
   },
   {
     "id": "metal-fight-beyblade-2020-baku-set",
@@ -7085,7 +7601,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Fight_Beyblade_2020_Baku_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasis-5glaive-jolt",
+      "ray-unicorno-1-proof-unite",
+      "gravity-perseus-00bump-yielding",
+      "meteo-l-drago-7vortex-spiral",
+      "hell-kerbecs-0lift-mobius"
+    ]
   },
   {
     "id": "metal-fight-beyblade-anime-10th-anniversary-set",
@@ -7154,7 +7677,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Fight_Beyblade_Anime_10th_Anniversary_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "storm-pegasis-10glaive-quick",
+      "flame-sagittario-8-claw",
+      "earth-aquila-2-yielding",
+      "rock-leone-0-massive",
+      "lightning-l-drago-10reach-zephyr"
+    ]
   },
   {
     "id": "metal-fury-3-pack",
@@ -7201,7 +7731,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Fury_3-Pack",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyber-pegasus-105f",
+      "galaxy-pegasus-w105r2f",
+      "cosmic-pegasus-w105r2f"
+    ]
   },
   {
     "id": "metal-fusion-3-pack",
@@ -7243,7 +7778,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Fusion_3-Pack",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyber-pegasus-105f",
+      "storm-aquario-100hf-s",
+      "flame-bull-100f",
+      "dark-bull-h145sd",
+      "earth-eagle-145wd",
+      "evil-gemios-df145fs"
+    ]
   },
   {
     "id": "metal-masters-3-pack",
@@ -7264,7 +7807,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Masters_3-Pack",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "twisted-tempo-145wd",
+      "flame-serpent-sw145f",
+      "cyber-aquario-105rf"
+    ]
   },
   {
     "id": "meteor-fire-beystadium",
@@ -7542,7 +8090,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Motor_Strike_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "evo-hyperion-flamebringer-h6-6-xceed-x-sp",
+      "evo-lucius-endbringer-l6-vertical-drift-sp"
+    ]
   },
   {
     "id": "ms-double-stadium-set",
@@ -7576,7 +8128,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/MS_Double_Stadium_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dragoon-ms",
+      "strata-dragoon-ms",
+      "driger-ms",
+      "draciel-ms"
+    ]
   },
   {
     "id": "mugen-beystadium-dx-set",
@@ -7615,7 +8173,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Mugen_Beystadium_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "strike-god-valkyrie-mugen"
+    ]
   },
   {
     "id": "octagon-showdown-battle-set",
@@ -7726,7 +8287,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Overdrive_Special_Starter_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dangerous-belial-almight-2",
+      "prominence-phoenix-tapered-metal-universe-10",
+      "savior-perseus-giga-bearing-3"
+    ]
   },
   {
     "id": "pegasus-battle-set",
@@ -7750,7 +8316,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Pegasus_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyber-pegasus-105f",
+      "storm-pegasus-105rf",
+      "galaxy-pegasus-w105r2f"
+    ]
   },
   {
     "id": "pegasus-thunder-whip-stadium",
@@ -7860,7 +8431,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/PhoenixRudder_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "phoenixrudder-9-70g",
+      "sphinxcowl-1-80gf",
+      "wyverngale-2-60s"
+    ]
   },
   {
     "id": "play-now-beyblade-special-set",
@@ -7917,7 +8493,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Play_Now!_Beyblade_Special_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "samurai-ifrit-w145cf",
+      "guardian-leviathan-160sb"
+    ]
   },
   {
     "id": "premiere-set",
@@ -7950,7 +8530,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Premiere_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "blaze-ragnaruk-4cross-flugel",
+      "god-valkyrie-6vortex-reboot",
+      "kreis-satan-2glaive-loop"
+    ]
   },
   {
     "id": "problade-ex-set",
@@ -7987,7 +8572,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Problade_EX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "flash-sagittario-230wd",
+      "ray-gil-100rsf",
+      "gravity-destroyer-ad145wd"
+    ]
   },
   {
     "id": "prototype-nemesis",
@@ -8179,7 +8769,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Quad_Creature_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "chain-dragon-d8-fyquor-q-bite-q-billow-6",
+      "fierce-helios-h8-squadron-q-quattro-q-stay-3",
+      "komet-bazilisk-b8-xanthus-q-fusion-q-rugged-7",
+      "lightning-poseidon-p8-over-q-yielding-q-adventure-1"
+    ]
   },
   {
     "id": "rail-rush-battle-set",
@@ -8232,7 +8828,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Rail_Rush_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wonder-valtryek-v4-12-volcanic-s",
+      "z-achilles-a4-11-xtend-s"
+    ]
   },
   {
     "id": "random-booster-1",
@@ -8323,7 +8923,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_10",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "killer-eagle",
+      "rushing-boar",
+      "dark-gargoyle",
+      "seaborg-2",
+      "trypio"
+    ]
   },
   {
     "id": "random-booster-11",
@@ -8381,7 +8988,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
     ],
     "boxImage": "RandomBooster11.jpg",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_11",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "crab-diver",
+      "blizzard-orthrus",
+      "orca-diver",
+      "manta-diver",
+      "driger-v",
+      "vortex-ape"
+    ]
   },
   {
     "id": "random-booster-12",
@@ -8557,7 +9172,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_BrachioWhip_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "brachiowhip-ow5-70nr"
+    ]
   },
   {
     "id": "random-booster-clockmirage-select",
@@ -8626,7 +9244,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_ClockMirage_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "clockmirage-9-65b"
+    ]
   },
   {
     "id": "random-booster-crocotread-select",
@@ -8695,7 +9316,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_CrocoTread_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "crocotread-tq5-50gn"
+    ]
   },
   {
     "id": "random-booster-foxbrush-select",
@@ -8764,7 +9388,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_FoxBrush_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "foxbrush-j9-70gr",
+      "foxbrush-j0-80db",
+      "foxbrush-j2-60u"
+    ]
   },
   {
     "id": "random-booster-lightning-l-drago-1-60f",
@@ -8818,7 +9447,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Lightning_L-Drago_1-60F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "lightning-l-drago-1-60f-upper-type",
+      "lightning-l-drago-1-60f-rapid-hit-type"
+    ]
   },
   {
     "id": "random-booster-light-vol-1",
@@ -8892,7 +9525,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Light_Vol._1",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "mad-cancer-ch120fs",
+      "heat-pegasis-100wb",
+      "clay-wolf-145fs",
+      "heat-wolf-wd145sf",
+      "mad-leone-145b",
+      "clay-leone-df145wb",
+      "wind-pegasis-df145b",
+      "wind-leone-d125hf"
+    ]
   },
   {
     "id": "random-booster-light-vol-2",
@@ -8941,7 +9584,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
     ],
     "boxImage": "MFB_RBLV2_2.jpg",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Light_Vol._2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wind-aquario-100hf-s",
+      "clay-wolf-105b",
+      "clay-sagittario-145b",
+      "heat-pegasis-df145wb",
+      "heat-leone-d125fs",
+      "mad-sagittario-df145hf",
+      "mad-leone-145fs",
+      "wind-wolf-wd145wb"
+    ]
   },
   {
     "id": "random-booster-light-vol-3",
@@ -8996,7 +9649,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Light_Vol._3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "clay-aries-ed145b",
+      "clay-pegasis-145s",
+      "mad-sagittario-c145sd",
+      "heat-bull-d125wb",
+      "wind-wolf-h145d",
+      "heat-leone-h145s",
+      "mad-bull-c145hf",
+      "wind-sagittario-100sd"
+    ]
   },
   {
     "id": "random-booster-shelterdrake-select",
@@ -9065,7 +9728,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_ShelterDrake_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "shelterdrake-7-80gp",
+      "shelterdrake-5-70o",
+      "shelterdrake-3-60d"
+    ]
   },
   {
     "id": "random-booster-shinobishadow-select",
@@ -9131,7 +9799,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_ShinobiShadow_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "shinobishadow-1-80mn",
+      "shinobishadow-9-60lf",
+      "shinobishadow-3-70gp"
+    ]
   },
   {
     "id": "random-booster-sphinxcowl-select",
@@ -9196,7 +9869,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_SphinxCowl_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "sphinxcowl-9-80gn",
+      "sphinxcowl-4-80ht",
+      "sphinxcowl-5-60o"
+    ]
   },
   {
     "id": "random-booster-vipertail-select",
@@ -9261,7 +9939,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_ViperTail_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "vipertail-5-80o",
+      "vipertail-4-60f",
+      "vipertail-3-80hn"
+    ]
   },
   {
     "id": "random-booster-vol-1",
@@ -9368,7 +10051,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._1",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "sharkedge-3-60lf",
+      "sharkedge-4-80n",
+      "dransword-3-80b",
+      "hellsscythe-4-80lf",
+      "knightshield-4-60lf",
+      "wizardarrow-3-60t"
+    ]
   },
   {
     "id": "random-booster-vol-10",
@@ -9479,7 +10170,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._10",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "unicorndelta-po3-60gu",
+      "unicorndelta-po1-80gr",
+      "samuraisaber-9-65lo",
+      "hellshammer-3-85gu",
+      "tyrannobeat-3-60n",
+      "crimsongaruda-7-80gu"
+    ]
   },
   {
     "id": "random-booster-vol-10-crash-ragnaruk-11r-wd",
@@ -9575,7 +10274,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._10_Crash_Ragnaruk.11R.Wd",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "crash-ragnaruk-11reach-wedge",
+      "winning-valkyrie-8-guard",
+      "z-achilles-4-destroy",
+      "emperor-forneus-7-zeta",
+      "sieg-xcalibur-5bump-atomic",
+      "spriggan-requiem-6meteor-iron",
+      "lost-longinus-2reach-merge",
+      "legend-spriggan-0under-nothing"
+    ]
   },
   {
     "id": "random-booster-vol-11",
@@ -9685,7 +10394,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._11",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "heavensring-0-80ds",
+      "heavensring-6-60tp",
+      "impactdrake-7-55fb",
+      "ghostcircle-m-85ds",
+      "wolfflame-d9-65l",
+      "cerberusreaper-b0-80wb"
+    ]
   },
   {
     "id": "random-booster-vol-11-vise-leopard-12l-ds",
@@ -9782,7 +10499,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._11_Vise_Leopard.12L.Ds",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "vise-leopard-12lift-destroy",
+      "vise-leopard-4-yard",
+      "screw-trident-0lift-volcanic",
+      "arc-bahamut-7lift-xtend",
+      "nightmare-longinus-planet",
+      "winning-valkyrie-3-yielding",
+      "emperor-forneus-1meteor-hunter",
+      "bloody-longinus-8vortex-defense"
+    ]
   },
   {
     "id": "random-booster-vol-12-dead-hades-11t-z",
@@ -9879,7 +10606,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._12_Dead_Hades.11T.Z'",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dead-hades-11turn-zephyr",
+      "hell-salamander-gravity-yielding",
+      "archer-hercules-heavy-friction",
+      "maximum-garuda-7lift-sword",
+      "deep-chaos-0turn-xtend",
+      "twin-nemesis-1-hit-wedge",
+      "shelter-regulus-8-bump-destroy",
+      "beat-kukulcan-13dagger-yard"
+    ]
   },
   {
     "id": "random-booster-vol-13-air-knight-12e-et",
@@ -9979,7 +10716,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._13_Air_Knight.12E.Et",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "air-knight-12expand-eternal",
+      "air-knight-11-friction",
+      "revive-phoenix-12-fusion",
+      "hell-salamander-13-blow",
+      "hazard-kerbeus-4-merge",
+      "emperor-forneus-13meteor-survive",
+      "dranzer-flame-10turn-sword",
+      "wolborg-0expand-atomic"
+    ]
   },
   {
     "id": "random-booster-vol-14-driger-fang-0-xt",
@@ -10088,7 +10835,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._14_Driger_Fang.0.Xt",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "winning-valkyrie-1-operate",
+      "spriggan-requiem-7-absorb",
+      "bloody-longinus-3-press",
+      "z-achilles-13turn-blow",
+      "legend-spriggan-5reach-eternal",
+      "left-apollos-12meteor-sword",
+      "right-artemis-4proof-orbit",
+      "driger-fang-0-xtend"
+    ]
   },
   {
     "id": "random-booster-vol-15",
@@ -10198,7 +10955,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._15",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cosmo-valkyrie-11-eternal-ten",
+      "storm-pegasis-10glaive-quick",
+      "bushin-dragon-7-friction-retsu",
+      "slash-ashura-5-quest-zan",
+      "orb-egis-0turn-quick",
+      "dead-hades-8-expand-xtreme",
+      "buster-xcalibur-zenith-absorb",
+      "vise-leopard-1-proof-operate"
+    ]
   },
   {
     "id": "random-booster-vol-16",
@@ -10304,7 +11071,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._16",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "flare-dragon-around-planet-sen",
+      "gaia-dragoon-around-hunter",
+      "flare-ashura-5-survive-retsu",
+      "slash-joker-10-keep-metsu",
+      "crash-ragnaruk-7bump-fusion",
+      "hazard-kerbeus-00hit-guard",
+      "geist-fafnir-ratchet-gyro",
+      "revive-phoenix-8-meteor-accel"
+    ]
   },
   {
     "id": "random-booster-vol-17",
@@ -10421,7 +11198,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._17",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "tact-longinus-12expand-trans-sou",
+      "lightning-l-drago-10reach-zephyr",
+      "tact-fafnir-11-revolve-sen",
+      "rock-joker-zenith-eternal-sou",
+      "storm-pegasis-hurricane-atomic",
+      "bushin-valkyrie-0-unite-retsu",
+      "wizard-bahamut-00cross-jolt-gen",
+      "judgement-pegasus-8-glaive-keep-metsu"
+    ]
   },
   {
     "id": "random-booster-vol-18",
@@ -10520,7 +11307,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._18",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "naked-spriggan-paradox-orbit-metal-ten",
+      "dragoon-victory-sting-evolution",
+      "dread-fafnir-paradox-revolve-metsu",
+      "naked-longinus-0turn-rise-sen",
+      "poison-dragon-11-volcanic-zan",
+      "heaven-joker-gravity-operate-gou",
+      "erase-bahamut-1-star-zeta-sou",
+      "draciel-fortress-00wall-charge"
+    ]
   },
   {
     "id": "random-booster-vol-19",
@@ -10617,7 +11414,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._19",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "burn-phoenix-yell-wedge",
+      "grand-dragon-aero-lift-flugel-gou",
+      "rock-dragon-5-jaggy-sou",
+      "poison-hydra-8-angle-fusion-gen",
+      "knockout-odin-12-operate-ten",
+      "bushin-ashura-13-anchor-sen",
+      "cho-z-valkyrie-3-guard",
+      "shining-amaterios-0-destroy"
+    ]
   },
   {
     "id": "random-booster-vol-1-secret-aries",
@@ -10695,7 +11502,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._1_Secret_Aries",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "aries-125d",
+      "sagittario-145f",
+      "bull-105s",
+      "pegasis-145sf",
+      "leone-125s",
+      "bull-105d",
+      "pegasis-145f"
+    ]
   },
   {
     "id": "random-booster-vol-1-trident-heavy-claw",
@@ -10792,7 +11608,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._1_Trident_Heavy_Claw",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "trident-heavy-claw",
+      "spriggan-wing-claw",
+      "ragnaruk-spread-claw",
+      "kerbeus-heavy-survive",
+      "valkyrie-central-fusion",
+      "spriggan-central-accel",
+      "ragnaruk-wing-defense",
+      "kerbeus-spread-accel"
+    ]
   },
   {
     "id": "random-booster-vol-2",
@@ -10899,7 +11725,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._2",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wyverngale-5-80gb",
+      "wyverngale-3-60t",
+      "knightlance-4-60gb",
+      "vipertail-5-60f",
+      "leonclaw-3-80hn",
+      "wizardarrow-4-80gb"
+    ]
   },
   {
     "id": "random-booster-vol-20",
@@ -10997,7 +11831,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._20",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "curse-satan-hurricane-universe-1d",
+      "glide-hyperion-7bump-survive-1d",
+      "curse-ragnaruk-0-accel-1s",
+      "tact-diabolos-2glaive-low-gen",
+      "naked-bahamut-10-universe-metsu",
+      "union-spriggan-outer-quick-zan",
+      "earth-aquila-vanguard-merge",
+      "flame-sagittario-00-keep"
+    ]
   },
   {
     "id": "random-booster-vol-21",
@@ -11129,7 +11973,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._21",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "death-diabolos-4turn-merge-1d",
+      "abyss-diabolos-5-fusion-1s",
+      "king-fafnir-8-defense-1s",
+      "cosmo-pegasus-7-atomic-sou",
+      "air-knight-10-revolve",
+      "emperor-forneus-wheel-destroy",
+      "burn-phoenix-00-assault",
+      "dranzer-volcano-0-charge"
+    ]
   },
   {
     "id": "random-booster-vol-22",
@@ -11273,7 +12127,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._22",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "infinite-achilles-dimension-1b",
+      "infinite-achilles-7-loop-1d",
+      "super-satan-6-xtreme-1s",
+      "ace-dragon-wheel-rise-gen",
+      "hell-salamander-outer-universe",
+      "dead-hades-1-high-blow",
+      "dragoon-victory-2expand-eternal",
+      "driger-vulcan-0-high-jaggy"
+    ]
   },
   {
     "id": "random-booster-vol-23",
@@ -11426,7 +12290,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._23",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hollow-deathscyther-12axe-high-accel-4a",
+      "hollow-valkyrie-11-absorb-1d",
+      "abyss-longinus-13-spiral-4a",
+      "curse-deathscyther-8-zeta-1s",
+      "dead-phoenix-3-high-zephyr",
+      "archer-hercules-10axe-power",
+      "storm-pegasis-drake-high-survive",
+      "draciel-viper-00wall-high-defense"
+    ]
   },
   {
     "id": "random-booster-vol-24",
@@ -11556,7 +12430,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._24",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "first-uranus-00-metal-accel-1d",
+      "king-helios-survive-1b",
+      "glide-ragnaruk-5-trans-1s",
+      "super-hyperion-quick-1a",
+      "variant-lucifer-orbit-2d",
+      "imperial-dragon-7-eternal",
+      "master-diabolos-0-zephyr",
+      "revive-phoenix-4-metal-defense"
+    ]
   },
   {
     "id": "random-booster-vol-25",
@@ -11668,7 +12552,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._25",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cyclone-ragnaruk-giga-never-6",
+      "cyclone-ragnaruk-nexus-rise-2",
+      "dragoon-v2-wheel-xceed",
+      "hell-kerbecs-giga-wave",
+      "infinite-deathscyther-universe-1a",
+      "brave-wyvern-10-never-4a"
+    ]
   },
   {
     "id": "random-booster-vol-26",
@@ -11776,7 +12668,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._26",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "roar-bahamut-giga-moment-10",
+      "roar-fafnir-00-revolve-2",
+      "dranzer-v2-0cross-reboot",
+      "dynamite-ragnaruk-nexus-just-6",
+      "world-dragon-outer-moment-4a",
+      "variant-spriggan-convert-high-hold-1s"
+    ]
   },
   {
     "id": "random-booster-vol-27",
@@ -11895,7 +12795,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._27",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "devil-belial-giga-mobius-3",
+      "dynamite-valkyrie-over-just-6",
+      "guilty-spriggan-outer-never-2",
+      "vanish-longinus-nexus-moment-7",
+      "astral-fafnir-karma-venture-0",
+      "galaxy-pegasis-legacy-xtreme",
+      "dragoon-v2-tapered-zone"
+    ]
   },
   {
     "id": "random-booster-vol-28",
@@ -11990,7 +12899,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._28",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ultimate-valkyrie-legacy-variable-9",
+      "tempest-achilles-xceed-z-1b",
+      "infinite-dragon-zone-x-1a",
+      "super-hyperion-giga-metal-dimension-4a",
+      "king-helios-karma-high-charge-1s"
+    ]
   },
   {
     "id": "random-booster-vol-29",
@@ -12099,7 +13015,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._29",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "chain-kerbeus-fortress-yard-6",
+      "chain-ragnaruk-tapered-accel-10",
+      "driger-v2-over-wedge",
+      "dynamite-kerbeus-legacy-moment-9",
+      "roar-spriggan-fortress-kick-2",
+      "cyclone-valkyrie-giga-high-eternal-3"
+    ]
   },
   {
     "id": "random-booster-vol-2-evil-eye-wing-needle",
@@ -12196,7 +13120,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._2_Evil-eye_Wing_Needle",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "evil-eye-wing-needle",
+      "deathscyther-armed-blow",
+      "deathscyther-spread-massive",
+      "wyvern-heavy-accel",
+      "wyvern-central-needle",
+      "odin-armed-claw",
+      "odin-oval-fusion",
+      "valkyrie-oval-needle"
+    ]
   },
   {
     "id": "random-booster-vol-2-legend-pisces",
@@ -12278,7 +13212,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._2_Legend_Pisces",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "pisces-d125bs",
+      "aquario-df145sf",
+      "virgo-125bs",
+      "libra-d125hf",
+      "aquario-105b",
+      "virgo-100b",
+      "libra-100f",
+      "bull-df145hf"
+    ]
   },
   {
     "id": "random-booster-vol-3",
@@ -12386,7 +13330,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._3",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "tyrannobeat-4-70q",
+      "tyrannobeat-3-60s",
+      "hellschain-9-80o",
+      "drandagger-4-70p",
+      "sharkedge-1-60q",
+      "rhinohorn-5-80q"
+    ]
   },
   {
     "id": "random-booster-vol-30",
@@ -12488,7 +13440,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._30",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wind-knight-moon-bounce-6",
+      "prominence-knight-legacy-sword-1",
+      "devil-xcalibur-moon-high-wave-2",
+      "wind-kerbeus-xanthus-bounce-4",
+      "xiphoid-belial-karma-destroy-10"
+    ]
   },
   {
     "id": "random-booster-vol-3-stardust-pegasis",
@@ -12570,7 +13529,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._3_Stardust_Pegasis",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "storm-pegasis-100rf",
+      "rock-wolf-h145b",
+      "dark-leone-c145b",
+      "flame-wolf-h145s",
+      "storm-sagittario-145sd",
+      "rock-bull-wd145hf",
+      "dark-sagittario-wd145sd",
+      "flame-bull-105wb"
+    ]
   },
   {
     "id": "random-booster-vol-3-yaeger-yggdrasil-g-y",
@@ -12667,7 +13636,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._3_Yaeger_Yggdrasil.G.Y",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "yaeger-yggdrasil-gravity-yielding",
+      "storm-spriggan-boost-yielding",
+      "rising-ragnaruk-knuckle-yielding",
+      "kaiser-kerbeus-knuckle-revolve",
+      "victory-valkyrie-limited-unite",
+      "storm-spriggan-limited-variable",
+      "rising-ragnaruk-boost-press",
+      "kaiser-kerbeus-gravity-variable"
+    ]
   },
   {
     "id": "random-booster-vol-4",
@@ -12773,7 +13752,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._4",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "blackshell-4-60d",
+      "blackshell-9-80b",
+      "unicornsting-3-70d",
+      "wizardrod-1-60r",
+      "phoenixwing-5-80h",
+      "vipertail-5-70d"
+    ]
   },
   {
     "id": "random-booster-vol-4-mirage-virgo",
@@ -12828,7 +13815,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._4_Mirage_Virgo",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "earth-virgo-gb145bs",
+      "earth-cancer-df145es",
+      "flame-capricorne-t125hf",
+      "flame-aquila-100es",
+      "rock-capricorne-t125d",
+      "rock-libra-100wd",
+      "storm-aquila-145hf",
+      "storm-libra-145s"
+    ]
   },
   {
     "id": "random-booster-vol-4-quad-quetzalcoatl-j-p",
@@ -12927,7 +13924,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._4_Quad_Quetzalcoatl.J.P",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "quad-quetzalcoatl-jerk-press",
+      "wild-wyvern-jerk-gyro",
+      "dark-deathscyther-jerk-orbit",
+      "holy-horusood-vertical-jaggy",
+      "obelisk-odin-upper-jaggy",
+      "holy-horusood-triple-orbit",
+      "dark-deathscyther-vertical-gyro",
+      "driger-slash-heavy-fusion-takara-tomy"
+    ]
   },
   {
     "id": "random-booster-vol-5",
@@ -13033,7 +14040,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._5",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ghostcircle-0-80gb",
+      "ghostcircle-4-60h",
+      "shinobishadow-3-80f",
+      "leonclaw-0-80e",
+      "phoenixfeather-2-60n",
+      "wyverngale-0-80c"
+    ]
   },
   {
     "id": "random-booster-vol-5-gigant-gaia-q-f",
@@ -13132,7 +14147,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._5_Gigant_Gaia.Q.F",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "gigant-gaia-quarter-fusion",
+      "nova-neptune-quarter-needle",
+      "unlock-unicorn-quarter-accel",
+      "xeno-xcalibur-down-orbit",
+      "nova-neptune-jerk-impact",
+      "unlock-unicorn-upper-trans",
+      "xeno-xcalibur-vertical-claw",
+      "draciel-shield-central-press-takara-tomy"
+    ]
   },
   {
     "id": "random-booster-vol-5-grand-ketos",
@@ -13205,7 +14230,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._5_Grand_Ketos",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "burn-unicorno-sw145jb",
+      "poison-unicorno-130hf",
+      "storm-phoenix-130b",
+      "poison-phoenix-wa130sd",
+      "burn-serpent-wa130es",
+      "storm-serpent-t125hf"
+    ]
   },
   {
     "id": "random-booster-vol-6",
@@ -13318,7 +14351,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._6",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "hellsreaper-t4-70k",
+      "rhinoreaper-c4-55d",
+      "hellsarc-t3-85o",
+      "leoncrest-9-80k",
+      "phoenixrudder-4-70lf",
+      "whalewave-7-60k"
+    ]
   },
   {
     "id": "random-booster-vol-6-killer-beafowl",
@@ -13380,7 +14421,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._6_Killer_Beafowl",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-cancer-d125hf",
+      "burn-escolpio-100rf",
+      "flame-gemios-105cs",
+      "killer-escolpio-100d",
+      "galaxy-sagittario-145cs",
+      "flame-cancer-d125rf",
+      "burn-sagittario-105hf"
+    ]
   },
   {
     "id": "random-booster-vol-6-tornado-wyvern-4g-at",
@@ -13477,7 +14527,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._6_Tornado_Wyvern.4G.At",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "tornado-wyvern-4glaive-atomic",
+      "exceed-evil-eye-gravity-atomic",
+      "fang-fenrir-polish-atomic",
+      "exceed-evil-eye-2glaive-weight",
+      "psychic-phantom-6cross-spiral",
+      "inferno-ifrit-2vortex-hold",
+      "fang-fenrir-6glaive-liner",
+      "beast-behemoth-4cross-weight"
+    ]
   },
   {
     "id": "random-booster-vol-7",
@@ -13590,7 +14650,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._7",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cerberusflame-w5-80wb",
+      "whaleflame-m3-85ht",
+      "cerberusdark-w1-60f",
+      "dranbuster-5-80mn",
+      "blackshell-7-70wb",
+      "cobaltdragoon-4-55wb"
+    ]
   },
   {
     "id": "random-booster-vol-7-beat-lynx",
@@ -13655,7 +14723,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._7_Beat_Lynx",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "beat-lynx-th170wd",
+      "hell-horuseus-85rs",
+      "vulcan-herculeo-130ds",
+      "tornado-horuseus-130rsf",
+      "hell-herculeo-100xf",
+      "vulcan-horogium-bd145rs"
+    ]
   },
   {
     "id": "random-booster-vol-7-maximum-garuda-8f-fl",
@@ -13751,7 +14827,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._7_Maximum_Garuda.8F.Fl",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "maximum-garuda-8flow-flugel",
+      "god-valkyrie-2-flugel",
+      "kreis-satan-yell-spiral",
+      "blaze-ragnaruk-nine-liner",
+      "draciel-shield-4flow-cycle",
+      "dranzer-spiral-6cross-spiral",
+      "acid-anubis-8vortex-loop",
+      "jail-jormungand-6glaive-nothing"
+    ]
   },
   {
     "id": "random-booster-vol-8",
@@ -13861,7 +14947,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._8",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "mummycurse-7-55w",
+      "mummycurse-4-60c",
+      "pegasusbrush-m3-85w",
+      "solbrave-c9-70tp",
+      "drandagger-7-55g",
+      "weisstiger-4-80lr"
+    ]
   },
   {
     "id": "random-booster-vol-8-jade-jupiter",
@@ -13928,7 +15022,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._8_Jade_Jupiter",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "jade-jupiter-s130rb",
+      "divine-fox-90w-d",
+      "forbidden-eonis-130d",
+      "divine-crown-tr145d",
+      "hell-crown-130fb"
+    ]
   },
   {
     "id": "random-booster-vol-8-shelter-regulus-5s-tw",
@@ -14025,7 +15126,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._8_Shelter_Regulus.5S.Tw",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "shelter-regulus-5star-tower",
+      "alter-chronos-ring-tower",
+      "killer-deathscyther-quarter-loop",
+      "blaze-ragnaruk-triple-revolve",
+      "yaeger-yggdrasil-8meteor-quake",
+      "quad-quetzalcoatl-4star-flugel",
+      "dragoon-storm-5meteor-loop",
+      "driger-slash-4vortex-hunter"
+    ]
   },
   {
     "id": "random-booster-vol-9",
@@ -14122,7 +15233,14 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._9",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cobaltdragoon-9-80f",
+      "sharkedge-4-70e",
+      "mammothtusk-7-60s",
+      "hellsscythe-3-85gb",
+      "dranbuster-2-80q"
+    ]
   },
   {
     "id": "random-booster-vol-9-beat-kukulcan-7u-hn",
@@ -14220,7 +15338,17 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._9_Beat_Kukulcan.7U.Hn",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "beat-kukulcan-7under-hunter",
+      "dranzer-flame-yell-zeta-takara-tomy",
+      "valkyrie-1flow-edge",
+      "blast-jinnius-1-defense",
+      "guardian-kerbeus-7-nothing",
+      "kreis-satan-5-guard",
+      "mad-minoboros-5vortex-zephyr",
+      "gigant-gaia-8under-quake"
+    ]
   },
   {
     "id": "random-booster-vol-9-fusion-hades",
@@ -14283,7 +15411,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_Vol._9_Fusion_Hades",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "fusion-hades-ad145swd",
+      "hell-beelzeb-125xf",
+      "cloud-lyra-85sf",
+      "cloud-gemios-t125sf",
+      "crash-escolpio-125jb",
+      "bakushin-beelzeb-t125xf"
+    ]
   },
   {
     "id": "random-booster-whalewave-select",
@@ -14347,7 +15483,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Random_Booster_WhaleWave_Select",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "whalewave-5-80e",
+      "whalewave-4-70hn",
+      "whalewave-3-80gb"
+    ]
   },
   {
     "id": "ripshot-battle-set",
@@ -14391,7 +15532,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ripshot_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "soaring-wing-pegasus",
+      "doom-fire-drago"
+    ]
   },
   {
     "id": "rip-grind-beystadium",
@@ -14453,7 +15598,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Royal_Rumble_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "phantom-orion-b-d",
+      "death-quetzalcoatl-125rdf",
+      "diablo-nemesis-x-d"
+    ]
   },
   {
     "id": "salamander-cyclone-beystadium",
@@ -14524,7 +15674,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Shadow_Snake_Pit_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "legend-spryzen-s3-4cross-guard",
+      "krusher-doomscizor-d3-8glaive-nothing"
+    ]
   },
   {
     "id": "sharkscale-deck-set",
@@ -14567,7 +15721,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/SharkScale_Deck_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "sharkscale-4-50uf",
+      "tyrannoroar-1-70l",
+      "hellsbrave-j3-60gf"
+    ]
   },
   {
     "id": "shin-ta-stadium",
@@ -14728,7 +15887,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Sneak_Attack_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "cutter-shinobi-lf",
+      "rampart-aegis-gb"
+    ]
   },
   {
     "id": "sneak-attack-beystadium",
@@ -14920,7 +16083,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Start_Dash_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "dransword-3-60f"
+    ]
   },
   {
     "id": "start-dash-set-c",
@@ -14968,7 +16134,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Start_Dash_Set_C",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "bahamutblitz-bk1-50i"
+    ]
   },
   {
     "id": "star-storm-battle-set",
@@ -15013,7 +16182,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Star_Storm_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "genesis-valtryek-v3-6vortex-reboot",
+      "kinetic-satomb-s3-2glaive-loop"
+    ]
   },
   {
     "id": "striker-stadium",
@@ -15104,7 +16277,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/String_Launcher_2-Pack",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "gravity-destroyer-ad145wd",
+      "ray-gil-100rsf"
+    ]
   },
   {
     "id": "strongest-blader-set",
@@ -15157,7 +16334,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Strongest_Blader_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "nightmare-rex-uw145ewd"
+    ]
   },
   {
     "id": "summit-stadium",
@@ -15222,7 +16402,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Triple_Booster_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "tempest-dragon-charge-metal-1a",
+      "curse-satan-aero-hold-1d",
+      "naked-diabolos-11-wave-goku"
+    ]
   },
   {
     "id": "super-control-beyblade-stadium",
@@ -15299,7 +16484,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Super_Vortex_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "storm-pegasus-105rf",
+      "lightning-l-drago-100hf",
+      "flame-sagittario-c145s",
+      "dark-wolf-df145fs"
+    ]
   },
   {
     "id": "super-vortex-battle-set-beyblade-legends",
@@ -15339,7 +16530,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Super_Vortex_Battle_Set_(Beyblade_Legends)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ray-striker-d125cs",
+      "gravity-destroyer-ad145wd"
+    ]
   },
   {
     "id": "super-vortex-battle-set-sonic-series",
@@ -15368,7 +16563,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Super_Vortex_Battle_Set_(Sonic_Series)",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "thunder-libra-df145bs",
+      "hyper-aquario-105f"
+    ]
   },
   {
     "id": "super-vortex-beystadium",
@@ -15431,7 +16630,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Team_Excalibur_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "gravity-destroyer-ad145wd",
+      "grand-cetus-wd145rs",
+      "grand-capricorn-145d"
+    ]
   },
   {
     "id": "team-gangan-galaxy-set",
@@ -15455,7 +16659,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Team_GanGan_Galaxy_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "earth-eagle-145wd",
+      "galaxy-pegasus-w105r2f",
+      "ray-striker-d125cs"
+    ]
   },
   {
     "id": "team-star-breaker-set",
@@ -15479,7 +16688,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Team_Star_Breaker_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "flame-byxis-230wd",
+      "hades-kerbecs-bd145ds",
+      "evil-befall-uw145ewd"
+    ]
   },
   {
     "id": "thunder-edge-battle-set",
@@ -15531,7 +16745,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Thunder_Edge_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "divine-evo-belfyre-b8-squadron-q-guard-q-adventure-3",
+      "lightning-pandora-endless-p8-twist-q-fusion-q-still-7"
+    ]
   },
   {
     "id": "tornado-beystadium",
@@ -15661,7 +16879,13 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Triple_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "galaxy-pegasus-w105r2f",
+      "meteo-l-drago-lw105lf",
+      "electro-striker",
+      "inferno-sagittario-145s"
+    ]
   },
   {
     "id": "triple-battle-type-beystadium",
@@ -15704,7 +16928,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Triple_Booster_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "victory-valkyrie-upper-quake",
+      "nova-neptune-vertical-trans",
+      "chaos-oval-gyro"
+    ]
   },
   {
     "id": "twin-battle-bey-double-shooter-set",
@@ -15753,7 +16982,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Twin_Battle_Bey_Double_Shooter_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "wyvern-dj",
+      "dragoon-ms",
+      "driger-ms"
+    ]
   },
   {
     "id": "ultimate-beyta-stadium",
@@ -15834,7 +17068,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Beyta_Stadium",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "prototype-nemesis"
+    ]
   },
   {
     "id": "ultimate-fusion-dx-set",
@@ -15880,7 +17117,12 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Fusion_DX_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "king-helios-mr-giga-zeal-10",
+      "super-hyperion-mr-tapered-xplosion-2",
+      "divine-belial-nexus-bearing-drift-1-gear"
+    ]
   },
   {
     "id": "ultimate-tournament-beystadium",
@@ -15981,7 +17223,15 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Tournament_Collection",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "drain-fafnir-f3-8-nothing",
+      "genesis-valtryek-v3-6vortex-reboot",
+      "boom-khalzar-k3-7under-hunter",
+      "nightmare-luinor-l3-destroy",
+      "kinetic-satomb-s3-2glaive-loop",
+      "spryzen-requiem-s3-0-zeta"
+    ]
   },
   {
     "id": "vertical-drop-battle-set",
@@ -16026,7 +17276,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Vertical_Drop_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "ace-dragon-d5-sting-charge-i-h",
+      "bushin-ashindra-a5-hurricane-keep-h"
+    ]
   },
   {
     "id": "volcano-vortex-beystadium",
@@ -16088,7 +17342,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Volt_Knockout_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "super-hyperion-h6-7-xceed-sp",
+      "kolossal-helios-h6-10-zone-sp"
+    ]
   },
   {
     "id": "vortex-climb-battle-set",
@@ -16141,7 +17399,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Vortex_Climb_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "golden-judgement-dragon-d5-triple-bullet-i-h",
+      "prime-apocalypse-a5-0-ultimate-reboot-h"
+    ]
   },
   {
     "id": "warrior-wheel-balro",
@@ -16242,7 +17504,11 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Water_Team_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "pirate-orochi-145d",
+      "guardian-leviathan-160sb"
+    ]
   },
   {
     "id": "wbba-god-chips-and-glaive-frames",
@@ -16382,7 +17648,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Xtreme_Battle_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "tusk-mammoth-3-60t"
+    ]
   },
   {
     "id": "xtreme-beystadium",
@@ -16524,7 +17793,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Zero-G_Random_Booster_Vol._1_Thief_Phoenic_E230GCF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "thief-saramanda-230wb",
+      "samurai-saramanda-e230es",
+      "pirates-ifraid-t125gcf",
+      "shinobi-ifraid-230wd",
+      "pirates-saramanda-t125wb",
+      "shinobi-orojya-145es",
+      "samurai-orojya-145wd"
+    ]
   },
   {
     "id": "zero-g-random-booster-vol-2-archer-gargole-sa165wsf",
@@ -16581,7 +17859,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Zero-G_Random_Booster_Vol._2_Archer_Gargole_SA165WSF",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "guardian-gargole-m145sb",
+      "shinobi-orojya-160wsf",
+      "samurai-revizer-sa165q",
+      "pirates-gryph-160cf",
+      "pirates-revizer-m145cf",
+      "guardian-saramanda-w145q",
+      "archer-ifraid-w145sb"
+    ]
   },
   {
     "id": "zero-g-random-booster-vol-3-bandid-genbull-f230tb",
@@ -16638,7 +17925,16 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Zero-G_Random_Booster_Vol._3_Bandid_Genbull_F230TB",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "shinobi-genbull-130w-d",
+      "thief-saramanda-f230sf",
+      "shinobi-gryph-wd145tb",
+      "archer-phoenic-125b",
+      "pirates-phoenic-wd145sf",
+      "archer-killerken-130b",
+      "bandid-killerken-125w-d"
+    ]
   },
   {
     "id": "zerog-stadium-attack-type",
@@ -16723,7 +18019,10 @@ export const beyProductsSeedData: Partial<BeyProductDocument>[] = [
       }
     ],
     "sourceUrl": "https://beyblade.fandom.com/wiki/Zest_Achilles_Customize_Set",
-    "source": "fandom-infobox"
+    "source": "fandom-infobox",
+    "assortmentBeyIds": [
+      "zest-achilles-illegal-quattro-4"
+    ]
   }
 ];
 

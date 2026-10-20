@@ -209,6 +209,14 @@ export const DEFAULT_ROUTE_MAP = {
     PART_CLASSIFICATION: (classification: string) => `/parts/${classification}`,
     PART_DETAIL: (classification: string, code: string) =>
       `/parts/${classification}/${code}`,
+    /*
+     * The BEY database. A reference surface like `/parts`, and a ONE-segment
+     * URL unlike it — a bey's id IS its slug, so the page is a direct doc read
+     * with no query and no index. Parts need the classification in the path
+     * because a code alone is ambiguous (`105` is a spin-track height in Metal
+     * Fight and a disc in Burst); a bey name is not.
+     */
+    BEY_DETAIL: (slug: string) => `/beys/${slug}`,
     SCAM_TYPES: "/scams/types",
     SCAM_FAQS: "/scams/faqs",
     CLASSIFIED: "/classified",

@@ -50,6 +50,16 @@ export {
   listPartsBySlot,
 } from "./_internal/server/features/parts/data";
 /*
+ * The BEY reads. `getBeyBySlug` is a direct doc read (`id === slug`);
+ * `getProductsContainingBey` is ONE `array-contains` over the denormalised
+ * `assortmentBeyIds`, because Firestore cannot `array-contains` a field nested
+ * inside objects in an array.
+ */
+export {
+  getBeyBySlug,
+  getProductsContainingBey,
+} from "./_internal/server/features/beys/data";
+/*
  * D13's last item — "which models can I build from the parts I hold".
  * Exported because its only caller is a consumer route; the matcher it is built
  * on (`matchSlotToHoldings`) stays internal, since a caller reaching for the

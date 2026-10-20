@@ -9350,6 +9350,8 @@ export type {
   BeyProductAssortmentEntry,
 } from "./features/beys/schemas/firestore";
 export { beysSeedData, BEY_SEED_COUNT } from "./seed/index";
+export { BeyDetailPageView } from "./features/beys/components/BeyDetailPageView";
+export type { BeyDetailPageViewProps, BeyListingRow } from "./features/beys/components/BeyDetailPageView";
 export { beyProductsSeedData, BEY_PRODUCT_SEED_COUNT } from "./seed/index";
 export { modelCompositionSeedData } from "./seed/index";
 // D12 — the public part surfaces.
