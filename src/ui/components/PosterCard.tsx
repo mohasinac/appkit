@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading, Text } from "./Typography";
 
 /**
  * PosterCard — an image-led tile: artwork fills the card, a scrim carries the
@@ -98,8 +99,22 @@ export function PosterCard({
 
       <div className={POSTER_CLASS.body}>
         {eyebrow ? <span className={POSTER_CLASS.eyebrow}>{eyebrow}</span> : null}
-        {title ? <h3 className={POSTER_CLASS.title}>{title}</h3> : null}
-        {text ? <p className={POSTER_CLASS.text}>{text}</p> : null}
+        {title ? (
+          <Heading
+            level={3}
+            size={height === "compact" ? "lg" : "2xl"}
+            weight="bold"
+            color="inherit"
+            className={POSTER_CLASS.title}
+          >
+            {title}
+          </Heading>
+        ) : null}
+        {text ? (
+          <Text size="sm" color="inherit" truncate={3} className={POSTER_CLASS.text}>
+            {text}
+          </Text>
+        ) : null}
         {meta ? <span className={POSTER_CLASS.meta}>{meta}</span> : null}
         {chips ? <div className={POSTER_CLASS.chips}>{chips}</div> : null}
       </div>
@@ -189,8 +204,16 @@ export function PlainCard({
   return (
     <div className={classes}>
       {eyebrow ? <span className={PLAIN_CLASS.eyebrow}>{eyebrow}</span> : null}
-      {title ? <h3 className={PLAIN_CLASS.title}>{title}</h3> : null}
-      {text ? <p className={PLAIN_CLASS.text}>{text}</p> : null}
+      {title ? (
+        <Heading level={3} size="xl" weight="bold" color="inherit" className={PLAIN_CLASS.title}>
+          {title}
+        </Heading>
+      ) : null}
+      {text ? (
+        <Text size="sm" color="inherit" className={PLAIN_CLASS.text}>
+          {text}
+        </Text>
+      ) : null}
       {chips ? <div className={PLAIN_CLASS.chips}>{chips}</div> : null}
       {footer}
     </div>

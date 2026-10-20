@@ -51,13 +51,6 @@
   min-height: 14rem;
 }
 
-/* A compact tile carries a name and a count, not a headline and a paragraph —
-   at `--appkit-text-2xl` a two-word category name wraps to three lines in a
-   scroller cell. */
-.appkit-poster--compact .appkit-poster__title {
-  font-size: var(--appkit-text-lg);
-}
-
 .appkit-poster--compact .appkit-poster__body {
   gap: var(--appkit-space-1);
   padding: var(--appkit-space-4);
@@ -194,11 +187,23 @@
   background: rgb(255 255 255 / 0.45);
 }
 
+/*
+ * 🛑 NO `font-size` and NO `font-weight` here, and that is a decision.
+ *
+ * The title and body render through `<Heading>`/`<Text>`, which emit
+ * `.appkit-text--2xl` / `.appkit-font--bold` — plain CSS classes at the same
+ * (0,1,0) specificity as these. A tie is broken by ORDER IN THE BUNDLE, which
+ * is `index.style.css`'s import list: an invisible dependency that flips the
+ * moment someone reorders an unrelated line. So size and weight are passed as
+ * PROPS (including the compact tile's smaller title) and this rule owns only
+ * what a prop cannot express.
+ *
+ * Line clamping is `truncate={3}` on the `<Text>` for the same reason —
+ * one owner, not two.
+ */
 .appkit-poster__title {
   margin: 0;
   color: rgb(255 255 255);
-  font-size: var(--appkit-text-2xl);
-  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.015em;
   text-wrap: balance;
@@ -207,13 +212,7 @@
 .appkit-poster__text {
   margin: 0;
   color: rgb(255 255 255 / 0.68);
-  font-size: var(--appkit-text-sm);
   line-height: 1.55;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .appkit-poster__meta {
@@ -401,11 +400,11 @@
   background: var(--appkit-color-border);
 }
 
+/* Size and weight come from the `<Heading>`/`<Text>` props — see the note on
+   `.appkit-poster__title`. */
 .appkit-plain-card__title {
   margin: 0;
   color: var(--appkit-color-text);
-  font-size: var(--appkit-text-xl);
-  font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.015em;
   text-wrap: balance;
@@ -414,7 +413,6 @@
 .appkit-plain-card__text {
   margin: 0;
   color: var(--appkit-color-text-muted);
-  font-size: var(--appkit-text-sm);
   line-height: 1.55;
 }
 
