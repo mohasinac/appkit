@@ -26,3 +26,7 @@ export { RefundRequestView } from "./RefundRequestView";
 export type { RefundRequestViewProps } from "./RefundRequestView";
 export { YourPurchaseStrip } from "./YourPurchaseStrip";
 export type { YourPurchaseStripProps, PurchaseContext } from "./YourPurchaseStrip";
+export {
+  EmiInstallmentsPanel,
+  type EmiInstallmentsPanelProps,
+} from "./EmiInstallmentsPanel";

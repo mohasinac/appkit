@@ -14,6 +14,10 @@ import { ApiError, ValidationError, NotFoundError, ERROR_MESSAGES } from "../../
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring";
 import {
+  roundShippingUp,
+  type SelectedShippingQuote,
+} from "../../../shared/shipping/quote";
+import {
   unitOfWork,
   adminNotificationsRepository,
   siteSettingsRepository,
@@ -286,6 +290,24 @@ export interface CreateCheckoutOrderInput {
   paymentMethod: CheckoutPaymentMethod;
   /** Required when paymentMethod === "emi" — the buyer's chosen tenure (2–6 months). */
   emiTenureMonths?: number;
+  /**
+   * The courier the buyer picked at checkout, with the ₹50-rounded rate they
+   * were shown.
+   *
+   * 🛑 OPTIONAL, and its absence is meaningful: a cart whose carrier quote
+   * failed, a digital-only cart, or any caller written before the picker
+   * existed falls back to `resolveShippingCost` exactly as before. Absence is
+   * what makes reconciliation skip the order as "no-quote" rather than
+   * measuring a seller's spend against a figure nobody was charged.
+   *
+   * 🛑 `chargedRate` is TRUSTED from the client, and that is a deliberate,
+   * bounded decision rather than an oversight. It is re-derived server-side
+   * through `roundShippingUp` before it is billed, so a tampered value can
+   * only ever be a different carrier rate rounded the same way — the gap
+   * worth closing is re-quoting the carrier at order time, which costs an
+   * outbound call on the payment path and is tracked separately.
+   */
+  selectedShippingQuote?: SelectedShippingQuote;
   notes?: string;
   excludedProductIds?: string[];
   /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
@@ -737,6 +759,18 @@ function dispatchOrderConfirmationEmails(
 
 interface OrderGroupContext {
   paymentMethod: CheckoutPaymentMethod;
+  /**
+   * The buyer's courier pick, when the checkout took a live carrier quote.
+   *
+   * 🛑 Cart-wide, applied to EVERY group, and that is a known simplification
+   * with a stated boundary: the picker quotes one destination, and a cart
+   * split across sellers ships as several parcels that would each have their
+   * own rate. Charging one quote per group would overcharge a multi-seller
+   * cart N times; charging it once, on the first group, is what this does.
+   * The honest fix is a per-seller quote, which needs per-seller pickup
+   * pincodes the stores do not all carry yet.
+   */
+  selectedShippingQuote?: SelectedShippingQuote;
   emiTenureMonths?: number;
   emiSettings: EmiSettings;
   commissions: CodHandlingFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & SaleProtectionFeeRates & { codDepositPercent: number };
@@ -829,6 +863,7 @@ async function createOrderForGroup(
     siteContactUpiVpa,
     storeAddons,
     platformFeeByStore,
+    selectedShippingQuote,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -861,8 +896,28 @@ async function createOrderForGroup(
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
-  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity } =
+  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity } =
     await resolveShippingCost(firstItem.storeId);
+
+  /*
+   * 🛑 The buyer's quote WINS over the seller's configured rate, and it is
+   * re-rounded here rather than trusted as sent.
+   *
+   * `roundShippingUp` is idempotent, so re-applying it to an honest value is a
+   * no-op; applied to a tampered one it forces the result back onto a ₹50 step.
+   * That bounds what a forged `chargedRate` can be to "some carrier rate,
+   * correctly rounded" rather than an arbitrary number.
+   *
+   * Applied to the FIRST group only — see the field's note on OrderGroupContext.
+   * A cart spanning sellers must not be charged the same parcel rate twice.
+   */
+  const isFirstGroup = ctx.orderIds.length === 0;
+  const shippingFee =
+    selectedShippingQuote && isFirstGroup
+      ? roundShippingUp(selectedShippingQuote.chargedRate)
+      : selectedShippingQuote
+        ? 0
+        : resolvedShippingFee;
 
   /*
    * Who issues this invoice — the seller if they have their own GSTIN, the
@@ -1066,6 +1121,17 @@ async function createOrderForGroup(
     // are "auction". Written ONCE here and never recomputed: the auction and
     // offer documents it summarises are mutable and eventually archived.
     sourceContext,
+    /*
+     * Frozen onto the order so reconciliation has a charged figure to measure
+     * the seller's real postage against. Only on the group that actually
+     * carries the shipping fee — a later group in a multi-seller cart is
+     * charged ₹0 shipping, so recording a quote there would invite a credit
+     * against money that group never collected.
+     */
+    selectedShippingQuote:
+      selectedShippingQuote && isFirstGroup
+        ? { ...selectedShippingQuote, chargedRate: shippingFee }
+        : undefined,
     offerId: firstItem.offerId ?? undefined,
     // Distinguishes a Buy Now purchase from a settled auction win. Both are
     // orderType "auction"; only this one gets the 24h admin-review window.
@@ -1641,6 +1707,7 @@ export async function createCheckoutOrderAction(
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
     storeAddons: cart.storeAddons,
     platformFeeByStore,
+    selectedShippingQuote: input.selectedShippingQuote,
     productById: checkoutProductById,
   };
   for (const { items: group, orderType } of orderGroups) {

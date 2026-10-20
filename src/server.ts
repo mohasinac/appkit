@@ -138,6 +138,9 @@ export {
   adminRequestProofReuploadAction,
   adminRejectPaymentAsFraudAction,
   raiseOrderDisputeAction,
+  // Buyer pays one of their own EMI instalments — the counterpart to the
+  // seller's markEmiInstallmentPaid, which was the only writer before.
+  submitEmiInstallmentPaymentAction,
   // Buyer return request. Was reachable only through `server-entry.ts`, which
   // is the bare `@mohasinac/appkit` specifier — not `/server`, where every
   // other order action lives and where a consumer would look for it.

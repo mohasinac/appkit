@@ -796,6 +796,9 @@ export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewP
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
+// Buyer-facing EMI schedule with a pay-any-instalment action.
+export { EmiInstallmentsPanel } from "./features/orders/components/EmiInstallmentsPanel";
+export type { EmiInstallmentsPanelProps } from "./features/orders/components/EmiInstallmentsPanel";
 export { CountdownDisplay } from "./ui/components/CountdownDisplay";
 export type { CountdownDisplayProps } from "./ui/components/CountdownDisplay";
 export { OrderAddonBadges } from "./features/orders/components/OrderAddonBadges";

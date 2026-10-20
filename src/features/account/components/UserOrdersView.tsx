@@ -57,6 +57,28 @@ const ORDER_LANE_TABS = [
   { id: "offer", label: "Offer wins" },
 ] as const;
 
+/**
+ * Payment-method tabs — a THIRD axis, independent of the lane tabs above and
+ * the lifecycle scope beside them.
+ *
+ * 🛑 EMI is not a lane and not a status, which is why it could not join
+ * either existing control: `orderType` records how the order was WON
+ * (standard / auction / offer) and the scope records where it IS. How it is
+ * being PAID is orthogonal to both — an auction win can be on an EMI plan.
+ *
+ * Every id is exactly a stored `OrderDocument.paymentMethod` value, and
+ * `paymentMethod` is `canFilter: true` in the orders SIEVE_FIELDS — checked
+ * before wiring this, because an unallowlisted field does not raise: the
+ * clause is silently dropped and the chip returns the ENTIRE order list while
+ * looking like a filter (Root Cause #62).
+ */
+const PAYMENT_METHOD_TABS = [
+  { id: "", label: "Any" },
+  { id: "emi", label: "EMI plans" },
+  { id: "cod", label: "Cash on delivery" },
+  { id: "online", label: "Paid online" },
+] as const;
+
 const STATUS_OPTIONS = [
   { value: "pending", label: "Pending" },
   { value: "processing", label: "Processing" },
@@ -102,7 +124,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
    * (CLAUDE.md, Root Cause #35).
    */
   const searchParams = useSearchParams();
-  const hasNarrowingFilter = ["q", "search", "status", "orderType", "filters"].some(
+  const hasNarrowingFilter = ["q", "search", "status", "orderType", "paymentMethod", "filters"].some(
     (k) => Boolean(searchParams.get(k)),
   );
   const emptyMessage = hasNarrowingFilter
@@ -124,7 +146,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       fields: ["id", "productTitle"],
     },
     emptyLabel: emptyMessage,
-    filterKeys: ["status", "orderType"],
+    filterKeys: ["status", "orderType", "paymentMethod"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["user", "orders", "listing"],
     endpoint: ACCOUNT_ENDPOINTS.ORDERS,
@@ -136,6 +158,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       [
         state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null,
         state.orderType ? sieveFilter("orderType", SIEVE_OP.EQ, state.orderType) : null,
+        state.paymentMethod ? sieveFilter("paymentMethod", SIEVE_OP.EQ, state.paymentMethod) : null,
       ]
         .filter(Boolean)
         .join(",") || undefined,
@@ -151,6 +174,12 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
           tabs={ORDER_LANE_TABS as unknown as { id: string; label: string }[]}
           value={pendingFilters.orderType ?? ""}
           onChange={(id) => setPendingFilters((prev) => ({ ...prev, orderType: id }))}
+        />
+        <FilterChipGroup
+          label="Payment"
+          tabs={PAYMENT_METHOD_TABS as unknown as { id: string; label: string }[]}
+          value={pendingFilters.paymentMethod ?? ""}
+          onChange={(id) => setPendingFilters((prev) => ({ ...prev, paymentMethod: id }))}
         />
       <Div>
         <PaginatedSelect
