@@ -92,25 +92,6 @@ export const authored: Record<string, AuthoredCase> = {
       "The listing survives a reload of the public page and appears in /store/products. Delete it afterwards.",
   },
 
-  "checklist-selling-quick-add-minimum-details-whatsapp-shows-the-same-fields": {
-    roles: ["seller"],
-    startPage: "/store/whatsapp",
-    steps: [
-      SIGN_IN_SELLER,
-      "Publish 'Minimum Details Probe' from /store/products/new as in the previous case, with Price 499.",
-      "Open /store/whatsapp and find the catalog preview.",
-      "Locate the tile for 'Minimum Details Probe'.",
-      "Read every piece of information the tile shows.",
-      "Compare that list against the fields the quick form asked for.",
-    ],
-    inputs: { title: "Minimum Details Probe", price: 499 },
-    expectedBehaviour:
-      "What WhatsApp shows is a subset of what the short form collects — title, price, image, condition and stock. This is the reason the short form is the right shape: a seller who fills only it has already supplied everything a WhatsApp buyer will see, so nothing is missing from the channel most of them arrive through.",
-    expectedUiState:
-      "The tile shows the image, the name and ₹499. Nothing on it is blank or a placeholder, and nothing it shows was absent from the quick form.",
-    endResult:
-      "Read-only against the catalog preview. Delete the probe listing afterwards.",
-  },
 
   "checklist-selling-quick-add-minimum-details-advanced-flip-keeps-values": {
     roles: ["seller"],

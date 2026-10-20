@@ -503,7 +503,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           // No `|| 5000` fallback: inventing a member count the site cannot
           // verify is a fabricated social-proof number.
           memberCount={cfg?.memberCount}
-          groupLink={cfg?.groupLink || "https://chat.whatsapp.com/"}
+          groupLink={cfg?.groupLink || undefined}
           benefits={cfg?.benefits ?? []}
           testimonial={cfg?.testimonial}
           buttonText={cfg?.buttonText}

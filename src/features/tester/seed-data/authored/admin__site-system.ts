@@ -194,61 +194,6 @@ export const authored: Record<string, AuthoredCase> = {
       "With the toggle OFF, /checkout offers only whichever of manual UPI/cash and COD are separately enabled — no 'Pay Online (PhonePe)' button. With it back ON, the button reappears.",
     endResult: "The toggle is restored to ON, matching the state before this case started.",
   },
-  "checklist-admin-site-system-whatsapp-credentials-persist": {
-    roles: ["admin"],
-    startPage: "/admin/site",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/site, switch to the Integrations tab, and WRITE DOWN every WhatsApp field and its current masked state before touching anything.",
-      "Type QA-WA-TOKEN-552310 into the access-token field and fill any account identifier fields.",
-      "Save and RELOAD, then read how each field displays.",
-      "Open /api/site-settings in a private window and search for QA-WA-TOKEN-552310.",
-      "Open a public store page's source and search for it too.",
-      "RESTORE every field to exactly what step 3 recorded — clearing is not restoring, and a real Meta token cleared here cannot be recovered from the seed. Save and reload to confirm.",
-    ],
-    inputs: { token: "QA-WA-TOKEN-552310" },
-    expectedBehaviour:
-      "The token is encrypted at rest and masked on read. It is also decrypted on every read of a store document, so any page handing a raw store document to a client component serialises it into public HTML — which is why both the settings response and a public store page are checked rather than the admin form alone.",
-    expectedUiState:
-      "After the reload the token displays masked. Neither the public settings response nor a public store page's source contains it.",
-    expectedData: { tokenInPublicSurfaces: 0 },
-    endResult: "The fields are cleared by the final step.",
-  },
-  "checklist-admin-site-system-whatsapp-channel-toggle-persists": {
-    roles: ["admin"],
-    startPage: "/admin/site",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/site, switch to the Notifications tab, and read every channel toggle and its state. Four are listed: in-app, email, WhatsApp and SMS.",
-      "Turn the WHATSAPP channel off and save. Pick that one specifically — SMS is seeded OFF (and has no sender at all), so toggling it off would be a no-op that proves nothing.",
-      "RELOAD and read every toggle.",
-      "Check only the one changed.",
-      "Turn it back on, save, and reload to confirm.",
-    ],
-    expectedBehaviour:
-      "Off is the direction that proves persistence when the default is on: a toggle that never saves reads back as its default and passes a test that only ever turns it on. Saving one toggle must not rewrite the rest.",
-    expectedUiState:
-      "After the reload the toggled channel is off and every other is unchanged. A toggle that has reverted to on is the failure, and the save reported success.",
-    endResult: "The toggle is restored.",
-  },
-  "checklist-admin-site-system-whatsapp-order-announcement-fires": {
-    roles: ["admin", "buyer"],
-    startPage: "/admin/site",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and confirm the WhatsApp order channel is enabled.",
-      "Read whether real credentials are configured or whether the fields are empty.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123! and place an order that would trigger an order announcement.",
-      "Read whether the buyer opted into WhatsApp updates and what fee was charged for it.",
-      "Check the in-app notification for the order arrived.",
-      "If real credentials are configured, check whether a WhatsApp message arrived.",
-    ],
-    expectedBehaviour:
-      "WhatsApp order announcements are a paid per-store add-on, so the charge and the delivery must agree — a buyer charged the add-on fee and sent nothing is the failure that matters. With no credentials configured, the dispatch skips cleanly rather than failing loudly: the Meta secrets are seeded as empty strings rather than placeholders for exactly that reason.",
-    expectedUiState:
-      "The in-app notification arrives regardless. With credentials configured a message arrives; without them nothing is sent and no error surfaces to the buyer. A charged add-on with no delivery is the finding.",
-    endResult:
-      "One order exists. Record whether credentials were configured — the case reads differently either way.",
-  },
   "checklist-admin-site-system-auction-bid-tiers-admin": {
     roles: ["admin", "buyer"],
     startPage: "/admin/site",

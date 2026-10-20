@@ -513,7 +513,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       title: "Join the community",
       description: "Deal alerts, auction reminders, and early access to drops.",
       // Keep this link verbatim — a tester-checklist case asserts it.
-      groupLink: "https://chat.whatsapp.com/",
+      // Left unset: a bare chat.whatsapp.com URL is not a valid invite code and
+      // opens a page that resolves to no group. The real link is env-owned
+      // (WHATSAPP_GROUP_INVITE) and reaches the card through appkit.config.
+      groupLink: undefined,
       benefits: [
         "Deal alerts before they hit the homepage",
         "Reminders when auctions you watch are closing",

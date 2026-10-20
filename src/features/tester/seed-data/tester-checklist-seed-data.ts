@@ -824,16 +824,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "Carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\", default ₹5,000) prompt a \"Verify this order\" email OTP right before payment (except COD); carts below the threshold check out directly with no OTP step at all",
           description: "Root-caused 2026-08-20 — the OTP email send used to be fire-and-forget, so a Resend/API failure silently left the buyer stuck with no code and no error. Sending now surfaces a real error if the email genuinely fails to send, and the \"already sent, retry in N minutes\" rate-limit message is a clear sentence instead of a raw error code. Place a real order ≥ the threshold and confirm the code actually arrives by email (check spam too) — report the exact error text if it still doesn't.",
         },
-        {
-          key: "checkout-otp-whatsapp-option",
-          label: "When the admin has WhatsApp OTP switched on, the high-value checkout verification step offers a \"Send via WhatsApp instead\" option — and email, not WhatsApp, is still what gets sent by default",
-          description: "Added 2026-08-21. WhatsApp is deliberately opt-in for OTP: the code must arrive by email unless the buyer explicitly clicks the WhatsApp option. Requires Site Settings → Notifications → WhatsApp → \"WhatsApp OTP\" enabled AND real Meta Cloud API credentials saved, AND the selected delivery address having a phone number. Verify: (a) the default send is email; (b) the WhatsApp option only appears when all three conditions hold; (c) clicking it delivers the code to the address's phone and the on-screen text switches to the masked phone number; (d) the code from WhatsApp verifies successfully.",
-        },
-        {
-          key: "checkout-otp-whatsapp-hidden-without-phone",
-          label: "The \"Send via WhatsApp instead\" option is NOT offered when the selected delivery address has no phone number on it, even with WhatsApp OTP enabled",
-          description: "Added 2026-08-21. The phone is resolved server-side from the selected address (never from anything the browser sends), so an address with no phone has nowhere to send the code. Select/create a delivery address with the phone field empty and confirm the WhatsApp option is absent rather than appearing and then failing.",
-        },
         { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and PhonePe (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
         { key: "payment-proof-upload", label: "Uploading manual payment proof (screenshot, UTR, mark-as-paid + agreement checkboxes) works" },
@@ -859,7 +849,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "checkout-order-summary-full-breakdown",
-          label: "The checkout Order Summary panel shows Shipping, COD handling fee (when COD is the likely method), the selected add-on fees (WhatsApp updates / gift wrap / shipment protection — only the ones checked), GST (when enabled), and Coupon discount as separate line items with icons before you pay — not just Subtotal and Total",
+          label: "The checkout Order Summary panel shows Shipping, COD handling fee (when COD is the likely method), the selected add-on fees (gift wrap / shipment protection — only the ones checked), GST (when enabled), and Coupon discount as separate line items with icons before you pay — not just Subtotal and Total",
           description: "Fixed 2026-08-20 — the Order Summary previously showed Total = Subtotal − coupon discount only; shipping and every fee were computed and charged server-side but never shown to the buyer beforehand. Reach the payment step with an address selected, toggle an add-on checkbox, and confirm the matching line appears in the summary a moment later and the Total updates to match — then confirm the same Total appears on the order confirmation page afterward.",
           href: "/checkout",
         },
@@ -1407,7 +1397,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "cart-breakdown-aggregate-only",
-          label: "The expanded breakdown shows ONE line per fee type (Shipping, WhatsApp updates, Gift wrap, Platform fee, GST…) with a \"(N stores)\" qualifier where a fee applies to several sellers — not a separate block per store",
+          label: "The expanded breakdown shows ONE line per fee type (Shipping, Gift wrap, Platform fee, GST…) with a \"(N stores)\" qualifier where a fee applies to several sellers — not a separate block per store",
           description: "Per-store detail belongs on each seller card, not in this panel. Confirm the two don't duplicate each other.",
           href: "/cart",
         },
@@ -1436,8 +1426,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "cart-addons-per-store",
-          label: "Ticking \"WhatsApp order updates\" on ONE seller's card charges the fee once (₹10, not ₹20 on a two-seller cart) and shows it under that seller only",
-          description: "Requires Site Settings → Fees → WhatsApp notify fee enabled. Core regression guard: the selection used to be a single cart-wide checkbox while the fee was billed per seller, so one tick charged every store in the cart.",
+          label: "Ticking \"Gift wrap\" on ONE seller's card charges the fee once (₹49, not ₹98 on a two-seller cart) and shows it under that seller only",
+          description: "Requires Site Settings → Fees → gift wrap fee enabled. Core regression guard: the selection used to be a single cart-wide checkbox while the fee was billed per seller, so one tick charged every store in the cart.",
           href: "/cart",
         },
         {
@@ -1469,8 +1459,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         {
           key: "order-addon-icons-visible",
-          label: "An order that included add-ons shows icon chips for them (WhatsApp updates / Gift wrap / Protected) plus the coupon code, on the buyer's order page, the seller's order detail AND the admin order drawer",
-          description: "These are fulfilment instructions, not decoration: WhatsApp tells the notifier to message this buyer on status change, and gift wrap tells the packer to wrap the parcel. Check all three surfaces — they render from one shared component, so if one is missing something is unwired.",
+          label: "An order that included add-ons shows icon chips for them (Gift wrap / Protected) plus the coupon code, on the buyer's order page, the seller's order detail AND the admin order drawer",
+          description: "These are fulfilment instructions, not decoration: gift wrap tells the packer to wrap the parcel, and protection changes how a claim is handled. Check all three surfaces — they render from one shared component, so if one is missing something is unwired.",
           href: "/user/orders",
         },
         {
@@ -2619,7 +2609,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "confirm-payment", label: "Approving a buyer's manual payment proof works" },
         { key: "request-reupload", label: "Requesting a proof re-upload (honest-mistake tier) clears the proof and extends the buyer's deadline" },
         { key: "reject-fraud", label: "Rejecting a proof as fraudulent cancels the order, restores stock, and bans the buyer's account for 7 days" },
-        { key: "whatsapp-admin-share", label: "Uploading payment proof pings the admin WhatsApp numbers, and the buyer's \"Share for review\" link opens with a pre-filled message" },
+        { key: "whatsapp-admin-share", label: "Uploading payment proof records a staff notification, and the buyer's \"Share for review\" wa.me link opens with a pre-filled message" },
         { key: "mark-shipped", label: "Marking an order shipped with tracking info works" },
         { key: "tracking-visible", label: "Buyer sees updated tracking status after seller ships" },
         {
@@ -2716,7 +2706,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "form-sections-save-unchanged",
           label: "Every migrated form still saves exactly the fields it saved before",
           description:
-            "W8 C3 moved 16 hand-rolled forms onto <SectionForm>. The risk is a field that renders but no longer reaches the payload. On each of these, change EVERY field, save, reload, and confirm each value came back: the admin order editor (status, tracking number, carrier, notes), the admin user editor (role, email verified, display name, phone, tester flags, admin notes, bio, location, website, four social links), WhatsApp settings, the seller order panel, and the ad settings panel. A field that silently reverts is the failure, and nothing errors when it happens.",
+            "W8 C3 moved 16 hand-rolled forms onto <SectionForm>. The risk is a field that renders but no longer reaches the payload. On each of these, change EVERY field, save, reload, and confirm each value came back: the admin order editor (status, tracking number, carrier, notes), the admin user editor (role, email verified, display name, phone, tester flags, admin notes, bio, location, website, four social links), the seller order panel, and the ad settings panel. A field that silently reverts is the failure, and nothing errors when it happens.",
           href: "/admin/orders",
         },
         {
@@ -2944,7 +2934,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       pageKey: "seller-marketing-extras",
-      pageLabel: "Seller Offers, Features, Google Reviews & WhatsApp Catalog",
+      pageLabel: "Seller Offers, Features & Google Reviews",
       href: "/store/offers",
       cases: [
         {
@@ -2955,31 +2945,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         },
         { key: "seller-features-crud", label: "Seller can create and edit product features", href: "/store/features" },
         { key: "seller-google-reviews-sync", label: "Google Reviews sync pulls in real reviews correctly", href: "/store/google-reviews" },
-        { key: "seller-whatsapp-catalog", label: "WhatsApp catalog import/push works", href: "/store/whatsapp" },
-        {
-          key: "seller-whatsapp-token-save",
-          label: "Saving a WhatsApp access token on the store succeeds and comes back masked — it must not error out",
-          description: "Added 2026-08-21. The store's WhatsApp access token is encrypted before storage by the same mechanism as the admin Integrations keys, and that mechanism was failing in production — so this save path was broken too, in a place nobody would think to check. Enter a throwaway token value, save, reload the page, and confirm you got a success toast and the field shows a masked value rather than an error or a blank field.",
-          href: "/store/whatsapp",
-        },
-        {
-          key: "seller-whatsapp-import-runs-in-background",
-          label: "\"Import from WhatsApp\" returns immediately and reports its result when the background job finishes — the page never hangs waiting on it",
-          description: "Changed 2026-08-22 — the import used to run inline and could time out on a large catalog, silently importing only the first 250 items. It now runs as a background job, so expect an immediate \"import started\" response and a result toast a few moments later.",
-          href: "/store/whatsapp",
-        },
-        {
-          key: "seller-whatsapp-import-skips-already-synced",
-          label: "Re-running \"Import from WhatsApp\" a second time imports nothing new — everything is reported as already synced",
-          description: "Items pushed from here carry their LetItRip slug, so a repeat import must not create duplicate draft products. Run it twice and compare the counts.",
-          href: "/store/whatsapp",
-        },
-        {
-          key: "seller-whatsapp-push-product-link-opens",
-          label: "A product pushed to the WhatsApp catalog links back to a working, full product URL — not a broken relative link",
-          description: "Fixed 2026-08-22 — the pushed link was a relative path Meta rejects. Open the item in your WhatsApp catalog and tap through to confirm it lands on the live product page.",
-          href: "/store/whatsapp",
-        },
         { key: "seller-reviews-response", label: "Seller can view and respond to product reviews", href: "/store/reviews" },
       ],
     },
@@ -3098,7 +3063,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     },
     {
       pageKey: "quick-add-minimum-details",
-      pageLabel: "Quick add — the short form, and what WhatsApp shows",
+      pageLabel: "Quick add — the short form",
       href: "/store/products/new",
       cases: [
         {
@@ -3112,12 +3077,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "The short form alone can publish a real, buyable listing",
           description:
             "If it cannot, it is a decoy: the seller fills it, is refused, and has to learn the long form anyway — having done the work twice.",
-        },
-        {
-          key: "whatsapp-shows-the-same-fields",
-          label: "Everything WhatsApp shows was already asked for by the short form",
-          description:
-            "The catalog push sends title, price, image, condition and stock. That is the quick form field set, which is why the short form is the right shape — a seller who fills only it has supplied everything a WhatsApp buyer will see.",
         },
         {
           key: "advanced-flip-keeps-values",
@@ -3730,7 +3689,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "receive-notification", label: "In-app notifications appear for order/bid/message events", href: "/user/notifications" },
         { key: "mark-read", label: "Marking a notification as read works" },
-        { key: "notification-channel-prefs", label: "Per-channel notification preferences (in-app / email / WhatsApp) save and are respected" },
+        { key: "notification-channel-prefs", label: "Per-channel notification preferences (in-app / email) save and are respected" },
         {
           key: "notification-type-sample",
           label: "A sample of notification types each trigger correctly end-to-end — and the bell-only ones produce NO email",
@@ -4918,7 +4877,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "soft-ban-lift-notification-has-a-body",
           label: "Lifting a user's soft ban sends them a notification WITH a readable message, not just a title",
           description:
-            "Fixed 2026-08-31. BEFORE: the route wrote `body`, `entityId` and `entityType` behind an `as any` — none of which are fields on NotificationDocument (they are `message`, `relatedId`, `relatedType`) — so the bell showed a title and an EMPTY body, and the notification never reached email or WhatsApp. AFTER: as an admin, lift any soft ban on a test user from /admin/users, then open that user's bell. The row must show both the title AND the sentence naming which restriction was lifted, and it must be clickable.",
+            "Fixed 2026-08-31. BEFORE: the route wrote `body`, `entityId` and `entityType` behind an `as any` — none of which are fields on NotificationDocument (they are `message`, `relatedId`, `relatedType`) — so the bell showed a title and an EMPTY body, and the notification never reached email. AFTER: as an admin, lift any soft ban on a test user from /admin/users, then open that user's bell. The row must show both the title AND the sentence naming which restriction was lifted, and it must be clickable.",
           href: "/admin/users",
         },
         {
@@ -6474,24 +6433,6 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             key: "phonepe-enabled-toggle-persists",
             label: "Site Settings → Shipping: the \"PhonePe (online card/UPI) enabled\" toggle persists after save + reload, and gates the checkout payment option",
             description: "The toggle lives under the Shipping tab's \"Payment methods\" section (?tab=shipping), not a dedicated Payments tab. With it OFF, /checkout must not offer 'Pay Online (PhonePe)' — only manual UPI/cash and COD (whichever are separately enabled). Turn it ON, save, reload the settings page to confirm it's still ON, then open /checkout and confirm 'Pay Online (PhonePe)' now appears as a payment option.",
-            href: "/admin/site",
-          },
-          {
-            key: "whatsapp-credentials-persist",
-            label: "Site Settings → WhatsApp saves the Phone Number ID, Cloud API token, admin notify numbers, template language and all 6 template names — and they survive a reload",
-            description: "The token field is masked on reload (shows dots, not the raw value) — that is correct. Confirm by changing an unrelated field, saving again, and verifying the token still works rather than being overwritten with the mask.",
-            href: "/admin/site",
-          },
-          {
-            key: "whatsapp-channel-toggle-persists",
-            label: "Site Settings → Notifications: the WhatsApp channel enable toggle, minimum priority, and the checkout OTP switch all persist after save + reload",
-            href: "/admin/site",
-          },
-          {
-            key: "whatsapp-order-announcement-fires",
-            label: "Placing an order writes ONE admin notification and WhatsApps only the seller — never the admin number list",
-            description:
-              "Rewritten 2026-09. BEFORE: every order WhatsApped every number in the admin notify list, the highest-volume staff blast in the codebase, and it was skipped entirely when Meta credentials were absent — so with no credentials an order produced no staff signal at all and no record that it hadn't. AFTER: place an order and confirm (a) an admin notification row appears for it (visible in the admin notifications inbox, and counted in the next daily digest) EVEN WITH NO META CREDENTIALS CONFIGURED; (b) no WhatsApp message reaches any admin number; (c) with credentials configured, the seller who owns the listing still receives their sale announcement — that one is a single message to one person about their own sale and is deliberately kept.",
             href: "/admin/site",
           },
           {

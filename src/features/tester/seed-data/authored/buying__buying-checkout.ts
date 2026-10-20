@@ -235,52 +235,6 @@ export const authored: Record<string, AuthoredCase> = {
     endResult:
       "Entering the correct code completes the order. Three items only add to ₹4,597 — the fourth is what actually crosses the threshold, and an earlier draft of this case stopped at three and could never have triggered the prompt it was checking for.",
   },
-  "checklist-buying-buying-checkout-checkout-otp-whatsapp-hidden-without-phone": {
-    roles: ["buyer"],
-    startPage: "/checkout",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and confirm Site Settings → Notifications → WhatsApp → 'WhatsApp OTP' is enabled.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/addresses and add an address named 'QA Address otp-whatsapp-hidden', 2 Test Road, Mumbai, Maharashtra 400001, leaving the phone field empty.",
-      "Add product-beyblade-original-dranzer-s (₹1,499), product-beyblade-original-driger-v (₹1,799), product-beyblade-metal-storm-pegasus (₹1,299) and product-beyblade-burst-regalia-genesis (₹1,399) to the cart, making ₹5,996.",
-      "Open /checkout, select 'QA Address otp-whatsapp-hidden' on Step 1, and continue to the payment step.",
-      "Select a non-COD payment method.",
-      "Read every option offered on the OTP prompt.",
-    ],
-    inputs: { addressLabel: "QA Address otp-whatsapp-hidden", phone: "", subtotal: 5996 },
-    expectedBehaviour:
-      "The WhatsApp channel needs three things at once — admin-enabled, real credentials, and a phone number on the SELECTED address. Missing the third hides the option rather than offering it and failing at send time, which would waste the buyer's OTP window on a channel that could never deliver.",
-    expectedUiState:
-      "The prompt offers email only. There is no 'Send via WhatsApp instead' control, disabled or otherwise, even though the same setting shows one for an address that has a phone.",
-    expectedData: { whatsappOptionPresent: false },
-    endResult:
-      "The order still completes by email OTP. Delete the address afterwards so it does not accumulate across runs.",
-  },
-  "checklist-buying-buying-checkout-checkout-otp-whatsapp-option": {
-    roles: ["buyer"],
-    startPage: "/checkout",
-    steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and confirm Site Settings → Notifications → WhatsApp → 'WhatsApp OTP' is enabled with real Meta Cloud API credentials.",
-      "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /user/addresses and add a phone number to the existing address 'Home — 123 Stadium Lane, Vijay Nagar, Indore, Madhya Pradesh 452010' if it does not already have one.",
-      "Add product-beyblade-original-dranzer-s (₹1,499), product-beyblade-original-driger-v (₹1,799), product-beyblade-metal-storm-pegasus (₹1,299) and product-beyblade-burst-regalia-genesis (₹1,399) to the cart, making ₹5,996.",
-      "Open /cart and click 'Proceed to checkout'.",
-      "Select the address with a phone number on Step 1 and click 'Continue'.",
-      "Click 'Continue to payment' on Step 2.",
-      "On Step 3, select a non-COD payment method.",
-      "Read the default send channel shown on the OTP prompt.",
-      "Click 'Send via WhatsApp instead'.",
-      "Type the code received on WhatsApp into the OTP field and submit it.",
-    ],
-    inputs: { subtotal: 5996, defaultChannel: "email", alternateChannel: "WhatsApp" },
-    expectedBehaviour:
-      "Email is the default channel and WhatsApp is opt-in per attempt. The alternate appears only when the feature is enabled, real Meta credentials are configured, and the selected address carries a phone — the seeded Meta secrets are empty strings rather than placeholders precisely so a missing credential skips cleanly instead of making a billed call that fails.",
-    expectedUiState:
-      "The prompt first shows a masked email. After 'Send via WhatsApp instead' it shows a masked phone in the shape '+91 ••••••7890'. The code that arrives on WhatsApp is accepted and payment proceeds.",
-    expectedData: { defaultChannel: "email" },
-    endResult:
-      "The order is placed after the WhatsApp code verifies. With no real Meta credentials configured this case is unreachable — answer null rather than reporting the missing option as a bug.",
-  },
   "checklist-buying-buying-checkout-checkout-phonepe-charge-includes-shipping": {
     roles: ["buyer"],
     startPage: "/checkout",
