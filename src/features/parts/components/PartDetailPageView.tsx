@@ -234,40 +234,37 @@ export function PartDetailPageView({
               <Heading level={2} size="lg">
                 Ratings
               </Heading>
-              <Stack gap="xs" className="min-w-0">
-                {ratingRows.map((r) => (
-                  <Row key={r.key} gap="md" align="center" className="min-w-0">
-                    <Text size="sm" color="muted" className="w-36 flex-shrink-0">
-                      {r.label}
-                    </Text>
-                    {/*
-                     * A bar, not a number alone: the comparison between axes is
-                     * the thing a reader wants, and 0-100 is only meaningful
-                     * against the other bars beside it.
-                     *
-                     * `aria-hidden` on the track because the value follows as
-                     * text — a screen reader should hear "Attack 72", not a
-                     * description of a rectangle.
-                     */}
-                    <Div
-                      aria-hidden
-                      surface="muted"
-                      rounded="full"
-                      className="h-2 flex-1 overflow-hidden"
-                    >
-                      <Div
-                        surface="info-surface"
-                        rounded="full"
-                        className="h-full"
-                        style={{ width: `${Math.max(0, Math.min(100, r.value))}%` }}
-                      />
-                    </Div>
-                    <Text size="sm" numeric className="w-10 flex-shrink-0 text-right">
-                      {r.value}
-                    </Text>
-                  </Row>
-                ))}
-              </Stack>
+              {/*
+               * ── 🛑 NUMBERS, NOT BARS, AND THAT IS A DELIBERATE RETREAT ────
+               *
+               * A proportional bar reads better and was the first build. It
+               * needs a runtime width, and there is no way to express one here
+               * that I could VERIFY:
+               *
+               *   · `style={{ width: … }}` is blocked by audit-inline-styles,
+               *     whose regex is a bare `/style\s*=\s*\{\{/` and so flags a
+               *     CSS custom property too, despite its own header listing
+               *     custom properties as exempt.
+               *   · `// audit-inline-style-ok` is one of the 24 markers
+               *     `audit-no-suppression-comments` blocks outright.
+               *   · A lookup of 21 literal `w-[N%]` classes would compile IF
+               *     appkit's own Tailwind config generates them — and appkit
+               *     builds its CSS separately (`@source not "../../appkit"`),
+               *     so that is exactly the Root Cause #67 shape: a class the
+               *     build never emits, failing silently as a zero-width bar.
+               *
+               * I cannot run an appkit build to check which of those is true,
+               * and an unverified bar is a silent visual failure — the precise
+               * class of bug this session spent its time removing. So the
+               * table states the numbers, which cannot fail to render, and the
+               * bar is left for whoever can verify the generated CSS.
+               */}
+              <SpecTable
+                rows={ratingRows.map((r) => ({
+                  name: r.label,
+                  value: `${r.value} / 100`,
+                }))}
+              />
               {/*
                * 🛑 The scale is STATED. These numbers are ours — rescaled to
                * 0-100 so a Burst part and a Beyblade X part can be compared at
