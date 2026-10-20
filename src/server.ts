@@ -2255,3 +2255,13 @@ export {
   type ClientStickerSheet,
   type ClientTraceRun,
 } from "./_internal/server/features/sticker-trace/adapters";
+
+// The platform's statutory identity, injected at boot from appkit.config.js's
+// `business` block via the consumer's providers.config.ts. See the module
+// header for why the invoice path must not read it from siteSettings.
+export {
+  configurePlatformSupplier,
+  getPlatformSupplier,
+  resetPlatformSupplier,
+} from "./_internal/shared/features/site-settings/supplier-of-record";
+export type { PlatformSupplierIdentity } from "./_internal/shared/features/site-settings/supplier-of-record";

@@ -32,6 +32,7 @@
 
 import type { StoreDocument } from "../../../../features/stores/schemas/firestore";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
+import { getPlatformSupplier } from "../../../shared/features/site-settings/supplier-of-record";
 
 export interface SupplierIdentity {
   gstin?: string;
@@ -85,18 +86,39 @@ export function resolveSupplierIdentity(
   }
 
   /*
-   * Platform branch. Gated on `gst.enabled`, matching what the checkout
-   * already did before sellers could have a GSTIN at all — disabling GST must
-   * continue to produce plain invoices rather than tax invoices.
+   * Platform branch. Still gated on `gst.enabled` — disabling GST must
+   * continue to produce plain invoices rather than tax invoices, and
+   * `source: "none"` must stay reachable.
+   *
+   * 🛑 But the IDENTITY now comes from `appkit.config.js → business`, not from
+   * `siteSettings.gst.*`.
+   *
+   * That block documents itself as "THE one owner of the business's statutory
+   * identity", and records that before it existed the legal name, address,
+   * GSTIN and support channels lived in five places that already disagreed —
+   * four different support addresses published, the registered address saying
+   * Solapur while the warehouse said Hyderabad. Reading the GSTIN from site
+   * settings here made this invoice path a SIXTH owner, and the one that
+   * decides what a tax invoice says.
+   *
+   * `siteSettings.gst.enabled` stays the switch because whether to charge GST
+   * at all is an operational decision an admin makes. WHO the supplier is, is
+   * not: it is a fact about the registered entity, it is legally required to be
+   * published, and it belongs in a committed, code-reviewed file.
+   *
+   * The snapshot contract is unchanged — the caller writes the result onto the
+   * order at creation and never recomputes it, so correcting a typo in the
+   * business block does not reissue historical invoices.
    */
   const gst = settings?.gst;
   if (gst?.enabled) {
-    const platformGstin = trimmed(gst.gstin);
+    const platform = getPlatformSupplier();
+    const platformGstin = trimmed(platform.gstin);
     if (platformGstin) {
       return {
         gstin: platformGstin,
-        legalName: trimmed(gst.legalName),
-        address: trimmed(gst.address),
+        legalName: trimmed(platform.legalName),
+        address: trimmed(platform.address),
         source: "platform",
       };
     }
