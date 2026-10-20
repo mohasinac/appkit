@@ -36,6 +36,16 @@ export interface MarketplacePrizeDrawCardProps {
   hrefBuilder?: (product: MarketplacePrizeDrawCardData) => string;
   onNavigate?: (href: string) => void;
   labels?: MarketplacePrizeDrawCardLabels;
+  /**
+   * Owner-only pencil / clone / bin. Pass `<OwnerQuickActions>`; it renders
+   * nothing for a visitor who does not own the record.
+   *
+   * 🛑 Rendered OUTSIDE this card's own anchor, as a sibling. A `<button>`
+   * inside an `<a>` is invalid HTML that browsers resolve by closing the
+   * anchor early, which breaks the CARD's navigation rather than just the
+   * button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 const DEFAULT_LABELS: Required<MarketplacePrizeDrawCardLabels> = {
@@ -109,6 +119,7 @@ export function MarketplacePrizeDrawCard({
   hrefBuilder,
   onNavigate,
   labels,
+  renderOwnerActions,
 }: MarketplacePrizeDrawCardProps) {
   const router = useRouter();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
@@ -138,7 +149,7 @@ export function MarketplacePrizeDrawCard({
     router.push(String(detailHref));
   }, [detailHref, onNavigate, router]);
 
-  return (
+  const card = (
     <BaseListingCard
       isSelected={isSelected}
       variant={variant}
@@ -255,5 +266,17 @@ export function MarketplacePrizeDrawCard({
         </Button>
       </BaseListingCard.Info>
     </BaseListingCard>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * clears this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }

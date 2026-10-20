@@ -15,7 +15,7 @@ const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-sol
 const CLS_SALE_BADGE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-success-on-solid";
 const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
 const CLS_LIMITED_BADGE = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-info-on-solid";
-import { BaseListingCard, Button, GatedPrice, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Div, BaseListingCard, Button, GatedPrice, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
@@ -46,6 +46,16 @@ export interface MarketplacePreorderCardProps {
   onAddToCart?: (product: MarketplacePreorderCardData) => void;
   wishlistActions?: WishlistToggleActions;
   labels?: MarketplacePreorderCardLabels;
+  /**
+   * Owner-only pencil / clone / bin. Pass `<OwnerQuickActions>`; it renders
+   * nothing for a visitor who does not own the record.
+   *
+   * 🛑 Rendered OUTSIDE this card's own anchor, as a sibling. A `<button>`
+   * inside an `<a>` is invalid HTML that browsers resolve by closing the
+   * anchor early, which breaks the CARD's navigation rather than just the
+   * button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 const DEFAULT_LABELS: Required<MarketplacePreorderCardLabels> = {
@@ -81,6 +91,7 @@ export function MarketplacePreorderCard({
   onAddToCart,
   wishlistActions,
   labels,
+  renderOwnerActions,
 }: MarketplacePreorderCardProps) {
   const router = useRouter();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
@@ -118,7 +129,7 @@ export function MarketplacePreorderCard({
     [toggle],
   );
 
-  return (
+  const card = (
     <BaseListingCard
       isSelected={isSelected}
       variant={variant}
@@ -281,5 +292,17 @@ export function MarketplacePreorderCard({
         )}
       </BaseListingCard.Info>
     </BaseListingCard>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * clears this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 bottom-2 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }

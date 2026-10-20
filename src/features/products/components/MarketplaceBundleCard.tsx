@@ -47,6 +47,16 @@ export interface MarketplaceBundleCardProps {
   hrefBuilder?: (bundle: MarketplaceBundleCardData) => string;
   onNavigate?: (href: string) => void;
   labels?: MarketplaceBundleCardLabels;
+  /**
+   * Owner-only pencil / clone / bin. Pass `<OwnerQuickActions>`; it renders
+   * nothing for a visitor who does not own the record.
+   *
+   * 🛑 Rendered OUTSIDE this card's own anchor, as a sibling. A `<button>`
+   * inside an `<a>` is invalid HTML that browsers resolve by closing the
+   * anchor early, which breaks the CARD's navigation rather than just the
+   * button's — `stopPropagation` stops a click but cannot fix a parse.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 const DEFAULT_LABELS: Required<MarketplaceBundleCardLabels> = {
@@ -77,6 +87,7 @@ export function MarketplaceBundleCard({
   hrefBuilder,
   onNavigate,
   labels,
+  renderOwnerActions,
 }: MarketplaceBundleCardProps) {
   const router = useRouter();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
@@ -103,7 +114,7 @@ export function MarketplaceBundleCard({
     router.push(String(detailHref));
   }, [detailHref, onNavigate, router]);
 
-  return (
+  const card = (
     <BaseListingCard
       isSelected={isSelected}
       variant={variant}
@@ -247,5 +258,17 @@ export function MarketplaceBundleCard({
         </Div>
       </BaseListingCard.Info>
     </BaseListingCard>
+  );
+
+  if (!renderOwnerActions) return card;
+  /*
+   * Sibling of the card, never a child — see the prop's docstring. `z-20`
+   * clears this card's own overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {card}
+      <Div className="absolute right-2 top-2 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }
