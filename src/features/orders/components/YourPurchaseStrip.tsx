@@ -37,6 +37,7 @@ import { useApiQuery } from "../../../client/api/useApiQuery";
 import { apiClient } from "../../../http";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROUTES } from "../../../next/routing/route-map";
 import { Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { Icon } from "../../../ui/components/Icon";
 import { formatDate } from "../../../utils";
@@ -138,7 +139,7 @@ export function YourPurchaseStrip({
            */
           <Text size="sm" color="muted">
             No order for this item in the last {windowDays} days.{" "}
-            <TextLink href="/user/orders">See all your orders</TextLink>
+            <TextLink href={String(ROUTES.USER.ORDERS)}>See all your orders</TextLink>
           </Text>
         )}
 

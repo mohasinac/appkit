@@ -84,10 +84,17 @@ if (violations.length === 0) {
   process.exit(0);
 }
 
-if (violations.length <= BASELINE) {
-  console.log(`audit-route-strings: ${violations.length} (baseline ${BASELINE}). No regression.`);
-  process.exit(0);
-}
+/*
+ * 🛑 The baseline branch that used to sit here referenced an undefined
+ * `BASELINE`, so this audit CRASHED with a ReferenceError the moment it found
+ * its first violation — it could only ever pass by finding nothing. The
+ * baseline-drift mode was removed from every audit when they went strict-zero
+ * ("any violation > 0 fails the audit"); this reference was left behind and
+ * nothing noticed, because the audit was at zero.
+ *
+ * Strict zero is the policy, so there is no branch to restore: fall through to
+ * the report below.
+ */
 
 const out = [`audit-route-strings: ${violations.length} hardcoded dashboard route(s) .\n`];
 out.push("Use ROUTES.{ADMIN,STORE,USER}.* from @mohasinac/appkit (appkit/src/next/routing/route-map.ts).");
