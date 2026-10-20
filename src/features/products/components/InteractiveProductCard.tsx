@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ProductCard } from "./ProductGrid";
+import { Div } from "../../../ui/components/Layout";
 import type { ProductItem } from "../types";
 
 export interface InteractiveProductCardProps {
@@ -86,9 +87,9 @@ export function InteractiveProductCard({
   );
   if (!renderOwnerActions) return card;
   return (
-    <div className="relative h-full">
+    <Div className="relative h-full">
       {card}
-      <div className="absolute right-2 top-14 z-20">{renderOwnerActions()}</div>
-    </div>
+      <Div className="absolute right-2 top-14 z-20">{renderOwnerActions()}</Div>
+    </Div>
   );
 }
