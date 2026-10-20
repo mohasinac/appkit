@@ -505,7 +505,7 @@ export default function BottomActions() {
 
             {/* -- Secondary label row (page mode only) — stacked ABOVE infoLabel -- */}
             {secondaryLabel && !isBulkMode && (
-              <Div className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
+              <Div className="pt-[var(--appkit-space-2)] pb-0 border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
                 <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
                   {secondaryLabel}
                 </Text>
@@ -514,7 +514,7 @@ export default function BottomActions() {
 
             {/* -- Info label row (page mode only) --------------------------------- */}
             {infoLabel && !isBulkMode && !hasInfoPanel && (
-              <Div className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
+              <Div className="pt-[var(--appkit-space-2)] pb-0 border-b border-[var(--appkit-color-border-subtle)]" padding="x-md">
                 <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
                   {infoLabel}
                 </Text>
