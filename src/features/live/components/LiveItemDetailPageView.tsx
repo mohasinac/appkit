@@ -44,6 +44,7 @@ import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPane
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
+import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 
 export interface LiveItemDetailPageViewProps {
   slug: string;
@@ -293,6 +294,17 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
           renderBuyBar={() => <Div id="live-item-buy-bar">{renderActions?.(product)}</Div>}
           renderRelated={() => (
             <Stack gap="xl">
+              {/*
+                The buyer's own order and review for THIS item. Self-gating:
+                renders nothing until auth resolves, because SessionProvider
+                mounts initialUser={null} on a static page, so `loading` starts
+                true even for someone signed in — showing the empty state first
+                would flash "no order" at a buyer who has one.
+              */}
+              <PurchaseReviewAffordance
+                productId={String(product.id)}
+                storeId={product.storeId ? String(product.storeId) : undefined}
+              />
               <GroupedListingsCarousel groups={groups} />
               <RelatedItemsSection
                 relatedItems={relatedItems}
