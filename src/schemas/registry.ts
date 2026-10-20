@@ -159,7 +159,7 @@ import { reportReviewFormSchema } from "../features/store-extensions/schemas/rep
 import { adminStoreUpdateSchema } from "../features/admin/schemas/admin-editor-forms";
 import { adminAddressCreateSchema } from "../features/addresses/schemas/address-form";
 import { adminOrderUpdateSchema, employeeInviteSchema, adminAdFormSchema } from "../features/admin/schemas/admin-ops-forms";
-import { adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema } from "../features/admin/schemas/admin-user-form";
+import { adminUserUpdateSchema, lotteryPullSchema } from "../features/admin/schemas/admin-user-form";
 import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-form";
 import { orderCancelSchema, paymentProofSchema } from "../features/orders/schemas/buyer-forms";
 import { scamReportFormSchema } from "../features/scams/schemas/report-form";
@@ -209,9 +209,7 @@ const forms = {
   adminUser: adminUserUpdateSchema,
   employeeInvite: employeeInviteSchema,
   adminAd: adminAdFormSchema,
-  siteSettings: siteSettingsFormSchema,
-  whatsappSettings: whatsappSettingsSchema,
-  orderCancel: orderCancelSchema,
+  siteSettings: siteSettingsFormSchema,  orderCancel: orderCancelSchema,
   paymentProof: paymentProofSchema,
   scamReport: scamReportFormSchema,
   sublistingCategory: sublistingCategoryFormSchema,

@@ -860,15 +860,6 @@ export const BEFORE_AFTER_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// WhatsApp Business (store-level settings + catalog sync)
-// ---------------------------------------------------------------------------
-
-export const WHATSAPP_SELLER_ENDPOINTS = {
-  SETTINGS: "/api/store/whatsapp-settings",
-  CATALOG_SYNC: "/api/store/whatsapp-settings/catalog-sync",
-  CATALOG_IMPORT: "/api/store/whatsapp-settings/catalog-import",
-} as const;
-
 // ---------------------------------------------------------------------------
 // Aggregate namespace export
 // ---------------------------------------------------------------------------
@@ -915,7 +906,6 @@ export const API_ENDPOINTS = {
   SUBLISTING_CATEGORIES: SUBLISTING_CATEGORY_ENDPOINTS,
   WISHLIST: WISHLIST_ENDPOINTS,
   PROFILE_STATS: PROFILE_STATS_ENDPOINTS,
-  WHATSAPP_SELLER: WHATSAPP_SELLER_ENDPOINTS,
   SUPPORT: SUPPORT_ENDPOINTS,
   SCAMMERS: SCAMMER_ENDPOINTS,
   REPORTS: REPORT_ENDPOINTS,

@@ -835,34 +835,6 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
       permissions: ["seller", "admin"],
     },
-    // ── WhatsApp integration ────────────────────────────────────────────
-    "whatsapp-connect": {
-      iconKey: "link",
-      id: "store.whatsapp-connect",
-      label: "Save & Connect",
-      ariaLabel: "Save WhatsApp credentials and connect",
-      description: "Save WhatsApp Business credentials and establish connection.",
-      kind: "primary",
-      permissions: ["seller", "admin"],
-    },
-    "whatsapp-catalog-sync": {
-      iconKey: "retry",
-      id: "store.whatsapp-catalog-sync",
-      label: "Push to WhatsApp",
-      ariaLabel: "Sync products to WhatsApp catalog",
-      description: "Push published standard products to WhatsApp Business Catalog.",
-      kind: "secondary",
-      permissions: ["seller", "admin"],
-    },
-    "whatsapp-catalog-import": {
-      iconKey: "upload",
-      id: "store.whatsapp-catalog-import",
-      label: "Import from WhatsApp",
-      ariaLabel: "Import products from WhatsApp catalog",
-      description: "Import products from WhatsApp Catalog as drafts.",
-      kind: "secondary",
-      permissions: ["seller", "admin"],
-    },
     // ── Google Reviews integration ──────────────────────────────────────
     "google-reviews-sync": {
       iconKey: "retry",

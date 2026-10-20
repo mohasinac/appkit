@@ -1395,7 +1395,6 @@ export {
 export { changeEmailSchema } from "./features/account/schemas/index";
 export {
   adminUserUpdateSchema,
-  whatsappSettingsSchema,
   lotteryPullSchema,
 } from "./features/admin/schemas/admin-user-form";
 export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-form";

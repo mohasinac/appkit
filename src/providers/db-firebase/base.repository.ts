@@ -75,7 +75,7 @@ export abstract class BaseRepository<T extends DocumentData> {
    *
    * It is a SEPARATE hook because a list is not a detail read. A repository
    * whose `mapDoc` decrypts a secret must not hand that secret to a list —
-   * `StoreRepository` overrides this to drop the WhatsApp token, since
+   * A subclass overrides this when a list row must drop a field, since
    * `listStores(activeOnly)` backs the PUBLIC /stores page.
    */
   protected mapDocForList<D = T>(snap: DocumentSnapshot): D {

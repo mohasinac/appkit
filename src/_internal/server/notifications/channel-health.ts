@@ -1,5 +1,5 @@
 /**
- * Circuit breaker for outbound notification channels (email, WhatsApp).
+ * Circuit breaker for outbound notification channels.
  *
  * Persisted as a singleton Firestore doc `system/channelHealth` so the
  * "is this channel currently known-bad" state survives across requests and
@@ -14,7 +14,11 @@ import { getAdminDb } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring";
 
-export type NotificationChannel = "email" | "whatsapp";
+/**
+ * Email is the only outbound channel with a transport. "whatsapp" was the
+ * other arm until 2026-10-20, when the Cloud API integration was removed.
+ */
+export type NotificationChannel = "email";
 
 interface ChannelHealthState {
   consecutiveFailures: number;
@@ -86,7 +90,7 @@ function delay(ms: number): Promise<void> {
 /**
  * Runs `fn` up to 3 times (500ms then 1.5s between attempts) and records the
  * final outcome against the channel's health state. `fn` must throw on
- * failure — for a helper that returns a boolean instead (e.g. the WhatsApp
+ * failure — for a helper that returns a boolean instead (e.g. a sender
  * Cloud API helpers), convert `false` into a thrown error at the call site
  * before passing it in.
  */
