@@ -69,6 +69,7 @@ import type {
 import { ApiError } from "../../errors";
 import { normalizeError } from "../../errors/normalize";
 import { serverLogger } from "../../monitoring/server-logger";
+import { getPlatformSupplier } from "../../_internal/shared/features/site-settings/supplier-of-record";
 
 const API_BASE = "https://apiv2.shiprocket.in/v1/external";
 
@@ -376,16 +377,27 @@ export class ShiprocketShippingProvider extends IShippingProvider {
     weight: number,
   ): Promise<ServiceabilityResult> {
     /*
-     * 🛑 `pickup_postcode` is required by their API and we do not have it on
-     * this contract. Taken from the registered pickup location's name is NOT
-     * possible — it is a nickname, not a pincode — so this returns
-     * "unserviceable" rather than guessing a origin pincode, which would
-     * produce confidently wrong rates.
+     * `pickup_postcode` is required by their API, and it comes from the ONE
+     * owner of the business's address: `appkit.config.js → business`, injected
+     * at boot through `configurePlatformSupplier`.
+     *
+     * 🛑 This used to read ONLY `SHIPROCKET_PICKUP_PINCODE` and its comment
+     * said "we do not have it on this contract" — which was wrong: the
+     * registered address has carried `postalCode` all along. The var was
+     * never set in any runtime, so serviceability returned
+     * `{ isServiceable: false }` for every destination, and checkout would
+     * have told every buyer we cannot ship to them. A quote that is silently
+     * always "no" is indistinguishable from a carrier with no coverage.
+     *
+     * The env var stays as an OVERRIDE and is checked first, for the case
+     * where goods dispatch from somewhere other than the registered office.
      */
-    const origin = process.env.SHIPROCKET_PICKUP_PINCODE?.trim();
+    const origin =
+      process.env.SHIPROCKET_PICKUP_PINCODE?.trim() ||
+      getPlatformSupplier().pickupPostcode?.trim();
     if (!origin) {
       serverLogger.warn(
-        "shiprocket: SHIPROCKET_PICKUP_PINCODE unset — serviceability cannot be checked",
+        "shiprocket: no pickup postcode — set it on appkit.config.js business.registeredAddress, or override with SHIPROCKET_PICKUP_PINCODE",
         { pincode },
       );
       return { isServiceable: false, couriers: [] };
