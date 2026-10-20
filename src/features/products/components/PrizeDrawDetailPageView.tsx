@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
 import { orderRepository, productRepository } from "../../../repositories";
 
 const __P = {
@@ -247,6 +248,17 @@ export async function PrizeDrawDetailPageView({
           )}
           renderInfo={() => (
             <Stack gap="md">
+              {/*
+                Owner quick-actions, rendered directly — the component self-gates on
+                the session, so an async RSC can hand it the record. A prize draw is owned by its store.
+              */}
+              <OwnerQuickActions
+                resource="PRODUCT"
+                placement="detail"
+                recordLabel={String(product.title ?? product.id)}
+                storeId={product.storeId ? String(product.storeId) : undefined}
+                editHref={String(ROUTES.STORE.PRODUCTS_EDIT(String(product.id)))}
+              />
               <Div>
                 <Row gap="xs" wrap className="mb-2">
                   <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>

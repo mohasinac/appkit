@@ -27,6 +27,8 @@ import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker, type GroupPickerMember } from "../../products/components/GroupMemberPicker";
 import type { GroupedListingDocument } from "../schemas/firestore";
 import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
+import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
+import { ROUTES } from "../../../next/routing/route-map";
 
 const __O = { hidden: "overflow-hidden" } as const;
 
@@ -60,6 +62,17 @@ export function GroupedListingDetailView({ group, members }: GroupedListingDetai
             <Span size="xs" color="muted" transform="uppercase" weight="semibold">
               {THEME_LABEL[group.groupTheme]}
             </Span>
+            {/*
+              Owner quick-actions, rendered directly — the component self-gates on
+              the session, so an async RSC can hand it the record. A grouped listing may belong to a store, so storeId goes in when present.
+            */}
+            <OwnerQuickActions
+              resource="GROUP"
+              placement="detail"
+              recordLabel={String(group.title)}
+              storeId={group.storeId ? String(group.storeId) : undefined}
+              editHref={String(ROUTES.ADMIN.GROUPED_LISTINGS_EDIT(String(group.id)))}
+            />
             <Heading level={1}>{group.title}</Heading>
             {group.description && (
               <Text color="muted">{group.description}</Text>

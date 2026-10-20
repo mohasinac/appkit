@@ -42,6 +42,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { CategoryGrid } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
+import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -102,6 +103,20 @@ export function BundleDetailView({
               </Div>
 
               <Stack gap="md" className="flex-1">
+                {/*
+                  Owner quick-actions. Admin-only in practice: a bundle has no
+                  ownerId, so the owner branch can never match.
+
+                  No clone — members, bundleCategorySlugs and display.mosaicImages
+                  are all resolved at WRITE time, so a copy would carry another
+                  bundle's resolved state rather than its own.
+                */}
+                <OwnerQuickActions
+                  resource="BUNDLE"
+                  placement="detail"
+                  recordLabel={String(bundle.name)}
+                  editHref={String(ROUTES.ADMIN.BUNDLES_EDIT(String(bundle.id)))}
+                />
                 <Heading
                   level={1} size="3xl" weight="semibold" color="primary">
                   {bundle.name}
