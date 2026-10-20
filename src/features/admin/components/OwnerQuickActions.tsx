@@ -52,7 +52,9 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
 import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
-import { Row } from "../../../ui";
+import { Row, useToast } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 /** Which registry bucket supplies the labels and the confirm copy. */
 export type OwnerQuickActionsResource =
@@ -107,6 +109,7 @@ export function OwnerQuickActions({
   const session = useOptionalSession();
   const isOwnerOrAdmin = useIsOwner(ownerId);
   const isAdmin = useIsAdmin();
+  const { showToast } = useToast();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -121,12 +124,25 @@ export function OwnerQuickActions({
     try {
       await onDelete();
       setConfirmOpen(false);
+    } catch (err) {
+      const normalized = normalizeError(err);
+      /*
+       * 🛑 A failed delete MUST say so. Without this the dialog simply closed
+       * its spinner and the record was still there — and because the caller
+       * navigates away on success, "nothing happened" is indistinguishable
+       * from "it worked but the page did not move". This is a destructive
+       * action on a public page; silence is the worst available answer.
+       */
+      showToast(
+        toUserMessage((normalized as { code?: string }).code ?? "UNKNOWN"),
+        "error",
+      );
     } finally {
       // Always clears, so a failed delete leaves a usable dialog rather than a
       // permanently-spinning button the user cannot dismiss or retry.
       setDeleting(false);
     }
-  }, [onDelete]);
+  }, [onDelete, showToast]);
 
   /*
    * 🛑 Nothing at all until auth resolves — see the header. `loading` starts

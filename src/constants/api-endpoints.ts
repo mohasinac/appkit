@@ -93,6 +93,12 @@ export const ACCOUNT_ENDPOINTS = {
     `/api/user/history/${encodeURIComponent(productId)}`,
   HISTORY_MERGE: "/api/user/history/merge",
   REVIEWS: "/api/user/reviews",
+  /**
+   * "Have I bought this, and did I review it?" for one product — backs the
+   * purchase strip on a product page. Per-viewer, never cached.
+   */
+  PURCHASE_CONTEXT: (productId: string) =>
+    `/api/user/purchases/${encodeURIComponent(productId)}`,
   BIDS: "/api/user/bids",
   BID_BY_ID: (id: string) => `/api/user/bids/${id}`,
   EXPORT: "/api/user/export",
@@ -678,6 +684,8 @@ export const PROMOTION_ENDPOINTS = {
 export const REVIEW_ENDPOINTS = {
   LIST: "/api/reviews",
   FEATURED: "/api/reviews?featured=true",
+  /** GET / PATCH / DELETE one review. The PATCH is the buyer's own edit. */
+  BY_ID: (id: string) => `/api/reviews/${encodeURIComponent(id)}`,
 } as const;
 
 // ---------------------------------------------------------------------------

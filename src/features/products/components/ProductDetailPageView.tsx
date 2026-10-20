@@ -35,6 +35,7 @@ import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import {
   Button,
@@ -611,7 +612,7 @@ export async function ProductDetailPageView({
                 editHref={String(ROUTES.STORE.PRODUCTS_EDIT(String(product.id)))}
                 onClone={async () => {
                   const res = await fetch(
-                    `/api/store/products/${product.id}/duplicate`,
+                    SELLER_ENDPOINTS.PRODUCT_DUPLICATE(String(product.id)),
                     { method: "POST" },
                   );
                   if (!res.ok) return;
@@ -630,7 +631,7 @@ export async function ProductDetailPageView({
                   }
                 }}
                 onDelete={async () => {
-                  await fetch(`/api/store/products/${product.id}`, {
+                  await fetch(SELLER_ENDPOINTS.PRODUCT_BY_ID(String(product.id)), {
                     method: "DELETE",
                   });
                   if (typeof window !== "undefined") {

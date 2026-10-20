@@ -534,6 +534,7 @@ export { SELLER_ENDPOINTS } from "./constants/index";
  * BidDetailPageClient — checklist-page-wiring-detail-pages-detail-page-matches-list-modal.
  */
 export { ACCOUNT_ENDPOINTS } from "./constants/index";
+export { REVIEW_ENDPOINTS } from "./constants/index";
 // P-16 — Tour system (driver.js-backed onboarding walkthrough).
 export { TourProvider, useTour } from "./_internal/client/features/tour/TourProvider";
 export type { TourContextValue, TourRole } from "./_internal/client/features/tour/TourProvider";

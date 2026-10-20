@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { apiClient } from "../../../http";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   Button,
   FieldInput,
@@ -49,6 +50,9 @@ import {
   Text,
 } from "../../../ui";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+// Keys errors by the FULL dotted path, so a nested issue cannot collapse onto
+// one map entry and lose all but the last.
+import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
 import { normalizeError } from "../../../errors/normalize";
@@ -117,6 +121,62 @@ export function ReviewFormDrawer({
     if (isOpen) setValues({ ...EMPTY, ...initialValues });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, reviewId]);
+
+  /*
+   * Extracted rather than inlined in onClick. The inline version sat at
+   * brace-depth 6 — JSX, render prop, Button, handler, try, for — which
+   * audit-code-quality flags, and it was right to: the validation loop and
+   * the two write paths were buried four levels inside a tag.
+   */
+  type SubmitHelpers = {
+    setFieldError: (name: string, error: string | null) => void;
+    clearErrors: () => void;
+    markSubmitAttempted?: () => void;
+  };
+
+  async function submit({
+    setFieldError,
+    clearErrors,
+    markSubmitAttempted,
+  }: SubmitHelpers): Promise<void> {
+    clearErrors();
+    setFormError(null);
+    markSubmitAttempted?.();
+
+    const parsed = reviewFormSchema.safeParse(values);
+    if (!parsed.success) {
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return;
+    }
+
+    setBusy(true);
+    try {
+      if (reviewId) {
+        await apiClient.patch(REVIEW_ENDPOINTS.BY_ID(reviewId), parsed.data);
+      } else {
+        await apiClient.post(REVIEW_ENDPOINTS.LIST, {
+          ...parsed.data,
+          productId,
+          storeId,
+        });
+      }
+      onSaved?.();
+      onClose();
+    } catch (err) {
+      const normalized = normalizeError(err);
+      /*
+       * 🛑 toUserMessage, never the server's own message. A raw `?? error`
+       * fallback is what rendered a Node MODULE_NOT_FOUND with a require
+       * stack inside a bid modal (Root Cause #86); this resolves through
+       * errors.codes.* and terminates at UNKNOWN.
+       */
+      setFormError(
+        toUserMessage((normalized as { code?: string }).code ?? "UNKNOWN"),
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <SideDrawer
@@ -191,50 +251,7 @@ export function ReviewFormDrawer({
               type="submit"
               isLoading={busy}
               action={editing ? ACTIONS.REVIEW.edit : ACTIONS.REVIEW.write}
-              onClick={async () => {
-                clearErrors();
-                setFormError(null);
-                markSubmitAttempted?.();
-
-                const parsed = reviewFormSchema.safeParse(values);
-                if (!parsed.success) {
-                  for (const issue of parsed.error.issues) {
-                    setFieldError(String(issue.path[0]), issue.message);
-                  }
-                  return;
-                }
-
-                setBusy(true);
-                try {
-                  if (editing) {
-                    await apiClient.patch(`/api/reviews/${reviewId}`, parsed.data);
-                  } else {
-                    await apiClient.post("/api/reviews", {
-                      ...parsed.data,
-                      productId,
-                      storeId,
-                    });
-                  }
-                  onSaved?.();
-                  onClose();
-                } catch (err) {
-                  const normalized = normalizeError(err);
-                  /*
-                   * 🛑 `toUserMessage`, never the server's own message. A raw
-                   * `?? error` fallback is what rendered a Node MODULE_NOT_FOUND
-                   * with a require stack inside a bid modal (Root Cause #86);
-                   * this resolves through errors.codes.* and terminates at
-                   * UNKNOWN.
-                   */
-                  setFormError(
-                    toUserMessage(
-                      (normalized as { code?: string }).code ?? "UNKNOWN",
-                    ),
-                  );
-                } finally {
-                  setBusy(false);
-                }
-              }}
+              onClick={() => void submit({ setFieldError, clearErrors, markSubmitAttempted })}
             />
           </Stack>
         )}

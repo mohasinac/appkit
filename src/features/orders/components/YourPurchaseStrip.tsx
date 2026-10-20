@@ -37,6 +37,7 @@ import { useApiQuery } from "../../../client/api/useApiQuery";
 import { apiClient } from "../../../http";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { Icon } from "../../../ui/components/Icon";
@@ -76,7 +77,7 @@ export function YourPurchaseStrip({
     queryKey: ["user", "purchases", productId],
     queryFn: async () => {
       const res = await apiClient.get<{ data?: PurchaseContext }>(
-        `/api/user/purchases/${encodeURIComponent(productId)}`,
+        ACCOUNT_ENDPOINTS.PURCHASE_CONTEXT(productId),
       );
       return (
         res?.data ?? { order: null, review: null, windowDays: 90 }
