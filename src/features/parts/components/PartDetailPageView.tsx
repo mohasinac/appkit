@@ -33,6 +33,7 @@ import {
   Span,
   TextLink,
   Badge,
+  Anchor,
 } from "../../../ui";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { ROUTES } from "../../../next/routing/route-map";
