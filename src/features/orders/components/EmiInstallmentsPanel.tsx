@@ -5,6 +5,7 @@ import { Badge, Button, Div, Form, Row, Stack, Text, useToast } from "../../../u
 import { FieldInput } from "../../../ui/forms";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { EmiInstallment } from "../schemas/firestore";
+import { normalizeError } from "../../../errors/normalize";
 
 /**
  * The buyer's own EMI schedule, with a way to pay any unpaid instalment.
@@ -79,7 +80,8 @@ export function EmiInstallmentsPanel({
       showToast("Payment reference submitted — the seller will confirm it.", "success");
       setOpenIndex(null);
       setReference("");
-    } catch {
+    } catch (err) {
+      void normalizeError(err);
       // The action's own message is surfaced by the caller's error mapping;
       // this only has to stop the panel pretending the submission landed.
       showToast("Couldn't submit that payment. Please try again.", "error");
