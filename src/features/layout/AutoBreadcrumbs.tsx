@@ -3,6 +3,7 @@ import React from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LISTING_TYPE_REGISTRY } from "../../_internal/shared/listing-types/_registry";
 import { Div, Li, Nav, Ol, Span } from "../../ui";
 
 /** Map of path segments → human-readable labels. */
@@ -30,6 +31,36 @@ const DEFAULT_PATH_LABELS: Record<string, string> = {
   view: "View",
   add: "Add",
   edit: "Edit",
+  /*
+   * Real public route segments whose title-cased form is wrong or ugly.
+   * Anything absent here still renders — `capitalize()` title-cases every
+   * word, so `digital-codes` reads "Digital Codes" unaided. These are only the
+   * ones where casing alone does not get there (`faqs` -> "Faqs",
+   * `pre-orders` -> "Pre Orders").
+   */
+  faqs: "FAQs",
+  "pre-orders": "Pre-Orders",
+  "prize-draws": "Prize Draws",
+  "digital-codes": "Digital Codes",
+  beys: "Beyblades",
+  parts: "Parts",
+  brands: "Brands",
+  franchise: "Franchise",
+  bundles: "Bundles",
+  stores: "Stores",
+  sellers: "Sellers",
+  events: "Events",
+  reviews: "Reviews",
+  auctions: "Auctions",
+  promotions: "Promotions",
+  classified: "Classified",
+  live: "Live Items",
+  art: "Art",
+  stickers: "Stickers",
+  catalogue: "Catalogue",
+  credits: "Credits",
+  about: "About",
+  contact: "Contact",
 };
 
 // Common locale codes filtered out of path segments
@@ -65,8 +96,77 @@ export interface AutoBreadcrumbsProps {
   renderLink?: (href: string, label: string) => React.ReactNode;
 }
 
+/*
+ * ── 🛑 THE LAST SEGMENT OF A DETAIL ROUTE IS DATA, NOT A LABEL ─────────────
+ *
+ * This component only sees `usePathname()`, so it cannot know which segments
+ * are dynamic. Title-casing one anyway produced, verbatim in production:
+ *
+ *     Home / Products / Product beyblade x xtreme stadium bx 10
+ *
+ * while the page's OWN breadcrumb, rendered directly beneath it, correctly
+ * read `Xtreme Stadiums › Beyblade X Xtreme Stadium (BX-10)`. Only the page
+ * holds the real title; a pathname cannot be turned into one.
+ *
+ * So an entity id is OMITTED rather than guessed at. Every detail page in this
+ * app renders its own trail with real titles, which is why dropping the crumb
+ * loses nothing — the breadcrumb simply ends at `Home / Products`, which is
+ * true, useful and navigable.
+ *
+ * 🛑 The listing prefixes are READ FROM `LISTING_TYPE_REGISTRY`, never
+ * re-listed here. Two enumerations of one union always drift (Root Cause #42 /
+ * #61), and that registry is already the single source for all nine listing
+ * types' `slugPrefix`.
+ *
+ * The non-listing prefixes below cannot come from there because no registry
+ * covers them; they are the documented slug-prefix system in CLAUDE.md, and
+ * only the ones that actually appear in a PUBLIC url are listed — an
+ * `order-`/`payout-`/`notif-` id never reaches a public breadcrumb.
+ *
+ * 🛑 This does NOT catch a prefix-less slug: `/beys/variares-d-d` still renders
+ * "Variares D D". That is a known, accepted limitation rather than an
+ * oversight — it is readable, it is not an id-shaped string, and the bey page's
+ * own breadcrumb carries the proper name. Fixing it properly means the page
+ * supplying its leaf label, which is plumbing this component cannot do alone.
+ */
+const NON_LISTING_PUBLIC_PREFIXES = [
+  "category-",
+  "brand-",
+  "store-",
+  "blog-",
+  "event-",
+  "review-",
+  "faq-",
+  "coupon-",
+  "group-",
+  "sublisting-",
+  "user-",
+  "mycatalog-",
+  "catalog-",
+  "scammer-",
+] as const;
+
+function isOpaqueEntityId(seg: string): boolean {
+  const listingPrefixes = Object.values(LISTING_TYPE_REGISTRY)
+    .map((p) => p.slugPrefix)
+    .filter((p): p is string => Boolean(p));
+  return [...listingPrefixes, ...NON_LISTING_PUBLIC_PREFIXES].some((p) =>
+    seg.startsWith(p),
+  );
+}
+
+/**
+ * Title-case a hyphenated path segment — EVERY word, not just the first.
+ *
+ * The previous implementation uppercased only `charAt(0)`, so a multi-word
+ * segment came out as sentence-case mush ("Pre orders", "Digital codes").
+ */
 function capitalize(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " ");
+  return s
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 /**
@@ -94,7 +194,9 @@ export function AutoBreadcrumbs({
     (seg) =>
       !LOCALE_CODES.has(seg.toLowerCase()) &&
       !/^[0-9a-f-]{8,}$/.test(seg) &&
-      !/^\d+$/.test(seg),
+      !/^\d+$/.test(seg) &&
+      /* An entity id carries no label a pathname can recover — see above. */
+      !isOpaqueEntityId(seg),
   );
 
   if (segments.length === 0) return null;
