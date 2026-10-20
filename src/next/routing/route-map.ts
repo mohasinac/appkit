@@ -97,6 +97,14 @@ export const DEFAULT_ROUTE_MAP = {
     HELP_AUCTIONS: "/help/auctions",
     HELP_ORDERS: "/help/orders",
     HELP_ACCOUNT: "/help/account",
+    /*
+     * 🛑 A LICENCE OBLIGATION, not a vanity page — which is why it is a route
+     * key and sits in PUBLIC_ROUTES. The facts across ~5,500 rows (parts, beys,
+     * products, characters) come from a CC-BY-SA community wiki; taking facts
+     * only and linking back is what keeps us clear of share-alike, and a
+     * link-back nobody can reach discharges nothing.
+     */
+    CREDITS: "/credits",
     TERMS: "/terms",
     PRIVACY: "/privacy",
     ETHICS: "/ethics",
@@ -663,6 +671,9 @@ export const PUBLIC_ROUTES = [
   ROUTES.PUBLIC.CONTACT as string,
   ROUTES.BLOG.LIST as string,
   ROUTES.PUBLIC.HELP as string,
+  /* Unauthenticated BY NECESSITY: an attribution a reader must sign in to see
+   * is not attribution. Same reasoning as the grievance-officer entry below. */
+  ROUTES.PUBLIC.CREDITS as string,
   ROUTES.PUBLIC.TERMS as string,
   ROUTES.PUBLIC.PRIVACY as string,
   ROUTES.PUBLIC.ETHICS as string,

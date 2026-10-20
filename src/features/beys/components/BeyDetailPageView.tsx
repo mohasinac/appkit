@@ -36,6 +36,7 @@ import {
   Badge,
 } from "../../../ui";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
+import { ROUTES } from "../../../next/routing/route-map";
 import { PART_SLOT_LABEL, type PartSlot } from "../../parts/schemas/firestore";
 import type { BeyDocument, BeyProductDocument } from "../schemas/firestore";
 
@@ -359,6 +360,12 @@ export function BeyDetailPageView({
                   </Anchor>
                 </>
               ) : null}
+              {/* The same Credits link the part view carries. It was missing
+                  here, so the two surfaces built from ONE corpus credited it
+                  two different ways — and the one that names the licence holder
+                  is the half that matters. */}
+              {" · "}
+              <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
             </Text>
           </Div>
         </Stack>

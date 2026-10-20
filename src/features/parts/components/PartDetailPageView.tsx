@@ -35,6 +35,7 @@ import {
   Badge,
 } from "../../../ui";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   PART_SLOT_LABEL,
   type PartGlossaryDocument,
@@ -331,7 +332,7 @@ export function PartDetailPageView({
                   Source
                 </Anchor>
                 {" · "}
-                <TextLink href="/credits">Credits</TextLink>
+                <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
               </Text>
             </Div>
           )}
