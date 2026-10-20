@@ -191,7 +191,58 @@ console.log(`✓ Connected to project: ${process.env.FIREBASE_ADMIN_PROJECT_ID |
  * barrel because they are real library code that the app uses too. Merging
  * them would pull the helpers back into the seed graph and undo the split.
  */
-const appkitSeed = await import("@mohasinac/appkit/seed");
+/*
+ * ── 🛑 TWO PLACES THE SEED CAN LIVE, AND A CLEAR ERROR IF NEITHER ────────
+ *
+ * `dist/seed/**` is 27 MB of the 52 MB dist and is EXCLUDED from the
+ * published tarball — a package consumer has no business carrying fixture
+ * data. So the `./seed` subpath resolves only where the data actually is:
+ *
+ *   · an installed copy that was resynced from this repo (the normal local
+ *     case — `cp -r appkit/dist node_modules/@mohasinac/appkit/dist`)
+ *   · this repo's own `appkit/dist/seed`, when run from the source tree
+ *
+ * 🛑 A fresh `npm install` from the registry has NEITHER, and that is
+ * deliberate: seeding needs the generators and the 18 MB of research JSON
+ * that only exist in this repo, so it is a repo operation by nature. What
+ * must not happen is the SILENT version — an import that resolves to nothing
+ * and a loader that then reports `no seed data, skipping` with exit 0, which
+ * is Root Cause #90 and has already cost this project six empty collections.
+ * Hence an explicit throw naming both paths.
+ */
+async function importSeedModule() {
+  const attempts = [];
+  /*
+   * 🛑 A RELATIVE path, not the `@mohasinac/appkit/seed` subpath.
+   *
+   * That subpath was added and then REMOVED in the same change: once
+   * `dist/seed` is excluded from the tarball, a declared export pointing at a
+   * file the package does not contain is a landmine for anyone who imports it.
+   * Attempting it here would also be dead code — it can never resolve now — and
+   * a dead attempt whose throw is swallowed is exactly what makes the next
+   * reader think the subpath still works.
+   *
+   * Relative resolution covers both real cases: run from this repo it finds
+   * `appkit/dist/seed`; run as an installed copy that was resynced from the
+   * repo it finds `node_modules/@mohasinac/appkit/dist/seed`.
+   */
+  const local = pathToFileURL(resolve(__dirname, "../dist/seed/index.js")).href;
+  try {
+    return await import(local);
+  } catch (err) {
+    attempts.push(`${local} — ${err?.code ?? err?.message ?? err}`);
+  }
+  console.error(
+    "\u001b[31m✗ Could not load the seed data.\u001b[0m\n" +
+      "  The seed is excluded from the published package on purpose — it is a repo\n" +
+      "  operation, not something a consumer does. Build it first:\n\n" +
+      "      npm --prefix ./appkit run build\n\n" +
+      "  Tried:\n" +
+      attempts.map((a) => `      ${a}`).join("\n"),
+  );
+  process.exit(1);
+}
+const appkitSeed = await importSeedModule();
 const appkit = { ...(await import("@mohasinac/appkit")), ...appkitSeed };
 // PII crypto functions moved server-only in appkit 3.8.1 (they touch
 // firebase-admin's crypto chain) — no longer exported from the main

@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "4.58.0",
+  "version": "4.59.0",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -18,11 +18,6 @@
       "types": "./dist/server-entry.d.ts",
       "import": "./dist/server-entry.js",
       "default": "./dist/server-entry.js"
-    },
-    "./seed": {
-      "types": "./dist/seed/index.d.ts",
-      "import": "./dist/seed/index.js",
-      "default": "./dist/seed/index.js"
     },
     "./client": {
       "types": "./dist/client.d.ts",
@@ -217,7 +212,9 @@
     "scripts/seed-cli-loader.mjs",
     "scripts/dedupe-peer-deps.mjs",
     "scripts/copy-assets.mjs",
-    "scripts/bundle-css.mjs"
+    "scripts/bundle-css.mjs",
+    "!dist/seed",
+    "!dist/features/tester/seed-data"
   ],
   "bin": {
     "appkit-sieve-audit": "./scripts/sieve-audit.mjs",
