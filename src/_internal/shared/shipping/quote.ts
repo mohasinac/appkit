@@ -148,7 +148,7 @@ export function reconcileShipping(
 ): ShippingReconciliation {
   const charged = Number.isFinite(quote.chargedRate) ? Math.max(0, quote.chargedRate) : 0;
   const spent = Number.isFinite(actual.actualRate) ? Math.max(0, actual.actualRate) : 0;
-  const delta = roundPaise(charged - spent);
+  const delta = roundMoney(charged - spent);
 
   return {
     sellerAbsorbs: delta < 0 ? Math.abs(delta) : 0,
@@ -160,12 +160,11 @@ export function reconcileShipping(
 /**
  * Two decimal places.
  *
- * Money here is decimal rupees (the paise→rupees migration, Root Cause #31), so
- * a subtraction can leave a float artefact — `100 - 47.1` is `52.900000000000006`,
- * and that would become a points credit with eleven decimal places on a user's
- * balance.
+ * Money is stored as decimal rupees (Root Cause #31), so a subtraction can
+ * leave a float artefact — `100 - 47.1` is `52.900000000000006`, and that would
+ * become a points credit with eleven decimal places on a user's balance.
  */
-function roundPaise(value: number): number {
+function roundMoney(value: number): number {
   return Math.round(value * 100) / 100;
 }
 

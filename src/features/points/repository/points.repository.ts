@@ -1,5 +1,6 @@
 import { getAdminDb } from "../../../providers/db-firebase";
 import {
+  POINTS_FIELDS,
   POINTS_LEDGER_COLLECTION,
   isPointsEntryWellFormed,
   type PointsEntryKind,
@@ -57,8 +58,8 @@ export class PointsRepository {
     const db = getAdminDb();
     const rows = await db
       .collection(POINTS_LEDGER_COLLECTION)
-      .where("userId", "==", userId)
-      .select("amount")
+      .where(POINTS_FIELDS.USER_ID, "==", userId)
+      .select(POINTS_FIELDS.AMOUNT)
       .get();
     const total = rows.docs.reduce((sum, d) => sum + (Number(d.data().amount) || 0), 0);
     return Math.round(total * 100) / 100;
@@ -180,8 +181,8 @@ export class PointsRepository {
     const db = getAdminDb();
     const rows = await db
       .collection(POINTS_LEDGER_COLLECTION)
-      .where("userId", "==", userId)
-      .orderBy("createdAt", "desc")
+      .where(POINTS_FIELDS.USER_ID, "==", userId)
+      .orderBy(POINTS_FIELDS.CREATED_AT, "desc")
       .limit(limit)
       .get();
     return rows.docs.map((d) => d.data() as PointsLedgerEntry);

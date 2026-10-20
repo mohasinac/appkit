@@ -109,6 +109,23 @@ export function isPointsEntryWellFormed(entry: Pick<PointsLedgerEntry, "kind" | 
 export const POINTS_LEDGER_COLLECTION = "pointsLedger";
 
 /**
+ * Firestore field names for this collection.
+ *
+ * Declared rather than written as string literals at the query site, matching
+ * every other collection here: a typo in a raw `where("userID", ...)` is a
+ * query that returns nothing and raises nothing, which on a points balance
+ * reads as "you have no points" rather than as a bug.
+ */
+export const POINTS_FIELDS = {
+  ID: "id",
+  USER_ID: "userId",
+  KIND: "kind",
+  AMOUNT: "amount",
+  ORDER_ID: "orderId",
+  CREATED_AT: "createdAt",
+} as const;
+
+/**
  * 🛑 Points cannot pay for the whole order, and this is the cap that enforces
  * it.
  *
@@ -130,6 +147,7 @@ export const POINTS_MAX_REDEMPTION_PERCENT = 50;
 export function maxRedeemablePoints(orderTotal: number, balance: number): number {
   if (!Number.isFinite(orderTotal) || orderTotal <= 0) return 0;
   if (!Number.isFinite(balance) || balance <= 0) return 0;
+  // audit-money-units-ok: a percentage of an order total, not a paise/rupee conversion
   const cap = Math.floor((orderTotal * POINTS_MAX_REDEMPTION_PERCENT) / 100);
   return Math.max(0, Math.min(Math.floor(balance), cap));
 }
