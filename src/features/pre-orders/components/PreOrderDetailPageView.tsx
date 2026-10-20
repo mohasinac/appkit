@@ -58,6 +58,7 @@ import { RelatedItemsSection } from "../../products/components/RelatedItemsSecti
 import { computeRelatedItems } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
@@ -87,6 +88,10 @@ const PRODUCTION_STATUS_LABELS: Record<string, string> = {
 
 interface PreOrderInfoSectionProps {
   title: string;
+  /** Product id + store SLUG, for the owner toolbar. Threaded in because this
+   *  section is a separate component and the product is not in its scope. */
+  productId?: string;
+  storeId?: string;
   productionStatus: string | null;
   maxPerUser: number | null;
   deliveryDate: Date | null;
@@ -109,6 +114,8 @@ interface PreOrderInfoSectionProps {
 
 function PreOrderInfoSection({
   title,
+  productId,
+  storeId,
   productionStatus,
   maxPerUser,
   deliveryDate,
@@ -146,6 +153,21 @@ function PreOrderInfoSection({
             </Span>
           )}
         </Row>
+        {/*
+          Owner quick-actions. `productId` and `storeId` are threaded in for
+          the same reason as the auction panel: this section is its own
+          component, so the product is not in scope, and without the store
+          slug the owner branch could never match.
+        */}
+        {productId && (
+          <OwnerQuickActions
+            resource="PRODUCT"
+            placement="detail"
+            recordLabel={title}
+            storeId={storeId}
+            editHref={String(ROUTES.STORE.PRODUCTS_EDIT(productId))}
+          />
+        )}
         <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">
           {title}
         </Heading>
@@ -547,6 +569,8 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           renderInfo={() => (
             <PreOrderInfoSection
               title={title}
+              productId={String(product.id)}
+              storeId={product.storeId ? String(product.storeId) : undefined}
               productionStatus={productionStatus}
               maxPerUser={maxPerUser}
               deliveryDate={deliveryDate}

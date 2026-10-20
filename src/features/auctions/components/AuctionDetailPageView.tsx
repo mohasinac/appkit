@@ -76,6 +76,7 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 import { isFinalSale } from "../../products/constants/final-sale";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -105,6 +106,8 @@ function toDescriptionHtml(raw: JsonValue): string {
 
 interface AuctionInfoPanelProps {
   productId: string;
+  /** The store SLUG, for the owner check. Threaded from the page's product. */
+  storeId?: string;
   title: string; currentBid: number; currency: string; bidCount: number;
   isEnded: boolean; endDate: Date | null; buyNowPrice: number | null;
   /** Resolved via isBuyNowAvailable() by the caller — never re-derived here. */
@@ -120,7 +123,7 @@ interface AuctionInfoPanelProps {
 }
 
 function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
-  const { productId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
+  const { productId, storeId, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
   return (
     <Stack gap="md">
       <Div>
@@ -130,6 +133,20 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
               HTML, directly above a countdown that correctly said "Ended". */}
           <AuctionLiveStatusBadge auctionEndDate={endDate} initialIsEnded={isEnded} />
         </Row>
+        {/*
+          Owner quick-actions, rendered directly — the component self-gates
+          on the session. `storeId` is threaded in because this info panel is
+          a separate function from the page body, so the product is not in
+          scope here; without it the owner branch could never match and the
+          toolbar would be silently admin-only.
+        */}
+        <OwnerQuickActions
+          resource="PRODUCT"
+          placement="detail"
+          recordLabel={title}
+          storeId={storeId}
+          editHref={String(ROUTES.STORE.PRODUCTS_EDIT(productId))}
+        />
         <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>
       </Div>
       <Div>
@@ -449,7 +466,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           renderGallery={() => (
             <ProductGalleryClient images={images} video={productVideo} productName={title} />
           )}
-          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale: isFinalSale(p), category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
+          renderInfo={() => renderAuctionInfoPanel({ productId: String(product.id), storeId: product.storeId ? String(product.storeId) : undefined, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale: isFinalSale(p), category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
