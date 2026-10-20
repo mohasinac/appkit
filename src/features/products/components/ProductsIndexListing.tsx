@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { ShoppingCart, Heart, Columns } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -31,6 +31,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
 import { GENERIC_PRODUCT_LISTING_TYPES, PRODUCT_TYPE_FILTER_TABS } from "../constants/listing-tabs";
 import { parseSelectedListingTypes } from "../utils/listing-type";
+import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 import { commonSortOptionsFor } from "../../../_internal/shared/listing-types/_registry";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { AvailabilityTabs } from "./AvailabilityTabs";
@@ -121,16 +122,46 @@ export function ProductsIndexListing({
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
 
+  /*
+   * ── What this page actually spans ────────────────────────────────────────
+   *
+   * 🛑 A type an admin has switched OFF must not appear as a filter option.
+   * `listingTypes` / `typeTabs` describe what the page covers by DESIGN
+   * (`GENERIC_PRODUCT_LISTING_TYPES`, or a store tab's own set); the flags
+   * describe what this site offers. Only the intersection is real.
+   *
+   * Ticking a disabled type was not merely untidy — `listPublicProducts`
+   * narrows the request to `selected ∩ span` and falls back to the FULL span
+   * when that intersection is empty, so a chip for a disabled type silently
+   * WIDENED the results instead of narrowing them (the same trap documented
+   * for out-of-span types on `/products`).
+   *
+   * Falling back to the ungated sets when the filter empties them is
+   * deliberate: an empty span is not "show nothing", it is a settings document
+   * that disabled everything this page covers, and rendering a type-less
+   * listing is more useful than rendering an empty one. `useListingTypeFlags`
+   * already fails open while settings load, so there is no first-paint flash.
+   */
+  const listingTypeFlags = useListingTypeFlags();
+  const enabledSpan = useMemo(() => {
+    const kept = listingTypes.filter((t) => listingTypeFlags[t as ListingType]);
+    return (kept.length > 0 ? kept : listingTypes) as readonly ListingType[];
+  }, [listingTypes, listingTypeFlags]);
+  const enabledTypeTabs = useMemo(() => {
+    const kept = typeTabs.filter((tab) => enabledSpan.includes(tab.id as ListingType));
+    return kept.length > 0 ? kept : typeTabs;
+  }, [typeTabs, enabledSpan]);
+
   // ── Type filter (multi-select) ───────────────────────────────────────────
   // The URL value is a pipe-joined set; empty means "every type this page
   // spans". Unknown tokens are dropped rather than passed through to a
   // Firestore `==` that could never match (Root Cause #33).
   const typeParam = table.get(TABLE_KEYS.LISTING_TYPE);
   const selectedTypes = parseSelectedListingTypes(typeParam).filter((t) =>
-    listingTypes.includes(t),
+    enabledSpan.includes(t),
   );
   const effectiveTypes = (
-    selectedTypes.length > 0 ? selectedTypes : listingTypes
+    selectedTypes.length > 0 ? selectedTypes : enabledSpan
   ) as readonly ListingType[];
 
   // Sorts valid across every selected type. Pick Auctions alone and you get
@@ -168,10 +199,10 @@ export function ProductsIndexListing({
   // moment the user ticks a single type instead of only after Apply.
   const pendingTypes = parseSelectedListingTypes(
     pendingTable.get(TABLE_KEYS.LISTING_TYPE),
-  ).filter((t) => listingTypes.includes(t));
+  ).filter((t) => enabledSpan.includes(t));
   const dedicatedPage = dedicatedPageFor(pendingTypes);
 
-  const listingTypeOptions = typeTabs.map((t) => ({ value: t.id, label: t.label }));
+  const listingTypeOptions = enabledTypeTabs.map((t) => ({ value: t.id, label: t.label }));
 
   const openFilters = useCallback(() => {
     onFilterReset();

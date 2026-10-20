@@ -538,7 +538,7 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-emi-installments",
     question: "Can I pay in installments (EMI)?",
-    answer: html(`<p>Yes — on eligible orders. If the seller has EMI enabled and your order with them meets the minimum order value, "Pay in EMI" appears as a payment option at checkout. Choose a tenure of 2–6 months, pay a small token amount upfront, and the remaining balance plus a small monthly surcharge is billed automatically in equal installments each month. Your order ships as soon as the token payment is confirmed — you don't wait for the full amount to be paid.</p>`),
+    answer: html(`<p>Yes — on eligible orders. If the seller has EMI enabled and your order with them meets the minimum order value, "Pay in EMI" appears as a payment option at checkout. Choose a tenure of 2–6 months, pay a small token amount upfront, and the remaining balance plus a small monthly surcharge is billed automatically in equal installments each month. Your order ships once the EMI is fully paid — the token confirms your commitment and secures the item, it is not a dispatch trigger. A seller may opt an individual listing into earlier dispatch, and that is stated on the listing.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,

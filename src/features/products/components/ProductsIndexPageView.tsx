@@ -14,6 +14,9 @@ import {
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 import { parseSelectedListingTypes } from "../utils/listing-type";
+import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
+import { siteSettingsRepository } from "../../../repositories";
+import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -67,14 +70,45 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
 
   // See ArtStickersListView — one shared filter implementation with
   // /api/products, so SSR and the client refetch agree by construction.
-  const products = await listPublicProducts(
-    parsePublicProductParams(searchParams, {
-      listingTypes: GENERIC_PRODUCT_LISTING_TYPES,
-      pageSize: DEFAULT_PAGE_SIZE,
-      sorts: DEFAULT_SORT,
-      ...defaultAvailabilityForListingTypes(effectiveTypes),
+  const [products, settings] = await Promise.all([
+    listPublicProducts(
+      parsePublicProductParams(searchParams, {
+        listingTypes: GENERIC_PRODUCT_LISTING_TYPES,
+        pageSize: DEFAULT_PAGE_SIZE,
+        sorts: DEFAULT_SORT,
+        ...defaultAvailabilityForListingTypes(effectiveTypes),
+      }),
+    ),
+    /*
+     * Read in parallel with the listing — the banner below is the only
+     * consumer, and serialising a settings read in front of the page's main
+     * query would spend a round trip against Rule #6's budget for one link.
+     *
+     * 🛑 `safeRead`, so a settings failure hides the banner rather than
+     * failing the catalogue. Auctions have their own nav entry and their own
+     * page; the banner is a shortcut, and a shortcut is the correct thing to
+     * lose when its gate cannot be evaluated.
+     */
+    safeRead(() => siteSettingsRepository.findById("global"), {
+      route: "/products",
+      key: "products.siteSettings",
+      fallback: null,
     }),
-  );
+  ]);
+
+  /*
+   * 🛑 Auctions are a LISTING TYPE an admin can switch off, and this banner
+   * advertised them unconditionally.
+   *
+   * Every other auction entry point already respects the flag — the navbar
+   * child (filtered by key in `LayoutShellClient`), the footer link
+   * (`FOOTER_LINK_LISTING_TYPES`), the store tabs (`tabs.ts`), the
+   * category/brand tabs, and the homepage section (`gatedListing`). This was
+   * the one surface left promoting a page that renders nothing on a site with
+   * auctions disabled, which is Root Cause #37's dead-link shape reached from
+   * the other direction.
+   */
+  const showAuctionsBanner = isListingTypeEnabled("auction", settings);
 
   return (
     <Main>
@@ -87,6 +121,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
           <Text className="mt-1" color="muted" size="sm">
             Discover amazing products and deals
           </Text>
+          {showAuctionsBanner && (
           <Div className="mt-3">
             <TextLink
               variant="bare"
@@ -104,6 +139,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
               🏷️ Looking for unique deals? Browse Auctions →
             </TextLink>
           </Div>
+          )}
         </Container>
       </Section>
 

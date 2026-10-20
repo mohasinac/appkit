@@ -11,6 +11,7 @@ import { AuctionBidsTable } from "../../auctions/components/AuctionBidsTable";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { BidDocument } from "../../auctions/schemas/firestore";
+import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 
 const SORT_OPTIONS = [
   { value: sortBy("bidDate", "DESC"), label: "Newest first" },
@@ -38,6 +39,7 @@ export function UserBidsView() {
   // not an affordance: it is not row-scoped, and it only shows when there are
   // no bids at all.
   const [detail, setDetail] = useState<BidDocument | null>(null);
+  const auctionsEnabled = useListingTypeFlags().auction;
 
   const config: ListingViewConfig<UserBidsResponse, BidDocument> = {
     portal: "user",
@@ -87,10 +89,19 @@ export function UserBidsView() {
           onPageChange={() => {}}
           emptyLabel={
             <Span>
-              You haven&apos;t placed any bids yet.{" "}
-              <TextLink href={String(ROUTES.PUBLIC.AUCTIONS)}>
-                Browse auctions
-              </TextLink>
+              You haven&apos;t placed any bids yet.
+              {/* The CTA follows the listing type, not the page. A buyer's
+                  past bids outlive auctions being switched off, so the page
+                  stays; inviting them to browse a catalogue the site no
+                  longer offers would be a dead end. */}
+              {auctionsEnabled && (
+                <>
+                  {" "}
+                  <TextLink href={String(ROUTES.PUBLIC.AUCTIONS)}>
+                    Browse auctions
+                  </TextLink>
+                </>
+              )}
             </Span>
           }
         />
