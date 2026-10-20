@@ -580,6 +580,42 @@ export interface PartGlossaryDocument extends BaseDocument {
    * states it per part, so absence is "not stated", not zero.
    */
   ratings?: PartRatings;
+  /**
+   * The ceiling `ratings` are out of — 6, 8 or 100.
+   *
+   * 🛑 LOAD-BEARING, because each generation rates on its own scale and they
+   * share these fields. Measured: Beyblade X rates 0-100 (237 rows) while
+   * Burst rates 0-6 or 0-8 (945 rows), so mean `attack` by slot reads
+   * `blade 31.8` beside `driver 1.78`. Anything that sorts, compares or
+   * simulates on a rating MUST divide by this first; without it a Beyblade X
+   * blade outranks every Burst layer five times over.
+   *
+   * Derived per system from the highest rating observed for it, rounded up to
+   * a standard step — not from a hand-written table, which was wrong within
+   * one run (`warrior-wheel--dragoon` carries attack 7 against a declared 6).
+   */
+  ratingScale?: number;
+  /**
+   * The same axes rescaled to 0-100, so a part can be compared ACROSS
+   * generations — which the game needs, since it has cross-gen battles.
+   *
+   * 🛑 This equalises the EDITORIAL JUDGEMENT, not the capability. A Burst
+   * layer at 6/6 and a Beyblade X blade at 100/100 both land on 100 and are
+   * not equally strong — that blade is 30 g against the layer's 13 g. So it
+   * answers "how good is this part for its generation", which is the right
+   * basis for a balanced roster and the wrong basis for claiming physical
+   * equivalence. `weightG` carries the latter, in grams, unnormalised.
+   *
+   * `ratings` stays raw beside it: a normalised value can be recomputed from
+   * the raw pair, a discarded raw value cannot.
+   *
+   * 🛑 FOR COMPARING OPPONENTS, NEVER FOR SUGGESTING A BUILD. A bey can only
+   * be ASSEMBLED within one generation — a Burst layer does not fit a Beyblade
+   * X ratchet — while battles are cross-generation. So this field belongs in a
+   * matchup, a leaderboard or a side-by-side, and a "build your own" picker
+   * must constrain to a single system's stack regardless of what it says.
+   */
+  ratingsNormalised?: PartRatings;
   /** WBO format legality across 11 formats; an unstated format is absent. */
   wboLegality?: PartWboLegality;
   /**

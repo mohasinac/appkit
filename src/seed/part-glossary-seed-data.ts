@@ -224,6 +224,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -394,6 +403,13 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 10,
       "height": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 10,
+      "height": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -530,6 +546,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 3.5,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 58,
+      "stamina": 50
+    },
     "jpName": "サークルアッパー",
     "romaji": "Sākuru Appā"
   },
@@ -602,6 +624,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -662,6 +690,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -722,6 +756,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -837,6 +877,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -897,6 +943,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -957,6 +1009,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -1030,6 +1088,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -1155,6 +1219,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -1294,6 +1364,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 50
     }
   },
   {
@@ -1367,6 +1443,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -1498,6 +1580,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -1819,6 +1907,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -1939,6 +2033,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -2133,6 +2233,10 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Holy_Despell",
     "ratings": {
       "defense": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "defense": 17
     }
   },
   {
@@ -2430,6 +2534,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -2458,6 +2568,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -2582,6 +2698,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -2642,6 +2764,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -2719,6 +2847,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -2774,6 +2908,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -2859,6 +2999,13 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2,
       "weight": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 83
     }
   },
   {
@@ -3016,6 +3163,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 3.5,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 58,
+      "stamina": 50
+    },
     "jpName": "サムライアッパー",
     "romaji": "Samurai Appā"
   },
@@ -3128,6 +3281,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 33
     }
   },
   {
@@ -3272,6 +3431,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -3365,6 +3530,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -3417,6 +3588,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2.5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 42
     },
     "partType": "Balance",
     "jpName": "スパイラルアッパー",
@@ -3544,6 +3721,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -3604,6 +3787,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -3674,6 +3863,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -3734,6 +3929,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -3793,6 +3994,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -3868,6 +4075,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -4005,6 +4218,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -4170,6 +4389,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -4400,6 +4625,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -4549,6 +4780,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -4610,6 +4847,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 50
     }
   },
   {
@@ -4930,6 +5173,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dash": 40,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 10,
+      "dash": 40,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -5120,6 +5371,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Ball",
     "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 55,
+      "dash": 10,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 20,
       "stamina": 55,
@@ -5614,6 +5873,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dash": 35,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 10,
+      "dash": 35,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -5761,6 +6028,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Ball",
     "ratings": {
+      "attack": 10,
+      "defense": 25,
+      "stamina": 60,
+      "dash": 5,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 25,
       "stamina": 60,
@@ -5991,6 +6266,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Ball",
     "ratings": {
+      "attack": 10,
+      "defense": 15,
+      "stamina": 45,
+      "dash": 30,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 15,
       "stamina": 45,
@@ -6232,6 +6515,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Hexa",
     "ratings": {
+      "attack": 30,
+      "defense": 35,
+      "stamina": 20,
+      "dash": 15,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 35,
       "stamina": 20,
@@ -6523,6 +6814,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Point",
     "ratings": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
+      "dash": 25,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 25,
       "defense": 25,
       "stamina": 25,
@@ -6882,6 +7181,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dash": 25,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 20,
+      "stamina": 20,
+      "dash": 25,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -7006,6 +7313,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Point",
     "ratings": {
+      "attack": 35,
+      "defense": 25,
+      "stamina": 25,
+      "dash": 15,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 35,
       "defense": 25,
       "stamina": 25,
@@ -7188,6 +7503,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Vortex",
     "ratings": {
+      "attack": 45,
+      "defense": 10,
+      "stamina": 5,
+      "dash": 40,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 10,
       "stamina": 5,
@@ -9320,6 +9643,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -9489,6 +9818,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 15,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -9641,6 +9976,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 20
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 65,
+      "defense": 30,
+      "stamina": 20
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -9756,6 +10097,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CrimsonGaruda",
     "ratings": {
+      "attack": 45,
+      "defense": 25,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 25,
       "stamina": 30
@@ -9986,6 +10333,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 20,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 70,
+      "defense": 20,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -10185,6 +10538,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranDagger",
     "ratings": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 50,
       "defense": 25,
       "stamina": 25
@@ -10654,6 +11013,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 35
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 30,
+      "stamina": 35
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -10765,6 +11130,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DrigerSlash",
     "ratings": {
+      "attack": 40,
+      "defense": 35,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 40,
       "defense": 35,
       "stamina": 25
@@ -10899,6 +11270,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GhostCircle",
     "ratings": {
+      "attack": 5,
+      "defense": 40,
+      "stamina": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 5,
       "defense": 40,
       "stamina": 55
@@ -11056,6 +11433,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsHammer",
     "ratings": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 50,
       "defense": 25,
       "stamina": 25
@@ -11289,6 +11672,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 35,
       "stamina": 35
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 35,
+      "stamina": 35
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -11496,6 +11885,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 55,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 20,
+      "defense": 55,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -11633,6 +12028,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonClaw",
     "ratings": {
+      "attack": 40,
+      "defense": 40,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 40,
       "defense": 40,
       "stamina": 20
@@ -11847,6 +12248,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -11958,6 +12365,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -12194,6 +12610,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 25,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -12334,6 +12756,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SilverWolf",
     "ratings": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 65
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 30,
       "stamina": 65
@@ -12504,6 +12932,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 5
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 65,
+      "defense": 30,
+      "stamina": 5
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -12647,6 +13081,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_UnicornSting",
     "ratings": {
+      "attack": 35,
+      "defense": 35,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 35,
       "defense": 35,
       "stamina": 30
@@ -12810,6 +13250,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ViperTail",
     "ratings": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 20,
       "stamina": 50
@@ -13055,6 +13501,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 55
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 55
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -13208,6 +13660,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 25,
+      "stamina": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -13281,6 +13739,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -13405,6 +13869,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 50
     }
   },
   {
@@ -13535,6 +14005,10 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Engine_Stopper_Base",
     "ratings": {
       "attack": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33
     }
   },
   {
@@ -13626,6 +14100,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -13910,6 +14390,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     }
   },
   {
@@ -14113,6 +14599,10 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Jumping_Base",
     "ratings": {
       "attack": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50
     }
   },
   {
@@ -14174,6 +14664,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -14460,6 +14956,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -14618,6 +15120,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -14653,6 +15161,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -14715,6 +15229,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -14822,6 +15342,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -14924,6 +15450,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -15140,6 +15672,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 50
     }
   },
   {
@@ -15222,6 +15760,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -15986,6 +16530,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -16451,6 +17004,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -16773,6 +17334,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -16998,6 +17567,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 2,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
       "speed": 0
     },
     "wboLegality": {
@@ -17374,6 +17951,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -17660,6 +18245,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -18104,6 +18697,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -18329,6 +18930,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 3,
       "weight": 1,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 38,
+      "weight": 13,
       "speed": 0
     },
     "wboLegality": {
@@ -18660,6 +19269,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -18830,6 +19448,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -19108,6 +19735,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -19261,6 +19896,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -19430,6 +20074,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -19571,6 +20223,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 25,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -19742,6 +20403,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -19887,6 +20556,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -20041,6 +20719,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -20260,6 +20946,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -20440,6 +21135,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -20569,6 +21272,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -20773,6 +21485,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -20890,6 +21611,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 3,
       "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 50,
       "speed": 0,
       "burst": 0
     },
@@ -21106,6 +21836,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -21287,6 +22025,15 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -21491,6 +22238,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -21668,6 +22423,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1,
       "weight": 3,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 50,
       "speed": 0
     },
     "wboLegality": {
@@ -21869,6 +22632,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -21991,6 +22762,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -22120,6 +22899,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -22211,6 +22998,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 4,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -22393,6 +23188,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -22497,6 +23300,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -22694,6 +23505,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -22786,6 +23605,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -22923,6 +23750,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -23155,6 +23990,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -23263,6 +24106,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 0,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -23471,6 +24322,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 0,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -23699,6 +24558,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -23911,6 +24778,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -24072,6 +24947,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38
     },
     "wboLegality": {
       "burst": true,
@@ -24321,6 +25204,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -24426,6 +25317,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 0,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -24635,6 +25534,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -24775,6 +25682,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38
     },
     "wboLegality": {
       "burst": true,
@@ -24942,6 +25857,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -25073,6 +25996,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -25282,6 +26213,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "アクアリオ",
     "romaji": "Akuario"
   },
@@ -25489,6 +26426,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
     "jpName": "アリエス",
     "romaji": "Ariesu"
   },
@@ -25605,6 +26548,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 83
     },
     "aka": [
       "Beafowl (Takara Tomy)"
@@ -25729,6 +26678,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "defense": 4,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 67,
       "stamina": 0
     },
     "jpName": "ブレイズ",
@@ -25878,6 +26833,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -26125,6 +27086,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
     },
     "aka": [
       "Capricorne"
@@ -26419,6 +27386,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
     "jpName": "シグナス",
     "romaji": "Shigunasu"
   },
@@ -26600,6 +27573,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 67
+    },
     "aka": [
       "Aquila"
     ],
@@ -26771,6 +27750,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 83
     },
     "aka": [
       "Phoenix (Takara Tomy)"
@@ -26992,6 +27977,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
+    },
     "jpName": "ホルセウス",
     "romaji": "Horuseus"
   },
@@ -27110,6 +28101,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
     },
     "jpName": "ジュピター",
     "romaji": "Jupitā"
@@ -27276,6 +28273,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 50
     },
     "jpName": "ケルベクス",
     "romaji": "Kerubekusu"
@@ -27535,6 +28538,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 67
     }
   },
   {
@@ -27663,6 +28672,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 2.5,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 42,
+      "defense": 42,
+      "stamina": 33
+    },
     "jpName": "リンクス",
     "romaji": "Rinkusu"
   },
@@ -27746,6 +28761,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
     },
     "jpName": "ネメシスX",
     "romaji": "Nemeshisu X"
@@ -27990,6 +29011,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     }
   },
   {
@@ -28133,6 +29160,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
     "jpName": "サーペント",
     "romaji": "Sāpento"
   },
@@ -28230,6 +29263,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
     },
     "aka": [
       "Unicorno II (Takara Tomy)"
@@ -28395,6 +29434,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     },
     "jpName": "ビルゴ",
     "romaji": "Birugo"
@@ -28623,6 +29668,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
+    },
     "jpName": "ヴォルフ",
     "romaji": "Vorufu"
   },
@@ -28731,6 +29782,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 5,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
     }
   },
   {
@@ -28765,6 +29822,11 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "stamina": 50
     }
   },
   {
@@ -28811,6 +29873,11 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "stamina": 33
     }
   },
   {
@@ -28860,6 +29927,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -32146,6 +33219,14 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -32527,6 +33608,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
+    },
     "jpName": "バーン",
     "romaji": "Bān"
   },
@@ -32741,6 +33828,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     },
     "jpName": "ダーク",
     "romaji": "Dāku"
@@ -33055,6 +34148,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
     "jpName": "キラー",
     "romaji": "Kirā"
   },
@@ -33290,6 +34389,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     }
   },
   {
@@ -33448,6 +34553,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 0,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 67
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -33628,6 +34739,12 @@ const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
     }
   },
   {
@@ -33839,6 +34956,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -34002,6 +35125,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -34273,6 +35402,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
     "partType": "Balance"
   },
   {
@@ -34355,6 +35490,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
     },
     "jpName": "プロト",
     "romaji": "Puroto"
@@ -34678,6 +35819,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
     "jpName": "ロック",
     "romaji": "Rokku"
   },
@@ -34882,6 +36029,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -35219,6 +36372,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "ストーム",
     "romaji": "Sutōmu"
   },
@@ -35444,6 +36603,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2,
       "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 38,
       "speed": 0,
       "burst": 0
     },
@@ -35833,6 +37001,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -36003,6 +37180,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 63,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -36142,6 +37328,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -36489,6 +37684,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25,
+      "burst": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -36622,6 +37826,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -36850,6 +38063,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13,
+      "burst": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -36993,6 +38215,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 4,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 38,
+      "speed": 50,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -37102,6 +38333,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 0,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -37233,6 +38473,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 0,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -37475,6 +38724,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -37779,6 +39037,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 33,
+      "burst": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -37939,6 +39206,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -38096,6 +39372,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1,
       "burst": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 17,
+      "burst": 83
     },
     "wboLegality": {
       "burst": true,
@@ -38267,6 +39552,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 13,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -38467,6 +39761,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Volt",
     "ratings": {
+      "attack": 45,
+      "defense": 15,
+      "stamina": 15
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 15,
       "stamina": 15
@@ -38922,6 +40222,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 1,
       "stamina": 6
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 100
     },
     "aka": [
       "Eternal Sharp (Takara Tomy)"
@@ -41259,6 +42565,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -42053,6 +43365,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 15,
       "height": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 3,
+      "defense": 12,
+      "stamina": 15,
+      "height": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -42312,6 +43631,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-60",
     "ratings": {
+      "attack": 17,
+      "defense": 9,
+      "stamina": 4,
+      "height": 60
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 9,
       "stamina": 4,
@@ -42762,6 +44088,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 9,
       "stamina": 6
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 9,
+      "stamina": 6
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -42961,6 +44293,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-70",
     "ratings": {
+      "attack": 15,
+      "defense": 8,
+      "stamina": 7
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 8,
       "stamina": 7
@@ -43306,6 +44644,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-80",
     "ratings": {
+      "attack": 15,
+      "defense": 7,
+      "stamina": 8,
+      "height": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 7,
       "stamina": 8,
@@ -43688,6 +45033,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 6,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 11,
+      "defense": 13,
+      "stamina": 6,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -43916,6 +45268,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-70",
     "ratings": {
+      "attack": 11,
+      "defense": 12,
+      "stamina": 7,
+      "height": 70
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 11,
       "defense": 12,
       "stamina": 7,
@@ -44238,6 +45597,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 8,
       "height": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 11,
+      "defense": 11,
+      "stamina": 8,
+      "height": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -44485,6 +45851,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 9,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 12,
+      "defense": 9,
+      "stamina": 9,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -44684,6 +46057,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 12,
       "defense": 8.5,
       "stamina": 9.5
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 12,
+      "defense": 9,
+      "stamina": 10
     },
     "wboLegality": {
       "xStandard": true
@@ -44893,6 +46272,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-80",
     "ratings": {
+      "attack": 12,
+      "defense": 8,
+      "stamina": 10,
+      "height": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 12,
       "defense": 8,
       "stamina": 10,
@@ -45133,6 +46519,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 7,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -45264,6 +46657,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 33
+    },
     "jpName": "バトルチェンジコア",
     "romaji": "Batoru Chenji Koa"
   },
@@ -45350,6 +46749,11 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "defense": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17
     }
   },
   {
@@ -45495,6 +46899,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "グリップフラットコア",
     "romaji": "Gurippu Furatto Koa"
   },
@@ -45566,6 +46976,11 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "defense": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17
     }
   },
   {
@@ -45821,6 +47236,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -45885,6 +47306,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -46170,6 +47597,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -46521,6 +47954,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -47179,6 +48618,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -47741,6 +49186,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -48027,6 +49478,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -48307,6 +49764,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 17
     }
   },
   {
@@ -48440,6 +49903,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 17
     }
   },
   {
@@ -48984,6 +50453,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -49448,6 +50923,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 0,
       "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
       "stamina": 0
     },
     "aka": [
@@ -49979,6 +51460,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 1,
       "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 0
     }
   },
   {
@@ -50345,6 +51832,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -50444,6 +51940,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -50505,6 +52010,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 33
     }
   },
   {
@@ -50963,6 +52474,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -51422,6 +52939,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -51605,6 +53128,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     }
   },
   {
@@ -51741,6 +53270,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -51844,6 +53382,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -51983,6 +53530,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1,
       "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 38,
       "speed": 0,
       "burst": 0
     },
@@ -52159,6 +53715,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -52308,6 +53873,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -52403,6 +53977,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 2,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -52557,6 +54140,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -52644,6 +54236,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 3,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -52776,6 +54377,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 3,
       "speed": 2,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 25,
       "burst": 0
     },
     "wboLegality": {
@@ -52940,6 +54550,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -53116,6 +54734,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 0,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -53285,6 +54911,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 2,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -54081,6 +55715,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 50,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -54398,6 +56040,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 67,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -54638,6 +56288,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -54735,6 +56393,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -55061,6 +56727,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -55338,6 +57012,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 33
     },
     "wboLegality": {
       "burst": true,
@@ -55892,6 +57574,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 33,
+      "weight": 0,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -56076,6 +57766,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -56272,6 +57970,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 33
     },
     "wboLegality": {
       "burst": true,
@@ -56632,6 +58338,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 5,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 5,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -56774,6 +58487,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 10,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 20,
+      "stamina": 10,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -56876,6 +58596,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Charge",
     "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 5,
+      "height": 60
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 20,
       "stamina": 5,
@@ -57060,6 +58787,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 25,
       "height": 70
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 5,
+      "stamina": 25,
+      "height": 70
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -57144,6 +58878,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 25,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 20,
+      "stamina": 25,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -57223,6 +58964,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Gravity",
     "ratings": {
+      "attack": 37,
+      "defense": 9,
+      "stamina": 4,
+      "height": 90
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 37,
       "defense": 9,
       "stamina": 4,
@@ -57332,6 +59080,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Heavy",
     "ratings": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 11,
+      "height": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 17,
       "stamina": 11,
@@ -57454,6 +59209,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 5,
       "height": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 20,
+      "defense": 15,
+      "stamina": 5,
+      "height": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -57564,6 +59326,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 5,
       "height": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 5,
+      "stamina": 5,
+      "height": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -57653,6 +59422,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Massive",
     "ratings": {
+      "attack": 15,
+      "defense": 15,
+      "stamina": 10,
+      "height": 60
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 15,
       "stamina": 10,
@@ -57755,6 +59531,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Odd",
     "ratings": {
+      "attack": 17,
+      "defense": 10,
+      "stamina": 13,
+      "height": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 10,
       "stamina": 13,
@@ -58014,6 +59797,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 20,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -58171,6 +59961,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 20,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -58259,6 +60056,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Vertical",
     "ratings": {
+      "attack": 10,
+      "defense": 25,
+      "stamina": 5,
+      "height": 60
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 25,
       "stamina": 5,
@@ -58395,6 +60199,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 20,
       "height": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 20,
+      "height": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -58474,6 +60285,13 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Assist_Blade_-_Zillion",
     "ratings": {
+      "attack": 22,
+      "defense": 15,
+      "stamina": 3,
+      "height": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 22,
       "defense": 15,
       "stamina": 3,
@@ -58687,6 +60505,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 33
+    },
     "jpName": "クロスドラゴン",
     "romaji": "Kurosu Doragon"
   },
@@ -58819,6 +60643,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 17
     }
   },
   {
@@ -58862,6 +60692,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -58940,6 +60776,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 17
     }
   },
   {
@@ -59003,6 +60845,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -59098,6 +60946,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
+    },
     "aka": [
       "Bearing Gyros AR",
       "Gyro AR"
@@ -59150,6 +61004,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -59322,6 +61182,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -59401,6 +61267,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -59456,6 +61328,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -59502,6 +61380,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -59544,6 +61428,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "トリプルアタッカー",
     "romaji": "Toripuru Atakkā"
   },
@@ -59577,6 +61467,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -59619,6 +61515,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -59724,6 +61626,12 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67
     }
   },
   {
@@ -59867,6 +61775,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -60072,6 +61989,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -60371,6 +62297,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 25,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -60642,6 +62577,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 38,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -60765,6 +62709,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -61117,6 +63070,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 38,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -61295,6 +63257,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 63,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -61527,6 +63498,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 38,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -61740,6 +63720,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 63,
+      "weight": 38,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -61907,6 +63896,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 2,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 25,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -62113,6 +64111,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -62326,6 +64333,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -62466,6 +64482,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 38,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -62744,6 +64769,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -63111,6 +65145,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -63234,6 +65277,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 3,
       "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 38,
+      "weight": 50,
       "speed": 0,
       "burst": 0
     },
@@ -63560,6 +65612,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -63852,6 +65913,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 25,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -64208,6 +66278,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -64454,6 +66533,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -64831,6 +66919,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -65128,6 +67225,15 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 0,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -65434,6 +67540,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 25,
+      "stamina": 50,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -65547,6 +67661,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Bound_Spike",
     "ratings": {
+      "attack": 5,
+      "defense": 60,
+      "stamina": 30,
+      "dash": 5,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 5,
       "defense": 60,
       "stamina": 30,
@@ -65696,6 +67818,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 45,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 5,
+      "stamina": 10,
+      "dash": 45,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -65796,6 +67926,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Spike",
     "ratings": {
+      "attack": 5,
+      "defense": 55,
+      "stamina": 40,
+      "dash": 10,
+      "burstResistance": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 5,
       "defense": 55,
       "stamina": 40,
@@ -65960,6 +68098,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 55,
+      "stamina": 25,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -66105,6 +68251,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 35,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 15,
+      "stamina": 20,
+      "dash": 35,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -66191,6 +68345,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Flat",
     "ratings": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 15,
+      "dash": 30,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 40,
       "defense": 15,
       "stamina": 15,
@@ -66416,6 +68578,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 40,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 5,
+      "stamina": 5,
+      "dash": 40,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -66606,6 +68776,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 30,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 20,
+      "defense": 40,
+      "stamina": 10,
+      "dash": 30,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -66777,6 +68955,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 30,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 25,
+      "stamina": 15,
+      "dash": 30,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -66874,6 +69060,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Rush",
     "ratings": {
+      "attack": 45,
+      "defense": 10,
+      "stamina": 10,
+      "dash": 35,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 10,
       "stamina": 10,
@@ -66989,6 +69183,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 30,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 20,
+      "dash": 30,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -67092,6 +69294,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Glide",
     "ratings": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 55,
+      "dash": 15,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 20,
       "defense": 10,
       "stamina": 55,
@@ -67303,6 +69513,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 55,
+      "stamina": 20,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -67451,6 +69669,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 25,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 25,
+      "stamina": 20,
+      "dash": 25,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -67561,6 +69787,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 30,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 15,
+      "stamina": 5,
+      "dash": 30,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -67654,6 +69888,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Jolt",
     "ratings": {
+      "attack": 35,
+      "defense": 10,
+      "stamina": 15,
+      "dash": 40,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 35,
       "defense": 10,
       "stamina": 15,
@@ -67860,6 +70102,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 25,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 25,
+      "stamina": 15,
+      "dash": 25,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -68007,6 +70257,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 40,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 5,
+      "stamina": 15,
+      "dash": 40,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -68084,6 +70342,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Cyclone",
     "ratings": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 5,
+      "dash": 45,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 5,
       "stamina": 5,
@@ -68313,6 +70579,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 40,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 10,
+      "dash": 40,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -68458,6 +70732,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 15,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 25,
+      "stamina": 55,
+      "dash": 15,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -68548,6 +70830,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Low_Point",
     "ratings": {
+      "attack": 30,
+      "defense": 15,
+      "stamina": 30,
+      "dash": 25,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 15,
       "stamina": 30,
@@ -68708,6 +70998,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 35,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 45,
+      "defense": 5,
+      "stamina": 15,
+      "dash": 35,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -68807,6 +71105,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Merge",
     "ratings": {
+      "attack": 50,
+      "defense": 20,
+      "stamina": 10,
+      "dash": 20,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 50,
       "defense": 20,
       "stamina": 10,
@@ -68949,6 +71255,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 5,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 57,
+      "stamina": 30,
+      "dash": 5,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": false,
       "xMasters": false,
@@ -69030,6 +71344,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Metal_Taper",
     "ratings": {
+      "attack": 40,
+      "defense": 22,
+      "stamina": 18,
+      "dash": 20,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 40,
       "defense": 22,
       "stamina": 18,
@@ -69135,6 +71457,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Narrow",
     "ratings": {
+      "attack": 15,
+      "defense": 20,
+      "stamina": 60,
+      "dash": 5,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 20,
       "stamina": 60,
@@ -69403,6 +71733,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 50,
+      "stamina": 30,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -69587,6 +71925,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 30,
+      "stamina": 50,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -69733,6 +72079,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 25,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 55,
+      "defense": 15,
+      "stamina": 5,
+      "dash": 25,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -69866,6 +72220,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Rubber_Accel",
     "ratings": {
+      "attack": 60,
+      "defense": 17,
+      "stamina": 3,
+      "dash": 20,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 60,
       "defense": 17,
       "stamina": 3,
@@ -70107,6 +72469,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 30,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 20,
+      "dash": 30,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -70251,6 +72621,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 45,
+      "stamina": 35,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -70335,6 +72713,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Kick",
     "ratings": {
+      "attack": 35,
+      "defense": 30,
+      "stamina": 20,
+      "dash": 15,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 35,
       "defense": 30,
       "stamina": 20,
@@ -70459,6 +72845,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 35,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 55,
+      "defense": 5,
+      "stamina": 5,
+      "dash": 35,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true,
       "xMasters": true,
@@ -70563,6 +72957,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Under_Needle",
     "ratings": {
+      "attack": 10,
+      "defense": 60,
+      "stamina": 20,
+      "dash": 10,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 60,
       "stamina": 20,
@@ -70704,6 +73106,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 20,
       "burstResistance": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 30,
+      "dash": 20,
+      "burstResistance": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -70832,6 +73242,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 30,
+      "stamina": 45,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -70910,6 +73328,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Wall_Wedge",
     "ratings": {
+      "attack": 5,
+      "defense": 60,
+      "stamina": 25,
+      "dash": 10,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 5,
       "defense": 60,
       "stamina": 25,
@@ -71055,6 +73481,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dash": 10,
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 55,
+      "stamina": 30,
+      "dash": 10,
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -71146,6 +73580,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Yielding",
     "ratings": {
+      "attack": 10,
+      "defense": 15,
+      "stamina": 65,
+      "dash": 10,
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 15,
       "stamina": 65,
@@ -71258,6 +73700,14 @@ const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Zap",
     "ratings": {
+      "attack": 30,
+      "defense": 20,
+      "stamina": 15,
+      "dash": 35,
+      "burstResistance": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 20,
       "stamina": 15,
@@ -72620,6 +75070,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50
     }
   },
   {
@@ -72738,6 +75193,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33
     }
   },
   {
@@ -73293,6 +75753,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -73504,6 +75973,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 22,
       "stamina": 18
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 22,
+      "stamina": 18
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -73628,6 +76103,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 65,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 65,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -73718,6 +76199,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 55,
       "stamina": 24
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 21,
+      "defense": 55,
+      "stamina": 24
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -73802,6 +76289,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 28,
       "stamina": 17
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 55,
+      "defense": 28,
+      "stamina": 17
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -73878,6 +76371,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Chewbacca",
     "ratings": {
+      "attack": 22,
+      "defense": 23,
+      "stamina": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 22,
       "defense": 23,
       "stamina": 55
@@ -73965,6 +76464,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Clamp_Crab",
     "ratings": {
+      "attack": 10,
+      "defense": 43,
+      "stamina": 47
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 43,
       "stamina": 47
@@ -74081,6 +76586,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ClockMirage",
     "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 10,
       "stamina": 80
@@ -74310,6 +76821,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 63,
+      "weight": 25,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -74409,6 +76929,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -74505,6 +77034,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Darth_Vader",
     "ratings": {
+      "attack": 28,
+      "defense": 60,
+      "stamina": 12
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 28,
       "defense": 60,
       "stamina": 12
@@ -74864,6 +77399,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 5,
       "burst": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 63,
+      "burst": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -74928,6 +77472,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Doctor Doom is a Beyblade blade from the Basic Line. Released as G3063 for Beyblade X (Season 3).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Doctor_Doom",
     "ratings": {
+      "attack": 19,
+      "defense": 55,
+      "stamina": 26
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 19,
       "defense": 55,
       "stamina": 26
@@ -75027,6 +77577,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DracielShield",
     "ratings": {
+      "attack": 30,
+      "defense": 50,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 50,
       "stamina": 20
@@ -75145,6 +77701,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 55,
+      "defense": 30,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -75238,6 +77800,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranStrike",
     "ratings": {
+      "attack": 58,
+      "defense": 25,
+      "stamina": 17
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 58,
       "defense": 25,
       "stamina": 17
@@ -75390,6 +77958,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -75477,6 +78054,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_General_Grievous",
     "ratings": {
+      "attack": 22,
+      "defense": 50,
+      "stamina": 28
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 22,
       "defense": 50,
       "stamina": 28
@@ -75704,6 +78287,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gill_Shark",
     "ratings": {
+      "attack": 20,
+      "defense": 25,
+      "stamina": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 20,
       "defense": 25,
       "stamina": 55
@@ -75978,6 +78567,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 60,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 60,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -76071,6 +78666,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 28,
       "stamina": 55
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 28,
+      "stamina": 55
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -76141,6 +78742,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Grogu",
     "ratings": {
+      "attack": 21,
+      "defense": 50,
+      "stamina": 29
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 21,
       "defense": 50,
       "stamina": 29
@@ -76321,6 +78928,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -76409,6 +79025,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Gust_Bat",
     "ratings": {
+      "attack": 42,
+      "defense": 38,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 42,
       "defense": 38,
       "stamina": 20
@@ -76503,6 +79125,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hack_Viking",
     "ratings": {
+      "attack": 47,
+      "defense": 28,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 47,
       "defense": 28,
       "stamina": 25
@@ -76616,6 +79244,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HeavensRing",
     "ratings": {
+      "attack": 10,
+      "defense": 60,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 60,
       "stamina": 30
@@ -76760,6 +79394,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 40,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 40,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -76897,6 +79537,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 60,
       "stamina": 27
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 60,
+      "stamina": 27
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -76964,6 +79610,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Hulk is a Beyblade blade from the Basic Line, weighing 33 g. Released as G3064 for Beyblade X (Season 3).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Hulk",
     "ratings": {
+      "attack": 12,
+      "defense": 65,
+      "stamina": 23
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 12,
       "defense": 65,
       "stamina": 23
@@ -77076,6 +79728,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 25,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -77174,6 +79832,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Iron_Man",
     "ratings": {
+      "attack": 17,
+      "defense": 55,
+      "stamina": 28
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 55,
       "stamina": 28
@@ -77385,6 +80049,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 27
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 23,
+      "defense": 50,
+      "stamina": 27
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -77519,6 +80189,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 60,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 60,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -77630,6 +80306,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightMail",
     "ratings": {
+      "attack": 10,
+      "defense": 65,
+      "stamina": 35
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 65,
       "stamina": 35
@@ -77790,6 +80472,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 70,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 15,
+      "defense": 70,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -77885,6 +80573,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 20
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 30,
+      "stamina": 20
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -77973,6 +80667,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Lightning_L-Drago_(Upper_Type)",
     "ratings": {
+      "attack": 55,
+      "defense": 25,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 55,
       "defense": 25,
       "stamina": 20
@@ -78071,6 +80771,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 55,
       "stamina": 22
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 23,
+      "defense": 55,
+      "stamina": 22
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -78157,6 +80863,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LusterDragoon",
     "ratings": {
+      "attack": 75,
+      "defense": 15,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 75,
       "defense": 15,
       "stamina": 10
@@ -78355,6 +81067,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 35,
       "stamina": 38
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 27,
+      "defense": 35,
+      "stamina": 38
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -78467,6 +81185,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 35
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 15,
+      "stamina": 35
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -78560,6 +81284,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 55
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 12,
+      "defense": 33,
+      "stamina": 55
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -78617,6 +81347,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Mister Fantastic is a Beyblade blade from the Basic Line. Released as G3063 for Beyblade X (Season 3).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Mister_Fantastic",
     "ratings": {
+      "attack": 31,
+      "defense": 55,
+      "stamina": 14
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 31,
       "defense": 55,
       "stamina": 14
@@ -78710,6 +81446,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Moff_Gideon",
     "ratings": {
+      "attack": 32,
+      "defense": 35,
+      "stamina": 33
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 32,
       "defense": 35,
       "stamina": 33
@@ -78827,6 +81569,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 60,
       "stamina": 20
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 30,
+      "defense": 60,
+      "stamina": 20
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -78912,6 +81660,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Obi-Wan_Kenobi",
     "ratings": {
+      "attack": 23,
+      "defense": 60,
+      "stamina": 17
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 23,
       "defense": 60,
       "stamina": 17
@@ -79012,6 +81766,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Primal",
     "ratings": {
+      "attack": 60,
+      "defense": 27,
+      "stamina": 13
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 60,
       "defense": 27,
       "stamina": 13
@@ -79128,6 +81888,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 55,
       "stamina": 23
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 22,
+      "defense": 55,
+      "stamina": 23
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -79222,6 +81988,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_OrochiCluster",
     "ratings": {
+      "attack": 65,
+      "defense": 15,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 65,
       "defense": 15,
       "stamina": 20
@@ -79324,6 +82096,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixFeather",
     "ratings": {
+      "attack": 50,
+      "defense": 20,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 50,
       "defense": 20,
       "stamina": 30
@@ -79451,6 +82229,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixRudder",
     "ratings": {
+      "attack": 10,
+      "defense": 35,
+      "stamina": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 35,
       "stamina": 55
@@ -79624,6 +82408,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 63,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -79711,6 +82504,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Red_Hulk",
     "ratings": {
+      "attack": 65,
+      "defense": 27,
+      "stamina": 8
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 65,
       "defense": 27,
       "stamina": 8
@@ -79818,6 +82617,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_RhinoHorn",
     "ratings": {
+      "attack": 20,
+      "defense": 50,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 20,
       "defense": 50,
       "stamina": 30
@@ -80031,6 +82836,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -80158,6 +82972,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 28,
       "stamina": 12
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 60,
+      "defense": 28,
+      "stamina": 12
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -80248,6 +83068,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Rock_Leone",
     "ratings": {
+      "attack": 30,
+      "defense": 55,
+      "stamina": 15
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 55,
       "stamina": 15
@@ -80434,6 +83260,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 30,
+      "stamina": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -80575,6 +83407,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 20,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 65,
+      "defense": 20,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true,
       "xMasters": true,
@@ -80680,6 +83518,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savage_Bear",
     "ratings": {
+      "attack": 25,
+      "defense": 45,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 25,
       "defense": 45,
       "stamina": 30
@@ -80911,6 +83755,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 70,
+      "defense": 15,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -80974,6 +83824,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Shatter Horus is a Beyblade blade from the Basic Line, weighing 32.9 g. Released as G4567 for Beyblade X (Season 3).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shatter_Horus",
     "ratings": {
+      "attack": 15,
+      "defense": 35,
+      "stamina": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 35,
       "stamina": 50
@@ -81089,6 +83945,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ShelterDrake",
     "ratings": {
+      "attack": 25,
+      "defense": 40,
+      "stamina": 35
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 25,
       "defense": 40,
       "stamina": 35
@@ -81243,6 +84105,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 70,
       "stamina": 20
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 70,
+      "stamina": 20
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -81319,6 +84187,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Shockwave",
     "ratings": {
+      "attack": 32,
+      "defense": 18,
+      "stamina": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 32,
       "defense": 18,
       "stamina": 50
@@ -81418,6 +84292,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SiegSuperion",
     "ratings": {
+      "attack": 38,
+      "defense": 35,
+      "stamina": 27
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 38,
       "defense": 35,
       "stamina": 27
@@ -81555,6 +84435,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 55,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 55,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -81668,6 +84554,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -81770,6 +84662,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Starscream",
     "ratings": {
+      "attack": 18,
+      "defense": 27,
+      "stamina": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 18,
       "defense": 27,
       "stamina": 55
@@ -81882,6 +84780,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Steel_Samurai",
     "ratings": {
+      "attack": 40,
+      "defense": 37,
+      "stamina": 23
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 40,
       "defense": 37,
       "stamina": 23
@@ -82084,6 +84988,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 55,
+      "defense": 15,
+      "stamina": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -82167,6 +85077,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_StormSpriggan",
     "ratings": {
+      "attack": 30,
+      "defense": 40,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 30,
       "defense": 40,
       "stamina": 30
@@ -82264,6 +85180,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 32
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 18,
+      "defense": 50,
+      "stamina": 32
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -82339,6 +85261,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Stun_Medusa",
     "ratings": {
+      "attack": 13,
+      "defense": 70,
+      "stamina": 17
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 13,
       "defense": 70,
       "stamina": 17
@@ -82438,6 +85366,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tackle_Goat",
     "ratings": {
+      "attack": 13,
+      "defense": 65,
+      "stamina": 22
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 13,
       "defense": 65,
       "stamina": 22
@@ -82570,6 +85504,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 23,
       "stamina": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 27,
+      "defense": 23,
+      "stamina": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -82677,6 +85617,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 60,
       "stamina": 18
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 22,
+      "defense": 60,
+      "stamina": 18
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -82775,6 +85721,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 43,
       "stamina": 17
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 43,
+      "stamina": 17
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -82869,6 +85821,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraPress",
     "ratings": {
+      "attack": 20,
+      "defense": 65,
+      "stamina": 15
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 20,
       "defense": 65,
       "stamina": 15
@@ -82990,6 +85948,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TriceraSpiky",
     "ratings": {
+      "attack": 32,
+      "defense": 55,
+      "stamina": 13
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 32,
       "defense": 55,
       "stamina": 13
@@ -83181,6 +86145,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tusk_Mammoth",
     "ratings": {
+      "attack": 33,
+      "defense": 35,
+      "stamina": 32
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 33,
       "defense": 35,
       "stamina": 32
@@ -83380,6 +86350,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -83575,6 +86554,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 75,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -83679,6 +86667,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Venom",
     "ratings": {
+      "attack": 55,
+      "defense": 22,
+      "stamina": 23
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 55,
       "defense": 22,
       "stamina": 23
@@ -83788,6 +86782,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_VictoryValkyrie",
     "ratings": {
+      "attack": 55,
+      "defense": 20,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 55,
       "defense": 20,
       "stamina": 25
@@ -83945,6 +86945,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 30,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 45,
+      "defense": 30,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -84084,6 +87090,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WhaleWave",
     "ratings": {
+      "attack": 45,
+      "defense": 35,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 45,
       "defense": 35,
       "stamina": 20
@@ -84314,6 +87326,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 40,
       "stamina": 50
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 40,
+      "stamina": 50
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -84404,6 +87422,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 25,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 65,
+      "defense": 25,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -84484,6 +87508,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Yell_Kong",
     "ratings": {
+      "attack": 13,
+      "defense": 37,
+      "stamina": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 13,
       "defense": 37,
       "stamina": 50
@@ -84593,6 +87623,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67
+    },
     "jpName": "カスタマイズベアリングベース",
     "romaji": "Kasutamaizu Bearingu Bēsu"
   },
@@ -84682,6 +87718,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -84803,6 +87845,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -84840,6 +87888,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -84977,6 +88030,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
+    },
     "jpName": "フラット",
     "romaji": "Furatto"
   },
@@ -85016,6 +88075,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -85048,6 +88113,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 67
     }
   },
   {
@@ -85162,6 +88233,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -85190,6 +88267,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -85235,6 +88318,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "stamina": 17
     }
   },
   {
@@ -85274,6 +88362,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -85316,6 +88410,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -85362,6 +88462,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -85399,6 +88505,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Dragoon_G_Version)",
     "ratings": {
       "attack": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50
     }
   },
   {
@@ -85431,6 +88541,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "stamina": 33
     }
   },
   {
@@ -85458,6 +88573,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17
     }
   },
   {
@@ -85490,6 +88610,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 67
     }
   },
   {
@@ -85533,6 +88659,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -85566,6 +88698,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50
     }
   },
   {
@@ -85635,6 +88773,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -85675,6 +88819,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -85801,6 +88951,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 67
     }
   },
   {
@@ -85901,6 +89057,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -85971,6 +89133,12 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 50
     }
   },
   {
@@ -86063,6 +89231,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 2,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 75,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -86162,6 +89339,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 25,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -86312,6 +89498,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -86459,6 +89654,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -86563,6 +89767,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 3,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 38,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -86732,6 +89945,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -87262,6 +90484,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -87439,6 +90670,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 88,
+      "weight": 38,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -87552,6 +90792,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 88,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0,
+      "burst": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -87657,6 +90906,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 25,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -87870,6 +91128,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 88,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -88034,6 +91301,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 38,
+      "stamina": 25,
+      "weight": 88,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -88183,6 +91459,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 2,
       "speed": 2,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 25,
       "burst": 0
     },
     "wboLegality": {
@@ -88344,6 +91629,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 38,
+      "weight": 38,
+      "speed": 25,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -88444,6 +91738,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 7,
       "speed": 0,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 88,
+      "speed": 0,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -88558,6 +91861,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 7,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 88,
+      "speed": 25,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -88703,6 +92015,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 88,
+      "stamina": 13,
+      "weight": 100,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -88807,6 +92128,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 6,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 75,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -88913,6 +92243,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 7,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 88,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -89036,6 +92375,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -89295,6 +92643,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -89406,6 +92763,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1,
       "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 25,
       "speed": 0,
       "burst": 0
     },
@@ -89593,6 +92959,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -89734,6 +93109,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -89847,6 +93231,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -89952,6 +93345,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -90080,6 +93482,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -90187,6 +93598,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -90282,6 +93702,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -90387,6 +93816,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -90541,6 +93979,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -90643,6 +94090,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -90754,6 +94210,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -90856,6 +94321,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 0,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -90977,6 +94451,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -91086,6 +94569,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -91232,6 +94724,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -91361,6 +94862,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -91458,6 +94968,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -91624,6 +95143,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -91745,6 +95273,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -91834,6 +95371,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -91909,6 +95454,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Generate-H",
     "ratings": {
       "runTime": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
     },
     "wboLegality": {
       "burst": true,
@@ -92030,6 +95579,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 50,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -92118,6 +95675,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 3,
       "weight": 4,
       "speed": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 75,
+      "stamina": 38,
+      "weight": 50,
+      "speed": 38
     },
     "wboLegality": {
       "burst": true,
@@ -92241,6 +95806,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -92314,6 +95887,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Disc-Integrated_Driver_-_Ignition-H",
     "ratings": {
       "runTime": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
     },
     "wboLegality": {
       "burst": true,
@@ -92400,6 +95977,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4,
       "weight": 5,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 63,
       "speed": 0
     },
     "wboLegality": {
@@ -92496,6 +96081,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4,
       "weight": 5,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 63,
       "speed": 0
     },
     "wboLegality": {
@@ -92598,6 +96191,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 2,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25,
       "burst": 0
     },
     "wboLegality": {
@@ -92849,6 +96451,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38
+    },
     "wboLegality": {
       "burstClassic": false
     },
@@ -93028,6 +96638,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 38
     },
     "wboLegality": {
       "burst": true,
@@ -93471,6 +97089,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -93655,6 +97281,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 2,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 25,
       "speed": 0
     },
     "wboLegality": {
@@ -94072,6 +97706,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -94330,6 +97972,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 3,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -94740,6 +98390,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -94918,6 +98576,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -95062,6 +98728,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 0,
       "weight": 2,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 0,
+      "weight": 33,
       "speed": 0
     },
     "wboLegality": {
@@ -95373,6 +99047,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -95576,6 +99258,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -95658,6 +99348,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 6,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 75,
       "speed": 0,
       "burst": 0
     },
@@ -95901,6 +99600,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -96251,6 +99959,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -96508,6 +100224,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 3,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -96891,6 +100616,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -97149,6 +100883,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1,
       "weight": 4,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 67,
       "speed": 0
     },
     "wboLegality": {
@@ -97481,6 +101223,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 67,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -97710,6 +101460,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -97823,6 +101582,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -98011,6 +101779,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -98153,6 +101929,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1,
       "weight": 1,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 17,
       "speed": 0
     },
     "wboLegality": {
@@ -98389,6 +102173,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1,
       "weight": 5,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 63,
       "speed": 0
     },
     "wboLegality": {
@@ -98739,6 +102531,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -98837,6 +102637,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2,
       "weight": 4,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 50,
       "speed": 0,
       "burst": 0
     },
@@ -99042,6 +102851,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -99289,6 +103107,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -99451,6 +103277,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -99667,6 +103501,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 38,
+      "weight": 38,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -99768,6 +103611,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 3,
       "weight": 1,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 17,
       "speed": 0
     },
     "wboLegality": {
@@ -100122,6 +103973,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -100252,6 +104111,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2,
       "weight": 5,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 63,
       "speed": 0,
       "burst": 0
     },
@@ -100479,6 +104347,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -100571,6 +104447,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 4,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -101260,6 +105145,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -101625,6 +105518,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 75,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -101716,6 +105618,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 4,
       "speed": 2,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 25,
       "burst": 0
     },
     "wboLegality": {
@@ -101915,6 +105826,15 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -102059,6 +105979,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 5,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
     },
     "wboLegality": {
       "burst": true,
@@ -102215,6 +106140,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 50,
+      "weight": 13,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -102347,6 +106280,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -102446,6 +106387,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
     },
     "wboLegality": {
       "burst": true,
@@ -102556,6 +106502,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -102755,6 +106709,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -102862,6 +106824,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 38
     },
     "wboLegality": {
       "burst": true,
@@ -103053,6 +107023,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "power": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103144,6 +107119,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103229,6 +107208,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 5,
+      "weight": 0,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 63,
       "weight": 0,
       "speed": 0
     },
@@ -103332,6 +107319,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103426,6 +107421,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 3,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -103636,6 +107639,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103742,6 +107753,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103846,6 +107865,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -103934,6 +107961,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -104020,6 +108051,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet_II-H",
     "ratings": {
       "runTime": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
     },
     "wboLegality": {
       "burst": true,
@@ -104114,6 +108149,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -104198,6 +108237,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -104272,6 +108315,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge_III-H",
     "ratings": {
       "runTime": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
     },
     "wboLegality": {
       "burst": true,
@@ -104367,6 +108414,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 5,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -104629,6 +108684,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -104718,6 +108781,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Coil-H",
     "ratings": {
       "runTime": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
     },
     "wboLegality": {
       "burst": true,
@@ -104849,6 +108916,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 17,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -104942,6 +109017,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -105118,6 +109198,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -105299,6 +109387,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -105389,6 +109485,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -105465,6 +109565,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 5,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
     },
     "wboLegality": {
       "burst": true,
@@ -105655,6 +109760,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -105740,6 +109849,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 83
     },
     "wboLegality": {
       "burst": true,
@@ -106165,6 +110279,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -106341,6 +110463,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 4,
       "power": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 67,
+      "power": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -106512,6 +110639,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -106639,6 +110774,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -106712,6 +110855,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 5,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
     },
     "wboLegality": {
       "burst": true,
@@ -106878,6 +111026,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -107077,6 +111230,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -107156,6 +111317,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-H",
     "ratings": {
       "runTime": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 83
     },
     "wboLegality": {
       "burst": true,
@@ -107248,6 +111413,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Friction-S",
     "ratings": {
       "speed": 6,
+      "power": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 100,
       "power": 0
     },
     "wboLegality": {
@@ -107421,6 +111591,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -107574,6 +111752,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -107801,6 +111987,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "power": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -107973,6 +112164,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Guard-H",
     "ratings": {
       "runTime": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
     },
     "wboLegality": {
       "burst": true,
@@ -108231,6 +112426,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -108464,6 +112667,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 17,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -108554,6 +112765,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -108642,6 +112861,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -108741,6 +112968,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -108829,6 +113064,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -108927,6 +113170,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109016,6 +113267,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109104,6 +113363,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -109346,6 +113613,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 0,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109442,6 +113717,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -109589,6 +113872,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109696,6 +113987,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -109842,6 +114141,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109926,6 +114233,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 4,
       "power": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 67,
+      "power": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -109998,6 +114310,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Hybrid-H",
     "ratings": {
       "runTime": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 17
     },
     "wboLegality": {
       "burst": true,
@@ -110161,6 +114477,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 0,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -110254,6 +114578,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Jaggy-H",
     "ratings": {
       "runTime": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 17
     },
     "wboLegality": {
       "burst": true,
@@ -110423,6 +114751,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 4,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 67,
+      "power": 33
     },
     "wboLegality": {
       "burst": true,
@@ -110596,6 +114929,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 4,
       "power": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 67,
+      "power": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -110676,6 +115014,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 38,
+      "stamina": 25,
       "weight": 0,
       "speed": 0
     },
@@ -110864,6 +115210,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 50,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -110971,6 +115325,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -111055,6 +115413,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 83
     },
     "wboLegality": {
       "burst": true,
@@ -111151,6 +115514,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -111239,6 +115610,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -111341,6 +115720,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Liner-H",
     "ratings": {
       "runTime": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 17
     },
     "wboLegality": {
       "burst": true,
@@ -111507,6 +115890,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 5,
       "power": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -111581,6 +115969,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -111658,6 +116051,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Low-H",
     "ratings": {
       "runTime": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 83
     },
     "wboLegality": {
       "burst": true,
@@ -111765,6 +116162,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4,
       "weight": 2,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 25,
       "speed": 0
     },
     "wboLegality": {
@@ -111940,6 +116345,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "power": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -112096,6 +116506,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 0,
+      "speed": 17
     },
     "wboLegality": {
       "burst": true,
@@ -112370,6 +116788,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -112455,6 +116881,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 3,
       "weight": 2,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 38,
+      "weight": 25,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -112554,6 +116988,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -112640,6 +117082,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -112739,6 +117189,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -112837,6 +117295,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -112923,6 +117389,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -113018,6 +117492,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 25,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -113104,6 +117586,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 3,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -113194,6 +117684,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -113280,6 +117778,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 1,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -113584,6 +118090,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -113766,6 +118280,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 4,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 67,
+      "power": 33
     },
     "wboLegality": {
       "burst": true,
@@ -114017,6 +118536,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -114120,6 +118647,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 4,
       "weight": 1,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 50,
+      "weight": 13,
       "speed": 0
     },
     "wboLegality": {
@@ -114378,6 +118913,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -114516,6 +119055,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 38,
+      "weight": 50,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -114606,6 +119153,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -114679,6 +119234,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
     },
     "wboLegality": {
       "burst": true,
@@ -114773,6 +119333,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Orbit-H",
     "ratings": {
       "runTime": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 83
     },
     "wboLegality": {
       "burst": true,
@@ -115110,6 +119674,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 33,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -115216,6 +119788,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -115312,6 +119892,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 50,
+      "weight": 38,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -115386,6 +119974,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Planet-H",
     "ratings": {
       "runTime": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
     },
     "wboLegality": {
       "burst": true,
@@ -115581,6 +120173,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -115657,6 +120253,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -115767,6 +120368,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -115937,6 +120546,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 83
     },
     "wboLegality": {
       "burst": true,
@@ -116115,6 +120729,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -116290,6 +120912,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 5,
       "power": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -116404,6 +121031,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 5,
       "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 25,
       "weight": 0,
       "speed": 0
     },
@@ -116560,6 +121195,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 0,
       "speed": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
     },
     "wboLegality": {
       "burst": true,
@@ -116731,6 +121374,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -116812,6 +121463,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-H",
     "ratings": {
       "runTime": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
     },
     "wboLegality": {
       "burst": true,
@@ -117056,6 +121711,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -117199,6 +121858,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 0,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -117378,6 +122045,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "runTime": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -117553,6 +122224,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "power": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -117639,6 +122315,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 0,
       "power": 6
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 0,
+      "power": 100
     },
     "wboLegality": {
       "burst": true,
@@ -117934,6 +122615,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 0,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -118047,6 +122736,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -118125,6 +122822,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
     },
     "wboLegality": {
       "burst": true,
@@ -118212,6 +122914,11 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -118328,6 +123035,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -118443,6 +123158,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -118533,6 +123256,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Trick-H",
     "ratings": {
       "runTime": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 17
     },
     "wboLegality": {
       "burst": true,
@@ -118625,6 +123352,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2,
+      "weight": 0,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
       "weight": 0,
       "speed": 0
     },
@@ -118759,6 +123494,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -118835,6 +123578,10 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Ultimate_Reboot-H",
     "ratings": {
       "runTime": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 17
     },
     "wboLegality": {
       "burst": true,
@@ -119164,6 +123911,14 @@ const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -119261,6 +124016,10 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Valor-H",
     "ratings": {
       "runTime": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
     },
     "wboLegality": {
       "burst": true,
@@ -119460,6 +124219,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -119557,6 +124324,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -119644,6 +124419,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 6,
       "power": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 100,
+      "power": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -119729,6 +124509,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 25
     },
     "wboLegality": {
       "burst": true,
@@ -119835,6 +124623,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 38,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -119924,6 +124720,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 83
     },
     "wboLegality": {
       "burst": true,
@@ -120091,6 +124892,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 3,
       "weight": 3,
+      "speed": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 50,
+      "weight": 50,
       "speed": 0
     },
     "wboLegality": {
@@ -120610,6 +125419,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -120716,6 +125533,10 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-H",
     "ratings": {
       "runTime": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 33
     },
     "wboLegality": {
       "burst": true,
@@ -120898,6 +125719,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 67
     },
     "wboLegality": {
       "burst": true,
@@ -121134,6 +125960,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -121232,6 +126066,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -121313,6 +126155,10 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-H",
     "ratings": {
       "runTime": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 67
     },
     "wboLegality": {
       "burst": true,
@@ -121407,6 +126253,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 5,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 83,
+      "power": 17
     },
     "wboLegality": {
       "burst": true,
@@ -121558,6 +126409,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 0,
       "weight": 3,
+      "speed": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 38,
       "speed": 0
     },
     "wboLegality": {
@@ -121825,6 +126684,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 67,
+      "weight": 0,
+      "speed": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -121921,6 +126788,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 1,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 25,
+      "weight": 13,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -122043,6 +126918,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -122117,6 +127000,10 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-H",
     "ratings": {
       "runTime": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "runTime": 50
     },
     "wboLegality": {
       "burst": true,
@@ -122396,6 +127283,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -122479,6 +127374,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 50
     },
     "wboLegality": {
       "burst": true,
@@ -122679,6 +127579,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 2,
       "weight": 0,
       "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 13
     },
     "wboLegality": {
       "burst": true,
@@ -124678,6 +129586,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 38,
+      "stamina": 0
+    },
     "element": "Sky",
     "jpName": "アーチャー",
     "romaji": "Āchā"
@@ -124791,6 +129705,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 5,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 13
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -124959,6 +129879,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 25
     },
     "element": "God",
     "jpName": "グラディエーター",
@@ -125183,6 +130109,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 63,
+      "stamina": 0
+    },
     "aka": [
       "Shinobi (Takara Tomy)"
     ],
@@ -125319,6 +130251,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 38,
+      "stamina": 38
+    },
     "aka": [
       "Pirates (Takara Tomy)"
     ],
@@ -125433,6 +130371,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 13
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -125634,6 +130578,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 13
+    },
     "aka": [
       "Warriors (Sonokong)"
     ],
@@ -125762,6 +130712,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 38
     },
     "element": "Fire",
     "jpName": "シーフ",
@@ -125893,6 +130849,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "aka": [
       "Anubis (B-166)"
     ],
@@ -125970,6 +130932,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     },
     "jpName": "ベルゼブ",
     "romaji": "Beruzebu"
@@ -126112,6 +131080,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -126214,6 +131188,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 83
     }
   },
   {
@@ -126317,6 +131297,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     },
     "aka": [
       "Hades (Takara Tomy)"
@@ -126447,6 +131433,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -126558,6 +131550,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 5,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 33,
       "stamina": 0
     },
     "wboLegality": {
@@ -126692,6 +131690,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 5
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 83
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -126785,6 +131789,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
     },
     "jpName": "ドラゴニス",
     "romaji": "Doragonisu"
@@ -126886,6 +131896,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
     },
     "jpName": "フォックス",
     "romaji": "Fokkusu"
@@ -127025,6 +132041,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     },
     "aka": [
       "Cancer"
@@ -127169,6 +132191,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
     "jpName": "ジェミオス",
     "romaji": "Jemiosu"
   },
@@ -127266,6 +132294,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
     },
     "jpName": "ギル",
     "romaji": "Giru"
@@ -127414,6 +132448,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
+    },
     "jpName": "エルクレオ",
     "romaji": "Erukureo"
   },
@@ -127529,6 +132569,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 67
+    },
     "aka": [
       "Uranus (Takara Tomy)"
     ],
@@ -127619,6 +132665,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -127717,6 +132769,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 6
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 100
+    },
     "jpName": "クロノス",
     "romaji": "Kuronosu"
   },
@@ -127800,6 +132858,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
     },
     "jpName": "エルドラゴアサルトバージョン",
     "romaji": "Erudorago Asaruto Bājon"
@@ -127931,6 +132995,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 5,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 33,
       "stamina": 0
     },
     "jpName": "エルドラゴI",
@@ -128123,6 +133193,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -128217,6 +133293,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 5,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 33,
       "stamina": 0
     },
     "jpName": "エルドラゴラッシュバージョン",
@@ -128324,6 +133406,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     },
     "jpName": "ラチェルタ",
     "romaji": "Racheruta"
@@ -128576,6 +133664,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -128747,6 +133841,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "jpName": "レオーネII",
     "romaji": "Reōne II"
   },
@@ -128887,6 +133987,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "jpName": "レイラー",
     "romaji": "Reirā"
   },
@@ -128996,6 +134102,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     },
     "aka": [
       "Nemesis (Takara Tomy)"
@@ -129125,6 +134237,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 6
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 100
+    },
     "jpName": "オリオン",
     "romaji": "Orion"
   },
@@ -129205,6 +134323,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -129523,6 +134647,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
+    },
     "aka": [
       "Pegasis I (Takara Tomy)"
     ],
@@ -129768,6 +134898,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -130000,6 +135136,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
+    },
     "aka": [
       "Pegasis III (Takara Tomy)"
     ],
@@ -130135,6 +135277,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -130216,6 +135364,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 0,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 33
     }
   },
   {
@@ -130344,6 +135498,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 0
+    },
     "jpName": "レックス",
     "romaji": "Rekkusu"
   },
@@ -130401,6 +135561,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 67
     }
   },
   {
@@ -130526,6 +135692,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 5,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 17
     }
   },
   {
@@ -130755,6 +135927,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
+    },
     "aka": [
       "Unicorno I (Takara Tomy)"
     ],
@@ -130871,6 +136049,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 4,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
       "stamina": 0
     },
     "jpName": "スサノオ",
@@ -130992,6 +136176,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 6,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 100,
+      "stamina": 0
+    },
     "aka": [
       "Horogium (Takara Tomy)"
     ],
@@ -131059,6 +136249,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -131105,6 +136301,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -131146,6 +136348,13 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 3,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 50,
+      "power": 33
     }
   },
   {
@@ -131190,6 +136399,13 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 3,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 50,
+      "power": 33
     }
   },
   {
@@ -131277,6 +136493,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "stamina": 33
     }
   },
   {
@@ -131319,6 +136540,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -131360,6 +136587,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 4,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "power": 17
     }
   },
   {
@@ -131401,6 +136633,11 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "stamina": 33
     }
   },
   {
@@ -131438,6 +136675,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3.5,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 58,
+      "defense": 17,
+      "stamina": 50
     },
     "jpName": "右エンジンギア（ミステリーカッター）",
     "romaji": "Migi enjin Gia (misuterīkattā)"
@@ -137298,6 +142541,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -137389,6 +142641,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -137546,6 +142807,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 0,
       "defense": 2,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
       "stamina": 0,
       "weight": 0,
       "speed": 0,
@@ -137785,6 +143055,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -137928,6 +143207,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 0,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -138098,6 +143386,14 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -138240,6 +143536,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 1,
       "weight": 0,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -138594,6 +143899,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -138692,6 +144006,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -138877,6 +144200,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -139100,6 +144432,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -139247,6 +144588,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 2,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -139404,6 +144754,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -139578,6 +144937,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -139747,6 +145115,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -139857,6 +145234,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 1,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
       "stamina": 0,
       "weight": 0,
       "speed": 0,
@@ -140211,6 +145597,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -140343,6 +145738,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
+      "stamina": 0
+    },
     "jpName": "バクシン",
     "romaji": "Bakushin"
   },
@@ -140414,6 +145815,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2.5,
       "defense": 2.5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 42,
+      "defense": 42,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -140508,6 +145915,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2.5,
       "defense": 2.5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 42,
+      "defense": 42,
+      "stamina": 33
     }
   },
   {
@@ -140593,6 +146006,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -140672,6 +146091,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
     }
   },
   {
@@ -140837,6 +146262,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -140953,6 +146384,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
     }
   },
   {
@@ -141130,6 +146567,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 17
     },
     "jpName": "カウンター",
     "romaji": "Kauntā"
@@ -141312,6 +146755,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "サイバー",
     "romaji": "Saibā"
   },
@@ -141436,6 +146885,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "jpName": "トルネード",
     "romaji": "Torunēdo"
   },
@@ -141505,6 +146960,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 4,
       "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
       "stamina": 0
     },
     "wboLegality": {
@@ -141580,6 +147041,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 4,
       "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
       "stamina": 0
     }
   },
@@ -141725,6 +147192,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -141827,6 +147300,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -141921,6 +147400,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 67,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -141990,6 +147475,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "defense": 4,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 67,
       "stamina": 0
     },
     "wboLegality": {
@@ -142122,6 +147613,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -142231,6 +147728,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 5,
       "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
     }
   },
   {
@@ -142328,6 +147831,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -142419,6 +147928,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -142501,6 +148016,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -142564,6 +148085,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -142788,6 +148315,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -142988,6 +148521,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -143069,6 +148608,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -143154,6 +148699,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 67
     }
   },
   {
@@ -143241,6 +148792,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
     }
   },
   {
@@ -143321,6 +148878,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 5,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -143446,6 +149009,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -143529,6 +149098,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 6,
       "defense": 0,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 17
     }
   },
   {
@@ -143600,6 +149175,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 67,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -143662,6 +149243,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 3,
       "defense": 4,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 67,
       "stamina": 0
     }
   },
@@ -143794,6 +149381,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0.5,
       "stamina": 0.5
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 8,
+      "stamina": 8
+    },
     "jpName": "ライトニング",
     "romaji": "Raitoningu"
   },
@@ -143920,6 +149513,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 6,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 33,
       "stamina": 0
     },
     "jpName": "マーキュリー",
@@ -144133,6 +149732,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -144231,6 +149836,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
+    },
     "aka": [
       "Crash (Takara Tomy)"
     ],
@@ -144291,6 +149902,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 67
     }
   },
   {
@@ -144419,6 +150036,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 67,
+      "stamina": 0
+    },
     "jpName": "ナイトメア",
     "romaji": "Naitomea"
   },
@@ -144507,6 +150130,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -144614,6 +150243,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 5
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 83
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -144700,6 +150335,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 83
     }
   },
   {
@@ -144920,6 +150561,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
+    },
     "jpName": "レイ",
     "romaji": "Rei"
   },
@@ -144989,6 +150636,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 83
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -145083,6 +150736,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 83
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -145184,6 +150843,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 4,
       "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
       "stamina": 0
     },
     "jpName": "ソル",
@@ -145377,6 +151042,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67
     }
   },
   {
@@ -145486,6 +151157,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
     },
     "aka": [
       "Cloud (Takara Tomy)"
@@ -145620,6 +151297,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 0,
       "defense": 6,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 100,
       "stamina": 0
     },
     "wboLegality": {
@@ -145773,6 +151456,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 6,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 100,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -145859,6 +151548,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 6,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 100,
       "stamina": 0
     },
     "wboLegality": {
@@ -145967,6 +151662,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
     }
   },
   {
@@ -146062,6 +151763,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -146128,6 +151835,12 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 6,
       "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
       "stamina": 0
     }
   },
@@ -146218,6 +151931,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 0,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -146357,6 +152079,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -146505,6 +152236,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -146677,6 +152417,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -146867,6 +152616,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -147084,6 +152842,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -147270,6 +153037,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -147427,6 +153203,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -147549,6 +153334,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 2,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
       "stamina": 0,
       "weight": 0,
       "speed": 0,
@@ -147703,6 +153497,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -147849,6 +153652,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -147975,6 +153787,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -148132,6 +153953,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -148278,6 +154108,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -148480,6 +154319,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 0,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -151088,6 +156936,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 25,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -151212,6 +157069,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 50,
+      "weight": 17,
+      "speed": 17,
+      "burst": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -151327,6 +157193,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 75,
+      "weight": 63,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -151558,6 +157433,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 38,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -151773,6 +157657,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 50,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -151855,6 +157748,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -151975,6 +157877,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 75,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -152168,6 +158079,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -152599,6 +158519,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 0,
+      "weight": 67,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -152724,6 +158653,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0,
       "burst": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0,
+      "burst": 67
     },
     "wboLegality": {
       "burst": true,
@@ -152929,6 +158867,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 13,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -153198,6 +159145,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 100,
+      "stamina": 13,
+      "weight": 75,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -153298,6 +159254,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 50,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -153534,6 +159499,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 25,
+      "speed": 25,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -153671,6 +159645,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 2,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 25,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -153985,6 +159968,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 83,
+      "weight": 33,
+      "speed": 33,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -154091,6 +160083,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 6
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 0,
+      "burst": 75
     },
     "wboLegality": {
       "burst": true,
@@ -154260,6 +160261,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 67,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -154460,6 +160470,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 25,
+      "burst": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -154573,6 +160592,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 63,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -154776,6 +160804,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 88,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -154858,6 +160895,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -154965,6 +161011,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 63,
+      "weight": 63,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -155137,6 +161192,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 83,
+      "weight": 50,
+      "speed": 0,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -155351,6 +161415,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 75,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -155476,6 +161549,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 88,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -155591,6 +161673,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -155777,6 +161868,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 5,
       "weight": 2,
       "speed": 2,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 63,
+      "weight": 25,
+      "speed": 25,
       "burst": 0
     },
     "wboLegality": {
@@ -156096,6 +162196,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -156312,6 +162421,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -156406,6 +162524,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 100,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 17,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -156509,6 +162636,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -156651,6 +162787,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 17,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -156940,6 +163085,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 33,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -157050,6 +163204,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 5
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 33,
+      "burst": 83
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -157156,6 +163319,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 67
     },
     "wboLegality": {
       "burst": true,
@@ -157476,6 +163648,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -157668,6 +163849,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -157769,6 +163959,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -157872,6 +164071,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -158209,6 +164417,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 17,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -158456,6 +164673,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -158562,6 +164788,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
+      "stamina": 67,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -158664,6 +164899,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -159110,6 +165354,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -159281,6 +165534,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 75,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -159573,6 +165835,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -159770,6 +166041,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -159886,6 +166166,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -159967,6 +166256,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -160116,6 +166414,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 67
+    },
     "wboLegality": {
       "burst": true,
       "burstLimited": true,
@@ -160210,6 +166517,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -160309,6 +166625,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -160462,6 +166787,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -160649,6 +166983,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 63,
+      "weight": 63,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -160963,6 +167306,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 88,
+      "weight": 63,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -161158,6 +167510,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -161430,6 +167791,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 4,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 50,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -161552,6 +167922,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 25,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -161747,6 +168126,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 88,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -161981,6 +168369,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 83,
+      "weight": 50,
+      "speed": 0,
+      "burst": 17
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -162094,6 +168491,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 38,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -162221,6 +168627,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 67,
+      "weight": 50,
+      "speed": 33,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -162412,6 +168827,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 50,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -162501,6 +168925,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -162786,6 +169219,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -163061,6 +169503,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -163366,6 +169817,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -163481,6 +169941,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 0,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 0,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -163639,6 +170108,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -163887,6 +170365,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -164053,6 +170540,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -164156,6 +170652,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 63,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 25,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -164426,6 +170931,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -164583,6 +171097,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 0,
       "burst": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 83,
+      "speed": 0,
+      "burst": 67
     },
     "wboLegality": {
       "burst": true,
@@ -164768,6 +171291,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 67
     },
     "wboLegality": {
       "burst": true,
@@ -165258,6 +171790,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 17,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -165514,6 +172055,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 33,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -165628,6 +172178,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 6,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 88,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 75,
+      "speed": 13,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -165916,6 +172475,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -166117,6 +172685,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -166441,6 +173018,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 100,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -166635,6 +173221,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 75,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -167158,6 +173753,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 75,
+      "speed": 0,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -167239,6 +173843,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 17,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -167368,6 +173981,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -167492,6 +174114,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 17,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -167794,6 +174425,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 50,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -167981,6 +174621,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 100,
+      "stamina": 25,
+      "weight": 75,
+      "speed": 0,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -168159,6 +174808,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 75,
+      "stamina": 25,
+      "weight": 63,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -168320,6 +174978,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -168422,6 +175089,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 25,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -168672,6 +175348,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -168766,6 +175451,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 17,
+      "burst": 17
     },
     "wboLegality": {
       "burst": true,
@@ -169031,6 +175725,15 @@ const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 63,
+      "weight": 50,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -169320,6 +176023,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -169531,6 +176243,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 6
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 75
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -169680,6 +176401,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -170083,6 +176813,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -170260,6 +176999,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -170481,6 +177229,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -170736,6 +177493,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25,
+      "burst": 63
     },
     "wboLegality": {
       "burst": true,
@@ -171221,6 +177987,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -171408,6 +178183,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -171735,6 +178519,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1,
       "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13,
+      "burst": 63
     },
     "wboLegality": {
       "burst": true,
@@ -172159,6 +178952,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -172373,6 +179175,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -172717,6 +179528,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
     },
     "wboLegality": {
       "burst": true,
@@ -173097,6 +179917,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 25,
+      "burst": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -173435,6 +180264,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 63
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -173657,6 +180495,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 3,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -173882,6 +180729,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 3,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -174095,6 +180951,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 1,
       "speed": 1,
       "burst": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 17,
+      "speed": 17,
+      "burst": 67
     },
     "wboLegality": {
       "burst": true,
@@ -174364,6 +181229,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 67,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -174528,6 +181402,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 33,
+      "speed": 17,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -174757,6 +181640,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 67,
+      "weight": 67,
+      "speed": 0,
+      "burst": 33
     },
     "wboLegality": {
       "burst": true,
@@ -175027,6 +181919,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 5,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 63,
+      "speed": 25,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -178203,6 +185104,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -178356,6 +185266,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Antler is a Beyblade main blade from the Custom Line, weighing 29.1 g. Released July 9th, 2026 as G1684 for Beyblade X (Season 2).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Antler",
     "ratings": {
+      "attack": 8,
+      "defense": 15,
+      "stamina": 37
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 8,
       "defense": 15,
       "stamina": 37
@@ -178525,6 +185441,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 10,
       "stamina": 40
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 40
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -178640,6 +185562,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Blast",
     "ratings": {
+      "attack": 50,
+      "defense": 10,
+      "stamina": 15
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 50,
       "defense": 10,
       "stamina": 15
@@ -178820,6 +185748,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 10,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 10,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -178957,6 +185891,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 5
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 40,
+      "defense": 15,
+      "stamina": 5
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -179075,6 +186015,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Dark",
     "ratings": {
+      "attack": 10,
+      "defense": 40,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 40,
       "stamina": 10
@@ -179260,6 +186206,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 10,
       "stamina": 15
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 35,
+      "defense": 10,
+      "stamina": 15
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -179373,6 +186325,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 15,
       "stamina": 40
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 40
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -179452,6 +186410,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Flare",
     "ratings": {
+      "attack": 25,
+      "defense": 40,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 25,
       "defense": 40,
       "stamina": 10
@@ -179579,6 +186543,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 12,
       "stamina": 24
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 24,
+      "defense": 12,
+      "stamina": 24
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -179664,6 +186634,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Hunt",
     "ratings": {
+      "attack": 20,
+      "defense": 10,
+      "stamina": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 20,
       "defense": 10,
       "stamina": 30
@@ -179774,6 +186750,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Might",
     "ratings": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 25,
       "defense": 25,
       "stamina": 25
@@ -179904,6 +186886,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 10,
       "stamina": 25
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 25
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -180002,6 +186990,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Main_Blade_-_Wriggle",
     "ratings": {
+      "attack": 8,
+      "defense": 12,
+      "stamina": 40
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 8,
       "defense": 12,
       "stamina": 40
@@ -180109,6 +187103,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 10,
       "stamina": 5
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 10,
+      "stamina": 5
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -180206,6 +187206,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Delta",
     "ratings": {
+      "attack": 15,
+      "defense": 15,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 15,
       "defense": 15,
       "stamina": 10
@@ -180373,6 +187379,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Fortress",
     "ratings": {
+      "attack": 10,
+      "defense": 20,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 20,
       "stamina": 10
@@ -180545,6 +187557,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Metal_Blade_-_Rage",
     "ratings": {
+      "attack": 10,
+      "defense": 10,
+      "stamina": 20
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 10,
       "stamina": 20
@@ -180883,6 +187901,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 5
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 5,
+      "stamina": 5
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -180985,6 +188009,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 10
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 5,
+      "stamina": 10
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -181073,6 +188103,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Over_Blade_-_Guard",
     "ratings": {
+      "attack": 5,
+      "defense": 10,
+      "stamina": 5
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 5,
       "defense": 10,
       "stamina": 5
@@ -181353,6 +188389,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 7,
       "stamina": 5
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 7,
+      "stamina": 5
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -181618,6 +188660,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 3,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 67
     },
     "aka": [
       "AS"
@@ -181911,6 +188959,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 50
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -182020,6 +189074,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 6
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 100
+    },
     "aka": [
       "B:D"
     ],
@@ -182117,6 +189177,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 13
     },
     "aka": [
       "BSF"
@@ -182346,6 +189412,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -182501,6 +189573,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 13
     },
     "aka": [
       "CF"
@@ -182690,6 +189768,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 0,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 50
     },
     "aka": [
       "Coat Sharp (Takara Tomy)",
@@ -183042,6 +190126,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -183210,6 +190300,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2.5,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 42,
+      "stamina": 67
+    },
     "aka": [
       "Defense Sharp (Takara Tomy)",
       "DS"
@@ -183321,6 +190417,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
+    },
     "aka": [
       "D:D"
     ],
@@ -183423,6 +190525,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 83
     },
     "aka": [
       "EDS"
@@ -183767,6 +190875,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "aka": [
       "XF"
     ]
@@ -183897,6 +191011,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "aka": [
       "F:D"
     ],
@@ -184003,6 +191123,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 0,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 50
     },
     "aka": [
       "F:S"
@@ -184366,6 +191492,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -184463,6 +191595,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     },
     "aka": [
       "FB"
@@ -184647,6 +191785,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 50
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -184781,6 +191925,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 13
+    },
     "aka": [
       "GCF"
     ],
@@ -184851,6 +192001,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 5,
       "defense": 2,
+      "stamina": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 25,
       "stamina": 0
     },
     "aka": [
@@ -185232,6 +192388,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 0,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 50
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -185652,6 +192814,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "aka": [
       "LF"
     ],
@@ -185745,6 +192913,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 6,
       "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
       "stamina": 0
     },
     "aka": [
@@ -185867,6 +193041,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 33
+    },
     "aka": [
       "MB"
     ],
@@ -185964,6 +193144,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 0,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 0,
+      "stamina": 33
     },
     "aka": [
       "MF"
@@ -186147,6 +193333,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 6
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 100
+    },
     "wboLegality": {
       "mfbStandard": false,
       "mfbLimited": false,
@@ -186273,6 +193465,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 5,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
     },
     "aka": [
       "PD"
@@ -186474,6 +193672,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Performance_Tip_-_Quake_(Metal_Saga)",
     "ratings": {
       "attack": 6,
+      "defense": 0,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
       "defense": 0,
       "stamina": 0
     },
@@ -186755,6 +193959,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -186853,6 +194063,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -186934,6 +194150,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": false,
@@ -187192,6 +194414,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "aka": [
       "RF"
     ],
@@ -187318,6 +194546,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -187367,6 +194601,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 50
     },
     "partType": "Balance"
   },
@@ -187622,6 +194862,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -187973,6 +195219,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -188146,6 +195398,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 3,
       "stamina": 4
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 50
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -188329,6 +195587,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 4,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 50
     },
     "aka": [
       "W²D",
@@ -188593,6 +195857,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 5,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
     },
     "aka": [
       "WB"
@@ -188975,6 +196245,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
+    },
     "aka": [
       "WD"
     ],
@@ -189193,6 +196469,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -189311,6 +196593,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 13
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -189421,6 +196709,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 33
     },
     "aka": [
       "X:D"
@@ -190831,6 +198125,10 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "burstResistance": 30
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "burstResistance": 30
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -190929,6 +198227,10 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Bit_-_Turbo",
     "ratings": {
+      "burstResistance": 30
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "burstResistance": 30
     },
     "wboLegality": {
@@ -191030,6 +198332,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 45,
       "stamina": 40
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 45,
+      "defense": 45,
+      "stamina": 40
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -191102,6 +198410,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Cutter Shinobi is a Beyblade ratchet-integrated blade from the Unique Line, weighing 37.4 g. Released as G1940 for Beyblade X (Season 3).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_Cutter_Shinobi",
     "ratings": {
+      "attack": 48,
+      "defense": 48,
+      "stamina": 34
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 48,
       "defense": 48,
       "stamina": 34
@@ -191226,6 +198540,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet-Integrated_Blade_-_GloryValkyrie",
     "ratings": {
+      "attack": 85,
+      "defense": 35,
+      "stamina": 25
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 85,
       "defense": 35,
       "stamina": 25
@@ -191405,6 +198725,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 70,
       "stamina": 35
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 70,
+      "stamina": 35
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -191562,6 +198888,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 58,
       "stamina": 36
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 36,
+      "defense": 58,
+      "stamina": 36
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -191631,6 +198963,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-60",
     "ratings": {
+      "attack": 3,
+      "defense": 14,
+      "stamina": 13,
+      "height": 60
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 3,
       "defense": 14,
       "stamina": 13,
@@ -191753,6 +199092,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 14,
       "height": 70
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 3,
+      "defense": 13,
+      "stamina": 14,
+      "height": 70
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -191846,6 +199192,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-50",
     "ratings": {
+      "attack": 18,
+      "defense": 9,
+      "stamina": 3,
+      "height": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 18,
       "defense": 9,
       "stamina": 3,
@@ -191945,6 +199298,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-70",
     "ratings": {
+      "attack": 17,
+      "defense": 6,
+      "stamina": 7,
+      "height": 70
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 6,
       "stamina": 7,
@@ -192098,6 +199458,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-80",
     "ratings": {
+      "attack": 17,
+      "defense": 4,
+      "stamina": 9,
+      "height": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 17,
       "defense": 4,
       "stamina": 9,
@@ -192430,6 +199797,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 12,
       "stamina": 8
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 10,
+      "defense": 12,
+      "stamina": 8
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -192539,6 +199912,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_2-80",
     "ratings": {
+      "attack": 10,
+      "defense": 11,
+      "stamina": 9
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 11,
       "stamina": 9
@@ -192754,6 +200133,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 10,
       "height": 85
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 5,
+      "defense": 15,
+      "stamina": 10,
+      "height": 85
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -192862,6 +200248,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-50",
     "ratings": {
+      "attack": 12,
+      "defense": 13,
+      "stamina": 5,
+      "height": 50
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 12,
       "defense": 13,
       "stamina": 5,
@@ -193026,6 +200419,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-55",
     "ratings": {
+      "attack": 7,
+      "defense": 11,
+      "stamina": 12
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 7,
       "defense": 11,
       "stamina": 12
@@ -193264,6 +200663,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 8,
       "stamina": 8
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 14,
+      "defense": 8,
+      "stamina": 8
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -193355,6 +200760,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-70",
     "ratings": {
+      "attack": 14,
+      "defense": 7,
+      "stamina": 9,
+      "height": 70
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 14,
       "defense": 7,
       "stamina": 9,
@@ -193467,6 +200879,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_6-80",
     "ratings": {
+      "attack": 14,
+      "defense": 6,
+      "stamina": 10
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 14,
       "defense": 6,
       "stamina": 10
@@ -193591,6 +201009,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_7-55",
     "ratings": {
+      "attack": 6,
+      "defense": 14,
+      "stamina": 10,
+      "height": 55
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 6,
       "defense": 14,
       "stamina": 10,
@@ -193739,6 +201164,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 8,
       "height": 60
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 14,
+      "stamina": 8,
+      "height": 60
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -193845,6 +201277,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 10,
       "height": 70
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 12,
+      "stamina": 10,
+      "height": 70
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -193941,6 +201380,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 14,
       "stamina": 9
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 7,
+      "defense": 14,
+      "stamina": 9
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -194024,6 +201469,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 12,
       "height": 70
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 8,
+      "defense": 10,
+      "stamina": 12,
+      "height": 70
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -194100,6 +201552,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_8-80",
     "ratings": {
+      "attack": 8,
+      "defense": 9,
+      "stamina": 13,
+      "height": 80
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 8,
       "defense": 9,
       "stamina": 13,
@@ -194242,6 +201701,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 7,
       "height": 65
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7,
+      "height": 65
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -194353,6 +201819,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-70",
     "ratings": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7,
+      "height": 70
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 13,
       "defense": 10,
       "stamina": 7,
@@ -194515,6 +201988,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 7,
       "height": 80
     },
+    "ratingScale": 100,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 10,
+      "stamina": 7,
+      "height": 80
+    },
     "wboLegality": {
       "xStandard": true
     },
@@ -194585,6 +202065,13 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-65",
     "ratings": {
+      "attack": 10,
+      "defense": 11,
+      "stamina": 19,
+      "height": 65
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 10,
       "defense": 11,
       "stamina": 19,
@@ -194697,6 +202184,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_M-85",
     "ratings": {
+      "attack": 8,
+      "defense": 19,
+      "stamina": 13
+    },
+    "ratingScale": 100,
+    "ratingsNormalised": {
       "attack": 8,
       "defense": 19,
       "stamina": 13
@@ -194869,6 +202362,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -195059,6 +202561,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 3
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 0,
+      "burst": 38
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -195227,6 +202738,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 2,
       "burst": 3
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 88,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 25,
+      "burst": 38
     },
     "wboLegality": {
       "burst": true,
@@ -195403,6 +202923,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -195498,6 +203027,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 3,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 13,
+      "stamina": 0,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -195755,6 +203293,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 2,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -195995,6 +203542,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 38,
+      "weight": 25,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -196155,6 +203711,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 13,
+      "burst": 13
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -196308,6 +203873,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -196516,6 +204090,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 63,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -196679,6 +204262,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 1,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 13,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -196871,6 +204463,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 4,
       "weight": 2,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 50,
+      "weight": 25,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -197134,6 +204735,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 50,
+      "speed": 0,
+      "burst": 25
     },
     "wboLegality": {
       "burst": true,
@@ -197489,6 +205099,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -197673,6 +205292,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 0,
+      "burst": 25
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -197760,6 +205388,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 100,
+      "stamina": 25,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -197979,6 +205616,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -198132,6 +205778,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 4,
       "speed": 2,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 25,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -198292,6 +205947,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "weight": 2,
       "speed": 0,
       "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 25,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 0,
+      "burst": 13
     },
     "wboLegality": {
       "burst": true,
@@ -200307,6 +207971,10 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Neo-Right_(Metal_Weight_Version)",
     "ratings": {
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "stamina": 50
     }
   },
   {
@@ -200345,6 +208013,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -200385,6 +208059,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67
     },
     "jpName": "NEOライトスピンギア (ダブルベアリングバージョン)",
     "romaji": "Neo Raito Supin Gia (Daburu Bearingu Bājon)"
@@ -200444,6 +208124,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50,
+      "stamina": 33
     }
   },
   {
@@ -200533,6 +208219,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
     }
   },
   {
@@ -200607,6 +208299,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 67
     }
   },
   {
@@ -200639,6 +208337,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 33
     }
   },
   {
@@ -200825,6 +208529,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
     }
   },
   {
@@ -201022,6 +208732,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33
     }
   },
   {
@@ -201227,6 +208943,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_85",
     "ratings": {
       "attack": 3,
+      "defense": 0,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
       "defense": 0,
       "stamina": 0
     },
@@ -201458,6 +209180,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -201546,6 +209274,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 0,
       "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
       "stamina": 0
     },
     "aka": [
@@ -201724,6 +209458,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 33
+    },
     "jpName": "アーマーディフェンス145",
     "romaji": "Āmā Difensu 145"
   },
@@ -201879,6 +209619,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 33
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -201982,6 +209728,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33
     },
     "aka": [
       "CH120"
@@ -202089,6 +209841,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -202357,6 +210115,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -202548,6 +210312,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
       "stamina": 0
     },
     "aka": [
@@ -202848,6 +210618,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 33
+    },
     "aka": [
       "DF145"
     ]
@@ -202976,6 +210752,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -203218,6 +211000,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -203306,6 +211094,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 0,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 50
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -203511,6 +211305,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 50
+    },
     "aka": [
       "GB145"
     ]
@@ -203669,6 +211469,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 17
     }
   },
   {
@@ -203799,6 +211605,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 1,
       "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
       "stamina": 0
     },
     "aka": [
@@ -204105,6 +211917,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 33
+    },
     "aka": [
       "R145"
     ]
@@ -204315,6 +212133,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 0
+    },
     "aka": [
       "S130"
     ],
@@ -204390,6 +212214,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 25
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -204463,6 +212293,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 1,
       "stamina": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 13,
+      "stamina": 25
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -204666,6 +212502,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 50,
+      "stamina": 33
+    },
     "partType": "High"
   },
   {
@@ -204768,6 +212610,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 13
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": false,
@@ -204844,6 +212692,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 50
     },
     "aka": [
       "TH170"
@@ -204972,6 +212826,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -205174,6 +213034,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1.5,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 25,
+      "stamina": 50
     },
     "aka": [
       "UW145"
@@ -205491,6 +213357,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -205750,6 +213622,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 0
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true
@@ -205903,6 +213781,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 0
+    },
     "aka": [
       "W145"
     ],
@@ -206021,6 +213905,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 0
+    },
     "aka": [
       "WA130"
     ]
@@ -206108,6 +213998,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 50
     }
   },
   {
@@ -206175,6 +214070,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 50
     }
   },
   {
@@ -206240,6 +214140,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -206323,6 +214228,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 50
     }
   },
   {
@@ -206447,6 +214357,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 33
     }
   },
   {
@@ -206530,6 +214445,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 33
     }
   },
   {
@@ -206595,6 +214515,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -206650,6 +214575,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 1,
       "power": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 17,
+      "power": 50
     }
   },
   {
@@ -206711,6 +214641,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -206768,6 +214703,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 33
     }
   },
   {
@@ -206839,6 +214779,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 33
     }
   },
   {
@@ -206949,6 +214894,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -207004,6 +214954,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 2,
       "power": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 33,
+      "power": 33
     }
   },
   {
@@ -207061,6 +215016,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -207134,6 +215094,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "speed": 3,
       "power": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "speed": 50,
+      "power": 17
     }
   },
   {
@@ -209549,6 +217514,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -209643,6 +217617,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -209761,6 +217744,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -209873,6 +217865,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -210017,6 +218018,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -210121,6 +218131,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -210316,6 +218335,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -210420,6 +218448,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -210538,6 +218575,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Superking_Chip_-_Longinus",
     "ratings": {
       "attack": 2,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
       "defense": 0,
       "stamina": 0,
       "weight": 0,
@@ -210700,6 +218746,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -210786,6 +218841,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -210908,6 +218972,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -211014,6 +219087,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -211099,6 +219181,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 38,
       "speed": 0,
       "burst": 0
     },
@@ -211195,6 +219286,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1,
       "weight": 1,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 13,
       "speed": 0,
       "burst": 0
     },
@@ -211317,6 +219417,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": false,
@@ -211430,6 +219539,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 0,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -211578,6 +219696,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 0,
       "stamina": 1,
+      "weight": 0,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 0,
+      "stamina": 13,
       "weight": 0,
       "speed": 0,
       "burst": 0
@@ -211760,6 +219887,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -211843,6 +219979,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 25
+    },
     "aka": [
       "Bahamdia (Takara Tomy)"
     ],
@@ -211925,6 +220067,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 13
     },
     "element": "Darkness",
     "jpName": "バルロ",
@@ -212161,6 +220309,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Warrior_Wheel_-_Dragoon",
     "ratings": {
       "attack": 7,
+      "defense": 0,
+      "stamina": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 88,
       "defense": 0,
       "stamina": 0
     },
@@ -212531,6 +220685,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 4,
       "stamina": 2
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 50,
+      "stamina": 25
+    },
     "aka": [
       "Goreim (Takara Tomy)"
     ],
@@ -212642,6 +220802,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 13
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -212850,6 +221016,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 13
     },
     "aka": [
       "Ifraid (Takara Tomy)"
@@ -213185,6 +221357,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 4
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 25,
+      "stamina": 50
+    },
     "aka": [
       "Orojya (Takara Tomy)"
     ],
@@ -213277,6 +221455,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "ratings": {
       "attack": 6,
       "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 13,
       "stamina": 0
     },
     "aka": [
@@ -213414,6 +221598,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 13
     },
     "aka": [
       "Phoenic (Takara Tomy)"
@@ -213585,6 +221775,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 25,
+      "stamina": 13
+    },
     "aka": [
       "Saramanda (Takara Tomy)"
     ],
@@ -213661,6 +221857,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 5
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 63
+    },
     "aka": [
       "Wyvern (anime, English)"
     ],
@@ -213735,6 +221937,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 5,
       "defense": 1,
       "stamina": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 13,
+      "stamina": 13
     },
     "aka": [
       "Girago (Takara Tomy)"
@@ -213877,6 +222085,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 13,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -213956,6 +222173,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 2,
       "weight": 3,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 38,
       "speed": 0,
       "burst": 0
     },
@@ -214075,6 +222301,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 0,
       "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
       "speed": 0,
       "burst": 0
     },
@@ -214222,6 +222457,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -214422,6 +222666,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -214614,6 +222867,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 1,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 25,
+      "weight": 25,
+      "speed": 13,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -214749,6 +223011,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 1,
       "weight": 2,
+      "speed": 0,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 0,
+      "stamina": 13,
+      "weight": 25,
       "speed": 0,
       "burst": 0
     },
@@ -214947,6 +223218,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "stamina": 0,
       "weight": 2,
       "speed": 1,
+      "burst": 0
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 13,
       "burst": 0
     },
     "wboLegality": {
@@ -215185,6 +223465,15 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "speed": 0,
       "burst": 0
     },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 13,
+      "defense": 13,
+      "stamina": 13,
+      "weight": 25,
+      "speed": 0,
+      "burst": 0
+    },
     "wboLegality": {
       "burst": true,
       "burstGt": true,
@@ -215226,6 +223515,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 33
     }
   },
   {
@@ -215325,6 +223620,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
     },
     "jpName": "サークルヘビィ",
     "romaji": "Sākuru Hebyi"
@@ -215528,6 +223829,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 50
+    },
     "aka": [
       "Magne Weight Disk"
     ],
@@ -215665,6 +223972,11 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 3,
       "stamina": 2
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "defense": 50,
+      "stamina": 33
+    },
     "jpName": "スパークディスク",
     "romaji": "Supāku Disuku"
   },
@@ -215742,6 +224054,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 3
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 50
+    },
     "jpName": "ワイド",
     "romaji": "Waido"
   },
@@ -215768,6 +224086,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 1,
       "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 17,
+      "stamina": 50
     }
   },
   {
@@ -215890,6 +224214,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -215981,6 +224311,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -216137,6 +224473,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 33,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -216212,6 +224554,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 4,
       "defense": 2,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 33,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -216289,6 +224637,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -216364,6 +224718,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 3,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 50,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -216467,6 +224827,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 92,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -216564,6 +224930,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 4,
       "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -216675,6 +225047,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 1,
       "stamina": 5
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 83
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -216932,6 +225310,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -217032,6 +225416,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -217138,6 +225528,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -217237,6 +225633,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 2,
       "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
     },
     "wboLegality": {
       "mfbStandard": true,
@@ -217353,6 +225755,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 2,
       "stamina": 4
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 67
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -217449,6 +225857,12 @@ const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 3,
       "defense": 3,
       "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
     },
     "wboLegality": {
       "mfbStandard": true,
