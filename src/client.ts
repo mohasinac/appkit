@@ -491,6 +491,14 @@ export type { ActionRowProps, ActionRowAlign } from "./ui/components/ActionRow";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient } from "./features/layout/index";
+/**
+ * A page declares its own inline primary CTA so the floating action control
+ * stays out of its way until that button has been seen and scrolled past. A
+ * page that publishes actions and no anchor gets the control immediately —
+ * which is right for a bulk-selection screen and wrong for anything with a
+ * visible Buy/Checkout button. See `useCtaReveal`.
+ */
+export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/index";
 export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
 export { ListingLayout } from "./ui/components/ListingLayout";
 export type { ListingLayoutProps, ListingLayoutLabels } from "./ui/components/ListingLayout";

@@ -8,6 +8,7 @@ import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 import { dispatchCartUpdated, formatCartAddedMessage, type CartUpdatedEventDetail } from "../utils/pending-ops";
 import { useToast } from "../../../ui/components/Toast";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import type { JsonValue } from "@mohasinac/appkit/client";
 
@@ -30,9 +31,14 @@ interface AddToCartServerResponse {
 function showAddedToast(
   showToast: (msg: string, variant: "success" | "error") => void,
   detail: CartUpdatedEventDetail,
+  canSeePrices: boolean,
 ): void {
   showToast(
-    formatCartAddedMessage(detail, (amount) => formatCurrency(amount, getDefaultCurrency())),
+    formatCartAddedMessage(
+      detail,
+      (amount) => formatCurrency(amount, getDefaultCurrency()),
+      canSeePrices,
+    ),
     "success",
   );
 }
@@ -52,6 +58,10 @@ export function useAddToCart(options?: UseAddToCartOptions) {
   const queryClient = useQueryClient();
   const endpoint = options?.endpoint ?? CART_ENDPOINTS.GET;
   const { showToast } = useToast();
+  // The guest fallback below fires precisely when the viewer is NOT signed in,
+  // so a toast that quoted the cart total was the one place the price gate was
+  // guaranteed to be speaking to a guest.
+  const { canSeePrices } = useCanSeePrices();
 
   const optionsRef = useRef(options);
   useEffect(() => {
@@ -65,7 +75,7 @@ export function useAddToCart(options?: UseAddToCartOptions) {
         queryClient.invalidateQueries({ queryKey: ["cart"] });
         const itemCount = data?.itemCount ?? 0;
         const totalValue = data?.subtotal ?? 0;
-        showAddedToast(showToast, { productTitle: variables.productTitle, itemCount, totalValue });
+        showAddedToast(showToast, { productTitle: variables.productTitle, itemCount, totalValue }, canSeePrices);
         dispatchCartUpdated({ itemCount, totalValue, productTitle: variables.productTitle });
         optionsRef.current?.onSuccess?.();
       },
@@ -91,7 +101,7 @@ export function useAddToCart(options?: UseAddToCartOptions) {
           const guestItems = getGuestCartItems();
           const itemCount = guestItems.reduce((sum, it) => sum + it.quantity, 0);
           const totalValue = guestItems.reduce((sum, it) => sum + (it.price ?? 0) * it.quantity, 0);
-          showAddedToast(showToast, { productTitle: data.productTitle, itemCount, totalValue });
+          showAddedToast(showToast, { productTitle: data.productTitle, itemCount, totalValue }, canSeePrices);
           dispatchCartUpdated({ itemCount, totalValue, productTitle: data.productTitle });
           optionsRef.current?.onSuccess?.();
           return undefined;
@@ -99,7 +109,7 @@ export function useAddToCart(options?: UseAddToCartOptions) {
         throw err;
       }
     },
-    [serverMutation, showToast],
+    [serverMutation, showToast, canSeePrices],
   );
 
   return {

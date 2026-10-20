@@ -7,19 +7,31 @@
  * (`useBottomActions`, `useFormBottomActions`, every `DataListingView` bulk
  * bar) are untouched: only the presentation changed.
  *
- * ── Why a side dock and not a bar ──────────────────────────────────────────
+ * ── 🛑 DESKTOP ONLY. The phone gets `BottomActions`. ───────────────────────
  *
- * A full-width bar welded to an edge covers content the whole time it is up —
- * the last row of a listing on mobile, and on desktop it either reads as a
- * browser download bar at the bottom or steals the header's space at the top.
- * A dock is a 56px button at rest and a panel only while it is being used.
+ * This used to render at every width, and on a phone that was the wrong trade
+ * twice over: a floating puck sits in the middle of the content on the screen
+ * with the least of it, and it replaced a bar that was already in the thumb
+ * zone and already stacked correctly above the tab bar. A phone has a thumb
+ * zone and a bottom edge that means something; a 1440px window has neither,
+ * which is the entire argument for each half.
+ *
+ * The two are mutually exclusive by construction — `useIsDesktop` decides, and
+ * both halves read the SAME `BottomActionsContext`, so all ~30 publishers are
+ * untouched and nothing can register with only one of them.
  *
  * ── Three rules this encodes ───────────────────────────────────────────────
  *
- * 1. **It docks OPPOSITE the sidebar.** `SidebarLayout` docks to the hand-mode
- *    side (`hand === "left" ? left-0 : right-0`), so the dock takes the other
- *    edge and the two can never overlap — including while the sidebar is open,
+ * 1. **It docks OPPOSITE the sidebar, at the vertical MIDDLE.** `SidebarLayout`
+ *    docks to the hand-mode side (`hand === "left" ? left-0 : right-0`), so the
+ *    dock takes the other edge — left, in the default right-hand configuration
+ *    — and the two can never overlap, including while the sidebar is open,
  *    which is exactly when a CTA hidden underneath it would be unreachable.
+ *    Vertically it is centred rather than bottom-anchored: at the bottom of a
+ *    desktop window it reads as a browser download bar and sits as far from
+ *    the content as the viewport allows. Centred, it is beside the content,
+ *    and it needs no bottom-tier clearance at all — there is no tab bar at
+ *    this width and the pagination bar is at the other end of the screen.
  *
  * 2. **It reveals only after the inline CTA has been seen and passed** — see
  *    `useCtaReveal`. A page with no CTA anchor shows it at once, which is what
@@ -43,6 +55,7 @@ import type { BottomAction } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { useHandMode } from "../../_internal/client/hand-mode";
 import { useCtaReveal } from "./useCtaReveal";
+import { useIsDesktop } from "./useIsDesktop";
 import { ActionRow, Div, IconButton, Row, Span, Stack, Text, Button } from "../../ui";
 
 const PANEL_SURFACE =
@@ -216,6 +229,7 @@ export default function SideActionDock() {
   const { state, actionCallbacksRef, bulkCallbacksRef, bulkClearRef } =
     useBottomActionsContext();
   const { hand } = useHandMode();
+  const isDesktop = useIsDesktop();
 
   const [expanded, setExpanded] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -243,7 +257,7 @@ export default function SideActionDock() {
 
   // Rule 3 — a selection is its own reveal.
   const revealed = useCtaReveal(hasContent && !isBulkMode, ctaAnchorId) || isBulkMode;
-  const isVisible = hasContent && revealed;
+  const isVisible = isDesktop && hasContent && revealed;
 
   // Rule 1 — opposite the sidebar, which docks to the hand-mode side.
   const dockSideClass = hand === "left" ? "right-0" : "left-0";
@@ -328,10 +342,19 @@ export default function SideActionDock() {
         "fixed z-[var(--appkit-z-overlay)] pointer-events-auto flex flex-col",
         panelAlignClass,
         dockSideClass,
-        // Clears the whole bottom tier, so it never lands on the mobile tab bar
-        // or on a pagination bar — the same sum every other floating control
-        // reads (see CSS Variable Reference → "The bottom edge is three tiers").
-        "bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4))]",
+        /*
+         * Vertically centred — see rule 1. This is a desktop-only control, so
+         * it deliberately reads NONE of the three bottom-tier variables: there
+         * is no tab bar at this width, the keyboard inset is a phone concern,
+         * and the pagination bar is at the opposite end of the viewport. An
+         * unused `calc()` over variables that are 0 here is just a claim about
+         * a relationship that no longer exists.
+         *
+         * `max-h` + `justify-center` so a tall expanded panel grows about the
+         * midpoint and is clipped by the viewport rather than running off both
+         * ends of it; the panel scrolls internally.
+         */
+        "top-1/2 -translate-y-1/2 max-h-[90vh] justify-center",
         "px-[var(--appkit-space-3)] gap-[var(--appkit-space-2)]",
       ].join(" ")}
       data-section="side-action-dock"

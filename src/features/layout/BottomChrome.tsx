@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Div } from "../../ui";
 import { BOTTOM_CHROME_SLOT_ID } from "../../ui/components/bottom-chrome-slot";
+import { useIsDesktop } from "./useIsDesktop";
 
 export interface BottomChromeProps {
   children: React.ReactNode;
@@ -54,28 +55,13 @@ export interface BottomChromeProps {
  * mutually exclusive by construction (see `write()`).
  */
 
-/**
- * The breakpoint at which the tier moves from the bottom edge to under the
- * header. 64rem is Tailwind's `lg` — the same line `BottomNavbar` disappears
- * at, so the tier changes ends exactly when the thing it was stacking above
- * stops existing.
- */
-const DESKTOP_QUERY = "(min-width: 64rem)";
-
 export function BottomChrome({ children }: BottomChromeProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-
   // Matched in JS as well as in CSS because the MEASUREMENT has to know which
   // variable to publish — a media query alone can move the box but cannot tell
-  // the ResizeObserver which end of the screen it ended up at.
-  useEffect(() => {
-    const mq = window.matchMedia(DESKTOP_QUERY);
-    const sync = () => setIsDesktop(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
+  // the ResizeObserver which end of the screen it ended up at. Shared with
+  // SideActionDock/BottomActions so one line decides the whole layout flip.
+  const isDesktop = useIsDesktop();
 
   useEffect(() => {
     const root = document.documentElement;

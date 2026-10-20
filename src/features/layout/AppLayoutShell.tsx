@@ -20,6 +20,7 @@ import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
 import SideActionDock from "./SideActionDock";
+import BottomActions from "./BottomActions";
 import { BottomChrome } from "./BottomChrome";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
 import { BottomNavbar, type BottomNavbarUser } from "./BottomNavbar";
@@ -1023,18 +1024,26 @@ export function AppLayoutShell({
         <BackToTop />
         <FooterLayout {...footer} />
         {/*
-          🛑 `<BottomChrome>` stays, EMPTY of the action bar. It is still the
-          tier container for anything that genuinely bands the bottom edge —
-          `ListingLayout`'s mobile pagination bar portals into its slot — and it
-          is the sole publisher of `--bottom-chrome-height`, which the footer's
-          clearance and `BackToTop` both read. Deleting it would collapse that
-          variable to 0 and put the pagination bar under the tab bar.
+          The page-action control is ONE context with TWO presentations, and
+          exactly one of them is mounted at any width (`useIsDesktop`):
 
-          The action dock is deliberately NOT inside it: it floats beside the
-          content, reserves no height, and would otherwise push the footer down
-          by a bar that is a 56px button most of the time.
+            < lg   <BottomActions/>  — a bar in the thumb zone, INSIDE the tier
+                                        so it stacks above the tab bar and its
+                                        height reaches --bottom-chrome-height.
+            >= lg  <SideActionDock/> — a floating puck at the vertical middle,
+                                        OUTSIDE the tier: it reserves no height,
+                                        and putting it in would push the footer
+                                        down by a bar that is a 56px button most
+                                        of the time.
+
+          🛑 `<BottomChrome>` is not optional even when the bar inside it is
+          absent. It is the tier container `ListingLayout`'s mobile pagination
+          bar portals into, and the sole publisher of `--bottom-chrome-height`,
+          which the footer's clearance and `BackToTop` both read.
         */}
-        <BottomChrome>{null}</BottomChrome>
+        <BottomChrome>
+          <BottomActions />
+        </BottomChrome>
         <SideActionDock />
         {showBottomNav && (
           <BottomNavbar

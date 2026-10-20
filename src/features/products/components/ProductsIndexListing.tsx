@@ -296,9 +296,16 @@ export function ProductsIndexListing({
       itemCount: items.reduce((sum, it) => sum + it.quantity, 0),
       totalValue: items.reduce((sum, it) => sum + (it.price ?? 0) * it.quantity, 0),
     };
-    showToast(formatCartAddedMessage(detail, (amount) => formatCurrency(amount, getDefaultCurrency())), "success");
+    showToast(
+      formatCartAddedMessage(
+        detail,
+        (amount) => formatCurrency(amount, getDefaultCurrency()),
+        canSeePrices,
+      ),
+      "success",
+    );
     dispatchCartUpdated(detail);
-  }, [localCart, showToast]);
+  }, [localCart, showToast, canSeePrices]);
 
   const handleBuyNow = useCallback((product: any) => {
     requireAuth(ACTION_ID.BUY_NOW, () => {

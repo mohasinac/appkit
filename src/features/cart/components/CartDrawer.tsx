@@ -4,6 +4,7 @@ import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { useHandMode } from "../../../_internal/client/hand-mode";
@@ -86,11 +87,16 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
         <Row justify="between" className="min-w-0" gap="sm">
+          {/* 🛑 A cart line is a PUBLIC price surface like any listing card —
+              a guest cart is reachable without an account, so an ungated
+              `formatCurrency` here republishes exactly what `<GatedPrice>`
+              withholds one page earlier. This was the leak: the summary and
+              the total were gated while every line beneath them printed the
+              amount in full. */}
           <Text className="text-[var(--appkit-color-text)]" weight="semibold">
-            {formatCurrency(
-              item.meta.price * item.quantity,
-              item.meta.currency,
-            )}
+            <GatedPrice>
+              {formatCurrency(item.meta.price * item.quantity, item.meta.currency)}
+            </GatedPrice>
           </Text>
           {onQtyChange && !isOutOfStock && (
             <QuantityStepper
@@ -207,7 +213,7 @@ export function CartDrawer({
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span weight="semibold">
-                {formatCurrency(subtotal, currency)}
+                <GatedPrice>{formatCurrency(subtotal, currency)}</GatedPrice>
               </Span>
             </Row>
             {onCheckout && (

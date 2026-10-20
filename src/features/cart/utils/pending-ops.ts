@@ -49,9 +49,21 @@ export function dispatchCartUpdated(detail: CartUpdatedEventDetail): void {
 export function formatCartAddedMessage(
   detail: CartUpdatedEventDetail,
   formatCurrency: (amount: number) => string,
+  /**
+   * 🛑 A toast is a STRING, so it cannot be wrapped in `<GatedPrice>` — this is
+   * the third form of the guest-price gate, read as a value at the call site
+   * (CLAUDE.md § "Guest price gating"). Default `true` so no existing caller
+   * silently loses the total; the signed-out callers pass `false`.
+   *
+   * The COUNT is deliberately still shown. It is not money, and a guest who
+   * just added something is owed confirmation that it landed.
+   */
+  includeTotal = true,
 ): string {
   const itemLabel = detail.productTitle ? `"${detail.productTitle}"` : "Item";
-  return `${itemLabel} added to cart — ${detail.itemCount} item${detail.itemCount !== 1 ? "s" : ""}, ${formatCurrency(detail.totalValue)} total`;
+  const count = `${detail.itemCount} item${detail.itemCount !== 1 ? "s" : ""}`;
+  const total = includeTotal ? `, ${formatCurrency(detail.totalValue)} total` : "";
+  return `${itemLabel} added to cart — ${count}${total}`;
 }
 
 function dispatchCartOpsChange(): void {

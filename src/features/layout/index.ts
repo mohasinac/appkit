@@ -67,14 +67,14 @@ export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
 export { useFormBottomActions } from "./hooks/useFormBottomActions";
 export type { UseFormBottomActionsOptions } from "./hooks/useFormBottomActions";
 
-export { default as SideActionDock } from "./SideActionDock";
-/**
- * @deprecated The bottom action bar is now a floating side dock. Kept as an
- * alias so a consumer that mounts it by name keeps compiling and keeps
- * rendering the same actions — the component it resolves to is
- * `SideActionDock`.
+/*
+ * The two presentations of one control. `AppLayoutShell` mounts both and
+ * `useIsDesktop` lets exactly one render — do not mount either directly, or a
+ * page gets two toolbars publishing into the same context.
  */
-export { default as BottomActions } from "./SideActionDock";
+export { default as SideActionDock } from "./SideActionDock";
+export { default as BottomActions } from "./BottomActions";
+export { useIsDesktop, DESKTOP_QUERY } from "./useIsDesktop";
 export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./cta-anchor";
 
 export { BottomChrome } from "./BottomChrome";

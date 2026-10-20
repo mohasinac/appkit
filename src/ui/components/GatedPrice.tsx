@@ -3,7 +3,9 @@
 import React from "react";
 import { Span } from "./Typography";
 import { Row } from "./Layout";
-import { ROUTES } from "../../next/routing/route-map";
+import { Icon } from "./Icon";
+import { IconButton, ICON_BUTTON_ICON_SIZE } from "./IconButton";
+import { LoginRequiredModal } from "./LoginRequiredModal";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { formatCurrency, formatPercentage } from "../../utils/number.formatter";
 import { useCanSeePrices } from "../../react/hooks/useCanSeePrices";
@@ -48,6 +50,58 @@ export interface GatedPriceProps {
 }
 
 const DEFAULT_LABEL = "Sign in to see price";
+
+/**
+ * The signed-out state: a closed eye you can press, not a line of refusal copy.
+ *
+ * 🛑 WHY AN ICON AND NOT THE SENTENCE. The prompt used to be a full
+ * "🔒 Sign in to see price" link in `--appkit-color-primary`, repeated once per
+ * card. On a 24-card grid that is 24 lines of brand-coloured refusal, each
+ * wider than the price it stands in for — so the grid's loudest element became
+ * the thing the visitor cannot have, and the rows it sat in changed width with
+ * the copy. An eye occupies roughly a price's worth of space, reads as "there
+ * is something here", and says it once per card without shouting.
+ *
+ * 🛑 THE ASK IS ON THE CLICK, NOT ON THE PAGE. Pressing it opens the shared
+ * sign-in modal rather than navigating away: a visitor who taps a price on a
+ * listing page wants the price, not to lose their place in the catalogue. The
+ * modal is rendered only while open, so a grid of 24 gated prices mounts 24
+ * buttons and zero modals.
+ *
+ * The accessible name is still the full sentence — the icon is the visual
+ * economy, not an information loss.
+ */
+function GatedPriceReveal({ label }: { label: string }) {
+  const [asking, setAsking] = React.useState(false);
+  return (
+    <>
+      {/*
+       * `IconButton`, not a raw `<button>` + bespoke CSS: a 2rem outlined box
+       * with the design system's own focus ring and hover, so this control
+       * cannot drift from every other icon control on the page. `size="sm"`
+       * picks the glyph size for us (`ICON_BUTTON_ICON_SIZE`) — a hand-passed
+       * icon size beside a box size is the mismatched pair Root Cause #80 is
+       * about.
+       */}
+      <IconButton
+        size="sm"
+        variant="outline"
+        rounded="lg"
+        aria-label={label}
+        title={label}
+        onClick={() => setAsking(true)}
+        icon={<Icon name="hide" size={ICON_BUTTON_ICON_SIZE.sm} />}
+      />
+      {asking && (
+        <LoginRequiredModal
+          isOpen
+          onClose={() => setAsking(false)}
+          message={`${label}. Sign in or create an account to see prices across the site.`}
+        />
+      )}
+    </>
+  );
+}
 
 /**
  * Renders its children only when the viewer may see prices; renders NOTHING
@@ -107,12 +161,9 @@ export function GatedPrice({
 
   if (!canSeePrices) {
     return (
-      <a
-        href={String(ROUTES.AUTH.LOGIN)}
-        className={`${rootClass} appkit-gated-price__prompt`}
-      >
-        {label}
-      </a>
+      <Span className={`${rootClass} appkit-gated-price__prompt`}>
+        <GatedPriceReveal label={label} />
+      </Span>
     );
   }
 

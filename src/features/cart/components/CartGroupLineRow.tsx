@@ -21,6 +21,7 @@ import React, { useState } from "react";
 import { Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { MediaImage } from "../../media/MediaImage";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { CartLineMember } from "../schemas";
@@ -137,8 +138,12 @@ export function CartGroupLineRow({
                   </Div>
                   <Stack gap="none" className="min-w-0">
                     <Text size="sm" truncate={1} color="primary">{m.title}</Text>
+                    {/* `<PricesOnly>` on the AMOUNT only, so a guest still sees
+                        the `× N` that tells them what the line contains — the
+                        quantity is not money and losing it would make an
+                        expanded bundle unreadable rather than merely gated. */}
                     <Text size="xs" color="muted">
-                      {formatCurrency(m.unitPrice, currency)}
+                      <PricesOnly>{formatCurrency(m.unitPrice, currency)}</PricesOnly>
                       {lineKind === "bundle" ? ` × ${m.quantity}` : ""}
                     </Text>
                   </Stack>
@@ -179,7 +184,7 @@ export function CartGroupLineRow({
 
         <Row justify="between" gap="sm" className="min-w-0">
           <Text weight="semibold" className="text-[var(--appkit-color-text)]">
-            {formatCurrency(lineTotal, currency)}
+            <GatedPrice>{formatCurrency(lineTotal, currency)}</GatedPrice>
           </Text>
           {/* Copies stepper — bundles only, for the reason above. */}
           {lineKind === "bundle" && onQtyChange && !locked && (
