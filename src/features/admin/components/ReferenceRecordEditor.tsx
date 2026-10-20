@@ -175,12 +175,19 @@ export function ReferenceRecordEditor({
     );
   }
 
+  /*
+   * 🛑 No `className` on `<Form>` — the `<Stack gap="md">` inside already owns
+   * the spacing, so `space-y-4` was a second, competing source of it
+   * (audit-variant-prop-coverage: a layout token belongs in a variant prop).
+   *
+   * 🛑 And this is a PLAIN comment, above the `return`, not a `{/* … *␣/}` JSX
+   * one below it. I wrote it as JSX first and it broke the parse: a JSX comment
+   * between `return (` and the root element is a second expression, so the
+   * return has two children and no wrapper. `tsc` caught it — the first
+   * typecheck this session was allowed to run — which is exactly the class of
+   * error the 4 GB no-build cap was hiding.
+   */
   return (
-    {/*
-      No `className` — the `<Stack gap="md">` inside already owns the spacing,
-      and `space-y-4` on the Form was a second, competing source of it
-      (audit-variant-prop-coverage: a layout token belongs in a variant prop).
-    */}
     <Form>
       {({ setFieldError, clearErrors }) => (
         <Stack gap="md" className="min-w-0">

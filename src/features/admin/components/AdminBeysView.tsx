@@ -29,7 +29,7 @@ import { Heading, ListingLayout, Stack, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { BEY_FIELDS } from "../../../constants/field-names";
-import { SORT_DIR, sortBy } from "../../../constants/sort";
+import { sortBy } from "../../../constants/sort";
 import type { JsonValue } from "../../../schemas/types";
 import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "./DataListingView";
@@ -133,7 +133,6 @@ const ADMIN_BEYS_CONFIG: ListingViewConfig<JsonValue, BeyRow> = {
   title: "Beyblades",
   subtitle:
     "The generated Beyblade database. Corrections made here are kept when the database is regenerated.",
-  boxes: [],
   searchPlaceholder: "Search Beyblades by name — Dranzer F, Variares…",
   /*
    * 🛑 `searchCommit: "enter"`, not debounce. The route's search is an indexed
@@ -151,7 +150,6 @@ const ADMIN_BEYS_CONFIG: ListingViewConfig<JsonValue, BeyRow> = {
    */
   search: {
     placeholder: "Search Beyblades by name — a prefix, case-sensitive",
-    mode: "prefix",
     fields: ["name"],
   },
   emptyLabel: "No Beyblade matches that name",
@@ -162,11 +160,11 @@ const ADMIN_BEYS_CONFIG: ListingViewConfig<JsonValue, BeyRow> = {
    * option — but writing it as a literal is what lets a field rename
    * leave a sort string that silently sorts nothing.
    */
-  defaultSort: sortBy(BEY_FIELDS.NAME, SORT_DIR.ASC),
+  defaultSort: sortBy(BEY_FIELDS.NAME, "ASC"),
   pageSize: 25,
   queryKey: ["admin", "beys"],
   endpoint: ADMIN_ENDPOINTS.BEYS,
-  sortOptions: [{ value: sortBy(BEY_FIELDS.NAME, SORT_DIR.ASC), label: "Name A-Z" }],
+  sortOptions: [{ value: sortBy(BEY_FIELDS.NAME, "ASC"), label: "Name A-Z" }],
   columns: COLUMNS,
   buildFilters: () => undefined,
   getTotal: (response, rows) => extractTotal(response) ?? rows.length,

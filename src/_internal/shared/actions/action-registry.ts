@@ -52,6 +52,14 @@ export type ActionResource =
   | "GROUP"
   | "CATEGORY"
   | "BRAND"
+  /*
+   * The two GENERATED reference databases. `ActionTree` is
+   * `Record<ActionResource, …>`, so adding a bucket without adding it here
+   * is a compile error — which is how this was caught, and the reason the
+   * registry is typed that way rather than as a loose `Record<string, …>`.
+   */
+  | "PART"
+  | "BEY"
   | "SUBLISTING"
   | "STORE"
   | "BLOG"
