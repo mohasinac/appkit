@@ -5,13 +5,6 @@ export {
   type OrderAddonBadgesProps,
 } from "./OrderAddonBadges";
 export {
-  MarketplaceOrderCard,
-  type MarketplaceOrderCardLabels,
-  type MarketplaceOrderCardLinks,
-  type MarketplaceOrderCardOrder,
-  type MarketplaceOrderCardProps,
-} from "./MarketplaceOrderCard";
-export {
   OrderFilters,
   ORDER_FILTER_KEYS,
   ORDER_ADMIN_SORT_OPTIONS,

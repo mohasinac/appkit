@@ -6476,8 +6476,6 @@ export { finalizeStagedMediaUrl } from "./features/media/server";
 // DEFAULT_ORDER_DATA - Constant used across modules.
 export { DEFAULT_ORDER_DATA } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// MarketplaceOrderCard - Component for marketplace order card.
-export { MarketplaceOrderCard } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ORDER_ADMIN_SORT_OPTIONS - Constant used across modules.
 export { ORDER_ADMIN_SORT_OPTIONS } from "./features/orders/index";
@@ -6598,17 +6596,9 @@ export { useOrders } from "./features/orders/index";
 // useTrackOrder - React hook for use track order.
 export { useTrackOrder } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceOrderCardLabels - Type contract for marketplace order card labels.
-export type { MarketplaceOrderCardLabels } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceOrderCardLinks - Type contract for marketplace order card links.
-export type { MarketplaceOrderCardLinks } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceOrderCardOrder - Type contract for marketplace order card order.
-export type { MarketplaceOrderCardOrder } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceOrderCardProps - Type contract for marketplace order card props.
-export type { MarketplaceOrderCardProps } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // Order - Type contract for order.
 export type { Order } from "./features/orders/index";
