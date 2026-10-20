@@ -158,6 +158,9 @@ function parseUpstream<T>(contract: z.ZodType<T>, json: unknown, what: string): 
   try {
     return contract.parse(json);
   } catch (err) {
+    // Normalised first, before the value is inspected — audit-catch-normalize
+    // is strict-zero and the ZodError branch below reads `err` either way.
+    void normalizeError(err);
     const issues =
       err instanceof z.ZodError
         ? err.issues.map((i) => i.path.join("."))
