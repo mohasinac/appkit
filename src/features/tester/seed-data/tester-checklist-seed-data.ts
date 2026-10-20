@@ -7772,6 +7772,475 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
     ],
     { adminOnly: true },
   ),
+  /*
+   * OWNER QUICK-ACTIONS, BUYER PURCHASE CONTEXT, AND THE ADVANCED-TYPE GATE.
+   *
+   * 🛑 Every case here is an explicit BEFORE -> AFTER, and that is not a
+   * stylistic choice. Each defect these cover returned HTTP 200 with plausible
+   * content: a form that saved nothing, a gate that permitted everything, a
+   * review whose search tokens silently described its previous text. A case
+   * reading "check the editor works" passes against all of them.
+   *
+   * The spares case is the proof. Before the fix, every /store/spares/new save
+   * failed Zod validation because the schema's hand-written listingType enum
+   * omitted the type — so a tester told to "check creating a spares listing
+   * works" would answer no, with no idea what correct looked like.
+   */
+  ...group(
+    "owner-tools",
+    "Owner tools & purchase context",
+    [
+      {
+        pageKey: "listing-types",
+        pageLabel: "Listing types & the advanced gate",
+        href: "/store/products",
+        cases: [
+          {
+            key: "spares-can-be-created",
+            label: "A spares listing can be created at all",
+            roles: ["seller"],
+            startPage: "/store/spares/new",
+            steps: [
+              "Sign in as the seller who owns store-beyblade-arena.",
+              "Open /store/spares/new and fill in a title, a price and a stock quantity.",
+              "Save as draft, then publish.",
+              "Open /spares and look for the listing.",
+            ],
+            inputs: { title: "QA Spare attack ring", price: 249, stockQuantity: 3 },
+            expectedBehaviour:
+              "productCreateSchema accepts listingType 'spares'. Its enum is DERIVED from ALL_LISTING_TYPES rather than hand-written, so a type in the union cannot be missing from the schema.",
+            expectedUiState:
+              "Both the autosave and the publish succeed, with no field error on listingType. The published row appears on /spares.",
+            endResult:
+              "BEFORE: every save failed validation — the hand-written enum omitted 'spares' while carrying a dead 'bundle' — so the type could not be created at all, even though its 21 pages, its nav entry and its browse page all existed. AFTER: it saves and appears.",
+          },
+          {
+            key: "dead-bundle-type-rejected",
+            label: "listingType 'bundle' is rejected rather than silently stored",
+            roles: ["admin"],
+            startPage: "/admin/products",
+            steps: [
+              "Sign in as admin@letitrip.in / TempPass123!.",
+              "POST to /api/admin/products with a valid product body and listingType set to 'bundle'.",
+              "Read the response status and body.",
+            ],
+            inputs: { listingType: "bundle" },
+            expectedBehaviour:
+              "'bundle' stopped being a listingType in SB-UNI-D — bundles are a categoryType on categories. The derived enum no longer accepts it.",
+            expectedUiState: "A 400 naming listingType. No product is created.",
+            endResult:
+              "BEFORE: it passed validation and wrote a product that pluginFor, LISTING_KIND_ALIAS_MAP and isListingRowAvailable have no branch for — invisible on every surface and uneditable from any UI. AFTER: refused at the door.",
+          },
+          {
+            key: "advanced-types-hidden-for-new-store",
+            label: "A new store sees only Products, Spares and Auctions under Listings",
+            roles: ["seller"],
+            startPage: "/store",
+            steps: [
+              "Sign in as a seller whose store has no advanced_listing_types capability.",
+              "Read every entry in the Listings group of the store sidebar.",
+              "Type /store/live/new directly into the address bar.",
+            ],
+            expectedBehaviour:
+              "The nav filter resolves the store's entitlements SERVER-side — capabilities is a private store field, so a client filter has nothing to read. The create shell refuses a type the store may not use.",
+            expectedUiState:
+              "The Listings group lists Products, Spares and Auctions and nothing else. /store/live/new renders a refusal naming the type and linking to store preferences, not a usable form.",
+            expectedData: { listingNavItems: 3 },
+            endResult:
+              "BEFORE: all eleven entries showed and every per-type new page rendered a complete, usable form for any store. AFTER: three entries, and the advanced pages refuse.",
+          },
+          {
+            key: "advanced-create-refused-server-side",
+            label: "The API refuses an advanced type even when the form is bypassed",
+            roles: ["seller"],
+            startPage: "/store/products",
+            steps: [
+              "Sign in as a seller without the advanced_listing_types capability.",
+              "Call the seller create-product action with listingType 'prize-draw'.",
+              "Read the result.",
+            ],
+            inputs: { listingType: "prize-draw" },
+            expectedBehaviour:
+              "assertListingTypeAllowed runs inside createSellerProduct, where the store document is already loaded — so the refusal costs no extra read and cannot be skipped by calling a different entry point.",
+            expectedUiState: "An authorization error naming the type. No listing is created.",
+            endResult:
+              "BEFORE: the only gate covered auction and pre-order, and it sat behind an if-store check that let a storeless caller through. AFTER: all seven advanced types refused, and a non-admin with no store is refused rather than waved past.",
+          },
+          {
+            key: "cannot-patch-into-advanced-type",
+            label: "A standard listing cannot be PATCHed into an advanced type",
+            roles: ["seller"],
+            startPage: "/store/products",
+            steps: [
+              "Sign in as a seller without the advanced_listing_types capability.",
+              "Create a standard listing and note its id.",
+              "Call the seller update action on it with listingType 'auction', then again with 'prize-draw'.",
+              "Reload the listing and read its type.",
+            ],
+            expectedBehaviour:
+              "The update gate fires on a CHANGE of type. 'auction' is a basic type so it is allowed; 'prize-draw' is advanced and is refused.",
+            expectedUiState:
+              "The prize-draw PATCH returns an authorization error. The listing's type is unchanged after a reload.",
+            endResult:
+              "BEFORE: sellerUpdateProduct had NO type check at all, so the create gate was bypassable in one request. AFTER: it is refused. 🛑 And editing an EXISTING advanced listing still works — the gate fires only on a change, because every per-type edit page re-sends its own type literal.",
+          },
+          {
+            key: "advanced-optin-round-trips",
+            label: "The advanced-types checkbox survives a reload",
+            roles: ["seller"],
+            startPage: "/store/payout-settings",
+            steps: [
+              "Sign in as a seller and open Payout & Preferences from the store sidebar.",
+              "Tick 'Enable advanced listing types' and save.",
+              "RELOAD the page and read the checkbox.",
+              "Open the store sidebar and read the Listings group.",
+            ],
+            expectedBehaviour:
+              "The flag is stored as the advanced_listing_types capability, MERGED into the array rather than replacing it, so admin-granted capabilities survive. The route echoes the saved value back.",
+            expectedUiState:
+              "After the reload the checkbox is still ticked and the Listings group now lists all ten types.",
+            expectedData: { listingNavItems: 10 },
+            endResult:
+              "BEFORE: there was no such control, and /store/payout-settings had no nav entry at all — reachable only by typing the URL. AFTER: it is in the sidebar, and the value round-trips.",
+          },
+          {
+            key: "optin-preserves-admin-capabilities",
+            label: "Saving the seller checkbox does not revoke admin-granted capabilities",
+            roles: ["admin", "seller"],
+            startPage: "/admin/stores",
+            steps: [
+              "As admin, open the store editor for the seller's store and tick 'Verified Seller Badge'. Save.",
+              "Sign in as that seller, open Payout & Preferences, tick 'Enable advanced listing types' and save.",
+              "As admin again, reopen the store editor and read the capability list.",
+            ],
+            expectedBehaviour:
+              "The seller's form owns ONE member of the capabilities array and touches only that member; everything else is read from the stored document and written back unchanged.",
+            expectedUiState:
+              "Verified Seller Badge is still ticked, alongside the new advanced_listing_types.",
+            endResult:
+              "A seller form whose write shape can EXPRESS state it does not own will eventually overwrite it (Root Cause #76). This is the case that proves it does not.",
+          },
+        ],
+      },
+      {
+        pageKey: "owner-quick-actions",
+        pageLabel: "Pencil, clone and bin on public pages",
+        href: "/products",
+        cases: [
+          {
+            key: "no-controls-for-guest",
+            label: "A signed-out visitor sees no pencil, clone or bin anywhere",
+            roles: ["guest"],
+            startPage: "/products",
+            steps: [
+              "Open /products signed out and read a product card.",
+              "Open a product detail page.",
+              "Open /categories and a category page.",
+            ],
+            expectedBehaviour:
+              "The toolbar renders nothing when there is no session, and nothing while the session is still resolving.",
+            expectedUiState: "No edit, duplicate or delete control on any card or detail page.",
+            endResult: "A visitor must never see an owner control, and must never see one flash in and out.",
+          },
+          {
+            key: "no-flash-for-signed-in-owner",
+            label: "The toolbar appears once, without flashing",
+            roles: ["admin"],
+            startPage: "/products",
+            steps: [
+              "Sign in as admin@letitrip.in / TempPass123!.",
+              "HARD-reload /products and watch the first second of the page closely.",
+              "Repeat twice more.",
+            ],
+            expectedBehaviour:
+              "Public pages are ISR and read no session, so loading starts true on every hard load even for a signed-in user. The toolbar renders NOTHING until auth resolves.",
+            expectedUiState:
+              "The controls are absent, then appear once. They never appear, vanish and reappear.",
+            endResult:
+              "A two-state gate here would show nothing, then pop the toolbar in a few hundred ms after every single page load. Appearing late is invisible; flashing is a bug people report.",
+          },
+          {
+            key: "pencil-opens-that-records-editor",
+            label: "The pencil lands on that record's editor, not a list",
+            roles: ["admin"],
+            startPage: "/products",
+            steps: [
+              "Signed in as admin, open a product detail page and note the product title.",
+              "Press the pencil.",
+              "Read the page that opens.",
+            ],
+            expectedBehaviour: "The pencil navigates to that product's edit route.",
+            expectedUiState: "The editor opens on the SAME product, with its title already filled in.",
+            endResult:
+              "BEFORE: there was no control at all — ZERO public detail views rendered any owner affordance — so fixing a typo meant going to the dashboard, finding the list and searching for the row.",
+          },
+          {
+            key: "card-navigation-still-works",
+            label: "A card with owner controls still navigates when clicked",
+            roles: ["admin"],
+            startPage: "/products",
+            steps: [
+              "Signed in as admin, open /products.",
+              "Click a product card anywhere OTHER than the owner controls.",
+              "Go back, then click the pencil on the same card.",
+            ],
+            expectedBehaviour:
+              "The toolbar is rendered OUTSIDE the card's anchor. A button inside an anchor is invalid HTML that browsers resolve by closing the anchor early, which breaks the CARD's navigation.",
+            expectedUiState:
+              "Clicking the card opens the product. Clicking the pencil opens the editor. Neither does both.",
+            endResult: "The card's own link must survive the toolbar being added to it.",
+          },
+          {
+            key: "clone-is-admin-only",
+            label: "A seller sees pencil and bin but NOT clone",
+            roles: ["seller"],
+            startPage: "/products",
+            steps: [
+              "Sign in as the seller who owns store-beyblade-arena.",
+              "Open one of that store's product detail pages.",
+              "Read the owner controls.",
+            ],
+            expectedBehaviour:
+              "Clone is gated on useIsAdmin, not the owner check — useIsOwner returns true for the owner too, so reusing it would hand every seller a staff tool.",
+            expectedUiState: "A pencil and a bin. No duplicate control.",
+            endResult: "Clone is a staff tool; editing and deleting your own listing is ordinary.",
+          },
+          {
+            key: "clone-creates-a-draft-copy",
+            label: "Clone creates a (Copy) draft and opens its editor",
+            roles: ["admin"],
+            startPage: "/products",
+            steps: [
+              "Signed in as admin, open a product detail page and note its title, stock and whether it has bids.",
+              "Press the duplicate control.",
+              "Read the editor that opens: its title, its status, its bid count and its group membership.",
+              "Go back to the original product page and read its title and status.",
+            ],
+            expectedBehaviour:
+              "The duplicate endpoint strips identity (id/slug/barcodeId), analytics (viewCount/avgRating/reviewCount), auction bid state and group membership, titles the copy with a (Copy) suffix and forces status draft. It returns the new id so the UI can land on the copy.",
+            expectedUiState:
+              "The editor opens on a NEW record whose title ends in (Copy), status draft, no bids and no group. The original is untouched.",
+            expectedData: { copyStatus: "draft", copyBidCount: 0 },
+            endResult:
+              "A duplicate must start standalone — silently joined to the source's group is how one edit changes two listings.",
+          },
+          {
+            key: "bin-confirms-before-deleting",
+            label: "The bin confirms, names the record, and cancelling changes nothing",
+            roles: ["admin"],
+            startPage: "/products",
+            steps: [
+              "Signed in as admin, open a product detail page and note its title.",
+              "Press the bin and read the dialog.",
+              "Press Cancel. Reload the page.",
+              "Press the bin again and confirm.",
+              "Try to open the same product URL.",
+            ],
+            expectedBehaviour:
+              "The confirm copy comes from the ACTIONS registry, never inline, and names the record being deleted.",
+            expectedUiState:
+              "The dialog names the product. After Cancel the product is still there on reload. After confirming, the product URL no longer resolves.",
+            endResult:
+              "A destructive control on a PUBLIC page must state what it will destroy, and cancelling must be a true no-op.",
+          },
+        ],
+      },
+      {
+        pageKey: "purchase-context",
+        pageLabel: "Your order & your review on a product page",
+        href: "/products",
+        cases: [
+          {
+            key: "strip-links-to-your-order",
+            label: "A buyer who ordered this item gets a Track link to that order",
+            roles: ["buyer"],
+            startPage: "/user/orders",
+            steps: [
+              "Sign in as a buyer with a seeded order and note the order id and one item in it.",
+              "Open that item's product page.",
+              "Read the strip above the reviews.",
+              "Press Track.",
+            ],
+            expectedBehaviour:
+              "The lookup scans the buyer's recent orders for one containing this product — items[] holds objects, so no Firestore query can match a nested productId.",
+            expectedUiState:
+              "The strip names the order date and its short reference, and Track lands on the track page for THAT order.",
+            endResult:
+              "BEFORE: no surface linked a product to the buyer's own order; the route was remember-you-bought-it, go to /user/orders, page through. 🛑 No price appears in the strip.",
+          },
+          {
+            key: "older-than-window-says-so",
+            label: "A purchase older than 90 days says so rather than denying it",
+            roles: ["buyer"],
+            startPage: "/products",
+            steps: [
+              "Sign in as a buyer and open a product page for an item they have NOT ordered in the last 90 days.",
+              "Read the strip's wording exactly.",
+            ],
+            expectedBehaviour:
+              "The order lookup is a bounded 90-day window, and the response carries windowDays so the UI can state the bound.",
+            expectedUiState:
+              "It reads 'No order for this item in the last 90 days' with a link to all orders. It does NOT read 'you haven't bought this'.",
+            endResult:
+              "🛑 A filtered empty result reported as an absolute zero is a lie the buyer cannot check — the same defect UserOrdersView carries a long comment about.",
+          },
+          {
+            key: "write-then-edit-a-review",
+            label: "A buyer can write a review and then edit it",
+            roles: ["buyer"],
+            startPage: "/products",
+            steps: [
+              "Sign in as a buyer with a delivered order and open one of its items.",
+              "Press 'Write a review' in the strip, give 4 stars, a title and a comment, and save.",
+              "RELOAD the product page and read the strip and the review list.",
+              "Press 'Edit review', change the comment, and save.",
+              "RELOAD again and read the review.",
+            ],
+            inputs: { rating: 4, title: "QA review purchase-context", comment: "First version." },
+            expectedBehaviour:
+              "One form component serves both the inline drawer and /user/reviews/[id]/edit, so the two cannot drift. An approved review edited by its author stays approved.",
+            expectedUiState:
+              "The strip shows 'Your review: 4/5' and the edited comment is the one displayed after the reload.",
+            endResult:
+              "BEFORE: there was NO review form anywhere in the application — useCreateReview had zero component consumers and ViewReviewModal is read-only. AFTER: a review can be written and changed.",
+          },
+          {
+            key: "review-edit-keeps-search-and-images-honest",
+            label: "Editing a review rebuilds its search tokens and its hasImages flag",
+            roles: ["buyer"],
+            startPage: "/user/reviews",
+            steps: [
+              "Sign in as a buyer with an existing review that has at least one image.",
+              "Open /user/reviews and note the review's id.",
+              "Edit the review, replacing a distinctive word in the comment with a new distinctive word, and save.",
+              "Search the product's reviews for the OLD word, then for the NEW word.",
+              "Read the review's stored hasImages against whether it still has images.",
+            ],
+            expectedBehaviour:
+              "The PATCH goes through reviewRepository, so searchTxt is rebuilt and userName stays encrypted; hasImages is derived whenever images is sent.",
+            expectedUiState:
+              "Searching the NEW word finds the review. Searching the OLD word does not.",
+            expectedData: { foundByNewWord: true, foundByOldWord: false },
+            endResult:
+              "BEFORE: the route wrote through a GENERIC repository, so the tokens still described the previous text — the review was findable only by what it used to say — and hasImages went stale.",
+          },
+          {
+            key: "review-get-returns-a-name-not-ciphertext",
+            label: "GET a review by id returns a display name, not enc:v1 ciphertext",
+            roles: ["guest"],
+            startPage: "/reviews",
+            steps: [
+              "Open /api/reviews/{id} for any seeded review.",
+              "Read the userName field and look for a helpfulVoterIds field.",
+            ],
+            expectedBehaviour:
+              "The read goes through reviewRepository, so mapDoc decrypts userName and strips helpfulVoterIds.",
+            expectedUiState:
+              "userName is a readable name. There is no helpfulVoterIds field in the response.",
+            endResult:
+              "BEFORE: the generic repository returned the document verbatim, so this public endpoint served the reviewer's name as raw enc:v1 ciphertext and published the list of everyone who had voted it helpful.",
+          },
+        ],
+      },
+      {
+        pageKey: "order-journey",
+        pageLabel: "Order tracking & search",
+        href: "/user/orders",
+        cases: [
+          {
+            key: "track-offered-before-shipping",
+            label: "Track is offered on a pending order, not only a shipped one",
+            roles: ["buyer"],
+            startPage: "/user/orders",
+            steps: [
+              "Sign in as a buyer with orders in several statuses.",
+              "Find an order that is pending, confirmed or processing.",
+              "Read its row's actions.",
+              "Press Track.",
+            ],
+            expectedBehaviour:
+              "Every pre-delivery status offers Track. The timeline reads correctly for all of them — it shows the stages reached and the stages still ahead.",
+            expectedUiState: "A Track action is present, and it opens the track page for that order.",
+            endResult:
+              "BEFORE: Track appeared only once an order was shipped, so a buyer waiting on a pending order — exactly when they most want to know — had no link at all.",
+          },
+          {
+            key: "track-page-shows-the-parcel",
+            label: "The track page shows items, address, carrier and onward links",
+            roles: ["buyer"],
+            startPage: "/user/orders",
+            steps: [
+              "Open the track page for an order with more than one item and a delivery address.",
+              "Read everything on the page.",
+            ],
+            expectedBehaviour:
+              "Items, the delivery address, the carrier and tracking number, and links to the detail page, the invoice and — once delivered — a return, all come from data already on the order.",
+            expectedUiState:
+              "Item thumbnails and titles with quantities, the delivery address, the short order reference, and the onward action buttons. No price anywhere.",
+            endResult:
+              "BEFORE: the page rendered a timeline and nothing else — a wiring gap, not a data gap. A buyer who wanted their invoice had to go back to the list and find the order again.",
+          },
+          {
+            key: "search-orders-by-item-name",
+            label: "Searching orders matches the item name, and a nonsense term returns the filtered message",
+            roles: ["buyer"],
+            startPage: "/user/orders",
+            steps: [
+              "Sign in as a buyer with several orders and note one item's title.",
+              "Search /user/orders for a distinctive word from that title.",
+              "Now search for 'zzzznope'.",
+              "Read the empty-state wording exactly.",
+            ],
+            inputs: { nonsenseTerm: "zzzznope" },
+            expectedBehaviour:
+              "The in-memory filter matches the item TITLES as well as the order id, and a filtered empty result is reported as filtered.",
+            expectedUiState:
+              "The item word returns that order. 'zzzznope' returns 'No orders match your search or filters.' — NOT 'You haven't placed any orders yet.'",
+            expectedData: { nonsenseResults: 0 },
+            endResult:
+              "BEFORE: the route matched the order id only, so a buyer searching for what they bought got nothing. 🛑 The nonsense control is the point — a real term returns plausible rows whether or not the filter works.",
+          },
+          {
+            key: "invoice-supplier-from-business-block",
+            label: "The invoice names the registered entity from the business block",
+            roles: ["buyer", "admin"],
+            startPage: "/user/orders",
+            steps: [
+              "Open the invoice for a recent order and read the supplier block — legal name, GSTIN, address.",
+              "Compare them against appkit.config.js's business block.",
+              "Download the PDF invoice for the SAME order and compare it line for line with the HTML one.",
+            ],
+            expectedBehaviour:
+              "resolveSupplierIdentity's platform branch reads the injected business identity, and both renderers read the snapshot stamped on the order at creation.",
+            expectedUiState:
+              "The HTML and PDF invoices agree, and the supplier block matches the business block.",
+            endResult:
+              "BEFORE: it read siteSettings.gst, making the invoice path a sixth owner of the statutory identity — and the one that decides what a tax invoice says. 🛑 The snapshot is unchanged, so correcting a typo must NOT reissue historical invoices.",
+          },
+          {
+            key: "user-reviews-list-is-paginated",
+            label: "The user reviews endpoint returns a page, not everything ever written",
+            roles: ["buyer"],
+            startPage: "/user/reviews",
+            steps: [
+              "Sign in as a buyer with several reviews.",
+              "Call /api/user/reviews and read the response keys.",
+              "Call it again with pageSize=1 and read how many reviews come back.",
+              "Call it with pageSize=5000.",
+            ],
+            inputs: { pageSize: 1, oversizedPageSize: 5000 },
+            expectedBehaviour:
+              "The endpoint pages, and clamps pageSize to Rule #6's ceiling of 50.",
+            expectedUiState:
+              "The response carries reviews, total, page, pageSize and totalPages. pageSize=1 returns one review. pageSize=5000 returns at most 50.",
+            expectedData: { maxPageSize: 50 },
+            endResult:
+              "BEFORE: it returned every review the account had ever written, unbounded, in one response.",
+          },
+        ],
+      },
+    ],
+  ),
 ];
 
 const defaultPhases = assignDefaultPhases(
