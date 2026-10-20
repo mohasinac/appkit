@@ -135,10 +135,24 @@ export function WhatsAppCommunitySection({
                 {memberCount && (
                   <Row align="center" gap="xs">
                     {/* The one piece of motion that earns its place: "this group
-                        is active right now" is the actual pitch. */}
+                        is active right now" is the actual pitch.
+
+                        🛑 `--appkit-color-surface`, not `bg-white`. A literal
+                        white is arguably *correct* on a card that stays
+                        brand-dark in every theme, and still wrong to write: it
+                        is a palette literal with no dark counterpart, which
+                        `audit-dark-mode` and `audit-variant-prop-coverage` both
+                        block. Surface-fill-on-a-branded-card is exactly the
+                        pairing `Button variant="inverse"` uses (added in this
+                        same pass), so the dot and the CTA beneath it resolve
+                        from one token rather than two opinions.
+
+                        `rounded` is the PROP, not a `rounded-full` className —
+                        the utility was masked behind the bg finding until the
+                        bg was fixed, which is why it needed two passes. */}
                     <Span layout="flex" className="relative h-2 w-2" aria-hidden>
-                      <Span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-                      <Span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+                      <Span rounded="full" className="absolute inline-flex h-full w-full animate-ping bg-[var(--appkit-color-surface)] opacity-75" />
+                      <Span rounded="full" className="relative inline-flex h-2 w-2 bg-[var(--appkit-color-surface)]" />
                     </Span>
                     <Span color="inverse-muted" size="xs" weight="medium" numeric>
                       {memberCount.toLocaleString(getDefaultLocale())}+ {memberCountLabel}
