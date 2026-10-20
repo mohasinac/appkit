@@ -904,6 +904,7 @@ export {
   ADVANCED_LISTING_TYPES,
   BASIC_LISTING_TYPES,
   LISTING_TYPE_TIER,
+  hasAdvancedListingTypes,
   isAdvancedListingType,
   isListingTypeAllowedFor,
   listingTypesAllowedFor,

@@ -7158,6 +7158,7 @@ export {
   BASIC_LISTING_TYPES,
   LISTING_TYPE_TIER,
   assertListingTypeAllowed,
+  hasAdvancedListingTypes,
   isAdvancedListingType,
   isListingTypeAllowedFor,
   listingTypesAllowedFor,
