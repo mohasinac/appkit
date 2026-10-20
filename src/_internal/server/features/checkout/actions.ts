@@ -106,7 +106,7 @@ import { verifyPaymentSignature as verifyRazorpayPaymentSignature } from "../../
 import { resolveKeys } from "../../../../core/integration-keys";
 import { rupeesToPaise, paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
-import { checkEmiEligibility, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
+import { checkEmiEligibility, computeBuyerEmiQuote, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -1689,6 +1689,18 @@ export interface CheckoutPricingPreviewInput {
    */
   lane?: CartLane;
   /**
+   * The chosen EMI tenure, when `paymentMethod` is `"emi"`.
+   *
+   * 🛑 REQUIRED for an EMI preview to be truthful. The surcharge is
+   * `principalRemaining × surchargePercentPerMonth × tenureMonths`, so it
+   * cannot be derived from the cart alone — and without it this function
+   * returned a total that `createOrderForGroup` then exceeded by exactly that
+   * amount. Unlike the add-ons below, the tenure is NOT on the cart document:
+   * it is picked on the payment step and belongs to the order, so it has to
+   * travel with the request.
+   */
+  emiTenureMonths?: number;
+  /**
    * Add-on selections are NOT accepted here. They live on the cart document,
    * keyed per store (`CartDocument.storeAddons`), because that is the
    * granularity they are billed at. Accepting them here as well would be a
@@ -1706,6 +1718,14 @@ export interface CheckoutPricingPreviewStore {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
+  /**
+   * EMI surcharge for THIS seller, when the buyer is previewing an EMI order.
+   *
+   * Per store because `computeEmiSchedule` takes a SELLER subtotal — the
+   * financed principal is per order, not per cart, so a cart-wide figure
+   * would not match any order written.
+   */
+  emiSurcharge: number;
   gstAmount: number;
   couponDiscount: number;
   total: number;
@@ -1738,6 +1758,8 @@ export interface CheckoutPricingPreview {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
+  /** Total EMI surcharge across sellers. Zero unless previewing an EMI order. */
+  emiSurcharge: number;
   gstAmount: number;
   couponDiscount: number;
   /** Buyer-facing platform commission, capped, charged once for this checkout. */
@@ -1762,6 +1784,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   giftWrapFee: 0,
   shipmentProtectionFee: 0,
   saleProtectionFee: 0,
+  emiSurcharge: 0,
   gstAmount: 0,
   couponDiscount: 0,
   platformFee: 0,
@@ -1788,6 +1811,7 @@ export async function previewCheckoutPricing(
     paymentMethod,
     excludedProductIds = [],
     lane,
+    emiTenureMonths,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -1862,7 +1886,7 @@ export async function previewCheckoutPricing(
     const firstItem = group[0].item;
     const groupTotal = group.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0);
 
-    const { shippingFee: groupShippingFee, storeState, storeProtections } =
+    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled } =
       await resolveShippingCost(firstItem.storeId);
 
     // Add-ons are per store, read off the cart document — the same entry
@@ -1874,6 +1898,41 @@ export async function previewCheckoutPricing(
     // cash (both pre-paid via UPI/bank transfer before dispatch).
     const groupCodHandlingFee =
       paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+
+    /*
+     * 🛑 The EMI surcharge is a TERM OF THE TOTAL, and it was missing here
+     * while `createOrderForGroup` added it — a shown-vs-charged drift of
+     * exactly the kind this function exists to prevent.
+     *
+     * Measured on the live settings (tokenPercent 10, surchargePercentPerMonth
+     * 1) against the ₹20,000 listing: token ₹2,000, financed ₹18,000, so the
+     * surcharge is ₹360 at the default 2-month tenure and ₹1,080 at 6. The
+     * Order Summary showed ₹20,011.80 either way, and the order recorded up to
+     * ₹1,080 more. Worse, the EMI panel beside it already displayed
+     * instalments computed WITH the surcharge, so the page disagreed with
+     * itself.
+     *
+     * `computeBuyerEmiQuote`, never `computeEmiSchedule`: the latter also
+     * returns the platform/seller split of the surcharge, which is our
+     * commercial arrangement with the seller and has no business reaching a
+     * browser (see § "Buyer-facing fees").
+     *
+     * Eligibility is deliberately NOT enforced here. A preview that threw
+     * would blank the Order Summary; `createOrderForGroup` still refuses an
+     * ineligible EMI order, which is where refusing belongs. An ineligible
+     * cart simply previews no surcharge, because the tenure never applies.
+     */
+    let groupEmiSurcharge = 0;
+    if (paymentMethod === "emi" && emiTenureMonths && siteSettings?.emi) {
+      const emiSettings = siteSettings.emi;
+      if (checkEmiEligibility(groupTotal, storeEmiEnabled, emiSettings).eligible) {
+        groupEmiSurcharge = computeBuyerEmiQuote(
+          groupTotal,
+          emiTenureMonths,
+          emiSettings,
+        ).surchargeAmount;
+      }
+    }
     const groupGiftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissions);
     /*
      * C5e — the same three tiers `createOrderForGroup` enforces, so the figure
@@ -1942,6 +2001,7 @@ export async function previewCheckoutPricing(
       subtotal: groupTotal,
       shippingFee: groupShippingFee,
       codHandlingFee: groupCodHandlingFee,
+      emiSurcharge: groupEmiSurcharge,
       giftWrapFee: groupGiftWrapFee,
       shipmentProtectionFee: groupShipmentProtectionFee,
       saleProtectionFee: groupSaleProtectionFee,
@@ -1960,6 +2020,7 @@ export async function previewCheckoutPricing(
         Math.max(0, groupTotal - groupCouponDiscount) +
         groupShippingFee +
         groupCodHandlingFee +
+        groupEmiSurcharge +
         groupGiftWrapFee +
         groupShipmentProtectionFee +
         groupSaleProtectionFee,
@@ -1974,6 +2035,7 @@ export async function previewCheckoutPricing(
 
   const shippingFee = sum((s) => s.shippingFee);
   const codHandlingFee = sum((s) => s.codHandlingFee);
+  const emiSurcharge = sum((s) => s.emiSurcharge);
   const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
   const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
   const saleProtectionFeeTotal = sum((s) => s.saleProtectionFee);
@@ -2013,6 +2075,7 @@ export async function previewCheckoutPricing(
     Math.max(0, cartSubtotal - couponDiscount) +
     shippingFee +
     codHandlingFee +
+    emiSurcharge +
     giftWrapFeeTotal +
     shipmentProtectionFeeTotal +
     saleProtectionFeeTotal +
@@ -2023,6 +2086,7 @@ export async function previewCheckoutPricing(
     subtotal: cartSubtotal,
     shippingFee,
     codHandlingFee,
+    emiSurcharge,
     giftWrapFee: giftWrapFeeTotal,
     shipmentProtectionFee: shipmentProtectionFeeTotal,
     saleProtectionFee: saleProtectionFeeTotal,
