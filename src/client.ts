@@ -1171,6 +1171,19 @@ export type {
   NormalizedZodError,
 } from "./errors/normalize";
 
+/*
+ * [CLIENT-SAFE] Pure wa.me share-link message builder — no crypto, no network.
+ *
+ * It used to live beside the WhatsApp Cloud API senders, isolated into its own
+ * file precisely so this barrel's import graph never reached their top-level
+ * `crypto` import (Root Cause #24). The Cloud API integration was removed
+ * 2026-10-20 and this moved to `features/orders/utils/`, which is its real
+ * domain: it builds the body of the buyer's "Share for review" link on the
+ * order payment page, and a wa.me deep link needs no token or registered
+ * number.
+ */
+export { buildPaymentProofReviewMessage } from "./features/orders/utils/payment-proof-message";
+export type { PaymentProofReviewMessageInput } from "./features/orders/utils/payment-proof-message";
 
 // [CLIENT-SAFE] Verified 2026-08-20 (webpack-migration audit): every symbol
 // below is a "use client" component/hook, or a pure function/constant/type
