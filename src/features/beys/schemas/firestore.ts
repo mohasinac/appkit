@@ -116,22 +116,86 @@ export interface BeyDerivationCoverage {
  * is running on — and a three-value enum written before the fourth case was
  * read would have forced the next one into the wrong bucket.
  */
+/**
+ * How a mode is selected.
+ *
+ * ── 🛑 THIS ENUM IS THE OWNER'S TAXONOMY, NOT MY GUESS ────────────────────
+ *
+ * Owner, 2026-10-21: *"most mode switches are either flips, config 1, 2 or 3
+ * and more."* Everything beyond that set is a mode that changes WITHOUT the
+ * owner doing anything, and those divide cleanly by what drives them.
+ *
+ * I deliberately did NOT define this when the first four modes were authored,
+ * because at that point I had seen two kinds and an enum built from two would
+ * have forced the next two into the wrong value. It is defined now that the
+ * real set is known — which is the difference between a taxonomy and a guess.
+ */
+export const BEY_MODE_SWITCH_KINDS = [
+  /** Turn the part over. Two states by definition. */
+  "flip",
+  /** An indexed assembly position — config 1, 2, 3… See `configIndex`. */
+  "config",
+  /** Swap in a different piece (Delta Drive's three tips). */
+  "swap",
+  /** Changes on its own as spin speed falls. Nothing to set. */
+  "speed",
+  /** Fires when the bey is struck (Kreis' halves slipping). */
+  "impact",
+  /*
+   * 🛑 There is deliberately NO "surface" kind. Its only candidate was the
+   * claim that Bandit Genbu's TB tip runs on a ball or a cylinder rim
+   * depending on the floor — and TB is "Tapered Ball", a FIXED SHAPE with no
+   * modes at all (owner, 2026-10-21). An enum value whose only instance turned
+   * out not to exist is the speculative infra this project forbids.
+   */
+] as const;
+export type BeyModeSwitchKind = (typeof BEY_MODE_SWITCH_KINDS)[number];
+
+/** One configuration a bey can be set to, or settles into. */
 export interface BeyMode {
-  /** "Attack orbit", "Stamina", "Left-spin". The source's own vocabulary. */
+  /** "Attack", "Stamina", "Barrage". The part's own vocabulary where it has one. */
   name: string;
   /** What it does, in a sentence a buyer can read. No formulae. */
   behaviour: string;
   /**
-   * How it comes about. The distinction that matters most is whether the owner
-   * chooses it before launch or the bey changes by itself as spin falls — those
-   * are different kinds of mode and a reader needs to know which this is.
+   * How it comes about, in prose. 🛑 Kept ALONGSIDE `switchKind` rather than
+   * replaced by it: the kind is what a filter or a game reads, the sentence is
+   * what a person reads, and "Assemble the wheel for six contact points" is
+   * not recoverable from `"config"`.
    */
   trigger: string;
+  /** Which of the six selection mechanisms this is. */
+  switchKind?: BeyModeSwitchKind;
+  /** 1-based, for `switchKind: "config"` / `"swap"`. */
+  configIndex?: number;
   /**
-   * The case-study case number the claim was read from. 🛑 Kept because a
-   * claim whose derivation nobody can find is a claim nobody can correct —
-   * the same reason the physical-constants extraction keeps its citation.
+   * The part that provides the mode — a fusion wheel or a tip in every case
+   * confirmed so far.
+   *
+   * 🛑 Modes are authored against the PART and fanned out to every bey whose
+   * composition uses it, so one wheel is described once rather than copied per
+   * bey (Root Cause #75). This field keeps that origin visible on the bey, and
+   * is what would let a later pass lift modes onto `partGlossary` mechanically.
    */
+  appliesToPart?: string;
+  /**
+   * A second part the mode depends on, when it is an ALIGNMENT between two.
+   *
+   * 🛑 Not every mode belongs to one part. Lightning and Meteo L-Drago change
+   * mode by how the energy ring's dragon heads line up with the wheel's teeth
+   * — a property of the PAIR. Without this the data would claim the wheel
+   * alone does it.
+   */
+  requiresPart?: string;
+  /**
+   * Who or what the claim rests on — `"owner-<date>"` for a confirmed one.
+   *
+   * 🛑 LOAD-BEARING, not metadata. The generator emits ONLY modes carrying
+   * this, because the case-study corpus's mode prose was wrong in four of four
+   * claims reviewed. See `scripts/lib/bey-modes-authored.mjs`.
+   */
+  confirmed?: string;
+  /** The case-study case number, where one was read. A claim nobody can trace is a claim nobody can correct. */
   sourceCase?: number;
 }
 

@@ -269,7 +269,23 @@ export function BeyDetailPageView({
               <Stack gap="md" className="min-w-0">
                 {bey.modes.map((mode) => (
                   <Stack key={mode.name} gap="xs" className="min-w-0">
-                    <Text weight="semibold">{mode.name}</Text>
+                    <Row gap="sm" align="center" wrap className="min-w-0">
+                      <Text weight="semibold">{mode.name}</Text>
+                      {/*
+                        🛑 "Set before launch" vs "changes by itself" is the
+                        single most useful thing to know about a mode, and it is
+                        the distinction `switchKind` exists to carry: Dragoon S
+                        and Wyborg both switch tip shape, but one is done by
+                        hand and the other mid-battle on impact (owner,
+                        2026-10-21). A reader who cannot tell them apart will go
+                        looking for a setting that is not there.
+                      */}
+                      <Text size="xs" color="muted">
+                        {mode.switchKind === "speed" || mode.switchKind === "impact"
+                          ? "changes on its own"
+                          : "set before launch"}
+                      </Text>
+                    </Row>
                     <Text size="sm">{mode.behaviour}</Text>
                     <Text size="sm" color="muted">
                       {mode.trigger}

@@ -3172,7 +3172,27 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Duo Uranus 230WD is a Stamina-Type Beyblade from the 4D System, weighing 50.5 g, spinning right-spin. Released November 19, 2011 as BB-121 for Beyblade: Metal Fury. It combines Uranus, Uranus, Duo, 230. Used by Herschel.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Uranus_230WD",
     "source": "fandom-infobox",
-    "categoryId": "category-duo-uranus-230wd"
+    "categoryId": "category-duo-uranus-230wd",
+    "modes": [
+      {
+        "name": "Balanced",
+        "behaviour": "Assembled so the weight sits evenly around the wheel. It spins true and stays stable, which favours lasting rather than hitting.",
+        "trigger": "Assemble the wheel in its balanced configuration, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--duo"
+      },
+      {
+        "name": "Weighted",
+        "behaviour": "Rotated so the weight is concentrated on one side. The top wobbles into a wider path and throws more of its mass into each contact — deliberately unbalanced, to attack.",
+        "trigger": "Assemble the wheel in its weighted configuration, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--duo"
+      }
+    ]
   },
   {
     "id": "duo-uranus-uw145ewd",
@@ -3239,7 +3259,43 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Duo Uranus UW145EWD Gunmetallic Ver. is a Stamina-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Fury. It combines Uranus, Uranus, Duo, UW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Duo_Uranus_UW145EWD",
     "source": "fandom-infobox",
-    "categoryId": "category-duo-uranus-uw145ewd-gunmetallic-ver"
+    "categoryId": "category-duo-uranus-uw145ewd-gunmetallic-ver",
+    "modes": [
+      {
+        "name": "Balanced",
+        "behaviour": "Assembled so the weight sits evenly around the wheel. It spins true and stays stable, which favours lasting rather than hitting.",
+        "trigger": "Assemble the wheel in its balanced configuration, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--duo"
+      },
+      {
+        "name": "Weighted",
+        "behaviour": "Rotated so the weight is concentrated on one side. The top wobbles into a wider path and throws more of its mass into each contact — deliberately unbalanced, to attack.",
+        "trigger": "Assemble the wheel in its weighted configuration, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--duo"
+      },
+      {
+        "name": "Wings down",
+        "behaviour": "The Upper Wing 145 track mounted the usual way up. The wings sit clear of the stadium floor, so the top runs cleanly and the wings only come into play when they meet an opponent.",
+        "trigger": "Mount the track the usual way up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      },
+      {
+        "name": "Wings up",
+        "behaviour": "Flipped over, the wings present at a different angle and can add to an attack. 🛑 In most cases they also scrape along the stadium floor, which costs spin quickly — so this is a trade, not a straight upgrade.",
+        "trigger": "Flip the track over and mount it inverted, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      }
+    ]
   },
   {
     "id": "dusk-balkesh-b5-7-orbit-h",
@@ -7441,7 +7497,25 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Evil Befall UW145EWD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 28, 2010 as BB-100 for Beyblade: Metal Masters. It combines Befall, Befall, Evil, UW145. Used by Jack. Its special move is Befall The Ripper Beautiful Dead.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Evil_Befall_UW145EWD",
     "source": "fandom-infobox",
-    "categoryId": "category-evil-befall-uw145ewd"
+    "categoryId": "category-evil-befall-uw145ewd",
+    "modes": [
+      {
+        "name": "Wings down",
+        "behaviour": "The Upper Wing 145 track mounted the usual way up. The wings sit clear of the stadium floor, so the top runs cleanly and the wings only come into play when they meet an opponent.",
+        "trigger": "Mount the track the usual way up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      },
+      {
+        "name": "Wings up",
+        "behaviour": "Flipped over, the wings present at a different angle and can add to an attack. 🛑 In most cases they also scrape along the stadium floor, which costs spin quickly — so this is a trade, not a straight upgrade.",
+        "trigger": "Flip the track over and mount it inverted, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      }
+    ]
   },
   {
     "id": "evil-bull-125fs",
@@ -13688,7 +13762,25 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Fusion Hades AD145SWD is a Balance-Type Beyblade from the 4D System, spinning right-spin. Released December 28, 2011 as BB-123 for Beyblade: Metal Fury. It combines Hades, Hades, Fusion, AD145. Used by Pluto.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Hades_AD145SWD",
     "source": "fandom-infobox",
-    "categoryId": "category-fusion-hades-ad145swd"
+    "categoryId": "category-fusion-hades-ad145swd",
+    "modes": [
+      {
+        "name": "Rubber up",
+        "behaviour": "With the rubber facing up it is the rubber that meets an opponent. Rubber grips and absorbs, so hits are deadened and some of the opponent's spin is taken.",
+        "trigger": "Assemble the wheel rubber-side up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--fusion"
+      },
+      {
+        "name": "Metal up",
+        "behaviour": "With the metal facing up, contact is hard and the top hits back rather than soaking the blow up.",
+        "trigger": "Assemble the wheel metal-side up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--fusion"
+      }
+    ]
   },
   {
     "id": "gabriel",
@@ -29059,7 +29151,27 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Inferno Byxis CH120RS is a Balance-Type Beyblade from the Hybrid Wheel System. Released as B-121 for Beyblade: Metal Masters. It combines Byxis, Byxis, Inferno, CH120.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Inferno_Byxis_CH120RS",
     "source": "fandom-infobox",
-    "categoryId": "category-inferno-byxis-ch120rs"
+    "categoryId": "category-inferno-byxis-ch120rs",
+    "modes": [
+      {
+        "name": "120 — low",
+        "behaviour": "Set short, so the wheel meets an opponent low down. A low hit tends to push the other top sideways rather than lift it, and sitting lower is more stable.",
+        "trigger": "Set the track to its 120 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      },
+      {
+        "name": "145 — high",
+        "behaviour": "Set tall, so contact lands higher up an opponent — under its upper edge, which unsettles it and can tip it over.",
+        "trigger": "Set the track to its 145 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      }
+    ]
   },
   {
     "id": "inferno-cygzas-125b",
@@ -30761,7 +30873,27 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Jade Jupiter S130RB is a Defense-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 as BB-116 (Takara Tomy) and BB-116FX (Hasbro) for Beyblade: Metal Fury. It combines Jupiter, Jupiter, Jade, S130. Used by Dynamis. Special moves: Satellite Move, Grand Lightning.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Jade_Jupiter_S130RB",
     "source": "fandom-infobox",
-    "categoryId": "category-jade-jupiter-s130rb"
+    "categoryId": "category-jade-jupiter-s130rb",
+    "modes": [
+      {
+        "name": "Balls free",
+        "behaviour": "The ball bearings are left loose, so they roll as the top spins and when it is struck. The movement soaks up some of a hit instead of passing it all on.",
+        "trigger": "Rotate the wheel to the configuration that frees the balls, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--jade"
+      },
+      {
+        "name": "Balls fixed",
+        "behaviour": "The balls are locked in place, so the wheel behaves as one solid mass. Hits are met rigidly rather than absorbed.",
+        "trigger": "Rotate the wheel to the configuration that locks the balls, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--jade"
+      }
+    ]
   },
   {
     "id": "jail-jormungand-6glaive-nothing",
@@ -35166,7 +35298,25 @@ export const beyChunk1: Partial<BeyDocument>[] = [
     "seoDescription": "Knight Changer is a Balance-Type Beyblade from the Spin Gear System, spinning right-spin. Part of Beyblade. It combines Knight Claws, Heavy, Right SG, Auto Change Base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Knight_Changer",
     "source": "fandom-infobox",
-    "categoryId": "category-knight-changer"
+    "categoryId": "category-knight-changer",
+    "modes": [
+      {
+        "name": "Sharp",
+        "behaviour": "How it launches. A narrow point, so it stays put and holds its spin while it waits to be attacked.",
+        "trigger": "The state it starts in.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      },
+      {
+        "name": "Flat",
+        "behaviour": "Being hit switches the base from its sharp point to a flat one, and the top starts moving aggressively instead of holding station. The flaps that take the hit also shift so they line up better with the attack ring above, putting more of the weight behind the ring's own contact points.",
+        "trigger": "Switches on being hit. Nothing to set.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      }
+    ]
   },
   {
     "id": "knight-dranzer",

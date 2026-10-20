@@ -17125,7 +17125,27 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "seoDescription": "Ultimate Meteo L-Drago Absorb DF105LRF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released November 20, 2010 as BB-98 (Takara Tomy) and BB-98B (Hasbro) for Beyblade: Metal Masters. It combines L-Drago II, L-Drago Absorb, Meteo, DF105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Meteo_L-Drago_Absorb_DF105LRF",
     "source": "fandom-infobox",
-    "categoryId": "category-ultimate-meteo-l-drago-absorb-df105lrf"
+    "categoryId": "category-ultimate-meteo-l-drago-absorb-df105lrf",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "ultimate-meteo-l-drago-assault-85xf",
@@ -17204,7 +17224,27 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "seoDescription": "Ultimate Meteo L-Drago Assault 85XF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released November 20, 2010 as BB-98 (Takara Tomy) and BB-98A (Hasbro) for Beyblade: Metal Masters. It combines L-Drago II, L-Drago Assault, Meteo, 85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Meteo_L-Drago_Assault_85XF",
     "source": "fandom-infobox",
-    "categoryId": "category-ultimate-meteo-l-drago-assault-85xf"
+    "categoryId": "category-ultimate-meteo-l-drago-assault-85xf",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "ultimate-meteo-l-drago-rush-125sf",
@@ -17283,7 +17323,27 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "seoDescription": "Ultimate Meteo L-Drago Rush 125SF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released November 20, 2010 as BB-98 (Takara Tomy) and BB-98C (Hasbro) for Beyblade: Metal Masters. It combines L-Drago II, L-Drago Rush, Meteo, 125.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ultimate_Meteo_L-Drago_Rush_125SF",
     "source": "fandom-infobox",
-    "categoryId": "category-ultimate-meteo-l-drago-rush-125sf"
+    "categoryId": "category-ultimate-meteo-l-drago-rush-125sf",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "ultimate-valkyrie-legacy-variable-9",
@@ -20620,16 +20680,31 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "categoryId": "category-variares-d-d",
     "modes": [
       {
-        "name": "Right-spin",
-        "behaviour": "The standard configuration. Spins clockwise, so it meets the great majority of Beyblades in the same direction and trades spin normally on contact.",
-        "trigger": "Set on the D:D track before launch.",
-        "sourceCase": 1836
+        "name": "Flat",
+        "behaviour": "The widest and grippiest of the three. It drives the top around the stadium and hunts the opponent down, at the cost of using its spin up quickly.",
+        "trigger": "Fit the flat tip before launch.",
+        "switchKind": "swap",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--delta-drive"
       },
       {
-        "name": "Left-spin",
-        "behaviour": "Spins anticlockwise. Against a right-spin opponent the two meet in opposition, which raises the force of every exchange and can take spin off the opponent rather than losing it.",
-        "trigger": "Set on the D:D track before launch.",
-        "sourceCase": 1836
+        "name": "Semi-flat",
+        "behaviour": "Between the other two. It still moves about and seeks contact, but holds its spin noticeably longer than the flat tip does.",
+        "trigger": "Fit the semi-flat tip before launch.",
+        "switchKind": "swap",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--delta-drive"
+      },
+      {
+        "name": "Sharp",
+        "behaviour": "A narrow point with very little touching the floor. It stays close to where it is launched and spins for a long time, giving up the ability to attack.",
+        "trigger": "Fit the sharp tip before launch.",
+        "switchKind": "swap",
+        "configIndex": 3,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--delta-drive"
       }
     ]
   },
@@ -30177,7 +30252,25 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "seoDescription": "Wyborg is a Balance-Type Beyblade. Released October 2001 as A-36. It combines Wyborg, Double Snake, Eight Balance, Right Spin Auto Change Version. Used by Ian Papov. Its special move is Sand Bind.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Wyborg",
     "source": "fandom-infobox",
-    "categoryId": "category-wyborg"
+    "categoryId": "category-wyborg",
+    "modes": [
+      {
+        "name": "Sharp",
+        "behaviour": "How it launches. A narrow point, so it stays put and holds its spin while it waits to be attacked.",
+        "trigger": "The state it starts in.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      },
+      {
+        "name": "Flat",
+        "behaviour": "Being hit switches the base from its sharp point to a flat one, and the top starts moving aggressively instead of holding station. The flaps that take the hit also shift so they line up better with the attack ring above, putting more of the weight behind the ring's own contact points.",
+        "trigger": "Switches on being hit. Nothing to set.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      }
+    ]
   },
   {
     "id": "wyverngale-0-80c",

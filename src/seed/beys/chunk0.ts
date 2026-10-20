@@ -6561,21 +6561,7 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Bandit Genbu F230TB is a Stamina-Type Beyblade from the Synchrome System, spinning right-spin. Released 20th October 2012 as BBG-23 for Beyblade: Shogun Steel. It combines Genbu, Bandit, Genbu, Free 230. Used by Genjuro Kamegaki. Its special move is Spinning Shell Smash.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bandit_Genbu_F230TB",
     "source": "fandom-infobox",
-    "categoryId": "category-bandit-genbu-f230tb",
-    "modes": [
-      {
-        "name": "Ball contact",
-        "behaviour": "On a smooth floor the tip rides on the ball, which keeps friction low and holds spin for a long time.",
-        "trigger": "Running on a smooth surface.",
-        "sourceCase": 1842
-      },
-      {
-        "name": "Cylinder rim contact",
-        "behaviour": "Tipped over onto the rim of the inner cylinder, the contact grips far harder and drives the top around the stadium instead of letting it sit.",
-        "trigger": "Tipping onto the rim on a rough or angled surface.",
-        "sourceCase": 1842
-      }
-    ]
+    "categoryId": "category-bandit-genbu-f230tb"
   },
   {
     "id": "bandit-golem-df145bs",
@@ -8027,7 +8013,36 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Beat Lynx TH170WD is a Balance-Type Beyblade from the 4D System, spinning right-spin. Released April 23, 2011 as BB-109 (Japanese) for Beyblade: Metal Fury. It combines Lynx, Lynx, Beat, TH170. Used by Johannes.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Beat_Lynx_TH170WD",
     "source": "fandom-infobox",
-    "categoryId": "category-beat-lynx-th170wd"
+    "categoryId": "category-beat-lynx-th170wd",
+    "modes": [
+      {
+        "name": "Lowest",
+        "behaviour": "The shortest of the three settings. The most stable, and it strikes an opponent low.",
+        "trigger": "Set the track to its lowest height, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--triple-height-170"
+      },
+      {
+        "name": "Middle",
+        "behaviour": "The middle setting. Taller, and the wings sit at a different spacing than either of the other two — each height changes where the protrusions fall, not just how high the top rides.",
+        "trigger": "Set the track to its middle height, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--triple-height-170"
+      },
+      {
+        "name": "Highest",
+        "behaviour": "The tallest setting, at 170 mm. It reaches over the top of most opponents, which suits attacking from above — and gives up stability for it.",
+        "trigger": "Set the track to its highest height, before launch.",
+        "switchKind": "config",
+        "configIndex": 3,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--triple-height-170"
+      }
+    ]
   },
   {
     "id": "behemoth-cyclops-c4-5-flugel-s",
@@ -11491,7 +11506,27 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Blitz Striker 100RSF is a Attack-Type Beyblade from the 4D System, spinning right-spin. Released August 6, 2011 as BB-117 (Takara Tomy) and BB-117-FX (Spark FX) for Beyblade: Metal Fury. It combines Striker II, Striker II, Blitz, 100. Used by Masamune Kadoya. Its special move is Flash of Lightning.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blitz_Striker_100RSF",
     "source": "fandom-infobox",
-    "categoryId": "category-blitz-striker-100rsf"
+    "categoryId": "category-blitz-striker-100rsf",
+    "modes": [
+      {
+        "name": "Smash",
+        "behaviour": "Configured so three points stand out. Fewer, heavier hits — each contact lands with more force behind it, which suits knocking an opponent out of the stadium.",
+        "trigger": "Assemble the wheel for three contact points, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--blitz"
+      },
+      {
+        "name": "Barrage",
+        "behaviour": "Configured so six points stand out. Twice as many hits, each lighter — it wears an opponent down and keeps them unsettled rather than landing one big blow.",
+        "trigger": "Assemble the wheel for six contact points, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--blitz"
+      }
+    ]
   },
   {
     "id": "blitz-striker-100sf",
@@ -20092,7 +20127,25 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Cosmic Pegasus F D is a Attack-Type Beyblade from the 4D System, spinning right-spin. Released March 26, 2011 as BB-105 (Takara Tomy, Legends) and BB-105-FX (Spark FX) for Beyblade: Metal Fury. It combines Pegasus III, Pegasus III, Cosmic, F:D. Used by Gingka Hagane.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Cosmic_Pegasus_F_D",
     "source": "fandom-infobox",
-    "categoryId": "category-cosmic-pegasus-f-d"
+    "categoryId": "category-cosmic-pegasus-f-d",
+    "modes": [
+      {
+        "name": "Sharp tip",
+        "behaviour": "While it is still spinning fast it rides on a narrow central point. Very little touches the floor, so it holds its spin and stays roughly where it was launched.",
+        "trigger": "How it behaves at high speed. Nothing to set.",
+        "switchKind": "speed",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--final-drive"
+      },
+      {
+        "name": "Final Drive",
+        "behaviour": "As the speed drops the wide rubber ring around the tip takes over and the top starts moving hard around the stadium — it turns most aggressive late in a battle, when an opponent expects it to be winding down.",
+        "trigger": "Takes over on its own as speed falls. Nothing to set.",
+        "switchKind": "speed",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--final-drive"
+      }
+    ]
   },
   {
     "id": "cosmic-pegasus-w105r2f",
@@ -24546,7 +24599,27 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Dark Cancer CH120SF is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released November 21, 2009 as BB-55 for Beyblade: Metal Fusion. It combines Cancer, Cancer, Dark, CH120. Used by Tetsuya Watarigani.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dark_Cancer_CH120SF",
     "source": "fandom-infobox",
-    "categoryId": "category-dark-cancer-ch120sf"
+    "categoryId": "category-dark-cancer-ch120sf",
+    "modes": [
+      {
+        "name": "120 — low",
+        "behaviour": "Set short, so the wheel meets an opponent low down. A low hit tends to push the other top sideways rather than lift it, and sitting lower is more stable.",
+        "trigger": "Set the track to its 120 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      },
+      {
+        "name": "145 — high",
+        "behaviour": "Set tall, so contact lands higher up an opponent — under its upper edge, which unsettles it and can tip it over.",
+        "trigger": "Set the track to its 145 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      }
+    ]
   },
   {
     "id": "dark-capricorne-105rf",
@@ -25947,7 +26020,27 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Dark Gasher CH120FS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released as BB-31 for Beyblade: Metal Fusion. It combines Gasher, Gasher, Dark, CH120. Used by Tetsuya Watarigani (English video games and Bakushin Susanow Attacks!).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dark_Gasher_CH120FS",
     "source": "fandom-infobox",
-    "categoryId": "category-dark-gasher-ch120fs"
+    "categoryId": "category-dark-gasher-ch120fs",
+    "modes": [
+      {
+        "name": "120 — low",
+        "behaviour": "Set short, so the wheel meets an opponent low down. A low hit tends to push the other top sideways rather than lift it, and sitting lower is more stable.",
+        "trigger": "Set the track to its 120 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      },
+      {
+        "name": "145 — high",
+        "behaviour": "Set tall, so contact lands higher up an opponent — under its upper edge, which unsettles it and can tip it over.",
+        "trigger": "Set the track to its 145 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      }
+    ]
   },
   {
     "id": "dark-leone-c145b",
@@ -36250,7 +36343,25 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "seoDescription": "Dranzer Auto Change Balancer is a Balance-Type Beyblade from the 4 Layer System. Released March 2000 as 27 (Takara Tomy) for Next Generation Beigoma Battle: Beyblade. It combines Dranzer, Wing Cutter, Balance, Auto Change Base. Used by Kai Hiwatari (manga only).",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Dranzer_Auto_Change_Balancer",
     "source": "fandom-infobox",
-    "categoryId": "category-dranzer-auto-change-balancer"
+    "categoryId": "category-dranzer-auto-change-balancer",
+    "modes": [
+      {
+        "name": "Sharp",
+        "behaviour": "How it launches. A narrow point, so it stays put and holds its spin while it waits to be attacked.",
+        "trigger": "The state it starts in.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      },
+      {
+        "name": "Flat",
+        "behaviour": "Being hit switches the base from its sharp point to a flat one, and the top starts moving aggressively instead of holding station. The flaps that take the hit also shift so they line up better with the attack ring above, putting more of the weight behind the ring's own contact points.",
+        "trigger": "Switches on being hit. Nothing to set.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "blade-base--auto-change-base"
+      }
+    ]
   },
   {
     "id": "dranzer-f",

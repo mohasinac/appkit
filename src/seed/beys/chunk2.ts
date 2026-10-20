@@ -524,7 +524,25 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Kreis Cygnus 145WD is a Defense-Type Beyblade from the 4D System, spinning right-spin. Released January 15th, 2012 (World Hobby Fair 2012) · January 21st, 2012 (Regular Release) as BB-124 for Beyblade: Metal Fury. It combines Cygnus, Cygnus, Kreis, 145. Used by Cycnus.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Kreis_Cygnus_145WD",
     "source": "fandom-infobox",
-    "categoryId": "category-kreis-cygnus-145wd"
+    "categoryId": "category-kreis-cygnus-145wd",
+    "modes": [
+      {
+        "name": "Default",
+        "behaviour": "How it launches, with the two halves of the wheel aligned.",
+        "trigger": "The state it starts in.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--kreis"
+      },
+      {
+        "name": "Slipped",
+        "behaviour": "Being hit makes the two halves of the wheel slip against each other. That slip takes the edge off the impact instead of transmitting it, so the top is harder to shift once an opponent has started attacking it.",
+        "trigger": "Activates on being hit. Nothing to set.",
+        "switchKind": "impact",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--kreis"
+      }
+    ]
   },
   {
     "id": "kreis-satan-2glaive-loop",
@@ -1494,7 +1512,25 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "L-Drago Destructor F S is a Attack-Type Beyblade from the 4D System, spinning left-spin. Released April 23, 2011 as BB-108 (Takara Tomy, Legends) and BB-108-FX (Spark FX) for Beyblade: Metal Fury. It combines L-Drago III, L-Drago Destructor, F:S. Used by Ryuga.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/L-Drago_Destructor_F_S",
     "source": "fandom-infobox",
-    "categoryId": "category-l-drago-destructor-f-s"
+    "categoryId": "category-l-drago-destructor-f-s",
+    "modes": [
+      {
+        "name": "Flat",
+        "behaviour": "At high speed the wide flat face is in contact, so the top moves aggressively around the stadium and attacks while it still has spin to spend.",
+        "trigger": "How it behaves at high speed. Nothing to set.",
+        "switchKind": "speed",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--final-survive"
+      },
+      {
+        "name": "Final Survive",
+        "behaviour": "As the speed drops it settles onto a narrow point, friction falls away and it stops moving about — trading its attack for the longest possible spin at the end of a battle. The mirror image of Final Drive, which attacks late instead.",
+        "trigger": "Takes over on its own as speed falls. Nothing to set.",
+        "switchKind": "speed",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "performance-tip--final-survive"
+      }
+    ]
   },
   {
     "id": "l-drago-destructor-lw105lf",
@@ -4033,7 +4069,29 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Lightning L-Drago 100HF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released July 18, 2009 as BB-43 and BB-43B (Super Vortex Battle Set) for Beyblade: Metal Fusion. It combines L-Drago I, L-Drago I, Lightning, 100.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Lightning_L-Drago_100HF",
     "source": "fandom-infobox",
-    "categoryId": "category-lightning-l-drago-100hf"
+    "categoryId": "category-lightning-l-drago-100hf",
+    "modes": [
+      {
+        "name": "Normal",
+        "behaviour": "The dragon heads on the energy ring sit between the wheel's teeth, leaving a more even outline. It spins steadily and is the safer way to launch it.",
+        "trigger": "Line the ring's heads up between the wheel's teeth, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "requiresPart": "energy-ring--l-drago-i",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--lightning"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Rotated so the dragon heads line up ON the wheel's teeth, which pushes the contact points out and makes each hit bite harder.",
+        "trigger": "Line the ring's heads up with the wheel's teeth, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "requiresPart": "energy-ring--l-drago-i",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--lightning"
+      }
+    ]
   },
   {
     "id": "lightning-l-drago-10reach-zephyr",
@@ -5245,7 +5303,27 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Mad Cancer CH120FS is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released March 28th, 2009 as BB-31 for Beyblade: Metal Fusion. It combines Cancer, Cancer, Mad, CH120. Used by Tetsuya Watarigani. Its special move is Track Change.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Mad_Cancer_CH120FS",
     "source": "fandom-infobox",
-    "categoryId": "category-mad-cancer-ch120fs"
+    "categoryId": "category-mad-cancer-ch120fs",
+    "modes": [
+      {
+        "name": "120 — low",
+        "behaviour": "Set short, so the wheel meets an opponent low down. A low hit tends to push the other top sideways rather than lift it, and sitting lower is more stable.",
+        "trigger": "Set the track to its 120 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      },
+      {
+        "name": "145 — high",
+        "behaviour": "Set tall, so contact lands higher up an opponent — under its upper edge, which unsettles it and can tip it over.",
+        "trigger": "Set the track to its 145 mm height, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--change-height-120"
+      }
+    ]
   },
   {
     "id": "mad-leone-145b",
@@ -9081,7 +9159,27 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Meteo L-Drago 85LF (Rush Version) is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released December 28, 2011 as BB-123 for Beyblade: Metal Fury. It combines L-Drago III, L-Drago Rush, Meteo, 85.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Meteo_L-Drago_85LF_(Rush_Version)",
     "source": "fandom-infobox",
-    "categoryId": "category-meteo-l-drago-85lf"
+    "categoryId": "category-meteo-l-drago-85lf",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "meteo-l-drago-lw105jb-assault-version",
@@ -9158,7 +9256,27 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Meteo L-Drago LW105JB (Assault Version) is a Defense-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released December 28, 2011 as BB-123 for Beyblade: Metal Fury. It combines L-Drago III, L-Drago Assault, Meteo, LW105.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Meteo_L-Drago_LW105JB_(Assault_Version)",
     "source": "fandom-infobox",
-    "categoryId": "category-meteo-l-drago-lw105jb"
+    "categoryId": "category-meteo-l-drago-lw105jb",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "meteo-l-drago-lw105lf",
@@ -9260,7 +9378,27 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Meteo L-Drago LW105LF is a Attack-Type Beyblade from the Hybrid Wheel System, spinning left-spin. Released September 18, 2010 as BB-88 and BB-88A (Triple Battle Set) for Beyblade: Metal Masters. It combines L-Drago II, L-Drago II, Meteo, LW105. Used by Ryuga.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Meteo_L-Drago_LW105LF",
     "source": "fandom-infobox",
-    "categoryId": "category-meteo-l-drago-lw105lf"
+    "categoryId": "category-meteo-l-drago-lw105lf",
+    "modes": [
+      {
+        "name": "Absorb",
+        "behaviour": "Aligned so the rubber of the dragon heads is what meets the opponent. Rubber grips rather than deflects, so it takes spin off the other top instead of knocking it away — the spin-steal setting.",
+        "trigger": "Align the ring's three heads for rubber contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 1,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      },
+      {
+        "name": "Attack",
+        "behaviour": "Aligned so the wheel's own teeth lead instead. Contact is hard and the top strikes rather than draining.",
+        "trigger": "Align the ring's three heads for tooth contact, before launch.",
+        "switchKind": "config",
+        "configIndex": 2,
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--meteo"
+      }
+    ]
   },
   {
     "id": "midnight-bull-125sf",
@@ -11849,7 +11987,25 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Nightmare Rex UW145EWD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released August 6, 2011 as BB-117 for Beyblade: Metal Fury. It combines Rex, Rex, Nightmare, UW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Nightmare_Rex_UW145EWD",
     "source": "fandom-infobox",
-    "categoryId": "category-nightmare-rex-uw145ewd"
+    "categoryId": "category-nightmare-rex-uw145ewd",
+    "modes": [
+      {
+        "name": "Wings down",
+        "behaviour": "The Upper Wing 145 track mounted the usual way up. The wings sit clear of the stadium floor, so the top runs cleanly and the wings only come into play when they meet an opponent.",
+        "trigger": "Mount the track the usual way up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      },
+      {
+        "name": "Wings up",
+        "behaviour": "Flipped over, the wings present at a different angle and can add to an attack. 🛑 In most cases they also scrape along the stadium floor, which costs spin quickly — so this is a trade, not a straight upgrade.",
+        "trigger": "Flip the track over and mount it inverted, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      }
+    ]
   },
   {
     "id": "night-virgo-df145bs",
@@ -12011,21 +12167,7 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Ninja Salamander SW145SD is a Balance-Type Beyblade from the Synchrome System, spinning right-spin. Released March 31, 2012 as BBG-02 (Takara Tomy) and SS-02 (Hasbro) for Beyblade: Shogun Steel. It combines Salamander, Salamander, Ninja, SW145. Used by Shinobu Hiryūin.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Ninja_Salamander_SW145SD",
     "source": "fandom-infobox",
-    "categoryId": "category-ninja-salamander-sw145sd",
-    "modes": [
-      {
-        "name": "Defense",
-        "behaviour": "The wings sit rounded-side forward, so a hit is spread along a curve and glances away instead of landing square. Little of the force comes back as recoil.",
-        "trigger": "Mount the SW145 wings rounded-side forward before launch.",
-        "sourceCase": 690
-      },
-      {
-        "name": "Attack",
-        "behaviour": "The wings are reversed so the pointed faces lead, concentrating a hit at a point rather than spreading it.",
-        "trigger": "Reverse the SW145 wings before launch.",
-        "sourceCase": 690
-      }
-    ]
+    "categoryId": "category-ninja-salamander-sw145sd"
   },
   {
     "id": "ninja-salamander-tt-11",
@@ -16321,16 +16463,20 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "categoryId": "category-phantom-orion-b-d",
     "modes": [
       {
-        "name": "Attack orbit",
-        "behaviour": "Runs on the outer bearing, giving a wide sweeping orbit around the stadium and an aggressive approach. The broad contact costs spin quickly.",
-        "trigger": "The starting state at launch.",
-        "sourceCase": 678
+        "name": "Attack",
+        "behaviour": "This way up the wheel presents its edge outward, so it bites into an opponent on contact and hits harder.",
+        "trigger": "Flip the fusion wheel before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--phantom"
       },
       {
         "name": "Stamina",
-        "behaviour": "Settles to a centred spin on a much smaller contact point, cutting friction sharply and extending how long it keeps spinning.",
-        "trigger": "Changes by itself as spin falls — an internal spring releases the bearing cage. There is nothing for the owner to do.",
-        "sourceCase": 678
+        "behaviour": "Flipped over, the wheel presents a smoother profile. It gives up attacking power and keeps spinning considerably longer.",
+        "trigger": "Flip the fusion wheel before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "fusion-wheel--phantom"
       }
     ]
   },
@@ -20181,7 +20327,25 @@ export const beyChunk2: Partial<BeyDocument>[] = [
     "seoDescription": "Proto Killer Beafowl UW145EWD is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Part of Beyblade: Metal Masters. It combines Proto Beafowl, Proto Beafowl, Proto Killer, UW145.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Proto_Killer_Beafowl_UW145EWD",
     "source": "fandom-infobox",
-    "categoryId": "category-proto-killer-beafowl-uw145ewd"
+    "categoryId": "category-proto-killer-beafowl-uw145ewd",
+    "modes": [
+      {
+        "name": "Wings down",
+        "behaviour": "The Upper Wing 145 track mounted the usual way up. The wings sit clear of the stadium floor, so the top runs cleanly and the wings only come into play when they meet an opponent.",
+        "trigger": "Mount the track the usual way up, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      },
+      {
+        "name": "Wings up",
+        "behaviour": "Flipped over, the wings present at a different angle and can add to an attack. 🛑 In most cases they also scrape along the stadium floor, which costs spin quickly — so this is a trade, not a straight upgrade.",
+        "trigger": "Flip the track over and mount it inverted, before launch.",
+        "switchKind": "flip",
+        "confirmed": "owner-2026-10-21",
+        "appliesToPart": "spin-track--upper-wing-145"
+      }
+    ]
   },
   {
     "id": "proto-nemesis-ad145d",
