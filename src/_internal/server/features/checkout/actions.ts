@@ -17,6 +17,8 @@ import {
   roundShippingUp,
   type SelectedShippingQuote,
 } from "../../../shared/shipping/quote";
+import { pointsRepository } from "../../../../features/points/repository/points.repository";
+import { maxRedeemablePoints } from "../../../../features/points/schemas/firestore";
 import {
   unitOfWork,
   adminNotificationsRepository,
@@ -308,6 +310,18 @@ export interface CreateCheckoutOrderInput {
    * outbound call on the payment path and is tracked separately.
    */
   selectedShippingQuote?: SelectedShippingQuote;
+  /**
+   * Points the buyer chose to spend on this checkout. 1 point = ₹1.
+   *
+   * 🛑 Requested, never trusted. The server re-reads the balance, re-applies
+   * the 50% cap against the real cart total, and spends the LESSER of the two
+   * — a client that asks for more than it holds gets its request trimmed, not
+   * an error, because the honest reading of "spend 500 when you have 300" is a
+   * stale page rather than an attack. `pointsRepository.redeem` then re-checks
+   * the balance a third time inside its own transaction, which is the check
+   * that actually prevents a negative balance under concurrency.
+   */
+  pointsToRedeem?: number;
   notes?: string;
   excludedProductIds?: string[];
   /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
@@ -1715,6 +1729,47 @@ export async function createCheckoutOrderAction(
   }
 
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
+
+  /*
+   * Spend points AFTER the orders exist.
+   *
+   * 🛑 This ordering is the whole safety argument. Redeeming first and then
+   * failing to create an order would debit a buyer for something they never
+   * received, and points have no refund path that does not need a human. This
+   * way the worst case is an order placed at full price with the balance
+   * intact — recoverable, and visible to the buyer, who still has their
+   * points.
+   *
+   * The amount is re-derived server-side against the real total rather than
+   * taken from the request; `maxRedeemablePoints` applies the 50% cap, and
+   * `redeem` re-checks the balance inside its own transaction.
+   */
+  if (input.pointsToRedeem && input.pointsToRedeem > 0 && orderIds.length > 0) {
+    try {
+      const balance = await pointsRepository.getBalance(uid);
+      const spend = maxRedeemablePoints(total, Math.min(balance, input.pointsToRedeem));
+      if (spend > 0) {
+        await pointsRepository.redeem({
+          userId: uid,
+          points: spend,
+          orderId: orderIds[0],
+          description: `Redeemed on ${orderIds[0]}`,
+        });
+      }
+    } catch (err) {
+      /*
+       * A failed redemption must not fail a placed order. The buyer keeps the
+       * points and paid full price — the strictly safer side of this trade.
+       */
+      const normalized = normalizeError(err);
+      serverLogger.error("points redemption failed after order creation", {
+        uid,
+        orderId: orderIds[0],
+        message: normalized.message,
+      });
+    }
+  }
+
   dispatchOrderConfirmationEmails(emailsToSend);
 
   serverLogger.info(

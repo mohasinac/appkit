@@ -293,6 +293,8 @@ export const DEFAULT_ROUTE_MAP = {
     NOTIFICATIONS: "/user/notifications",
     /** Plan §10 — claimed-coupons wallet (Active / Expired / Used tabs). */
     CLAIMED_COUPONS: "/user/coupons",
+    /** Points balance + ledger. 1 point = ₹1, spendable at checkout. */
+    POINTS: "/user/points",
     BECOME_SELLER: "/user/become-seller",
     CART: "/cart",
     CHECKOUT: "/checkout",

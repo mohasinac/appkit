@@ -880,6 +880,14 @@ export {
   isCheckoutValueOtpVerified,
 } from "./features/checkout/server";
 export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/server";
+/*
+ * Shipping reconciliation. Public on the SERVER entry only: it writes a points
+ * ledger entry and an order, so it must never be reachable from a client
+ * bundle. The consumer owns the seller's dispatch route, which is the second
+ * place a parcel is marked shipped.
+ */
+export { reconcileOrderShipping } from "./_internal/server/features/shipping/reconcile";
+export { pointsRepository, PointsRepository } from "./features/points/repository/points.repository";
 export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use
