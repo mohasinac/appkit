@@ -31,6 +31,12 @@ export interface ResolvedKeys {
   phonepeEnvironment: string;
   phonepeWebhookUsername: string;
   phonepeWebhookPassword: string;
+  // Razorpay
+  /** Publishable key (`rzp_test_…` / `rzp_live_…`) — the one value here that is safe to hand the browser. */
+  razorpayKeyId: string;
+  razorpayKeySecret: string;
+  /** Webhook signing secret. Optional in practice: without it `verifyWebhook()` fails closed and the buyer-present /verify path still works. */
+  razorpayWebhookSecret: string;
   // Resend email
   resendApiKey: string;
 }
@@ -42,11 +48,29 @@ const EMPTY_KEYS: ResolvedKeys = {
   phonepeEnvironment: "",
   phonepeWebhookUsername: "",
   phonepeWebhookPassword: "",
+  razorpayKeyId: "",
+  razorpayKeySecret: "",
+  razorpayWebhookSecret: "",
   resendApiKey: "",
 };
 
 let _cache: { value: ResolvedKeys; expiresAt: number } | null = null;
 const CACHE_TTL_MS = 60_000; // 1 minute
+
+/**
+ * Treats a seeded `*_PLACEHOLDER` value as ABSENT so the env fallback wins.
+ *
+ * Most seeded credentials are the literal string `"…_PLACEHOLDER"`, which is
+ * truthy — so a plain `db.x || process.env.X` resolves to the placeholder and
+ * the real env var is never read. For a gateway that is worse than an empty
+ * value: the placeholder reaches Razorpay's API and produces an authentication
+ * failure mid-checkout rather than cleanly falling back. `resolveEmailProvider`
+ * is the reference for this test; see CLAUDE.md's siteSettings row.
+ */
+function usable(value: string | undefined): string {
+  if (!value || value.includes("PLACEHOLDER")) return "";
+  return value;
+}
 
 /** Drops the in-process cache. Call this after admin saves new credentials. */
 export function invalidateIntegrationKeysCache(): void {
@@ -68,6 +92,10 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
   }
 
   const value: ResolvedKeys = {
+    razorpayKeyId: usable(db.razorpayKeyId) || process.env.RAZORPAY_KEY_ID || "",
+    razorpayKeySecret: usable(db.razorpayKeySecret) || process.env.RAZORPAY_KEY_SECRET || "",
+    razorpayWebhookSecret:
+      usable(db.razorpayWebhookSecret) || process.env.RAZORPAY_WEBHOOK_SECRET || "",
     phonepeClientId: db.phonepeClientId || process.env.PHONEPE_CLIENT_ID || "",
     phonepeClientSecret:
       db.phonepeClientSecret || process.env.PHONEPE_CLIENT_SECRET || "",

@@ -553,6 +553,12 @@ export { createResendProvider } from "./providers/email-resend/index";
 // PhonePeProvider - Component for phonepe provider.
 export { PhonePeProvider } from "./providers/payment-phonepe/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// RazorpayProvider - IPaymentProvider over Razorpay's client-side-modal gateway.
+export { RazorpayProvider } from "./providers/payment-razorpay/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// verifyRazorpayWebhookSignature - HMAC-SHA256 over the RAW webhook body. SDK-free module.
+export { verifyWebhookSignature as verifyRazorpayWebhookSignature } from "./providers/payment-razorpay/signature";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // paiseToRupees - Shared export for paise to rupees. // audit-money-units-ok: names the boundary conversion function itself
 export { paiseToRupees } from "./core/money";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

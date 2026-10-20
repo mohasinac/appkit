@@ -344,6 +344,8 @@ export interface OrderRefundEvent {
   refundedBy: string; // userId of admin / seller who issued the refund
   /** Set when PhonePe processed the refund. */
   phonepeRefundId?: string;
+  /** Set when Razorpay processed the refund (`rfnd_…`). Mutually exclusive with `phonepeRefundId` — one online gateway runs at a time. */
+  razorpayRefundId?: string;
   /** Set when refund was processed manually (offline). */
   manualTransactionId?: string;
   /** Proof document URL (via /api/media signed-URL flow). */
@@ -814,24 +816,34 @@ export interface OrderDocument extends BaseDocument {
   refundPending?: boolean;
 }
 
-export type OrderPaymentRecordMethod = "manual" | "phonepe" | "cod";
+export type OrderPaymentRecordMethod = "manual" | "phonepe" | "razorpay" | "cod";
 export type OrderPaymentVerificationMethod = "manual_review" | "webhook" | "cod_collection" | "order_status";
 
 export interface OrderPaymentRecord {
   method: OrderPaymentRecordMethod;
-  /** UTR (manual) | PhonePe transactionId (phonepe) | collector note/ref (COD). */
+  /** UTR (manual) | PhonePe transactionId / Razorpay `pay_…` (gateway) | collector note/ref (COD). */
   transactionId?: string;
-  /** Manual proof upload | COD collection receipt photo (optional) | n/a for phonepe. */
+  /** Manual proof upload | COD collection receipt photo (optional) | n/a for a gateway. */
   proofUrl?: string;
   amount: number;
   paidAt?: Date;
-  /** Admin/seller uid (manual/COD) | "phonepe-order-status" or "phonepe-webhook" (phonepe, automatic). */
+  /** Admin/seller uid (manual/COD) | "{gateway}-order-status" or "{gateway}-webhook" (automatic). */
   verifiedBy?: string;
   verificationMethod: OrderPaymentVerificationMethod;
-  /** PhonePe audit trail only. */
+  /**
+   * Gateway audit trail only.
+   *
+   * `merchantOrderId` is the id this codebase stores as `order.paymentId` and
+   * keys every lookup on, whichever gateway is live — PhonePe's own
+   * `merchantOrderId`, or Razorpay's `order_…`. The provider-specific fields
+   * below record the gateway's extra ids when it has them.
+   */
   gatewayRef?: {
     merchantOrderId?: string;
     phonepeOrderId?: string;
+    razorpayOrderId?: string;
+    /** Razorpay's payment id (`pay_…`) — the key its refund API needs. */
+    razorpayPaymentId?: string;
     transactionId?: string;
   };
 }

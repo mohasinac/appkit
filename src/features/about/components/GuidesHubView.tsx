@@ -78,8 +78,21 @@ export async function GuidesHubView({}: GuidesHubViewProps = {}) {
       blurb: t("groupSellingBlurb"),
       items: [
         { href: String(ROUTES.PUBLIC.SELLER_GUIDE), label: t("sellerGuide"), text: t("sellerGuideText") },
-        { href: String(ROUTES.PUBLIC.SELLER_GUIDE_BUNDLES), label: t("bundleGuide"), text: t("bundleGuideText") },
-        { href: String(ROUTES.PUBLIC.SELLER_GUIDE_PRIZE_DRAWS), label: t("prizeDrawGuide"), text: t("prizeDrawGuideText") },
+        /*
+         * 🛑 HIDDEN BLOCK — the bundle and prize-draw guides, withdrawn
+         * 2026-10-20 alongside the footer entries for those listing types
+         * (`HIDDEN_FOOTER_LINK_HREFS`, src/constants/navigation.tsx). A hub
+         * card is a promise that the thing it describes is open for business;
+         * teaching a seller to run a prize draw they cannot currently publish
+         * is worse than saying nothing.
+         *
+         * The pages, the routes and the `guidesHub.bundleGuide*` /
+         * `guidesHub.prizeDrawGuide*` message keys are all left in place, so
+         * restoring this is uncommenting two lines.
+         *
+         * { href: String(ROUTES.PUBLIC.SELLER_GUIDE_BUNDLES), label: t("bundleGuide"), text: t("bundleGuideText") },
+         * { href: String(ROUTES.PUBLIC.SELLER_GUIDE_PRIZE_DRAWS), label: t("prizeDrawGuide"), text: t("prizeDrawGuideText") },
+         */
       ],
     },
   ];

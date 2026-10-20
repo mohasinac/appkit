@@ -354,6 +354,9 @@ export function AdminSiteSettingsView({
   const [platformShippingFixedMin, setPlatformShippingFixedMin] = React.useState(0);
 
   // ⑧ Integrations
+  const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
+  const [razorpayKeySecret, setRazorpayKeySecret] = React.useState("");
+  const [razorpayWebhookSecret, setRazorpayWebhookSecret] = React.useState("");
   const [phonepeClientId, setPhonepeClientId] = React.useState("");
   const [phonepeClientSecret, setPhonepeClientSecret] = React.useState("");
   const [phonepeClientVersion, setPhonepeClientVersion] = React.useState("1");
@@ -387,6 +390,7 @@ export function AdminSiteSettingsView({
   const [maxDeliveryRadius, setMaxDeliveryRadius] = React.useState(0);
 
   // ⑨ Payment methods (siteSettings.payment — read by checkout for method eligibility)
+  const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
   const [phonepeEnabled, setPhonepeEnabled] = React.useState(false);
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
@@ -579,6 +583,9 @@ export function AdminSiteSettingsView({
     setGstLegalName(s.gst?.legalName ?? "");
     setGstAddress(s.gst?.address ?? "");
 
+    setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
+    setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
+    setRazorpayWebhookSecret(s.credentialsMasked?.razorpayWebhookSecret ?? "");
     setPhonepeClientId(s.credentialsMasked?.phonepeClientId ?? "");
     setPhonepeClientSecret(s.credentialsMasked?.phonepeClientSecret ?? "");
     setPhonepeClientVersion(s.credentialsMasked?.phonepeClientVersion ?? "1");
@@ -607,6 +614,7 @@ export function AdminSiteSettingsView({
     setDefaultCarrier(s.shipping?.defaultCarrier ?? "custom");
     setMaxDeliveryRadius(s.shipping?.maxDeliveryRadius ?? 0);
 
+    setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
     setPhonepeEnabled(s.payment?.phonepeEnabled ?? false);
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
@@ -667,6 +675,9 @@ export function AdminSiteSettingsView({
     setMsgCeilingEmail(s.messaging?.dailyCeiling?.email ?? 80);
 
     originalMaskedRef.current = {
+      razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
+      razorpayKeySecret: s.credentialsMasked?.razorpayKeySecret ?? "",
+      razorpayWebhookSecret: s.credentialsMasked?.razorpayWebhookSecret ?? "",
       phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
       phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
       phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "",
@@ -769,6 +780,9 @@ export function AdminSiteSettingsView({
       // "" field, so an unedited tab never overwrites a real secret with its
       // own masked display string.
       credentials: {
+        razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
+        razorpayKeySecret: maskedOrReal("razorpayKeySecret", razorpayKeySecret),
+        razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", razorpayWebhookSecret),
         phonepeClientId: maskedOrReal("phonepeClientId", phonepeClientId),
         phonepeClientSecret: maskedOrReal("phonepeClientSecret", phonepeClientSecret),
         phonepeClientVersion: maskedOrReal("phonepeClientVersion", phonepeClientVersion),
@@ -809,7 +823,7 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
+      payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
@@ -1552,6 +1566,14 @@ export function AdminSiteSettingsView({
             <SettingsTabForm id="integrations" label="Integrations">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Razorpay</Text>
+                <Grid cols={2} gap="md">
+                  <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_test_… / rzp_live_…" />
+                  <MaskedInput label="Razorpay Key Secret" value={razorpayKeySecret} onChange={setRazorpayKeySecret} placeholder="••••••••" />
+                  <MaskedInput label="Razorpay Webhook Secret" value={razorpayWebhookSecret} onChange={setRazorpayWebhookSecret} placeholder="••••••••" />
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">PhonePe</Text>
                 <Grid cols={2} gap="md">
                   <MaskedInput label="PhonePe Client ID" value={phonepeClientId} onChange={setPhonepeClientId} placeholder="MERCHANTID_…" />
@@ -1634,7 +1656,8 @@ export function AdminSiteSettingsView({
           <TabsContent value="shipping">
             <SettingsTabForm id="shipping" label="Shipping">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
-              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — disabled by default, manual payment is the default" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
+              <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI/netbanking) enabled — needs Key ID + Key Secret under Credentials" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
+              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — ignored while Razorpay is on; only one online gateway runs at a time" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
               <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />

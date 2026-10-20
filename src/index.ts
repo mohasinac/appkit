@@ -2836,6 +2836,25 @@ export { rupeesToPaise } from "./core/money";
 // PhonePeConfig - Type contract for phonepe config.
 export type { PhonePeConfig } from "./providers/payment-phonepe/index";
 
+// ./providers/payment-razorpay/index
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// RazorpayProvider - IPaymentProvider over Razorpay's client-side-modal gateway.
+export { RazorpayProvider } from "./providers/payment-razorpay/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// RazorpayConfig - Type contract for razorpay config.
+export type { RazorpayConfig } from "./providers/payment-razorpay/index";
+
+// ./providers/payment-razorpay/signature
+// [SERVER-ONLY]-Server-only — uses Node.js crypto. Deliberately SDK-free so importing it does not pull the razorpay package in.
+// verifyRazorpayPaymentSignature - HMAC-SHA256 over `{order_id}|{payment_id}`; the cheap guard, never the authority.
+export { verifyPaymentSignature as verifyRazorpayPaymentSignature } from "./providers/payment-razorpay/signature";
+// [SERVER-ONLY]-Server-only — uses Node.js crypto.
+// verifyRazorpayWebhookSignature - HMAC-SHA256 over the RAW webhook body.
+export { verifyWebhookSignature as verifyRazorpayWebhookSignature } from "./providers/payment-razorpay/signature";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// RazorpayPaymentResult - the three fields Razorpay's checkout.js returns.
+export type { RazorpayPaymentResult } from "./providers/payment-razorpay/signature";
+
 // ./providers/payment-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).

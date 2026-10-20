@@ -264,6 +264,19 @@ export interface SiteSettingsCredentials {
   /** Username/password pair configured in the PhonePe dashboard's Webhook tab (SHA/Basic auth mode) — verified via the SDK's `validateCallback()`. */
   phonepeWebhookUsername?: string;
   phonepeWebhookPassword?: string;
+  /**
+   * Razorpay publishable key (`rzp_test_…` / `rzp_live_…`).
+   *
+   * 🛑 The ONLY credential in this interface that is deliberately sent to the
+   * browser — Razorpay's `checkout.js` needs it to open the modal. It is
+   * published by `/api/payment/create-order`, not by the site-settings
+   * projection, so it stays in `PRIVATE_SITE_SETTINGS_FIELDS` like every
+   * other credential (see CLAUDE.md § Public Data Projections).
+   */
+  razorpayKeyId?: string;
+  razorpayKeySecret?: string;
+  /** Webhook signing secret from Razorpay's dashboard → Webhooks. Without it `verifyWebhook()` fails closed. */
+  razorpayWebhookSecret?: string;
   resendApiKey?: string;
   metaAppId?: string;
   metaAppSecret?: string;
@@ -288,6 +301,9 @@ export interface SiteSettingsCredentialsMasked {
   phonepeEnvironment?: string;
   phonepeWebhookUsername?: string;
   phonepeWebhookPassword?: string;
+  razorpayKeyId?: string;
+  razorpayKeySecret?: string;
+  razorpayWebhookSecret?: string;
   resendApiKey?: string;
   metaAppId?: string;
   metaAppSecret?: string;
@@ -531,6 +547,18 @@ export interface SiteSettingsDocument extends BaseDocument {
     supportHours?: string;
   };
   payment: {
+    /**
+     * Razorpay (client-side card/UPI/netbanking modal).
+     *
+     * 🛑 Checked BEFORE `phonepeEnabled` in `providers.config.ts` — exactly
+     * one online gateway can be registered per process, so the order is the
+     * tie-break when both are on, not a precedence anyone should rely on.
+     * Turning this on with no credentials makes the provider constructor
+     * throw at boot; `resolveKeys()` treats a seeded `*_PLACEHOLDER` as
+     * absent, so a placeholder reads as "unconfigured" rather than failing
+     * mid-checkout.
+     */
+    razorpayEnabled: boolean;
     phonepeEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
@@ -992,6 +1020,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   motto: "Your Marketplace, Your Rules",
   theme: DEFAULT_SITE_SETTINGS_THEME,
   payment: {
+    razorpayEnabled: false,
     phonepeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
@@ -1064,28 +1093,53 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     autoExtendWindowMinutes: 5,
     settlementGracePeriodHours: 24,
   },
-  // Every type on by default. `isListingTypeEnabled` treats a MISSING key as
-  // enabled, so this block is documentation of the full set rather than the
-  // mechanism — a type absent here still renders. `art` and `stickers` were
-  // missing from the old `featureFlags.listingTypes` literal for exactly that
-  // reason: nothing broke, so nobody noticed (Root Cause #58).
+  /*
+   * 🛑 THIS BLOCK IS NOW LOAD-BEARING, and it was not before.
+   *
+   * `isListingTypeEnabled` treats a MISSING key as ENABLED, so while every
+   * value here was `true` the block was pure documentation — a type left out
+   * rendered anyway, which is how `art`, `stickers` and `spares` sat outside it
+   * for months with nothing breaking (Root Cause #58). Now that five types ship
+   * `false`, an omission is no longer harmless in one direction only: a new
+   * union member added to `ListingType` and forgotten here goes LIVE on every
+   * site, which is the opposite of the intended default.
+   *
+   * So: every member of `ListingType` gets an explicit line, including the ones
+   * that are `true`. `spares` was missing entirely and is spelled out now.
+   *
+   * 2026-10-20 — open for business: standard, spares, pre-order, art, stickers.
+   * The other five are built, routed and reachable by URL; what is switched off
+   * is the site OFFERING them. An admin flips any of them back in
+   * Admin → Site Settings → Listings without a deploy, which is the whole point
+   * of this living in settings rather than in a constant.
+   *
+   * ⚠️ A default only reaches a site that has never written its settings
+   * document. An existing deployment already has a singleton with the old
+   * all-true map, and changing this file does NOT rewrite it — flip those in the
+   * admin UI, or re-seed.
+   */
   listings: {
     listingTypes: {
       standard: true,
-      auction: true,
+      spares: true,
       "pre-order": true,
-      "prize-draw": true,
-      classified: true,
-      "digital-code": true,
-      live: true,
       art: true,
       stickers: true,
+      auction: false,
+      "prize-draw": false,
+      classified: false,
+      "digital-code": false,
+      live: false,
     },
+    // `bundle: false` is the admin-side switch for bundles, which are a
+    // CATEGORY type rather than a listing type — it is what hides the
+    // homepage's featured-bundles rail and the bundle tabs on category and
+    // brand pages. Same reasoning as the five listing types above.
     categoryTypes: {
       category: true,
       sublisting: true,
       brand: true,
-      bundle: true,
+      bundle: false,
     },
   },
   shipping: {

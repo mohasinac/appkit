@@ -174,6 +174,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     whatsappNumber: "918919665811",
   },
   payment: {
+    razorpayEnabled: false,
     phonepeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
@@ -230,10 +231,14 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     dailyCeiling: { email: 80, sms: 50 },
   },
   seo: {
+    // Kept in step with the hero h1 in homepage-sections-seed-data.ts: the
+    // title is what a search result and a browser tab show, so leaving
+    // "Auction" here would have gone on advertising a disabled type from the
+    // one place a visitor sees before the page even loads.
     defaultTitle:
-      "LetItRip — Buy, Sell & Auction Collectibles | India's Collectibles Marketplace",
+      "LetItRip — Buy & Sell Collectibles | India's Collectibles Marketplace",
     defaultDescription:
-      "Buy, sell, and auction collectibles on India's marketplace for enthusiasts — action figures, trading cards, spinning tops, model kits, and more from verified sellers.",
+      "Buy and sell collectibles on India's marketplace for enthusiasts — action figures, trading cards, spinning tops, model kits, and more from verified sellers.",
     keywords: [
       "collectibles marketplace india",
       "action figures india",
@@ -504,22 +509,27 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   // Was `featureFlags` — 14 toggles of which 11 had no reader. Deleted
   // 2026-08-29; the two that were never flags live here instead.
   listings: {
+    // Kept identical to `DEFAULT_SITE_SETTINGS_DATA.listings` in
+    // admin/schemas/firestore.ts — a seed that disagrees with the default
+    // means a freshly seeded site and a never-configured site offer different
+    // catalogues. See that block for why every member is now spelled out.
     listingTypes: {
       standard: true,
-      auction: true,
+      spares: true,
       "pre-order": true,
-      "prize-draw": true,
-      classified: true,
-      "digital-code": true,
-      live: true,
       art: true,
       stickers: true,
+      auction: false,
+      "prize-draw": false,
+      classified: false,
+      "digital-code": false,
+      live: false,
     },
     categoryTypes: {
       category: true,
       sublisting: true,
       brand: true,
-      bundle: true,
+      bundle: false,
     },
   },
   credentials: {
@@ -529,6 +539,21 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     phonepeEnvironment: "sandbox",
     phonepeWebhookUsername: "webhook_PLACEHOLDER",
     phonepeWebhookPassword: "webhook_PLACEHOLDER",
+    /*
+     * 🛑 Deliberately EMPTY, not `*_PLACEHOLDER`, and this is the same
+     * reasoning the Meta secrets and `googleMapsApiKey` are seeded empty for:
+     * a placeholder is truthy, so a consumer that reads the value directly
+     * treats it as a usable credential and makes a real, failing API call —
+     * here, mid-checkout, after the buyer has committed. `resolveKeys()` also
+     * filters PLACEHOLDER for these three as a second line of defence, but
+     * the seed should not be the thing that needs defending against.
+     *
+     * A real key belongs in Admin › Site Settings › Credentials (encrypted at
+     * rest) or in RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET.
+     */
+    razorpayKeyId: "",
+    razorpayKeySecret: "",
+    razorpayWebhookSecret: "",
     resendApiKey: "",
     metaAppId: "meta_app_PLACEHOLDER",
     metaAppSecret: "meta_secret_PLACEHOLDER",
