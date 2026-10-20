@@ -18,14 +18,27 @@ import type { OrderDocument, OrderPaymentRecord } from "../schemas";
 const METHOD_LABEL: Record<OrderPaymentRecord["method"], string> = {
   manual: "Manual (Cash / UPI)",
   phonepe: "PhonePe",
+  razorpay: "Razorpay",
   cod: "Cash on Delivery",
 };
 
 function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
   if (!order.paymentMethod) return null;
+  /*
+   * Only reached by orders written before `paymentRecord` existed, so the
+   * gateway behind a bare `paymentMethod: "online"` has to be inferred.
+   *
+   * 🛑 It is inferred as RAZORPAY, not PhonePe, and the reason is evidence
+   * rather than preference: PhonePe has never processed a payment in any
+   * environment — `payment.phonepeEnabled` has been false throughout and
+   * every PhonePe credential is still a placeholder — so no `online` order
+   * can be its. Every such order predates the Razorpay→PhonePe migration.
+   * Orders placed from now on carry a real `paymentRecord` naming the live
+   * gateway, so this inference never applies to them in either direction.
+   */
   const method: OrderPaymentRecord["method"] =
     order.paymentMethod === "online"
-      ? "phonepe"
+      ? "razorpay"
       : order.paymentMethod === "cod"
         ? "cod"
         : "manual";
@@ -35,7 +48,7 @@ function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
     proofUrl: order.paymentProofUrl,
     amount: order.totalPrice,
     verificationMethod:
-      method === "phonepe" ? "order_status" : method === "cod" ? "cod_collection" : "manual_review",
+      method === "cod" ? "cod_collection" : method === "manual" ? "manual_review" : "order_status",
   };
 }
 

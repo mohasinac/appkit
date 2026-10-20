@@ -95,6 +95,13 @@ import type { OutOfStockPolicy } from "../../../../features/orders/schemas/index
 import { getDefaultCurrency } from "../../../../core/index";
 import { getProviders } from "../../../../contracts";
 import type { PhonePeCheckoutIntent } from "../../../../providers/payment-phonepe/index";
+/*
+ * The SDK-free signature module, NOT the provider's `index.ts`. Importing the
+ * index would pull a static `import Razorpay from "razorpay"` into this
+ * action's import graph for one HMAC comparison — see that file's header.
+ */
+import { verifyPaymentSignature as verifyRazorpayPaymentSignature } from "../../../../providers/payment-razorpay/signature";
+import { resolveKeys } from "../../../../core/integration-keys";
 import { rupeesToPaise, paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { checkEmiEligibility, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
@@ -1726,7 +1733,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
 /**
  * Read-only "what will I actually be charged" preview for the checkout
  * Order Summary. Reuses the exact same building blocks
- * createCheckoutOrderAction / verifyAndPlacePhonePeOrderAction use when an
+ * createCheckoutOrderAction / verifyAndPlaceGatewayOrderAction use when an
  * order is actually placed — resolveShippingCost, the compute*Fee helpers,
  * computeGroupCouponDiscount, and the GST calc — so the number shown to the
  * buyer can never diverge from what gets charged/recorded. Never decrements
@@ -1984,21 +1991,55 @@ export async function attachPaymentAction(input: {
 }
 
 // ---------------------------------------------------------------------------
-// PhonePe-confirmed checkout: Order Status confirm + amount re-check +
+// Gateway-confirmed checkout: order-status confirm + amount re-check +
 // atomic stock decrement + cart clear + multi-order create + notifications.
 //
-// Unlike Razorpay, there is no client-side signature — the buyer's browser
-// never receives a verifiable proof of payment. Both the buyer-present
-// `/api/payment/verify` call AND the async webhook (buyer may have closed
-// the tab) call this SAME action, keyed only by `merchantOrderId`. A small
-// Firestore claim doc (`phonepeOrderClaims/{merchantOrderId}`, created via
-// `.create()`, which throws on conflict) makes whichever caller arrives
-// first the sole placer of orders for that payment.
+// Serves BOTH online gateways. The authoritative check is identical for each
+// and deliberately server-side: re-fetch the order from the gateway and
+// require `status === "paid"`. PhonePe hands the browser nothing verifiable,
+// so for it that fetch is the only possible proof; Razorpay DOES return a
+// signed client callback, which is verified as well when supplied
+// (`razorpaySignature`) — but it is the cheap guard, never the authority. A
+// signature is computable from an order id and a payment id, so trusting it
+// alone would accept a client-reported outcome; fetching alone would accept a
+// replayed order id from another session. Both, or the weaker story wins.
+//
+// Both the buyer-present `/api/payment/verify` call AND the async webhook
+// (buyer may have closed the tab) call this SAME action, keyed only by the
+// gateway order id. A small Firestore claim doc
+// (`gatewayOrderClaims/{gatewayOrderId}`, created via `.create()`, which
+// throws on conflict) makes whichever caller arrives first the sole placer of
+// orders for that payment.
+//
+// 🛑 The claim collection was `phonepeOrderClaims` until Razorpay was
+// restored. Renaming it was safe precisely because it is Admin-SDK-only
+// (absent from firestore.rules, so default-deny) and PhonePe has never been
+// enabled in any environment — flag false, credentials all placeholders — so
+// no claim doc has ever been written. Do not rename it again without
+// establishing the same two facts.
 // ---------------------------------------------------------------------------
 
-export interface VerifyAndPlacePhonePeOrderInput {
-  /** PhonePe's merchantOrderId — our own id, generated in PhonePeProvider.createOrder(). */
+export interface VerifyAndPlaceGatewayOrderInput {
+  /**
+   * The gateway order id every lookup for this payment is keyed on, and what
+   * gets stored as `order.paymentId`: PhonePe's own `merchantOrderId`
+   * (generated in `PhonePeProvider.createOrder()`), or Razorpay's `order_…`.
+   */
   merchantOrderId: string;
+  /**
+   * Razorpay's client callback, when the buyer-present path has it. Omit on
+   * the webhook path and for PhonePe, which has no such callback.
+   *
+   * Verified IN ADDITION to the server-side order fetch, never instead of it
+   * — see the block comment above. A present-but-invalid signature is a hard
+   * failure: it means the browser's callback was forged or tampered with,
+   * even if the order did turn out to be paid.
+   */
+  razorpaySignature?: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  };
   /**
    * Buyer identity. Omit on the webhook path — no session exists there, so
    * it's resolved from `uid` packed into PhonePe's `metaInfo` at
@@ -2041,7 +2082,7 @@ export interface VerifyAndPlacePhonePeOrderInput {
  * Auto-refund the value of items dropped from a PhonePe checkout under the
  * "skip_items" out-of-stock policy. PhonePe captures payment for the FULL
  * cart before the stock check runs, so anything not placed as an order must
- * be given back. Extracted from `verifyAndPlacePhonePeOrderAction` — same
+ * be given back. Extracted from `verifyAndPlaceGatewayOrderAction` — same
  * behavior, kept as a named step so the parent function stays readable.
  *
  * Awaited by the caller (this moves money, never fire-and-forget). On
@@ -2101,7 +2142,7 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
   } catch (refundErr) {
     void normalizeError(refundErr);
     serverLogger.warn(
-      "verifyAndPlacePhonePeOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
+      "verifyAndPlaceGatewayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
       {
         orderId: primaryOrderId,
         droppedValue,
@@ -2113,7 +2154,7 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
       .catch((updErr: unknown) => {
         void normalizeError(updErr);
         serverLogger.error(
-          "verifyAndPlacePhonePeOrderAction: failed to flag refundPending after auto-refund failure",
+          "verifyAndPlaceGatewayOrderAction: failed to flag refundPending after auto-refund failure",
           { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
         );
       });
@@ -2144,7 +2185,7 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
       .catch((notifyErr: unknown) => {
         void normalizeError(notifyErr);
         serverLogger.error(
-          "verifyAndPlacePhonePeOrderAction: failed to write admin notification for failed auto-refund",
+          "verifyAndPlaceGatewayOrderAction: failed to write admin notification for failed auto-refund",
           { orderId: primaryOrderId },
         );
       });
@@ -2152,7 +2193,7 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
 }
 
 /**
- * Places one order for one seller-group within `verifyAndPlacePhonePeOrderAction`
+ * Places one order for one seller-group within `verifyAndPlaceGatewayOrderAction`
  * — mirrors `createOrderForGroup`'s role on the COD/cash/EMI path (same
  * per-group fee/coupon/order-doc/notification shape), extracted into its own
  * function purely to keep the parent function under the LARGE_COMPONENT
@@ -2220,6 +2261,14 @@ async function createPhonePeGroupOrder(
     buyerState,
   } = ctx;
 
+  /*
+   * Which online gateway actually took the money, read off the registered
+   * provider rather than passed in — exactly one is registered per process
+   * (`providers.config.ts`), so there is no caller-supplied value that could
+   * disagree with reality. Recorded on the order so a refund months later
+   * knows which API the stored `paymentId` belongs to.
+   */
+  const gatewayName = getProviders().payment?.name ?? "phonepe";
 
   const firstItem = group[0].item;
   const groupTotal = group.reduce(
@@ -2385,19 +2434,29 @@ async function createPhonePeGroupOrder(
     status: OrderStatusValues.CONFIRMED,
     paymentStatus: PaymentStatusValues.PAID,
     paymentMethod: PaymentMethodValues.ONLINE,
-    // Our own generated id, not PhonePe's — this is what refunds/lookups key
-    // on (PhonePe's refund API is `originalMerchantOrderId`-keyed anyway).
+    /*
+     * The id every refund and lookup keys on, whichever gateway is live:
+     * PhonePe's own `merchantOrderId` (its refund API is
+     * `originalMerchantOrderId`-keyed), or Razorpay's `order_…`.
+     *
+     * 🛑 Razorpay's refund API is PAYMENT-keyed, not order-keyed — storing an
+     * order id here works only because `RazorpayProvider.refund()` resolves
+     * the order's captured payment itself. Keep that behaviour if this field
+     * ever changes; the alternative is tracking a second id at ~6 call sites.
+     */
     paymentId: merchantOrderId,
     paymentRecord: {
-      method: "phonepe",
+      method: gatewayName === "razorpay" ? "razorpay" : "phonepe",
       transactionId: transactionId ?? merchantOrderId,
       amount: orderTotal,
       paidAt: new Date(),
-      verifiedBy: "phonepe-order-status",
+      verifiedBy: `${gatewayName}-order-status`,
       verificationMethod: "order-status",
       gatewayRef: {
         merchantOrderId,
-        phonepeOrderId,
+        ...(gatewayName === "razorpay"
+          ? { razorpayOrderId: merchantOrderId, razorpayPaymentId: transactionId }
+          : { phonepeOrderId }),
         transactionId,
       },
     },
@@ -2494,10 +2553,40 @@ async function createPhonePeGroupOrder(
   return orderTotal;
 }
 
-export async function verifyAndPlacePhonePeOrderAction(
-  input: VerifyAndPlacePhonePeOrderInput,
+export async function verifyAndPlaceGatewayOrderAction(
+  input: VerifyAndPlaceGatewayOrderInput,
 ): Promise<CheckoutOrderResult> {
   const { merchantOrderId } = input;
+
+  /*
+   * Razorpay's signed client callback, checked BEFORE the claim doc is
+   * created. Order matters: a forged callback that claimed first would make
+   * the real confirmation (webhook or retry) return "in progress" forever,
+   * turning a rejected request into a stuck order. Verify, then claim.
+   *
+   * The key secret is resolved here rather than passed in because the route
+   * has no business holding it. A missing secret cannot verify anything, so
+   * it fails closed — the same direction as `verifyWebhook()`.
+   */
+  if (input.razorpaySignature) {
+    const { razorpayKeySecret } = await resolveKeys();
+    const signatureValid =
+      !!razorpayKeySecret &&
+      verifyRazorpayPaymentSignature(input.razorpaySignature, razorpayKeySecret);
+    if (!signatureValid) {
+      serverLogger.warn(
+        `Razorpay signature rejected: order=${input.razorpaySignature.razorpay_order_id} payment=${input.razorpaySignature.razorpay_payment_id}`,
+      );
+      failedCheckoutRepository
+        .logPayment(input.userId ?? "unknown", "signature_mismatch", "Razorpay client signature invalid", {
+          gatewayOrderId: input.razorpaySignature.razorpay_order_id,
+          gatewayPaymentId: input.razorpaySignature.razorpay_payment_id,
+          addressId: input.addressId,
+        })
+        .catch((logErr: unknown) => { void normalizeError(logErr); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: logErr instanceof Error ? logErr.message : String(logErr) }); });
+      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
+    }
+  }
 
   // Idempotency: the buyer's /verify call and the async webhook can both
   // race to confirm+place for the same PhonePe payment (see the module
@@ -2505,7 +2594,7 @@ export async function verifyAndPlacePhonePeOrderAction(
   // creates this claim doc first is the sole placer; the loser returns
   // whatever the winner already placed, or a retryable "in progress" error
   // if the winner genuinely hasn't finished yet.
-  const claimRef = getAdminDb().collection("phonepeOrderClaims").doc(merchantOrderId);
+  const claimRef = getAdminDb().collection("gatewayOrderClaims").doc(merchantOrderId);
   try {
     await claimRef.create({ claimedAt: new Date() });
   } catch (claimErr) {
@@ -2521,14 +2610,23 @@ export async function verifyAndPlacePhonePeOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.ORDER_PLACEMENT_IN_PROGRESS);
   }
 
-  // Order Status confirmation — PhonePe never hands the browser a
-  // verifiable proof of payment, so this call IS the "signature check".
-  const phonepeOrder = await getProviders().payment!.getOrder(merchantOrderId);
-  if (phonepeOrder.status !== "paid") {
-    serverLogger.warn(`PhonePe order not completed: merchantOrderId=${merchantOrderId} state=${phonepeOrder.status}`);
+  /*
+   * THE authoritative check, for either gateway: re-fetch the order from the
+   * gateway and require it to be paid. For PhonePe this is the only possible
+   * proof (the browser never receives a verifiable one); for Razorpay it is
+   * what the client signature above cannot establish on its own.
+   *
+   * 🛑 `RazorpayProvider.getOrder()` must map the gateway's real status for
+   * this to mean anything — the pre-2026 implementation hardcoded "created",
+   * which here would reject every successful Razorpay payment AFTER the buyer
+   * was debited. See that provider's class comment, point 1.
+   */
+  const gatewayOrder = await getProviders().payment!.getOrder(merchantOrderId);
+  if (gatewayOrder.status !== "paid") {
+    serverLogger.warn(`Gateway order not paid: merchantOrderId=${merchantOrderId} state=${gatewayOrder.status}`);
     failedCheckoutRepository
-      .logPayment(input.userId ?? "unknown", "signature_mismatch", "PhonePe order not COMPLETED", {
-        gatewayOrderId: phonepeOrder.gatewayOrderId,
+      .logPayment(input.userId ?? "unknown", "signature_mismatch", "Gateway order not paid", {
+        gatewayOrderId: gatewayOrder.gatewayOrderId,
         gatewayPaymentId: merchantOrderId,
         addressId: input.addressId,
       })
@@ -2537,9 +2635,11 @@ export async function verifyAndPlacePhonePeOrderAction(
   }
 
   // The buyer-present /verify call always supplies these; the webhook path
-  // (no session) reconstructs them from PhonePe's metaInfo, packed at
-  // create-order time — see `PhonePeCheckoutIntent`.
-  const intent = phonepeOrder.metadata as unknown as PhonePeCheckoutIntent | undefined;
+  // (no session) reconstructs them from the gateway's own passthrough channel
+  // — PhonePe's `metaInfo`, Razorpay's `notes` — both packed at create-order
+  // time and both surfaced as `PaymentOrder.metadata`. See
+  // `PhonePeCheckoutIntent`, which is the shape either one carries.
+  const intent = gatewayOrder.metadata as unknown as PhonePeCheckoutIntent | undefined;
   const uid = input.userId ?? intent?.uid;
   if (!uid) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
@@ -2681,7 +2781,7 @@ export async function verifyAndPlacePhonePeOrderAction(
             ? `Product ${u.productId} has ${u.availableQty} left, requested ${u.requestedQty}`
             : `Product ${u.productId} not published`,
           {
-            gatewayOrderId: phonepeOrder.gatewayOrderId,
+            gatewayOrderId: gatewayOrder.gatewayOrderId,
             gatewayPaymentId: merchantOrderId,
             addressId,
           },
@@ -2777,7 +2877,7 @@ export async function verifyAndPlacePhonePeOrderAction(
       cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
     // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
     // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
-    const paidAmountRs = paiseToRupees(phonepeOrder.amount);
+    const paidAmountRs = paiseToRupees(gatewayOrder.amount);
     if (paidAmountRs < expectedPaymentAmountRs - 1) {
       serverLogger.warn(
         `Payment amount mismatch for user ${uid}: paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
@@ -2788,7 +2888,7 @@ export async function verifyAndPlacePhonePeOrderAction(
           "amount_mismatch",
           `Paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
           {
-            gatewayOrderId: phonepeOrder.gatewayOrderId,
+            gatewayOrderId: gatewayOrder.gatewayOrderId,
             gatewayPaymentId: merchantOrderId,
             amountRs: paidAmountRs,
             addressId,
@@ -2847,8 +2947,8 @@ export async function verifyAndPlacePhonePeOrderAction(
       userName,
       userEmail,
       merchantOrderId,
-      phonepeOrderId: phonepeOrder.gatewayOrderId,
-      transactionId: phonepeOrder.transactionId,
+      phonepeOrderId: gatewayOrder.gatewayOrderId,
+      transactionId: gatewayOrder.transactionId,
       shippingAddress,
       // For the CGST/SGST vs IGST split. The TOTAL does not depend on it
       // (see createPhonePeGroupOrder), which is what let the pre-payment
@@ -2909,7 +3009,7 @@ export async function verifyAndPlacePhonePeOrderAction(
   }
 
   serverLogger.info(
-    `verifyAndPlacePhonePeOrderAction: ${orderIds.length} order(s) placed for uid=${uid} — payment ${merchantOrderId}`,
+    `verifyAndPlaceGatewayOrderAction: ${orderIds.length} order(s) placed for uid=${uid} — payment ${merchantOrderId}`,
   );
 
   getAdminRealtimeDb()

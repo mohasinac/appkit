@@ -206,7 +206,10 @@ export const SECTION_TEMPLATES: readonly SectionTemplate[] = [
       title: "",
       indicators: [
         { id: "trust-originals", icon: "shield-check", title: "Authenticity, labelled", description: "Original, reproduction or unverified on every listing — never a silent claim." },
-        { id: "trust-escrow", icon: "lock", title: "Money held until delivery", description: "We hold payment in escrow, so a claim pays from funds we already have." },
+        // No "escrow" here either — see the trust bar in homepage-sections-seed-data.ts.
+        // A TEMPLATE is a claim an admin inserts with one click and is unlikely
+        // to re-read, so a withdrawn claim left in a template comes back by itself.
+        { id: "trust-escrow", icon: "lock", title: "Money held until delivery", description: "Payment reaches the seller after delivery, so a claim is settled from funds still with us." },
         { id: "trust-india", icon: "truck", title: "India-wide shipping", description: "Delhivery, Blue Dart, DTDC and India Post, with tracking on every order." },
         { id: "trust-rare", icon: "search", title: "Rare and pre-owned", description: "Four generations of Beyblade, including the lines that are long out of production." },
       ],
