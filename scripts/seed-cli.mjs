@@ -175,7 +175,24 @@ console.log(`✓ Connected to project: ${process.env.FIREBASE_ADMIN_PROJECT_ID |
 // ---------------------------------------------------------------------------
 // Pull seed data + helpers from @mohasinac/appkit
 // ---------------------------------------------------------------------------
-const appkit = await import("@mohasinac/appkit");
+/*
+ * ── 🛑 SEED DATA COMES FROM ./seed, NOT THE MAIN BARREL ──────────────────
+ *
+ * `appkit/src/seed/` is 61% of this package's source bytes and 60% of the
+ * published dist — 540 files of pure fixture data. While the main barrel
+ * re-exported it, every consumer importing `@mohasinac/appkit` pulled that
+ * graph into scope and Turbopack traced all 24 MB of it for nothing.
+ *
+ * The re-exports are gone from `index.ts`/`server.ts`, so this CLI — the
+ * only real consumer of the data — reads it from a dedicated subpath.
+ *
+ * 🛑 Two imports, deliberately. The seed ARRAYS come from ./seed; the
+ * HELPERS (id generators, token builders, PII field maps) stay on the main
+ * barrel because they are real library code that the app uses too. Merging
+ * them would pull the helpers back into the seed graph and undo the split.
+ */
+const appkitSeed = await import("@mohasinac/appkit/seed");
+const appkit = { ...(await import("@mohasinac/appkit")), ...appkitSeed };
 // PII crypto functions moved server-only in appkit 3.8.1 (they touch
 // firebase-admin's crypto chain) — no longer exported from the main
 // client-safe barrel, only from "@mohasinac/appkit/server". The *_PII_FIELDS

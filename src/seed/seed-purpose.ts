@@ -284,6 +284,40 @@ export const SEED_ROW_PURPOSE: Record<string, SeedPurpose> = {
   /* The platform's own default store. The other three seeded stores
    * (beyblade-arena, blader-bazaar, vintage-vault-co) are test fixtures. */
   "stores:store-letitrip-official": "permanent",
+  /*
+   * ── 🛑 THE ONLY GENUINELY PURCHASABLE PRODUCTS ─────────────────────────
+   *
+   * 12 real, wiki-verified Beyblade X listings under
+   * `store-letitrip-official`, added 2026-10-19 because PhonePe's merchant
+   * review requires at least one genuinely purchasable product.
+   *
+   * `products` is a PURGEABLE collection, and these had no row override — so
+   * `appkit-seed purge` would have deleted the entire reason the payment
+   * provider approved the account, while leaving the permanent store that
+   * sells them standing and empty.
+   *
+   * 🛑 Their STORE is already permanent, which is what makes marking these
+   * rows permanent legal: rule 1 of this file is that a permanent row may
+   * not reference a test row. Marking a product permanent while its seller
+   * stays purgeable would strand it as a dangling FK that still reads as a
+   * real listing — the exact failure `SEED_PURPOSE_DERIVED_FROM` exists for.
+   *
+   * Generated from the ids in `products-beyblade-x-seed-data.ts` rather than
+   * retyped; a hand-kept mirror of a 12-row list drifts on the first addition
+   * (Root Cause #42).
+   */
+  "products:product-beyblade-x-aeropegasus-3-70a": "permanent",
+  "products:product-beyblade-x-valkyrievolt-s4-70v": "permanent",
+  "products:product-beyblade-x-cobaltdrake-4-60f": "permanent",
+  "products:product-beyblade-x-phoenixwing-9-60gf": "permanent",
+  "products:product-beyblade-x-xtreme-stadium-bx-10": "permanent",
+  "products:product-beyblade-x-bx-53-all-in-one-set": "permanent",
+  "products:product-beyblade-x-bx-53-aeropegasus-dmc": "permanent",
+  "products:product-beyblade-x-bx-53-wizardarrow-v2": "permanent",
+  "products:product-beyblade-x-bx-53-knightshield-v2": "permanent",
+  "products:product-beyblade-x-bx-53-winder-launcher": "permanent",
+  "products:product-beyblade-x-bx-53-string-launcher": "permanent",
+  "products:product-beyblade-x-bx-53-xtreme-stadium-variant": "permanent",
 };
 
 /**

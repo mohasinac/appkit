@@ -1859,21 +1859,7 @@ export {
  TicketPriorityValues,
 } from "./features/support/schemas/firestore";
 // Support tickets â€" seed data
-export { supportTicketsSeedData } from "./seed/index";
-export { offersSeedData } from "./seed/index";
 // S-STORE foundation seed data
-export {
-  payoutMethodsSeedData,
-  shippingConfigsSeedData,
-  analyticsCardsSeedData,
-  analyticsAlertsSeedData,
-  storeCategoriesSeedData,
-  listingTemplatesSeedData,
-  moderationQueueSeedData,
-  reportsSeedData,
-  itemRequestsSeedData,
-  storeGoogleConfigSeedData,
-} from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer â€" uses firebase-admin; server-only.
@@ -1925,239 +1911,149 @@ export type { WishlistItem } from "./repositories/index";
  * .mjs script) imports it from there, and because `BaseDocument.seedPurpose`
  * means every consumer document type references the union.
  */
-export {
-  type SeedPurpose,
-  type SeedPurposeFields,
-  type WithSeedPurpose,
-  SEED_PURPOSE_VALUES,
-  ALL_SEED_PURPOSES,
-  SEED_COLLECTION_PURPOSE,
-  SEED_TEST_TTL_DAYS,
-  isSeedPurpose,
-  resolveSeedPurpose,
-  seedPurposeFields,
-  stampSeedPurpose,
-  asSeedPurpose,
-} from "./seed/index";
 
-export { ADDRESS_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // BID_FIXTURES - Constant used across modules.
-export { BID_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CART_FIXTURES - Constant used across modules.
-export { CART_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // COUPON_FIXTURES - Constant used across modules.
-export { COUPON_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // DEFAULT_CATEGORIES - Constant used across modules.
-export { DEFAULT_CATEGORIES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // DEFAULT_FAQS - Constant used across modules.
-export { DEFAULT_FAQS } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // NOTIFICATION_FIXTURES - Constant used across modules.
-export { NOTIFICATION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // PAYOUT_FIXTURES - Constant used across modules.
-export { PAYOUT_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // PRODUCT_FIXTURES - Constant used across modules.
-export { PRODUCT_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SESSION_COLLECTION - Constant used across modules.
-export { SESSION_COLLECTION } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SESSION_FIXTURES - Constant used across modules.
-export { SESSION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // STORE_FIXTURES - Constant used across modules.
-export { STORE_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // USER_FIXTURES - Constant used across modules.
-export { USER_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addressesSeedData - Model for addresses seed data.
-export { addressesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // assertPiiRoundTrip - Shared export for assert pii round trip.
-export { assertPiiRoundTrip } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bidsSeedData - Model for bids seed data.
-export { bidsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // blogPostsSeedData - Model for blog posts seed data.
-export { blogPostsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselSlidesSeedData - Model for carousel slides seed data.
-export { carouselSlidesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselsSeedData - Seed data for named carousels (EX2).
-export { carouselsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // cartsSeedData - Model for carts seed data.
-export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SB-UNI-C â€" brandsSeedData merged into categoriesSeedData with categoryType:"brand".
 // categoriesSeedData - Model for categories seed data.
-export { categoriesSeedData, categoriesP1SeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // couponsSeedData - Model for coupons seed data.
-export { couponsSeedData } from "./seed/index";
 // couponUsageSeedData - Per-user coupon redemption records (subcollection seed).
-export type { CouponUsageSeedRecord } from "./seed/index";
-export { couponUsageSeedData } from "./seed/index";
 // claimedCouponsSeedData - Plan §10 wallet seed (active/expired/used rows).
-export { claimedCouponsSeedData } from "./seed/index";
 // demoSeed has been moved to "@mohasinac/appkit/server" â€" it transitively
 // reaches firebase-admin via the seed runner, which must not leak into client
 // bundles. Import from `@mohasinac/appkit/server` in server-only code.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
-export { eventEntriesSeedData } from "./seed/index";
 // lotteryEntriesSeedData already exported above via LOTTERY_ENTRIES_COLLECTION block.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventsSeedData - Model for events seed data.
-export { eventsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqSeedData - Model for faq seed data.
-export { faqSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // testerChecklistSeedData - Model for tester checklist seed data.
-export { testerChecklistSeedData } from "./seed/index";
 // testerResponsesSeedData - Seeded tester submissions behind the bug-hunter demo fixtures.
-export { testerResponsesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // formatSeedPrice - Helper for format seed price.
-export { formatSeedPrice } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSeedLocale - Helper for get seed locale.
-export { getSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // homepageSectionsSeedData - Model for homepage sections seed data.
-export { homepageSectionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeAddress - Shared export for make address.
-export { makeAddress } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeBid - Shared export for make bid.
-export { makeBid } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeBlogPost - Shared export for make blog post.
-export { makeBlogPost } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCarouselSlide - Shared export for make carousel slide.
-export { makeCarouselSlide } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCart - Shared export for make cart.
-export { makeCart } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCartItem - Model for make cart item.
-export { makeCartItem } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCategory - Shared export for make category.
-export { makeCategory } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCoupon - Shared export for make coupon.
-export { makeCoupon } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFaq - Shared export for make faq.
-export { makeFaq } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullAddress - Shared export for make full address.
-export { makeFullAddress } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullCart - Shared export for make full cart.
-export { makeFullCart } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullCoupon - Shared export for make full coupon.
-export { makeFullCoupon } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullNotification - Shared export for make full notification.
-export { makeFullNotification } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullPayout - Shared export for make full payout.
-export { makeFullPayout } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullProduct - Shared export for make full product.
-export { makeFullProduct } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullStore - Shared export for make full store.
-export { makeFullStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullUser - Shared export for make full user.
-export { makeFullUser } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeNotification - Shared export for make notification.
-export { makeNotification } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOrder - Shared export for make order.
-export { makeOrder } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makePayout - Shared export for make payout.
-export { makePayout } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeProduct - Shared export for make product.
-export { makeProduct } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeReview - Shared export for make review.
-export { makeReview } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeRevokedSession - Shared export for make revoked session.
-export { makeRevokedSession } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeSeedPhone - Shared export for make seed phone.
-export { makeSeedPhone } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeSession - Shared export for make session.
-export { makeSession } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeStore - Shared export for make store.
-export { makeStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeUser - Shared export for make user.
-export { makeUser } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeWinningBid - Shared export for make winning bid.
-export { makeWinningBid } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // notificationsSeedData - Model for notifications seed data.
-export { notificationsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ordersSeedData - Model for orders seed data.
-export { ordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // payoutsSeedData - Model for payouts seed data.
-export { payoutsSeedData } from "./seed/index";
 // shipmentsSeedData / shipmentLotsSeedData / shipmentItemsSeedData - procurement shipments seed data.
-export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./seed/index";
-export { catalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
-export { productsStandardSeedData } from "./seed/index";
 // productsBeybladeXSeedData - Real, wiki-verified Beyblade X listings under store-letitrip-official (4 tops, 1 stadium, 1 Product Group of 7).
-export { productsBeybladeXSeedData } from "./seed/index";
 // 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsAuctionsSeedData - Seed data for auction product listings.
-export { productsAuctionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPreordersSeedData - Seed data for pre-order product listings.
-export { productsPreordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPrizeDrawsSeedData - Seed data for prize-draw product listings (SB5-E).
-export { productsPrizeDrawsSeedData } from "./seed/index";
 // productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
-export { productsClassifiedsSeedData } from "./seed/index";
 // productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
-export { productsDigitalCodesSeedData } from "./seed/index";
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
-export { productsLiveItemsSeedData } from "./seed/index";
 // productsArtSeedData - Seed data for art product listings (EMI/art-stickers session).
-export { productsArtSeedData } from "./seed/index";
 // productsStickersSeedData - Seed data for stickers product listings (EMI/art-stickers session).
-export { productsStickersSeedData } from "./seed/index";
 /*
  * productsSparesSeedData — loose components off disassembled items.
  *
@@ -2167,147 +2063,98 @@ export { productsStickersSeedData } from "./seed/index";
  * barrel only and the symbol exists, TypeScript is happy, and the loader still
  * prints `spares — no seed data, skipping` and exits 0 (Root Cause #90).
  */
-export { productsSparesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
-export { registerSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewsSeedData - Model for reviews seed data.
-export { reviewsSeedData } from "./seed/index";
 // runSeed has been moved to "@mohasinac/appkit/server" â€" see demoSeed above.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // seedForTest - Shared export for seed for test.
-export { seedForTest } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sessionsSeedData - Model for sessions seed data.
-export { sessionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // siteSettingsSeedData - Model for site settings seed data.
-export { siteSettingsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeAddressesSeedData - Model for store addresses seed data.
-export { storeAddressesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storesSeedData - Model for stores seed data.
-export { storesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // usersSeedData - Model for users seed data.
-export { usersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // wishlistsSeedData - Model for wishlists seed data.
-export { wishlistsSeedData } from "./seed/index";
 // historySeedData - Model for history (recently-viewed) seed data.
-export { historySeedData } from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 // groupedListingsSeedData - Model for grouped listings seed data.
-export { groupedListingsSeedData } from "./seed/index";
 // mediaAssetsSeedData — the mediaAssets rows backing /media/<shortId> cover
 // images. Exported from seed/index.ts but missing here until 2026-10-14,
 // which is exactly Root Cause #18's shape: seed-cli.mjs imports the bare
 // "@mohasinac/appkit" package, which resolves through THIS file, not through
 // seed/index.ts directly — so an export present only on the inner barrel is
 // invisible to the CLI and silently "no seed data, skipping".
-export { mediaAssetsSeedData, MEDIA_ASSET_SEED_COUNT } from "./seed/index";
 // productsCatalogueSeedData — the 972 generated per-taxonomy-leaf listings.
 // Same Root Cause #18 shape as mediaAssetsSeedData above: seed-cli.mjs imports
 // the bare "@mohasinac/appkit" package, which resolves through THIS file.
-export {
-  productsCatalogueSeedData,
-  CATALOGUE_LISTING_COUNT,
-} from "./seed/index";
 // Franchise — the IP a product is FROM (brand is who MADE it). Re-exported
 // from the outer barrel because seed-cli.mjs imports the bare package.
-export {
-  FRANCHISE_ROW_COUNT,
-  FRANCHISE_SLUGS,
-  FRANCHISE_BY_CATEGORY_ROOT,
-} from "./seed/index";
 // SB-UNI-V â€" bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.
-export type { CouponDiscountType } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FirestoreIndexConfig - Type contract for firestore index config.
-export type { FirestoreIndexConfig } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NotificationType - Type contract for notification type.
 export type { NotificationType, NotificationRelatedType } from "./features/admin/schemas/firestore";
 export { NOTIFICATION_TYPE_VALUES, NOTIFICATION_RELATED_TYPE_VALUES } from "./features/admin/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PayoutStatus - Type contract for payout status.
-export type { PayoutStatus } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedAddressDocument - Type contract for seed address document.
-export type { SeedAddressDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBaseOrderDocument - Type contract for seed base order document.
-export type { SeedBaseOrderDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBaseOrderItem - Type contract for seed base order item.
-export type { SeedBaseOrderItem } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBaseProductDocument - Type contract for seed base product document.
-export type { SeedBaseProductDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBaseStoreDocument - Type contract for seed base store document.
-export type { SeedBaseStoreDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBaseUserDocument - Type contract for seed base user document.
-export type { SeedBaseUserDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBidDocument - Type contract for seed bid document.
-export type { SeedBidDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedBlogPostDocument - Type contract for seed blog post document.
-export type { SeedBlogPostDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCarouselSlideDocument - Type contract for seed carousel slide document.
-export type { SeedCarouselSlideDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCartDocument - Type contract for seed cart document.
-export type { SeedCartDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCartItemDocument - Type contract for seed cart item document.
-export type { SeedCartItemDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCategoryDocument - Type contract for seed category document.
-export type { SeedCategoryDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCollection - Type contract for seed collection.
-export type { SeedCollection } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCollectionName - Type contract for seed collection name.
-export type { SeedCollectionName } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedConfig - Type contract for seed config.
-export type { SeedConfig } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedCouponDocument - Type contract for seed coupon document.
-export type { SeedCouponDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedFaqDocument - Type contract for seed faq document.
-export type { SeedFaqDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedLocaleData - Type contract for seed locale data.
-export type { SeedLocaleData } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedNotificationDocument - Type contract for seed notification document.
-export type { SeedNotificationDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedPayoutDocument - Type contract for seed payout document.
-export type { SeedPayoutDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedResult - Type contract for seed result.
-export type { SeedResult } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedReviewDocument - Type contract for seed review document.
-export type { SeedReviewDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedSessionDocument - Type contract for seed session document.
-export type { SeedSessionDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // TestSeedHandles - Type contract for test seed handles.
-export type { TestSeedHandles } from "./seed/index";
 
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // ErrorCategory - Shared export for error category.
@@ -5209,7 +5056,6 @@ export type { SupportTicketCreateValues } from "./features/support/schemas/ticke
 export { lotteryConfigWriteSchema, lotterySlotWriteSchema, mergeLotteryConfig } from "./features/lottery/schemas/config-write";
 export type { LotteryConfigWriteInput, LotteryMergeResult } from "./features/lottery/schemas/config-write";
 // lotteryEntriesSeedData - Seed data for the lotteryEntries collection.
-export { lotteryEntriesSeedData } from "./seed/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // LOTTERY_ENTRY_FIELDS - Canonical field name constants for lotteryEntries collection.
 export { LOTTERY_ENTRY_FIELDS } from "./features/lottery/schemas/firestore";
@@ -9281,15 +9127,8 @@ export {
 } from "./features/grouped/schemas/grouped-listing-form";
 
 // Scam registry â€" seed data
-export { scammersSeedData } from "./seed/index";
 
 // Product features â€" seed data (FI2)
-export { productFeaturesSeedData } from "./seed/index";
-export {
-  authenticityKnowledgeSeedData,
-  AUTHENTICITY_KNOWLEDGE_COLLECTION,
-  AUTHENTICITY_KNOWLEDGE_COUNT,
-} from "./seed/index";
 /*
  * 🛑 Registering a seed collection takes FOUR edits and three of them are
  * silent if missed: seed/index.ts, THIS re-export, and seed-cli's own import
@@ -9297,7 +9136,6 @@ export {
  * `taxCodes  seed 0  in db 0` — the collection looked registered and simply
  * had no data, which is indistinguishable from an empty fixture set.
  */
-export { taxCodesSeedData } from "./seed/index";
 /*
  * E4/D12 — generated from the extracted corpus research.
  *
@@ -9327,7 +9165,6 @@ export type {
   ModelSlotMerge,
   PartSlot,
 } from "./features/parts/schemas/firestore";
-export { partGlossarySeedData } from "./seed/index";
 /*
  * 🛑 Exported from the MAIN barrel, not just `seed/index.ts`. `seed-cli.mjs`
  * destructures its seed data from the BARE `@mohasinac/appkit` package, which
@@ -9349,11 +9186,8 @@ export type {
   BeyDerivationCoverage,
   BeyProductAssortmentEntry,
 } from "./features/beys/schemas/firestore";
-export { beysSeedData, BEY_SEED_COUNT } from "./seed/index";
 export { BeyDetailPageView } from "./features/beys/components/BeyDetailPageView";
 export type { BeyDetailPageViewProps, BeyListingRow } from "./features/beys/components/BeyDetailPageView";
-export { beyProductsSeedData, BEY_PRODUCT_SEED_COUNT } from "./seed/index";
-export { modelCompositionSeedData } from "./seed/index";
 // D12 — the public part surfaces.
 export { ModelCompositionPanel } from "./features/parts/components/ModelCompositionPanel";
 export {

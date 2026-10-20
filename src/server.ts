@@ -197,142 +197,96 @@ export type {
 
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ADDRESS_FIXTURES - Constant used across modules.
-export { ADDRESS_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // BID_FIXTURES - Constant used across modules.
-export { BID_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CART_FIXTURES - Constant used across modules.
-export { CART_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // COUPON_FIXTURES - Constant used across modules.
-export { COUPON_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // DEFAULT_CATEGORIES - Constant used across modules.
-export { DEFAULT_CATEGORIES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // DEFAULT_FAQS - Constant used across modules.
-export { DEFAULT_FAQS } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // NOTIFICATION_FIXTURES - Constant used across modules.
-export { NOTIFICATION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // PAYOUT_FIXTURES - Constant used across modules.
-export { PAYOUT_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // PRODUCT_FIXTURES - Constant used across modules.
-export { PRODUCT_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SESSION_COLLECTION - Constant used across modules.
-export { SESSION_COLLECTION } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SESSION_FIXTURES - Constant used across modules.
-export { SESSION_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // STORE_FIXTURES - Constant used across modules.
-export { STORE_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // USER_FIXTURES - Constant used across modules.
-export { USER_FIXTURES } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addressesSeedData - Model for addresses seed data.
-export { addressesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // assertPiiRoundTrip - Shared export for assert pii round trip.
-export { assertPiiRoundTrip } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bidsSeedData - Model for bids seed data.
-export { bidsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // blogPostsSeedData - Model for blog posts seed data.
-export { blogPostsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselSlidesSeedData - Model for carousel slides seed data.
-export { carouselSlidesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // cartsSeedData - Model for carts seed data.
-export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoriesSeedData - Model for categories seed data.
-export { categoriesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // couponsSeedData - Model for coupons seed data.
-export { couponsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
-export { eventEntriesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventsSeedData - Model for events seed data.
-export { eventsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqSeedData - Model for faq seed data.
-export { faqSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // formatSeedPrice - Helper for format seed price.
-export { formatSeedPrice } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // generateMergedFirestoreIndexFile - Helper for generate merged firestore index file.
-export { generateMergedFirestoreIndexFile } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSeedLocale - Helper for get seed locale.
-export { getSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // homepageSectionsSeedData - Model for homepage sections seed data.
-export { homepageSectionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeAddress - Shared export for make address.
-export { makeAddress } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeBid - Shared export for make bid.
-export { makeBid } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeBlogPost - Shared export for make blog post.
-export { makeBlogPost } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCarouselSlide - Shared export for make carousel slide.
-export { makeCarouselSlide } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCart - Shared export for make cart.
-export { makeCart } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCartItem - Model for make cart item.
-export { makeCartItem } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCategory - Shared export for make category.
-export { makeCategory } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeCoupon - Shared export for make coupon.
-export { makeCoupon } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFaq - Shared export for make faq.
-export { makeFaq } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullAddress - Shared export for make full address.
-export { makeFullAddress } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullCart - Shared export for make full cart.
-export { makeFullCart } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullCoupon - Shared export for make full coupon.
-export { makeFullCoupon } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullNotification - Shared export for make full notification.
-export { makeFullNotification } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullPayout - Shared export for make full payout.
-export { makeFullPayout } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullProduct - Shared export for make full product.
-export { makeFullProduct } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullStore - Shared export for make full store.
-export { makeFullStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeFullUser - Shared export for make full user.
-export { makeFullUser } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeNotification - Shared export for make notification.
-export { makeNotification } from "./seed/index";
 export { sendNotification } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY] enqueueJob — writes a `jobs/{jobId}` doc + returns a bulk-event
 // custom token. The only way a Vercel route may start heavy work; actual
@@ -360,73 +314,50 @@ export {
 export type { AdminAuditAction, AdminAuditLogDocument } from "./features/audit-log/schemas/firestore";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOrder - Shared export for make order.
-export { makeOrder } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makePayout - Shared export for make payout.
-export { makePayout } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeProduct - Shared export for make product.
-export { makeProduct } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeReview - Shared export for make review.
-export { makeReview } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeRevokedSession - Shared export for make revoked session.
-export { makeRevokedSession } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeSeedPhone - Shared export for make seed phone.
-export { makeSeedPhone } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeSession - Shared export for make session.
-export { makeSession } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeStore - Shared export for make store.
-export { makeStore } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeUser - Shared export for make user.
-export { makeUser } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeWinningBid - Shared export for make winning bid.
-export { makeWinningBid } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // mergeFirestoreIndices - Helper for merge firestore indices.
-export { mergeFirestoreIndices } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // notificationsSeedData - Model for notifications seed data.
-export { notificationsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ordersSeedData - Model for orders seed data.
-export { ordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // payoutsSeedData - Model for payouts seed data.
-export { payoutsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
-export { registerSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewsSeedData - Model for reviews seed data.
-export { reviewsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // runSeed - Helper for run seed. Sourced directly from the runner module.
-export { runSeed } from "./seed/runner";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // seedForTest - Shared export for seed for test.
-export { seedForTest } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sessionsSeedData - Model for sessions seed data.
-export { sessionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // siteSettingsSeedData - Model for site settings seed data.
-export { siteSettingsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeAddressesSeedData - Model for store addresses seed data.
-export { storeAddressesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storesSeedData - Model for stores seed data.
-export { storesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // usersSeedData - Model for users seed data.
-export { usersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ApiErrors - Shared export for api errors.
 export { ApiErrors } from "./next/index";
