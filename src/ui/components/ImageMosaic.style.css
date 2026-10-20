@@ -7,10 +7,19 @@
  * around as a visitor moves through the tree. A fixed height per breakpoint is
  * the one shape that keeps the hero stable.
  *
- * 🛑 `overflow: hidden` on the grid and `object-fit: cover` on the images, so a
- * portrait product photo cannot stretch the band. Every image here is a
- * thumbnail of unknown aspect ratio; cropping is the only option that does not
- * distort the subject.
+ * 🛑 `overflow: hidden` on the grid, and the images are CONTAINED rather than
+ * cropped. This block used to say the opposite — "cropping is the only option
+ * that does not distort the subject" — and `object-fit: cover` was declared
+ * here. Both are gone: `MediaImage` now defaults to `contain` app-wide, which
+ * it applies as a Tailwind utility, and both Tailwind configs set
+ * `important: true` — so a plain `object-fit: cover` declaration here could
+ * never have won anyway. It would have been a rule that reads as the
+ * governing decision while changing nothing (Root Cause #106).
+ *
+ * The trade is real and is the one that was asked for: a 4:3 publisher shot in
+ * a square tile now letterboxes against `--appkit-color-surface` instead of
+ * having its edges cut off. Most of this catalogue's imagery is product-on-
+ * white, where a crop removes the product and `contain` does not.
  */
 .appkit-image-mosaic {
   display: grid;
@@ -49,6 +58,16 @@
   }
 }
 
+/*
+ * `--solo` — a `leadSlot` with no images beside it.
+ *
+ * One column, not `2fr 1fr`. The small track has nothing to hold, and an empty
+ * 1fr gutter beside a brand panel reads as four images that failed to load.
+ */
+.appkit-image-mosaic--solo {
+  grid-template-columns: 1fr;
+}
+
 .appkit-image-mosaic__lead,
 .appkit-image-mosaic__tile {
   position: relative;
@@ -61,7 +80,20 @@
 .appkit-image-mosaic__tile img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+}
+
+/*
+ * Breathing room INSIDE the tile, so a contained image stops short of the
+ * rounded corners instead of touching them. On `cover` this was unnecessary —
+ * the crop ran to the edge by definition — which is why it arrives with the
+ * fit change rather than before it.
+ */
+.appkit-image-mosaic__lead img {
+  padding: var(--appkit-space-3);
+}
+
+.appkit-image-mosaic__tile img {
+  padding: var(--appkit-space-2);
 }
 
 .appkit-image-mosaic__rest {

@@ -90,7 +90,24 @@ export interface MediaImageProps {
    * one slide the visitor can actually see.
    */
   fetchPriority?: "high" | "low" | "auto";
-  /** CSS object-fit applied to the underlying img element. Defaults to `'cover'`. */
+  /**
+   * CSS object-fit applied to the underlying img element. Defaults to
+   * `'contain'`.
+   *
+   * 🛑 THE DEFAULT CHANGED on 2026-10-20, from `'cover'`. `cover` fills the
+   * box by cropping whatever does not fit, which is right for a photograph
+   * that continues past its frame and wrong for this catalogue: most of its
+   * imagery is a product shot centred on white, where the crop takes the
+   * product and leaves the background. `contain` fits the whole subject
+   * inside the shape and letterboxes the remainder against the tile's own
+   * surface colour.
+   *
+   * Pass `'cover'` explicitly where a FILLED box is the component's contract
+   * rather than a preference — a full-bleed backdrop with text over it, or a
+   * circular avatar. Three call sites do: `MediaAvatar`, and the slide and
+   * card backgrounds in `HeroCarousel`. A letterboxed backdrop there would put
+   * the dim overlay and the headline on bare surface.
+   */
   objectFit?: "cover" | "contain";
   /**
    * Emoji or text to show when `src` is undefined.
@@ -165,7 +182,7 @@ export function MediaImage({
   priority = false,
   loading,
   fetchPriority,
-  objectFit = "cover",
+  objectFit = "contain",
   fallback,
   className,
   rounded,

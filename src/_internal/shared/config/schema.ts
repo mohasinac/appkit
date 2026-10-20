@@ -97,6 +97,12 @@ export interface AppkitBrandConfig {
   name: string;
   /** Short / abbreviated name, e.g. "LT" */
   shortName?: string;
+  /**
+   * Standalone lockup line under the homepage hero logo, e.g. "Let It Rip
+   * India". Not `name`: that one is a sentence ingredient ("Why Buyers Trust
+   * {name}") and this one stands alone, so they are spelled differently.
+   */
+  heroCaption?: string;
   /** One-line brand description used in meta tags and footers */
   description?: string;
   /** Tagline shown in footer / about sections */

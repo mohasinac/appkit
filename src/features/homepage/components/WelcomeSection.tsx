@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Icon, ImageMosaic, MOSAIC_MIN, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, Grid, Heading, Icon, ImageMosaic, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
 import type { IconKey } from "../../../ui/icons/icon-registry";
 
 // --- Props -------------------------------------------------------------------
@@ -26,8 +26,13 @@ export interface WelcomeSectionProps {
   onSecondaryCtaClick?: () => void;
   trustChips?: WelcomeSectionChip[];
   /**
-   * Decorative hero imagery, MOST IMPORTANT FIRST — the first takes the large
-   * mosaic cell. Below `MOSAIC_MIN` (3) the brand-mark panel is used instead.
+   * Decorative hero imagery for the mosaic's SMALL cells — the large cell is
+   * always the brand panel now, so these no longer compete for it.
+   *
+   * 🛑 Pass REAL images only. A caller sourcing these from
+   * `display.coverImage` must drop `SEED_TILE_PREFIX` values first: those are
+   * six flat generated SVGs, and a hero built from them is four coloured
+   * rectangles claiming to be a product preview.
    *
    * Must be deterministic: `ImageMosaic` is explicit that `Math.random()` here
    * would break SSR/hydration agreement, so the caller passes a stable
@@ -36,6 +41,14 @@ export interface WelcomeSectionProps {
   heroImages?: readonly string[];
   isLoading?: boolean;
   brandLogoText?: string;
+  /**
+   * Wordmark caption under the hero logo, e.g. "Let It Rip India".
+   *
+   * Consumer-supplied, never defaulted to a literal here: appkit is a library
+   * and a brand string baked into it is the encapsulation break
+   * `audit-ssr-in-appkit` Rule 3 exists to prevent. Omitted = no caption.
+   */
+  brandCaption?: string;
   className?: string;
 }
 
@@ -56,6 +69,7 @@ export function WelcomeSection({
   heroImages,
   isLoading = false,
   brandLogoText = "",
+  brandCaption,
   className = "",
 }: WelcomeSectionProps) {
 const themed = { textSecondary: THEMED_TEXT_SECONDARY };
@@ -216,39 +230,63 @@ if (isLoading) {
           </Div>
 
           {/*
-            Right: real imagery when there is any, the brand panel otherwise.
+            Right: the brand panel in the large cell, real imagery beside it.
 
-            🛑 A hero whose hero image is its own wordmark is the "we had no
-            photograph" tell, and this one rendered `<SiteMark>` + `<SiteLogo>`
-            on a gradient mesh — on a site with 559 real `mediaAssets` rows of
-            product art, every one addressable as `/media/<id>`.
+            🛑 THE LARGE CELL IS NO LONGER AN IMAGE, and that is a reversal of
+            what this block used to argue. It read: "a hero whose hero image is
+            its own wordmark is the 'we had no photograph' tell" — true as
+            stated, and it is why the mosaic was built. What it did not account
+            for is that `display.coverImage` on a top-level category is a
+            GENERATED placeholder for every row the hero actually draws from,
+            so the large cell rendered `/images/seed-tiles/312e81.svg`: a flat
+            indigo rectangle with three concentric rings. Not a photograph, and
+            not a wordmark either — just a tile pretending to be content.
 
-            `ImageMosaic` returns null below MOSAIC_MIN (3), so the brand panel
-            is a REAL fallback rather than dead code: a consumer with no
-            imagery, or a homepage with no `categories` section to source it
-            from, still gets the old treatment.
+            The brand panel is the honest occupant of a cell with nothing to
+            put in it, and the objection above survives in the small column:
+            that is where real `/media/<id>` art goes, unfiltered placeholders
+            excluded by the caller.
+
+            `heroImages` may legitimately be empty — `MOSAIC_MIN` does not
+            apply in `leadSlot` mode, and the mosaic collapses to the panel
+            alone at full width rather than rendering an empty gutter.
           */}
           <Div className="hidden lg:block">
-            {heroImages && heroImages.length >= MOSAIC_MIN ? (
-              <ImageMosaic
-                size="hero"
-                images={heroImages}
-                alt={`${brandLogoText || "Marketplace"} collection highlights`}
-              />
-            ) : (
-              <Div
-                className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
-              >
-                <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
-                <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} p-[2.5rem]`}>
-                  <SiteMark title={brandLogoText || "LetItRip.in"} size="xl" />
-                  <SiteLogo
-                    title={brandLogoText || "LetItRip.in"}
-                    size="xl"
-                  />
-                </Stack>
-              </Div>
-            )}
+            <ImageMosaic
+              size="hero"
+              images={heroImages ?? []}
+              alt={`${brandLogoText || "Marketplace"} collection highlights`}
+              leadSlot={
+                <Div
+                  className="absolute inset-0 bg-[image:var(--appkit-gradient-section-mesh)]"
+                >
+                  <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
+                  {/* `padding="xl"` (= --appkit-space-8), not a `p-[2rem]`
+                      className: an arbitrary utility only exists if Tailwind
+                      happened to scan it, and `audit-dead-css-classes` caught
+                      exactly that here. The token map is generated by
+                      construction. */}
+                  <Stack centered gap="sm" padding="xl" className={`absolute inset-0 ${flex.center}`}>
+                    <SiteMark title={brandLogoText || "LetItRip.in"} size="xl" />
+                    <SiteLogo
+                      title={brandLogoText || "LetItRip.in"}
+                      size="xl"
+                    />
+                    {brandCaption && (
+                      <Text
+                        align="center"
+                        size="sm"
+                        weight="semibold"
+                        transform="uppercase"
+                        className="tracking-widest text-primary-700 dark:text-primary-300"
+                      >
+                        {brandCaption}
+                      </Text>
+                    )}
+                  </Stack>
+                </Div>
+              }
+            />
           </Div>
         </Grid>
       </Div>

@@ -29,7 +29,14 @@ export function MediaAvatar({
     <Div
       className={`relative ${sizeClasses[size]} overflow-hidden flex-shrink-0 ${className}`} rounded="full"
     >
-      <MediaImage src={src} alt={alt} size="avatar" />
+      {/*
+        🛑 `cover`, against MediaImage's `contain` default. The wrapper is a
+        `rounded-full` circle, so a contained portrait would sit as a narrow
+        strip inside a circle with bare surface above and below it — the one
+        shape a face crop must never take. Filling the box IS the contract
+        here, not a preference about cropping.
+      */}
+      <MediaImage src={src} alt={alt} size="avatar" objectFit="cover" />
     </Div>
   );
 }

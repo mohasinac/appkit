@@ -17,6 +17,7 @@ import { getHomepageFaqsCached } from "../../faq/utils/getHomepageFaqsCached";
 import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
+import { gateCarouselSlides } from "../lib/slide-gating";
 import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import {
@@ -285,7 +286,21 @@ export async function MarketplaceHomepageView({
       : undefined,
   };
 
-  const carouselSlides = toCarouselSlides(slides);
+  /*
+   * The same "do not advertise what we do not sell" rule the section filter
+   * above applies, one level deeper.
+   *
+   * `enabledSections` is keyed on `SectionType`, so it can drop the auctions
+   * RAIL but is structurally blind to a carousel — a carousel is one section
+   * of type `carousel` whatever its slides happen to be about. With
+   * `auction: false` live, the hero still shipped a "Live auctions" card and a
+   * full "Win it at your price" slide, both pointing at `/auctions`.
+   *
+   * Gated on the LINK rather than the copy: "Win it at your price" names no
+   * type, so a keyword scan would miss the worse of the two offenders while
+   * eating innocent ones. See `slide-gating.ts`.
+   */
+  const carouselSlides = gateCarouselSlides(toCarouselSlides(slides), siteSettings);
 
   return (
     <Main>

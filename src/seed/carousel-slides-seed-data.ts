@@ -1,7 +1,14 @@
 /*
  * WHY: Seeds 6 carousel slides for the marketplace homepage promo carousel.
- * WHAT: 5 active + 1 inactive. Deterministic Picsum backgrounds with a dim
+ * WHAT: 4 active + 2 inactive. Deterministic Picsum backgrounds with a dim
  * overlay, plus a headline / supporting line / CTA on each.
+ *
+ * 🛑 FOUR ACTIVE, NOT FIVE, SINCE 2026-10-20. `MAX_ACTIVE_SLIDES` is a
+ * ceiling, not a quota — `slide-beyblade-auction` went inactive with
+ * `listings.listingTypes.auction: false` and nothing was promoted to backfill
+ * it. Do NOT activate `slide-upcoming-promo` to get back to five: that one is
+ * the fixture `getActiveSlides()`' own filter is tested against, and it says
+ * "A draft slide kept unpublished so admins have a starting point to copy."
  *
  * 🛑 EVERY ACTIVE SLIDE MUST CARRY AN `overlay` OR `cards`, OR IT RENDERS BLANK.
  * `HeroCarousel` gates all slide copy on `slide.overlay` (line ~412) and the
@@ -113,16 +120,34 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         hover: { effect: "scale" },
       },
       {
-        id: "card-hero-bid",
+        /*
+         * 🛑 THIS WAS THE AUCTIONS CARD ("Bid / Live auctions / Place a bid
+         * before the timer runs out" → `/auctions`), and it was still on the
+         * first screen of the site weeks after `listings.listingTypes.auction`
+         * went `false`. The section-level gate in `MarketplaceHomepageView` is
+         * keyed on `SectionType` and a carousel is type `carousel` whatever it
+         * contains, so nothing could see it. `gateCarouselSlides` now can — but
+         * a filter that leaves a hole in a `repeat(3, 1fr)` row is a fallback,
+         * not a fix, so the slot gets real content instead.
+         *
+         * 🛑 NOT `/spares` and NOT `/art`, which were the obvious swaps: both
+         * types are ENABLED, both have a working browse page, and both held
+         * ZERO published products when this was written (measured against
+         * production, 2026-10-20). Replacing a dead-end card with a different
+         * dead-end card is not a fix. `/categories` is populated — six roots,
+         * 28 brands, 8 franchises — and browsing the tree is genuinely the
+         * third way to shop here.
+         */
+        id: "card-hero-browse",
         zone: 2,
         mobileZone: 2,
         background: { type: "image", url: MEDIA.lDrago, dimOverlay: { enabled: true, opacity: 0.45 } },
         content: {
-          eyebrow: "Bid",
-          title: "Live auctions",
-          description: "Place a bid before the timer runs out.",
+          eyebrow: "Explore",
+          title: "Shop by category",
+          description: "Walk the tree from generation down to a single part.",
         },
-        buttons: [{ id: "card-hero-bid-cta", text: "Browse auctions", href: String(ROUTES.PUBLIC.AUCTIONS), variant: "primary" }],
+        buttons: [{ id: "card-hero-browse-cta", text: "Browse categories", href: String(ROUTES.PUBLIC.CATEGORIES), variant: "primary" }],
         hover: { effect: "scale" },
       },
       {
@@ -145,10 +170,26 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     updatedAt: daysAgo(3),
   },
   {
+    /*
+     * 🛑 DISABLED, NOT DELETED — the same arrangement the auctions RAIL uses in
+     * `homepage-sections-seed-data.ts`, and for the same reason. Every word of
+     * the copy, the video background and the CTA stay exactly as they were, so
+     * flipping `listings.listingTypes.auction` back to `true` and this flag
+     * with it restores the slide intact.
+     *
+     * Two locks, deliberately. `gateCarouselSlides` already drops this at
+     * render because `overlay.button.link` and `link.url` both resolve to
+     * `/auctions` — but that one is invisible, and a slide listed as active in
+     * the carousel admin while never appearing on the page reads as a bug in
+     * the admin. `active: false` is the lock a human sees.
+     *
+     * 🛑 The copy names no listing type — "Win it at your price" — which is
+     * exactly why the gate matches on the LINK and not on the words.
+     */
     id: "slide-beyblade-auction",
     title: "Live auctions",
     order: 2,
-    active: true,
+    active: false,
     background: {
       type: "video",
       // Direct MP4 URL, deliberately NOT wrapped in seedExtMedia() — that
