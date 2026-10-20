@@ -34,11 +34,56 @@ import {
   TextLink,
   Badge,
 } from "../../../ui";
+import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import {
   PART_SLOT_LABEL,
   type PartGlossaryDocument,
   type ModelCompositionDocument,
 } from "../schemas/firestore";
+
+/**
+ * The buyer-facing label for each WBO tournament format, in the order a
+ * player cares about: the formats they are most likely to enter first.
+ *
+ * 🛑 A `Record` over the format keys rather than a derived title-case, because
+ * "Burst Standard" is not `burstStandard` title-cased and "GT" must not become
+ * "Gt". 1,380 of 2,488 parts carry a legality ruling.
+ */
+const WBO_FORMAT_LABEL: Record<string, string> = {
+  burstStandard: "Burst Standard",
+  burstLimited: "Burst Limited",
+  burstClassic: "Burst Classic",
+  burstGT: "Burst GT",
+  burstSparking: "Burst Sparking",
+  burstDynamite: "Burst Dynamite",
+  xStandard: "X Standard",
+  zeroG: "Zero-G",
+  metalFight: "Metal Fight",
+  plastic: "Plastic",
+  hms: "HMS",
+};
+
+/**
+ * The rating axes, in a fixed order.
+ *
+ * 🛑 ORDERED EXPLICITLY, never by `Object.keys`. Firestore returns map fields
+ * alphabetically, which would put "burst" and "dash" ahead of "attack" and
+ * reorder the table per part depending on which axes that part happens to
+ * carry. A reader comparing two parts needs the same rows in the same places.
+ */
+const RATING_AXES: readonly { key: string; label: string }[] = [
+  { key: "attack", label: "Attack" },
+  { key: "defense", label: "Defense" },
+  { key: "stamina", label: "Stamina" },
+  { key: "weight", label: "Weight" },
+  { key: "speed", label: "Speed" },
+  { key: "burst", label: "Burst" },
+  { key: "burstResistance", label: "Burst resistance" },
+  { key: "dash", label: "Dash" },
+  { key: "power", label: "Power" },
+  { key: "height", label: "Height" },
+  { key: "runTime", label: "Run time" },
+];
 
 /** One live listing row. Deliberately money-free — see the header. */
 export interface PartListingRow {
@@ -97,6 +142,60 @@ export function PartDetailPageView({
    */
   const aliases = (part.aliases ?? []).filter((a) => a && a !== part.name && a !== part.code);
 
+  /*
+   * ── THE SPEC TABLE ────────────────────────────────────────────────────────
+   *
+   * `specs[]` is the extracted infobox (2,144 of 2,488 parts carry one), and
+   * the four rows prepended here are the fields promoted OFF that array
+   * because something queries them — so they would otherwise either be
+   * missing from the table or duplicated inside it.
+   *
+   * 🛑 De-duplicated against the extracted rows by label. `Classification`,
+   * `System` and `Series` all appear in `specs[]` as well, so prepending them
+   * blindly printed each one twice.
+   */
+  const promoted: SpecTableRow[] = [
+    { name: "Classification", value: classification },
+    ...(part.system ? [{ name: "System", value: part.system }] : []),
+    ...(part.series ? [{ name: "Series", value: part.series }] : []),
+    ...(typeof part.weightG === "number"
+      ? [{ name: "Weight", value: String(part.weightG), unit: "g" }]
+      : []),
+    ...(part.spinDirection ? [{ name: "Spin direction", value: part.spinDirection }] : []),
+    ...(part.partType ? [{ name: "Type", value: part.partType }] : []),
+    ...(part.hasbroCode ? [{ name: "Hasbro code", value: part.hasbroCode }] : []),
+  ];
+  const promotedLabels = new Set(promoted.map((r) => r.name.toLowerCase()));
+  const specRows: SpecTableRow[] = [
+    ...promoted,
+    ...(part.specs ?? [])
+      .filter((s) => s.label && s.value && !promotedLabels.has(s.label.toLowerCase()))
+      .map((s) => ({ name: s.label, value: s.value })),
+  ];
+
+  /*
+   * ── RATINGS ───────────────────────────────────────────────────────────────
+   *
+   * 🛑 RENDER THE NORMALISED VECTOR, NEVER THE RAW ONE. Two scales live in
+   * these fields — the Beyblade X lines rate 0-100 and everything before them
+   * rates 0-6 (with a handful of Burst systems peaking at 7 or 8) — so a raw
+   * "Attack 3" means half of maximum for a Burst part and almost nothing for
+   * an X part. `ratingsNormalised` is the only comparable form, and the source
+   * scale is stated under the bars so the number is not passed off as the
+   * wiki's own.
+   */
+  const ratings = part.ratingsNormalised ?? null;
+  const ratingRows = ratings
+    ? RATING_AXES.map((a) => ({ ...a, value: (ratings as Record<string, unknown>)[a.key] })).filter(
+        (r): r is { key: string; label: string; value: number } => typeof r.value === "number",
+      )
+    : [];
+
+  /* Only the formats this part is actually ruled on — see the note below. */
+  const legalFormats = Object.entries(part.wboLegality ?? {}).filter(
+    ([, v]) => typeof v === "boolean",
+  ) as [string, boolean][];
+
   return (
     <Section padding="y-lg">
       <Container size="lg">
@@ -118,6 +217,99 @@ export function PartDetailPageView({
               </Text>
             )}
           </Stack>
+
+          {/* ── specifications ───────────────────────────────────────────── */}
+          {specRows.length > 1 && (
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                Specifications
+              </Heading>
+              <SpecTable rows={specRows} />
+            </Stack>
+          )}
+
+          {/* ── ratings ──────────────────────────────────────────────────── */}
+          {ratingRows.length > 0 && (
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                Ratings
+              </Heading>
+              <Stack gap="xs" className="min-w-0">
+                {ratingRows.map((r) => (
+                  <Row key={r.key} gap="md" align="center" className="min-w-0">
+                    <Text size="sm" color="muted" className="w-36 flex-shrink-0">
+                      {r.label}
+                    </Text>
+                    {/*
+                     * A bar, not a number alone: the comparison between axes is
+                     * the thing a reader wants, and 0-100 is only meaningful
+                     * against the other bars beside it.
+                     *
+                     * `aria-hidden` on the track because the value follows as
+                     * text — a screen reader should hear "Attack 72", not a
+                     * description of a rectangle.
+                     */}
+                    <Div
+                      aria-hidden
+                      surface="muted"
+                      rounded="full"
+                      className="h-2 flex-1 overflow-hidden"
+                    >
+                      <Div
+                        surface="info-surface"
+                        rounded="full"
+                        className="h-full"
+                        style={{ width: `${Math.max(0, Math.min(100, r.value))}%` }}
+                      />
+                    </Div>
+                    <Text size="sm" numeric className="w-10 flex-shrink-0 text-right">
+                      {r.value}
+                    </Text>
+                  </Row>
+                ))}
+              </Stack>
+              {/*
+               * 🛑 The scale is STATED. These numbers are ours — rescaled to
+               * 0-100 so a Burst part and a Beyblade X part can be compared at
+               * all — and presenting them unlabelled would pass them off as
+               * the source's own figures.
+               */}
+              <Text size="xs" color="faint">
+                Rescaled to 0&ndash;100 for comparison across generations
+                {typeof part.ratingScale === "number"
+                  ? `; rated 0–${part.ratingScale} at source`
+                  : ""}
+                .
+              </Text>
+            </Stack>
+          )}
+
+          {/* ── tournament legality ──────────────────────────────────────── */}
+          {legalFormats.length > 0 && (
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                Tournament legality
+              </Heading>
+              <Row gap="xs" wrap align="center" className="min-w-0">
+                {legalFormats.map(([format, allowed]) => (
+                  <Badge key={format} variant={allowed ? "success" : "danger"}>
+                    {WBO_FORMAT_LABEL[format] ?? format}
+                    {allowed ? " ✓" : " ✗"}
+                  </Badge>
+                ))}
+              </Row>
+              {/*
+               * 🛑 ONLY THE FORMATS THE SOURCE RULES ON. A part absent from a
+               * format's list is unaddressed, not banned — most parts are
+               * simply irrelevant to most formats, and rendering every format
+               * with a cross would claim a ruling that does not exist.
+               */}
+              <Text size="xs" color="faint">
+                World Beyblade Organization formats this part is ruled on. A format not
+                listed has no ruling for it.
+              </Text>
+            </Stack>
+          )}
 
           {/* ── which beys use it ─────────────────────────────────────────── */}
           <Stack gap="sm" className="min-w-0">

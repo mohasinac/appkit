@@ -144,6 +144,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Vn"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Attack",
     "role": "tip",
     "jpName": "ベンチャー",
@@ -250,6 +252,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Vl'"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "role": "tip",
     "jpName": "ボルカニックダッシュ",
@@ -344,6 +348,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Volcanic-SlingShock"
     ],
     "hasbroCode": "TA15-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "role": "tip"
   },
@@ -438,6 +444,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Wv'"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ウェーブダッシュ",
@@ -552,6 +560,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Wd'"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "partType": "Stamina",
     "role": "tip",
     "jpName": "ウェッジダッシュ",
@@ -649,6 +659,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Wedge-SlingShock"
     ],
     "hasbroCode": "TS13-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "role": "tip"
   },
@@ -826,6 +838,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "W"
     ],
     "hasbroCode": "TS09",
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "role": "tip",
     "jpName": "ウエイト",
@@ -914,6 +928,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Xc'+Z"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Attack",
     "role": "tip",
     "jpName": "エクシードダッシュゼット",
@@ -1018,6 +1034,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Xc'"
     ],
+    "system": "Superking Layer System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "role": "tip",
     "jpName": "エクシードダッシュ",
@@ -1089,6 +1107,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc+X-SP"
     ],
     "hasbroCode": "TSP21",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "role": "tip"
   },
@@ -1178,6 +1198,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc-SP"
     ],
     "hasbroCode": "TSP07",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "role": "tip"
   },
@@ -1252,6 +1274,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xc-SPM"
     ],
     "hasbroCode": "TSP07-M",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "role": "tip"
   },
@@ -1356,6 +1380,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Xp'"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "partType": "Attack",
     "role": "tip",
     "jpName": "エクスプロージョンダッシュ",
@@ -1470,6 +1496,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtender-H"
     ],
     "hasbroCode": "TH12",
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "partType": "Balance",
     "role": "tip"
   },
@@ -1572,6 +1600,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtend+-QuadDrive"
     ],
     "hasbroCode": "TB13-Q",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "role": "tip"
   },
@@ -1658,6 +1688,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xtend-SlingShock"
     ],
     "hasbroCode": "TB09-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "role": "tip"
   },
@@ -1726,6 +1758,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Xt-SL"
     ],
     "hasbroCode": "TB09L-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "role": "tip"
   },
@@ -1903,6 +1937,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "X'"
     ],
     "hasbroCode": "PR-13",
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "role": "tip",
     "jpName": "エクストリームダッシュ",
@@ -2009,6 +2045,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Yd'"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "partType": "Defense",
     "role": "tip",
     "jpName": "ヤードダッシュ",
@@ -2098,6 +2136,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yardage-H"
     ],
     "hasbroCode": "TH25",
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "role": "tip"
   },
@@ -2197,6 +2237,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yard-SlingShock"
     ],
     "hasbroCode": "TD11-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "role": "tip"
   },
@@ -2265,6 +2307,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yr-SL"
     ],
     "hasbroCode": "TD11L-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "role": "tip"
   },
@@ -2358,6 +2402,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ym"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "role": "tip",
     "jpName": "ヤードメタル",
@@ -2453,6 +2499,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Yielding-QuadDrive"
     ],
     "hasbroCode": "TS18-Q",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Stamina",
     "role": "tip"
   },
@@ -2633,6 +2681,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Y"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "role": "tip",
     "jpName": "イールディング",
@@ -2739,6 +2789,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Zl"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ジール",
@@ -2869,6 +2921,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Z'"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ゼファーダッシュ",
@@ -2951,6 +3005,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyrus-H (Beyblade Burst App)"
     ],
     "hasbroCode": "TH29",
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3057,6 +3113,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyr-QuadDrive"
     ],
     "hasbroCode": "TB14-Q",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3126,6 +3184,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zephyry-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP18",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3238,6 +3298,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Zt'"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ゼータダッシュ",
@@ -3329,6 +3391,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zeta-SlingShock"
     ],
     "hasbroCode": "TB12-S",
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3415,6 +3479,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Zn'+X"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ゾーンダッシュエックス",
@@ -3538,6 +3604,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Zn'"
     ],
+    "system": "Superking Layer System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip",
     "jpName": "ゾーンダッシュ",
@@ -3622,6 +3690,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning+Z-SPM (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP20-M",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3699,6 +3769,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zn-Q"
     ],
     "hasbroCode": "TB16-Q",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3788,6 +3860,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning-SP (Beyblade Burst App)"
     ],
     "hasbroCode": "TSP02",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3864,6 +3938,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Zoning-SPM"
     ],
     "hasbroCode": "TSP02-M",
+    "system": "SpeedStorm System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "role": "tip"
   },
@@ -3956,6 +4032,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4046,6 +4124,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -4139,6 +4219,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4223,6 +4305,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -4305,6 +4389,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Evo Belfyre B8 (QuadStrike)"
     ],
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4381,6 +4467,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4469,6 +4557,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -4556,6 +4646,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ifrit (Takara Tomy)"
     ],
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "イフリート",
@@ -4642,6 +4734,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4714,6 +4808,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -4807,6 +4903,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4892,6 +4990,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -4960,6 +5060,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -5028,6 +5130,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -5094,6 +5198,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -5181,6 +5287,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -5253,6 +5361,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -5347,6 +5457,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -5431,6 +5543,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "role": "gear",
     "jpName": "Dギア",
     "romaji": "Di Gia"
@@ -5557,6 +5671,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 38,
       "stamina": 0
     },
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Sky",
     "role": "wheel",
     "jpName": "アーチャー",
@@ -5685,6 +5801,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bandid (Takara Tomy)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Earth",
     "role": "wheel",
     "jpName": "バンディッド",
@@ -5766,6 +5884,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Berserker",
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Earth",
     "role": "wheel",
     "jpName": "バーサーカー",
@@ -5854,6 +5974,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 13,
       "stamina": 25
     },
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "God",
     "role": "wheel",
     "jpName": "グラディエーター",
@@ -5939,6 +6061,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Element_Wheel_-_Guardian",
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Water",
     "role": "wheel"
   },
@@ -6088,6 +6212,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Shinobi (Takara Tomy)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Fire",
     "role": "wheel",
     "jpName": "シノビ",
@@ -6156,6 +6282,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Necromancer (Takara Tomy)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "spinDirection": "Right-Spin",
     "element": "Darkness",
     "role": "wheel",
@@ -6232,6 +6360,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pirates (Takara Tomy)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Water",
     "role": "wheel",
     "jpName": "パイレーツ",
@@ -6360,6 +6490,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dark Knight (Takara Tomy)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Sky",
     "role": "wheel",
     "jpName": "ダークナイト",
@@ -6561,6 +6693,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Warriors (Sonokong)"
     ],
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Fire",
     "role": "wheel",
     "jpName": "サムライ",
@@ -6694,6 +6828,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 13,
       "stamina": 38
     },
+    "system": "Synchrome System",
+    "series": "Beyblade: Shogun Steel",
     "element": "Fire",
     "role": "wheel",
     "jpName": "シーフ",
@@ -6834,6 +6970,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Anubis (B-166)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "アヌビウス",
     "romaji": "Anubiusu"
@@ -6916,6 +7054,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ベルゼブ",
     "romaji": "Beruzebu"
@@ -7069,6 +7209,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "キメラ",
     "romaji": "Kimera"
@@ -7095,6 +7237,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Comic is a Beyblade energy ring from the Hybrid Wheel System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Comic",
+    "system": "Hybrid Wheel System",
     "role": "ring"
   },
   {
@@ -7176,6 +7319,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 83
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring"
   },
   {
@@ -7290,6 +7435,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hades (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ハーデス",
     "romaji": "Hādesu"
@@ -7434,6 +7581,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Perseus Defense Ver.",
       "Destroyer Defense"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
@@ -7552,6 +7701,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus Attack Ver."
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ペルセウスアタックバージョン",
     "romaji": "Peruseusu Atakku Bājon"
@@ -7691,6 +7842,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus Stamina Ver."
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ペルセウススタミナバージョン",
     "romaji": "Peruseusu Sutamina Bājon"
@@ -7783,6 +7936,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ドラゴニス",
     "romaji": "Doragonisu"
@@ -7891,6 +8046,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "フォックス",
     "romaji": "Fokkusu"
@@ -8040,6 +8197,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cancer"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "キャンサー",
     "romaji": "Kyansā"
@@ -8187,6 +8346,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "ジェミオス",
     "romaji": "Jemiosu"
@@ -8292,6 +8453,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ギル",
     "romaji": "Giru"
@@ -8447,6 +8610,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "エルクレオ",
     "romaji": "Erukureo"
@@ -8572,6 +8737,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Uranus (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ウラヌス",
     "romaji": "Uranusu"
@@ -8667,6 +8834,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring"
   },
   {
@@ -8771,6 +8940,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 100
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "クロノス",
     "romaji": "Kuronosu"
@@ -8862,6 +9033,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "エルドラゴアサルトバージョン",
     "romaji": "Erudorago Asaruto Bājon"
@@ -9001,6 +9174,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "エルドラゴI",
     "romaji": "Erudorago I"
@@ -9208,6 +9383,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L-Drago Absorb Ver.",
       "L-Drago Absorb"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "エルドラゴII",
     "romaji": "Erudorago II"
@@ -9301,6 +9478,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "エルドラゴラッシュバージョン",
     "romaji": "Erudorago Rasshu Bājon"
@@ -9414,6 +9593,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ラチェルタ",
     "romaji": "Racheruta"
@@ -9677,6 +9858,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "レオーネI",
     "romaji": "Reōne I"
@@ -9851,6 +10034,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 0
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "レオーネII",
     "romaji": "Reōne II"
@@ -10000,6 +10185,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "レイラー",
     "romaji": "Reirā"
@@ -10120,6 +10307,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nemesis (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ネメシス",
     "romaji": "Nemeshisu"
@@ -10252,6 +10441,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 100
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "オリオン",
     "romaji": "Orion"
@@ -10340,6 +10531,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring"
   },
   {
@@ -10668,6 +10861,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis I (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "ペガシスI",
     "romaji": "Pegashisu I"
@@ -10924,6 +11119,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis II (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ペガシスII",
     "romaji": "Pegashisu II"
@@ -11159,6 +11356,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis III (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring",
     "jpName": "ペガシスIII",
     "romaji": "Pegashisu III"
@@ -11302,6 +11501,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "ring",
     "jpName": "パイシーズ",
     "romaji": "Paishīzu"
@@ -11387,6 +11588,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 33
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring"
   },
   {
@@ -11521,6 +11724,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "レックス",
     "romaji": "Rekkusu"
@@ -11586,6 +11791,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "ring"
   },
   {
@@ -11718,6 +11925,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 17
     },
+    "series": "Metal Saga",
     "role": "ring"
   },
   {
@@ -11762,6 +11970,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Shielzam is a Beyblade energy ring from the Metal.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Shielzam",
+    "system": "Metal",
     "role": "ring"
   },
   {
@@ -11958,6 +12167,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno I (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ユニコルノ",
     "romaji": "Yunikoruno"
@@ -12080,6 +12291,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "スサノオ",
     "romaji": "Susanoo"
@@ -12209,6 +12422,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Horogium (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "ring",
     "jpName": "ホロギウム",
     "romaji": "Horogiumu"
@@ -12282,6 +12497,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12335,6 +12551,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12436,6 +12653,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 50,
       "power": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12579,6 +12797,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12626,6 +12845,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 67,
       "power": 17
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12673,6 +12893,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "stamina": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -12717,6 +12938,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "system": "Engine Gear System",
     "role": "gear",
     "jpName": "右エンジンギア（ミステリーカッター）",
     "romaji": "Migi enjin Gia (misuterīkattā)"
@@ -12824,6 +13046,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Anubis (B-166)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "アヌビウス",
     "romaji": "Anubiusu"
@@ -12905,6 +13129,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Beelzeb",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ベルゼブ",
     "romaji": "Beruzebu"
@@ -12948,6 +13174,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Caesar is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Released October 23rd, 2010 for Beyblade: Metal Masters.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Caesar",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "シーザー",
     "romaji": "Shīzā"
@@ -13112,6 +13340,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Capricorne (Takara Tomy)"
     ],
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "カプリコーネ",
     "romaji": "Kapurikōne"
@@ -13222,6 +13452,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ketos (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ケトス",
     "romaji": "Ketosu"
@@ -13260,6 +13492,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Cetus (Generic) is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cetus_(Generic)",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "セタス",
     "romaji": "Setasu"
@@ -13324,6 +13558,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "キメラ",
     "romaji": "Kimera"
@@ -13354,6 +13590,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Comic is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Comic",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip"
   },
   {
@@ -13425,6 +13663,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Counter_Leone",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "カウンターレオーネ",
     "romaji": "Kauntā Reōne"
@@ -13455,6 +13695,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Crow is a Beyblade face bolt from the Metal System. Part of Metal Fight Beyblade.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crow",
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip"
   },
   {
@@ -13521,6 +13763,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Crown",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip"
   },
   {
@@ -13602,6 +13846,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cyber Pegasis"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "サイバーペガシス",
     "romaji": "Saibā Pegashisu"
@@ -13640,6 +13886,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Cygzas is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cygzas",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "キグザス",
     "romaji": "Kiguzasu"
@@ -13721,6 +13969,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hades (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ハーデス",
     "romaji": "Hādesu"
@@ -13929,6 +14179,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perseus"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ペルセウス",
     "romaji": "Peruseusu"
@@ -14006,6 +14258,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Dragonis",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ドラゴニス",
     "romaji": "Doragonisu"
@@ -14062,6 +14316,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Five_Star_Pegasis",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "ファイブスターペガシス",
     "romaji": "Faibu Sutā Pegashisu"
@@ -14155,6 +14411,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Fox",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "フォックス",
     "romaji": "Fokkusu"
@@ -14281,6 +14539,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cancer"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "キャンサー",
     "romaji": "Kyansā"
@@ -14363,6 +14623,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Gil",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip"
   },
   {
@@ -14399,6 +14661,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Giran is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Giran",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "ジラン",
     "romaji": "Jiran"
@@ -14519,6 +14783,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Herculeo",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "エルクレオ",
     "romaji": "Erukureo"
@@ -14557,6 +14823,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Hydra is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Hydra",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "ヒュドラ",
     "romaji": "Hyudora"
@@ -14659,6 +14927,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Uranus (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ウラヌス",
     "romaji": "Uranusu"
@@ -14739,6 +15009,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Ionis",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip"
   },
   {
@@ -14828,6 +15100,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Kronos",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "クロノス",
     "romaji": "Kuronosu"
@@ -15007,6 +15281,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "エルドラゴI",
     "romaji": "Erudorago I"
@@ -15144,6 +15420,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_L-Drago_II",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "エルドラゴII",
     "romaji": "Erudorago II"
@@ -15297,6 +15575,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_L-Drago_III",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "エルドラゴIII",
     "romaji": "Erudorago III"
@@ -15395,6 +15675,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lacerta",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ラチェルタ",
     "romaji": "Racheruta"
@@ -15433,6 +15715,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Leol is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leol",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "レオル",
     "romaji": "Reoru"
@@ -15656,6 +15940,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leone_I",
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "レオーネI",
     "romaji": "Reōne I"
@@ -15815,6 +16101,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leone_II",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "レオーネII",
     "romaji": "Reōne II"
@@ -15853,6 +16141,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Leplys is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Leplys",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "レプリス",
     "romaji": "Repurisu"
@@ -15879,6 +16169,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Lyncat is a Beyblade face bolt from the Metal System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Lyncat",
+    "system": "Metal System",
     "role": "chip"
   },
   {
@@ -15975,6 +16266,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Lyra (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "レイラー",
     "romaji": "Reirā"
@@ -16080,6 +16373,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Nemesis (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ネメシス",
     "romaji": "Nemeshisu"
@@ -16153,6 +16448,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Nemesis_X",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ネメシスX",
     "romaji": "Nemeshisu X"
@@ -16191,6 +16488,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Northern Cross is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Northern_Cross",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "ノーザンクロス",
     "romaji": "Nōzan Kurosu"
@@ -16308,6 +16607,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Orion",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "オリオン",
     "romaji": "Orion"
@@ -16373,6 +16674,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Orso",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip"
   },
   {
@@ -16409,6 +16712,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Pavon is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Pavon",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "ーパボン",
     "romaji": "Pabon"
@@ -16782,6 +17087,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis I (Takara Tomy)"
     ],
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "ペガシスI",
     "romaji": "Pegashisu I"
@@ -17024,6 +17331,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis II (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ペガシスII",
     "romaji": "Pegashisu II"
@@ -17245,6 +17554,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pegasis III (Takara Tomy)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip",
     "jpName": "ペガシスIII",
     "romaji": "Pegashisu III"
@@ -17395,6 +17706,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "パイシーズ",
     "romaji": "Paishīzu"
@@ -17434,6 +17747,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Poseidon is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Part of Metal Fight Beyblade The Movie: VS The Sun - Sol Blaze, the Scorching Hot Invader.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Poseidon",
+    "system": "Hybrid Wheel System",
+    "series": "Metal Fight Beyblade The Movie: VS The Sun - Sol Blaze, the Scorching Hot Invader",
     "role": "chip",
     "jpName": "ポセイドン",
     "romaji": "Poseidon"
@@ -17554,6 +17869,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Quetzalcoatl",
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "ケツァルコアトル",
     "romaji": "Ketsarukoatoru"
@@ -17592,6 +17909,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Raven is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Raven",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "レイヴン",
     "romaji": "Reivun"
@@ -17713,6 +18032,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Rex",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "レックス",
     "romaji": "Rekkusu"
@@ -17759,6 +18080,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Sagittario_II",
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip"
   },
   {
@@ -17906,6 +18229,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Escolpio (Takara Tomy)"
     ],
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "エスコルピオ",
     "romaji": "Esukorupio"
@@ -17936,6 +18261,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Serpenter is a Beyblade face bolt from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpenter",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip"
   },
   {
@@ -17972,6 +18299,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Shielzam is a Beyblade face bolt from the Metal System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Shielzam",
+    "system": "Metal System",
+    "series": "Beyblade: Metal Fusion",
     "role": "chip",
     "jpName": "シールザム",
     "romaji": "Shīruzamu"
@@ -18136,6 +18465,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Unicorno I (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ユニコルノ",
     "romaji": "Yunikoruno"
@@ -18243,6 +18574,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Susanow",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "スサノオ",
     "romaji": "Susanoo"
@@ -18349,6 +18682,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Horogium (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "chip",
     "jpName": "ホロギウム",
     "romaji": "Horogiumu"
@@ -18489,6 +18824,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Virgo",
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
     "role": "chip",
     "jpName": "ビルゴ",
     "romaji": "Birugo"
@@ -18545,6 +18882,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "World Ver."
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "chip"
   },
   {
@@ -18656,6 +18995,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "α"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "アングル",
     "romaji": "Anguru"
@@ -18758,6 +19099,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "A"
     ],
+    "system": "Superking Layer System",
+    "series": "Beyblade Burst Surge",
     "role": "base",
     "jpName": "アックス",
     "romaji": "Akkusu"
@@ -18929,6 +19272,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "B"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "バンプ",
     "romaji": "Banpu"
@@ -19173,6 +19518,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "C"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "クロス",
     "romaji": "Kurosu"
@@ -19330,6 +19677,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "ダガー",
     "romaji": "Dagā"
@@ -19505,6 +19854,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "エキスパンド",
     "romaji": "Ekisupando"
@@ -19659,6 +20010,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "フロー",
     "romaji": "Furō"
@@ -20021,6 +20374,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "G"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "グレイブ",
     "romaji": "Gureibu"
@@ -20130,6 +20485,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "H"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "ヒット",
     "romaji": "Hitto"
@@ -20327,6 +20684,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "L"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "リフト",
     "romaji": "Rifuto"
@@ -20557,6 +20916,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "M"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "メテオ",
     "romaji": "Meteo"
@@ -20718,6 +21079,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "P"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "プルーフ",
     "romaji": "Purūfu"
@@ -20884,6 +21247,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "リーチ",
     "romaji": "Rīchi"
@@ -21065,6 +21430,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "S"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "スター",
     "romaji": "Sutā"
@@ -21244,6 +21611,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "T"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "role": "base",
     "jpName": "ターン",
     "romaji": "Tān"
@@ -21369,6 +21738,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "U"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "アンダー",
     "romaji": "Andā"
@@ -21728,6 +22099,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "V"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "role": "base",
     "jpName": "ボルテックス",
     "romaji": "Borutekkusu"
@@ -21858,6 +22231,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "バクシン",
     "romaji": "Bakushin"
@@ -21943,6 +22318,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ビート",
     "romaji": "Bīto"
@@ -22038,6 +22415,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 42,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -22138,6 +22517,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Blitz I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ブリッツ",
     "romaji": "Burittsu"
@@ -22216,6 +22597,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -22397,6 +22780,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Big Bang (Takara Tomy)",
       "Cosmic I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ビッグバン",
     "romaji": "Biggu Ban"
@@ -22511,6 +22896,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -22695,6 +23082,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
     "jpName": "カウンター",
     "romaji": "Kauntā"
@@ -22884,6 +23273,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
     "jpName": "サイバー",
     "romaji": "Saibā"
@@ -23015,6 +23406,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "トルネード",
     "romaji": "Torunēdo"
@@ -23102,6 +23495,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Death I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -23175,6 +23570,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -23207,6 +23604,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Devil is a Beyblade fusion wheel from the Hybrid Wheel System. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Devil",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "spinDirection": "Right-Spin",
     "role": "wheel"
   },
@@ -23332,6 +23731,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ディアブロ",
     "romaji": "Diaburo"
@@ -23439,6 +23840,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "ディバイン",
     "romaji": "Dibain"
@@ -23542,6 +23945,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": false
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "デュオ",
     "romaji": "Deyuo"
@@ -23620,6 +24025,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -23760,6 +24167,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Fang I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ファング",
     "romaji": "Fangu"
@@ -23868,6 +24277,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -23976,6 +24387,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -24076,6 +24489,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "フラッシュ",
     "romaji": "Furasshu"
@@ -24160,6 +24575,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -24239,6 +24656,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Firefuse (anime, English)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -24464,6 +24883,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "ギャラクシー",
     "romaji": "Gyarakusi"
@@ -24673,6 +25094,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "グラビティ",
     "romaji": "Gurabiti"
@@ -24756,6 +25179,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -24848,6 +25273,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 67
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -24943,6 +25370,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -25036,6 +25465,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "クライス",
     "romaji": "Kuraisu"
@@ -25171,6 +25602,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L-Drago Destroy (Takara Tomy)",
       "L-Drago Destructor (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -25256,6 +25689,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -25343,6 +25778,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -25412,6 +25849,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -25553,6 +25992,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 8,
       "stamina": 8
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
     "jpName": "ライトニング",
     "romaji": "Raitoningu"
@@ -25688,6 +26129,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "マーキュリー",
     "romaji": "Mākyurī"
@@ -25912,6 +26355,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "メテオ",
     "romaji": "Meteo"
@@ -26014,6 +26459,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Crash (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
     "jpName": "クラッシュ",
     "romaji": "Kurasshu"
@@ -26079,6 +26526,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 67
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -26213,6 +26662,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "ナイトメア",
     "romaji": "Naitomea"
@@ -26315,6 +26766,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "オメガ",
     "romaji": "Omega"
@@ -26431,6 +26884,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Phantom I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ファントム",
     "romaji": "Fantomu"
@@ -26516,6 +26971,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 83
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -26743,6 +27200,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 33
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "レイ",
     "romaji": "Rei"
@@ -26829,6 +27288,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Scythe I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "サイズ",
     "romaji": "Saizu"
@@ -26927,6 +27388,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -27030,6 +27493,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "ソル",
     "romaji": "Soru"
@@ -27128,6 +27593,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thermal",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -27230,6 +27697,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel"
   },
   {
@@ -27349,6 +27818,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Cloud (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
     "jpName": "クラウド",
     "romaji": "Kuraudo"
@@ -27379,6 +27850,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Tornade is a Beyblade fusion wheel. Part of Beyblade: Metal Fusion.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Tornade",
+    "series": "Beyblade: Metal Fusion",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "wheel"
@@ -27498,6 +27970,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Basalt (Takara Tomy)"
     ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel",
     "jpName": "バサルト",
     "romaji": "Basaruto"
@@ -27528,6 +28002,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Typhoon is a Beyblade fusion wheel from the Hybrid Wheel System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Typhoon",
+    "system": "Hybrid Wheel System",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "wheel"
@@ -27657,6 +28132,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Variares I (Hasbro)"
     ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -27751,6 +28228,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbStandard": true,
       "mfbLimited": true
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "integratedRoles": [
       "ring",
@@ -27865,6 +28344,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
     "role": "wheel"
   },
   {
@@ -27972,6 +28453,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel",
     "jpName": "ウイング",
     "romaji": "Uingu"
@@ -28041,6 +28524,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
     "role": "wheel"
   },
   {
@@ -28149,6 +28634,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "gear",
     "jpName": "Fギア",
     "romaji": "Efu Gia"
@@ -28301,6 +28788,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "∀"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "アキレス",
@@ -28459,6 +28948,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "A"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "アシュラ",
@@ -28642,6 +29133,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "B",
       "Balkesh (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip",
     "jpName": "バハムート",
@@ -28839,6 +29332,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Db",
       "Devolos (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Dual-Spin",
     "role": "chip",
     "jpName": "ディアボロス",
@@ -29064,6 +29559,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ドラゴン",
@@ -29261,6 +29758,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dr",
       "Dragon 2"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ドラゴン",
@@ -29427,6 +29926,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip",
     "jpName": "ファブニル",
@@ -29565,6 +30066,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "H",
       "Cobra (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ヒュドラ",
@@ -29723,6 +30226,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "J"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ジョーカー",
@@ -29880,6 +30385,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L",
       "Lúinor (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip",
     "jpName": "ロンギヌス",
@@ -30020,6 +30527,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "O",
       "Odax (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "オーディン",
@@ -30182,6 +30691,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "P"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ペガサス",
@@ -30343,6 +30854,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "S",
       "Spryzen (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Dual-Spin",
     "role": "chip",
     "jpName": "スプリガン",
@@ -30552,6 +31065,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "V",
       "Valtryek (Pro Series)"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "ヴァルキリー",
@@ -30627,6 +31142,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pronounced Zero Dash"
     ],
     "hasbroCode": "G14",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -30704,6 +31221,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "G15",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -30810,6 +31329,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pronounced Ten Dash"
     ],
     "hasbroCode": "G12",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -30924,6 +31445,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pronounced Two Dash"
     ],
     "hasbroCode": "G05",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -31008,6 +31531,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pronounced Three Dash"
     ],
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -31103,6 +31628,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pronounced Four Dash"
     ],
     "hasbroCode": "G07",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -31190,6 +31717,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Pronounced Seven Dash"
     ],
     "hasbroCode": "G16",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -31256,6 +31785,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstClassic": false
     },
     "hasbroCode": "G13",
+    "system": "QuadDrive System",
+    "series": "Beyblade Burst QuadDrive",
     "role": "ring"
   },
   {
@@ -31341,6 +31872,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31408,6 +31941,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31478,6 +32013,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31563,6 +32100,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -31621,6 +32160,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31679,6 +32220,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31777,6 +32320,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "role": "chip"
   },
   {
@@ -31878,6 +32423,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -31945,6 +32492,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32010,6 +32559,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32068,6 +32619,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32139,6 +32692,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -32197,6 +32752,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32270,6 +32827,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -32332,6 +32891,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32399,6 +32960,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32474,6 +33037,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "クラーケン",
@@ -32534,6 +33099,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -32599,6 +33166,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -32657,6 +33226,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32725,6 +33296,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip",
     "jpName": "オーガ",
@@ -32796,6 +33369,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -32854,6 +33429,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "chip"
   },
@@ -32918,6 +33495,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -33001,6 +33580,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Dual-Spin",
     "role": "chip"
   },
@@ -33103,6 +33684,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "chip"
   },
@@ -33199,6 +33782,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst BU",
     "role": "gear",
     "jpName": "Hギア"
   },
@@ -33336,6 +33921,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "A2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -33462,6 +34049,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "aK"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -33572,6 +34161,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Air Knight",
       "Air Knight K5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -33703,6 +34294,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "aC"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -33778,6 +34371,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Alter Cognite"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -33929,6 +34524,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "α"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -34021,6 +34618,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "AL"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Left-Spin",
     "role": "ring"
   },
@@ -34152,6 +34751,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "aH"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -34239,6 +34840,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Archer Hercules"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -34356,6 +34959,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "aB"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -34433,6 +35038,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Arc Balkesh"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -34500,6 +35107,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Asteroid Zeutron"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -34599,6 +35208,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Lava-X Anubion A4 (SlingShock)",
       "Atlas Anubion A6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -34670,6 +35281,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -34800,6 +35413,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "β"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -34936,6 +35551,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "B2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -35041,6 +35658,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Gold-X Beast Betromoth B4 (SlingShock)",
       "Beast Betromoth B6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -35152,6 +35771,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "bK"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -35233,6 +35854,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Behemoth Cyclops C5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -35318,6 +35941,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Berserk Roktavor"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -35432,6 +36057,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Bγ"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -35549,6 +36176,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "bJ"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -35630,6 +36259,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Blast Jinnius"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -35795,6 +36426,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "bR"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -35943,6 +36576,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "bL"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -36017,6 +36652,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Boom Khalzar"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -36084,6 +36721,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Breaker Xcalius"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -36158,6 +36797,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Brutal Lúinor"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -36269,6 +36910,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "BP"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -36386,6 +37029,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "bX"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -36457,6 +37102,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "C"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -36566,6 +37213,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "C"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -36775,6 +37424,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "超A (choA)"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -36899,6 +37550,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "超S (choS)"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
     "role": "ring",
@@ -37112,6 +37765,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "超V (choV)",
       "Cho-Z Valtryek (Pro Series)"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -37203,6 +37858,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "CT"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Turbo",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -37321,6 +37978,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "cR"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -37410,6 +38069,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Crash Roktavor",
       "Roktavor R5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -37503,6 +38164,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dc"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Right-Spin",
     "role": "ring",
     "romaji": "Dakeu Kereuberoseu"
@@ -37609,6 +38272,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "D2",
       "Dark Doomscizor"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -37728,6 +38393,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dH"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -37863,6 +38530,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dP"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -37989,6 +38658,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38070,6 +38741,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Deep Caynox"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -38187,6 +38860,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dC"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38266,6 +38941,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "D2",
       "Flame-X Diomedes D4 (SlingShock)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -38339,6 +39016,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "D"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -38406,6 +39085,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Draciel F"
     ],
+    "system": "HyperSphere System",
+    "series": "Beyblade Burst Surge",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38522,6 +39203,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Draciel F or DC"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38615,6 +39298,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Draciel S",
       "Guard Draciel Shield (SlingShock)"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -38749,6 +39434,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Draciel S or DC"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38854,6 +39541,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "DC"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst BU",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -38967,6 +39656,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Draciel V or DC"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -39119,6 +39810,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dragoon F or DG"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -39202,6 +39895,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "DG",
       "Fang Dragoon Fighter (SlingShock)"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -39276,6 +39971,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dragoon S",
       "DG"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -39419,6 +40116,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dragoon S or DG"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -39536,6 +40235,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -39659,6 +40360,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dragoon V or DG"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -39764,6 +40467,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Drain Fafnir"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -39851,6 +40556,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Dranzer F or DZ",
       "Crystal Dranzer Flame (SlingShock)"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -39990,6 +40697,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer F or DZ"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -40068,6 +40777,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer S or DZ"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -40193,6 +40904,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer S or DZ"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -40305,6 +41018,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer Volcano 2"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -40418,6 +41133,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dranzer V or DZ"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -40487,6 +41204,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dread Hades"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -40560,6 +41279,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dread Phoenix"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -40657,6 +41378,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Driger Fang",
       "Wraith Driger Fang (F0612)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Rise",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -40767,6 +41490,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Driger F or DR"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -40851,6 +41576,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Driger S",
       "Phantom Driger Slash (SlingShock)"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -41025,6 +41752,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Driger S or DR"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41141,6 +41870,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Driger Vulcan 2"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst BU",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41254,6 +41985,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Driger V or DR"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41335,6 +42068,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Dullahan D5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -41418,6 +42153,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dα"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41509,6 +42246,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dα"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41600,6 +42339,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "dα"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41713,6 +42454,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "EA"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41895,6 +42638,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "eF"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -41989,6 +42734,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Emperor Forneus",
       "Emperor Forneus F5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -42073,6 +42820,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "E2",
       "Epic Evipero"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -42198,6 +42947,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -42267,6 +43018,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -42406,6 +43159,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "E2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -42532,6 +43287,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "F2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -42623,6 +43380,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "FT"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -42698,6 +43457,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "F2",
       "Ferro Fengriff"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -42779,6 +43540,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "role": "ring"
   },
   {
@@ -42888,6 +43651,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "FS"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -42996,6 +43761,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Fs"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -43058,6 +43825,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
     "role": "ring"
@@ -43161,6 +43930,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gaia Dragoon V or GD"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -43248,6 +44019,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -43362,6 +44135,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "gZ"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -43477,6 +44252,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Mountain-X Galaxy Zeutron Z4 (Element-X Version)",
       "Galaxy Zeutron Z5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -43563,6 +44340,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Gargoyle G5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -43687,6 +44466,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "gF"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -43768,6 +44549,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Geist Fafnir"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -43894,6 +44677,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "G2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -43997,6 +44782,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Blizzard-X Giga Gaianon G4 (SlingShock)",
       "Giga Gaianon G6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -44074,6 +44861,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Defense",
     "spinDirection": "Dual-Spin",
     "role": "ring",
@@ -44177,6 +44966,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "GRP"
     ],
+    "system": "Dynamite Battle Layer System",
+    "series": "Beyblade Burst QuadDrive",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -44315,6 +45106,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "gK"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -44396,6 +45189,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Inferno-X Kerbeus K4 (Element-X Pack)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -44521,6 +45316,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "hK"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -44590,6 +45387,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Hazard Kerbeus"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -44657,6 +45456,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Heat Salamander"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -44763,6 +45564,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -44890,6 +45693,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "hS"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -45027,6 +45832,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "H2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -45108,6 +45915,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "H"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -45228,6 +46037,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "H"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -45327,6 +46138,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "HD"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Turbo",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -45414,6 +46227,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "H2",
       "Hyper Horusood"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -45491,6 +46306,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "H2",
       "Poison-X Hyrus H4 (SlingShock)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -45624,6 +46441,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "I2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -45700,6 +46519,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "I2",
       "Inferno Ifritor"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -45779,6 +46600,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "I2",
       "Lightning-X Istros I4 (SlingShock)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -45912,6 +46735,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "J2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -46014,6 +46839,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Silver-X Jumbo Jormuntor J4 (SlingShock)",
       "Jumbo Jormuntor J6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -46094,6 +46921,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "K"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -46228,6 +47057,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "K"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -46354,6 +47185,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "kD"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -46438,6 +47271,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Kinetic Satomb"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -46519,6 +47354,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -46589,6 +47426,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": true
     },
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -46781,6 +47620,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "kS"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -46856,6 +47697,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Krusher Doomscizor"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -46959,6 +47802,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "lα",
       "Fusion Aether (anime, English)"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -47072,6 +47917,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "lα"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -47155,6 +48002,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Left Astro",
       "Left Astro A5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -47234,6 +48083,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Legend Spryzen"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Balance",
     "spinDirection": "Dual-Spin",
     "role": "ring"
@@ -47353,6 +48204,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "LL"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -47521,6 +48374,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "L2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -47600,6 +48455,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "L2",
       "Lost Lúinor (official stylization)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring"
@@ -47717,6 +48574,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "M2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -47812,6 +48671,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Thorns-X Mad Minoboros M4 (SlingShock)",
       "Mad Minoboros M6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -47872,6 +48733,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst QuadDrive",
     "spinDirection": "Left-Spin",
     "role": "ring"
   },
@@ -47951,6 +48814,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Maximus Garuda"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -48028,6 +48893,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": false,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -48109,6 +48976,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "M"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -48221,6 +49090,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "M"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -48307,6 +49178,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Morrigna M5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -48382,6 +49255,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "N"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -48489,6 +49364,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "N"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -48614,6 +49491,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "nL"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -48706,6 +49585,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Nightmare Lúinor"
     ],
     "hasbroCode": "LD01",
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Attack",
     "spinDirection": "Left-Spin",
     "role": "ring",
@@ -48797,6 +49678,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Nova Nepstrius",
       "Dark-X Nova Nepstrius N4 (SlingShock)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -48921,6 +49804,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "N2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -48995,6 +49880,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "O"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -49134,6 +50021,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "O"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -49230,6 +50119,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ogre O5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -49332,6 +50223,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Omni Odax",
       "Odax O6 (SpeedStorm)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -49470,6 +50363,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "oE",
       "Orb Engaard (Pro Series)"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -49557,6 +50452,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Orb Engaard",
       "Engaard E5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -49675,6 +50572,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Ω"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -49748,6 +50647,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Orichalcum"
     ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -49817,6 +50718,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "O2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -49914,6 +50817,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "pP"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -49990,6 +50895,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Perfect Phoenix"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -50059,6 +50966,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "P2",
       "Phrenic Phantazus"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -50212,6 +51121,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Pα"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -50303,6 +51214,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "PT"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "spinDirection": "Right-Spin",
     "role": "ring"
   },
@@ -50442,6 +51355,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "P2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -50577,6 +51492,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Q2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -50663,6 +51580,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Q2",
       "Stone-X Quetziko Q4 (SlingShock)"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -50754,6 +51673,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "R2",
       "Raging Roktavor"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -50890,6 +51811,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -50969,6 +51892,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "burstLimited": true,
       "burstClassic": false
     },
+    "system": "Burst System",
+    "series": "Beyblade Burst Surge",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51088,6 +52013,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Rγ"
     ],
+    "system": "Gatinko Layer System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51281,6 +52208,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "rP"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51352,6 +52281,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Revive Phoenix"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -51453,6 +52384,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "rα"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51566,6 +52499,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "rα"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51649,6 +52584,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "Right Artemis",
       "Right Artemis A5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -51826,6 +52763,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R2"
     ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -51931,6 +52870,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "RL"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
     "partType": "Defense",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -52007,6 +52948,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "R"
     ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -52093,6 +53036,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "Rudr R5 (HyperSphere)"
     ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Balance",
     "spinDirection": "Right-Spin",
     "role": "ring"
@@ -52208,6 +53153,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "sT"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -52295,6 +53242,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "sα",
       "Yamiterios"
     ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
     "partType": "Attack",
     "spinDirection": "Right-Spin",
     "role": "ring",
@@ -52386,6 +53335,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "aka": [
       "sΩ"
     ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
     "partType": "Stamina",
     "spinDirection": "Right-Spin",
     "role": "ring",

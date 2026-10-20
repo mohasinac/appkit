@@ -675,6 +675,26 @@ export interface PartGlossaryDocument extends BaseDocument {
    * variants are all `chip`. Derived in `scripts/lib/part-slot-vocab.mjs`,
    * which covers all 59 slots with 10 roles.
    */
+  /**
+   * The part SYSTEM — "Dynamite Battle Layer System", "4D System", "Basic
+   * Line". Stated on 1,961 of 2,087 source pages (94%).
+   *
+   * 🛑 This is the generation key, and it is load-bearing rather than
+   * decorative:
+   *
+   * 1. ASSEMBLY IS WITHIN-GENERATION ONLY. No bey can be built across
+   *    generations, and Plastic and HMS do not interchange either, so a build
+   *    validator needs each part's system. Nothing else on the row answers it.
+   *
+   * 2. ONE SLOT CAN HOLD TWO DIFFERENT PARTS. `blade` is the measured case:
+   *    Beyblade X blades are metal at a ~32 g median while Burst QuadDrive and
+   *    Dynamite Battle blades are plastic at ~7-11 g. A per-slot mass band
+   *    cannot be correct for both, and without this field nothing downstream
+   *    could tell them apart.
+   */
+  system?: string;
+  /** The retail series — "Beyblade Burst QuadStrike", "Beyblade: Metal Fury". */
+  series?: string;
   role?: PartRole;
   /**
    * Every stack role one moulding fills, listed TOP-TO-BOTTOM. A part that
