@@ -17,6 +17,12 @@ export interface InteractiveProductCardProps {
   onToggleWishlist?: (productId: string) => void;
   onAddToCart?: (product: ProductItem) => void;
   onBuyNow?: (product: ProductItem) => void;
+  /**
+   * Owner-only pencil / clone / bin. Forwarded to ProductCard, which renders
+   * it OUTSIDE its own and this component's `<Link>` wrappers — see its return
+   * statement. Renders nothing for a visitor who does not own the listing.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function InteractiveProductCard({
@@ -30,6 +36,7 @@ export function InteractiveProductCard({
   onToggleWishlist,
   onAddToCart,
   onBuyNow,
+  renderOwnerActions,
 }: InteractiveProductCardProps) {
   // When selection is enabled, render ProductCard directly so its built-in
   // checkbox + long-press (BaseListingCard.Checkbox) work. `href` is still
@@ -53,10 +60,19 @@ export function InteractiveProductCard({
         selectionMode={selectable}
         isSelected={isSelected}
         onSelect={(id) => onSelect(id, !isSelected)}
+        renderOwnerActions={renderOwnerActions}
       />
     );
   }
-  return (
+  /*
+   * 🛑 The owner toolbar is a SIBLING of this Link, not a child of it.
+   *
+   * ProductCard already keeps the toolbar outside its OWN anchor, but this
+   * branch adds a second one around the whole card — so handing the slot down
+   * would still nest buttons inside an `<a>`. Rendering it here, over a
+   * relative wrapper, is the only placement that escapes both.
+   */
+  const card = (
     <Link href={href} className="block">
       <ProductCard
         product={product}
@@ -67,5 +83,12 @@ export function InteractiveProductCard({
         onBuyNow={onBuyNow}
       />
     </Link>
+  );
+  if (!renderOwnerActions) return card;
+  return (
+    <div className="relative h-full">
+      {card}
+      <div className="absolute right-2 top-14 z-20">{renderOwnerActions()}</div>
+    </div>
   );
 }

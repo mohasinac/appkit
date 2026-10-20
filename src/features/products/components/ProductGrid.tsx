@@ -69,6 +69,19 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
   selectionMode?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
+  /**
+   * Owner-only pencil / clone / bin, for an admin or the seller who owns this
+   * listing. Pass `<OwnerQuickActions>`; it renders nothing for anyone else.
+   *
+   * 🛑 Rendered OUTSIDE this card's `<Link>`, at `top-14 right-2` — below the
+   * wishlist heart and clear of the checkbox, badge stack and IconOverlay. See
+   * the return statement for why it cannot live inside the card body.
+   *
+   * Suppressed while a selection is active: a bulk-select gesture and a
+   * per-record edit are different intents, and offering both at once invites
+   * the wrong one.
+   */
+  renderOwnerActions?: () => React.ReactNode;
 }
 
 export function ProductCard<T extends ProductItem = ProductItem>({
@@ -83,6 +96,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   selectionMode = false,
   isSelected = false,
   onSelect,
+  renderOwnerActions,
 }: ProductCardProps<T>) {
   const discount =
     product.originalPrice && product.originalPrice > product.price
@@ -248,6 +262,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           sublistingIcon={product.sublistingIcon}
           position="bottom-2 right-2"
         />
+
 
         {/* Wishlist button — always visible. Was a hand-rolled inline <svg>
             inside a `size="sm"` Button, which renders 32x36 (the --sm
@@ -435,15 +450,40 @@ export function ProductCard<T extends ProductItem = ProductItem>({
     </Div>
   );
 
-  if (href && !selectionMode) {
-    return (
+  const wrapped =
+    href && !selectionMode ? (
       <Link href={href} className="block h-full">
         {cardBody}
       </Link>
+    ) : (
+      cardBody
     );
-  }
 
-  return cardBody;
+  if (!renderOwnerActions || selectionMode || isSelected) return wrapped;
+
+  /*
+   * 🛑 OUTSIDE the anchor, as a sibling — never inside `cardBody`.
+   *
+   * This card wraps its entire body in a `<Link>` whenever `href` is set, and
+   * `InteractiveProductCard` wraps it in another one. A `<button>` inside an
+   * `<a>` is invalid HTML that browsers resolve by closing the anchor early,
+   * which breaks the CARD's navigation rather than just the button's —
+   * stopPropagation stops the click but cannot fix the parse.
+   *
+   * Positioned `top-14 right-2`: directly below the 44px wishlist heart at
+   * `top-2 right-2`, so it clears every occupied corner (checkbox and badges
+   * top-left, IconOverlay bottom-right) without needing to know the hero's
+   * height. The hero is `aspect-square`, so it is always taller than
+   * 3.5rem + 44px and the toolbar lands on the photo.
+   *
+   * `z-20` beats the in-card overlays, which all sit at `z-10`.
+   */
+  return (
+    <Div className="relative h-full">
+      {wrapped}
+      <Div className="absolute right-2 top-14 z-20">{renderOwnerActions()}</Div>
+    </Div>
+  );
 }
 
 // --- ProductCardContext (passed to renderCard slot) ---------------------------

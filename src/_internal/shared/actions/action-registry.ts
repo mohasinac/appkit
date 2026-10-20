@@ -56,6 +56,7 @@ export type ActionResource =
   | "STORE"
   | "BLOG"
   | "EVENT"
+  | "REVIEW"
   | "SHIPMENT"
   | "CATALOGUE"
   | "USER"
@@ -221,6 +222,29 @@ export const ACTIONS: ActionTree = {
         body: "This cannot be undone. Orders that already reference it keep their own copy of the title, price and image, so past orders stay readable.",
         confirmLabel: "Delete listing",
       },
+    },
+    /*
+     * Clone — ADMIN ONLY, and no confirmation.
+     *
+     * `POST /api/store/products/[id]/duplicate` already strips identity,
+     * analytics, auction bid state and group membership, titles the copy
+     * "… (Copy)" and forces `status: "draft"`. So it creates a draft and
+     * destroys nothing: a confirm dialog on a non-destructive action trains
+     * people to dismiss confirm dialogs.
+     *
+     * 🛑 `permissions: ["admin"]` is narrower than `edit`/`delete` above on
+     * purpose. A seller editing or deleting their own listing is ordinary;
+     * duplicating across the catalogue is a staff tool.
+     */
+    duplicate: {
+      iconKey: "duplicate",
+      id: "product.duplicate",
+      label: "Duplicate",
+      ariaLabel: "Duplicate this listing as a draft",
+      description:
+        "Copy this listing into a new draft, without its bids, analytics or group membership.",
+      kind: "secondary",
+      permissions: ["admin"],
     },
     "add-to-cart": {
       iconKey: "cart",
@@ -432,6 +456,43 @@ export const ACTIONS: ActionTree = {
       description: "Purchase a bundle directly (buyout — skips cart, goes to checkout).",
       kind: "primary",
       categoryTypeScope: ["bundle"],
+    },
+    /*
+     * Edit and delete lived only in the ADMIN bucket (`delete-bundle`,
+     * `activate-bundle`, …), so a bundle's own surfaces had nothing
+     * resource-scoped to resolve against. Added here beside `buy-now` so the
+     * owner affordance keys on the resource it is acting on, like every other
+     * bucket.
+     *
+     * 🛑 No `duplicate`. A bundle's members, `bundleCategorySlugs` and
+     * `display.mosaicImages` are all resolved at WRITE time, so a copy would
+     * carry another bundle's resolved state.
+     */
+    edit: {
+      iconKey: "edit",
+      id: "bundle.edit",
+      label: "Edit",
+      ariaLabel: "Edit bundle",
+      description: "Edit this bundle.",
+      kind: "secondary",
+      permissions: ["admin", "seller"],
+      categoryTypeScope: ["bundle"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "bundle.delete",
+      label: "Delete",
+      ariaLabel: "Delete bundle",
+      description: "Permanently delete this bundle.",
+      kind: "danger",
+      permissions: ["admin", "seller"],
+      categoryTypeScope: ["bundle"],
+      confirmation: {
+        title: "Delete this bundle?",
+        body: "This cannot be undone. The products inside it are NOT deleted — only the bundle that groups them and its discounted price.",
+        confirmLabel: "Delete bundle",
+        confirmKind: "danger",
+      },
     },
   },
   /*
@@ -1159,7 +1220,76 @@ export const ACTIONS: ActionTree = {
       },
     },
   },
+  /*
+   * There was no REVIEW bucket at all, while review actions sat scattered
+   * across three others — ADMIN (approve / reject / feature), STORE (reply /
+   * contest) and USER (write-review) — and NOTHING anywhere for a reviewer
+   * editing or deleting their own review. That is the gap a buyer hits on a
+   * product page, so it is the one this bucket is for.
+   */
+  REVIEW: {
+    edit: {
+      iconKey: "edit",
+      id: "review.edit",
+      label: "Edit review",
+      ariaLabel: "Edit your review",
+      description: "Edit a review you wrote.",
+      kind: "secondary",
+    },
+    delete: {
+      iconKey: "delete",
+      id: "review.delete",
+      label: "Delete review",
+      ariaLabel: "Delete your review",
+      description: "Permanently delete a review you wrote.",
+      kind: "danger",
+      confirmation: {
+        title: "Delete your review?",
+        body: "This cannot be undone. The seller's reply to it goes too, and the product's rating is recalculated without your score.",
+        confirmLabel: "Delete review",
+        confirmKind: "danger",
+      },
+    },
+    write: {
+      iconKey: "review",
+      id: "review.write",
+      label: "Write a review",
+      ariaLabel: "Write a review for this item",
+      description: "Write a review for an item you bought.",
+      kind: "primary",
+    },
+  },
   EVENT: {
+    /*
+     * This bucket had only register / cancel-registration / draw-raffle-winner
+     * — no edit, no delete — so the owner affordance on an event card or detail
+     * page had no registry entry to resolve its label and confirm copy from,
+     * and Rule #7 forbids inlining them.
+     */
+    edit: {
+      iconKey: "edit",
+      id: "event.edit",
+      label: "Edit",
+      ariaLabel: "Edit event",
+      description: "Edit this event.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "event.delete",
+      label: "Delete",
+      ariaLabel: "Delete event",
+      description: "Permanently delete this event.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this event?",
+        body: "This cannot be undone. Entries already recorded against it are removed with it, so a participant loses their place.",
+        confirmLabel: "Delete event",
+        confirmKind: "danger",
+      },
+    },
     "register": {
       iconKey: "user",
       id: "event.register",

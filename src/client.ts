@@ -1000,6 +1000,9 @@ export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_
 // Which listing types the signed-in seller's own store may create. Needs a
 // fetch because `capabilities` is a PRIVATE store field — see the hook.
 export { useStoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
+// Pencil / clone / bin for whoever owns the record, on a PUBLIC surface.
+export { OwnerQuickActions } from "./features/admin/components/OwnerQuickActions";
+export type { OwnerQuickActionsProps, OwnerQuickActionsResource } from "./features/admin/components/OwnerQuickActions";
 export type { StoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 export type { ListingType } from "./features/products/types/index";
