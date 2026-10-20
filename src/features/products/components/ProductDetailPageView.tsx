@@ -34,6 +34,7 @@ import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import {
   Button,
   Container,
@@ -581,6 +582,62 @@ export async function ProductDetailPageView({
           )}
           renderInfo={() => (
             <Stack gap="md">
+              {/*
+                Owner quick-actions — pencil, admin-only clone, bin.
+                Rendered DIRECTLY rather than through a slot prop:
+                `OwnerQuickActions` is a client component that self-gates on
+                the session, so a Server Component can hand it the record and
+                let it decide whether to appear at all. It renders nothing for
+                a visitor, and nothing until auth resolves.
+
+                Ownership goes in as `storeId`, which is the store SLUG — a
+                product is owned by a store, and `SessionUser.storeId` holds
+                the same slug. There is deliberately no `ownerId` here:
+                `ProductDocument` does not declare a `sellerId`, even though
+                `createSellerProduct` writes one, so reading it would mean
+                trusting an undeclared field.
+
+                Clone reuses POST /api/store/products/[id]/duplicate, which
+                already strips identity, analytics, bid state and group
+                membership and forces status: draft. Hence no confirmation on
+                it, and admin-only.
+              */}
+              <OwnerQuickActions
+                resource="PRODUCT"
+                placement="detail"
+                recordLabel={title || String(product.slug ?? product.id)}
+                storeId={product.storeId ? String(product.storeId) : undefined}
+                editHref={String(ROUTES.STORE.PRODUCTS_EDIT(String(product.id)))}
+                onClone={async () => {
+                  const res = await fetch(
+                    `/api/store/products/${product.id}/duplicate`,
+                    { method: "POST" },
+                  );
+                  if (!res.ok) return;
+                  const json = (await res.json()) as { data?: { id?: string } };
+                  const newId = json?.data?.id;
+                  /*
+                   * Land on the COPY's editor. The endpoint returns the new
+                   * draft's id precisely so a one-click clone ends somewhere
+                   * useful rather than back on the public page, where the
+                   * draft is invisible.
+                   */
+                  if (newId && typeof window !== "undefined") {
+                    window.location.assign(
+                      String(ROUTES.STORE.PRODUCTS_EDIT(newId)),
+                    );
+                  }
+                }}
+                onDelete={async () => {
+                  await fetch(`/api/store/products/${product.id}`, {
+                    method: "DELETE",
+                  });
+                  if (typeof window !== "undefined") {
+                    window.location.assign(String(ROUTES.PUBLIC.PRODUCTS));
+                  }
+                }}
+              />
+
               {/* Title + condition badge */}
               <Div>
                 {condition && (

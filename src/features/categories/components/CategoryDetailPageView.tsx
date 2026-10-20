@@ -9,6 +9,7 @@ import {
   storeRepository,
 } from "../../../repositories";
 import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
+import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { resolveTaxonomyVisual } from "../utils/taxonomy-visual";
@@ -710,6 +711,33 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           {/* Records this category for a product page's contextual trail (I5b).
               sessionStorage, one key, no network. */}
           {category?.id && <LastCategoryBeacon categoryId={category.id} />}
+
+          {/*
+            Owner quick-actions. Rendered DIRECTLY, with no slot prop threaded
+            through this view — `OwnerQuickActions` is a client component that
+            self-gates on the session, so a Server Component can hand it the
+            record and let it decide whether to appear. Threading a render prop
+            through twelve async RSC detail views would buy nothing.
+
+            🛑 Admin-only in practice: a category has no `ownerId`, so the
+            owner branch can never match. That is also why the component takes
+            `isAdmin` as its own term — `useIsOwner` returns false for an
+            ownerless record even to an admin.
+
+            No clone: a category's parentIds / ancestors / tier / path /
+            position / subtreeSize are all derived by buildCategoryTree and an
+            insert shifts sibling position ranges, so a copy would carry stale
+            derived state.
+          */}
+          {category?.id && (
+            <OwnerQuickActions
+              resource="CATEGORY"
+              placement="detail"
+              className="mb-3"
+              recordLabel={category.name ?? slug}
+              editHref={String(ROUTES.ADMIN.CATEGORIES_EDIT(category.id))}
+            />
+          )}
 
           {/* Title + metrics */}
           <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
