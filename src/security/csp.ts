@@ -48,14 +48,32 @@ export function generateNonce(): string {
   return btoa(String.fromCharCode(...bytes));
 }
 
+export interface BuildCSPOptions {
+  /**
+   * Add `'wasm-unsafe-eval'` to `script-src`, permitting
+   * `WebAssembly.compile`/`instantiate` from bytes.
+   *
+   * Required by any page that compiles WebAssembly at runtime — without it the
+   * production policy (`script-src 'self' 'nonce-…'`) blocks compilation
+   * outright, because WebAssembly compilation counts as script evaluation.
+   *
+   * Narrower than `'unsafe-eval'` on purpose: it unblocks WASM only and still
+   * forbids `eval` and `new Function` for JavaScript. Default `false`, so
+   * existing consumers are unaffected.
+   */
+  wasm?: boolean;
+}
+
 /** Build the full CSP header value for the given nonce. */
-export function buildCSP(nonce: string): string {
+export function buildCSP(nonce: string, options: BuildCSPOptions = {}): string {
   const isDev = process.env.NODE_ENV === "development";
+  const wasm = options.wasm === true ? " 'wasm-unsafe-eval'" : "";
   return [
     "default-src 'self'",
     isDev
-      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
-      : `script-src 'self' 'nonce-${nonce}'`,
+      ? // 'unsafe-eval' already subsumes 'wasm-unsafe-eval' in dev.
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
+      : `script-src 'self' 'nonce-${nonce}'${wasm}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
     "font-src 'self' data:",
