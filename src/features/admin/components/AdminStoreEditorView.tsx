@@ -6,7 +6,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Checkbox, Details, Div, SideDrawer, Span, Stack, Summary, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { StoreCapability } from "../../auth/permissions/constants";
+import {
+  ALL_STORE_CAPABILITIES,
+  DEFAULT_STORE_CAPABILITIES,
+  type StoreCapability,
+} from "../../auth/permissions/constants";
 import { adminStoreUpdateSchema } from "../schemas/admin-editor-forms";
 import type { StoreStatus } from "../../stores/schemas/firestore";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
@@ -24,7 +28,15 @@ interface AdminStoreFormValues {
   adminNotes: string;
 }
 
-const DEFAULT_CAPABILITIES = ["suggest_brands", "create_coupons"];
+/*
+ * 🛑 Imported, not restated. This value is the `??` fallback on the load path
+ * below, so whatever it holds is what gets SAVED BACK for a store whose
+ * `capabilities` field is absent. A local copy that drifted from
+ * `DEFAULT_STORE_CAPABILITIES` would silently rewrite entitlements on the next
+ * unrelated edit — Root Cause #38's re-save shape, with two owners of one
+ * default as the cause.
+ */
+const DEFAULT_CAPABILITIES: string[] = [...DEFAULT_STORE_CAPABILITIES];
 
 /** Add or remove one capability, returning the new list. */
 function toggleCapability(current: string[], key: string): string[] {
@@ -57,41 +69,84 @@ export interface AdminStoreEditorViewProps {
   currentAdminNotes?: string;
 }
 
-const CAPABILITY_GROUPS: { label: string; caps: { key: StoreCapability; label: string }[] }[] = [
-  {
-    label: "Listings",
-    caps: [
-      { key: "host_auctions", label: "Host Auctions" },
-      { key: "host_preorders", label: "Host Pre-orders" },
-      { key: "create_categories", label: "Request New Categories" },
-      { key: "suggest_brands", label: "Suggest Brands" },
-      { key: "create_coupons", label: "Create Coupons" },
-      { key: "bulk_listing_import", label: "Bulk Listing Import" },
-      { key: "extended_return_window", label: "Extended Return Window" },
-    ],
+/**
+ * The three capability groups, named once.
+ *
+ * A literal repeated per capability is how a group silently splits in two the
+ * day someone types "Trust and Visibility" in one of nineteen entries — the
+ * `CAPABILITY_GROUPS` derivation below filters on equality, so the typo'd entry
+ * would land in no rendered group at all and that capability would vanish from
+ * the admin UI without any error.
+ */
+const CAP_GROUP = {
+  LISTINGS: "Listings",
+  TRUST: "Trust & Visibility",
+  PLATFORM: "Platform",
+} as const;
+
+type CapabilityGroupKey = (typeof CAP_GROUP)[keyof typeof CAP_GROUP];
+
+/**
+ * Every capability's group and label.
+ *
+ * 🛑 `Record<StoreCapability, …>`, so a capability added to the union MUST be
+ * given a home here or this file does not compile. The groups used to be three
+ * hand-written arrays, which meant a new capability could be granted in code,
+ * checked by a server gate, and remain **unreachable from the admin UI** — the
+ * only place it can be turned on. That is the whole drift class in one
+ * sentence, and it had already happened: `advanced_listing_types` is the
+ * nineteenth member and the arrays listed eighteen.
+ */
+const CAPABILITY_META: Record<
+  StoreCapability,
+  { group: CapabilityGroupKey; label: string }
+> = {
+  advanced_listing_types: {
+    group: CAP_GROUP.LISTINGS,
+    label: "Advanced Listing Types (pre-orders, prize draws, classifieds, digital codes, live, art, stickers)",
   },
-  {
-    label: "Trust & Visibility",
-    caps: [
-      { key: "verified_seller", label: "Verified Seller Badge" },
-      { key: "featured_placement", label: "Featured Placement" },
-      { key: "promotional_banner", label: "Promotional Banner" },
-      { key: "priority_support", label: "Priority Support" },
-    ],
-  },
-  {
-    label: "Platform",
-    caps: [
-      { key: "multiple_stores", label: "Multiple Stores" },
-      { key: "custom_store_slug", label: "Custom Store Slug" },
-      { key: "api_access", label: "API Access" },
-      { key: "lower_commission_rate", label: "Lower Commission Rate" },
-      { key: "early_access_features", label: "Early Access Features" },
-      { key: "advanced_analytics", label: "Advanced Analytics" },
-      { key: "whatsapp_catalog_sync", label: "WhatsApp Catalog Sync" },
-    ],
-  },
+  // Legacy: no longer checked anywhere — `auction` is a basic type now.
+  host_auctions: { group: CAP_GROUP.LISTINGS, label: "Host Auctions (legacy — no longer required)" },
+  // Legacy per-type grant, still honoured so existing stores keep access.
+  host_preorders: { group: CAP_GROUP.LISTINGS, label: "Host Pre-orders (legacy grant)" },
+  create_categories: { group: CAP_GROUP.LISTINGS, label: "Request New Categories" },
+  suggest_brands: { group: CAP_GROUP.LISTINGS, label: "Suggest Brands" },
+  create_coupons: { group: CAP_GROUP.LISTINGS, label: "Create Coupons" },
+  bulk_listing_import: { group: CAP_GROUP.LISTINGS, label: "Bulk Listing Import" },
+  extended_return_window: { group: CAP_GROUP.LISTINGS, label: "Extended Return Window" },
+  verified_seller: { group: CAP_GROUP.TRUST, label: "Verified Seller Badge" },
+  featured_placement: { group: CAP_GROUP.TRUST, label: "Featured Placement" },
+  promotional_banner: { group: CAP_GROUP.TRUST, label: "Promotional Banner" },
+  priority_support: { group: CAP_GROUP.TRUST, label: "Priority Support" },
+  multiple_stores: { group: CAP_GROUP.PLATFORM, label: "Multiple Stores" },
+  custom_store_slug: { group: CAP_GROUP.PLATFORM, label: "Custom Store Slug" },
+  api_access: { group: CAP_GROUP.PLATFORM, label: "API Access" },
+  lower_commission_rate: { group: CAP_GROUP.PLATFORM, label: "Lower Commission Rate" },
+  early_access_features: { group: CAP_GROUP.PLATFORM, label: "Early Access Features" },
+  advanced_analytics: { group: CAP_GROUP.PLATFORM, label: "Advanced Analytics" },
+  whatsapp_catalog_sync: { group: CAP_GROUP.PLATFORM, label: "WhatsApp Catalog Sync" },
+};
+
+const CAPABILITY_GROUP_ORDER: CapabilityGroupKey[] = [
+  CAP_GROUP.LISTINGS,
+  CAP_GROUP.TRUST,
+  CAP_GROUP.PLATFORM,
 ];
+
+/**
+ * Derived, so every capability appears in exactly one group by construction.
+ * Keeps the `{ label, caps: [{ key, label }] }` shape the renderer below
+ * already expects.
+ */
+const CAPABILITY_GROUPS: {
+  label: string;
+  caps: { key: StoreCapability; label: string }[];
+}[] = CAPABILITY_GROUP_ORDER.map((group) => ({
+  label: group,
+  caps: ALL_STORE_CAPABILITIES.filter(
+    (key) => CAPABILITY_META[key].group === group,
+  ).map((key) => ({ key, label: CAPABILITY_META[key].label })),
+}));
 
 const STATUS_OPTIONS = [
   { label: "Active", value: "active" },

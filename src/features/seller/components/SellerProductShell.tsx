@@ -41,18 +41,22 @@ const BUNDLE_PLUGIN_FALLBACK = {
 function pluginForMode(mode: ProductListingMode) {
   return mode === "bundle" ? BUNDLE_PLUGIN_FALLBACK : pluginFor(mode as ListingType);
 }
-export type ProductListingMode =
-  | "standard"
-  | "auction"
-  | "pre-order"
-  | "prize-draw"
-  | "bundle"
-  | "classified"
-  | "digital-code"
-  | "live"
-  | "art"
-  | "stickers"
-  | "spares";
+/**
+ * What this shell is editing: any listing type, or a bundle.
+ *
+ * 🛑 DERIVED from `ListingType`, not restated. This was a hand-written copy of
+ * the union plus `"bundle"` — the eleventh such copy in the codebase — and the
+ * whole point of `ALL_LISTING_TYPES_MAP` being a `Record<ListingType, true>`
+ * is that a new member cannot be silently omitted from a list like this one.
+ * Root Cause #61.
+ *
+ * `"bundle"` is a deliberate EXTRA, not an oversight: bundles stopped being a
+ * `listingType` in SB-UNI-D (they are a `categoryType` on `categories` now),
+ * but this shell still edits them, which is what `pluginForMode`'s
+ * `BUNDLE_PLUGIN_FALLBACK` is for. Spelling it as a union with one added
+ * literal says that, where a twelve-item list said nothing.
+ */
+export type ProductListingMode = ListingType | "bundle";
 
 export interface SellerProductDraft {
   title?: string;

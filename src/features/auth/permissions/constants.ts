@@ -601,8 +601,16 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
  */
 export type StoreCapability =
   // Listing & Catalog
-  | "host_auctions" // can create auction listings
-  | "host_preorders" // can create pre-order listings
+  | "advanced_listing_types" // can create the seven advanced listing types (see _internal/shared/listing-types/tiers.ts)
+  /*
+   * 🛑 `host_auctions` no longer gates anything. `auction` is a BASIC listing
+   * type as of the advanced-types split, so the check was removed rather than
+   * inverted. The string stays declared so existing store documents carrying
+   * it remain valid against `storeFirestoreSchema` — removing a union member
+   * would make every such document fail validation on its next write.
+   */
+  | "host_auctions" // legacy, no longer checked — auction is basic
+  | "host_preorders" // legacy per-type grant; still honoured for pre-order
   | "create_categories" // can request new categories (goes to admin)
   | "suggest_brands" // can suggest new brands (default on)
   | "create_coupons" // can create store-level coupons (default on)
@@ -626,7 +634,58 @@ export type StoreCapability =
   // Integrations
   | "whatsapp_catalog_sync"; // can sync store products to their WhatsApp Business Catalog (admin-granted)
 
-/** Default capabilities granted to every new store on creation. */
+/**
+ * Every capability, as a runtime value.
+ *
+ * 🛑 `Record<StoreCapability, true>` rather than a plain array, for the same
+ * reason `ALL_LISTING_TYPES_MAP` is: adding a member to the union without
+ * adding it here is then a COMPILE error, not a silent omission. This is what
+ * lets `capabilities` be validated as a `z.enum` instead of
+ * `z.array(z.string())` — which accepted any string, so a typo'd capability
+ * saved successfully and the gate it was meant to open never opened, silently.
+ *
+ * It also backs the admin editor's grouping, so a new capability cannot be
+ * granted in code and remain unreachable from the admin UI.
+ */
+const STORE_CAPABILITY_MAP: Record<StoreCapability, true> = {
+  advanced_listing_types: true,
+  host_auctions: true,
+  host_preorders: true,
+  create_categories: true,
+  suggest_brands: true,
+  create_coupons: true,
+  bulk_listing_import: true,
+  extended_return_window: true,
+  verified_seller: true,
+  featured_placement: true,
+  promotional_banner: true,
+  priority_support: true,
+  multiple_stores: true,
+  custom_store_slug: true,
+  api_access: true,
+  lower_commission_rate: true,
+  early_access_features: true,
+  advanced_analytics: true,
+  whatsapp_catalog_sync: true,
+};
+
+export const ALL_STORE_CAPABILITIES = Object.keys(
+  STORE_CAPABILITY_MAP,
+) as StoreCapability[];
+
+/** Narrow an untrusted string to a real capability. */
+export function isStoreCapability(value: unknown): value is StoreCapability {
+  return typeof value === "string" && value in STORE_CAPABILITY_MAP;
+}
+
+/**
+ * Default capabilities granted to every new store on creation.
+ *
+ * 🛑 THE one definition. `AdminStoreEditorView` hardcoded its own copy, which
+ * is also the `??` fallback on its load path — so the two could disagree about
+ * what a store with no `capabilities` field is entitled to, and the admin
+ * editor's copy is the one that gets SAVED BACK. Import this; never restate it.
+ */
 export const DEFAULT_STORE_CAPABILITIES: StoreCapability[] = [
   "suggest_brands",
   "create_coupons",
@@ -675,6 +734,29 @@ export function hasCapability(
   required: StoreCapability,
 ): boolean {
   return capabilities.includes(required);
+}
+
+/**
+ * Resolve a store's stored `capabilities` array to its effective set.
+ *
+ * 🛑 The PURE half of `getStoreCapabilities`, extracted so a caller that
+ * already holds the store document does not pay a second Firestore read to ask
+ * what it is entitled to (Rule #6). Three WhatsApp routes were reading
+ * `store.capabilities ?? []` inline for exactly that reason, which made them a
+ * second, divergent reader of the field — they skipped the default merge, so
+ * they and `getStoreCapabilities` could disagree about the same store.
+ *
+ * Note the empty-array case falls back to the defaults, matching
+ * `getStoreCapabilities`' long-standing `raw.length > 0` test. That is
+ * arguably the wrong call — an admin who deliberately unticks everything gets
+ * the defaults handed back — but it is the established behaviour and changing
+ * it would silently re-grant capabilities on stores that had them removed.
+ */
+export function resolveStoreCapabilities(
+  raw: readonly string[] | null | undefined,
+): StoreCapability[] {
+  if (Array.isArray(raw) && raw.length > 0) return raw as StoreCapability[];
+  return [...DEFAULT_STORE_CAPABILITIES];
 }
 
 // ============================================================================

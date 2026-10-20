@@ -19,6 +19,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "../../../errors";
+import { assertListingTypeAllowed } from "../../../_internal/shared/listing-types/tiers";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import type { JsonValue } from "../../../schemas/types";
@@ -683,6 +684,12 @@ export async function createSellerProduct(
   userName: string,
   userEmail: string,
   input: Record<string, JsonValue>,
+  /*
+   * 🛑 Defaults to `"seller"`, which FAILS CLOSED. A caller that forgets to
+   * pass a role gets the gate, not a bypass — the opposite default would make
+   * every un-updated call site an admin.
+   */
+  userRole: string = "seller",
 ): Promise<void> {
   const store = await storeRepository.findByOwnerId(userId);
   // Refuse rather than write an orphan. A listing with no store is invisible on
@@ -692,6 +699,20 @@ export async function createSellerProduct(
   if (!store) {
     throw new NotFoundError("No store found for this account. Create your store first.");
   }
+
+  /*
+   * The advanced-listing-type gate, at the choke point every create funnels
+   * through.
+   *
+   * It lives HERE rather than only in the consumer action because this is the
+   * one place all creates meet, and because the store document is already in
+   * scope — so the check costs no extra Firestore read (Rule #6). The caller's
+   * own gate is a nicety; this one is the guarantee.
+   */
+  assertListingTypeAllowed(input.listingType, {
+    isPrivileged: userRole === "admin",
+    capabilities: store.capabilities,
+  });
 
   const finalizedData = await finalizeProductMediaReferences(input);
   await productRepository.create({
@@ -879,11 +900,41 @@ export async function sellerUpdateProduct(
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
   // existing.storeId is the store slug, not the seller's Firebase UID.
-  if (userRole !== "admin") {
-    const store = await storeRepository.findByOwnerId(userId);
+  const isPrivileged = userRole === "admin";
+  let store: Awaited<ReturnType<typeof storeRepository.findByOwnerId>> = null;
+  if (!isPrivileged) {
+    store = await storeRepository.findByOwnerId(userId);
     if (!store || existing.storeId !== store.id)
       throw new AuthorizationError("You do not own this product");
   }
+
+  /*
+   * 🛑 The UPDATE path had no listing-type gate at all, which made the
+   * create-time one bypassable in a single request: create a `standard`
+   * listing, then PATCH `listingType: "auction"` onto it and the type stuck.
+   * Gating only creates is gating nothing.
+   *
+   * 🛑 But it fires only on a CHANGE of type, and that is load-bearing. Every
+   * per-type edit page spreads its own literal into the payload
+   * (`store/art/[id]/edit` sends `listingType: "art"`), so gating on the
+   * submitted value alone would lock a seller out of editing listings they
+   * already own the moment the capability was turned off — or an admin revoked
+   * it. The rule is "you may not create or convert INTO an advanced type",
+   * never "you may not touch one".
+   *
+   * Reuses the store already loaded for the ownership check above, so a
+   * non-admin update pays no extra read. An admin skips both.
+   */
+  if (
+    typeof input.listingType === "string" &&
+    input.listingType !== existing.listingType
+  ) {
+    assertListingTypeAllowed(input.listingType, {
+      isPrivileged,
+      capabilities: store?.capabilities,
+    });
+  }
+
   if (
     typeof input.status === "string" &&
     input.status !== "published" &&

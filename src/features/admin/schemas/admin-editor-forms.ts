@@ -30,6 +30,7 @@ import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
 import { mediaUrlSchema } from "../../../validation/schemas";
 import { StoreStatusValues, type StoreStatus } from "../../stores/schemas/firestore";
+import { ALL_STORE_CAPABILITIES } from "../../auth/permissions/constants";
 
 const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
 /*
@@ -92,7 +93,9 @@ export const adminStoreUpdateSchema = z
       section: "standing", order: 4, row: "full", kind: "textarea",
       when: (v) => v.storeStatus === "suspended",
     }),
-    capabilities: annotate(z.array(z.string().min(1)).max(50).optional(), {
+    // 🛑 z.enum, not z.string().min(1) — see storeFirestoreSchema. A typo'd
+    // capability used to save cleanly and grant nothing.
+    capabilities: annotate(z.array(z.enum(ALL_STORE_CAPABILITIES as [string, ...string[]])).max(50).optional(), {
       section: "capabilities", sectionLabel: "Capabilities", order: 1, row: "full", kind: "list",
     }),
     adminNotes: annotate(z.string().trim().max(2000).optional(), {

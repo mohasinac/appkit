@@ -896,6 +896,22 @@ export {
   ALL_LISTING_TYPES,
   isListingType,
 } from "./_internal/shared/listing-types/feature-flags";
+// Basic/advanced listing-type split. Client-safe: the nav filter and any
+// seller-facing picker need the same rule the server enforces, and deriving it
+// twice is how the ten hand-written copies of the union happened.
+export {
+  ADVANCED_LISTING_TYPE_CAPABILITY,
+  ADVANCED_LISTING_TYPES,
+  BASIC_LISTING_TYPES,
+  LISTING_TYPE_TIER,
+  isAdvancedListingType,
+  isListingTypeAllowedFor,
+  listingTypesAllowedFor,
+} from "./_internal/shared/listing-types/tiers";
+export type {
+  ListingTypeAccessContext,
+  ListingTypeTier,
+} from "./_internal/shared/listing-types/tiers";
 
 // SB-UNI-X5 2026-05-13 — action telemetry sink (client-safe; defaults to
 // a no-op + console.debug in dev).
@@ -980,6 +996,10 @@ export {
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
 export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
+// Which listing types the signed-in seller's own store may create. Needs a
+// fetch because `capabilities` is a PRIVATE store field — see the hook.
+export { useStoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
+export type { StoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 export type { ListingType } from "./features/products/types/index";
 

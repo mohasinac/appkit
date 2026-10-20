@@ -7150,6 +7150,22 @@ export {
   ALL_LISTING_TYPES,
   isListingType,
 } from "./_internal/shared/listing-types/feature-flags";
+// Basic/advanced listing-type split — which types a store may create.
+// Pure (no firebase-admin in its import chain), so it is safe in index.ts.
+export {
+  ADVANCED_LISTING_TYPE_CAPABILITY,
+  ADVANCED_LISTING_TYPES,
+  BASIC_LISTING_TYPES,
+  LISTING_TYPE_TIER,
+  assertListingTypeAllowed,
+  isAdvancedListingType,
+  isListingTypeAllowedFor,
+  listingTypesAllowedFor,
+} from "./_internal/shared/listing-types/tiers";
+export type {
+  ListingTypeAccessContext,
+  ListingTypeTier,
+} from "./_internal/shared/listing-types/tiers";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
  actionTracker,

@@ -2,6 +2,7 @@ export * from "./firestore";
 
 import { z } from "zod";
 import { StoreStatusValues } from "./firestore";
+import { ALL_STORE_CAPABILITIES } from "../../auth/permissions/constants";
 import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../../schemas/firestore-helpers";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
@@ -76,7 +77,15 @@ export const storeFirestoreSchema = z.object({
       averageRating: z.number().optional(),
     })
     .optional(),
-  capabilities: z.array(z.string()).optional(),
+  /*
+   * 🛑 A `z.enum`, not `z.array(z.string())`. Nothing used to check a stored
+   * capability against the union, so a typo saved successfully and the gate it
+   * was meant to open never opened — with no error anywhere, because an
+   * unrecognised capability is indistinguishable from an ungranted one.
+   */
+  capabilities: z
+    .array(z.enum(ALL_STORE_CAPABILITIES as [string, ...string[]]))
+    .optional(),
   customCommissionRate: z.number().min(0).max(100).optional(),
   googleReviews: z
     .object({

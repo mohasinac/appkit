@@ -91,6 +91,23 @@ const payoutSettingsDraftSchema = z.object({
    */
   supportsShippingProtection: annotate(z.boolean(), { section: "preferences", order: 5, row: "quarter" }),
   supportsSaleProtection: annotate(z.boolean(), { section: "preferences", order: 6, row: "quarter" }),
+  /*
+   * Advanced listing types — pre-orders, prize draws, classifieds, digital
+   * codes, live items, art and stickers. Everyone can already list
+   * `standard`, `spares` and `auction`.
+   *
+   * 🛑 Alongside payout settings for the same reason the protections are:
+   * each of these carries an obligation, not just a form. A pre-order takes
+   * money for stock that does not exist yet, a prize draw is a regulated
+   * promotion, a classified happens off-platform with no escrow, a
+   * digital-code listing must be delivered from a pool the seller has to keep
+   * stocked, and a live listing is an animal. A new seller should meet those
+   * deliberately rather than by discovering a nav item.
+   *
+   * OFF by default, and the copy has to say what enabling ACCEPTS — the same
+   * reason the protection toggles say what declining costs.
+   */
+  advancedListingTypesEnabled: annotate(z.boolean(), { section: "preferences", order: 7, row: "quarter" }),
 }).superRefine((v, ctx) => {
   if (v.method === "upi") {
     if (!v.upiId.trim()) {
@@ -131,6 +148,7 @@ interface PayoutDraft {
   pricesIncludeGst: boolean;
   supportsShippingProtection: boolean;
   supportsSaleProtection: boolean;
+  advancedListingTypesEnabled: boolean;
 }
 
 interface SafePayoutDetails {
@@ -169,6 +187,13 @@ const DEFAULT_DRAFT: PayoutDraft = {
   // OFF by default — matches StoreDocument, and absence must read as declined.
   supportsShippingProtection: false,
   supportsSaleProtection: false,
+  /*
+   * OFF by default, which is also the direction the server gate fails. A
+   * default of `true` here would be worse than cosmetic: this draft is what
+   * gets PATCHed, so it would silently GRANT the capability on the next
+   * unrelated save of this form.
+   */
+  advancedListingTypesEnabled: false,
 };
 
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
@@ -218,6 +243,9 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           pricesIncludeGst: res?.data?.pricesIncludeGst ?? true,
           supportsShippingProtection: res?.data?.supportsShippingProtection ?? false,
           supportsSaleProtection: res?.data?.supportsSaleProtection ?? false,
+          // Absent means NOT entitled. Defaulting this to `true` would be a
+          // silent GRANT on the next save, since this draft is what gets sent.
+          advancedListingTypesEnabled: res?.data?.advancedListingTypesEnabled ?? false,
         });
       })
       .catch(console.error)
@@ -252,6 +280,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         pricesIncludeGst: draft.pricesIncludeGst,
         supportsShippingProtection: draft.supportsShippingProtection,
         supportsSaleProtection: draft.supportsSaleProtection,
+        advancedListingTypesEnabled: draft.advancedListingTypesEnabled,
         // Flat, matching the route's schema. A nested `taxInfo` object was
         // stripped by `z.object()` and never reached Firestore.
         gstin: draft.gstin.trim(),
@@ -485,7 +514,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "preferences",
       label: "Preferences",
-      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst", "supportsShippingProtection", "supportsSaleProtection"],
+      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst", "supportsShippingProtection", "supportsSaleProtection", "advancedListingTypesEnabled"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Preferences</Heading>
@@ -585,6 +614,31 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Changing this does not re-price listings you have already published.
             It applies to products you save from now on.
+          </Text>
+          <Toggle
+            checked={values.advancedListingTypesEnabled}
+            onChange={(checked) => onChange({ advancedListingTypesEnabled: checked })}
+            label="Enable advanced listing types"
+            disabled={busy}
+          />
+          {/*
+            🛑 The copy names what enabling ACCEPTS, not just what it unlocks.
+            Every one of these types carries an obligation a seller has not
+            agreed to by opening a shop, and a bare "unlock more listing types"
+            label would read as a feature rather than a commitment.
+          */}
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            Adds pre-orders, prize draws, classifieds, digital codes, live
+            items, art and stickers alongside the products, spares and auctions
+            you can already list. Each carries its own obligation:{" "}
+            <Span weight="semibold">
+              a pre-order takes payment for stock you do not have yet, a prize
+              draw is a regulated promotion, a classified happens off-platform
+              with no escrow protection, a digital code must be delivered from a
+              pool you keep stocked, and a live listing is an animal.
+            </Span>{" "}
+            Turning this off later does not unpublish listings you have already
+            created — it only stops you making new ones.
           </Text>
         </Stack>
       ),
