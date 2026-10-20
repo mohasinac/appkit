@@ -226,6 +226,15 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * the extractor is possible but needs a corpus a clone will not have.
    */
   partGlossary: "permanent",
+  /*
+   * PERMANENT, for the reason `partGlossary` is: these are extracted from a
+   * crawled corpus by committed scripts, not fixtures. Clearing them means
+   * re-running an extraction over a local crawl a clone will not have, which
+   * is the test § G1c sets — "if clearing it means somebody has to WRITE it
+   * again rather than re-run a loader".
+   */
+  beys: "permanent",
+  beyProducts: "permanent",
   modelComposition: "permanent",
   testerChecklistResponses: "test",
 

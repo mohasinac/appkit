@@ -9328,6 +9328,29 @@ export type {
   PartSlot,
 } from "./features/parts/schemas/firestore";
 export { partGlossarySeedData } from "./seed/index";
+/*
+ * 🛑 Exported from the MAIN barrel, not just `seed/index.ts`. `seed-cli.mjs`
+ * destructures its seed data from the BARE `@mohasinac/appkit` package, which
+ * resolves through THIS file — so an export present only on the inner barrel is
+ * invisible to the loader and the collection reports "no seed data, skipping"
+ * with exit 0. That is Root Cause #90 exactly, and it is how `mediaAssets`
+ * read "504 seed / 0 in db" while all 504 objects sat in the bucket.
+ */
+export {
+  BEYS_COLLECTION,
+  BEY_PRODUCTS_COLLECTION,
+  beyId,
+} from "./features/beys/schemas/firestore";
+export type {
+  BeyDocument,
+  BeyProductDocument,
+  BeyCompositionEntry,
+  BeyRatings,
+  BeyDerivationCoverage,
+  BeyProductAssortmentEntry,
+} from "./features/beys/schemas/firestore";
+export { beysSeedData, BEY_SEED_COUNT } from "./seed/index";
+export { beyProductsSeedData, BEY_PRODUCT_SEED_COUNT } from "./seed/index";
 export { modelCompositionSeedData } from "./seed/index";
 // D12 — the public part surfaces.
 export { ModelCompositionPanel } from "./features/parts/components/ModelCompositionPanel";

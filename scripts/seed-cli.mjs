@@ -209,6 +209,8 @@ const {
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
   authenticityKnowledgeSeedData,
   partGlossarySeedData, modelCompositionSeedData,
+  beysSeedData, beyProductsSeedData,
+  BEYS_COLLECTION, BEY_PRODUCTS_COLLECTION,
   testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
@@ -322,6 +324,14 @@ const COLLECTION_MAP = {
   taxCodes: TAX_CODES_COLLECTION,
   // E4/D12 — extracted from the local corpus, generated into the seed.
   partGlossary: PART_GLOSSARY_COLLECTION,
+  /*
+   * The BEY reference database. Mirrors `partGlossary`: extracted from a
+   * corpus by committed scripts, shares its id with the paired category leaf,
+   * and keeps measured data OFF `categories` so a reseed cannot drop every
+   * bey page's ISR entry.
+   */
+  beys: BEYS_COLLECTION,
+  beyProducts: BEY_PRODUCTS_COLLECTION,
   modelComposition: MODEL_COMPOSITION_COLLECTION,
   testerChecklistItems: TESTER_CHECKLIST_ITEM_COLLECTION,
   /*
@@ -686,6 +696,10 @@ const SEED_DATA_MAP = {
   authenticityKnowledge: authenticityKnowledgeSeedData,
   taxCodes: taxCodesSeedData,
   partGlossary: partGlossarySeedData,
+  // 🛑 Both halves are mandatory: load() short-circuits on an empty array, so a
+  // COLLECTION_MAP entry alone logs "no seed data, skipping" and exits 0.
+  beys: beysSeedData,
+  beyProducts: beyProductsSeedData,
   modelComposition: modelCompositionSeedData,
   testerChecklistItems: testerChecklistSeedData,
   testerChecklistResponses: testerResponsesSeedData,
