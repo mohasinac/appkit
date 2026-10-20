@@ -60,13 +60,18 @@ export const getProductsContainingBey = cache(
         .get();
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as BeyProductDocument);
     } catch (err) {
+      const e = normalizeError(err);
       /*
        * Fails OPEN to an empty list. A missing composite index throws
        * `FAILED_PRECONDITION`, and the right outcome is a bey page without its
        * "found in" section rather than a broken page — the caller wraps this in
        * `safeRead` as well, so the degradation is recorded rather than silent.
+       *
+       * 🛑 `normalizeError` is the FIRST statement on purpose. It was below
+       * this comment, which put it outside audit-catch-normalize's proximity
+       * window — so the audit correctly reported it as missing even though the
+       * call was right there. Comment after the call, never before it.
        */
-      const e = normalizeError(err);
       serverLogger.warn("getProductsContainingBey failed", { beyId, error: e.message });
       return [];
     }
