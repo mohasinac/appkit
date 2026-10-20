@@ -66,7 +66,9 @@ export type RecordQuickActionResource =
   | "EVENT"
   | "BLOG"
   | "FRANCHISE"
-  | "SUBLISTING";
+  | "SUBLISTING"
+  | "PART"
+  | "BEY";
 
 interface ResourceWiring {
   /** DELETE target. */
@@ -82,6 +84,16 @@ const WIRING: Record<RecordQuickActionResource, ResourceWiring> = {
     endpoint: ADMIN_ENDPOINTS.CATEGORY_BY_ID,
     editHref: (id) => String(ROUTES.ADMIN.CATEGORIES_EDIT(id)),
     afterDelete: String(ROUTES.ADMIN.CATEGORIES),
+  },
+  PART: {
+    endpoint: ADMIN_ENDPOINTS.PART_BY_ID,
+    editHref: (id) => String(ROUTES.ADMIN.PARTS_EDIT(id)),
+    afterDelete: String(ROUTES.ADMIN.PARTS),
+  },
+  BEY: {
+    endpoint: ADMIN_ENDPOINTS.BEY_BY_ID,
+    editHref: (id) => String(ROUTES.ADMIN.BEYS_EDIT(id)),
+    afterDelete: String(ROUTES.ADMIN.BEYS),
   },
   BRAND: {
     endpoint: ADMIN_ENDPOINTS.BRAND_BY_ID,

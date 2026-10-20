@@ -38,6 +38,7 @@ import {
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { ROUTES } from "../../../next/routing/route-map";
 import { PART_SLOT_LABEL, type PartSlot } from "../../parts/schemas/firestore";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import type { BeyDocument, BeyProductDocument } from "../schemas/firestore";
 
 /**
@@ -164,6 +165,28 @@ export function BeyDetailPageView({
               </Text>
             )}
             <Heading level={1}>{bey.name}</Heading>
+            {/*
+              ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
+              `OwnerQuickActions` renders nothing at all for a signed-out
+              visitor or an ordinary buyer, so this costs a public reader
+              nothing. It is the same component the category, brand and bundle
+              pages use — one implementation, so the affordance cannot drift
+              into three shapes.
+
+              🛑 `onMedia` is NOT passed. Both these pages are type on the
+              page surface with no cover image behind the title, so the default
+              (ghost on surface) is correct. Passing it would force the
+              on-media treatment and put light ink on a light background —
+              Root Cause #67, which shipped 26 invisible surfaces exactly that
+              way.
+            */}
+            <RecordOwnerQuickActions
+              resource="BEY"
+              recordId={bey.id}
+              placement="detail"
+              recordLabel={bey.name}
+            />
+
             <Row gap="xs" wrap align="center" className="min-w-0">
               {bey.type && <Badge variant="info">{bey.type}</Badge>}
               {bey.spinDirection && <Badge variant="default">{bey.spinDirection}</Badge>}

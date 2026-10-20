@@ -36,6 +36,7 @@ import {
   Anchor,
 } from "../../../ui";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { ROUTES } from "../../../next/routing/route-map";
 import {
   PART_SLOT_LABEL,
@@ -207,6 +208,28 @@ export function PartDetailPageView({
               <TextLink href={hrefForClassification(part.slot)}>{classification}</TextLink>
             </Text>
             <Heading level={1}>{part.name}</Heading>
+            {/*
+              ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
+              `OwnerQuickActions` renders nothing at all for a signed-out
+              visitor or an ordinary buyer, so this costs a public reader
+              nothing. It is the same component the category, brand and bundle
+              pages use — one implementation, so the affordance cannot drift
+              into three shapes.
+
+              🛑 `onMedia` is NOT passed. Both these pages are type on the
+              page surface with no cover image behind the title, so the default
+              (ghost on surface) is correct. Passing it would force the
+              on-media treatment and put light ink on a light background —
+              Root Cause #67, which shipped 26 invisible surfaces exactly that
+              way.
+            */}
+            <RecordOwnerQuickActions
+              resource="PART"
+              recordId={part.id}
+              placement="detail"
+              recordLabel={part.name}
+            />
+
             <Row gap="xs" wrap align="center" className="min-w-0">
               {part.code && <Badge variant="info">{part.code}</Badge>}
               {typeof part.weightG === "number" && (

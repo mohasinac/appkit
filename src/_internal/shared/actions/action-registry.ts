@@ -546,6 +546,96 @@ export const ACTIONS: ActionTree = {
       },
     },
   },
+  /*
+   * ── 🛑 THE TWO GENERATED REFERENCE DATABASES ─────────────────────────────
+   *
+   * `partGlossary` (2,488) and `beys` (1,988) are built by committed
+   * generators from a crawled corpus. That shapes every leaf below:
+   *
+   *   · NO `create`. A row authored by hand has no source, vanishes on the
+   *     next regeneration, and makes "this dataset rebuilds from the repo"
+   *     false. Adding a part is a change to the generator, not a button.
+   *   · `edit` is CORRECT-A-WRONG-EXTRACTION, and says so, because that is
+   *     what it is for — the corpus was measurably wrong five times in one
+   *     session on mode data alone.
+   *   · `delete`'s confirmation does NOT say "cannot be undone", because that
+   *     would be a lie: the row is in a committed seed file and the next
+   *     reseed restores it. It says what actually happens.
+   */
+  PART: {
+    view: {
+      iconKey: "view",
+      id: "part.view",
+      label: "View",
+      ariaLabel: "View part",
+      description: "Open the part reference page.",
+      kind: "secondary",
+    },
+    edit: {
+      iconKey: "edit",
+      id: "part.edit",
+      label: "Edit",
+      ariaLabel: "Edit part",
+      description:
+        "Correct this part's recorded details. The correction is kept when the database is regenerated.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "part.delete",
+      label: "Delete",
+      ariaLabel: "Delete part",
+      description: "Remove this part from the live database.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Remove this part from the live database?",
+        body:
+          "Beyblades built from it keep their parts list and will show its name without a link. " +
+          "This part is also in the committed seed data, so regenerating the database will bring it " +
+          "back — to remove it for good, take it out of the generator.",
+        confirmLabel: "Remove",
+      },
+    },
+  },
+  BEY: {
+    view: {
+      iconKey: "view",
+      id: "bey.view",
+      label: "View",
+      ariaLabel: "View Beyblade",
+      description: "Open the Beyblade reference page.",
+      kind: "secondary",
+    },
+    edit: {
+      iconKey: "edit",
+      id: "bey.edit",
+      label: "Edit",
+      ariaLabel: "Edit Beyblade",
+      description:
+        "Correct this Beyblade's recorded details. The correction is kept when the database is regenerated.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "bey.delete",
+      label: "Delete",
+      ariaLabel: "Delete Beyblade",
+      description: "Remove this Beyblade from the live database.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Remove this Beyblade from the live database?",
+        body:
+          "Its category page and any listings under it are not touched, and boxed sets that include " +
+          "it keep their contents list. It is also in the committed seed data, so regenerating the " +
+          "database will bring it back — to remove it for good, take it out of the generator.",
+        confirmLabel: "Remove",
+      },
+    },
+  },
   CATEGORY: {
     view: {
       iconKey: "view",

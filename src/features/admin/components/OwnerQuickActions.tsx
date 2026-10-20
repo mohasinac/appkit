@@ -62,6 +62,8 @@ export type OwnerQuickActionsResource =
   | "CATEGORY"
   | "BRAND"
   | "FRANCHISE"
+  | "PART"
+  | "BEY"
   | "BUNDLE"
   | "GROUP"
   | "SUBLISTING"
@@ -104,6 +106,15 @@ interface ResourceLeaves {
 const RESOURCE_LEAVES: Record<OwnerQuickActionsResource, ResourceLeaves> = {
   PRODUCT: { bucket: "PRODUCT", edit: "edit", remove: "delete", duplicate: "duplicate" },
   CATEGORY: { bucket: "CATEGORY", edit: "edit", remove: "delete" },
+  /*
+   * Both get a bin. Unlike the three pencil-only resources below, the blast
+   * radius of removing one reference row is SMALL and bounded: a bey keeps
+   * its parts list (`partName` sits beside `partId` for exactly this), a
+   * boxed set keeps its contents, and a category page keeps its listings.
+   * Nothing cascades, and the committed seed can put the row back.
+   */
+  PART: { bucket: "PART", edit: "edit", remove: "delete" },
+  BEY: { bucket: "BEY", edit: "edit", remove: "delete" },
   BRAND: { bucket: "BRAND", edit: "edit", remove: "delete" },
   BUNDLE: { bucket: "BUNDLE", edit: "edit", remove: "delete" },
   GROUP: { bucket: "GROUP", edit: "edit", remove: "delete" },
