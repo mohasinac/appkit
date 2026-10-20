@@ -11,6 +11,7 @@
 
 import { serverLogger } from "../../../monitoring";
 import { normalizeError } from "../../../errors/normalize";
+import { reconcileOrderShipping } from "../../../_internal/server/features/shipping/reconcile";
 import { enqueueJob } from "../../jobs/actions/enqueue-job";
 import { isAdminUser, isSellerUser, isStrictSellerUser, isTesterUser } from "../../auth/role-predicates";
 import {
@@ -128,6 +129,23 @@ export interface CustomShipOrderInput {
   shippingCarrier: string;
   trackingNumber: string;
   trackingUrl: string;
+  /**
+   * What this parcel actually cost the seller to post, in decimal rupees.
+   *
+   * 🛑 OPTIONAL, and that is the whole design. Making it required would break
+   * every existing dispatch and would force a number out of sellers who ship
+   * manually and have no quote to be measured against. Supplying it is what
+   * opts the order into reconciliation: the buyer gets points back when the
+   * seller spent less than was charged, and the seller absorbs the overage
+   * when they spent more.
+   *
+   * Absence therefore means "not reconciled", never "cost nothing" — the same
+   * distinction `resolveShippingCost.shippingUnavailable` exists to preserve,
+   * where a silent zero "would ship every parcel free at our expense".
+   */
+  actualShippingCost?: number;
+  /** The courier actually used, when it differs from the one the buyer picked. */
+  actualCourierName?: string;
 }
 
 export interface MarkEmiInstallmentPaidInput {
@@ -1024,6 +1042,38 @@ export async function customShipOrder(
     shippingDate: new Date(),
     payoutStatus: "eligible",
   });
+
+  /*
+   * 🛑 AFTER the order is marked shipped, and never allowed to fail the
+   * dispatch.
+   *
+   * The parcel has physically gone. If reconciliation throws — the points
+   * ledger is unreachable, the order read fails — the correct outcome is a
+   * shipped order that has not been reconciled yet, which is recoverable by
+   * re-running it. Letting it propagate would leave the seller unable to mark
+   * a parcel shipped because of an accounting step they have no control over,
+   * and they would retry the dispatch, which is the one thing that must not
+   * happen twice.
+   *
+   * `reconcileOrderShipping` is itself idempotent on
+   * `order.shippingReconciliation`, so a retry is safe.
+   */
+  if (typeof input.actualShippingCost === "number") {
+    try {
+      const outcome = await reconcileOrderShipping(orderId, {
+        courierId: input.actualCourierName ?? input.shippingCarrier,
+        courierName: input.actualCourierName ?? input.shippingCarrier,
+        actualRate: input.actualShippingCost,
+      });
+      serverLogger.info("shipping reconciled", { orderId, ...outcome });
+    } catch (err) {
+      const normalized = normalizeError(err);
+      serverLogger.error("shipping reconciliation failed after dispatch", {
+        orderId,
+        message: normalized.message,
+      });
+    }
+  }
 
   serverLogger.info("customShipOrder", {
     orderId,

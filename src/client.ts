@@ -1372,6 +1372,23 @@ export {
   type LaneAssignable,
 } from "./_internal/shared/checkout/lanes";
 /*
+ * Shipping quote model. Public because the CONSUMER owns the route that asks
+ * the carrier for rates (`/api/shipping/quote`) and the checkout UI that
+ * renders them — the rounding rule has to be reachable from both, and it must
+ * be the same rule the server-side reconciliation uses, or the buyer is
+ * credited against a figure they were never charged.
+ */
+export {
+  roundShippingUp,
+  toQuoteOptions,
+  reconcileShipping,
+  SHIPPING_ROUND_UP_TO,
+  type ShippingQuoteOption,
+  type SelectedShippingQuote,
+  type ActualShipmentCost,
+  type ShippingReconciliation,
+} from "./_internal/shared/shipping/quote";
+/*
  * The cart page needs these to tell a multi-member line from an ordinary one: a
  * group/bundle line's `productId` is a group or category id, not a product id,
  * so anything that resolves it as a product must skip those lines. Reading

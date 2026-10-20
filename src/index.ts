@@ -9830,6 +9830,23 @@ export {
   type CartLane,
   type LaneAssignable,
 } from "./_internal/shared/checkout/lanes";
+/*
+ * Shipping quote model. Public because the CONSUMER owns the route that asks
+ * the carrier for rates (`/api/shipping/quote`) and the checkout UI that
+ * renders them — the rounding rule has to be reachable from both, and it must
+ * be the same rule the server-side reconciliation uses, or the buyer is
+ * credited against a figure they were never charged.
+ */
+export {
+  roundShippingUp,
+  toQuoteOptions,
+  reconcileShipping,
+  SHIPPING_ROUND_UP_TO,
+  type ShippingQuoteOption,
+  type SelectedShippingQuote,
+  type ActualShipmentCost,
+  type ShippingReconciliation,
+} from "./_internal/shared/shipping/quote";
 export {
   newsletterSubscribeSchema,
   quickCreateTaxonomySchema,
