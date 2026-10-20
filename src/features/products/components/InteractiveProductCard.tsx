@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ProductCard } from "./ProductGrid";
-import { Div } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import type { ProductItem } from "../types";
 
 export interface InteractiveProductCardProps {
