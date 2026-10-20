@@ -32,6 +32,47 @@ export interface CategoryInlineSelectProps {
    * `MAX_CATEGORY_ASSIGNMENTS`, which is what the repository refuses above.
    */
   maxAssignments?: number;
+  /**
+   * Scope the rows to LEAVES (a single item) or to COLLECTIONS (a lot).
+   *
+   * 🛑 `undefined` means UNSCOPED, which is what every existing call site
+   * gets — this cannot default, because a caller that does not know whether it
+   * is a lot must not be silently told it is a single. See `leafFilterFor`
+   * for why the server makes this load-bearing rather than cosmetic.
+   */
+  leavesOnly?: boolean;
+}
+
+/**
+ * ── 🛑 LOT vs SINGLE SCOPES THE ROWS, AND THE SERVER ALREADY REFUSES THE
+ * WRONG ONE ───────────────────────────────────────────────────────────────
+ *
+ * `assertAssignmentShape` has enforced both directions since 2026-10-14
+ * (`ENFORCE_LEAF_FILING = true`):
+ *
+ *   a LOT at a LEAF     -> "A lot holds several different items, so it cannot
+ *                          be filed under X, which is a single-item category."
+ *   a SINGLE at a BRANCH -> "X has subcategories, so it describes a group
+ *                          rather than one item."
+ *
+ * Until now the picker offered EVERY category to both, so roughly half of all
+ * choices walked the seller into a 400 they could not act on. Scoping the rows
+ * is therefore not a convenience — it is the client half of a rule the server
+ * already holds.
+ *
+ * 🛑 `isLeaf` NEEDS NO ROUTE CHANGE. `/api/admin/categories` forwards its
+ * `filters` string straight into `categoriesRepository.list`, and the public
+ * `/api/categories` whitelists `isLeaf` in `SAFE_CATEGORY_FILTER_FIELDS`. So
+ * this is a query-string addition, not new endpoint surface — which is also
+ * why it can ship without a build to verify it.
+ *
+ * `undefined` means UNSCOPED, which is what every existing caller gets. A
+ * caller that does not know whether it is a lot must not be silently told it
+ * is a single.
+ */
+function leafFilterFor(leavesOnly?: boolean): string | null {
+  if (leavesOnly === undefined) return null;
+  return leavesOnly ? "isLeaf==true" : "isLeaf==false";
 }
 
 // Admin: paginated + server-side search via /api/admin/categories (admin/mod only).
@@ -39,12 +80,15 @@ export interface CategoryInlineSelectProps {
 async function loadAdminCategoryOptions(
   query: string,
   page: number,
+  leavesOnly?: boolean,
 ): Promise<AsyncPage<PaginatedSelectOption<string>>> {
+  const leafFilter = leafFilterFor(leavesOnly);
   const params = new URLSearchParams({
     q: query,
     page: String(page),
     pageSize: "20",
     flat: "true",
+    ...(leafFilter ? { filters: leafFilter } : {}),
   });
   const res = await apiClient.get<{
     data?: { id?: string; name?: string }[];
@@ -63,8 +107,14 @@ async function loadAdminCategoryOptions(
 async function loadPublicCategoryOptions(
   query: string,
   _page: number,
+  leavesOnly?: boolean,
 ): Promise<AsyncPage<PaginatedSelectOption<string>>> {
-  const params = new URLSearchParams({ flat: "true", pageSize: "200" });
+  const leafFilter = leafFilterFor(leavesOnly);
+  const params = new URLSearchParams({
+    flat: "true",
+    pageSize: "200",
+    ...(leafFilter ? { filters: leafFilter } : {}),
+  });
   const res = await fetch(CATEGORY_ENDPOINTS.FILTERED(params.toString()), { credentials: "include" });
   const json: { success?: boolean; data?: { id?: string; name?: string }[] } =
     await res.json().catch(() => ({}));
@@ -86,8 +136,20 @@ export function CategoryInlineSelect({
   extraValues,
   onExtraValuesChange,
   maxAssignments = MAX_CATEGORY_ASSIGNMENTS,
+  leavesOnly,
 }: CategoryInlineSelectProps) {
-  const loadOptions = allowCreate ? loadAdminCategoryOptions : loadPublicCategoryOptions;
+  /*
+   * 🛑 MEMOISED, because `PaginatedSelect` consumes `loadOptions` inside an
+   * effect keyed on query/page. A fresh function identity every render
+   * re-triggers that effect, and the existing loaders are module-scope
+   * functions precisely to avoid it — binding the scope here would reintroduce
+   * the loop if it were done inline.
+   */
+  const base = allowCreate ? loadAdminCategoryOptions : loadPublicCategoryOptions;
+  const loadOptions = React.useCallback(
+    (query: string, page: number) => base(query, page, leavesOnly),
+    [base, leavesOnly],
+  );
 
   const primary = (
     <PaginatedSelect<string>

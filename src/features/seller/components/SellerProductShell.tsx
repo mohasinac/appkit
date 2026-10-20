@@ -80,6 +80,8 @@ export interface SellerProductDraft {
   lotSize?: number;
   /** The named bey this single IS, when the seller picked one. */
   beyId?: string;
+  /** The named PART this single is, when it is a component rather than a bey. */
+  partGlossaryId?: string;
   slug?: string;
   description?: string;
   category?: string;
@@ -252,6 +254,21 @@ const sellerProductSchema = z.object({
   title: z.string().min(1, "Product title is required").max(200),
   description: z.string().max(10000).optional().or(z.literal("")),
   price: z.number().min(0).optional(),
+  /*
+   * LOT vs SINGLE. 🛑 Declared HERE as well as on the interface, for the exact
+   * reason the `categoryIds` note below gives: this schema is
+   * `.passthrough()`, so an undeclared key survives at runtime and stays
+   * UNTYPED — the render site could not read `values.isLot` at all.
+   *
+   * No `.default(false)`, matching `src/validation/request-schemas.ts`: absent
+   * means single, and a default would write a field the seller never touched.
+   */
+  isLot: z.boolean().optional(),
+  /* Bounds mirror the request schema (2–999). A "lot of 1" is a single. */
+  lotSize: z.number().int().min(2).max(999).optional(),
+  /* The single-item identity, one or the other and never both. */
+  beyId: z.string().optional(),
+  partGlossaryId: z.string().optional(),
   category: z.string().optional(),
   /**
    * I2 — the assignment list, DEFAULT FIRST. `category` mirrors `[0]`.
@@ -311,6 +328,23 @@ export interface SellerProductShellProps {
   renderCategorySelector?: (props: {
     value: string;
     onChange: (v: string) => void;
+    /**
+     * Whether the listing is a LOT, so the selector can offer the right rows.
+     *
+     * 🛑 OPTIONAL, like `extraValues` beside it and for the same measured
+     * reason: `QuickProductForm` is a second consumer of this slot and making
+     * a new prop required broke it immediately last time (Root Cause #20, a
+     * public prop change without its consumers — which the comment below
+     * already warns about). A selector that ignores this keeps today's
+     * behaviour exactly.
+     *
+     * 🛑 The server has enforced the split since 2026-10-14
+     * (`ENFORCE_LEAF_FILING = true`): a lot at a leaf and a single at a branch
+     * are both refused. So a selector that offers the wrong rows is not a
+     * cosmetic issue — it walks the seller into a 400 they cannot act on,
+     * which is what every seller hit before this prop existed.
+     */
+    isLot?: boolean;
     /**
      * 🛑 OPTIONAL, and that is the whole point. `QuickProductForm` is a second
      * consumer of this slot and making these required broke it immediately —
@@ -447,6 +481,72 @@ function StepBasic({
         placeholder="e.g. Charizard Base Set PSA 9"
       />
       {/*
+        ── 🛑 LOT OR SINGLE, ASKED RIGHT HERE AT THE NAME ──────────────────
+
+        This sits immediately under Title because the answer CHANGES WHAT THE
+        NEXT PICKER OFFERS, and asking it after the category would mean asking
+        the seller to redo the choice they just made.
+
+        🛑 It is not a new concept — `ProductDocument.isLot` has existed since
+        G3a and `ProductRepository.deriveTaxonomy` already ENFORCES it: a lot
+        must file under a NON-LEAF category, a single may file anywhere. What
+        was missing was the control. Every listing therefore reached that check
+        claiming to be a single, and a seller with a mixed pile had no way to
+        say otherwise.
+
+        The rule is a claim about the ITEMS rather than about counting: filing
+        "12 assorted Burst beys" under `category-dragoon-g` asserts all twelve
+        are Dragoon G. So:
+
+          LOT    -> a CATEGORY, which is always a collection
+          SINGLE -> a named LEAF, found by the name just typed above
+
+        🛑 A `<Toggle>`, never a `<Button role="switch">` — Root Cause #15: the
+        Button's own padding overrides pill sizing and renders a grey circle.
+      */}
+      <Stack gap="xs">
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
+          What is in this listing?
+        </Text>
+        <Row gap="sm" align="center" wrap>
+          <Toggle
+            checked={values.isLot === true}
+            onChange={(next) =>
+              onChange(
+                next
+                  ? /*
+                     * Switching TO a lot clears the single-item identity. A
+                     * stale `beyId` would keep the listing pointing at one
+                     * named bey while claiming to be a mixed pile — the
+                     * contradiction the server rule exists to prevent, smuggled
+                     * past it by a field the seller can no longer see.
+                     */
+                    { isLot: true, beyId: undefined, partGlossaryId: undefined }
+                  : /* And back again drops the count, for the same reason. */
+                    { isLot: false, lotSize: undefined },
+              )
+            }
+            label={values.isLot ? "A lot of several items" : "A single item"}
+            size="sm"
+          />
+          {values.isLot && (
+            <FormField
+              name="lotSize"
+              label="How many?"
+              type="number"
+              value={values.lotSize != null ? String(values.lotSize) : ""}
+              onChange={(v) => onChange({ lotSize: v ? Number(v) : undefined })}
+              placeholder="optional"
+            />
+          )}
+        </Row>
+        <Text size="xs" color="muted">
+          {values.isLot
+            ? "A lot files under a category rather than one model, because a category is a collection — naming one model would claim every item in the pile is that model."
+            : "A single item can be filed against the exact bey or part it is, so buyers searching that name find it."}
+        </Text>
+      </Stack>
+      {/*
         🛑 CATEGORY AND CONDITION SIT ABOVE DESCRIPTION, and the order is the
         feature rather than a tidy-up.
 
@@ -468,6 +568,7 @@ function StepBasic({
             {renderCategorySelector({
               value: values.category ?? "",
               onChange: (v) => onChange({ category: v }),
+              isLot: values.isLot === true,
               /*
                * 🛑 `categoryIds[0]` is the DEFAULT assignment and is already
                * rendered by the primary picker above, so the extras list is
@@ -1889,7 +1990,7 @@ export function SellerProductShell({
       label: "Basic",
       required: true,
       quick: true,
-      fields: ["title", "description", "category", "brand", "condition", "tags", "barcodeId"],
+      fields: ["title", "isLot", "lotSize", "description", "category", "brand", "condition", "tags", "barcodeId"],
       render: ({ values, onChange }) => (
         <StepBasic
           values={values}
