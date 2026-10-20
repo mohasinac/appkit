@@ -9,6 +9,7 @@ import {
   storeRepository,
 } from "../../../repositories";
 import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
+import { TextLink } from "../../../ui/components/TextLink";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { MediaImage } from "../../media/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
@@ -22,6 +23,7 @@ import { LastCategoryBeacon } from "./LastCategoryBeacon";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { ModelCompositionPanel } from "../../parts/components/ModelCompositionPanel";
 import { getCompositionsForCategory } from "../../../_internal/server/features/parts/data";
+import { getBeysForCategory } from "../../../_internal/server/features/beys/data";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getGroupsForCategory } from "../../../_internal/server/features/grouped/data";
 import {
@@ -186,7 +188,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // page rather than an error (Root Cause #59).
   const categoriesIn = category?.id ? [category.id] : null;
 
-  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings, liveCounts, compositions] = await Promise.all([
+  const [productsResult, tabCounts, bundlesResult, childCategories, rootSiblingCategories, groupedListings, settings, liveCounts, compositions, pairedBeys] = await Promise.all([
     categoriesIn
       ? safeRead<Awaited<ReturnType<typeof productRepository.list>> | null>(
           () =>
@@ -312,6 +314,29 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? safeRead(() => getCompositionsForCategory(category.id), {
           route: "/categories/[slug]",
           key: "parts.compositionsForCategory",
+          fallback: [],
+        })
+      : Promise.resolve([]),
+    /*
+     * B5 — the bey(s) this leaf names, so the reference page is REACHABLE.
+     *
+     * 🛑 `ROUTES.PUBLIC.BEY_DETAIL` existed with ZERO call sites: 1,988 bey
+     * pages were built, routable and unreachable from anywhere in the product.
+     * The link already ran the other way (`/beys/{slug}` -> its category leaf),
+     * so this closes the loop rather than inventing an edge.
+     *
+     * Same shape as the compositions read directly above — one indexed
+     * equality against this category's OWN id, in the SAME `Promise.all` so it
+     * costs no extra round trip, wrapped in `safeRead` so a missing index
+     * records a DEGRADED_READ instead of taking the page down.
+     *
+     * A line or generation node matches nothing and renders nothing, which is
+     * correct: "Burst GT" is not a bey, the 1,858 leaves under it are.
+     */
+    category?.id
+      ? safeRead(() => getBeysForCategory(category.id), {
+          route: "/categories/[slug]",
+          key: "beys.beysForCategory",
           fallback: [],
         })
       : Promise.resolve([]),
@@ -864,6 +889,57 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           own `weightG`, which is the weight AS FITTED and the better figure
           than the mould's — so hydrating the glossary would be a second read
           for a value we already have. */}
+      {/* ── B5: the reference page for the model this leaf names ───────────
+          🛑 `ROUTES.PUBLIC.BEY_DETAIL` had ZERO call sites before this —
+          1,988 bey pages, every one routable and unreachable from anywhere in
+          the product. The link already ran the other way (a bey page links to
+          its category leaf via `categoryId`), so this closes the loop.
+
+          Rendered ABOVE "What it is made of" deliberately: the bey page is the
+          reference for the WHOLE model (mass, ratings, owner, release), while
+          the composition panel below is one section of it. Reading order
+          follows that.
+
+          🛑 Plural, and not `[0]`. Measured: 1,880 beys across 1,858 leaves,
+          so 22 leaves carry TWO — the vendor pairs, a Takara-Tomy release and
+          its Hasbro equivalent on one taxonomy leaf. Rendering only the first
+          would drop the other with nothing to show one existed.
+
+          No money and no image: the amounts live on the listings below, and a
+          price here would need `<GatedPrice>` and make this a client
+          component. */}
+      {pairedBeys.length > 0 && (
+        <Section border="subtle" surface="default" className="border-b">
+          <Div className={__W} padding="section">
+            <Stack gap="sm" className="min-w-0">
+              <Heading level={2} size="lg">
+                {pairedBeys.length === 1 ? "Specifications" : "Releases"}
+              </Heading>
+              <Stack gap="xs" className="min-w-0">
+                {pairedBeys.map((bey) => (
+                  <Row key={bey.id} gap="sm" align="center" wrap className="min-w-0">
+                    <TextLink href={String(ROUTES.PUBLIC.BEY_DETAIL(bey.slug))}>
+                      {bey.name}
+                    </TextLink>
+                    {/* The one-line provenance a visitor needs to tell two
+                        vendor releases apart. Each is optional on the document,
+                        so an absent field contributes nothing rather than an
+                        em-dash that claims we looked. */}
+                    {[bey.system, bey.productCodes?.[0]]
+                      .filter(Boolean)
+                      .map((bit) => (
+                        <Text key={String(bit)} size="sm" color="muted">
+                          {String(bit)}
+                        </Text>
+                      ))}
+                  </Row>
+                ))}
+              </Stack>
+            </Stack>
+          </Div>
+        </Section>
+      )}
+
       {compositions.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
           <Div className={__W} padding="section">

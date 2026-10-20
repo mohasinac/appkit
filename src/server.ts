@@ -57,6 +57,7 @@ export {
  */
 export {
   getBeyBySlug,
+  getBeysForCategory,
   getProductsContainingBey,
 } from "./_internal/server/features/beys/data";
 /*
