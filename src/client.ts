@@ -1002,6 +1002,14 @@ export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_
 export { useStoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
 // Pencil / clone / bin for whoever owns the record, on a PUBLIC surface.
 export { OwnerQuickActions } from "./features/admin/components/OwnerQuickActions";
+// "You ordered this - track it" / "your review - edit it", on a product page.
+export { YourPurchaseStrip } from "./features/orders/components/YourPurchaseStrip";
+// The first review form this app has had - see the component's header.
+export { ReviewFormDrawer, reviewFormSchema } from "./features/reviews/components/ReviewFormDrawer";
+export type { ReviewFormDrawerProps, ReviewFormValues } from "./features/reviews/components/ReviewFormDrawer";
+export { PurchaseReviewAffordance } from "./features/reviews/components/PurchaseReviewAffordance";
+export type { PurchaseReviewAffordanceProps } from "./features/reviews/components/PurchaseReviewAffordance";
+export type { YourPurchaseStripProps, PurchaseContext } from "./features/orders/components/YourPurchaseStrip";
 export type { OwnerQuickActionsProps, OwnerQuickActionsResource } from "./features/admin/components/OwnerQuickActions";
 export type { StoreListingEntitlements } from "./features/seller/hooks/useStoreListingEntitlements";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";

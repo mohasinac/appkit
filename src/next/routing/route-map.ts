@@ -288,6 +288,15 @@ export const DEFAULT_ROUTE_MAP = {
     CHECKOUT_SUCCESS: "/checkout/success",
     OFFERS: "/user/offers",
     REVIEWS: "/user/reviews",
+    /*
+     * The buyer's own review editor. There was no edit route for a review in
+     * EITHER portal — the user index was list-only and the admin side had just
+     * /admin/reviews — so a reviewer had no way to change what they had
+     * written. Added with its page and its nav entry in the same change
+     * (Root Cause #37: a route with no page, or a page with no nav, ships as
+     * half done).
+     */
+    REVIEW_EDIT: (id: string) => `/user/reviews/${id}/edit`,
     BIDS: "/user/bids",
     BID_DETAIL: (id: string) => `/user/bids/${id}/view`,
     RETURNS: "/user/returns",

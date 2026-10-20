@@ -25,3 +25,7 @@ export { ReviewsListingPanel } from "./ReviewsListingPanel";
 export type { ReviewsListingPanelProps, ReviewsSource } from "./ReviewsListingPanel";
 // ReviewDetailPageView is RSC — exported from src/index.ts directly (server barrel only)
 export type { ReviewDetailPageViewProps } from "./ReviewDetailPageView";
+export { ReviewFormDrawer, reviewFormSchema } from "./ReviewFormDrawer";
+export type { ReviewFormDrawerProps, ReviewFormValues } from "./ReviewFormDrawer";
+export { PurchaseReviewAffordance } from "./PurchaseReviewAffordance";
+export type { PurchaseReviewAffordanceProps } from "./PurchaseReviewAffordance";

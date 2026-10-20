@@ -24,3 +24,5 @@ export { RefundHistoryTable } from "./RefundHistoryTable";
 export type { RefundHistoryTableProps } from "./RefundHistoryTable";
 export { RefundRequestView } from "./RefundRequestView";
 export type { RefundRequestViewProps } from "./RefundRequestView";
+export { YourPurchaseStrip } from "./YourPurchaseStrip";
+export type { YourPurchaseStripProps, PurchaseContext } from "./YourPurchaseStrip";

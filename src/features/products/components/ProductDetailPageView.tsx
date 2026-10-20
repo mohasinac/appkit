@@ -35,6 +35,7 @@ import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import {
   Button,
   Container,
@@ -1180,13 +1181,28 @@ export async function ProductDetailPageView({
                 ) : undefined
               }
               reviewsContent={
-                <ReviewsListingPanel
+                <Stack gap="md">
+                  {/*
+                    A buyer's own order and their own review, above the public
+                    list. Renders nothing for a visitor, nothing for a
+                    signed-in user who has neither, and nothing at all until
+                    auth resolves — public product pages are ISR and read no
+                    session, so `loading` starts true even for someone signed
+                    in, and showing the empty state first would flash "no
+                    order" at a buyer who has one.
+                  */}
+                  <PurchaseReviewAffordance
+                    productId={String(product.id)}
+                    storeId={product.storeId ? String(product.storeId) : undefined}
+                  />
+                  <ReviewsListingPanel
                   source={{ kind: "product", productId: product.id }}
                   stateMode="local"
                   context="listing"
                   initialData={initialReviews}
                   emptyLabel="No reviews yet — be the first to review this product."
-                />
+                  />
+                </Stack>
               }
               customTabs={toCustomSectionTabs(p.customSections)}
             />
