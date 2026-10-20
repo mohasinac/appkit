@@ -273,7 +273,18 @@ export const DEFAULT_ROUTE_MAP = {
      */
     ADDRESSES_NEW: "/user/addresses/new",
     ADDRESSES_EDIT: (id: string) => `/user/addresses/${id}/edit`,
-    ORDER_DETAIL: (id: string) => `/user/orders/view/${id}`,
+    /*
+     * 🛑 `/user/orders/{id}`, not `/user/orders/view/{id}`.
+     *
+     * The same order used to present two unrelated-looking URL shapes: the
+     * detail page at `view/{id}` while every action on it — cancel, invoice,
+     * payment, return, track — sat at `{id}/…`. A buyer who shortened the URL
+     * by dropping a trailing segment landed on a 404.
+     *
+     * The old path still resolves: `view/[id]/page.tsx` is a redirect, kept
+     * because order confirmation and shipping emails carry it.
+     */
+    ORDER_DETAIL: (id: string) => `/user/orders/${id}`,
     ORDER_CANCEL: (id: string) => `/user/orders/${id}/cancel`,
     ORDER_TRACK: (id: string) => `/user/orders/${id}/track`,
     ORDER_RETURN: (id: string) => `/user/orders/${id}/return`,
