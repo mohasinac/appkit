@@ -142,21 +142,6 @@ export function computeCodHandlingFee(subtotal: number, rates: CodHandlingFeeRat
   return Math.max(min, percentFee);
 }
 
-export interface WhatsAppNotifyFeeRates {
-  /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
-  whatsappNotifyFeeEnabled?: boolean;
-  /** Flat rupee fee charged when the buyer opts in. Falls back to ₹10. */
-  whatsappNotifyFee?: number;
-}
-
-const DEFAULT_WHATSAPP_NOTIFY_FEE = 10;
-
-/** Flat WhatsApp order-updates addon fee — charged only when the buyer opted in AND the admin has the addon enabled. */
-export function computeWhatsAppNotifyFee(addonSelected: boolean, rates: WhatsAppNotifyFeeRates): number {
-  if (!addonSelected || !rates.whatsappNotifyFeeEnabled) return 0;
-  return rates.whatsappNotifyFee ?? DEFAULT_WHATSAPP_NOTIFY_FEE;
-}
-
 export interface GiftWrapFeeRates {
   /** Admin master toggle — the addon isn't charged (even if the buyer selected it) unless this is true. */
   giftWrapFeeEnabled?: boolean;

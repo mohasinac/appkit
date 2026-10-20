@@ -154,10 +154,6 @@ export interface NotificationDocument extends BaseDocument {
   readAt?: Date;
   relatedId?: string;
   relatedType?: NotificationRelatedType;
-  /** Outcome of the async whatsappNotify job for this notification's WhatsApp send, if one was enqueued. */
-  whatsappStatus?: "queued" | "sent" | "failed" | "skipped";
-  /** jobs/{id} doc that ran (or is running) the WhatsApp send for this notification. */
-  whatsappJobId?: string;
 }
 
 export const NOTIFICATIONS_COLLECTION = "notifications" as const;
@@ -269,7 +265,6 @@ export interface SiteSettingsCredentials {
   phonepeWebhookUsername?: string;
   phonepeWebhookPassword?: string;
   resendApiKey?: string;
-  whatsappApiKey?: string;
   metaAppId?: string;
   metaAppSecret?: string;
   metaPageAccessToken?: string;
@@ -284,28 +279,6 @@ export interface SiteSettingsCredentials {
   /** Google Places API for Google Business Reviews (HS4) */
   googleMapsApiKey?: string;
   googlePlaceId?: string;
-  /** WhatsApp Business Cloud API — platform level (for admin purchase announcements) */
-  whatsappPhoneNumberId?: string;
-  whatsappCloudApiToken?: string;
-  /** Comma-separated digits-only phone numbers that receive order announcements */
-  whatsappAdminNotifyNumbers?: string;
-  /**
-   * Approved Meta message-template names, one flat string field per
-   * order-lifecycle notification type — every `SiteSettingsCredentials`
-   * field is stored as an individually-encrypted string (see
-   * `getDecryptedCredentials`/`getCredentialsMasked`, which iterate + mask
-   * every field as a string), so this can't be a `Record<string,string>`
-   * map. Business-initiated WhatsApp sends outside the 24h customer-service
-   * window require a pre-approved template.
-   */
-  whatsappTemplateOrderPlaced?: string;
-  whatsappTemplateOrderConfirmed?: string;
-  whatsappTemplateOrderShipped?: string;
-  whatsappTemplateOrderDelivered?: string;
-  whatsappTemplateOrderCancelled?: string;
-  whatsappTemplateRefundInitiated?: string;
-  /** BCP-47 language code the templates above were approved in, e.g. "en" or "en_US". */
-  whatsappTemplateLanguage?: string;
 }
 
 export interface SiteSettingsCredentialsMasked {
@@ -316,7 +289,6 @@ export interface SiteSettingsCredentialsMasked {
   phonepeWebhookUsername?: string;
   phonepeWebhookPassword?: string;
   resendApiKey?: string;
-  whatsappApiKey?: string;
   metaAppId?: string;
   metaAppSecret?: string;
   metaPageAccessToken?: string;
@@ -328,16 +300,6 @@ export interface SiteSettingsCredentialsMasked {
   deviantartClientSecret?: string;
   googleMapsApiKey?: string;
   googlePlaceId?: string;
-  whatsappPhoneNumberId?: string;
-  whatsappCloudApiToken?: string;
-  whatsappAdminNotifyNumbers?: string;
-  whatsappTemplateOrderPlaced?: string;
-  whatsappTemplateOrderConfirmed?: string;
-  whatsappTemplateOrderShipped?: string;
-  whatsappTemplateOrderDelivered?: string;
-  whatsappTemplateOrderCancelled?: string;
-  whatsappTemplateRefundInitiated?: string;
-  whatsappTemplateLanguage?: string;
 }
 
 export interface NotificationChannelConfig {
@@ -354,15 +316,6 @@ export interface NotificationChannelConfig {
     /** Subset of NotificationTypes to email — absent means all types. */
     types?: NotificationType[];
   };
-  whatsapp: {
-    enabled: boolean;
-    /** Minimum priority that triggers a WhatsApp message (default: "high"). */
-    minPriority?: NotificationPriority;
-    /** Subset of NotificationTypes to WhatsApp — absent means all types. */
-    types?: NotificationType[];
-    /** When true, WhatsApp OTP is offered as an alternative to email OTP at checkout. */
-    otpEnabled?: boolean;
-  };
   sms: {
     enabled: boolean;
     /** Minimum priority that triggers an SMS (default: "high"). */
@@ -373,7 +326,6 @@ export interface NotificationChannelConfig {
 export const DEFAULT_NOTIFICATION_CHANNELS: NotificationChannelConfig = {
   inApp: { enabled: true, readOnly: true },
   email: { enabled: false, minPriority: "normal" },
-  whatsapp: { enabled: false, minPriority: "high", otpEnabled: false },
   sms: { enabled: false, minPriority: "high" },
 };
 
@@ -645,10 +597,6 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). */
     codHandlingFeeMin: number;
     codHandlingFeePercent: number;
-    /** Admin master toggle — whether the WhatsApp order-updates addon is offered at checkout at all. */
-    whatsappNotifyFeeEnabled: boolean;
-    /** Flat rupee fee charged to the buyer when they opt into the WhatsApp order-updates addon. */
-    whatsappNotifyFee: number;
     /** Admin master toggle — whether the gift-wrap addon is offered at checkout at all. */
     giftWrapFeeEnabled: boolean;
     /** Flat rupee fee charged to the buyer when they opt into gift wrap. */
@@ -735,8 +683,6 @@ export interface SiteSettingsDocument extends BaseDocument {
   messaging?: {
     /** User-facing email. Staff mail (daily digest, payout summary) ignores this. */
     emailEnabled: boolean;
-    /** User-facing WhatsApp. Same exemption for staff. */
-    whatsappEnabled: boolean;
     /**
      * Reserved sends allowed per channel per day. Applies to staff and
      * transactional mail too — the ceiling exists to stay inside the
@@ -744,7 +690,6 @@ export interface SiteSettingsDocument extends BaseDocument {
      */
     dailyCeiling: {
       email: number;
-      whatsapp: number;
       sms: number;
     };
   };
@@ -1059,8 +1004,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   // half-configured site.
   messaging: {
     emailEnabled: false,
-    whatsappEnabled: false,
-    dailyCeiling: { email: 80, whatsapp: 200, sms: 50 },
+    dailyCeiling: { email: 80, sms: 50 },
   },
   emi: {
     enabled: false,
@@ -1083,11 +1027,9 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     // The buyer add-ons ship ENABLED. They were `false`, which made
     // StoreAddonsPicker return null on both the cart and checkout, so a fresh
     // install had no add-ons at all and no indication why. `undefined` still
-    // means disabled everywhere (computeWhatsAppNotifyFee et al. read
+    // means disabled everywhere (computeGiftWrapFee et al. read
     // `if (!rates.XEnabled) return 0`) — only the DEFAULT changed, so an
     // existing siteSettings document keeps whatever it already stored.
-    whatsappNotifyFeeEnabled: true,
-    whatsappNotifyFee: 10,
     giftWrapFeeEnabled: true,
     giftWrapFee: 49,
     shipmentProtectionFeeEnabled: true,

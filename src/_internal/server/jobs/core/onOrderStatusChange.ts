@@ -104,7 +104,6 @@ export async function handleOrderStatusChange(
       relatedId: orderId,
       relatedType: "order",
       userEmail,
-      orderWhatsappAddonPaid: after.whatsappNotifyAddon === true,
     });
 
     // The RTDB mirror that used to live here has been removed. `sendNotification`

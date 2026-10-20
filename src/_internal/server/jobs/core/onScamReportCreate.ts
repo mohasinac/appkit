@@ -48,7 +48,6 @@ export async function handleScamReportCreate(
         relatedId: scammerId,
         relatedType: "scammer",
         userEmail: reporterPlain?.email ?? undefined,
-        userPhone: reporterPlain?.phoneNumber ?? undefined,
       });
     } catch (err) {
       void normalizeError(err);

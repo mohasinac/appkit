@@ -117,8 +117,6 @@ export interface UserAddress {
 export interface NotificationChannelPrefs {
   /** Disable all email notifications for this user (default: true = enabled). */
   email?: boolean;
-  /** Disable all WhatsApp notifications for this user. */
-  whatsapp?: boolean;
   /** Disable all SMS notifications for this user. */
   sms?: boolean;
 }

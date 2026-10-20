@@ -15,7 +15,7 @@
  * message.
  *
  * The guarantee that nothing bypasses this is STRUCTURAL instead: the guard
- * argument is REQUIRED on `sendEmail` and on both WhatsApp senders, so an
+ * argument is REQUIRED on `sendEmail`, so an
  * unguarded send does not typecheck, and `scripts/audit-unguarded-send.mjs`
  * fails the build on a raw `createResendProvider().send()`. Make the wrong
  * thing unrepresentable rather than adding a second layer of defence that has
@@ -79,9 +79,7 @@ export async function guardSend(ctx: SendGuardContext): Promise<SendDecision> {
     const channelEnabled =
       ctx.channel === "email"
         ? (messaging?.emailEnabled ?? MESSAGE_BUDGET_DEFAULTS.emailEnabled)
-        : ctx.channel === "whatsapp"
-          ? (messaging?.whatsappEnabled ?? MESSAGE_BUDGET_DEFAULTS.whatsappEnabled)
-          : false; // sms has no sender; if one appears it starts disabled.
+        : false; // sms has no sender; if one appears it starts disabled.
     if (!channelEnabled) {
       return {
         allow: false,

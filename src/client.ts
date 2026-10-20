@@ -1262,7 +1262,6 @@ export type { PublicSiteSettings } from "./_internal/shared/features/site-settin
 export { computeCodHandlingFee } from "./_internal/shared/fees/calculator"; // reexport-from-internal-ok: pure fee-calc utility consumed directly by public checkout UI (CheckoutRouteClient.tsx), same category as the sibling computeEmiSchedule/checkEmiEligibility re-export two lines above
 export type {
   CodHandlingFeeRates,
-  WhatsAppNotifyFeeRates,
   GiftWrapFeeRates,
   ShipmentProtectionFeeRates,
 } from "./_internal/shared/fees/calculator";

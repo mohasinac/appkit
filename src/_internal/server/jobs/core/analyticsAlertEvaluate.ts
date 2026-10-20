@@ -380,7 +380,7 @@ function buildMetricCache(
  * The owner's contact details, resolved once per owner.
  *
  * 🛑 This is how the seller's `notifyChannels` is HONOURED rather than
- * ignored. `sendNotification` decides email and WhatsApp eligibility itself
+ * ignored. `sendNotification` decides email eligibility itself
  * (type gate → admin allow-list → user prefs → daily budget) and takes no
  * channel list — but it cannot email an address it was not given. So omitting
  * `userEmail` when the seller did not tick email is a real narrowing through
@@ -482,9 +482,6 @@ export async function runAnalyticsAlertEvaluate(ctx: JobContext): Promise<void> 
         ...(alert.notifyChannels?.includes("email") && contact.email
           ? { userEmail: contact.email }
           : {}),
-        ...(alert.notifyChannels?.includes("whatsapp") && contact.phone
-          ? { userPhone: contact.phone }
-          : {}),
         audience: b.scope === "admin" ? "admin" : "seller",
       });
     };
@@ -524,7 +521,7 @@ export async function runAnalyticsAlertEvaluate(ctx: JobContext): Promise<void> 
          *
          * If the notification throws, the cooldown has still been recorded —
          * so a persistently failing channel cannot turn into one attempt per
-         * run forever. The inverse order would retry a broken WhatsApp send
+         * run forever. The inverse order would retry a broken send
          * every hour against a 100/day email allowance.
          */
         await ctx.db

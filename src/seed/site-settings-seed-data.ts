@@ -227,8 +227,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
    */
   messaging: {
     emailEnabled: false,
-    whatsappEnabled: false,
-    dailyCeiling: { email: 80, whatsapp: 200, sms: 50 },
+    dailyCeiling: { email: 80, sms: 50 },
   },
   seo: {
     defaultTitle:
@@ -483,8 +482,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     codHandlingFeePercent: 10,
     // Enabled so a seeded install actually shows the add-ons — see the matching
     // comment on DEFAULT_SITE_SETTINGS_DATA.commissions.
-    whatsappNotifyFeeEnabled: true,
-    whatsappNotifyFee: 10,
     giftWrapFeeEnabled: true,
     giftWrapFee: 49,
     shipmentProtectionFeeEnabled: true,
@@ -533,28 +530,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     phonepeWebhookUsername: "webhook_PLACEHOLDER",
     phonepeWebhookPassword: "webhook_PLACEHOLDER",
     resendApiKey: "",
-    whatsappApiKey: "wa_PLACEHOLDER",
-    // Real Meta secrets — deliberately left empty. With these unset the order
-    // announcement logs "not configured" and skips cleanly; a placeholder
-    // string here would instead be treated as a usable token and fail on send.
-    // Enter the real values in Admin → Site Settings → WhatsApp.
-    whatsappPhoneNumberId: "",
-    whatsappCloudApiToken: "",
-    // The platform's own WhatsApp number, digits-only with country code
-    // (+91 8919665811). Same number as contact.whatsappNumber above.
-    whatsappAdminNotifyNumbers: "918919665811",
-    // Default Meta message-template names. These MUST be created and approved
-    // in Meta Business Manager under exactly these names — business-initiated
-    // sends outside the 24h customer-service window are rejected without an
-    // approved template. Names match the notification types they serve, see
-    // WHATSAPP_TEMPLATE_BY_TYPE in features/admin/actions/notification-actions.ts.
-    whatsappTemplateOrderPlaced: "order_placed",
-    whatsappTemplateOrderConfirmed: "order_confirmed",
-    whatsappTemplateOrderShipped: "order_shipped",
-    whatsappTemplateOrderDelivered: "order_delivered",
-    whatsappTemplateOrderCancelled: "order_cancelled",
-    whatsappTemplateRefundInitiated: "refund_initiated",
-    whatsappTemplateLanguage: "en",
     metaAppId: "meta_app_PLACEHOLDER",
     metaAppSecret: "meta_secret_PLACEHOLDER",
     metaPageAccessToken: "meta_page_token_PLACEHOLDER",
@@ -577,7 +552,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   notificationChannels: {
     inApp: { enabled: true, readOnly: true },
     email: { enabled: true, minPriority: "normal" },
-    whatsapp: { enabled: true, minPriority: "high", otpEnabled: true },
     /*
      * FALSE. There is no SMS sender anywhere in this codebase — nothing reads
      * `notificationChannels.sms`, no Twilio SDK is installed, and the only

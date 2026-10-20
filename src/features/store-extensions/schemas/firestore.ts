@@ -153,7 +153,7 @@ export interface AnalyticsAlertDocument extends BaseDocument {
   threshold: number;
   windowHours: number;
   isActive: boolean;
-  notifyChannels: Array<"in-app" | "email" | "whatsapp">;
+  notifyChannels: Array<"in-app" | "email">;
   /**
    * When this alert last fired.
    *
