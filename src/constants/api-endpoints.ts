@@ -220,6 +220,12 @@ export const ADMIN_ENDPOINTS = {
   SHIPMENT_LOT_ITEM_LINK: (id: string, lotId: string, itemId: string) =>
     `/api/admin/shipments/${id}/lots/${lotId}/items/${itemId}/link`,
   SHIPMENTS_PROJECTIONS: "/api/admin/shipments/projections",
+  // Inventory — the box registry, placements and the move ledger.
+  INVENTORY_BOXES: "/api/admin/inventory/boxes",
+  INVENTORY_BOX_BY_ID: (id: string) => `/api/admin/inventory/boxes/${id}`,
+  INVENTORY_PLACEMENTS: "/api/admin/inventory/placements",
+  INVENTORY_MOVEMENTS: "/api/admin/inventory/movements",
+  INVENTORY_RECEIVE: "/api/admin/inventory/receive",
   CATALOGUE_APPROVALS: "/api/admin/catalogue",
   CATALOGUE_APPROVE: (id: string) => `/api/admin/catalogue/${id}/approve`,
   CATALOGUE_REJECT: (id: string) => `/api/admin/catalogue/${id}/reject`,

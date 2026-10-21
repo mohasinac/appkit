@@ -442,6 +442,11 @@ export const DEFAULT_ROUTE_MAP = {
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
     SHIPMENTS: "/admin/shipments",
+    INVENTORY: "/admin/inventory",
+    INVENTORY_BOXES: "/admin/inventory/boxes",
+    INVENTORY_BOX_DETAIL: (id: string) => `/admin/inventory/boxes/${id}`,
+    INVENTORY_MOVEMENTS: "/admin/inventory/movements",
+    SHIPMENT_RECEIVE: (id: string) => `/admin/shipments/${id}/receive`,
     SHIPMENTS_NEW: "/admin/shipments/new",
     SHIPMENTS_EDIT: (id: string) => `/admin/shipments/${id}/edit`,
     SHIPMENT_LOT_ITEMS: (id: string, lotId: string) => `/admin/shipments/${id}/lots/${lotId}/items`,

@@ -56,3 +56,11 @@ export {
   inventoryMovementsRepository,
 } from "./repository/inventory-movements.repository";
 export type { InventoryMovementCreateInput } from "./repository/inventory-movements.repository";
+
+/*
+ * The admin views. Client components, so they are safe in the main barrel —
+ * but the REPOSITORIES above are not, which is why nothing here is
+ * re-exported from `appkit/src/index.ts`.
+ */
+export { AdminStorageBoxesView, RegisterBoxForm } from "./components/AdminStorageBoxesView";
+export { AdminMoveLedgerView, MOVEMENT_KIND_TABS } from "./components/AdminMoveLedgerView";

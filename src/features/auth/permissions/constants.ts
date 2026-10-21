@@ -178,6 +178,22 @@ export type Permission =
   | "admin:catalogue:write"
 
   /*
+   * Inventory — the box registry, placements and the move ledger.
+   *
+   * 🛑 Declared in BOTH places, which is why this comment is here. The plan
+   * for this phase names it as a wiring step that fails silently: a permission
+   * in the union but absent from the route map below leaves the PAGE ungated,
+   * and one in the map but absent from the union does not typecheck at a
+   * route. `audit-permission-role-mismatch` checks the pair.
+   *
+   * No separate ledger permission: a movement cannot be edited or deleted at
+   * all (the repository throws), so the only write is an append — and anyone
+   * who may move stock may record that they moved it.
+   */
+  | "admin:inventory:read"
+  | "admin:inventory:write"
+
+  /*
    * Grouped listings — the admin-authored "you might also like" theme
    * scroller. It had a working view, working API routes and NO permission of
    * its own until 2026-08-26 (W22), which is why it also had no nav entry:
@@ -566,6 +582,9 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/payouts": "admin:payouts:read",
   "/admin/audit-log": "admin:audit-log:read",
   "/admin/shipments": "admin:shipments:read",
+  "/admin/inventory": "admin:inventory:read",
+  "/admin/inventory/boxes": "admin:inventory:read",
+  "/admin/inventory/movements": "admin:inventory:read",
   "/admin/catalogue-approvals": "admin:catalogue:read",
   "/admin/grouped-listings": "admin:grouped-listings:read",
   "/admin/categories": "admin:categories:read",
