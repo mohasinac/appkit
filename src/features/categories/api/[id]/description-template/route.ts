@@ -58,11 +58,53 @@ import type {
 } from "../../../schemas/category-content";
 import { usedPlaceholders } from "../../../../../_internal/shared/templating/placeholders";
 import { getCompositionsForCategory } from "../../../../../_internal/server/features/parts/data";
+import { getBeysForCategory } from "../../../../../_internal/server/features/beys/data";
 import {
   PART_BREAKDOWN_SLOT,
   formatPartBreakdown,
   stripSlotLine,
 } from "../../../../parts/utils/part-breakdown";
+
+/**
+ * ── The TAXONOMY slots ────────────────────────────────────────────────────
+ *
+ * Measured across the seeded bodies: 45 `{{title}}` · 21 `{{siteName}}` ·
+ * 18 `{{series}}` · 17 `{{category}}` · 13 `{{condition}}` · 6 `{{brand}}` ·
+ * 5 `{{partBreakdown}}` · 3 `{{categoryPath}}`. The seller form supplies four
+ * of those from the draft it is holding (title, brand, condition, siteName)
+ * and this route supplied exactly one (`partBreakdown`) — so
+ * **`{{category}}`, `{{categoryPath}}`, `{{series}}` and `{{system}}` could
+ * never resolve on any listing**, and the picker reported "4 of 9 slots could
+ * not be filled" on every single category, forever.
+ *
+ * All four are facts about the CATEGORY, not the draft, so the form cannot
+ * compute them and this is the only place that can. They ride the existing
+ * response exactly as `partBreakdown` does.
+ *
+ * 🛑 `series` and `system` are REAL FIELDS, not invented from the tree.
+ * `BeyDocument.series` is "the retail series" (`Beyblade Burst QuadStrike`)
+ * and `BeyDocument.system` is "the hardware generation" (`4D System`,
+ * `Hybrid Wheel System`) — which is why the seeded body renders them as two
+ * separate rows. A leaf pairs with a bey through `BeyDocument.categoryId`,
+ * and `getBeysForCategory` is the inverse of exactly that.
+ *
+ * 🛑 Resolved against the LEAF, never an ancestor — a bey describes one
+ * model, so inheriting a line's would tell every listing on that line it is
+ * the model that happened to join to the line node.
+ */
+const TAXONOMY_SLOTS = ["category", "categoryPath", "series", "system"] as const;
+
+/** Slots that need the bey read. Checked before paying for it. */
+const BEY_SLOTS = ["series", "system"] as const;
+
+/**
+ * `Spinning Tops › Beyblade X › Attack Types › Dran Sword`.
+ *
+ * A chevron rather than a slash: the body renders it inside
+ * `<li><strong>Category:</strong> …</li>` next to prose, and a slash there
+ * reads as a URL.
+ */
+const CATEGORY_PATH_SEPARATOR = " › ";
 
 /**
  * The variants a caller may ask for.
@@ -144,6 +186,17 @@ interface Inherited {
   inheritedFrom: string | null;
   inheritedFromName: string | null;
   defaults: CategoryProductDefaults;
+  /**
+   * Every ancestor's name, NEAREST-FIRST, from the docs the walk already
+   * fetched — so `{{categoryPath}}` costs zero extra reads.
+   *
+   * 🛑 Taken from the fetched SET and not accumulated inside the loop below,
+   * because that loop `break`s as soon as the template and the defaults are
+   * settled. Accumulating would give a chain that stops wherever the
+   * inheritance happened to stop, so the path a listing printed would depend
+   * on which ancestor carried the body.
+   */
+  ancestorNames: string[];
 }
 
 /**
@@ -220,6 +273,10 @@ async function resolveInherited(
    * that it came from the line.
    */
   const byId = new Map(ancestors.map((a) => [a.id, a as CategoryDoc]));
+  // See `Inherited.ancestorNames` — before the loop, which may break early.
+  out.ancestorNames = nearestFirst
+    .map((pid) => byId.get(pid)?.name?.trim())
+    .filter((n): n is string => Boolean(n));
   for (const pid of nearestFirst) {
     const d = byId.get(pid);
     if (!d) continue;
@@ -263,12 +320,13 @@ export async function GET(
      * referenced, so the per-field merge below cannot mutate the document the
      * repository cached.
      */
-    const { template, inheritedFrom, inheritedFromName, defaults } =
+    const { template, inheritedFrom, inheritedFromName, defaults, ancestorNames } =
       await resolveInherited(parentIds, variant, {
         template: pickTemplate(leaf, variant),
         inheritedFrom: null,
         inheritedFromName: null,
         defaults: { ...(leaf.productDefaults ?? {}) },
+        ancestorNames: [],
       });
 
     /*
@@ -311,6 +369,70 @@ export async function GET(
       const breakdown = formatPartBreakdown(compositions);
       if (breakdown) slots[PART_BREAKDOWN_SLOT] = breakdown;
       else body = stripSlotLine(body, PART_BREAKDOWN_SLOT);
+    }
+
+    /*
+     * ── The taxonomy slots ────────────────────────────────────────────────
+     *
+     * See TAXONOMY_SLOTS. `category` and `categoryPath` are free — the leaf
+     * and its ancestors are already in hand — so they are built
+     * unconditionally and the `placeholders` check below decides whether they
+     * are sent.
+     *
+     * The bey read is gated on the body actually asking, the same way the
+     * composition read is: nothing outside the Beyblade lines carries
+     * `{{series}}`/`{{system}}`, so a TCG set or a Hot Wheels casting pays
+     * nothing for a concept it does not have.
+     */
+    if (template) {
+      const taxonomy: Record<string, string> = {
+        category: (leaf.name ?? "").trim(),
+        // Root-first: `ancestorNames` is nearest-first, so reverse it and put
+        // the leaf on the end. This is the order a breadcrumb reads in.
+        categoryPath: [...ancestorNames]
+          .reverse()
+          .concat((leaf.name ?? "").trim())
+          .filter(Boolean)
+          .join(CATEGORY_PATH_SEPARATOR),
+      };
+
+      if (BEY_SLOTS.some((s) => placeholders.includes(s))) {
+        const beys = await getBeysForCategory(id);
+        /*
+         * The first pairing only, matching `formatPartBreakdown`'s rule and
+         * for the same reason: 22 leaves pair with more than one bey (a
+         * remake shares a model's name), and concatenating two retail series
+         * would describe a release that does not exist.
+         */
+        const bey = beys[0];
+        taxonomy.series = (bey?.series ?? "").trim();
+        taxonomy.system = (bey?.system ?? "").trim();
+      }
+
+      for (const slot of TAXONOMY_SLOTS) {
+        if (!placeholders.includes(slot)) continue;
+        const value = taxonomy[slot] ?? "";
+        if (value) {
+          slots[slot] = value;
+          continue;
+        }
+        /*
+         * 🛑 ABSENCE REMOVES THE LINE — `partBreakdown`'s contract, applied
+         * here for the same reason: `interpolate` resolves an unfilled slot
+         * to an empty string, so `<li><strong>System:</strong> {{system}}</li>`
+         * would render an empty bullet that reads as broken data.
+         *
+         * 🛑 KNOWN CONSEQUENCE, stated rather than guarded against (as the
+         * strip helper's own header does): `{{series}}` appears both as a
+         * standalone row AND mid-sentence ("from the {{series}} line"), so a
+         * leaf with no paired bey loses that whole sentence instead of
+         * printing "from the  line". Losing a sentence is the better of the
+         * two, and the seller sees the picker's note either way — but a
+         * template author adding an inline slot should know the line goes
+         * with it.
+         */
+        body = stripSlotLine(body, slot);
+      }
     }
 
     return NextResponse.json(

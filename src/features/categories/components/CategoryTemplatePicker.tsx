@@ -125,11 +125,45 @@ function unwrap(res: unknown): TemplateResponse | null {
   return body && typeof body === "object" && "template" in body ? body : null;
 }
 
-/** "2 of 9 slots could not be filled: {{year}}, {{type}}" */
-function unresolvedNote(unresolved: string[], total: number): string | null {
+/**
+ * `camelCase` / `snake_case` slot name -> words a seller reads.
+ *
+ * `categoryPath` -> "category path", `partBreakdown` -> "part breakdown".
+ * Lower-cased throughout because the note reads these mid-sentence.
+ */
+function humaniseSlot(name: string): string {
+  return name
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z\d])([A-Z])/g, "$1 $2")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * "2 details were left blank and are highlighted below: year, type"
+ *
+ * 🛑 NO `{{…}}` IN USER-FACING COPY. This printed the slot names back wrapped
+ * in braces — `2 of 9 slots could not be filled: {{year}}, {{type}}` — which
+ * is where the reported "raw {{slot}} syntax" came from. It was not a failed
+ * interpolation leaking through; the note RE-MANUFACTURED the template syntax
+ * to describe it, so the seller saw the same thing either way and no amount of
+ * fixing the templating would have removed it.
+ *
+ * "slots" went with the braces. It is the word this codebase uses for a
+ * placeholder; a seller filling in a listing has no reason to know it, and
+ * "could not be filled" reads as a system failure rather than as the three
+ * boxes they need to type in. The count stays — it is the actionable part —
+ * but it counts what is MISSING rather than reporting it as a fraction, since
+ * "2 of 9" invites the reader to wonder what the other seven were — and the
+ * denominator is why the `total` argument is gone.
+ */
+function unresolvedNote(unresolved: string[]): string | null {
   if (unresolved.length === 0) return null;
-  const named = unresolved.map((n) => `{{${n}}}`).join(", ");
-  return `${unresolved.length} of ${total} slots could not be filled: ${named}`;
+  const named = unresolved.map(humaniseSlot).join(", ");
+  const count = unresolved.length;
+  return count === 1
+    ? `One detail was left blank — add the ${named} before publishing.`
+    : `${count} details were left blank — add the ${named} before publishing.`;
 }
 
 /** "adds 2 specification rows · sets condition to Used" */
@@ -262,10 +296,7 @@ export function CategoryTemplatePicker({
     );
   }
 
-  const note = unresolvedNote(
-    filled.unresolved,
-    template.placeholders?.length ?? filled.unresolved.length,
-  );
+  const note = unresolvedNote(filled.unresolved);
   const extras = describeDefaults(data.defaults);
   const source = data.inheritedFromName
     ? `Inherited from ${data.inheritedFromName}`
