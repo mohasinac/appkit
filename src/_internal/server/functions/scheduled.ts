@@ -28,6 +28,7 @@ import {
   productStatsSyncHandler,
   revenueRollupHandler,
   priceIndexRollupHandler,
+  marketPriceRollupHandler,
   searchIndexBuildHandler,
   analyticsAlertEvaluateHandler,
   pageViewRollupHandler,
@@ -160,6 +161,30 @@ export const priceIndexRollup = defineFunction({
     "Roll up realised sale prices per leaf category into priceIndex/{leafId} (daily 04:30 UTC = 10:00 IST).",
   trigger: { kind: "schedule", cron: "30 4 * * *", timeZone: "UTC" },
   handler: priceIndexRollupHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "512MiB", maxInstances: 1 },
+});
+
+/*
+ * The ASKING half of the same page, from dated `priceObservations` rows.
+ *
+ * 🛑 A separate function from `priceIndexRollup`, not a second pass inside it,
+ * and the reason is the one that file already states for itself: these two
+ * bands are *"rendered side by side and never averaged"*. Sharing a function
+ * would also share a failure — a bad observation import taking the realised-
+ * sale index down with it, when the two read entirely different collections and
+ * have no reason to fail together.
+ *
+ * 05:00 UTC, half an hour after the sold half: both feed one page, and running
+ * them adjacently means a reader never sees one half a day fresher than the
+ * other. Not simultaneously — `maxInstances: 1` on each, but they would still
+ * contend for the same Firestore read budget in the same minute for no gain.
+ */
+export const marketPriceRollup = defineFunction({
+  name: "marketPriceRollup",
+  description:
+    "Roll up dated price observations into marketPriceIndex/{leafId} — mode, 6-month low/high (daily 05:00 UTC = 10:30 IST).",
+  trigger: { kind: "schedule", cron: "0 5 * * *", timeZone: "UTC" },
+  handler: marketPriceRollupHandler,
   options: { region: REGION, timeoutSeconds: 540, memory: "512MiB", maxInstances: 1 },
 });
 
@@ -465,6 +490,7 @@ export const SCHEDULED_FUNCTIONS = [
   productStatsSync,
   revenueRollup,
   priceIndexRollup,
+  marketPriceRollup,
   searchIndexBuild,
   analyticsAlertEvaluate,
   pageViewRollup,

@@ -56,7 +56,19 @@
 
 import { resolveInheritedGuidanceMany } from "../categories/price-guidance-resolve";
 import { PRICE_GUIDANCE_TAX_BASIS } from "../../../shared/features/categories/price-guidance";
+import { marketPriceIndexRepository } from "../../../../features/categories/repository/market-price-index.repository";
 import { PRICE_INDEX_SEARCH_LIMIT } from "./search";
+
+/**
+ * Where a row's figures came from, and therefore what may be claimed for them.
+ *
+ * 🛑 This is not decoration and a renderer that drops it will overclaim. A
+ * `computed` row is a mode over dated sightings of THIS leaf and may be
+ * labelled "most common price, last 6 months". A `seeded` row is the 2026-10
+ * crawl's median for an entire GENERATION, frozen at one date — calling that
+ * "most common" or "recent" would be false in both halves.
+ */
+export type PriceIndexMarketOrigin = "computed" | "seeded";
 
 export interface PriceIndexMarketRow {
   categoryId: string;
@@ -75,6 +87,29 @@ export interface PriceIndexMarketRow {
   p75?: number;
   sampleSize?: number;
   asOf?: string;
+  origin: PriceIndexMarketOrigin;
+  /**
+   * The price sightings cluster on. `computed` rows only.
+   *
+   * 🛑 Optional even there: absent means no price bucket held two or more
+   * sightings, so there is no cluster and the renderer must fall back to
+   * `median` under a different label rather than printing a lone sighting as
+   * though it were a consensus.
+   */
+  mode?: number;
+  modeCount?: number;
+  /** Observed low/high over the window below. `computed` rows only. */
+  low?: number;
+  high?: number;
+  /**
+   * 🛑 FALSE means `low`/`high`/`mode` describe ALL TIME — the six-month window
+   * held too little to stand alone. The renderer must relabel; a stale figure
+   * is indistinguishable from a current one once printed.
+   */
+  basedOnRecent?: boolean;
+  windowDays?: number;
+  /** Newest sighting behind a `computed` row. Not the rollup time. */
+  lastSeenAt?: string;
   /**
    * The share of competitor listings at this level that are SOLD OUT (0.85,
    * measured across the five largest catalogues).
@@ -123,10 +158,62 @@ export async function getPriceIndexMarketForIds(
   );
   if (ids.length === 0) return [];
 
-  const guidanceById = await resolveInheritedGuidanceMany(ids);
+  /*
+   * Both halves in parallel. The computed read is one `getAll`, the seeded one
+   * is two batched reads — three round trips total against Rule #6's budget,
+   * and sequencing them would make it three in series for no benefit since
+   * neither depends on the other.
+   */
+  const [guidanceById, computedById] = await Promise.all([
+    resolveInheritedGuidanceMany(ids),
+    marketPriceIndexRepository.getManyForLeaves(ids),
+  ]);
 
   const rows: PriceIndexMarketRow[] = [];
   for (const id of ids) {
+    /*
+     * 🛑 A COMPUTED band for this exact leaf outranks any seeded one.
+     *
+     * The seeded band is a crawl median for a whole generation, so every model
+     * in an era carries the same number — which is how Dragoon MS and Strata
+     * Dragoon MS, different beys with different markets, both reported ₹3,999.
+     * A computed band is dated sightings of THIS leaf. Where both exist the
+     * specific measurement wins; where only the generation band exists it still
+     * shows, labelled as the generation's.
+     *
+     * 🛑 Looked up for the LEAF ONLY, deliberately. Computed bands do not walk
+     * the ancestor chain: observations are recorded against the thing that was
+     * actually priced, so an era-level row would be evidence about the era and
+     * inheriting it down to a model would re-create the exact conflation this
+     * precedence exists to end. The seeded band remains the inherited fallback,
+     * and it says so on the card.
+     */
+    const computed = computedById.get(id)?.byKind?.ask;
+    if (computed) {
+      rows.push({
+        categoryId: id,
+        origin: "computed",
+        median: computed.median,
+        ...(computed.mode === undefined
+          ? {}
+          : { mode: computed.mode, modeCount: computed.modeCount }),
+        low: computed.low,
+        high: computed.high,
+        sampleSize: computed.sampleSize,
+        basedOnRecent: computed.basedOnRecent,
+        windowDays: computed.windowDays,
+        ...(toIso(computed.lastSeenAt) ? { lastSeenAt: toIso(computed.lastSeenAt) } : {}),
+        /*
+         * A computed band is this leaf's own measurement by construction — it
+         * is keyed on the leaf id and never inherited — so `inherited` is
+         * false and no `via*` attribution applies.
+         */
+        inherited: false,
+        taxBasis: PRICE_GUIDANCE_TAX_BASIS,
+      });
+      continue;
+    }
+
     const resolved = guidanceById.get(id);
     const market = resolved?.guidance.market;
     // No band anywhere up the chain. Omitted, never zeroed.
@@ -134,6 +221,7 @@ export async function getPriceIndexMarketForIds(
 
     rows.push({
       categoryId: id,
+      origin: "seeded",
       median: market.median,
       ...(market.p25 === undefined ? {} : { p25: market.p25 }),
       ...(market.p75 === undefined ? {} : { p75: market.p75 }),

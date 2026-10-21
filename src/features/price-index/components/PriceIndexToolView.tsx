@@ -102,14 +102,24 @@ export interface PriceIndexToolResponse {
 }
 
 /**
- * The competitor-crawl band for one leaf. Mirrors `PriceIndexMarketRow`.
+ * The asking-price band for one leaf. Mirrors `PriceIndexMarketRow`.
  *
- * Every field but `median` and `categoryId` is optional because the crawl
- * genuinely did not measure them everywhere, and an absent figure must render
- * as absent. See `price-bands.md`: "a band with `n=2` is not evidence".
+ * Every field but `median`, `categoryId` and `origin` is optional, because the
+ * two kinds of row carry genuinely different evidence and an absent figure
+ * must render as absent. See `price-bands.md`: "a band with `n=2` is not
+ * evidence".
+ *
+ * 🛑 `origin` decides what the card is ALLOWED to claim, and the two cases are
+ * not cosmetic variants of each other:
+ *
+ *   `computed`  a mode over dated sightings of THIS leaf. May be called "most
+ *               common" and, when `basedOnRecent`, "last 6 months".
+ *   `seeded`    the 2026-10 crawl's median for an entire GENERATION, frozen at
+ *               one date. May be called neither.
  */
 export interface PriceIndexMarketRowView {
   categoryId: string;
+  origin: "computed" | "seeded";
   median: number;
   p25?: number;
   p75?: number;
@@ -117,6 +127,15 @@ export interface PriceIndexMarketRowView {
   asOf?: string;
   soldOutShare?: number;
   source?: string;
+  /** `computed` only — the price sightings cluster on. */
+  mode?: number;
+  modeCount?: number;
+  low?: number;
+  high?: number;
+  /** `false` ⇒ the figures are all-time, not the last six months. */
+  basedOnRecent?: boolean;
+  windowDays?: number;
+  lastSeenAt?: string;
   inherited: boolean;
   viaCategoryId?: string;
   viaName?: string;
@@ -181,8 +200,15 @@ function relativeDay(iso: string | undefined): string {
   return months === 1 ? "1 month ago" : `${months} months ago`;
 }
 
-/** One figure with its label. Four of these, never one called "the price". */
-function Figure({ label, value }: { label: string; value: string }) {
+/**
+ * One figure with its label. Four of these, never one called "the price".
+ *
+ * `dim` renders the figure at body size in muted ink. It is how a GENERATION
+ * band is demoted below a per-model one — the numbers stay readable, because a
+ * ballpark is better than nothing, but they stop looking like a measurement of
+ * the thing the card is headed by.
+ */
+function Figure({ label, value, dim }: { label: string; value: string; dim?: boolean }) {
   return (
     <Stack gap="none" className="min-w-0">
       <Text size="xs" color="muted" transform="uppercase" className="tracking-wide">
@@ -191,7 +217,13 @@ function Figure({ label, value }: { label: string; value: string }) {
       {/* audit-guest-price-ok: the realised-price index is public by decision —
           see this file's header and the module docstring on searchPriceIndex.
           A completed-sale aggregate is not a live ask. */}
-      <Text size="lg" weight="semibold" numeric className="tabular-nums">
+      <Text
+        size={dim ? "base" : "lg"}
+        weight={dim ? "medium" : "semibold"}
+        {...(dim ? { color: "muted" as const } : {})}
+        numeric
+        className="tabular-nums"
+      >
         {value}
       </Text>
     </Stack>
@@ -342,14 +374,35 @@ function BandCard({ band, threshold }: { band: PriceIndexBandRow; threshold: num
  * Burst DB" is true, "typical for Rage Longinus" is not.
  */
 function MarketCard({ market }: { market: PriceIndexMarketRowView }) {
-  const hasRange = market.p25 !== undefined && market.p75 !== undefined;
   const soldOutPct =
     market.soldOutShare === undefined ? null : Math.round(market.soldOutShare * 100);
 
+  /*
+   * 🛑 A SEEDED band is a generation median and a COMPUTED one is a mode over
+   * dated sightings of this exact leaf. They are rendered differently because
+   * they support different claims, not because one looks nicer — the single
+   * worst thing this card could do is print a generation's figure in the
+   * typography of a per-model measurement, which is what it used to do and is
+   * why Dragoon MS and Strata Dragoon MS read as the same bey.
+   */
+  const isComputed = market.origin === "computed";
+
+  if (isComputed) return <ComputedMarketCard market={market} />;
+
+  const hasRange = market.p25 !== undefined && market.p75 !== undefined;
+
   return (
-    <Stack gap="sm" padding="sm" rounded="lg" border="default" className="min-w-0">
+    <Stack gap="sm" padding="sm" rounded="lg" border="subtle" surface="muted" className="min-w-0">
       <Row align="center" justify="between" gap="sm" wrap className="min-w-0">
-        <Badge variant="secondary">Typical asking price</Badge>
+        {/*
+          🛑 "Generation estimate", not "Typical asking price". The old label
+          described the figure's TYPE and said nothing about its SCOPE, so a
+          reader took a Hard Metal System median for a Dragoon MS price. The
+          badge now leads with the limitation.
+        */}
+        <Badge variant="secondary">
+          {market.inherited ? "Generation estimate" : "Typical asking price"}
+        </Badge>
         {/*
           🛑 Absent `sampleSize` renders as nothing at all. The Beyblade-top
           table carries no per-leaf n, and printing "0 listings" or inventing a
@@ -362,19 +415,29 @@ function MarketCard({ market }: { market: PriceIndexMarketRowView }) {
         )}
       </Row>
 
-      <Row gap="lg" wrap className="min-w-0">
-        {hasRange && <Figure label="Usual low" value={money(market.p25 as number)} />}
-        <Figure label="Typical ask" value={money(market.median)} />
-        {hasRange && <Figure label="Usual high" value={money(market.p75 as number)} />}
-      </Row>
-
+      {/*
+        🛑 The caveat goes ABOVE the numbers for an inherited band. Below them
+        it was read after the figures had already landed, which is too late —
+        the reader has the number by then and the sentence reads as a footnote
+        rather than as a correction.
+      */}
       {market.inherited && (
         <Text size="sm" color="muted">
-          Measured for{" "}
+          We have no figure for this exact item. These are typical asks for{" "}
           <Span weight="semibold">{market.viaName ?? market.viaCategoryId}</Span> as a
-          whole — the crawl priced the generation, not this exact item.
+          whole, so every item in that generation shows the same range.
         </Text>
       )}
+
+      <Row gap="lg" wrap className="min-w-0">
+        {hasRange && (
+          <Figure label="Usual low" value={money(market.p25 as number)} dim={market.inherited} />
+        )}
+        <Figure label="Typical ask" value={money(market.median)} dim={market.inherited} />
+        {hasRange && (
+          <Figure label="Usual high" value={money(market.p75 as number)} dim={market.inherited} />
+        )}
+      </Row>
 
       {soldOutPct !== null && (
         <Text size="sm" color="muted">
@@ -384,11 +447,116 @@ function MarketCard({ market }: { market: PriceIndexMarketRowView }) {
         </Text>
       )}
 
+      {/*
+        🛑 NO COMPETITOR NAME. It is not stored either (see MARKET_BANDS' own
+        header) — stripping it here alone would leave it in the database, one
+        careless spread away from publication, which is Root Cause #70 exactly.
+        The METHODOLOGY still prints, because "pooled across all Burst parts" is
+        what stops a pooled band being read as a per-leaf measurement.
+      */}
       <Text size="xs" color="muted" className="min-w-0 break-words">
-        {market.source ? `Source: ${market.source}. ` : ""}
-        Tax-inclusive
+        Aggregated from Indian shop listings
+        {market.source ? ` · ${market.source}` : ""} · tax-inclusive
         {market.asOf
           ? ` · measured ${new Date(market.asOf).toLocaleDateString("en-IN")}`
+          : ""}
+      </Text>
+    </Stack>
+  );
+}
+
+/**
+ * The per-leaf band computed from dated sightings.
+ *
+ * ## 🛑 The headline is the MODE, and it is labelled as one
+ *
+ * "Most commonly listed at" is a different claim from "typical ask" and the
+ * card has to make the right one. A median answers "what is the middle of this
+ * list"; a mode answers "what do people actually charge", and on a collectible
+ * those diverge — six sightings at ₹6,500 and three clearance ones at ₹3,000
+ * have a median that moves to ₹3,000 the moment two more cheap ones appear,
+ * while the going rate has not moved at all.
+ *
+ * ## 🛑 Where there is no mode, the label CHANGES
+ *
+ * `mode` is absent when no price bucket held two or more sightings — every
+ * observed price was different, so there is no cluster. The card then shows the
+ * median under "Typical ask". Printing a lone sighting under "most common"
+ * would dress one data point as a consensus.
+ *
+ * ## 🛑 `basedOnRecent` decides the low/high label, and it must
+ *
+ * False means the six-month window held too little to stand alone, so the
+ * figures are all-time. A card that says "last 6 months" over a two-year-old
+ * sighting is indistinguishable from an accurate one once printed — which is
+ * the whole reason the flag travels with the band instead of being inferred.
+ */
+function ComputedMarketCard({ market }: { market: PriceIndexMarketRowView }) {
+  const recent = market.basedOnRecent === true;
+  const rangeLabel = recent ? "last 6 months" : "all time";
+  const hasRange = market.low !== undefined && market.high !== undefined;
+
+  return (
+    <Stack gap="sm" padding="sm" rounded="lg" border="default" className="min-w-0">
+      <Row align="center" justify="between" gap="sm" wrap className="min-w-0">
+        <Badge variant="primary">
+          {recent ? "Going rate · last 6 months" : "Going rate · all time"}
+        </Badge>
+        {market.sampleSize !== undefined && (
+          <Text size="xs" color="muted">
+            {market.sampleSize} {market.sampleSize === 1 ? "sighting" : "sightings"}
+          </Text>
+        )}
+      </Row>
+
+      <Row gap="lg" wrap className="min-w-0">
+        {hasRange && (
+          <Figure label={`Lowest · ${rangeLabel}`} value={money(market.low as number)} />
+        )}
+        {market.mode !== undefined ? (
+          <Figure label="Most commonly listed at" value={money(market.mode)} />
+        ) : (
+          <Figure label="Typical ask" value={money(market.median)} />
+        )}
+        {hasRange && (
+          <Figure label={`Highest · ${rangeLabel}`} value={money(market.high as number)} />
+        )}
+      </Row>
+
+      {market.mode !== undefined && market.modeCount !== undefined && (
+        <Text size="sm" color="muted">
+          {market.modeCount} of {market.sampleSize} sightings were around this
+          price — it is the figure this item is listed at most often, not the
+          middle of the range.
+        </Text>
+      )}
+
+      {/*
+        🛑 Said out loud when the window could not carry the band. Silence here
+        reads as "these are current", and the reader has no other way to tell.
+
+        🛑 It reports HOW OLD the newest sighting is, NOT `windowDays`. Those
+        are different quantities and the first draft printed the wrong one: a
+        set of sightings from 400–500 days ago has a SPAN of 100 days, so it
+        rendered "about 3 months" over data more than a year stale — which
+        reads as recent and is the exact misreading this whole branch exists to
+        prevent. The span of the evidence says nothing about its age.
+      */}
+      {!recent && (
+        <Text size="sm" color="muted">
+          Too few sightings in the last six months to stand on their own, so
+          these cover everything we have recorded
+          {market.lastSeenAt && relativeDay(market.lastSeenAt)
+            ? ` — the newest is from ${relativeDay(market.lastSeenAt)}`
+            : ""}
+          .
+        </Text>
+      )}
+
+      <Text size="xs" color="muted" className="min-w-0 break-words">
+        Asking prices from Indian shops and listings · tax-inclusive
+        {market.lastSeenAt
+          ? ` · most recent sighting ${relativeDay(market.lastSeenAt) || new Date(market.lastSeenAt).toLocaleDateString("en-IN")}`
           : ""}
       </Text>
     </Stack>
@@ -497,7 +665,18 @@ function ResultCard({
         <Text size="sm" color="muted">
           {market
             ? "Nothing has sold here on LetItRip yet, so the figures above are asking prices elsewhere rather than our own sales."
-            : "No completed sales recorded here yet. Prices appear once something sells on LetItRip."}
+            : canSeeMarket
+              ? /*
+                 * 🛑 BOTH halves are empty here, and saying so is the point.
+                 * The old copy named only the sold half, so a lookup for an
+                 * item nobody has crawled either — Dragoon G and every other
+                 * Engine Gear top, an era the 2026-10 crawl skipped entirely —
+                 * read as "it just has not sold yet" when the truth is that we
+                 * have no price evidence of any kind. Those are different
+                 * states and only one of them is about our marketplace.
+                 */
+                "No price evidence for this one yet — nothing sold here, and no asking prices recorded for it either. It appears as soon as either exists."
+              : "No completed sales recorded here yet. Prices appear once something sells on LetItRip."}
         </Text>
       )}
     </Stack>
