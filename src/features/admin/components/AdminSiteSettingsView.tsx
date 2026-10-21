@@ -1196,8 +1196,16 @@ export function AdminSiteSettingsView({
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
               <Stack gap="none">
+                {/*
+                  The `<Text>` above is a VISUAL label only — it is not a
+                  `<label>` and carries no `htmlFor`, so the picker had no
+                  accessible name. `bare` renders no label element by design
+                  (the swatch must fill its box), so the association is made
+                  with `aria-label` instead. The four sibling pickers on this
+                  page pass `label` and now get this for free from `Input`.
+                */}
                 <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
-                <Input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+                <Input type="color" aria-label="Background color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
               </Stack>
             </SettingsTabForm>
           </TabsContent>

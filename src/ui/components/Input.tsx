@@ -58,12 +58,35 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       .join(" ");
 
     if (bare) {
+      /*
+       * 🛑 `bare` DROPPED THE LABEL, and four call sites pass one.
+       *
+       * This branch exists to render an `<input>` with no wrapper markup —
+       * `/admin/site`'s native colour pickers need the element bare so the
+       * swatch fills its box. But it also ignored `label` entirely, so
+       * `<Input type="color" label="Overlay color" bare />` rendered an input
+       * with NO accessible name while the call site plainly declared one.
+       * A prop accepted and silently discarded (Root Cause #51's shape), and
+       * it lands on exactly the page the audit measured.
+       *
+       * `aria-label` rather than a `<label>` element: adding a label here
+       * would reintroduce the wrapper this branch exists to avoid. Only when
+       * the label is a STRING — a ReactNode cannot become an attribute, and
+       * stringifying one would produce "[object Object]" as the field's
+       * accessible name, which is worse than none.
+       *
+       * A caller's own `aria-label` wins, so this fills a gap and never
+       * overrides an explicit choice.
+       */
+      const bareAriaLabel =
+        props["aria-label"] ?? (typeof label === "string" ? label : undefined);
       return (
         <input
           {...props}
           ref={ref}
           id={inputId}
           disabled={disabled}
+          aria-label={bareAriaLabel}
           aria-invalid={error ? "true" : undefined}
           className={inputClassName}
         />
