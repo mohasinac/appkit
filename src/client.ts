@@ -333,6 +333,14 @@ export { useMediaUpload } from "./features/media/index";
 
 // Client-side context providers
 export { SessionProvider, useSession } from "./react/contexts/SessionContext";
+/*
+ * 🛑 `useOptionalSession` — returns null instead of throwing when no provider
+ * is mounted. Required by anything that renders on a PUBLIC page and adjusts
+ * for the viewer: library code must not demand a provider (Root Cause #20),
+ * and the no-provider path has to fail CLOSED. `useCanSeePrices` already
+ * depends on it; the grievance form on /grievance is the second consumer.
+ */
+export { useOptionalSession } from "./react/contexts/SessionContext";
 export type { SessionProviderProps } from "./react/contexts/SessionContext";
 // ThemeProvider — exported above alongside the registry-aware variant.
 export { useUrlTable } from "./react/hooks/useUrlTable";
