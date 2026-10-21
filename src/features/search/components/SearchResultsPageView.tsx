@@ -123,14 +123,63 @@ export function SearchResultsPageView({
                 <TextLink href={group.moreHref}>See all {group.label.toLowerCase()} →</TextLink>
               </Row>
               <Stack gap="xs">
+                {/*
+                  ── THE WHOLE CARD IS THE LINK ─────────────────────────────
+
+                  🛑 IT WAS A CARD CONTAINING A LINK, which is not the same
+                  thing. The clickable region was the title's TEXT — so a
+                  short title like "Dranzer" gave a ~60px target inside a
+                  full-width card that looked clickable everywhere, and every
+                  click on the card's padding, or on the detail line, did
+                  nothing. That is the clickable-card lie, and on the one page
+                  whose entire job is to send people somewhere.
+
+                  `variant="inherit"` + `layout="flex-col"` is what makes a
+                  block link possible without nesting: `TextLink` is the
+                  anchor and the title/detail are plain `<Text>` inside it. A
+                  `TextLink` inside a card-wide link would be an anchor inside
+                  an anchor — invalid HTML, and the trap that forced the
+                  product card's brand chip to fake navigation with
+                  `preventDefault` + `router.push`.
+                */}
                 {group.hits.map((hit) => (
-                  <Div key={`${group.key}-${hit.id}`} surface="card" padding="sm" rounded="md">
-                    <TextLink href={hit.href}>{hit.title}</TextLink>
-                    {hit.detail && (
-                      <Text size="xs" color="muted">
-                        {hit.detail}
+                  <Div
+                    key={`${group.key}-${hit.id}`}
+                    surface="card"
+                    rounded="md"
+                    overflow="hidden"
+                  >
+                    {/*
+                      The PADDING is on the link, not the card. That is what
+                      makes the whole card clickable rather than just the
+                      words — the card supplies the surface, the link fills it
+                      edge to edge.
+
+                      `hover:bg-surface-hover` is ONE theme-inverting token,
+                      never a `hover:bg-zinc-50` + `dark:` pair: the zinc
+                      scale is declared once under `:root` and does not
+                      invert, so a named tint is the same near-white fill in
+                      both themes and reads as white-on-white under dark ink
+                      (Root Cause #79).
+                    */}
+                    <TextLink
+                      href={hit.href}
+                      variant="inherit"
+                      layout="flex-col"
+                      gap="xs"
+                      paddingX="sm"
+                      paddingY="sm"
+                      className="w-full hover:bg-surface-hover"
+                    >
+                      <Text size="sm" weight="medium">
+                        {hit.title}
                       </Text>
-                    )}
+                      {hit.detail && (
+                        <Text size="xs" color="muted">
+                          {hit.detail}
+                        </Text>
+                      )}
+                    </TextLink>
                   </Div>
                 ))}
               </Stack>
