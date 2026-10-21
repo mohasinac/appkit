@@ -19,6 +19,7 @@ import { Button, Div, Form, FieldInput, FieldSelect, Stack, Text } from "../../.
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { sortBy } from "../../../constants/sort";
+import { sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { operatorMessage } from "./operator-message";
 import { BoxTypeValues, type StorageBoxDocument } from "../schemas/firestore";
 
@@ -63,7 +64,7 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
             value={code}
             onChange={setCode}
             placeholder="AC60-03"
-            helperText="Exactly what is written on the physical label."
+            hint="Exactly what is written on the physical label."
           />
           <FieldSelect
             name="boxType"
@@ -151,6 +152,23 @@ export function AdminStorageBoxesView() {
       },
       emptyLabel: "No boxes registered yet",
       filterKeys: ["status", "boxType"],
+      /*
+       * 🛑 REQUIRED — see the long note in `AdminMoveLedgerView`. Its absence
+       * threw `TypeError: buildFilters is not a function` during render, so
+       * `/admin/inventory/boxes` never painted.
+       *
+       * Joined with "," because sievejs reads a comma as AND: status AND
+       * boxType, which is what two independent chip groups mean. A "|" would
+       * be an OR-group on ONE field and is what `sieveMultiEq` is for —
+       * getting that backwards is how a filter silently widens instead of
+       * narrowing.
+       */
+      buildFilters: (state) => {
+        const parts: string[] = [];
+        if (state.status) parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
+        if (state.boxType) parts.push(sieveFilter("boxType", SIEVE_OP.EQ, state.boxType));
+        return parts.join(",") || undefined;
+      },
       /*
        * Sorted by `ordinal`, not `code`. A string sort puts AC60-10 before
        * AC60-2 — the kind of ordering that makes an operator distrust the

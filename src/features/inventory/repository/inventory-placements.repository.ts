@@ -32,6 +32,7 @@
  * @tag sideEffects:firestore
  */
 
+import type { Transaction } from "firebase-admin/firestore";
 import {
   BaseRepository,
   parseSieveDateValue,
@@ -408,8 +409,22 @@ export class InventoryPlacementsRepository extends BaseRepository<InventoryPlace
    *
    * `audit-inventory-ledger-append-only` allows this one path by name.
    */
+  /*
+   * 🛑 `Transaction`, not a structural `{ set: (ref: unknown, data: unknown)
+   * => void }`. That shortcut did not compile and the reason is worth keeping:
+   * parameter types are CONTRAVARIANT, so a parameter annotated
+   * `(ref: unknown) => void` promises to accept anything at all — a stronger
+   * guarantee than `Transaction.set`, whose first argument must be a
+   * `DocumentReference`. So `Transaction` was not assignable to it and all
+   * three call sites failed. Widening a parameter to `unknown` narrows what
+   * can be passed IN, which is the opposite of what it looks like.
+   *
+   * `import type` keeps this free at runtime — it emits nothing, which is the
+   * same reason `unit-of-work.ts` can name the type without pulling
+   * firebase-admin into the graph (Root Cause #24).
+   */
   private appendMovement(
-    tx: { set: (ref: unknown, data: unknown) => void },
+    tx: Transaction,
     row: Record<string, unknown>,
   ): void {
     const ref = this.db.collection(INVENTORY_MOVEMENTS_COLLECTION).doc();
