@@ -87,6 +87,9 @@ export interface PaymentReconcileResult {
   /** R4 */
   disputesRecorded: number;
   casesEscalated: number;
+  /** R5 */
+  unpaidCancellations: number;
+  staleRefundFlagsCleared: number;
   /** Observability */
   reads: number;
   skippedReason?: string;
@@ -439,6 +442,167 @@ async function reconcileStaleRefundClaims(
   }
 }
 
+/* ──────────────── R5: a cancellation that still owes money ──────────────── */
+
+/**
+ * A cancelled order whose recorded refund was never actually paid.
+ *
+ * ## 🛑 Why R3 cannot see this, which is the whole reason R5 exists
+ *
+ * R3 above watches `refundClaims` for a row stuck in `claimed` — i.e. a crash
+ * **after** `processRefundAction` took its idempotency claim. But
+ * `cancelOrderWithRefund` writes the cancellation and the refund *intent*
+ * first, and only then calls `processRefundAction`. So a failure in that window
+ * — the process dies, the settings read throws, the provider is unreachable
+ * before a claim is written — leaves **no `refundClaims` row at all**, and R3
+ * is structurally blind to it.
+ *
+ * What it does leave is an order that says, in its own fields, that it owes
+ * money: `status: "cancelled"` with a `refundAmount` and
+ * `refundStatus: "pending"`. That is the artefact, and it exists precisely
+ * because the intent is written before the money moves.
+ *
+ * ## Two equalities, no inequality, and the reason
+ *
+ * `where(status).where(refundStatus)` plus a `limit`. Deliberately **no
+ * `orderBy`**: `cancellationDate` and `refundAmount` are both optional fields,
+ * and an `orderBy` on an optional field silently excludes every document that
+ * lacks it (Root Cause #100) — which here would mean the sweep quietly skipping
+ * exactly the malformed rows it is looking for. With no `orderBy` Firestore
+ * orders by document id, which is stable and needs no second index.
+ *
+ * ## The settled check reads `refunds[]`, not the flag
+ *
+ * The flag says what was INTENDED; `refunds[]` says what HAPPENED, and it is
+ * maintained transactionally by reserve/settle. `settleRefund` now clears the
+ * flag to `"completed"` on a full processed refund, so a healthy refund leaves
+ * this query's result set on its own — but a crash between the provider call
+ * and that write would leave the flag standing with the money gone. Comparing
+ * against the committed total is what tells those two apart, and getting it
+ * backwards would report every successful refund as a failure.
+ */
+async function reconcileUnpaidCancellations(
+  ctx: JobContext,
+): Promise<{ owed: number; stale: number; reads: number }> {
+  let owed = 0;
+  let stale = 0;
+
+  try {
+    const snap = await ctx.db
+      .collection("orders")
+      .where("status", "==", "cancelled")
+      .where("refundStatus", "==", "pending")
+      .limit(100)
+      .get();
+
+    /*
+     * Saturation is reported, never silent. A full page means there may be more
+     * behind it, and "we processed 100 and said nothing" reads identically to
+     * "there were exactly 100" — the `truncated` discipline.
+     */
+    if (snap.size === 100) {
+      ctx.logger.warn(
+        "R5: hit the 100-order page limit — more unpaid cancellations may exist behind it",
+      );
+    }
+
+    for (const doc of snap.docs) {
+      const data = doc.data() as {
+        refundAmount?: number;
+        refunds?: Array<{ amount?: number; status?: string }>;
+        paymentMethod?: string;
+        paymentId?: string;
+        userId?: string;
+        storeId?: string;
+        cancellationReason?: string;
+      };
+
+      const intended = data.refundAmount ?? 0;
+      if (intended <= MONEY_EPSILON) {
+        /*
+         * `refundStatus: "pending"` with no amount. `cancelOrder` only writes
+         * the flag together with an amount, so this is a legacy row or a
+         * hand-edit — not money at risk, and not worth a case.
+         */
+        continue;
+      }
+
+      const committed = (data.refunds ?? [])
+        .filter((r) => r.status !== "failed")
+        .reduce((sum, r) => sum + (r.amount ?? 0), 0);
+
+      if (committed >= intended - MONEY_EPSILON) {
+        /*
+         * The money DID move; only the flag is stale — a crash between the
+         * provider call and `settleRefund`'s write, or a refund settled through
+         * a path that predates the flag being cleared. Repaired in place rather
+         * than escalated: there is nothing for a human to decide, and leaving
+         * it would make this order reappear in every future run.
+         */
+        stale += 1;
+        await doc.ref
+          .update({ refundStatus: "completed", updatedAt: ctx.now })
+          .catch((err: unknown) => {
+            void normalizeError(err);
+            ctx.logger.warn("R5: could not clear a stale refundStatus", { orderId: doc.id });
+          });
+        continue;
+      }
+
+      owed += 1;
+      const shortfall = intended - committed;
+      await paymentCasesRepository().openOrObserve({
+        /*
+         * The SAME kind and the SAME `subjectId` that `cancelOrderWithRefund`
+         * uses when it opens this case synchronously — so when the failure was
+         * caught at the time, this run increments `observedCount` instead of
+         * opening a second case. That turns the count into "this has been owed
+         * for N days", which is the number an operator should be triaging by.
+         */
+        kind: "manual_refund_due",
+        subjectId: doc.id,
+        severity: "error",
+        title: `Cancelled order still owes ₹${shortfall.toFixed(2)} — ${doc.id}`,
+        detail: [
+          "This order is cancelled and records a refund it has not paid.",
+          "",
+          "🛑 R3 cannot see this case: it watches `refundClaims`, and a failure",
+          "BEFORE a claim was taken leaves no claim row. The evidence is on the",
+          "order itself — a recorded `refundAmount` that `refunds[]` does not",
+          "cover.",
+          "",
+          `Order: ${doc.id}`,
+          `Recorded as owed: ₹${intended.toFixed(2)}`,
+          `Actually refunded: ₹${committed.toFixed(2)}`,
+          `Shortfall: ₹${shortfall.toFixed(2)}`,
+          data.paymentMethod ? `Payment method: ${data.paymentMethod}` : null,
+          data.paymentId ? `Gateway reference: ${data.paymentId}` : null,
+          data.userId ? `Buyer: ${data.userId}` : null,
+          data.cancellationReason ? `Cancelled because: ${data.cancellationReason}` : null,
+          "",
+          "Refunding from the admin order page is idempotent on this order, so a",
+          "retry cannot double-refund — if an earlier attempt did reach the",
+          "gateway, the retry returns that same refund.",
+        ]
+          .filter((l): l is string => l !== null)
+          .join("\n"),
+        entityType: "order",
+        entityId: doc.id,
+        amountAtRisk: shortfall,
+        orderIds: [doc.id],
+        ...(data.paymentId ? { gatewayPaymentId: data.paymentId } : {}),
+        now: ctx.now,
+      });
+    }
+
+    return { owed, stale, reads: snap.size };
+  } catch (err) {
+    void normalizeError(err);
+    ctx.logger.error("R5: unpaid-cancellation query failed", { err });
+    return { owed, stale, reads: 0 };
+  }
+}
+
 /* ──────────────── R4: disputes, and deadlines about to pass ─────────────── */
 
 async function reconcileDisputesAndDeadlines(
@@ -504,7 +668,7 @@ async function reconcileDisputesAndDeadlines(
 /* ─────────────────────────────── the job ────────────────────────────────── */
 
 export async function runPaymentReconcile(ctx: JobContext): Promise<PaymentReconcileResult> {
-  ctx.logger.info("Starting payment reconciliation (R2 + R3 + R4)");
+  ctx.logger.info("Starting payment reconciliation (R2 + R3 + R4 + R5)");
 
   /*
    * 🛑 R1 is deliberately NOT called here. It belongs to
@@ -512,10 +676,11 @@ export async function runPaymentReconcile(ctx: JobContext): Promise<PaymentRecon
    * should not wait up to 24 hours. Running it in both places would double its
    * writes for no extra coverage.
    */
-  const [payments, claims, disputes] = await Promise.all([
+  const [payments, claims, disputes, cancellations] = await Promise.all([
     reconcileGatewayPayments(ctx),
     reconcileStaleRefundClaims(ctx),
     reconcileDisputesAndDeadlines(ctx),
+    reconcileUnpaidCancellations(ctx),
   ]);
 
   const result: PaymentReconcileResult = {
@@ -528,7 +693,9 @@ export async function runPaymentReconcile(ctx: JobContext): Promise<PaymentRecon
     staleClaims: claims.stale,
     disputesRecorded: disputes.recorded,
     casesEscalated: disputes.escalated,
-    reads: payments.reads + claims.reads + disputes.reads,
+    unpaidCancellations: cancellations.owed,
+    staleRefundFlagsCleared: cancellations.stale,
+    reads: payments.reads + claims.reads + disputes.reads + cancellations.reads,
   };
 
   /*
@@ -541,6 +708,18 @@ export async function runPaymentReconcile(ctx: JobContext): Promise<PaymentRecon
 
   if (result.missingOrders > 0) {
     ctx.logger.error("🛑 Captured payments with no order", { count: result.missingOrders });
+  }
+
+  /*
+   * Loud, for the same reason as the line above: a buyer whose cancelled order
+   * never gave their money back has no way to tell, and nothing else in the
+   * system complains. Separated from `staleRefundFlagsCleared`, which is
+   * housekeeping and must not be reported in the same breath as money owed.
+   */
+  if (result.unpaidCancellations > 0) {
+    ctx.logger.error("🛑 Cancelled orders still owing a refund", {
+      count: result.unpaidCancellations,
+    });
   }
 
   return result;

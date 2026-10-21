@@ -12,6 +12,7 @@ import {
 import { isFinalSaleExempt } from "../../../shared/features/orders/return-reasons";
 import { REFUND_COPY } from "../../../shared/features/orders/refund-copy";
 import { assertOrderCancellable, assertReturnWindowOpen } from "./service";
+import { cancelOrderWithRefund } from "./cancellation-refund";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
 import { isAdminUser, isModeratorUser } from "../../../../features/auth/role-predicates";
@@ -43,13 +44,31 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<un
   });
 }
 
+/**
+ * Cancel an order, and give the money back if any was taken (D14).
+ *
+ * 🛑 `assertOrderCancellable` already RETURNS the order it validated, and this
+ * threw that away and let `cancelOrder` fetch it again. Reusing it saves a read
+ * on every cancellation and — more importantly — means the refund is decided
+ * against the same document the ownership and dispatch checks ran on, rather
+ * than against a re-read that could have moved in between.
+ *
+ * The response shape widened from the bare order to `{ order, refund }`. The
+ * order alone could not express the thing a buyer most needs to know, which is
+ * whether their money is coming back automatically or waiting on a human.
+ */
 export async function cancelOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = cancelOrderSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
-      await assertOrderCancellable(parsed.data.orderId, user.uid);
-      return orderRepository.cancelOrder(parsed.data.orderId, parsed.data.reason ?? "Cancelled by user");
+      const order = await assertOrderCancellable(parsed.data.orderId, user.uid);
+      return cancelOrderWithRefund(order, {
+        reason: parsed.data.reason ?? "Cancelled by user",
+        actorUid: user.uid,
+        actorRole: "buyer",
+        trigger: "cancelOrderAction",
+      });
   });
 }
 

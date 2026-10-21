@@ -41,6 +41,7 @@ export const PAYMENT_CASES_COLLECTION = "paymentCases";
  * | `dead_job` | a job exhausted its retries (Phase 8) |
  * | `grievance` | a statutory grievance with a clock (Phase 10) |
  * | `shipping_unpriced` | a store's shipping could not be priced, so we shipped free |
+ * | `manual_refund_due` | a cancellation owes money that no automatic rail can move |
  *
  * 🛑 `shipping_unpriced` is a CONFIGURATION fault with a money consequence,
  * which is why it belongs in this queue rather than in `serverErrors`. An
@@ -69,7 +70,30 @@ export type PaymentCaseKind =
    * loss. Filing it under a kind that means something else makes the queue's
    * own filters lie, and the kind chips are what an operator triages by.
    */
-  | "protection_claim";
+  | "protection_claim"
+  /**
+   * A cancelled order owes the buyer money and nothing can move it
+   * automatically — see `_internal/server/features/orders/cancellation-refund.ts`.
+   *
+   * Three situations produce it, and they share this kind because they share
+   * the operator's next action (send money, record the reference): the order
+   * was paid by cash / UPI-manual / EMI so there is no gateway transaction to
+   * reverse; it was cancelled after dispatch, so how much is owed is a human
+   * decision about who bears the outbound leg; or the gateway refund was
+   * attempted and failed.
+   *
+   * 🛑 Distinct from `refund_mismatch`, which means the gateway and our
+   * `refunds[]` DISAGREE about a refund that happened. Here nothing has
+   * happened and that is the point. Filing this under a kind that means
+   * something else is the shortcut I took once already with protection claims,
+   * and it is attractive precisely because a plausible kind exists.
+   *
+   * The amount is on the order too (`refundAmount` + `refundStatus: "pending"`,
+   * written in the same patch as the cancellation), so the case and the order
+   * cannot disagree about what is owed — and the order carries it even if this
+   * write fails.
+   */
+  | "manual_refund_due";
 
 /**
  * Identical to `ReportStatus`, deliberately — see the header. `actioned` means
@@ -217,6 +241,7 @@ const PAYMENT_CASE_KIND_MAP: Record<PaymentCaseKind, true> = {
   grievance: true,
   shipping_unpriced: true,
   protection_claim: true,
+  manual_refund_due: true,
 };
 export const PAYMENT_CASE_KINDS = Object.keys(PAYMENT_CASE_KIND_MAP) as PaymentCaseKind[];
 

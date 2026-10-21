@@ -966,6 +966,21 @@ export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/c
  * place a parcel is marked shipped.
  */
 export { reconcileOrderShipping } from "./_internal/server/features/shipping/reconcile";
+/*
+ * Cancel an order and settle the refund it owes (D14). SERVER ENTRY ONLY, for
+ * the same reason as its neighbour above: it calls the payment provider and
+ * writes to `orders` and `paymentCases`.
+ *
+ * Public because the consumer owns the seller/admin order PATCH route, which is
+ * the one cancel path that can reach a DISPATCHED order — the two buyer paths
+ * refuse that case before it gets here. There is no `./_internal/*` subpath, so
+ * a consumer route cannot reach it any other way.
+ */
+export { cancelOrderWithRefund } from "./_internal/server/features/orders/cancellation-refund";
+export type {
+  CancelWithRefundOptions,
+  CancelWithRefundResult,
+} from "./_internal/server/features/orders/cancellation-refund";
 export { pointsRepository, PointsRepository } from "./features/points/repository/points.repository";
 export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components

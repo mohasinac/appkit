@@ -32,6 +32,10 @@ import type { ObligationDocument } from "../../../../features/obligations/schema
 import { orderRepository } from "../../../../features/orders/repository/orders.repository";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
+import { cancelOrderWithRefund } from "../../features/orders/cancellation-refund";
+import { processRefundAction } from "../../features/refunds/actions";
+import { resolveRefundCapacity } from "../../features/refunds/capacity";
+import { MONEY_EPSILON } from "../../../shared/checkout/refundable-base";
 import type { JobContext } from "../runtime/types";
 
 export interface ObligationSweepResult {
@@ -46,24 +50,36 @@ export interface ObligationSweepResult {
 /**
  * Perform the policy's action.
  *
- * 🛑 This function is deliberately SMALL and deliberately does not refund
- * anything yet.
+ * ## The narrowing is LIFTED, and what unblocked it
  *
- * The plan is explicit that **no automatic refund may exist until Phase 1's
- * idempotency and cumulative cap have landed** — "a sweep on top of a
- * non-idempotent refund that compares against `totalPrice` rather than the
- * remaining balance is a double-refund generator". Phase 1 HAS landed (step 8:
- * `idempotencyKey` required, cap against `refundableBase`, two-phase atomic
- * write), so the prerequisite is met — but the cancel-with-refund path also
- * needs `cancelOrder` to actually carry a `refundAmount`, which is D14 and is
- * NOT yet done: all four callers still omit it, so stock is restored and money
- * is not.
+ * This function used to write anchors and close windows and nothing else —
+ * every monetary outcome escalated to a case **even where the policy said
+ * `act`** — because the plan forbids an automatic refund until two things hold:
  *
- * So the acting branch writes ANCHORS and CLOSES WINDOWS — the genuinely safe
- * `act` tier — and everything that moves money escalates to a case, even where
- * the policy says `act`. That is a deliberate narrowing, recorded here rather
- * than silently: it is better to open a case a human closes in ten seconds
- * than to ship a refund path whose money half is missing.
+ *  1. **Phase 1's idempotency and cumulative cap.** Landed in step 8:
+ *     `idempotencyKey` is required, the cap is measured against
+ *     `refundableBase` inside the reserving transaction, and the write is
+ *     two-phase around the provider call. Without those, "a sweep on top of a
+ *     non-idempotent refund that compares against `totalPrice` rather than the
+ *     remaining balance is a double-refund generator" — the plan's words.
+ *  2. **D14.** `cancelOrder` never received a `refundAmount` from any caller,
+ *     so an automatic cancellation restocked and moved no money. Now closed:
+ *     `cancelOrderWithRefund` owns cancel + restock + refund, keyed
+ *     `cancel_{orderId}` so a sweep tick that re-fires cannot double-refund.
+ *
+ * Both hold, so the `act` tier does what its policies say.
+ *
+ * ## What still escalates, and it is not a leftover
+ *
+ * `return-receive` and `payout-release` are `onDue: "escalate"` in the registry
+ * itself, which is the right place for that decision. And `return-inspect`
+ * acts only on the half that is unconditional:
+ *
+ * 🛑 **Refunding the buyer is automatic; CHARGING THE SELLER is not.** The
+ * plan's guardrail is explicit — "the buyer refund is automatic because the
+ * cover is unconditional; the seller chargeback is not". So an uninspected
+ * return refunds the buyer and opens a case for the seller-side decision,
+ * rather than debiting a counterparty on a timer.
  */
 async function performAction(
   ctx: JobContext,
@@ -139,9 +155,216 @@ async function performAction(
       return "acted";
 
     /*
+     * ── CANCEL AND REFUND: the three pre-dispatch lapses ──────────────────
+     *
+     * All three share one mechanism because they share one outcome — the sale
+     * is off and nothing has shipped — and their preconditions guarantee the
+     * safe case: `seller-accept` and `seller-dispatch` both require
+     * `!hasDispatched(o)`, and `proof-reupload` fires on an order whose payment
+     * was never accepted at all.
+     *
+     * 🛑 `cancelOrderWithRefund` is the ONLY door, never `cancelOrder` plus a
+     * refund call. It owns the restock (which four prior call sites each
+     * forgot), the refund-intent write that makes a crash detectable, the
+     * `cancel_{orderId}` idempotency key that makes a repeat tick a no-op, and
+     * the post-dispatch and manual-payment branches that refuse to move money
+     * automatically. Re-deriving any of that here would be a second copy of
+     * the rule (Root Cause #75) in the one place that runs unattended.
+     *
+     * The outcome is LOGGED, not ignored: "cancelled and refunded ₹2,499" and
+     * "cancelled, ₹2,499 still owed to a human" are different operational
+     * facts, and the second one already has a case attached.
+     */
+    case "seller-accept":
+    case "seller-dispatch":
+    case "proof-reupload": {
+      const { refund } = await cancelOrderWithRefund(order, {
+        reason: policy.describe,
+        /*
+         * No `actorUid`. `HistoryActor.uid` is documented as absent for cron
+         * jobs, and a literal `"system"` in a field that otherwise holds
+         * Firebase uids would read as an account by that name in every
+         * timeline.
+         */
+        actorRole: "system",
+        trigger: `obligation:${obligation.kind}`,
+      });
+      ctx.logger.info("obligation: order cancelled on a lapsed deadline", {
+        orderId: order.id,
+        kind: obligation.kind,
+        refundMoved: refund.moved,
+        refundAmount: refund.amount,
+      });
+      return "acted";
+    }
+
+    /*
+     * ── RETURN FLOW: two steps that move no money at all ──────────────────
+     *
+     * Both are `onDue: "act"` in the registry and both were escalating only
+     * because the old narrowing was blanket rather than per-kind. Neither
+     * touches a rupee.
+     *
+     * `return-respond`: the seller ignored the request, so it is approved on
+     * their behalf. The status stays `return_requested` deliberately — the
+     * buyer still has to post the parcel, and `returnApprovedAt` is what opens
+     * their posting window. Writing it is also what stops the buyer's seven
+     * days being silently eaten by a slow seller, which is why that anchor was
+     * added in the first place.
+     *
+     * `return-post`: the buyer never posted, so the return closes and the
+     * order goes back to `delivered` — its prior terminal state.
+     * `return_requested → delivered` is in the transition map for exactly this,
+     * and the map's own comment says why: without it a rejected or abandoned
+     * return strands the order in limbo forever.
+     */
+    case "return-respond":
+      await orderRepository.update(order.id, {
+        returnApprovedAt: ctx.now,
+      } as Partial<OrderDocument>);
+      ctx.logger.info("obligation: return approved on the seller's behalf", {
+        orderId: order.id,
+      });
+      return "acted";
+
+    case "return-post":
+      await orderRepository.updateStatus(order.id, "delivered", {
+        updatedAt: ctx.now,
+      } as Partial<OrderDocument>);
+      ctx.logger.info("obligation: return window closed — buyer never posted", {
+        orderId: order.id,
+      });
+      return "acted";
+
+    /*
+     * ── UNINSPECTED RETURN: refund the buyer, ASK about the seller ─────────
+     *
+     * 🛑 The asymmetry is the whole point, and it is the plan's own guardrail
+     * verbatim: *"the buyer refund is automatic because the cover is
+     * unconditional — the seller chargeback is not"*.
+     *
+     * Automatic for the buyer is defensible here specifically because the goods
+     * are BACK WITH THE SELLER: `returnReceivedAt` is set, so this is not the
+     * general "post-dispatch refunds need a human" case. The seller has had the
+     * parcel and the policy's whole window to object and has not looked.
+     *
+     * Charging the seller is a different act on a different party, with no
+     * finding behind it — nobody has inspected the goods, so there is no
+     * evidence either way. That decision opens a case.
+     *
+     * The buyer's OWN reason code drives the refund, read off the order. A
+     * hardcoded reason here would misreport why their money came back, and
+     * `isFinalSaleExempt` branches on it — so inventing one could also route
+     * around a final-sale line's terms.
+     */
+    case "return-inspect": {
+      const capacity = await resolveRefundCapacity(order);
+      if (capacity.remaining <= MONEY_EPSILON) {
+        ctx.logger.info("obligation: uninspected return has nothing left to refund", {
+          orderId: order.id,
+        });
+        return "acted";
+      }
+
+      const result = await processRefundAction({
+        orderId: order.id,
+        type: "full",
+        amount: capacity.remaining,
+        reasonCode: order.returnReasonCode ?? "not_as_described",
+        reasonNote: `Auto-resolved in the buyer's favour — ${policy.describe}`,
+        /*
+         * Natural key on the ORDER. A repeated tick, or a human clicking
+         * refund on the same uninspected return, collapses to one refund.
+         */
+        idempotencyKey: `return_uninspected_${order.id}`,
+        ...(order.paymentId
+          ? { method: "phonepe" as const, phonepeOrderId: order.paymentId }
+          : { method: "manual" as const }),
+        confirmIrrevocable: true,
+        refundedBy: "system:obligation:return-inspect",
+      });
+
+      if (!result.ok) {
+        /*
+         * 🛑 `ActionResult`, so the envelope is always truthy and `!result`
+         * could never fire (Root Cause #98). Escalating rather than retrying:
+         * a refund that failed on an unattended tick needs someone to read the
+         * gateway, not a louder loop.
+         */
+        await paymentCasesRepository().openOrObserve({
+          kind: "manual_refund_due",
+          subjectId: order.id,
+          severity: "error",
+          title: `Uninspected return — automatic refund of ₹${capacity.remaining.toFixed(2)} FAILED on ${order.id}`,
+          detail: [
+            "A received return was never inspected, so it auto-resolved in the buyer's favour — and the refund itself failed.",
+            "",
+            `Gateway error: ${result.error ?? "unknown"}`,
+            "",
+            `Order: ${order.id}`,
+            `Owed: ₹${capacity.remaining.toFixed(2)}`,
+            "",
+            "Retrying from the admin order page is idempotent on this order.",
+          ].join("\n"),
+          entityType: "order",
+          entityId: order.id,
+          amountAtRisk: capacity.remaining,
+          orderIds: [order.id],
+          now: ctx.now,
+        });
+        return "escalated";
+      }
+
+      /*
+       * The buyer is paid. Now the half a human owns — opened as its own case
+       * so it is triaged on its own terms rather than hidden inside the
+       * refund's record.
+       */
+      await paymentCasesRepository().openOrObserve({
+        kind: "refund_mismatch",
+        subjectId: `seller-charge:${order.id}`,
+        severity: "warning",
+        title: `Decide whether the seller bears ₹${capacity.remaining.toFixed(2)} — uninspected return on ${order.id}`,
+        detail: [
+          "A returned parcel reached the seller and was never inspected, so the buyer has been refunded automatically — the cover is unconditional and the seller had the goods and the full window.",
+          "",
+          "🛑 Whether the SELLER bears this is not automatic and must not be. Nobody inspected the goods, so there is no finding either way, and debiting a party other than the payer on a timer is the one thing the guardrail forbids outright.",
+          "",
+          `Order: ${order.id}`,
+          `Store: ${order.storeId ?? "—"}`,
+          `Refunded to the buyer: ₹${capacity.remaining.toFixed(2)}`,
+          `Return received: ${order.returnReceivedAt?.toISOString() ?? "—"}`,
+          `Buyer's stated reason: ${order.returnReasonCode ?? "—"}`,
+          "",
+          "Inspect the goods, then either charge the seller from the payout clawback or absorb it.",
+        ].join("\n"),
+        entityType: "order",
+        entityId: order.id,
+        amountAtRisk: capacity.remaining,
+        orderIds: [order.id],
+        now: ctx.now,
+      });
+
+      ctx.logger.info("obligation: uninspected return refunded to the buyer", {
+        orderId: order.id,
+        amount: capacity.remaining,
+        refundId: result.data.refundId,
+      });
+      return "acted";
+    }
+
+    /*
      * Everything else moves money or debits a counterparty. Escalated with the
      * policy's own description, so the case says what happened rather than
      * naming an obligation kind nobody outside this file recognises.
+     *
+     * 🛑 Reached now only by kinds the REGISTRY marks `onDue: "escalate"` —
+     * `return-receive` (a posted parcel that never arrived: the carrier is the
+     * question, and neither party is at fault yet) and `payout-release`
+     * (releasing money to a seller, which the quiet-period invariant says a
+     * human confirms). The branch keeps the `policy.onDue === "act"` wording
+     * below because a tenth kind added without a case arm lands here, and when
+     * that happens the case should say so rather than imply the policy chose it.
      */
     default: {
       await paymentCasesRepository().openOrObserve({
@@ -158,7 +381,7 @@ async function performAction(
           `Order status: ${order.status} / payment ${order.paymentStatus}`,
           "",
           policy.onDue === "act"
-            ? "🛑 The policy permits this to be automatic, but the money half is NOT built yet: `cancelOrder` still never receives a `refundAmount` (D14), so an automatic cancellation would restore stock and move no money. Resolve by hand until that lands."
+            ? "🛑 The policy permits this to be automatic and NO ACT BRANCH IMPLEMENTS IT. That is a gap, not a policy decision — a kind was added to the registry without a `case` arm in `performAction`. Resolve by hand, then add the branch."
             : "This tier always requires a human — goods have left the seller, or a party other than the payer would be debited.",
         ].join("\n"),
         entityType: "order",

@@ -1053,7 +1053,32 @@ class OrderRepository extends BaseRepository<OrderDocument> {
          * terminal status, no money moved.
          */
         ...(becomeRefunded && outcome.status === "processed"
-          ? { status: "refunded" as OrderStatus }
+          ? {
+              status: "refunded" as OrderStatus,
+              /*
+               * 🛑 Clears the INTENT that `cancelOrder` wrote.
+               *
+               * `cancelOrder(…, refundAmount)` sets `refundStatus: "pending"`,
+               * and until 2026-10-21 nothing anywhere ever wrote a terminal
+               * value — so a successfully refunded cancellation kept reading
+               * `"pending"` forever. That is not cosmetic: D14's detector looks
+               * for cancelled orders that still owe money, and a flag stuck at
+               * `"pending"` would make every *successful* refund look like a
+               * failure.
+               *
+               * It also gives `issuePartialRefund`'s
+               * `refundStatus === COMPLETED` guard its first writer. That check
+               * has existed for a long time and could never fire, so a
+               * fully-refunded order could be submitted for another full refund
+               * and was stopped only by the cumulative cap one layer down.
+               *
+               * Only on `processed` + `isFull`, because those are the two facts
+               * that make "completed" true. A failed settlement deliberately
+               * leaves `"pending"` standing — that is the state the detector
+               * must still see.
+               */
+              refundStatus: "completed" as const,
+            }
           : {}),
         updatedAt: new Date(),
       },

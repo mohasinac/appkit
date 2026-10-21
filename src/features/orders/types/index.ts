@@ -336,6 +336,40 @@ export interface Order {
   prizeRevealMode?: "instant" | "scheduled";
 }
 
+/**
+ * What happened to the buyer's money when their order was cancelled.
+ *
+ * 🛑 Lives HERE, not beside the function that produces it
+ * (`_internal/server/features/orders/cancellation-refund.ts`), for one concrete
+ * reason: appkit publishes no `./_internal/*` subpath, so a type declared there
+ * is unreachable from the consumer — and the consumer is exactly who needs to
+ * name it, because the API route and the buyer's cancel page both return and
+ * render this value.
+ *
+ * It is returned rather than swallowed because *"₹2,499 is on its way back"* and
+ * *"we owe you ₹2,499 and someone will send it"* are different sentences, and
+ * a buyer who has just cancelled a paid order is entitled to the right one.
+ * Before D14 the answer was always a bare 200 and `"Order cancelled"` — true,
+ * and silent about the money, which is the defect.
+ */
+export type CancellationRefundOutcome =
+  /** Nothing to refund: never captured, or already returned in full. */
+  | { moved: "none"; why: "not-paid" | "nothing-refundable"; amount: 0 }
+  /** Refunded through the gateway, once, keyed on the order. */
+  | { moved: "gateway"; amount: number; refundId: string }
+  /**
+   * Owed and recorded, but no automatic rail could move it — a manual payment
+   * method, a post-dispatch cancellation, or a gateway refusal. A
+   * `manual_refund_due` case carries it to an operator; `caseId` is absent only
+   * if that write itself failed, which never blocks the cancellation.
+   */
+  | {
+      moved: "owed";
+      amount: number;
+      why: "post-dispatch" | "manual-payment" | "gateway-failed" | "no-gateway-reference";
+      caseId?: string;
+    };
+
 export interface OrderListResponse {
   items: Order[];
   total: number;

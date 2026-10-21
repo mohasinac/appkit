@@ -15,8 +15,10 @@ import { serverLogger } from "../../../monitoring";
 import { getProviders } from "../../../contracts";
 import { orderRepository } from "../repository/orders.repository";
 import type { OrderDocument, OrderDocumentItem, OrderPlain } from "../schemas";
+import type { CancellationRefundOutcome } from "../types/index";
 import type { TrackingInfo } from "../../../contracts/shipping";
 import { ORDER_CANCELLABLE_STATUSES } from "../../../_internal/shared/features/orders/config";
+import { cancelOrderWithRefund } from "../../../_internal/server/features/orders/cancellation-refund";
 
 const ERR_ORDER_NOT_FOUND = "Order not found";
 
@@ -32,11 +34,26 @@ function assertCancellable(order: OrderDocument): void {
   }
 }
 
+/**
+ * Cancel a whole order on the buyer's own request.
+ *
+ * 🛑 **Returns the refund outcome now, and used to return `void` (D14).** This
+ * called `orderRepository.cancelOrder(orderId, reason)` — omitting the optional
+ * third argument, as all four callers did — so a *paid* order was cancelled,
+ * its stock restored, and **the money kept**, while
+ * `previewCancellationRefund` had already shown the buyer a figure nothing
+ * honoured.
+ *
+ * Both halves live in `cancelOrderWithRefund`, deliberately not here: passing
+ * the amount alone would only record an intent `cancelOrder` has no code to
+ * settle, which reads in the database as a refund on its way and is worse than
+ * the honest silence it replaces. See that module's header for the full table.
+ */
 export async function cancelOrderForUser(
   userId: string,
   orderId: string,
   reason: string,
-): Promise<void> {
+): Promise<CancellationRefundOutcome> {
   const order = await orderRepository.findById(orderId);
 
   if (!order) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
@@ -45,9 +62,22 @@ export async function cancelOrderForUser(
 
   assertCancellable(order);
 
-  await orderRepository.cancelOrder(orderId, reason);
+  const { refund } = await cancelOrderWithRefund(order, {
+    reason,
+    actorUid: userId,
+    actorRole: "buyer",
+    trigger: "cancelOrderForUser",
+  });
 
-  serverLogger.info("Order cancelled by user", { userId, orderId, reason });
+  serverLogger.info("Order cancelled by user", {
+    userId,
+    orderId,
+    reason,
+    refundMoved: refund.moved,
+    refundAmount: refund.amount,
+  });
+
+  return refund;
 }
 
 /**
@@ -58,13 +88,20 @@ export async function cancelOrderForUser(
  * the order ends up cancelled, falls through to the same whole-order
  * `cancelOrder` path `cancelOrderForUser` uses, rather than leaving a
  * zero-item live order.
+ *
+ * 🛑 Returns `null` on the genuinely-partial path, and an outcome only when it
+ * fell through to cancelling the whole order. That is not a convenience: a
+ * partial cancellation's add-on and per-item refund arithmetic is **D15/D16**
+ * and is not built — it still sets `refundPending: true` and leaves the money
+ * to the admin refund flow, exactly as before. Returning a zero-amount outcome
+ * here would claim a decision had been made about money when none has.
  */
 export async function cancelOrderItemsForUser(
   userId: string,
   orderId: string,
   itemIds: string[],
   reason: string,
-): Promise<void> {
+): Promise<CancellationRefundOutcome | null> {
   if (itemIds.length === 0) {
     return cancelOrderForUser(userId, orderId, reason);
   }
@@ -117,6 +154,13 @@ export async function cancelOrderItemsForUser(
     itemIds: [...matchedIds],
     reason,
   });
+
+  /*
+   * Explicit, because the declared return type is a union and an implicit
+   * `undefined` is not a member of it. It also says the thing worth saying:
+   * no refund decision was taken here.
+   */
+  return null;
 }
 
 export async function listOrdersForUser(

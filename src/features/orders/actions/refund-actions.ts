@@ -21,7 +21,10 @@ import { siteSettingsRepository } from "../../admin/repository/site-settings.rep
  * actually withheld cannot diverge — they did: this file showed a net figure
  * while `cancelOrder` moved no money at all (D14).
  */
-import { platformFeeWithheld } from "../../../_internal/shared/checkout/refundable-base";
+import {
+  platformFeeWithheld,
+  refundCapacity,
+} from "../../../_internal/shared/checkout/refundable-base";
 import { sendNotification } from "../../admin/actions/notification-actions";
 
 const DEFAULT_GST_PERCENT = 18;
@@ -147,10 +150,28 @@ export async function previewCancellationRefund(
    * `refund-actions.ts:104-110`, which is the other one. Root Cause #75's
    * lesson exactly: a rule reachable by copy-paste gets copied, and the copy
    * is not found by searching for the function that was supposed to own it.
+   *
+   * ── 2026-10-21: and `refundCapacity`, not `totalPrice − withheld` ─────────
+   *
+   * 🛑 The net figure now subtracts refunds ALREADY COMMITTED on this order,
+   * because `cancelOrderWithRefund` moves exactly `refundCapacity().remaining`
+   * — so if these two expressions differ, the number shown to the buyer is not
+   * the number that moves, which is the whole defect D14 is about.
+   *
+   * They differ on precisely one order: a partially-refunded one. The old
+   * expression ignored prior refunds, so cancelling an order that had already
+   * had a line refunded quoted the buyer the full base a second time. That
+   * would not have over-paid — `reserveRefund`'s transactional cap refuses it
+   * — but it would have quoted a figure and then failed, which is a worse
+   * experience than quoting the right one.
+   *
+   * On an order with no prior refunds the two are identical, so nothing changes
+   * for the common case.
    */
+  const capacity = refundCapacity(order, gstPercent);
   const grossRefund = order.totalPrice;
-  const feeDeducted = platformFeeWithheld(order, gstPercent);
-  const netRefund = parseFloat((grossRefund - feeDeducted).toFixed(2));
+  const feeDeducted = capacity.withheld;
+  const netRefund = capacity.remaining;
 
   return {
     orderId,
