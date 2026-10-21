@@ -1091,14 +1091,21 @@ async function createOrderForGroup(
   // unknown (digital-only carts have no shipping address).
 
   const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
-  const depositAmount = !isCodLike
-    ? undefined
-    : orderType === "preorder"
-      ? computePreOrderDepositAmount(group, commissions.codDepositPercent)
-      : roundRupees(groupTotal * (commissions.codDepositPercent / 100));
-  const codRemainingAmount = isCodLike
-    ? roundRupees(groupTotal - (depositAmount ?? 0))
-    : undefined;
+  /*
+   * 🛑 D43 — THE DEPOSIT/REMAINING SPLIT MOVED DOWN, BELOW `orderTotal`.
+   *
+   * It used to be computed HERE, on `groupTotal` — the goods value — so
+   * `depositAmount + codRemainingAmount` summed to the goods only and omitted
+   * shipping, the COD handling fee, add-ons, the platform fee and its GST.
+   * A COD buyer was told to "pay ₹X on delivery" where X was short by every
+   * fee they had just agreed to, and the courier would collect the wrong
+   * amount.
+   *
+   * It could not be fixed in place: `codHandlingFee` (below), `giftWrapFee`
+   * and both protection fees are all computed AFTER this point, so the total
+   * simply did not exist yet. The split now sits immediately after
+   * `orderTotal`, which is the only place every term is known.
+   */
 
   let emiSchedule: ReturnType<typeof computeEmiSchedule> | undefined;
   if (paymentMethod === "emi" && emiTenureMonths) {
@@ -1250,6 +1257,34 @@ async function createOrderForGroup(
      * not tax on the goods.
      */
     Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0);
+
+  /*
+   * ── D43: the COD deposit/remaining split, on the ORDER TOTAL ──────────────
+   *
+   * Moved here from ~150 lines above, where it was computed on `groupTotal`
+   * and therefore summed to the goods value alone — see the 🛑 at its old
+   * site. Every term `orderTotal` needs is finally known at this point, which
+   * is why this is the only correct home for it.
+   *
+   * 🛑 The pre-order branch is deliberately left on `group`:
+   * `computePreOrderDepositAmount` reads each line's own
+   * `preOrderDepositPercent`, because a pre-order deposit is a per-PRODUCT
+   * commercial term the seller set, not a percentage of the order. Rebasing it
+   * on `orderTotal` would silently change what every existing pre-order
+   * charges — a different defect, not this one.
+   *
+   * `roundRupees` on both halves, and the remainder is taken as
+   * `orderTotal − deposit` rather than independently rounded, so the two
+   * provably sum to the total instead of drifting by a paisa (D42's shape).
+   */
+  const depositAmount = !isCodLike
+    ? undefined
+    : orderType === "preorder"
+      ? computePreOrderDepositAmount(group, commissions.codDepositPercent)
+      : roundRupees(orderTotal * (commissions.codDepositPercent / 100));
+  const codRemainingAmount = isCodLike
+    ? roundRupees(orderTotal - (depositAmount ?? 0))
+    : undefined;
 
   const imageUrls = [
     ...new Set(

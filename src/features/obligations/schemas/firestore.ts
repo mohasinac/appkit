@@ -65,6 +65,29 @@ export type ObligationKind =
   // ── protection claims ───────────────────────────────────────────────────
   | "claim-shipping"
   | "claim-sale"
+  // ── completion ──────────────────────────────────────────────────────────
+  /**
+   * The order is COMPLETE: 7 days have passed since delivery with no issue
+   * raised, so points are awarded and no new dispute may be opened.
+   *
+   * 🛑 Owner's requirement, 2026-10-21, verbatim: *"points only get issued on
+   * successful purchases after buyer put reviews, then only, if no review no
+   * points, that marks the complete order, they are also assigned if the user
+   * no issues or updates after 7 days of delivery — no further disputes should
+   * be entertained as well."*
+   *
+   * So completion has TWO triggers and this is the second: the first is the
+   * buyer posting a review (event-driven, no timer needed), and this is the
+   * silence fallback. Whichever fires first completes the order; the award must
+   * therefore be IDEMPOTENT, which is why it is keyed on the order in the
+   * points ledger rather than appended blindly.
+   *
+   * It is also the dispute cutoff, which is the part with teeth: after this
+   * fires, a new dispute is refused. Existing ones are unaffected — see the
+   * policy's own note on why "no further disputes" cannot mean "everything
+   * closes at 7 days".
+   */
+  | "order-complete"
   // ── money out ───────────────────────────────────────────────────────────
   | "payout-release";
 
@@ -179,6 +202,7 @@ const OBLIGATION_KIND_MAP: Record<ObligationKind, true> = {
   "return-inspect": true,
   "claim-shipping": true,
   "claim-sale": true,
+  "order-complete": true,
   "payout-release": true,
 };
 

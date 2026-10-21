@@ -20,6 +20,13 @@ import { restoreStockForOrder } from "../checkout/stock-restore";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { enqueueJob } from "../../../../features/jobs/actions/enqueue-job";
 import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON, isManualPaymentMethod } from "../../../../features/orders/constants/payment-window";
+/*
+ * The dispute cutoff is DERIVED from the `order-complete` policy, never read
+ * off a stored flag — one definition of "7 days after delivery", shared with
+ * the sweep that closes the window and with whatever page tells the buyer when
+ * it closes.
+ */
+import { deadlinesFor } from "../../../shared/obligations/deadlines";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 
@@ -407,6 +414,37 @@ export async function raiseOrderDisputeAction(
       );
     }
     if (order.disputeStatus === "open") return; // idempotent
+
+    /*
+     * ── THE DISPUTE CUTOFF ────────────────────────────────────────────────
+     *
+     * Owner's rule, 2026-10-21: *"after 7 days of delivery no further disputes
+     * should be entertained."*
+     *
+     * 🛑 Enforced here, at the one place a dispute is RAISED, rather than in
+     * the sweep — because a cutoff is a refusal, and a refusal has to live
+     * where the request arrives. The `order-complete` obligation firing records
+     * that the window shut; this is what makes the record mean something.
+     *
+     * 🛑 It closes the door to NEW disputes ONLY. An existing dispute, an
+     * in-flight return, or a refund already posted are all untouched — the
+     * `order-complete` precondition refuses to fire while any of those is live,
+     * so by construction this cutoff can only exist on an order where nothing
+     * was ever contested. Reading the rule as "everything closes at 7 days"
+     * would cancel a return the buyer raised on day 6, which is the opposite of
+     * what a dispute window is for.
+     *
+     * Derived from `deliveryDate` rather than read off a stored flag, for the
+     * same reason every other deadline here is derived: a stored
+     * `disputeWindowClosed` boolean would need a backfill and would drift from
+     * the policy the day the duration changed (Root Cause #42).
+     */
+    const completion = deadlinesFor(order).find((d) => d.kind === "order-complete");
+    if (completion && completion.dueAt.getTime() <= Date.now()) {
+      throw new ValidationError(
+        `The dispute window for this order closed on ${completion.dueAt.toLocaleDateString("en-IN")} — 7 days after delivery. Contact support if you believe this is wrong.`,
+      );
+    }
 
     await orderRepository.update(orderId, {
       disputeRaised: true,

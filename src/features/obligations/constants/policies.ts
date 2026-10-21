@@ -306,6 +306,70 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
   },
 
   /*
+   * ── COMPLETION ───────────────────────────────────────────────────────────
+   */
+
+  /**
+   * 7 days after delivery with no issue raised: the order is COMPLETE, points
+   * are awarded, and no NEW dispute may be opened.
+   *
+   * 🛑 Owner's requirement, 2026-10-21. Two things about it need stating
+   * because getting either wrong changes the product:
+   *
+   * **1. "No further disputes entertained" means NO NEW DISPUTE MAY BE RAISED
+   * — it cannot mean "everything closes at 7 days".** A return requested on
+   * day 6 still has to be approved, posted, received and inspected, which takes
+   * weeks; and `claim-sale`'s window is itself 168h = exactly 7 days. Reading
+   * it as a hard close would cancel in-flight returns the buyer raised in time,
+   * which is the opposite of what a dispute window is for. So this fires a
+   * CUTOFF for new claims and leaves open ones running — and `precondition`
+   * below is what makes that true, by refusing to fire while anything is still
+   * in flight.
+   *
+   * **2. The award must be idempotent, because completion has two triggers.**
+   * The other is the buyer posting a review, which is event-driven and needs no
+   * timer. Whichever happens first completes the order. A ledger entry keyed on
+   * the order is what stops a review on day 3 and this sweep on day 7 awarding
+   * twice — `pointsLedger` is append-only, so an un-keyed second append would
+   * be a permanent double-credit with no way to net it off.
+   *
+   * 🛑 **`act`, but the points award is NOT built yet** — Phase P is step 16.
+   * Firing this today closes the dispute window and records the completion;
+   * the ledger write is added when Phase P lands, and the sweep's own narrowing
+   * (see `performAction`) keeps anything monetary escalating until then.
+   *
+   * 🛑 **One open question I am NOT guessing at**, recorded in the plan: the
+   * requirement says *"if no review no points"* AND *"they are also assigned if
+   * the user [raises] no issues… after 7 days"*. Those two cannot both hold —
+   * the second awards points to a buyer who never reviewed. Implemented as
+   * "review OR 7-day silence", which is what *"they are ALSO assigned"* says,
+   * and flagged for confirmation.
+   */
+  "order-complete": {
+    anchor: (o) => o.deliveryDate,
+    duration: { value: 7, unit: "days", calendar: "calendar" },
+    warnAt: [{ value: 2, unit: "days", calendar: "calendar" }],
+    /*
+     * Refuses to fire while ANY issue is live: a return in any state, a refund
+     * already posted, or a buyer-raised dispute. That is what makes the cutoff
+     * safe — it can only close a window that nothing is currently using.
+     */
+    precondition: (o) =>
+      Boolean(o.deliveryDate) &&
+      notTerminal(o) &&
+      o.status !== "return_requested" &&
+      o.status !== "returned" &&
+      !o.returnRequestedAt &&
+      !o.disputeRaised &&
+      (o.refunds?.length ?? 0) === 0,
+    onDue: "act",
+    settingPath: "returns.disputeWindowDays",
+    publishedCopyKey: "obligations.orderComplete",
+    describe:
+      "7 days passed since delivery with no issue raised — the order is complete and the dispute window has closed.",
+  },
+
+  /*
    * ── MONEY OUT ────────────────────────────────────────────────────────────
    */
 
@@ -325,7 +389,23 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
     anchor: (o) => o.deliveryDate,
     duration: { value: 7, unit: "days", calendar: "business" },
     precondition: (o) => Boolean(o.deliveryDate) && notTerminal(o),
-    blockedBy: ["return-respond", "return-post", "return-receive", "return-inspect", "claim-shipping", "claim-sale"],
+    /*
+     * 🛑 `order-complete` is in this list, and it is the one that makes the
+     * quiet period mean what it says. The others close individual windows; the
+     * dispute cutoff is the fact that NO NEW claim can arrive. Releasing a
+     * payout before it has fired means paying a seller while a buyer can still
+     * raise a dispute against that order — which is how a chargeback lands
+     * after the money has left.
+     */
+    blockedBy: [
+      "return-respond",
+      "return-post",
+      "return-receive",
+      "return-inspect",
+      "claim-shipping",
+      "claim-sale",
+      "order-complete",
+    ],
     onDue: "escalate",
     settingPath: "commissions.payoutHoldDays",
     publishedCopyKey: "obligations.payoutRelease",

@@ -99,6 +99,35 @@ async function performAction(
       return "acted";
 
     /*
+     * ── ORDER COMPLETE: the dispute cutoff ────────────────────────────────
+     *
+     * Owner's rule: 7 days after delivery with no issue raised, the order is
+     * complete, points are awarded, and no NEW dispute may be opened.
+     *
+     * Acting is safe and needs no money movement of its own: the obligation
+     * closing IS the record that the window shut, and `payout-release` is
+     * blocked on this kind, so the seller's funds become payable as a
+     * consequence rather than by a second decision here.
+     *
+     * 🛑 THE POINTS AWARD IS NOT WRITTEN HERE YET, and that is deliberate
+     * rather than forgotten. Phase P (step 16) owns the ledger, and the award
+     * must be IDEMPOTENT because completion has two triggers — this sweep and
+     * the buyer posting a review. `pointsLedger` is append-only, so an
+     * un-keyed second append would be a permanent double credit with no way to
+     * net it off. Writing the award before that key exists would be the
+     * expensive half of the feature shipped first.
+     *
+     * The completion itself is recorded now, so when Phase P lands it has a
+     * fact to award against rather than a window it has to re-derive.
+     */
+    case "order-complete":
+      ctx.logger.info("obligation: dispute window closed — order complete", {
+        orderId: order.id,
+        deliveredAt: order.deliveryDate?.toISOString(),
+      });
+      return "acted";
+
+    /*
      * Everything else moves money or debits a counterparty. Escalated with the
      * policy's own description, so the case says what happened rather than
      * naming an obligation kind nobody outside this file recognises.
