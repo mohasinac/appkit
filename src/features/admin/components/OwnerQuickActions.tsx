@@ -64,6 +64,7 @@ export type OwnerQuickActionsResource =
   | "FRANCHISE"
   | "PART"
   | "BEY"
+  | "FAQ"
   | "BUNDLE"
   | "GROUP"
   | "SUBLISTING"
@@ -115,6 +116,12 @@ const RESOURCE_LEAVES: Record<OwnerQuickActionsResource, ResourceLeaves> = {
    */
   PART: { bucket: "PART", edit: "edit", remove: "delete" },
   BEY: { bucket: "BEY", edit: "edit", remove: "delete" },
+  /*
+   * No `duplicate`: two identical questions in a help centre is a defect, not
+   * a shortcut — and unlike a product there is no per-copy field (price,
+   * stock, barcode) that makes a near-duplicate useful.
+   */
+  FAQ: { bucket: "FAQ", edit: "edit", remove: "delete" },
   BRAND: { bucket: "BRAND", edit: "edit", remove: "delete" },
   BUNDLE: { bucket: "BUNDLE", edit: "edit", remove: "delete" },
   GROUP: { bucket: "GROUP", edit: "edit", remove: "delete" },

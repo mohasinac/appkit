@@ -13,6 +13,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { useMediaUpload } from "../../media";
 import { ImageUpload } from "../../media/upload/ImageUpload";
+import { Repeater } from "../../../ui/components/Repeater";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 
@@ -84,60 +85,6 @@ interface CategoryTemplateRow {
   label: string;
   variant: string;
   body: string;
-}
-
-/**
- * A minimal add/remove repeater.
- *
- * Deliberately NOT a new appkit primitive: three local shapes with three
- * different row renderers is not yet the Rule of Three on a *component* — it
- * is one container used three times with a render prop, which is what this is.
- * Promote it when a fourth caller appears outside this file.
- */
-function Repeater<T>({
-  rows,
-  onChange,
-  blank,
-  addLabel,
-  renderRow,
-  max,
-}: {
-  rows: T[];
-  onChange: (next: T[]) => void;
-  blank: () => T;
-  addLabel: string;
-  renderRow: (row: T, set: (patch: Partial<T>) => void) => React.ReactNode;
-  max: number;
-}) {
-  return (
-    <Stack gap="sm">
-      {rows.map((row, i) => (
-        <Div key={i} rounded="lg" border="default" padding="sm">
-          <Stack gap="xs">
-            {renderRow(row, (patch) =>
-              onChange(rows.map((r, j) => (j === i ? { ...r, ...patch } : r))),
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onChange(rows.filter((_, j) => j !== i))}
-            >
-              Remove
-            </Button>
-          </Stack>
-        </Div>
-      ))}
-      {rows.length < max ? (
-        <Button variant="secondary" size="sm" onClick={() => onChange([...rows, blank()])}>
-          {addLabel}
-        </Button>
-      ) : (
-        <Text size="xs" color="muted">
-          Maximum of {max} reached.
-        </Text>
-      )}
-    </Stack>
-  );
 }
 
 async function loadTaxCodeOptions(query: string, page: number) {

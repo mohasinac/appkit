@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button, Div, RichText, Row, Span, Tabs, TabsList, TabsTrigger, Text } from "../../../ui";
 import type { FAQ, FAQCategory } from "../types";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 interface FAQAccordionItemProps {
   faq: FAQ;
@@ -65,6 +66,30 @@ function FAQAccordionItem({
           ) : (
             <Text className="whitespace-pre-line">{faq.answer.text}</Text>
           )}
+          {/*
+            Owner edit, per question.
+
+            🛑 INSIDE THE EXPANDED BODY, not on the header row, and the reason
+            is structural before it is aesthetic: the header IS a `<Button>`,
+            and a button nested in a button is invalid HTML that browsers
+            resolve by closing the outer one early — which would break the
+            accordion's own toggle, not just the edit control.
+
+            It also keeps the collapsed list clean. The help centre renders
+            63 seeded questions; 63 toolbars stacked down a list of one-line
+            headers would bury the questions an admin came to read.
+
+            Renders nothing for anyone who is not an admin — the component
+            resolves that itself, so the public help centre is unchanged.
+          */}
+          <Row justify="end" className="mt-3">
+            <RecordOwnerQuickActions
+              resource="FAQ"
+              recordId={faq.id}
+              placement="detail"
+              recordLabel={faq.question}
+            />
+          </Row>
           {renderExpandedFooter?.(faq)}
         </Div>
       )}

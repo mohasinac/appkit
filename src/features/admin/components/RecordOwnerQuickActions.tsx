@@ -75,6 +75,7 @@ export type RecordQuickActionResource =
   | "SUBLISTING"
   | "PART"
   | "BEY"
+  | "FAQ"
   /*
    * 🛑 PRODUCT is in this table rather than in its own file, which is the
    * consolidation: there is now ONE component every surface calls.
@@ -168,6 +169,11 @@ const WIRING: Record<RecordQuickActionResource, ResourceWiring> = {
     afterDelete: String(ROUTES.STORE.PRODUCTS),
     clone: SELLER_ENDPOINTS.PRODUCT_DUPLICATE,
     afterClone: (newId) => String(ROUTES.STORE.PRODUCTS_EDIT(newId)),
+  },
+  FAQ: {
+    endpoint: ADMIN_ENDPOINTS.FAQ_BY_ID,
+    editHref: (id) => String(ROUTES.ADMIN.FAQS_EDIT(id)),
+    afterDelete: String(ROUTES.ADMIN.FAQS),
   },
   SUBLISTING: {
     endpoint: ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID,

@@ -60,6 +60,12 @@ export type ActionResource =
    */
   | "PART"
   | "BEY"
+  /*
+   * FAQ is a first-class record — `faq-` slug, its own admin editor at
+   * `/admin/faqs/[id]/edit` and its own endpoint — and it had no bucket at
+   * all, which is why no FAQ anywhere carried an owner control.
+   */
+  | "FAQ"
   | "SUBLISTING"
   | "STORE"
   | "BLOG"
@@ -603,6 +609,54 @@ export const ACTIONS: ActionTree = {
           "Beyblades built from it keep their parts list and will show its name without a link. " +
           "This part is also in the committed seed data, so regenerating the database will bring it " +
           "back — to remove it for good, take it out of the generator.",
+        confirmLabel: "Remove",
+      },
+    },
+  },
+  /*
+   * FAQ — a real record with its own `faq-` slug, admin editor and endpoint,
+   * which had no bucket here at all. That absence is what kept the owner
+   * toolbar off every FAQ: `RESOURCE_LEAVES` resolves its labels and confirm
+   * copy through this tree, so a missing bucket is a missing control.
+   */
+  FAQ: {
+    view: {
+      iconKey: "view",
+      id: "faq.view",
+      label: "View",
+      ariaLabel: "View FAQ",
+      description: "Open this question on the help centre.",
+      kind: "secondary",
+    },
+    edit: {
+      iconKey: "edit",
+      id: "faq.edit",
+      label: "Edit",
+      ariaLabel: "Edit FAQ",
+      description: "Correct this question or its answer.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    delete: {
+      iconKey: "delete",
+      id: "faq.delete",
+      label: "Delete",
+      ariaLabel: "Delete FAQ",
+      description: "Remove this question from the help centre.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Remove this question from the help centre?",
+        /*
+         * 🛑 Names the two places it disappears from, because a FAQ is
+         * surfaced in more than one: `showOnHomepage` and `showInFooter` are
+         * fields on the document, so deleting one can quietly empty a
+         * homepage block an admin never associated with this screen.
+         */
+        body:
+          "It stops appearing in the help centre, and in the homepage and footer blocks if it was " +
+          "flagged for those. Seeded questions come back on the next reseed — to remove one for " +
+          "good, take it out of the seed data.",
         confirmLabel: "Remove",
       },
     },
