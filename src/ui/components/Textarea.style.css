@@ -1,8 +1,8 @@
 .appkit-textarea {
   width: 100%;
   border: 1px solid var(--appkit-color-border);
-  border-radius: 0.375rem;
-  background: var(--appkit-color-surface);
+  border-radius: var(--appkit-radius-lg);
+  background: var(--appkit-color-surface-input);
   color: var(--appkit-color-text);
   padding: 0.5rem 0.625rem;
   font-size: 0.875rem;
@@ -33,12 +33,6 @@
   resize: none;
 }
 
-.dark .appkit-textarea {
-  border-color: var(--appkit-color-border);
-  background: rgba(30, 41, 59, 0.7);
-  color: var(--appkit-color-text);
-}
-
 .dark .appkit-textarea::placeholder {
   color: var(--appkit-color-text-muted);
 }
@@ -47,6 +41,3 @@
   border-color: var(--appkit-color-slate-500);
 }
 
-.dark .appkit-textarea:disabled {
-  background: rgba(30, 41, 59, 0.4);
-}

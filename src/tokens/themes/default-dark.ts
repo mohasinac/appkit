@@ -45,8 +45,8 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
 
     "appkit-color-bg": "#020617",
     "appkit-color-surface": "#0f172a",
-    "appkit-color-surface-elevated": "rgba(15, 23, 42, 0.9)",
-    "appkit-color-surface-input": "rgba(30, 41, 59, 0.6)",
+    "appkit-color-surface-elevated": "#1e293b",
+    "appkit-color-surface-input": "#0b1220",
     // Theme-inverting interactive fills. Must stay byte-identical to the
     // [data-theme="default-dark"] block in tokens.css — audit-theme-drift
     // compares them.

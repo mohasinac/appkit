@@ -264,7 +264,13 @@
   --appkit-color-bg:               #fafafa;    /* zinc-50 */
   --appkit-color-surface:          #ffffff;    /* white */
   --appkit-color-surface-elevated: #ffffff;
-  --appkit-color-surface-input:    #ffffff;
+  /* 🛑 A FILL, not white. This was `#ffffff` — identical to `surface` — so a
+   * field on a white card had nothing but a 1px `#e4e4e7` border to mark it,
+   * which measures ~1.2:1 and is why the audit reported fields reading as
+   * faint outlines rather than objects. A recessed well is the cheaper fix
+   * than darkening every border in the product, because `--appkit-color-border`
+   * is also every divider and table rule. */
+  --appkit-color-surface-input:    #fafafa;    /* zinc-50 — recessed on a white card */
 
   /* --- Interactive surfaces ------------------------------------------------
    * `-hover` is the neutral chrome hover fill; `-raised` is a resting panel one
@@ -370,6 +376,14 @@
   --appkit-focus-ring-halo:
     0 0 0 2px color-mix(in srgb, var(--appkit-color-focus-ring) 30%, transparent),
     0 0 0 4px var(--appkit-color-surface);
+  /* Same shape as `--appkit-focus-ring`, keyed on the error colour — a field
+   * that failed validation keeps its red edge while focused instead of
+   * swapping to the focus hue and losing the only signal it had. Was
+   * `rgba(248, 113, 113, …)` (red-400) hardcoded in Input and Select: the
+   * right family, but fixed in every theme and deaf to `--appkit-color-error`. */
+  --appkit-focus-ring-error:
+    0 0 0 3px color-mix(in srgb, var(--appkit-color-error) 25%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--appkit-color-error) 15%, transparent);
 }
 
 /* --- Gradients — default-light defaults (overridden at runtime by ThemeProvider) - */
@@ -440,8 +454,23 @@
 
   --appkit-color-bg:               #020617;    /* slate-950 */
   --appkit-color-surface:          #0f172a;    /* slate-900 */
-  --appkit-color-surface-elevated: rgba(15, 23, 42, 0.9);
-  --appkit-color-surface-input:    rgba(30, 41, 59, 0.6);  /* slate-800/60 */
+  /* 🛑 ELEVATED WAS DARKER THAN SURFACE. `rgba(15, 23, 42, 0.9)` composites
+   * over the page to ~#0e1528, i.e. BELOW `surface` (#0f172a) — so in a dark
+   * theme, where elevation reads as "closer to the light", every elevated
+   * panel sank instead of rising. That is the audit's "the hero card is
+   * nearly invisible against the page".
+   *
+   * Opaque, not an alpha, and that is the actual lesson: a translucent
+   * elevation token composites against WHATEVER IS BEHIND IT, so the same
+   * "elevated" panel rendered one colour over the page and another over a
+   * card — which is how it ended up below `surface` in the first place
+   * without anyone choosing that. */
+  --appkit-color-surface-elevated: #1e293b;    /* slate-800 — one step UP from surface */
+  /* Recessed, and distinct from all three panel levels, because an input
+   * appears on the page, on a card and on an elevated panel. The old
+   * `rgba(30, 41, 59, 0.6)` composited to the panel's own colour on an
+   * elevated panel — an input that disappears into the thing it sits on. */
+  --appkit-color-surface-input:    #0b1220;    /* a well, below slate-900 */
 
   /* --- Interactive surfaces ------------------------------------------------
    * `-hover` is the neutral chrome hover fill; `-raised` is a resting panel one
