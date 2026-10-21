@@ -94,6 +94,17 @@ export interface AppLayoutShellProps {
   homeHref: string;
   shopHref: string;
   footer: FooterLayoutProps;
+  /**
+   * Render the public marketing footer. Defaults to `true`.
+   *
+   * Pass `false` on a dashboard. `footer` stays REQUIRED either way, so the
+   * consumer keeps one code path and there is no "which half did I forget"
+   * state — this only decides whether it is shown.
+   *
+   * 🛑 It also moves the bottom-chrome reservation: the footer owns it when
+   * rendered, `<Main>` owns it when not. See the comment on `<Main>`.
+   */
+  showFooter?: boolean;
   searchSlot?: React.ReactNode;
   /** Render-prop alternative to searchSlot — receives onClose so the slot can close the overlay. */
   searchSlotRenderer?: (onClose: () => void) => React.ReactNode;
@@ -857,6 +868,7 @@ export function AppLayoutShell({
   homeHref,
   shopHref,
   footer,
+  showFooter = true,
   searchSlot,
   searchSlotRenderer,
   titleBarNavSlot,
@@ -1058,11 +1070,17 @@ export function AppLayoutShell({
 
           <Main
             id="main-content"
-            // No bottom-chrome clearance here on purpose. FooterLayout is a
-            // SIBLING rendered after <Main>, so a margin here only gaps
-            // main-to-footer — it never clears the bottom of the page, which is
-            // what the fixed nav + tier actually overlap. That reservation now
-            // lives on the footer's own padding-bottom.
+            // Bottom-chrome clearance belongs to whichever element is LAST.
+            //
+            // With the footer rendered it is the footer's, and a margin here
+            // would only gap main-to-footer — it would never clear the bottom
+            // of the page, which is what the fixed nav + tier actually
+            // overlap. That is why this carried no bottom padding.
+            //
+            // With the footer SUPPRESSED (`showFooter={false}`, which is every
+            // dashboard page) `<Main>` becomes the last element, so the same
+            // reasoning puts the reservation here instead. Exactly one of the
+            // two owns it at a time; both would add a screen of dead space.
             //
             // The TOP tier is the mirror image and does belong here: at `lg` the
             // chrome tier hangs under the header as a fixed bar, so without this
@@ -1070,7 +1088,14 @@ export function AppLayoutShell({
             // is 0 below `lg` and 0 whenever no bar is published, so this
             // reserves exactly nothing until there is something to reserve —
             // which is why it can be unconditional rather than route-gated.
-            className="w-full flex-1 flex flex-col pt-[var(--top-chrome-height,0px)] transition-[padding-top] duration-300 ease-out"
+            className={[
+              "w-full flex-1 flex flex-col pt-[var(--top-chrome-height,0px)] transition-[padding-top] duration-300 ease-out",
+              showFooter
+                ? ""
+                : "pb-[calc(var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px))]",
+            ]
+              .filter(Boolean)
+              .join(" ")}
           >
             <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}
@@ -1079,7 +1104,28 @@ export function AppLayoutShell({
         </Div>
 
         <BackToTop />
-        <FooterLayout {...footer} />
+        {/*
+          🛑 THE 86-LINK MARKETING FOOTER WAS UNDER EVERY DASHBOARD PAGE.
+
+          `<FooterLayout>` rendered unconditionally, so `/admin/products`
+          ended in "Shop by Category", a newsletter form, social links and the
+          full legal block — on both viewports. A dashboard is a different
+          surface from the shop, and nothing in that footer is reachable only
+          from there: the dashboard sidebar carries its own nav and
+          `SIDEBAR_SUPPORT_LINKS`, and the title bar carries the account menu.
+
+          Suppressed by the consumer rather than route-sniffed here. This
+          component is handed its chrome; deciding what a path means is the
+          consumer's job, and `LayoutShellClient` already computes
+          `isDashboard` for exactly this kind of question.
+
+          🛑 The NAVBAR is deliberately still unconditional. It carries search,
+          cart and the account menu, so dropping it needs the Phase 3a role
+          title bar to exist first — otherwise a dashboard loses its only path
+          back to the shop. That is the remaining half of the audit's "two
+          navigation systems at once".
+        */}
+        {showFooter && <FooterLayout {...footer} />}
         {/*
           The page-action control is ONE context with TWO presentations, and
           exactly one of them is mounted at any width (`useIsDesktop`):
