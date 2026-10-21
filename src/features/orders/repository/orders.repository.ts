@@ -42,6 +42,10 @@ import {
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
   type PaymentReviewQueueMode,
 } from "../constants/payment-window";
+import {
+  isLegalOrderTransition,
+  describeIllegalTransition,
+} from "../constants/transitions";
 import { ORDER_FIELDS } from "../../../constants/field-names";
 
 /**
@@ -61,6 +65,37 @@ export interface OrderWriteContext {
    * the refund itself on the timeline rather than an array-length delta.
    */
   extraChanges?: Record<string, FieldChange>;
+  /**
+   * Bypass the status transition guard. **For the admin order editor only.**
+   *
+   * 🛑 The override is RECORDED in `statusHistory`, never silent — an override
+   * that leaves no trace is indistinguishable from the bug the guard exists to
+   * catch, so a later reader cannot tell a deliberate correction from a
+   * regression that slipped through.
+   *
+   * Do not pass this from a route that takes its status from a request body.
+   * Two of `updateStatus`'s four callers do exactly that (see
+   * `constants/transitions.ts`), and handing them the override would restore
+   * the hole the guard closes.
+   */
+  allowStatusOverride?: boolean;
+}
+
+/**
+ * An illegal status transition was refused.
+ *
+ * Its own class so the webhook ingest can distinguish "this event is LATE"
+ * from "this event is broken": a replayed `order.paid` arriving after the order
+ * shipped is not wrong, it is out of date, and the correct ack is 200 with a
+ * `status: "conflict"` row rather than a 500 asking the gateway to retry a
+ * regression it can never win.
+ */
+export class OrderStatusError extends Error {
+  readonly code = "ORDER_STATUS_TRANSITION_INVALID";
+  constructor(message: string) {
+    super(message);
+    this.name = "OrderStatusError";
+  }
 }
 
 /**
@@ -306,6 +341,52 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     known?: OrderDocument | null,
   ): Promise<OrderDocument> {
     const current = known !== undefined ? known : await this.findById(orderId);
+
+    /*
+     * ── THE STATUS TRANSITION GUARD ───────────────────────────────────────────
+     *
+     * 🛑 ENFORCED HERE, and the location is the whole reason this is cheap.
+     *
+     * `updateWithHistory` is the single choke point all seven write primitives
+     * route through, AND it is the only place that already holds the current
+     * document — so the guard costs **zero extra Firestore reads**. Enforcing
+     * at the service layer instead would be four call-site edits and would
+     * still miss `settleRefund`'s own write, which goes straight through here.
+     *
+     * What it stops, from the census in `constants/transitions.ts`: two of
+     * `updateStatus`'s four callers pass an arbitrary status from a REQUEST
+     * BODY with `as any`, so a seller could set `delivered` on an unpaid order
+     * or regress `delivered` → `pending`, and nothing refused it. A replayed
+     * `order.paid` webhook could do the same.
+     *
+     * 🛑 It is skipped when `current` is null — a brand-new document has no
+     * `from` state, and refusing the first write would make the guard reject
+     * order creation. Also skipped when the patch carries no `status`, which
+     * is most writes (a tracking number, a note, a payout flag).
+     */
+    const nextStatus = patch.status;
+    if (current?.status && nextStatus && !isLegalOrderTransition(current.status, nextStatus)) {
+      if (ctx?.allowStatusOverride) {
+        /*
+         * The admin escape hatch — RECORDED, never silent. An override that
+         * leaves no trace is indistinguishable from the bug this guard exists
+         * to catch, so it goes into `statusHistory` as an explicit note and the
+         * write proceeds.
+         */
+        ctx = {
+          ...ctx,
+          note: [
+            ctx.note,
+            `status override: ${current.status} → ${nextStatus} is not a legal transition`,
+          ]
+            .filter(Boolean)
+            .join(" · "),
+        };
+      } else {
+        throw new OrderStatusError(describeIllegalTransition(current.status, nextStatus));
+      }
+    }
+
     patch = stampStatusAnchor(current, patch);
     const withEntry = withHistory(
       current as unknown as FirestoreDocument | undefined,

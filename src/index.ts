@@ -6416,6 +6416,20 @@ export {
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
 } from "./features/orders/constants/payment-window";
 export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
+/*
+ * The order status machine. Safe in the MAIN barrel — `constants/transitions.ts`
+ * imports only a type from `../types/index`, so its chain never reaches
+ * `providers/db-firebase` and therefore never reaches `firebase-admin`
+ * (Root Cause #6/#24). The guard that consumes it lives in the repository,
+ * which stays server-only; these are the pure predicates a client surface can
+ * legitimately use to decide which status buttons to render.
+ */
+export {
+  ORDER_STATUS_TRANSITIONS,
+  ORDER_TERMINAL_STATUSES,
+  isLegalOrderTransition,
+  describeIllegalTransition,
+} from "./features/orders/constants/transitions";
 export {
   ORDER_SCOPE_VALUES,
   ORDER_SCOPE_TABS,
