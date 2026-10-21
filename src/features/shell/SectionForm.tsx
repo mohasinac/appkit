@@ -8,6 +8,7 @@ import { Badge } from "../../ui/components/Badge";
 import { Div, Row, Span, Stack } from "../../ui";
 import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
 import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
+import { useIsDesktop } from "../layout/useIsDesktop";
 import { useSectionState } from "../account/hooks/useCollapsedSections";
 import { FormSchemaContext } from "./FormShell";
 import { EASE_OUT_MS } from "../../tokens/motion";
@@ -517,6 +518,15 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     enabled: bottomBar && !hideActions,
   });
 
+  /*
+   * The bar above and the in-flow row at the end of this form are ONE
+   * decision about where the primary action lives, so they are decided
+   * together here rather than each guessing. `BottomActions` unmounts on
+   * desktop via this same hook; the row is its complement. See the row.
+   */
+  const isDesktop = useIsDesktop();
+  const showInlineActions = isDesktop || !bottomBar;
+
   const toggle = useCallback((id: string) => {
     /*
      * A DIRECT click on the header always wins. `forceOpenIds` exists to
@@ -620,8 +630,28 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
         );
       })}
 
-      {!hideActions && (
+      {!hideActions && showInlineActions && (
         /*
+         * 🛑 DESKTOP ONLY — the exact complement of the pinned bar.
+         *
+         * This row and `useFormBottomActions`' bar both render a Save, and
+         * the comment below explains why the row exists: the bar is mobile
+         * only, so desktop needed one. What neither accounted for is that on
+         * MOBILE both appear — the row at the end of the form and the fixed
+         * bar over it. That is the audit's duplicate-CTA finding, and its
+         * mobile checkout screenshot: two stacked CTAs ~60px apart with the
+         * in-flow one clipped by the bar sitting on top of it.
+         *
+         * Gated on `useIsDesktop()` — the SAME hook `BottomActions` uses to
+         * decide it should unmount — rather than a `lg:` class, so the two
+         * cannot disagree about where the boundary is. A class would also
+         * leave this row in the DOM, where it still takes focus and still
+         * answers a query, which is how it was counted as a second button on
+         * desktop in the first place.
+         *
+         * `|| !bottomBar` keeps a caller that opted out of the bar from
+         * losing its only submit control on mobile.
+         *
          * `justify="between"` so a destructive action sits opposite Save
          * rather than beside it. With no destructive action the empty <Div>
          * still holds the left edge, keeping Save right-aligned.
