@@ -108,10 +108,26 @@ export interface AutoBreadcrumbsProps {
  * read `Xtreme Stadiums › Beyblade X Xtreme Stadium (BX-10)`. Only the page
  * holds the real title; a pathname cannot be turned into one.
  *
- * So an entity id is OMITTED rather than guessed at. Every detail page in this
- * app renders its own trail with real titles, which is why dropping the crumb
- * loses nothing — the breadcrumb simply ends at `Home / Products`, which is
- * true, useful and navigable.
+ * So an entity id is OMITTED rather than guessed at — the breadcrumb simply
+ * ends at `Home / Products`, which is true, useful and navigable.
+ *
+ * 🛑 CORRECTED 2026-10-21 — this read "Every detail page in this app renders
+ * its own trail with real titles, which is why dropping the crumb loses
+ * nothing", and that is FALSE. Measured across five detail views: only
+ * `ProductDetailPageView` renders one. `AuctionDetailPageView`,
+ * `StoreDetailLayoutView`, `BlogPostView` and `BrandDetailPageView` render
+ * NONE, so on those four the shortened trail above is the only breadcrumb
+ * there is.
+ *
+ * That does not change the decision — a trail ending at `Home / Auctions` is
+ * still correct, and title-casing an id produced
+ * `Product beyblade x xtreme stadium bx 10`, which was not. But the
+ * justification matters, because the false version invites the obvious next
+ * move: "detail pages have their own trail, so suppress this component on
+ * detail routes entirely". That would strip the breadcrumb from those four
+ * surfaces. The duplicate is handled by `:has()` in
+ * `AutoBreadcrumbs.style.css`, which fires only where a page actually
+ * renders its own.
  *
  * 🛑 The listing prefixes are READ FROM `LISTING_TYPE_REGISTRY`, never
  * re-listed here. Two enumerations of one union always drift (Root Cause #42 /
@@ -221,7 +237,7 @@ export function AutoBreadcrumbs({
       reaching for belongs in that token, and the two `supports-[…]` rules
       beside it already handle the backdrop-filter case with their own alphas.
     */}
-    <Div border="default" className="border-y backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-slate-950/85" surface="default">
+    <Div border="default" className="appkit-auto-breadcrumbs border-y backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-slate-950/85" surface="default">
       <Div className="container mx-auto max-w-[1920px] px-[var(--appkit-space-5)] sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]" padding="y-xs">
         <Nav aria-label="Breadcrumb" className={className}>
           <Ol className="flex items-center gap-[var(--appkit-space-2)] flex-wrap" size="sm">

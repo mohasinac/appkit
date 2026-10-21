@@ -1,0 +1,45 @@
+/*
+ * One breadcrumb per page.
+ *
+ * `AppLayoutShell` renders `<AutoBreadcrumbs>` on every route, derived from
+ * `usePathname()`. Some pages ALSO render their own trail with real entity
+ * titles — `ProductDetailPageView`, `CategoryDetailPageView`, the scam
+ * registry — and those pages showed two breadcrumbs stacked. `AutoBreadcrumbs`'
+ * own header records seeing exactly that in production:
+ *
+ *     Home / Products / Product beyblade x xtreme stadium bx 10
+ *     Xtreme Stadiums › Beyblade X Xtreme Stadium (BX-10)
+ *
+ * and responded by shortening the top one rather than hiding it.
+ *
+ * ── 🛑 WHY CSS AND NOT REACT ────────────────────────────────────────────────
+ *
+ * A child cannot hide an already-rendered ancestor's sibling. The shell
+ * renders `<AutoBreadcrumbs>` BEFORE `{children}`, so a context or a state
+ * flag the page sets arrives a frame late — and hiding a full-width strip one
+ * frame after paint is a layout shift at the top of the document, which is the
+ * exact defect just fixed on the announcement bar (CLS 0.822). The fix cannot
+ * be allowed to become the same bug.
+ *
+ * `:has()` resolves it during the first style pass: no state, no effect, no
+ * frame where both are visible.
+ *
+ * 🛑 AND IT DEGRADES SAFELY. Where `:has()` is unsupported the rule simply
+ * does not match and both breadcrumbs render — today's behaviour. That is the
+ * right direction for a progressive enhancement: the failure mode is
+ * redundancy, never a missing breadcrumb.
+ *
+ * 🛑 SCOPED TO THE AUTOMATIC ONE. The page's trail is the one with real
+ * titles, so the generic one yields. Suppressing by ROUTE instead would have
+ * been wrong: only one of five detail views measured actually renders its own
+ * trail, so a route-shaped rule would strip the breadcrumb entirely from
+ * auction, store, blog and brand pages — see the correction in
+ * `AutoBreadcrumbs.tsx`'s header.
+ *
+ * @tag domain:layout
+ * @tag layer:feature
+ */
+
+body:has(.appkit-page-breadcrumb) .appkit-auto-breadcrumbs {
+  display: none;
+}

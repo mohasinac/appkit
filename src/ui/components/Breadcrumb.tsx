@@ -30,9 +30,26 @@ export interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className = "", tone = "default" }: BreadcrumbProps) {
   return (
+    /*
+     * 🛑 `appkit-page-breadcrumb` IS A SIGNAL TO CSS, not a style hook — and
+     * it belongs on THIS primitive rather than on `BreadcrumbTrail`, because
+     * this is the one thing every page-level breadcrumb has in common.
+     * `BreadcrumbTrail` wraps it; the scam registry's three surfaces render it
+     * directly; and `AutoBreadcrumbs` — the automatic, pathname-derived trail
+     * the shell renders on every route — does NOT use it at all, building its
+     * own `<Nav><Ol>`. So this class means exactly "a page supplied its own
+     * breadcrumb", with one owner and nothing to keep in sync.
+     *
+     * `AutoBreadcrumbs.style.css` hides the automatic trail when this appears
+     * anywhere in the body. See that file for why the resolution is `:has()`
+     * and not React state: the shell renders before `{children}`, so a flag a
+     * page sets arrives a frame late, and hiding a full-width strip after
+     * paint is the top-of-page layout shift just fixed on the announcement
+     * bar.
+     */
     <Nav
       aria-label="Breadcrumb"
-      className={`${tone === "on-media" ? "appkit-breadcrumb--on-media" : ""} ${className}`}
+      className={`appkit-page-breadcrumb ${tone === "on-media" ? "appkit-breadcrumb--on-media" : ""} ${className}`}
     >
       <Ol className="appkit-breadcrumb__list">
         {items.map((item, i) => {

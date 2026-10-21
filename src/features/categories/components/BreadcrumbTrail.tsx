@@ -158,6 +158,11 @@ export function BreadcrumbTrail({
   const leadCount = hasCollapsed ? split!.lead.length : 0;
 
   return (
+    /*
+     * No marker class here — it lives on the `<Breadcrumb>` primitive this
+     * renders below, which is also what the scam registry's pages use
+     * directly. One owner; see `Breadcrumb.tsx`.
+     */
     <Div className={className}>
       <Row align="center" gap="xs" wrap>
         <Breadcrumb items={visible.slice(0, leadCount)} tone={tone} />

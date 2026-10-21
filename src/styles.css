@@ -47,6 +47,13 @@
  */
 @import "./features/homepage/components/AnnouncementBar.style.css";
 /*
+ * One breadcrumb per page — a `:has()` rule that hides the automatic trail
+ * where a page renders its own. Same reason it must be in THIS chain and not a
+ * JS import: `bundle-css.mjs` flattens only the @import graph rooted here, and
+ * a missing rule means two stacked breadcrumbs with nothing looking wrong.
+ */
+@import "./features/layout/AutoBreadcrumbs.style.css";
+/*
  * Third-party stylesheet, vendored into dist/vendor by copy-assets.mjs.
  * It used to be a JS import inside ImageEditor.tsx, which made it invisible to
  * this bundle and fatal to Node-based resolution — see that script's header.
