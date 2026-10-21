@@ -57,7 +57,7 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
       onClick={onClick}
       className={`flex items-center justify-end gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
- ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
+ ? "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
  : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-[var(--appkit-color-text)]"
  }`}
     >

@@ -144,7 +144,7 @@ export function FilterFacetSection({
             "inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition-colors",
             hasValue
               ? CLS_OPTION_SELECTED
-              : " bg-[var(--appkit-color-surface)] hover:border-zinc-400 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-border)]",
+              : "hover:border-zinc-400 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-border)]",
           )}
         >
           {title}

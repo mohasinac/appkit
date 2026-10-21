@@ -224,7 +224,7 @@ export function ImageCropModal({
                 variant="ghost"
                 size="sm"
                 onClick={() => setZoom(preset)}
-                className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
+                className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] bg-[var(--appkit-color-surface-elevated)]"
               >
                 {preset * 100}%
               </Button>
@@ -240,7 +240,7 @@ export function ImageCropModal({
         )}
 
         {/* Position info + reset */}
-        <Row textSize="xs" justify="between" className="text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]">
+        <Row textSize="xs" justify="between" className="text-[var(--appkit-color-text-muted)]">
           <Span>
             {t("cropPosition")}: {Math.round(position.x)}%, {Math.round(position.y)}%
           </Span>

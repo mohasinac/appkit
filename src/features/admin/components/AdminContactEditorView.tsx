@@ -55,7 +55,7 @@ export function AdminContactEditorView({
 
   const statusColor: Record<string, string> = {
     new: "bg-info-surface text-info",
-    read: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
+    read: "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
     resolved: "bg-success-surface text-success",
   };
 

@@ -40,7 +40,7 @@ function DefaultFallback({
         An unexpected error occurred. Please try again.
       </Text>
       {process.env.NODE_ENV === "development" && error ? (
-        <pre className="max-w-full overflow-auto rounded-md bg-[var(--appkit-color-surface)] p-3 text-left text-xs bg-[var(--appkit-color-surface-elevated)]">
+        <pre className="max-w-full overflow-auto rounded-md p-3 text-left text-xs bg-[var(--appkit-color-surface-elevated)]">
           {error.message}
         </pre>
       ) : null}

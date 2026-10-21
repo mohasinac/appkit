@@ -141,7 +141,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       tone="none"
       underline="none"
       rounded="xl"
-      className="group relative block aspect-square overflow-hidden bg-[var(--appkit-color-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
+      className="group relative block aspect-square overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
       aria-label={post.caption ?? `View on ${meta.label}`}
     >
       {/* Thumbnail */}

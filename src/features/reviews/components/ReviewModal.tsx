@@ -88,7 +88,7 @@ export function ViewReviewModal({
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
+            className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)]"
           />
         )}
 

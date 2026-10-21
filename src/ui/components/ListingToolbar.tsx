@@ -131,7 +131,7 @@ const VIEW_BTN_BASE =
 const VIEW_BTN_ACTIVE =
   "bg-[var(--appkit-color-primary)] text-white";
 const VIEW_BTN_INACTIVE =
-  "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover text-[var(--appkit-color-text-muted)]";
+  "hover:bg-surface-hover text-[var(--appkit-color-text-muted)]";
 
 export function ListingToolbar({
   filterCount = 0,

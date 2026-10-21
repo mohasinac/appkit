@@ -7,7 +7,7 @@ import { Span } from "./Typography";
 import { sectionBackgroundStyle, type SectionBackgroundConfig } from "./Semantic";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
-const CLS_CLEAR_BTN = "text-xs text-[var(--appkit-color-text-muted)] hover:text-error text-[var(--appkit-color-text-muted)] transition-colors min-h-0 h-auto p-0";
+const CLS_CLEAR_BTN = "text-xs hover:text-error text-[var(--appkit-color-text-muted)] transition-colors min-h-0 h-auto p-0";
 
 export interface ListingFilterDrawerProps {
   open: boolean;

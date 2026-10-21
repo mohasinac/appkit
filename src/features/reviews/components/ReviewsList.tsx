@@ -107,7 +107,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-2 text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
+            className="mt-2 text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)]"
           />
         )}
 

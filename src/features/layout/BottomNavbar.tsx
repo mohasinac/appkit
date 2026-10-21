@@ -160,7 +160,7 @@ export interface BottomNavbarProps {
   onMoreToggle?: () => void;
   /** CSS class applied to the active nav item. Default: "text-primary-600 dark:text-primary-400" */
   activeClassName?: string;
-  /** CSS class applied to inactive nav items. Default: "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]" */
+  /** CSS class applied to inactive nav items. Default: "text-[var(--appkit-color-text-muted)]" */
   inactiveClassName?: string;
   /** CSS class applied to nav icons */
   iconClassName?: string;
@@ -188,7 +188,7 @@ export function BottomNavbar({
   navItems,
   onMoreToggle,
   activeClassName = "text-primary-600 dark:text-primary-400",
-  inactiveClassName = "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]",
+  inactiveClassName = "text-[var(--appkit-color-text-muted)]",
   iconClassName,
   labelClassName = "text-[11px] leading-tight font-medium",
   getRoleBadgeClass,
@@ -488,7 +488,7 @@ export function BottomNavbar({
             />
             {user.role && (
               <Span
-                className={`text-[7px] uppercase leading-none ${ getRoleBadgeClass ? getRoleBadgeClass(user.role) : "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]" }`} weight="semibold"
+                className={`text-[7px] uppercase leading-none ${ getRoleBadgeClass ? getRoleBadgeClass(user.role) : "text-[var(--appkit-color-text-muted)]" }`} weight="semibold"
               >
                 {user.role}
               </Span>

@@ -429,13 +429,25 @@ function CollapsibleSidebarSection({
 function SidebarUserHeader({
   user,
   onClose,
+  profileHref,
 }: {
   user: BottomNavbarUser;
   onClose: () => void;
+  /**
+   * Where the avatar goes. Optional so an existing caller that has no profile
+   * route still renders the header — the avatar simply stays inert there
+   * rather than linking somewhere that does not exist.
+   */
+  profileHref?: string;
 }) {
   return (
     <Row align="center" justify="between" gap="3">
       <Row className="flex-1 min-w-0" align="center" gap="3">
+        {/*
+          * The avatar links to the profile, and CLOSES the sidebar on the way.
+          * Without `onClose` the panel stays open over the page it just
+          * navigated to, which reads as the tap having done nothing.
+          */}
         <Div className="flex-shrink-0 relative">
           <AvatarDisplay
             cropData={
@@ -463,6 +475,28 @@ function SidebarUserHeader({
               {user.role.charAt(0).toUpperCase()}
             </Row>
           )}
+          {/*
+            * The link is an OVERLAY rather than a wrapper around the avatar.
+            * Wrapping would put the role badge — which is `absolute` against
+            * this same box — inside the anchor, so the badge would become part
+            * of the link's hit area and its own `title` would fight the link's
+            * accessible name. An inset overlay keeps the badge decorative and
+            * gives the whole avatar one clean target.
+            */}
+          {profileHref && (
+            <TextLink
+              href={profileHref}
+              variant="none"
+              onClick={onClose}
+              className="absolute inset-0 rounded-full"
+            >
+              {/* `TextLink` requires children, and a visually-hidden label is
+                  a better accessible name than a bare `aria-label` — it stays
+                  translatable and survives a screen reader that prefers
+                  content over attributes. */}
+              <Span className="sr-only">View your profile</Span>
+            </TextLink>
+          )}
         </Div>
         <Div className="flex-1 min-w-0">
           <Text className="truncate" color="primary" size="sm" weight="medium">
@@ -477,7 +511,7 @@ function SidebarUserHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -502,7 +536,7 @@ function SidebarGuestHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="rounded-full p-[var(--appkit-space-2)] hover:bg-surface-hover hover:text-zinc-900 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -679,31 +713,50 @@ function SidebarContent({
         </CollapsibleNavGroup>
       )}
 
+      {/*
+        * Each stat LINKS to the list it counts.
+        *
+        * 🛑 These were four inert `<Div>`s — a number the user could see and
+        * could not act on, which is Root Cause #56's shape at a smaller scale
+        * ("a row that only offers mutations is not done"). Nothing new had to
+        * be threaded in: `userOrdersHref`, `profileHref` and
+        * `resolvedStoreHref` were already props on this component, and the
+        * Orders stat sat thirty lines below a nav link using the very href it
+        * was missing.
+        *
+        * "Auctions Won" deep-links to the orders list filtered to the auction
+        * LANE — not to `/user/bids`, which is open bids rather than won
+        * orders. That filter is the `orderType` tab in `UserOrdersView`, so
+        * the two surfaces agree by construction.
+        *
+        * "Items Sold" renders only when the viewer actually has a store;
+        * otherwise it is a number with nowhere to go.
+        */}
       {isAuthenticated && user?.stats && (
         <Div layout="grid" gap="2" className="grid-cols-2">
-          {user.stats.totalOrders != null && (
-            <Div className={CLS_STAT_BOX}>
+          {user.stats.totalOrders != null && userOrdersHref && (
+            <TextLink href={userOrdersHref} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.totalOrders}</Text>
               <Text className={CLS_STAT_LABEL}>Orders</Text>
-            </Div>
+            </TextLink>
           )}
           {user.stats.reviewsCount != null && (
-            <Div className={CLS_STAT_BOX}>
+            <TextLink href={`${profileHref}#reviews`} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.reviewsCount}</Text>
               <Text className={CLS_STAT_LABEL}>Reviews</Text>
-            </Div>
+            </TextLink>
           )}
-          {user.stats.auctionsWon != null && (
-            <Div className={CLS_STAT_BOX}>
+          {user.stats.auctionsWon != null && userOrdersHref && (
+            <TextLink href={`${userOrdersHref}?orderType=auction`} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.auctionsWon}</Text>
               <Text className={CLS_STAT_LABEL}>Auctions Won</Text>
-            </Div>
+            </TextLink>
           )}
-          {user.stats.itemsSold != null && (
-            <Div className={CLS_STAT_BOX}>
+          {user.stats.itemsSold != null && resolvedStoreHref && (
+            <TextLink href={resolvedStoreHref} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.itemsSold}</Text>
               <Text className={CLS_STAT_LABEL}>Items Sold</Text>
-            </Div>
+            </TextLink>
           )}
         </Div>
       )}
@@ -989,7 +1042,11 @@ export function AppLayoutShell({
             ariaLabel="Secondary navigation"
             header={
               user ? (
-                <SidebarUserHeader user={user} onClose={() => setSidebarOpen(false)} />
+                <SidebarUserHeader
+                  user={user}
+                  onClose={() => setSidebarOpen(false)}
+                  profileHref={profileHref}
+                />
               ) : (
                 <SidebarGuestHeader sidebarTitle={sidebarTitle} onClose={() => setSidebarOpen(false)} />
               )
