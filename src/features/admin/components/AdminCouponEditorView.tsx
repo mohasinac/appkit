@@ -5,7 +5,8 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ConfirmDeleteModal, Div, StackedViewShell, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, Input, StackedViewShell, useToast } from "../../../ui";
+import { Repeater } from "../../../ui/components/Repeater";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -34,6 +35,11 @@ const __O = {
  * describe. The nested `discount` / `usage` / `validity` / `restrictions`
  * groups the API wants are assembled in the payload builder.
  */
+interface CouponTier {
+  minAmount: number;
+  discountValue: number;
+}
+
 interface Values {
   [key: string]: unknown;
   code: string;
@@ -53,6 +59,8 @@ interface Values {
   isActive: boolean;
   firstTimeUserOnly: boolean;
   appliesToAuctions: boolean;
+  /** Spend tiers; replace `discount.value` above a threshold. */
+  tiers: CouponTier[];
   applicableProducts: string[];
   applicableCategories: string[];
 }
@@ -89,6 +97,7 @@ interface CouponRecord {
     applicableCategories?: string[];
   };
   applicableToAuctions?: boolean;
+  tiers?: CouponTier[];
 }
 
 interface CouponPayload {
@@ -106,6 +115,12 @@ interface CouponPayload {
     applicableCategories?: string[];
   };
   applicableToAuctions?: boolean;
+  /**
+   * Spend tiers. Replaces `discount.value` once the order total reaches a
+   * threshold — see `calculateDiscount`, which is the reader this field
+   * went without from the day it shipped until now.
+   */
+  tiers?: CouponTier[];
 }
 
 const TYPE_OPTIONS = [
@@ -161,6 +176,7 @@ export function AdminCouponEditorView({
     isActive: true,
     firstTimeUserOnly: false,
     appliesToAuctions: false,
+    tiers: [],
     applicableProducts: [],
     applicableCategories: [],
   });
@@ -214,6 +230,7 @@ export function AdminCouponEditorView({
         ? c.restrictions.applicableCategories
         : [],
       appliesToAuctions: c.applicableToAuctions ?? false,
+      tiers: c.tiers ?? [],
     });
   }, [couponQuery.data]);
 
@@ -270,6 +287,13 @@ export function AdminCouponEditorView({
           }),
         },
         applicableToAuctions: form.appliesToAuctions,
+        /*
+         * 🛑 Sent even when EMPTY so that clearing the last tier persists —
+         * the same reasoning as the brand highlights. A tier with no
+         * threshold and no value is dropped rather than stored: it would be
+         * a band that matches every order and discounts nothing.
+         */
+        tiers: form.tiers.filter((t) => t.minAmount > 0 || t.discountValue > 0),
       };
       if (isEdit) {
         return apiClient.patch(ADMIN_ENDPOINTS.COUPON_BY_ID(couponId!), payload);
@@ -317,6 +341,51 @@ export function AdminCouponEditorView({
       buildSectionsFromSchema<Values>(adminCouponFormSchema, {
         options: { type: TYPE_OPTIONS.map((o) => ({ value: String(o.value), label: o.label })) },
         renderers: {
+          /*
+           * Spend tiers. `Repeater` is the one promoted out of
+           * `AdminCategoryEditorView`; this is its fifth caller.
+           *
+           * 🛑 Both inputs are NUMBERS, parsed here rather than kept as
+           * strings, because `getTieredDiscount` sorts on `minAmount` and
+           * compares it to the order total. A string "1000" sorts before
+           * "900" lexically, which would silently pick the wrong band.
+           */
+          tiers: ({ values, onChange }) => {
+            const rows = (values.tiers as CouponTier[]) ?? [];
+            return (
+              <Repeater<CouponTier>
+                rows={rows}
+                onChange={(next) => onChange({ tiers: next })}
+                blank={() => ({ minAmount: 0, discountValue: 0 })}
+                addLabel="Add a tier"
+                max={6}
+                renderRow={(row, set) => (
+                  <Div layout="grid" gap="4" className="sm:grid-cols-2">
+                    <Input
+                      label="Spend at least (₹)"
+                      type="number"
+                      min={0}
+                      value={String(row.minAmount)}
+                      onChange={(e) => set({ minAmount: Number(e.target.value) || 0 })}
+                    />
+                    <Input
+                      label={
+                        values.type === "percentage"
+                          ? "Discount (%)"
+                          : "Discount (₹)"
+                      }
+                      type="number"
+                      min={0}
+                      value={String(row.discountValue)}
+                      onChange={(e) =>
+                        set({ discountValue: Number(e.target.value) || 0 })
+                      }
+                    />
+                  </Div>
+                )}
+              />
+            );
+          },
           // Typing the campaign name fills the code until the admin edits it.
           name: ({ values, errors }) => (
             <FieldInput

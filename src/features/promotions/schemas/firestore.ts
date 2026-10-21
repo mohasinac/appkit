@@ -387,11 +387,41 @@ export function calculateDiscount(
 ): number {
   if (coupon.discount.minPurchase && orderTotal < coupon.discount.minPurchase)
     return 0;
+
+  /*
+   * ── Tiered discounts ──────────────────────────────────────────────────────
+   *
+   * 🛑 `tiers` HAS BEEN ON `CouponDocument` SINCE IT SHIPPED, AND NOTHING EVER
+   * READ IT. `getTieredDiscount` existed, was exported from the barrel, and
+   * had ZERO callers — so a coupon carrying tiers was charged at its flat
+   * `discount.value` and the tiers did nothing at all. This is the reader.
+   *
+   * A tier REPLACES `discount.value` rather than adding to it, which is what
+   * its own field comment describes: "Percentage (0-100) when the coupon type
+   * === percentage; decimal rupees when type === fixed". So the tier is the
+   * value for that band, not a bonus on top.
+   *
+   * 🛑 Only `percentage` and `fixed` consult it. A BOGO's value lives in
+   * `bxgy` and free shipping is a shipping-line waiver, so neither has a
+   * `discount.value` for a tier to replace — applying one there would be
+   * inventing semantics the field does not define.
+   *
+   * 🛑 `> 0` means "a tier matched". `getTieredDiscount` returns 0 for all
+   * three of "no tiers", "no band matched" and "the matched band is worth
+   * zero", and those are indistinguishable in its signature. That is fine
+   * here ONLY because a zero-value tier is a no-op either way — it would
+   * discount nothing whether honoured or ignored. Do not reuse this test for
+   * anything where zero is a meaningful outcome.
+   */
+  const tieredValue = getTieredDiscount(coupon.tiers, orderTotal);
+  const effectiveValue =
+    tieredValue > 0 ? tieredValue : coupon.discount.value;
+
   let discountAmount = 0;
   switch (coupon.type) {
     case "percentage":
-      // audit-money-units-ok: percentage divisor (coupon.discount.value is 0-100), not paise
-      discountAmount = (orderTotal * coupon.discount.value) / 100;
+      // audit-money-units-ok: percentage divisor (effectiveValue is 0-100), not paise
+      discountAmount = (orderTotal * effectiveValue) / 100;
       if (
         coupon.discount.maxDiscount &&
         discountAmount > coupon.discount.maxDiscount
@@ -400,7 +430,7 @@ export function calculateDiscount(
       }
       break;
     case "fixed":
-      discountAmount = Math.min(coupon.discount.value, orderTotal);
+      discountAmount = Math.min(effectiveValue, orderTotal);
       break;
     case "buy_x_get_y":
       // Needs the basket — see calculateBxgyDiscount. Capped at the total so a

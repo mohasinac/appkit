@@ -299,6 +299,39 @@ export const adminCouponFormSchema = couponFormBase
       label: "Current usage", help: "Updated by orders.",
     }),
 
+    /*
+     * ── Tiered discounts ────────────────────────────────────────────────────
+     *
+     * 🛑 `CouponDocument.tiers` has existed since the collection shipped and
+     * had NO editor on either portal — and `getTieredDiscount`, its helper,
+     * had zero callers, so even a hand-seeded tier was ignored by the
+     * discount calculation. Both halves are fixed together: wiring an editor
+     * to a field nothing reads would hand an admin a control that does
+     * nothing, which is the defect this audit keeps removing rather than
+     * adding.
+     *
+     * 🛑 `when` limits it to the two types that HAVE a `discount.value` for a
+     * tier to replace. A BOGO's value lives in `bxgy` and free shipping is a
+     * shipping-line waiver, so a tier on either would be meaningless — and an
+     * input that cannot affect the outcome is worse than an absent one.
+     */
+    tiers: annotate(
+      z
+        .array(
+          z.object({
+            minAmount: z.number().min(0, "Spend threshold cannot be negative"),
+            discountValue: z.number().min(0, "Discount cannot be negative"),
+          }),
+        )
+        .max(6, "At most 6 tiers")
+        .optional(),
+      {
+        section: "limits", order: 6, row: "full", label: "Spend tiers",
+        when: (v) => v.type === "percentage" || v.type === "fixed",
+        help: "Replaces the discount value once the order reaches a threshold. The highest matching tier wins.",
+      },
+    ),
+
     firstTimeUserOnly: annotate(z.boolean(), {
       section: "scope", order: 3, row: "quarter", label: "First-time users only",
     }),
