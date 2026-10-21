@@ -593,14 +593,6 @@ export const HOMEPAGE_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Loyalty
-// ---------------------------------------------------------------------------
-
-export const LOYALTY_ENDPOINTS = {
-  BALANCE: (uid: string) => `/api/loyalty/balance?uid=${uid}`,
-} as const;
-
-// ---------------------------------------------------------------------------
 // Analytics — page-view tracking (public pages only)
 // ---------------------------------------------------------------------------
 
@@ -900,7 +892,6 @@ export const API_ENDPOINTS = {
   LOTTERY: LOTTERY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
   HOMEPAGE: HOMEPAGE_ENDPOINTS,
-  LOYALTY: LOYALTY_ENDPOINTS,
   ANALYTICS: ANALYTICS_ENDPOINTS,
   MEDIA: MEDIA_ENDPOINTS,
   ORDERS: ORDER_ENDPOINTS,

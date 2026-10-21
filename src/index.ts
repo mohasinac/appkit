@@ -6120,73 +6120,6 @@ export type { TitleBarUser } from "./features/layout/index";
 // UseBottomActionsOptions - Type contract for use bottom actions options.
 export type { UseBottomActionsOptions } from "./features/layout/index";
 
-// ./features/loyalty/index
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// CoinsBadge - Component for coins badge.
-export { CoinsBadge } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// CoinsDisplay - Shared export for coins display.
-export { CoinsDisplay } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// applyCoinsToOrder - Helper for apply coins to order.
-export { applyCoinsToOrder } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// buildLoyaltyColumns - Helper for build loyalty columns.
-export { buildLoyaltyColumns } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// calculateCoinsEarned - Helper for calculate coins earned.
-export { calculateCoinsEarned } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// calculateMaxRedeemable - Helper for calculate max redeemable.
-export { calculateMaxRedeemable } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// coinHistoryEntrySchema - Model for coin history entry schema.
-export { coinHistoryEntrySchema } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// coinReasonSchema - Model for coin reason schema.
-export { coinReasonSchema } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// coinsToRupees - Shared export for coins to rupees.
-export { coinsToRupees } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// loyaltyAdminColumns - Shared export for loyalty admin columns.
-export { loyaltyAdminColumns } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// loyaltyBalanceSchema - Model for loyalty balance schema.
-export { loyaltyBalanceSchema } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// loyaltyConfigSchema - Model for loyalty config schema.
-export { loyaltyConfigSchema } from "./features/loyalty/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useLoyaltyBalance - React hook for use loyalty balance.
-export { useLoyaltyBalance } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CoinHistoryEntry - Type contract for coin history entry.
-export type { CoinHistoryEntry } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CoinReason - Type contract for coin reason.
-export type { CoinReason } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// EarnCoinsInput - Type contract for earn coins input.
-export type { EarnCoinsInput } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// LoyaltyBalance - Type contract for loyalty balance.
-export type { LoyaltyBalance } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// LoyaltyConfig - Type contract for loyalty config.
-export type { LoyaltyConfig } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RedeemCoinsInput - Type contract for redeem coins input.
-export type { RedeemCoinsInput } from "./features/loyalty/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// RedeemCoinsResult - Type contract for redeem coins result.
-export type { RedeemCoinsResult } from "./features/loyalty/index";
-
-// ./features/loyalty/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// LoyaltyRepository - Shared export for loyalty repository.
-export { LoyaltyRepository } from "./features/loyalty/server";
-
 // ./features/media/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AvatarUpload - Shared export for avatar upload.
@@ -8772,7 +8705,7 @@ export {
   API_ENDPOINTS, API_ROUTES, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
   NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, AUCTION_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
-  FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
+  FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
   ORDER_ENDPOINTS, PREORDER_ENDPOINTS, PRODUCT_ENDPOINTS, REVIEW_ENDPOINTS,
   SEARCH_ENDPOINTS, SELLER_ENDPOINTS, BLOG_ENDPOINTS, WISHLIST_ENDPOINTS,
   COLLECTION_CACHE_PATHS, resolveEndpoint, resolveEndpointFn,

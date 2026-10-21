@@ -76,7 +76,6 @@ export const FEATURE_SUBPATH_MAP: Record<string, string> = {
   consultation: "@mohasinac/appkit/features/consultation",
   corporate: "@mohasinac/appkit/features/corporate",
   "before-after": "@mohasinac/appkit/features/before-after",
-  loyalty: "@mohasinac/appkit/features/loyalty",
   collections: "@mohasinac/appkit/features/collections",
   preorders: "@mohasinac/appkit/features/pre-orders",
 };
@@ -133,7 +132,6 @@ const FEATURE_NAMESPACE_MAP: Record<string, string> = {
   consultation: "consultation",
   corporate: "corporate",
   "before-after": "beforeAfter",
-  loyalty: "loyalty",
   collections: "collections",
 };
 
