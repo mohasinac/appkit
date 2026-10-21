@@ -1,8 +1,6 @@
 "use client";
-import { normalizeError } from "../../../errors/normalize";
 
-import React, { useEffect, useRef, useState } from "react";
-import JsBarcode from "jsbarcode";
+import React, { useMemo, useState } from "react";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Stack, Row } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
@@ -11,6 +9,19 @@ import {
   formatPhysicalLocation,
   type PhysicalLocationParts,
 } from "../../../utils/physical-location";
+import {
+  LabelPageStyle,
+  LabelSheet,
+  ProductLabel,
+  PrintScaleWarning,
+} from "../../print/components/labels";
+import { LabelProfilePicker } from "../../print/components/LabelProfilePicker";
+import {
+  LABEL_PROFILES,
+  documentPageCss,
+  labelPageCss,
+  type LabelProfileId,
+} from "../../../_internal/shared/features/print/label-profiles";
 
 interface PrintCenterStore {
   id: string;
@@ -35,6 +46,11 @@ interface PrintCenterProduct {
    * cast `as any`, which is why neither side complained. */
   physicalLocation?: PhysicalLocationParts;
   barcodeId?: string;
+  /**
+   * The storage box this product is placed in, from the placements registry.
+   * Preferred over `physicalLocation` on the label — see the render note.
+   */
+  boxCode?: string | null;
 }
 
 interface PrintCenterOrder {
@@ -61,45 +77,18 @@ interface PrintCenterViewProps {
   initialOrders?: PrintCenterOrder[];
 }
 
-function ProductLabel({ product }: { product: PrintCenterProduct }) {
-  const svgRef = useRef<SVGSVGElement>(null);
-  useEffect(() => {
-    if (svgRef.current && product.barcodeId) {
-      try {
-        JsBarcode(svgRef.current, product.barcodeId, {
-          format: "CODE128",
-          width: 2,
-          height: 50,
-          displayValue: true,
-          fontSize: 12,
-          margin: 8,
-        });
-        // JsBarcode throws on a value CODE128 cannot encode. The <svg> is left
-        // empty and the label still prints its title and price — there is no
-        // recovery beyond fixing the barcodeId on the product itself.
-      } catch (_err) {
-        void normalizeError(_err);
-      }
-    }
-  }, [product.barcodeId]);
-
-  return (
-    <Stack surface="card" padding="sm" rounded="sm" gap="xs" className="break-inside-avoid text-center w-[200px]">
-      {product.barcodeId ? (
-        <svg ref={svgRef} />
-      ) : (
-        <Text size="xs" color="muted">No barcode</Text>
-      )}
-      <Text size="xs" weight="medium" truncate={1}>{product.name}</Text>
-      <Text size="xs" color="muted">₹{product.price.toLocaleString("en-IN")}</Text>
-      {formatPhysicalLocation(product.physicalLocation) && (
-        <Text size="xs" color="muted">
-          {formatPhysicalLocation(product.physicalLocation)}
-        </Text>
-      )}
-    </Stack>
-  );
-}
+/*
+ * 🛑 THE LOCAL `ProductLabel` IS GONE. It was `w-[200px]`, rendered a barcode
+ * at `width: 2` (a 0.53 mm module — twice the density needed) with a fixed
+ * `margin: 8` quiet zone (4 modules against the 10 the symbology requires),
+ * and this view emitted no `@page` rule at all. So a thermal printer received
+ * the browser's default A4 with a 200-pixel card in the corner, and nothing
+ * errored.
+ *
+ * `features/print/components/labels.tsx` replaces it with mm geometry driven
+ * by the chosen profile. See that file's header for the two unit conversions,
+ * and `label-profiles.ts` for why the fit check refuses rather than scales.
+ */
 
 function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName: string }) {
   return (
@@ -143,6 +132,28 @@ export function PrintCenterView({
   const [tab, setTab] = useState<"labels" | "slips">("labels");
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
+  const [profileId, setProfileId] = useState<LabelProfileId>("thermal-50x25");
+  const profile = LABEL_PROFILES[profileId];
+
+  const chosenProducts = useMemo(
+    () => initialProducts.filter((p) => selectedProducts.has(p.id)),
+    [initialProducts, selectedProducts],
+  );
+
+  /*
+   * The LONGEST code in the selection, so the fit warning is about the worst
+   * label in the batch. Checking the first or the average would report "fits"
+   * about a job in which some labels do not — and the operator only finds out
+   * which ones after printing.
+   */
+  const longestCodeLength = useMemo(
+    () =>
+      chosenProducts.reduce(
+        (n, p) => Math.max(n, (p.barcodeId ?? "").length),
+        0,
+      ),
+    [chosenProducts],
+  );
 
   const toggleProduct = (id: string) =>
     setSelectedProducts((prev) => {
@@ -164,7 +175,16 @@ export function PrintCenterView({
 
   return (
     <Stack gap="md" padding="md">
-      <style>{`@media print { .no-print { display: none !important; } }`}</style>
+      {/*
+        🛑 ONE `@page` OWNER, SWITCHED BY TAB. The rule is document-global and
+        cannot be scoped, so two of these would not give two geometries — the
+        later one in document order silently wins. Only one tab renders at a
+        time, which is exactly what makes a single conditional emitter correct:
+        labels want the label as the page, packing slips want A4.
+      */}
+      <LabelPageStyle
+        css={tab === "labels" ? labelPageCss(profile) : documentPageCss()}
+      />
 
       <Stack className="no-print">
         <Heading level={3}>Print Center{store ? ` — ${store.storeName}` : ""}</Heading>
@@ -188,7 +208,13 @@ export function PrintCenterView({
 
       {tab === "labels" && (
         <>
-          <Stack className="no-print">
+          <Stack className="no-print" gap="sm">
+            <LabelProfilePicker
+              value={profileId}
+              onChange={setProfileId}
+              longestCodeLength={longestCodeLength}
+            />
+            <PrintScaleWarning />
             <Stack gap="sm">
               {initialProducts.length === 0 ? (
                 <Text color="muted">No products available.</Text>
@@ -208,13 +234,35 @@ export function PrintCenterView({
               </Button>
             </Stack>
           </Stack>
-          <Row wrap gap="sm" className="mt-4">
-            {initialProducts
-              .filter((p) => selectedProducts.has(p.id))
-              .map((p) => (
-                <ProductLabel key={p.id} product={p} />
-              ))}
-          </Row>
+          {/*
+            `LabelSheet` positions on a die-cut A4 grid at the stock's real
+            pitch, and passes thermal straight through — there the page IS the
+            label and `@page` plus `break-after` does the work.
+          */}
+          <LabelSheet profile={profile}>
+            {chosenProducts.map((p) => (
+              <ProductLabel
+                key={p.id}
+                profile={profile}
+                product={{
+                  barcodeId: p.barcodeId,
+                  name: p.name,
+                  price: p.price,
+                  /*
+                   * 🛑 The BOX CODE, falling back to the legacy free-text
+                   * location. `boxCode` comes from the placements registry, so
+                   * it is one of a known set and groups correctly;
+                   * `physicalLocation` was three uncontrolled inputs where
+                   * "shelf 3", "Shelf-3" and "AC60 3" all meant one place and
+                   * no list could group them. The fallback keeps old products
+                   * printing something until that field is retired.
+                   */
+                  boxCode:
+                    p.boxCode ?? formatPhysicalLocation(p.physicalLocation) ?? null,
+                }}
+              />
+            ))}
+          </LabelSheet>
         </>
       )}
 

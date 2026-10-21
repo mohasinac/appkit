@@ -445,6 +445,17 @@ export const DEFAULT_ROUTE_MAP = {
     INVENTORY: "/admin/inventory",
     INVENTORY_BOXES: "/admin/inventory/boxes",
     INVENTORY_BOX_DETAIL: (id: string) => `/admin/inventory/boxes/${id}`,
+    /*
+     * 🛑 Must sit BEFORE nothing and resolve independently of
+     * `INVENTORY_BOX_DETAIL` — `/admin/inventory/boxes/labels` and
+     * `/admin/inventory/boxes/{id}` share a segment, so Next's static-beats-
+     * dynamic precedence is what keeps `labels` from being read as a box id.
+     * That precedence is the framework's, not ours, but it means a box may
+     * never be registered with the code `labels`: its id would be
+     * `storagebox-labels`, so there is no collision in practice, and this note
+     * exists so nobody "fixes" the route by renaming it.
+     */
+    INVENTORY_BOX_LABELS: "/admin/inventory/boxes/labels",
     INVENTORY_MOVEMENTS: "/admin/inventory/movements",
     SHIPMENT_RECEIVE: (id: string) => `/admin/shipments/${id}/receive`,
     SHIPMENTS_NEW: "/admin/shipments/new",
