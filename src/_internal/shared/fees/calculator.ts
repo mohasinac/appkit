@@ -84,7 +84,36 @@ export function allocateCheckoutFees(
   if (groupSubtotals.length === 0) return allocation;
 
   const total = groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
-  let platformRemaining = fees.platformFee;
+
+  /*
+   * ── D41: THE `minimumTransactionFee` FLOOR IS APPLIED HERE, ONCE ──────────
+   *
+   * `computeCheckoutFees` computes `totalFee = max(platformFee + gstOnFee,
+   * minimumTransactionFee)` — and **`totalFee` had ZERO consumers.** Measured:
+   * the only references were its own declaration, its computation and its
+   * return. So the floor existed in a field nothing read.
+   *
+   * The capture route re-derived it by hand instead
+   * (`max(rawTotal, discountedSubtotal + minimumTransactionFee + …)`), while
+   * this allocator apportioned the UNFLOORED `platformFee`/`gstOnFee` to each
+   * order group. Consequence where the floor bit: **the gateway captured the
+   * floored amount and the orders recorded less than was collected.** The
+   * buyer's statement and our own records disagreed, by exactly the shortfall.
+   *
+   * The shortfall is treated as additional PLATFORM FEE, with no GST of its
+   * own, because the floor is defined on `platformFee + gstOnFee` COMBINED —
+   * so `flooredPlatformFee + gstOnFee` is exactly `totalFee`, which is exactly
+   * what the capture route charges. Adding GST on top of the shortfall would
+   * push the captured total above the floor and reintroduce the mismatch in
+   * the other direction.
+   *
+   * A floor nothing applies is not a floor; a floor applied in one of two
+   * places is worse, because the two then disagree about money.
+   */
+  const feeShortfall = Math.max(0, roundRupees(fees.totalFee - (fees.platformFee + fees.gstOnFee)));
+  const flooredPlatformFee = roundRupees(fees.platformFee + feeShortfall);
+
+  let platformRemaining = flooredPlatformFee;
   let gstRemaining = fees.gstOnFee;
 
   groupSubtotals.forEach(([storeId, subtotal], index) => {
@@ -93,7 +122,7 @@ export function allocateCheckoutFees(
     // whole (necessarily zero-ish) fee to the last group rather than dividing
     // by zero.
     const share = total > 0 ? subtotal / total : 0;
-    const platformFee = isLast ? roundRupees(platformRemaining) : roundRupees(fees.platformFee * share);
+    const platformFee = isLast ? roundRupees(platformRemaining) : roundRupees(flooredPlatformFee * share);
     const gstOnFee = isLast ? roundRupees(gstRemaining) : roundRupees(fees.gstOnFee * share);
     platformRemaining = roundRupees(platformRemaining - platformFee);
     gstRemaining = roundRupees(gstRemaining - gstOnFee);

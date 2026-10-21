@@ -1256,7 +1256,24 @@ async function createOrderForGroup(
      * OUR service fee to the seller, charged to the buyer on top of the fee —
      * not tax on the goods.
      */
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0);
+    /*
+     * 🛑 D42 — ROUNDED ONCE, HERE, AT THE END.
+     *
+     * This was a raw float sum of nine 2dp terms written verbatim to
+     * Firestore. IEEE-754 does not represent 0.1 exactly, so a nine-term sum
+     * lands on values like 1011.8000000000001 — and that is what got stored as
+     * the order's total, rendered on the invoice, and compared against the
+     * captured amount. The capture route was saved only because
+     * `rupeesToPaise` rounds on the way to the gateway; the Firestore write had
+     * no such protection.
+     *
+     * Rounded ONCE on the sum, never per term: rounding each addend first
+     * compounds nine half-paisa errors instead of one, which is how a total
+     * drifts from the sum of the lines shown beside it.
+     */
+    roundRupees(
+      Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0),
+    );
 
   /*
    * ── D43: the COD deposit/remaining split, on the ORDER TOTAL ──────────────
@@ -1435,6 +1452,14 @@ async function createOrderForGroup(
     emiTenureMonths: !adminBypass && emiSchedule ? emiTenureMonths : undefined,
     emiTokenAmount: !adminBypass ? emiSchedule?.tokenAmount : undefined,
     emiSurchargeAmount: !adminBypass ? emiSchedule?.surchargeAmount : undefined,
+    /*
+     * D45: the seller's share of the surcharge, recorded for the first time.
+     * `computeEmiSchedule` has always returned it and nothing ever stored it,
+     * so a split the admin had configured (default 50%) was computed and
+     * discarded on every EMI order. Persisting it moves no money — see the
+     * field's own 🛑 — it just stops the decision being thrown away.
+     */
+    emiSurchargeSellerShare: !adminBypass ? emiSchedule?.surchargeSellerShare : undefined,
     emiInstallments: !adminBypass && emiSchedule
       ? emiSchedule.installments.map((i) => ({ index: i.index, dueDate: i.dueDate, amount: i.amount, status: "pending" as const }))
       : undefined,
@@ -2936,8 +2961,11 @@ async function createPhonePeGroupOrder(
   /* Product GST is not a term — prices are tax-inclusive, so it is already
    * inside `groupTotal`. Matches the COD/UPI path exactly; `platformFeeGst`
    * stays because that is GST on our fee, charged on top. */
-  const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst;
+  // D42: rounded once on the sum — see the COD/UPI path's 🛑 for why a raw
+  // float sum of seven 2dp terms reached Firestore as 1011.8000000000001.
+  const orderTotal = roundRupees(
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst,
+  );
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of

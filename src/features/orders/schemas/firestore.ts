@@ -695,6 +695,26 @@ export interface OrderDocument extends BaseDocument {
   emiTokenAmount?: number;
   /** Extra cost of choosing EMI over full payment, in decimal rupees — split between platform and seller. */
   emiSurchargeAmount?: number;
+  /**
+   * The SELLER's share of the EMI surcharge, in decimal rupees.
+   *
+   * 🛑 D45, the half that is a data gap rather than a commercial decision.
+   * `computeEmiSchedule` computes `surchargeSellerShare` (from
+   * `emi.surchargeSellerSharePercent`, seeded at 50) and it was **persisted
+   * nowhere** — so the split existed as a setting, a form field and a returned
+   * value with no field to land in and therefore no reader in the payout path.
+   * The platform kept 100% of a surcharge it had already decided to split.
+   *
+   * 🛑 Persisting it moves NO money on its own, and that is deliberate.
+   * Whether the seller is actually PAID this — along with shipping and the COD
+   * handling fee, the other two D45 terms — is a commercial decision about who
+   * keeps which revenue, and it is the owner's to make, not a defect to quietly
+   * fix. What was broken is that the decision had already been made (the
+   * setting exists, defaulted to 50%) and the number was then thrown away. Now
+   * it is recorded, so honouring it is a payout change rather than an
+   * archaeology exercise.
+   */
+  emiSurchargeSellerShare?: number;
   emiInstallments?: EmiInstallment[];
   /** Sum of unpaid installment amounts, in decimal rupees. 0 once all installments are paid. */
   emiRemainingBalance?: number;
