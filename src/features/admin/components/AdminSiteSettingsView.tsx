@@ -359,6 +359,24 @@ export function AdminSiteSettingsView({
   const [giftWrapFeeEnabled, setGiftWrapFeeEnabled] = React.useState(false);
   const [giftWrapFee, setGiftWrapFee] = React.useState(49);
   const [shipmentProtectionFeeEnabled, setShipmentProtectionFeeEnabled] = React.useState(false);
+  /*
+   * 🛑 D13 — these five had NO state, NO field and NO control, while
+   * `updateSingleton` replaced the whole `commissions` map on every save. So
+   * the first save of any commissions field DELETED them: sale protection
+   * stopped being sold (a product we charge 3%, min ₹49 for) and COD handling
+   * silently reverted to code defaults, both with no error.
+   *
+   * The repository now writes dotted paths, so an omitted key survives — but
+   * the controls still have to exist, or CLAUDE.md's stated remediation
+   * ("enable them at Admin → Site Settings → Commissions") remains impossible.
+   * Defaults mirror the schema: sale protection ON at platform level, because
+   * the platform tier defaults true and the SELLER tier is the opt-in.
+   */
+  const [saleProtectionFeeEnabled, setSaleProtectionFeeEnabled] = React.useState(true);
+  const [saleProtectionFeePercent, setSaleProtectionFeePercent] = React.useState(3);
+  const [saleProtectionFeeMin, setSaleProtectionFeeMin] = React.useState(49);
+  const [codHandlingFeePercent, setCodHandlingFeePercent] = React.useState(10);
+  const [codHandlingFeeCap, setCodHandlingFeeCap] = React.useState(200);
   const [shipmentProtectionFeePercent, setShipmentProtectionFeePercent] = React.useState(2);
   const [shipmentProtectionFeeMin, setShipmentProtectionFeeMin] = React.useState(30);
   const [codDepositPercent, setCodDepositPercent] = React.useState(10);
@@ -436,6 +454,20 @@ export function AdminSiteSettingsView({
   const [cookieHtml, setCookieHtml] = React.useState("");
   const [ethicsHtml, setEthicsHtml] = React.useState("");
   const [conductHtml, setConductHtml] = React.useState("");
+  /*
+   * 🛑 D19 — `cancellation` and `grievance` are declared on
+   * `SiteSettingsDocument.legalPages` and were omitted from BOTH the load and
+   * the payload here. Under the old wholesale-map replace that meant an
+   * override written to either key was ERASED on the next Legal-tab save —
+   * the same cause as D13, one group over, which is the evidence that the
+   * repository fix (dotted paths) was the right level to fix it at.
+   *
+   * The grievance page in particular is a statutory channel, so an override
+   * silently reverting to the bundled default is a compliance problem rather
+   * than a content one.
+   */
+  const [cancellationHtml, setCancellationHtml] = React.useState("");
+  const [grievanceHtml, setGrievanceHtml] = React.useState("");
 
 
   // ⓪ About
@@ -586,6 +618,11 @@ export function AdminSiteSettingsView({
     setGiftWrapFeeEnabled(s.commissions?.giftWrapFeeEnabled ?? false);
     setGiftWrapFee(s.commissions?.giftWrapFee ?? 49);
     setShipmentProtectionFeeEnabled(s.commissions?.shipmentProtectionFeeEnabled ?? false);
+    setSaleProtectionFeeEnabled(s.commissions?.saleProtectionFeeEnabled ?? true);
+    setSaleProtectionFeePercent(s.commissions?.saleProtectionFeePercent ?? 3);
+    setSaleProtectionFeeMin(s.commissions?.saleProtectionFeeMin ?? 49);
+    setCodHandlingFeePercent(s.commissions?.codHandlingFeePercent ?? 10);
+    setCodHandlingFeeCap(s.commissions?.codHandlingFeeCap ?? 200);
     setShipmentProtectionFeePercent(s.commissions?.shipmentProtectionFeePercent ?? 2);
     setShipmentProtectionFeeMin(s.commissions?.shipmentProtectionFeeMin ?? 30);
     setCodDepositPercent(s.commissions?.codDepositPercent ?? 10);
@@ -665,6 +702,8 @@ export function AdminSiteSettingsView({
     setShippingPolicyHtml(s.legalPages?.shipping ?? "");
     setCookieHtml(s.legalPages?.cookies ?? "");
     setEthicsHtml(s.legalPages?.ethics ?? "");
+    setCancellationHtml(s.legalPages?.cancellation ?? "");
+    setGrievanceHtml(s.legalPages?.grievance ?? "");
     setConductHtml(s.legalPages?.codeOfConduct ?? "");
 
     setAboutTitle(s.aboutContent?.title ?? "");
@@ -782,7 +821,7 @@ export function AdminSiteSettingsView({
         offsetX: watermarkOffsetX,
         offsetY: watermarkOffsetY,
       },
-      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
+      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, saleProtectionFeeEnabled, saleProtectionFeePercent, saleProtectionFeeMin, codHandlingFeePercent, codHandlingFeeCap, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -853,7 +892,7 @@ export function AdminSiteSettingsView({
       payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
       auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
-      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml },
+      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
       // Both keys are always sent: Firestore's update() replaces a nested map
       // wholesale, so omitting one here would wipe it. The load-time spread this
       // used to carry existed to preserve `adminCheckoutBypass`, which is now a
@@ -1396,6 +1435,74 @@ export function AdminSiteSettingsView({
                   type="number"
                   min={0}
                   disabled={!shipmentProtectionFeeEnabled}
+                />
+              </Grid>
+
+              {/*
+                * 🛑 D13 — SALE PROTECTION had no control here at all, while
+                * being charged at 3% (min ₹49) on every order where the buyer
+                * ticked it. It was also absent from the save payload, so the
+                * first save of any commissions field deleted its three keys and
+                * silently withdrew the product.
+                *
+                * Mirrors the shipment-protection block above deliberately: the
+                * two are the same shape and an admin reading one should be able
+                * to predict the other.
+                */}
+              <Toggle
+                checked={saleProtectionFeeEnabled}
+                onChange={setSaleProtectionFeeEnabled}
+                label="Offer the sale-protection addon at checkout"
+              />
+              <Grid cols={2} gap="md">
+                <Input
+                  label="Sale protection (%)"
+                  helperText="% of order subtotal, charged when the buyer opts in. Covers the item against not-as-described and counterfeit claims."
+                  value={String(saleProtectionFeePercent)}
+                  onChange={(e) => setSaleProtectionFeePercent(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.1}
+                  disabled={!saleProtectionFeeEnabled}
+                />
+                <Input
+                  label="Sale protection minimum (₹)"
+                  helperText="Floor for the sale-protection fee."
+                  value={String(saleProtectionFeeMin)}
+                  onChange={(e) => setSaleProtectionFeeMin(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  disabled={!saleProtectionFeeEnabled}
+                />
+              </Grid>
+
+              {/*
+                * 🛑 D13 — COD HANDLING had the same problem: both keys absent
+                * from the form and from the payload, so a save reverted the fee
+                * to code defaults. There is no enable toggle because COD
+                * handling is not an opt-in addon — it applies to every COD
+                * order, and whether COD is offered at all is
+                * `payment.codEnabled` on a different tab.
+                */}
+              <Grid cols={2} gap="md">
+                <Input
+                  label="COD handling fee (%)"
+                  helperText="% of order subtotal, charged on Cash-on-Delivery orders only."
+                  value={String(codHandlingFeePercent)}
+                  onChange={(e) => setCodHandlingFeePercent(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.1}
+                />
+                <Input
+                  label="COD handling fee cap (₹)"
+                  helperText="Ceiling for the COD handling fee, however large the order."
+                  value={String(codHandlingFeeCap)}
+                  onChange={(e) => setCodHandlingFeeCap(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
                 />
               </Grid>
             </SettingsTabForm>
@@ -1982,6 +2089,8 @@ export function AdminSiteSettingsView({
                 ["Cookie Policy", cookieHtml, setCookieHtml],
                 ["Our Ethics", ethicsHtml, setEthicsHtml],
                 ["Code of Conduct", conductHtml, setConductHtml],
+                ["Cancellation Policy", cancellationHtml, setCancellationHtml],
+                ["Grievance Redressal", grievanceHtml, setGrievanceHtml],
               ].map(([label, value, setter]) => (
                 <Textarea
                   key={label as string}

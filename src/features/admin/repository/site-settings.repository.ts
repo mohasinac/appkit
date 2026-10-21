@@ -31,6 +31,56 @@ import { DatabaseError } from "../../../errors";
 import { decryptSecret, encryptSecret, maskSecret } from "../../../security";
 
 /**
+ * Flatten a nested update into Firestore dotted field paths, so a partial
+ * group update MERGES into the stored map instead of replacing it.
+ *
+ * `update({ commissions: { gstPercent: 18 } })` deletes every other key under
+ * `commissions`; `update({ "commissions.gstPercent": 18 })` touches one leaf.
+ * See the call site for the five keys that were silently destroyed by the
+ * former (D13).
+ *
+ * Three cases are deliberately NOT recursed into:
+ *
+ * · **Arrays** — an array is a VALUE, not a map. Flattening
+ *   `legalPages.sections.0.title` would make a shorter replacement array leave
+ *   the old tail in place, which is a worse bug than the one being fixed.
+ * · **`undefined`** — kept at its own path so a caller can still delete a
+ *   field. Recursing would turn it into a path to nothing.
+ * · **`Date` and any other class instance** — Firestore stores a `Date` as a
+ *   Timestamp; walking its properties would write `{}`. Tested by rejecting
+ *   anything whose prototype is not `Object.prototype`, which also covers
+ *   `FieldValue` sentinels and `Timestamp` itself.
+ */
+export function toDottedPaths(
+  input: Record<string, unknown>,
+  prefix = "",
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(input)) {
+    const path = prefix ? `${prefix}.${key}` : key;
+    const isPlainObject =
+      typeof value === "object" &&
+      value !== null &&
+      !Array.isArray(value) &&
+      Object.getPrototypeOf(value) === Object.prototype;
+
+    if (isPlainObject) {
+      const nested = toDottedPaths(value as Record<string, unknown>, path);
+      /*
+       * An EMPTY object is written at its own path rather than vanishing.
+       * `{ watermark: {} }` is a caller saying "clear this group"; dropping it
+       * because it produced no leaves would silently ignore the instruction.
+       */
+      if (Object.keys(nested).length === 0) out[path] = value;
+      else Object.assign(out, nested);
+    } else {
+      out[path] = value;
+    }
+  }
+  return out;
+}
+
+/**
  * Repository for site settings management
  *
  * Note: Site settings is a singleton document with ID "global"
@@ -158,10 +208,44 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
         updatedAt: new Date(),
       });
 
+      /*
+       * ── D13: DOTTED PATHS, not a wholesale nested-map replace ────────────
+       *
+       * 🛑 This was `.update(updateData)` with nested objects, and Firestore's
+       * `update()` REPLACES a nested map wholesale rather than merging into
+       * it. So saving `{ commissions: { platformFeePercent: 2 } }` deleted
+       * every other key under `commissions`.
+       *
+       * That is not hypothetical. `AdminSiteSettingsView`'s commissions
+       * payload omitted FIVE keys — `saleProtectionFeeEnabled`,
+       * `saleProtectionFeePercent`, `saleProtectionFeeMin`,
+       * `codHandlingFeeCap`, `codHandlingFeePercent` — with no state, no field
+       * and no control for any of them. So the FIRST save of any commissions
+       * field silently:
+       *
+       *   · stopped sale protection being sold, a product we charge 3% (min
+       *     ₹49) for, with no error and nothing in the UI to notice; and
+       *   · reverted COD handling to code defaults.
+       *
+       * It also made CLAUDE.md's stated remediation — "enable them once at
+       * Admin → Site Settings → Commissions" — impossible, because there was
+       * no control there to enable them with.
+       *
+       * Flattening to dotted paths is the structural fix: `commissions.gstPercent`
+       * touches exactly that leaf. The alternative (adding the five missing
+       * fields to the form) fixes TODAY'S instance and leaves the next group
+       * that grows a field to hit the same wall — and `legalPages` had already
+       * hit it independently (D19), which is the evidence that this recurs.
+       *
+       * 🛑 ARRAYS AND `undefined` ARE NOT FLATTENED. An array is a value, not a
+       * map: flattening `legalPages.sections.0.title` would make a shorter
+       * replacement array leave the old tail behind. And `undefined` must stay
+       * a top-level delete rather than becoming a dotted path to nothing.
+       */
       await this.db
         .collection(this.collection)
         .doc(this.SINGLETON_ID)
-        .update(updateData);
+        .update(toDottedPaths(updateData as Record<string, unknown>));
 
       const latest = await this.getSingleton();
       cacheManager.set(this.cacheKey(), latest, {
