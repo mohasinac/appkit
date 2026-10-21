@@ -122,6 +122,10 @@ import {
   runSyncPreflight,
   assertPaymentMethodAllowed,
 } from "../../../shared/checkout/rules";
+// The `GroupCouponDiscountResult` type is deliberately NOT imported: every
+// call site here destructures the result inline, so naming the type would be
+// an unused import.
+import { computeGroupCouponDiscount } from "../../../shared/checkout/coupon-discount";
 import { revalidateGroupLines } from "./group-rule-revalidation";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
@@ -133,6 +137,23 @@ import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment
 import { isCheckoutValueOtpVerified } from "../../../../features/checkout/actions/checkout-value-otp-actions";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
+
+/**
+ * How long a `gatewayOrderClaims` holder owns the right to place an order
+ * before another caller may take the claim over.
+ *
+ * 🛑 Sized against the SLOWEST legitimate placement, not the typical one. The
+ * route runs with `maxDuration = 60`, and a placement fans out to the gateway
+ * re-fetch, the cart read, product validation, stock decrements and N order
+ * writes — so a lease shorter than the work would let a second placer start
+ * while the first is still mid-write, which is the duplicate order the claim
+ * exists to prevent. 90s is that ceiling plus headroom.
+ *
+ * It is also the buyer's worst-case wait before a retry can succeed, which is
+ * the other reason not to make it generous: before this existed the wait was
+ * unbounded, because a failed placement left the claim forever.
+ */
+const GATEWAY_CLAIM_LEASE_MS = 90_000;
 
 /**
  * SB-UNI-N — Atomically claim the next available digital code for a confirmed
@@ -523,79 +544,18 @@ async function resolveStoreState(storeId: string): Promise<string | undefined> {
   return pickup?.state;
 }
 
-interface GroupCouponDiscountResult {
-  couponDiscount: number;
-  appliedDiscounts: {
-    code: string;
-    couponId?: string;
-    type: "coupon" | "deal" | "auto";
-    discountAmount: number;
-    scope?: "admin" | "seller";
-    storeId?: string;
-  }[];
-}
-
-/**
- * Prorates every buyer-applied coupon against one seller-group's total. Pure
- * — no side effects (usage-accumulator bookkeeping is layered on by callers
- * that actually place an order). Shared by createOrderForGroup,
- * createPhonePeGroupOrder, and the read-only previewCheckoutPricing so the
- * three can never drift on how a coupon splits across sellers (was three
- * near-identical copies before this extraction — Duplication Decision
- * Framework's Rule of Three).
+/*
+ * 🛑 `computeGroupCouponDiscount` and `GroupCouponDiscountResult` MOVED to
+ * `_internal/shared/checkout/coupon-discount.ts` on 2026-10-21. Imported at
+ * the top of this file; do not re-add a local copy.
+ *
+ * It was module-private here, which meant the three order paths in this file
+ * could reach it and `/api/payment/create-order` — the route that decides what
+ * the buyer's CARD is charged — could not, because a consumer route cannot
+ * deep-import `_internal/server`. That route consequently had no coupon term at
+ * all, so every coupon order paid by card over-captured by the discount. One
+ * implementation, four callers.
  */
-function computeGroupCouponDiscount(
-  appliedCoupons: CartAppliedCoupon[],
-  groupLines: { itemId: string; lineTotal: number }[],
-  groupTotal: number,
-  cartSubtotal: number,
-  storeId: string | undefined,
-): GroupCouponDiscountResult {
-  let couponDiscount = 0;
-  const appliedDiscounts: GroupCouponDiscountResult["appliedDiscounts"] = [];
-
-  for (const coupon of appliedCoupons) {
-    let couponGroupDiscount = 0;
-    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
-    if (isSellerScoped) {
-      if (coupon.storeId !== storeId) continue;
-      if (coupon.applicableItemIds?.length) {
-        const eligibleTotal = groupLines
-          .filter((l) => coupon.applicableItemIds!.includes(l.itemId))
-          .reduce((s, l) => s + l.lineTotal, 0);
-        couponGroupDiscount =
-          eligibleTotal > 0
-            ? Math.min(
-                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
-                eligibleTotal,
-              )
-            : 0;
-      } else {
-        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
-      }
-    } else if (cartSubtotal > 0) {
-      couponGroupDiscount = Math.min(
-        roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
-        groupTotal,
-      );
-    }
-
-    if (couponGroupDiscount > 0) {
-      couponDiscount += couponGroupDiscount;
-      appliedDiscounts.push({
-        code: coupon.code,
-        couponId: coupon.couponId,
-        type: "coupon",
-        discountAmount: couponGroupDiscount,
-        scope: coupon.scope,
-        storeId: coupon.storeId,
-      });
-    }
-  }
-
-  couponDiscount = Math.min(couponDiscount, groupTotal);
-  return { couponDiscount, appliedDiscounts };
-}
 
 function buildStockUpdatePayload(
   product: ProductDocument,
@@ -1048,7 +1008,32 @@ async function createOrderForGroup(
   });
 
   const groupCouponCodes = new Set<string>();
-  const groupLines = group.map(({ item }) => ({ itemId: item.itemId, lineTotal: item.price * item.quantity }));
+  /*
+   * 🛑 `lineTotalFor(item, product)`, not `item.price * item.quantity`.
+   *
+   * This was the raw multiplication until 2026-10-21, while `groupTotal` —
+   * computed 155 lines earlier in THIS SAME FUNCTION (line ~856) — uses
+   * `lineTotalFor`. And `computeGroupCouponDiscount` divides one by the other:
+   *
+   *     (eligibleTotal / groupTotal) * coupon.discountAmount
+   *
+   * So the numerator and denominator were built by two different price rules.
+   * `item.price` skips `unitPriceFor`, which is the ONLY place that knows about
+   * `lockedPrice` — so on a coupon applied to an accepted offer or a won
+   * auction, the numerator carried the seller's LIST price while the
+   * denominator carried the AGREED price, the ratio exceeded 1, and the coupon
+   * over-discounted that group (clamped to `eligibleTotal`, i.e. landing on the
+   * list price rather than the negotiated one).
+   *
+   * Root Cause #75 is exactly this — six hand-rolled copies of one price rule —
+   * and `unitPriceFor`'s docstring already forbids reading `item.price`
+   * directly. `product` is in scope here: `group` is typed
+   * `Array<{ item, product }>`.
+   */
+  const groupLines = group.map(({ item, product }) => ({
+    itemId: item.itemId,
+    lineTotal: lineTotalFor(item, product),
+  }));
   const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
     appliedCoupons,
     groupLines,
@@ -2874,15 +2859,39 @@ export async function verifyAndPlaceGatewayOrderAction(
     }
   }
 
-  // Idempotency: the buyer's /verify call and the async webhook can both
-  // race to confirm+place for the same PhonePe payment (see the module
-  // comment above). `.create()` throws on conflict, so whichever caller
-  // creates this claim doc first is the sole placer; the loser returns
-  // whatever the winner already placed, or a retryable "in progress" error
-  // if the winner genuinely hasn't finished yet.
+  /*
+   * Idempotency: the buyer's /verify call and the async webhook can both race
+   * to confirm+place for the same payment (see the module comment above).
+   * `.create()` throws on conflict, so whichever caller creates this claim doc
+   * first is the sole placer; the loser returns whatever the winner already
+   * placed.
+   *
+   * 🛑 THE CLAIM CARRIES A LEASE, AND THAT IS NOT A REFINEMENT — IT IS THE
+   * WHOLE POINT. Measured in production 2026-10-21: `order_TqJvzY4gVjR2cc` /
+   * `pay_TqJx88j8OB7dSJ`, ₹2,511.80 captured by UPI, no order, and a manual
+   * refund from the Razorpay dashboard.
+   *
+   * The old version wrote `{ claimedAt }` and nothing else. Everything below
+   * this block — ~400 lines, a dozen throw sites, `ADDRESS_REQUIRED` and the
+   * amount guard among them — runs AFTER the claim is taken, and **nothing
+   * released it on failure**. So one failed placement made the claim a
+   * tombstone: every later attempt hit ALREADY_EXISTS, found zero orders, and
+   * returned "still being confirmed — please refresh". Refreshing could never
+   * work. The error told the buyer to do the one thing guaranteed to fail.
+   *
+   * A lease fixes it without a 400-line try/catch, and fixes strictly more: a
+   * `catch` cannot run if the process is killed mid-placement, and an expired
+   * lease is reclaimable either way. The loser now distinguishes three states
+   * rather than two — placed, genuinely in flight, or abandoned.
+   */
   const claimRef = getAdminDb().collection("gatewayOrderClaims").doc(merchantOrderId);
+  const claimNow = new Date();
+  const claimLease = {
+    claimedAt: claimNow,
+    leaseExpiresAt: new Date(claimNow.getTime() + GATEWAY_CLAIM_LEASE_MS),
+  };
   try {
-    await claimRef.create({ claimedAt: new Date() });
+    await claimRef.create(claimLease);
   } catch (claimErr) {
     void normalizeError(claimErr);
     const existingOrders = await unitOfWork.orders.findByPaymentId(merchantOrderId);
@@ -2893,7 +2902,48 @@ export async function verifyAndPlaceGatewayOrderAction(
         itemCount: existingOrders.length,
       };
     }
-    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.ORDER_PLACEMENT_IN_PROGRESS);
+
+    /*
+     * No order, and the holder's lease has run out: the previous attempt died
+     * or threw. Take the claim over rather than refusing forever.
+     *
+     * The takeover is a TRANSACTION, not a bare update, because two retries
+     * can arrive together — and two placers for one payment is the duplicate
+     * order this claim exists to prevent. Re-reading inside the transaction
+     * means exactly one of them wins the takeover; the other sees a fresh
+     * lease and backs off.
+     */
+    const tookOver = await getAdminDb()
+      .runTransaction(async (tx) => {
+        const snap = await tx.get(claimRef);
+        const held = snap.data() as
+          | { leaseExpiresAt?: { toDate?: () => Date }; takeoverCount?: number }
+          | undefined;
+        const expiresAt = held?.leaseExpiresAt?.toDate?.();
+        // A claim written before this field existed has no lease — treat it as
+        // expired rather than immortal, which is the bug being fixed. Every
+        // tombstone already in the collection is reclaimed by this line.
+        if (expiresAt && expiresAt.getTime() > Date.now()) return false;
+        tx.update(claimRef, {
+          claimedAt: new Date(),
+          leaseExpiresAt: new Date(Date.now() + GATEWAY_CLAIM_LEASE_MS),
+          // Incremented in JS rather than with `FieldValue.increment`: the
+          // read is already inside this transaction, so it serialises
+          // correctly — and `firebase-admin/firestore` is loaded lazily here
+          // to keep it out of client graphs (Root Cause #24).
+          takeoverCount: (held?.takeoverCount ?? 0) + 1,
+        });
+        return true;
+      })
+      .catch((txErr: unknown) => {
+        void normalizeError(txErr);
+        return false;
+      });
+
+    if (!tookOver) {
+      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.ORDER_PLACEMENT_IN_PROGRESS);
+    }
+    serverLogger.warn("gateway claim taken over from an expired lease", { merchantOrderId });
   }
 
   /*
@@ -3089,15 +3139,28 @@ export async function verifyAndPlaceGatewayOrderAction(
   }
 
   {
-    // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked
-    // bundlePrice) instead of the representative member's product.price.
-    const cartSubtotalRs = productChecks.reduce((sum, { item, product }) => {
-      const isBundle = Boolean(
-        item.bundleCategorySlug && item.bundleProductIds?.length,
-      );
-      const unit = isBundle ? item.price : product!.price;
-      return sum + unit * item.quantity;
-    }, 0);
+    /*
+     * 🛑 D38 — this guard used to HAND-ROLL the price rule it is guarding:
+     *
+     *     const isBundle = Boolean(item.bundleCategorySlug && item.bundleProductIds?.length);
+     *     const unit = isBundle ? item.price : product!.price;
+     *
+     * It reproduced the BUNDLE branch of `unitPriceFor` and omitted the
+     * `lockedPrice` and `groupMembers` ones — which is precisely what that
+     * function's docstring forbids, and the fifth copy of the rule found
+     * across three sessions (Root Cause #75).
+     *
+     * The failure was the worst available shape. On an accepted ₹800 offer for
+     * a ₹1,000 listing: the capture route takes ₹800 (it uses `lineTotalFor`),
+     * this guard expects ₹1,000, `paid < expected − 1` fires, and the function
+     * THROWS — after the money has already been taken, on a branch with no
+     * refund. The buyer is charged and gets no order. That is the D64 incident
+     * class, reached by a different door.
+     */
+    const cartSubtotalRs = productChecks.reduce(
+      (sum, { item, product }) => sum + lineTotalFor(item, product),
+      0,
+    );
     // Must use the SAME helper /api/payment/create-order used to compute what
     // it charged. This block used to re-derive the fee inline from the raw
     // percentages, so the moment the cap landed it would have expected more
@@ -3110,6 +3173,28 @@ export async function verifyAndPlaceGatewayOrderAction(
     // below will use to build each order's recorded totalPrice) — keeps this
     // floor check from passing an amount that's short by the shipping fee.
     const expectedShippingGroups = splitCartIntoOrderGroups(bucketedPaid.available);
+    /*
+     * The coupon, which this guard also omitted — the mirror of D37, and the
+     * two MUST move together. With the capture route now correctly deducting
+     * the discount, a guard that does not would expect MORE than was collected
+     * and would reject every legitimate coupon payment — turning an overcharge
+     * into a post-capture throw, which is strictly worse.
+     *
+     * Grouped identically to the capture route (`splitCartIntoOrderGroups` over
+     * the same available items), so the two compute the same number from the
+     * same shape rather than agreeing by coincidence.
+     */
+    const { couponDiscount: expectedCouponDiscount } = computeCartCouponDiscount(
+      cart.appliedCoupons ?? [],
+      expectedShippingGroups.map((g) => ({
+        storeId: g.items[0].item.storeId,
+        lines: g.items.map(({ item, product }) => ({
+          itemId: item.itemId,
+          lineTotal: lineTotalFor(item, product),
+        })),
+      })),
+    );
+    const expectedDiscountedSubtotal = Math.max(0, cartSubtotalRs - expectedCouponDiscount);
     const expectedShippingFees = await Promise.all(
       expectedShippingGroups.map((g) => resolveShippingCost(g.items[0].item.storeId)),
     );
@@ -3160,11 +3245,46 @@ export async function verifyAndPlaceGatewayOrderAction(
      * ₹5,547 cart — rejecting every correctly-charged order.
      */
     const expectedPaymentAmountRs =
-      cartSubtotalRs + expectedPlatformFee + expectedGstOnFee + expectedAddonFees + expectedShippingFee;
+      expectedDiscountedSubtotal +
+      expectedPlatformFee +
+      expectedGstOnFee +
+      expectedAddonFees +
+      expectedShippingFee;
     // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
     // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
     const paidAmountRs = paiseToRupees(gatewayOrder.amount);
-    if (paidAmountRs < expectedPaymentAmountRs - 1) {
+
+    /*
+     * ── TWO-SIDED, and the second side is how D37 survived ─────────────────
+     *
+     * 🛑 This read `paidAmountRs < expectedPaymentAmountRs - 1` — a FLOOR
+     * check only. An over-capture of any size passed silently, which is
+     * exactly what let the missing coupon term go unnoticed: the gateway took
+     * the undiscounted amount, this guard saw "paid ≥ expected" and waved it
+     * through, and the order recorded the discounted figure. Nothing in our
+     * data disagreed.
+     *
+     * A ceiling is now checked too. The tolerance stays asymmetric and that is
+     * deliberate rather than sloppy:
+     *
+     *   UNDER by > ₹1   → we were short-changed. Refuse.
+     *   OVER  by > ₹1   → the BUYER was over-charged. Record loudly, and
+     *                     PROCEED to place the order.
+     *
+     * Proceeding on an over-capture is the important choice. The alternative —
+     * throwing — is what D38 did, and it leaves the buyer charged with no
+     * order and no refund on that branch, which is the D64 incident class.
+     * Placing the order means the buyer has what they paid for and the surplus
+     * is a recorded, refundable discrepancy rather than a vanished payment.
+     * Phase 4's reconciler reads `amount_mismatch` rows and opens a case; the
+     * refund itself waits for Phase 1's idempotency key, because an automatic
+     * refund on top of a non-idempotent refund path is a double-refund
+     * generator.
+     */
+    const amountDelta = paidAmountRs - expectedPaymentAmountRs;
+    const AMOUNT_TOLERANCE_RS = 1;
+
+    if (amountDelta < -AMOUNT_TOLERANCE_RS) {
       serverLogger.warn(
         `Payment amount mismatch for user ${uid}: paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
       );
@@ -3182,6 +3302,27 @@ export async function verifyAndPlaceGatewayOrderAction(
         )
         .catch((err: unknown) => { void normalizeError(err); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: err instanceof Error ? err.message : String(err) }); });
       throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
+    }
+
+    if (amountDelta > AMOUNT_TOLERANCE_RS) {
+      serverLogger.error(
+        `OVER-CAPTURE for user ${uid}: paid ₹${paidAmountRs}, expected ₹${expectedPaymentAmountRs} (surplus ₹${amountDelta.toFixed(2)}) — order will still be placed`,
+        { merchantOrderId, expectedCouponDiscount },
+      );
+      failedCheckoutRepository
+        .logPayment(
+          uid,
+          "amount_mismatch",
+          `OVER-CAPTURE: paid ₹${paidAmountRs}, expected ₹${expectedPaymentAmountRs}, surplus ₹${amountDelta.toFixed(2)} — refund owed`,
+          {
+            gatewayOrderId: gatewayOrder.gatewayOrderId,
+            gatewayPaymentId: merchantOrderId,
+            amountRs: paidAmountRs,
+            addressId,
+          },
+        )
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: err instanceof Error ? err.message : String(err) }); });
+      // Deliberately NO throw — see above.
     }
   }
 

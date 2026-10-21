@@ -296,6 +296,27 @@ export {
   type GstRateSlice,
 } from "./_internal/shared/checkout/order-math";
 
+/*
+ * The coupon discount, exported for the SAME reason `sumGroupGst` above was —
+ * and it is the third defect of that exact shape in this one route.
+ *
+ * `/api/payment/create-order` decides what the gateway CAPTURES, and it had no
+ * coupon term anywhere in the file (measured: zero occurrences). So a buyer
+ * with a coupon was shown ₹X−discount, charged ₹X, and had ₹X−discount
+ * recorded against their order. The post-capture guard is one-sided
+ * (`paid < expected − 1`), so an OVER-capture never trips it — which is why
+ * this survived: every number inside our own system agreed, and only the
+ * buyer's card statement disagreed.
+ *
+ * Pure math, no Firestore, no server-only imports — same contract as the
+ * order-math block above.
+ */
+export {
+  computeGroupCouponDiscount,
+  computeCartCouponDiscount,
+  type GroupCouponDiscountResult,
+} from "./_internal/shared/checkout/coupon-discount";
+
 // S-SBUNI-RULES: refund action
 export {
   processRefundAction,
