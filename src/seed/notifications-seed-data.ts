@@ -106,22 +106,16 @@ const notificationRecords: Partial<NotificationDocument>[] = [
     createdAt: daysAgo(5),
     updatedAt: daysAgo(3),
   },
-  {
-    id: "notif-yugi-raffle-win-001",
-    userId: "user-yugi-muto",
-    type: NOTIFICATION_FIELDS.TYPE_VALUES.SYSTEM,
-    priority: "high",
-    title: "You won the Original Series Raffle!",
-    message: "Congratulations! You've been selected as the winner of the Complete Original Series Collectors Set raffle.",
-    actionUrl: "/events/event-won-original-set-raffle",
-    actionLabel: "View Details",
-    isRead: true,
-    readAt: daysAgo(4),
-    relatedId: "event-won-original-set-raffle",
-    relatedType: "product",
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(4),
-  },
+  /*
+   * 🛑 REMOVED 2026-10-21 — `notif-yugi-raffle-win-001` referenced
+   * `event-won-original-set-raffle`, one of the 11 demo events deleted when
+   * the seed was pruned to match live. Keeping it would be a dangling FK whose
+   * `actionUrl` 404s (Root Cause #26: narrowing a seed catalogue without
+   * sweeping every file that referenced it).
+   *
+   * It also carried `relatedType: "product"` against an EVENT id, which was
+   * already wrong before the prune — so nothing is lost by its going.
+   */
   {
     id: "notif-yugi-review-approved-001",
     userId: "user-yugi-muto",

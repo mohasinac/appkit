@@ -1,10 +1,36 @@
 /*
- * WHY: Seeds 10 Beyblade-themed events covering all event types (poll, survey, sale, raffle, spin_wheel, feedback, offer, lottery).
- * WHAT: 2 upcoming + 4 active + 2 ended + 2 lottery (1 active, 1 draft). Includes raffle (open + drawn), spin wheel, poll, survey, feedback, sale, offer.
+ * WHY: Seeds the ONE live event — the Diwali cashback offer.
+ * WHAT: 1 active `offer` event, published ahead of its own start date.
+ *
+ * ## 🛑 PRUNED TO MATCH LIVE, 2026-10-21
+ *
+ * This file used to seed 11 demo events covering all eight event types (poll,
+ * survey, sale, raffle, spin_wheel, feedback, offer, lottery) plus 8 event
+ * entries. Live holds exactly ONE event, and the owner's decision is that
+ * **live is canonical** — so the demo rows were deleted rather than left to be
+ * re-created.
+ *
+ * Why that mattered rather than being tidy-up: `appkit-seed load` writes
+ * `set(payload, { merge: true })` with no production guard of any kind, and
+ * `.env.local` points at the live project. So those 11 demo events were one
+ * `npx appkit-seed load` away from appearing on the live site — measured
+ * against production, `events 12 seed / 0 in db / 12 would create`.
+ *
+ * 🛑 CONSEQUENCE, recorded rather than discovered later: the tester checklist
+ * cases that need a poll, a survey, a spin wheel, a raffle, a lottery, or a
+ * `paused`/`cancelled`/`ended` status chip now have NO fixture. Those cases
+ * can only report "could not test". That cost was raised before the deletion
+ * and accepted. If they are wanted back, they belong in a scratch Firebase
+ * project rather than in a corpus that loads against production.
+ *
+ * `eventEntriesSeedData` is deliberately an EMPTY array rather than deleted:
+ * all 8 entries referenced events that no longer exist, so keeping them would
+ * be a dangling FK (Root Cause #26), and removing the export would break
+ * `seed/index.ts` and `seed-cli`'s import. An empty array is honest.
  *
  * EXPORTS:
  *   eventsSeedData — Array of EventDocument for seed runner
- *   eventEntriesSeedData — Array of EventEntryDocument for seed runner
+ *   eventEntriesSeedData — empty; see above
  *
  * @tag domain:events
  * @tag layer:seed
@@ -18,374 +44,14 @@ import type {
   EventDocument,
   EventEntryPlain,
 } from "../features/events/schemas";
-import type { LotteryConfig } from "../features/lottery/types";
 import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
-import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
-import { seedExtMedia, seedPhoto } from "./_helpers/media";
+import { EVENT_FIELDS } from "../features/events/schemas";
 import { editorialImage } from "./_helpers/editorial-media";
 
 const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const _raweventsSeedData: EventDocument[] = [
-  // ── 1. ACTIVE — Poll: Favourite Blader Original Series ────────────────────
-  {
-    id: "event-favourite-blader-poll",
-    slug: "favourite-blader-poll",
-    type: EVENT_FIELDS.TYPE_VALUES.POLL,
-    title: "Vote: Best Blader of the Original Beyblade Series",
-    description: `<p>Who is the greatest blader of the original 1999 series? Cast your vote and see real-time results!</p><img src="${seedPhoto("event-content-favourite-blader-lineup-20260101", 900, 500)}" alt="Original series blader lineup" />`,
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(5),
-    endsAt: daysAhead(10),
-    coverImage: { type: "image", url: seedPhoto("event-cover-favourite-blader-poll-20260101", 1200, 600), alt: "Original series Beyblade lineup" },
-    tags: ["poll", "original-series", "season-1"],
-    // Demo fixture for the guest-participation toggle (2026-08-20) — polls
-    // are otherwise login-gated, so this event demonstrates the override.
-    allowGuestParticipation: true,
-    pollConfig: {
-      options: [
-        { id: "tyson", label: "Mock User 6" },
-        { id: "kai", label: "Kai Hiwatari" },
-        { id: "max", label: "Max Tate" },
-        { id: "rei", label: "Rei Kon" },
-        { id: "kenny", label: "Kenny (Chief)" },
-      ],
-      allowMultiSelect: false,
-      allowComment: false,
-      resultsVisibility: "after_vote" as const,
-    },
-    stats: { totalEntries: 362, approvedEntries: 362, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  } as EventDocument,
-
-  // ── 2. ACTIVE — Survey: Beyblade Storage ─────────────────────────────────
-  {
-    id: "event-beyblade-storage-survey",
-    slug: "beyblade-storage-survey",
-    type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
-    title: "How Do You Store Your Beyblades?",
-    description: "Help us understand how Indian bladers protect their collections. Your responses help us recommend better storage solutions.",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(3),
-    endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedPhoto("event-cover-storage-survey-20260101", 1200, 600), alt: "Beyblade storage case" },
-    tags: ["survey", "beyblade-storage", "community"],
-    surveyConfig: {
-      requireLogin: true,
-      maxEntriesPerUser: 1,
-      hasLeaderboard: false,
-      hasPointSystem: false,
-      entryReviewRequired: false,
-      formFields: [
-        { id: "q1", label: "What storage case do you use?", type: "radio", options: ["Hard case", "Soft pouch", "Original box", "No case"], required: true },
-        { id: "q2", label: "How do you store your launchers?", type: "radio", options: ["Wall rack", "Drawer organizer", "Original box", "Loose"], required: true },
-        { id: "q3", label: "Do you keep tips separately?", type: "radio", options: ["Yes — labeled bags", "Yes — compartment box", "No"], required: true },
-      ],
-    },
-    stats: { totalEntries: 89, approvedEntries: 89, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(1),
-  } as EventDocument,
-
-  // ── 3. ACTIVE — Sale: Original Series Clearance ──────────────────────────
-  {
-    id: "event-original-series-clearance",
-    slug: "original-series-clearance",
-    type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Original Series Clearance Sale — 20% Off",
-    description: "20% off all beyblades from the original 1999-2003 series! Use code TOURNAMENT2026 at checkout. Limited time only.",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(2),
-    endsAt: daysAhead(7),
-    coverImage: { type: "image", url: seedPhoto("event-cover-original-clearance-20260101", 1200, 600), alt: "Original series Beyblade clearance sale" },
-    tags: ["sale", "clearance", "original-series", "singles"],
-    /*
-     * 🛑 NO `couponCode`. It advertised TOURNAMENT2026, which was removed in
-     * the 2026-10-21 coupon purge. A sale event does not need a code — the
-     * discount is applied by category — and pointing it at CASHBACK10 would
-     * be worse: a 20% clearance banner handing out a 10% cashback code.
-     */
-    saleConfig: {
-      discountPercent: 20,
-      applicableCategories: ["category-beyblade-original"],
-    },
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(4),
-    updatedAt: daysAgo(2),
-  } as EventDocument,
-
-  // ── 4. ACTIVE — Raffle: Win Beyblade Burst Regalia Genesis ───────────────
-  {
-    id: "event-win-burst-regalia-genesis",
-    slug: "win-burst-regalia-genesis",
-    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
-    title: "Win a Sealed Beyblade Burst Regalia Genesis",
-    description: `<p>Enter for a chance to win a sealed Beyblade Burst Regalia Genesis! One lucky blader takes home the ultimate spinner.</p><img src="${seedPhoto("event-content-regalia-genesis-prize-20260101", 900, 500)}" alt="Sealed Beyblade Burst Regalia Genesis prize box" />`,
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(3),
-    endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedPhoto("event-cover-regalia-genesis-raffle-20260101", 1200, 600), alt: "Beyblade Burst Regalia Genesis" },
-    tags: ["raffle", "burst", "regalia-genesis", "giveaway", "prizes"],
-    hasRaffle: true,
-    raffleType: "open_raffle",
-    rafflePrize: "Sealed Beyblade Burst Regalia Genesis (authenticity cert: LIR-BEY-998877)",
-    raffleEntryCount: 247,
-    stats: { totalEntries: 247, approvedEntries: 247, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(1),
-  } as EventDocument,
-
-  // ── 5. ACTIVE — Spin Wheel: Daily Beyblade Pull ──────────────────────────
-  {
-    id: "event-daily-beyblade-pull-wheel",
-    slug: "daily-beyblade-pull-wheel",
-    type: EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL,
-    title: "Daily Beyblade Pull! Spin for a Prize",
-    description: "Spin the wheel once per day for a chance to win discount coupons and free launcher grips!",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(7),
-    endsAt: daysAhead(23),
-    coverImage: { type: "image", url: seedPhoto("event-cover-daily-pull-wheel-20260101", 1200, 600), alt: "Spin wheel prize wheel" },
-    tags: ["spin-wheel", "daily", "prizes", "coupons"],
-    spinPrizes: [
-      // 🛑 No `couponId`: coupon-rehan10 was removed in the 2026-10-21 purge.
-      // A prize naming a coupon that does not exist mints nothing on a win and
-      // the spinner is told they won it. `spin-5pct` beside it has always
-      // been label-only, so this shape is already supported.
-      { id: "spin-10pct", label: "10% Off Coupon", weight: 15, isActive: true },
-      { id: "spin-5pct", label: "5% Off Coupon", weight: 25, isActive: true },
-      { id: "spin-grip", label: "Free Launcher Grip Tape", weight: 10, isActive: true },
-      { id: "spin-try-again", label: "Try Again Tomorrow!", weight: 50, isActive: true },
-    ],
-    // spinMaxPerUser: 2 (not the default 1) so the per-identity spin-count
-    // enforcement added 2026-08-20 has a real demo case, and
-    // allowGuestParticipation lets a signed-out visitor spin too.
-    spinMaxPerUser: 2,
-    allowGuestParticipation: true,
-    spinWindowStart: daysAgo(7),
-    spinWindowEnd: daysAhead(23),
-    stats: { totalEntries: 534, approvedEntries: 534, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(8),
-    updatedAt: daysAgo(1),
-  } as EventDocument,
-
-  // ── 6. ACTIVE — Feedback: Metal Fight Era ────────────────────────────────
-  {
-    id: "event-metal-fight-era-feedback",
-    slug: "metal-fight-era-feedback",
-    type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
-    title: "Tell Us About Metal Fight Era Beyblades on LetItRip",
-    description: "Rate your experience buying Metal Fight era beyblades on LetItRip. Your feedback helps us improve the marketplace.",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(10),
-    endsAt: daysAhead(20),
-    coverImage: { type: "image", url: seedPhoto("event-cover-metal-fight-feedback-20260101", 1200, 600), alt: "Metal Fight era Beyblade lineup" },
-    tags: ["feedback", "metal-fight", "community"],
-    feedbackConfig: {
-      formFields: [
-        { id: "rating", label: "How would you rate the Metal Fight era selection?", type: "rating", required: true },
-        { id: "comment", label: "Any additional feedback?", type: "textarea", required: false },
-      ],
-      anonymous: false,
-    },
-    stats: { totalEntries: 45, approvedEntries: 45, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(12),
-    updatedAt: daysAgo(2),
-  } as EventDocument,
-
-  /*
-   * ── REMOVED 2026-10-21: "Buy 3 Beyblades, Get 10% Off" ─────────────────
-   *
-   * 🛑 Deleted rather than repointed. It was an `offer` event whose whole
-   * substance was `offerConfig.displayCode: "BUYNOW10"` — and BUYNOW10 went
-   * in the coupon purge that left CASHBACK10 as the only code.
-   *
-   * The two alternatives were both worse. Dropping just the `offerConfig`
-   * leaves an offer event with nothing to offer: `events/[id]/page.tsx`
-   * mounts `<EventOfferCard>` only when `type === "offer"` AND a
-   * `displayCode` exists, so the page would render a title and no offer.
-   * Repointing it at CASHBACK10 would advertise a Diwali cashback code
-   * under a "buy 3, get 10% off" headline — two different promotions.
-   *
-   * It also named `store-beyblade-arena`, which is not in the live
-   * catalogue, so the offer could not have been honoured anyway.
-   */
-
-  // ── 8. ENDED — Raffle: Won Complete Original Series Set (drawn) ─────────
-  {
-    id: "event-won-original-set-raffle",
-    slug: "won-original-set-raffle",
-    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
-    title: "Win Complete Original Series Collectors Set",
-    description: `<p>The grand raffle has concluded! One lucky blader won a complete original-series collectors set.</p><img src="${seedPhoto("event-content-original-set-winner-20260101", 900, 500)}" alt="Winner unboxing the complete original-series collectors set" />`,
-    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
-    startsAt: daysAgo(30),
-    endsAt: daysAgo(5),
-    coverImage: { type: "image", url: seedPhoto("event-cover-original-set-raffle-20260101", 1200, 600), alt: "Complete original-series collectors set" },
-    tags: ["raffle", "original-series", "ended", "winner"],
-    hasRaffle: true,
-    raffleType: "open_raffle",
-    rafflePrize: "Complete Original Series Collectors Set — 5 beyblades + stadium, all sealed or NM",
-    raffleWinnerUserId: "user-yugi-muto",
-    raffleWinnerDisplayName: "Mock User 3",
-    raffleWinnerEntryId: "entry-original-raffle-yugi-001",
-    raffleTriggeredAt: daysAgo(5),
-    raffleEntryCount: 1892,
-    stats: { totalEntries: 1892, approvedEntries: 1892, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(35),
-    updatedAt: daysAgo(5),
-  } as EventDocument,
-
-  // ── 9. ACTIVE — Lottery: Pokémon Number Draw (July 2026) ─────────────────
-  {
-    id: "event-pokemon-number-draw-july-2026",
-    slug: "pokemon-number-draw-july-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.LOTTERY,
-    title: "Pokémon Number Draw — July 2026",
-    description: "<p>Choose your lucky slot and win rare Pokémon collectibles! 25 slots available. Each slot is assigned a prize from our collection. First-come, first-served.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(2),
-    endsAt: daysAhead(5),
-    coverImage: { type: "image", url: seedExtMedia("https://upload.wikimedia.org/wikipedia/commons/9/98/International_Pok%C3%A9mon_logo.svg"), alt: "Pokémon Number Draw" },
-    tags: ["lottery", "pokemon", "prizes"],
-    lotteryConfig: {
-      totalSlots: 25,
-      pricingMode: "variable",
-      drawWindowDurationMinutes: 5,
-      maxPullsPerTransaction: 1,
-      maxPullsPerUser: 1,
-      slots: [
-        // The first 8 slots carry a prize photo; the rest deliberately do not,
-        // so the detail page exercises both sides of the "only photographed
-        // slots get a collage tile" rule. `image` is a plain image URL and so
-        // is seedExtMedia()-wrapped like every other image in this file.
-        { slotNumber: 1,  name: "Charizard Base Set Holo",          image: seedPhoto("lottery-pokemon-number-draw-slot-1", 600, 600), price: 5000, weight: 1,  isBooked: true,  bookedByUserId: "user-ravi-k",   bookedByDisplayName: "Ravi K",   bookedByUserLotteryNumber: 1 },
-        { slotNumber: 2,  name: "Blastoise Base Set Holo",          image: seedPhoto("lottery-pokemon-number-draw-slot-2", 600, 600), price: 3000, weight: 33, isBooked: true,  bookedByUserId: "user-priya-s",  bookedByDisplayName: "Priya S",  bookedByUserLotteryNumber: 2 },
-        { slotNumber: 3,  name: "Venusaur Base Set Holo",           image: seedPhoto("lottery-pokemon-number-draw-slot-3", 600, 600), price: 2500, weight: 40, isBooked: true,  bookedByUserId: "user-arjun-m",  bookedByDisplayName: "Arjun M",  bookedByUserLotteryNumber: 3 },
-        { slotNumber: 4,  name: "Pikachu Surfing Promo",            image: seedPhoto("lottery-pokemon-number-draw-slot-4", 600, 600), price: 1500, weight: 66, isBooked: true,  bookedByUserId: "user-sneha-p",  bookedByDisplayName: "Sneha P",  bookedByUserLotteryNumber: 4 },
-        { slotNumber: 5,  name: "Mewtwo Base Set Holo",             image: seedPhoto("lottery-pokemon-number-draw-slot-5", 600, 600), price: 2000, weight: 50, isBooked: true,  bookedByUserId: "user-vikram-r", bookedByDisplayName: "Vikram R", bookedByUserLotteryNumber: 5 },
-        { slotNumber: 6,  name: "Gengar First Ed. Fossil",          image: seedPhoto("lottery-pokemon-number-draw-slot-6", 600, 600), price: 3500, weight: 28, isBooked: false },
-        { slotNumber: 7,  name: "Alakazam Base Set Holo",           image: seedPhoto("lottery-pokemon-number-draw-slot-7", 600, 600), price: 800,  weight: 93, isBooked: false },
-        { slotNumber: 8,  name: "Machamp 1st Ed. Base Set",         image: seedPhoto("lottery-pokemon-number-draw-slot-8", 600, 600), price: 400,  weight: 99, isBooked: false },
-        { slotNumber: 9,  name: "Clefairy Base Set Holo",           price: 600,  weight: 95, isBooked: false },
-        { slotNumber: 10, name: "Chansey Base Set Holo",            price: 700,  weight: 94, isBooked: false },
-        { slotNumber: 11, name: "Ninetales Base Set Holo",          price: 1000, weight: 80, isBooked: false },
-        { slotNumber: 12, name: "Scyther Jungle Holo",              price: 500,  weight: 97, isBooked: false },
-        { slotNumber: 13, name: "Gyarados Base Set Holo",           price: 1200, weight: 76, isBooked: false },
-        { slotNumber: 14, name: "Lapras Fossil Holo",               price: 900,  weight: 88, isBooked: false },
-        { slotNumber: 15, name: "Zapdos Fossil Holo",               price: 2200, weight: 45, isBooked: false },
-        { slotNumber: 16, name: "Articuno Fossil Holo",             price: 2000, weight: 50, isBooked: false },
-        { slotNumber: 17, name: "Moltres Fossil Holo",              price: 1800, weight: 55, isBooked: false },
-        { slotNumber: 18, name: "Dragonite Base Set Holo",          price: 4000, weight: 20, isBooked: false },
-        { slotNumber: 19, name: "Snorlax Jungle Holo",              price: 600,  weight: 95, isBooked: false },
-        { slotNumber: 20, name: "Jolteon Jungle Holo",              price: 700,  weight: 94, isBooked: false },
-        { slotNumber: 21, name: "Flareon Jungle Holo",              price: 700,  weight: 94, isBooked: false },
-        { slotNumber: 22, name: "Vaporeon Jungle Holo",             price: 700,  weight: 94, isBooked: false },
-        { slotNumber: 23, name: "Espeon Neo Discovery Holo",        price: 800,  weight: 93, isBooked: false },
-        { slotNumber: 24, name: "Umbreon Neo Discovery Holo",       price: 1000, weight: 80, isBooked: false },
-        { slotNumber: 25, name: "Lugia Neo Genesis Holo",           price: 4500, weight: 10, isBooked: false },
-      ],
-    } satisfies LotteryConfig,
-    stats: { totalEntries: 5, approvedEntries: 5, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(3),
-    updatedAt: daysAgo(0),
-  } as EventDocument,
-
-  // ── 10. DRAFT — Lottery: Beyblade Slot Raffle ────────────────────────────
-  {
-    id: "event-beyblade-slot-raffle-draft",
-    slug: "beyblade-slot-raffle-draft",
-    type: EVENT_FIELDS.TYPE_VALUES.LOTTERY,
-    title: "Beyblade Slot Raffle — Coming Soon",
-    description: "<p>10 rare beyblade slots up for grabs. Details coming soon!</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
-    startsAt: daysAhead(16),
-    endsAt: daysAhead(14),
-    coverImage: { type: "image", url: seedPhoto("event-cover-beyblade-slot-raffle-20260101", 1200, 600), alt: "Beyblade Slot Raffle" },
-    tags: ["lottery", "beyblade", "prizes"],
-    lotteryConfig: {
-      totalSlots: 10,
-      pricingMode: "uniform",
-      uniformPrice: 500,
-      drawWindowDurationMinutes: 10,
-      maxPullsPerTransaction: 1,
-      maxPullsPerUser: 1,
-      slots: Array.from({ length: 10 }, (_, i) => ({
-        slotNumber: i + 1,
-        name: `Prize Slot ${i + 1}`,
-        // Seed index, not Math.random() — a seed file is re-executed on every
-        // CLI invocation, so any non-deterministic value breaks upsert
-        // idempotency (Root Cause #25).
-        image: seedPhoto(`lottery-beyblade-slot-raffle-slot-${i + 1}`, 600, 600),
-        price: 500,
-        weight: 50,
-        isBooked: false,
-      })),
-    } satisfies LotteryConfig,
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(0),
-  } as EventDocument,
-
-  // ── 11. PAUSED — Sale ────────────────────────────────────────────────────
-  // `paused` and `cancelled` are real `EventStatus` values that had no fixture
-  // at all: the seed only ever produced active/draft/ended. Their admin filter
-  // chips were added 2026-08-24, and a chip that can only ever return an empty
-  // list is exactly what the hide-empty rule is meant to remove — so the states
-  // need real rows to be worth showing.
-  {
-    id: "event-monsoon-sale-paused",
-    slug: "monsoon-sale-paused",
-    type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Monsoon Sale — Paused",
-    description:
-      "<p>Temporarily paused while we restock. Discounts resume once stock lands.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.PAUSED,
-    startsAt: daysAgo(3),
-    endsAt: daysAhead(10),
-    coverImage: { type: "image", url: seedPhoto("event-cover-monsoon-sale-paused-20260101", 1200, 600), alt: "Monsoon Sale" },
-    tags: ["sale", "monsoon", "paused"],
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(6),
-    updatedAt: daysAgo(3),
-  } as EventDocument,
-
-  // ── 12. CANCELLED — Raffle ───────────────────────────────────────────────
-  {
-    id: "event-x-launch-raffle-cancelled",
-    slug: "x-launch-raffle-cancelled",
-    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
-    title: "Beyblade X Launch Raffle — Cancelled",
-    description:
-      "<p>Cancelled after the prize stock could not be sourced in time. Entrants were refunded in full.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.CANCELLED,
-    startsAt: daysAgo(20),
-    endsAt: daysAgo(6),
-    coverImage: { type: "image", url: seedPhoto("event-cover-x-launch-raffle-cancelled-20260101", 1200, 600), alt: "Beyblade X Launch Raffle" },
-    tags: ["raffle", "beyblade-x", "cancelled"],
-    hasRaffle: true,
-    raffleType: "open_raffle",
-    rafflePrize: "Beyblade X Dran Sword starter set",
-    raffleEntryCount: 0,
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(25),
-    updatedAt: daysAgo(6),
-  } as EventDocument,
-
   // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
   /*
    * 🛑 `type: "offer"` + `offerConfig.displayCode` is what renders the
@@ -449,119 +115,6 @@ const _raweventsSeedData: EventDocument[] = [
  * `Encrypted<string>`, so the document type would be a false claim.
  */
 export const eventEntriesSeedData: EventEntryPlain[] = [
-  // Rehan entered the poll
-  {
-    id: "entry-poll-yugi-001",
-    eventId: "event-favourite-blader-poll",
-    userId: "user-yugi-muto",
-    userDisplayName: "Mock User 3",
-    userEmail: "rehan.sheikh@gmail.com",
-    pollVotes: ["tyson"],
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(4),
-    createdAt: daysAgo(4),
-  },
-
-  // Vivaan entered the poll
-  {
-    id: "entry-poll-kaiba-001",
-    eventId: "event-favourite-blader-poll",
-    userId: "user-seto-kaiba",
-    userDisplayName: "Mock User 2",
-    userEmail: "vivaan.kapoor@gmail.com",
-    pollVotes: ["kai"],
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(3),
-    createdAt: daysAgo(3),
-  },
-
-  // Rehan entered the raffle (and won the original-series raffle)
-  {
-    id: "entry-original-raffle-yugi-001",
-    eventId: "event-won-original-set-raffle",
-    userId: "user-yugi-muto",
-    userDisplayName: "Mock User 3",
-    userEmail: "rehan.sheikh@gmail.com",
-    raffleEligible: true,
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(25),
-    createdAt: daysAgo(25),
-  },
-
-  // Rehan entered the active raffle
-  {
-    id: "entry-regalia-raffle-yugi-001",
-    eventId: "event-win-burst-regalia-genesis",
-    userId: "user-yugi-muto",
-    userDisplayName: "Mock User 3",
-    userEmail: "rehan.sheikh@gmail.com",
-    raffleEligible: true,
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(2),
-    createdAt: daysAgo(2),
-  },
-
-  // Vivaan spun the wheel
-  {
-    id: "entry-spin-kaiba-001",
-    eventId: "event-daily-beyblade-pull-wheel",
-    userId: "user-seto-kaiba",
-    userDisplayName: "Mock User 2",
-    userEmail: "vivaan.kapoor@gmail.com",
-    spinUsed: true,
-    spinCount: 1,
-    spinPrizeId: "spin-10pct",
-    spinWonAt: daysAgo(1),
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(1),
-    createdAt: daysAgo(1),
-  },
-
-  // Rehan spun the wheel twice (spinMaxPerUser: 2 on this event) — demo
-  // fixture for the per-identity spin-count enforcement added 2026-08-20.
-  {
-    id: "entry-spin-yugi-001",
-    eventId: "event-daily-beyblade-pull-wheel",
-    userId: "user-yugi-muto",
-    userDisplayName: "Mock User 3",
-    userEmail: "rehan.sheikh@gmail.com",
-    spinUsed: true,
-    spinCount: 2,
-    spinPrizeId: "spin-grip",
-    spinWonAt: daysAgo(1),
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(2),
-    createdAt: daysAgo(2),
-  },
-
-  // A guest (not logged in) spun the wheel — demo fixture for the
-  // guest-participation toggle added 2026-08-20. This event's
-  // allowGuestParticipation is true, so no userId is set; guestIpHash is a
-  // deterministic-looking placeholder (real values are HMAC-SHA256 hex).
-  {
-    id: "entry-spin-guest-001",
-    eventId: "event-daily-beyblade-pull-wheel",
-    guestIpHash: "hmac-sha256:seed-placeholder-guest-spin-001",
-    spinUsed: true,
-    spinCount: 1,
-    spinPrizeId: "spin-5pct",
-    spinWonAt: daysAgo(3),
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(3),
-    createdAt: daysAgo(3),
-  },
-
-  // A guest voted in the poll — demo fixture for allowGuestParticipation on
-  // a non-spin event type (poll).
-  {
-    id: "entry-poll-guest-001",
-    eventId: "event-favourite-blader-poll",
-    guestIpHash: "hmac-sha256:seed-placeholder-guest-poll-001",
-    pollVotes: ["max"],
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(2),
-    createdAt: daysAgo(2),
-  },
 ];
 
 /**

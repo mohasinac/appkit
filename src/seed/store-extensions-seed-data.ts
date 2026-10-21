@@ -219,7 +219,8 @@ export const moderationQueueSeedData: Partial<ModerationQueueDocument>[] = [
   { id: "mod-review-driger-v", mediaType: "rich-text", entityType: "review", entityId: "review-8", ownerId: "user-yugi-muto", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
   { id: "mod-image-arena-banner", mediaType: "image", mediaUrl: seedPhoto("store-banner-beyblade-arena-20260518", 1600, 400), entityType: "storefront", entityId: "store-beyblade-arena", ownerId: "user-tyson-blader", storeId: "store-beyblade-arena", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
   { id: "mod-blog-authentication-guide", mediaType: "rich-text", entityType: "blog", entityId: "blog-spot-genuine-takara-tomy-beyblade", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 432000_000), submittedAt: new Date(NOW.getTime() - 438000_000) },
-  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedPhoto("event-cover-beyblade-tournament-20260518", 1200, 600), entityType: "event", entityId: "event-favourite-blader-poll", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
+  // Removed 2026-10-21: referenced event-favourite-blader-poll, one of the 11
+  // demo events deleted when the seed was pruned to match live (Root Cause #26).
 ];
 
 // ───── reports (5 records) ────────────────────────────────────────────────
