@@ -70,7 +70,7 @@ export async function TrackOrderView({
           <Heading color="inverse" level={1} variant="none" className="mb-4">
             {t("title")}
           </Heading>
-          <Text color="inverse" variant="none" className="/80">
+          <Text color="inverse-muted" variant="none" >
             {t("subtitle")}
           </Text>
         </Div>

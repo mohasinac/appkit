@@ -56,7 +56,7 @@ export async function FAQPageView({
           <Heading color="inverse" level={1} variant="none" className="mb-3">
             {activeCategory ? activeCategory.label : t("title")}
           </Heading>
-          <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">
+          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto">
             {t("subtitle")}
           </Text>
         </Container>

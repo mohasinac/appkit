@@ -115,7 +115,7 @@ export async function ShippingPolicyView({
           <Heading color="inverse" level={1} variant="none" className="mb-3">
             {t("title")}
           </Heading>
-          <Text color="inverse" variant="none" className="/80">
+          <Text color="inverse-muted" variant="none" >
             {t("lastUpdated")}
           </Text>
         </Div>

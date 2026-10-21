@@ -61,7 +61,7 @@ export function PromotionsHero({
         <Heading color="inverse" level={1} variant="none" className="mb-4">
           {labels.title}
         </Heading>
-        <Text color="inverse" variant="none" className="/90 max-w-2xl mx-auto" size="lg">
+        <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto" size="lg">
           {labels.subtitle}
         </Text>
       </Div>

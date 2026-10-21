@@ -86,7 +86,7 @@ export async function HelpPageView({
       <Section color="inverse" tone="accent-banner" padding="banner">
         <Div className={`${page.container.md} text-center`}>
           <Heading color="inverse" level={1} variant="none" className="mb-4">{t("title")}</Heading>
-          <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
+          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">

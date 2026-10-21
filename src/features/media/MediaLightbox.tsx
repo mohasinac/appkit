@@ -143,7 +143,7 @@ function LightboxControlsBar({
       <IconBtn onClick={zoomOut} disabled={zoom <= MIN_ZOOM} ariaLabel={L.zoomOut}>
         <ZoomOut className="w-7 h-7" />
       </IconBtn>
-      <Span color="inverse" size="xs" className="/70 w-14 tabular-nums" align="center">
+      <Span color="inverse-muted" size="xs" className="w-14 tabular-nums" align="center">
         {Math.round(zoom * 100)}%
       </Span>
       <IconBtn onClick={zoomIn} disabled={zoom >= MAX_ZOOM} ariaLabel={L.zoomIn}>
@@ -155,7 +155,7 @@ function LightboxControlsBar({
         </IconBtn>
       )}
       <Span className="w-px h-6 bg-white/15 mx-1 shrink-0" aria-hidden="true" />
-      <Span color="inverse" size="xs" className="/60 w-12 tabular-nums" align="center">
+      <Span color="inverse-muted" size="xs" className="w-12 tabular-nums" align="center">
         {index + 1} / {items.length}
       </Span>
       <Span className="w-px h-6 bg-white/15 mx-1 shrink-0" aria-hidden="true" />

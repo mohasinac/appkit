@@ -44,9 +44,9 @@ export async function UnauthorizedView({
           >
             {t("title")}
           </Heading>
-          <Text color="inverse" 
+          <Text color="inverse-muted"
             variant="none"
-            className="/80 max-w-lg mx-auto mb-8" size="lg"
+            className="max-w-lg mx-auto mb-8" size="lg"
           >
             {t("subtitle")}
           </Text>

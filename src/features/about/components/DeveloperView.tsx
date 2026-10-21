@@ -50,7 +50,7 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
           <Heading color="inverse" level={1} variant="none" className="mb-3">
             {labels.title ?? "Meet the Developer"}
           </Heading>
-          <Text color="inverse" variant="none" className="/80" size="sm">
+          <Text color="inverse-muted" variant="none" size="sm">
             {labels.subtitle ?? "The person building LetItRip, one feature at a time."}
           </Text>
         </Div>

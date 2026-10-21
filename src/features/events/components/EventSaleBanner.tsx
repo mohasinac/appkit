@@ -46,7 +46,7 @@ export function EventSaleBanner({
           <Heading level={2} weight="bold" size="3xl">
             {headline}
           </Heading>
-          {subtitle ? <Text color="inverse" className="/90" size="base">{subtitle}</Text> : null}
+          {subtitle ? <Text color="inverse-muted" size="base">{subtitle}</Text> : null}
         </Stack>
         {couponCode ? (
           <Div layout="inline-flex" gap="3" align="center" className="backdrop-blur" surface="default" paddingY="y-xs" paddingX="x-md" rounded="lg">

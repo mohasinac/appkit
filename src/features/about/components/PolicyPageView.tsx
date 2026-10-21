@@ -172,7 +172,7 @@ export async function PolicyPageView({
           <Heading color="inverse" level={1} variant="none" className="mb-3">
             {t("title")}
           </Heading>
-          <Text color="inverse" variant="none" className="/80" size="sm">
+          <Text color="inverse-muted" variant="none" size="sm">
             {t("lastUpdated")}
           </Text>
         </Div>

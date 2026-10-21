@@ -48,7 +48,7 @@ export function AboutView({
           <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
             {labels.title}
           </Heading>
-          <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto" size="xl">
+          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto" size="xl">
             {labels.subtitle}
           </Text>
         </Div>
@@ -184,7 +184,7 @@ export function AboutView({
             renderCtaButtons()
           ) : (
             <Row justify="center" gap="3" wrap>
-              <Span color="inverse" size="sm" className="/70">
+              <Span color="inverse-muted" size="sm" >
                 {labels.ctaSell} · {labels.ctaShop}
               </Span>
             </Row>
