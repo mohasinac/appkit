@@ -5,7 +5,7 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
-import { ActionRow, Div, OverflowRow, Row, Span, Stack, Text } from "../../ui";
+import { ActionRow, Div, Heading, OverflowRow, Row, Span, Stack, Text } from "../../ui";
 
 /**
  * Carries the `schema` prop passed to `<FormShell>` down to any nested
@@ -241,9 +241,30 @@ export function FormShell({
             {breadcrumb && (
               <Text className="text-[var(--appkit-color-text-muted)] truncate mb-0.5" size="xs">{breadcrumb}</Text>
             )}
-            <Text className="text-[var(--appkit-color-text)] truncate" size="sm" weight="semibold">
+            {/*
+              🛑 A HEADING, NOT A `<Text>`. This was `<Text size="sm"
+              weight="semibold">`, so every editor page in the product —
+              ~64 of them through this shell — displayed its title and put
+              NOTHING in the document outline. A screen reader reached
+              `/admin/products/new` and found no page heading at all; the
+              audit counted that alongside the listing pages.
+
+              `size` and `weight` are carried over explicitly, so this is a
+              zero-pixel change: the same 14px semibold truncating line, now
+              as `<h1>`. The visual size deliberately does not follow the
+              level — this sits inside a drawer's compact toolbar, where a
+              level-1 default would be absurdly large. Heading level is about
+              structure; `size` is about appearance, and they are allowed to
+              disagree.
+            */}
+            <Heading
+              level={1}
+              className="text-[var(--appkit-color-text)] truncate"
+              size="sm"
+              weight="semibold"
+            >
               {previewMode ? `Preview — ${title}` : title}
-            </Text>
+            </Heading>
           </Div>
 
           <Row gap="xs" className="flex-shrink-0">
