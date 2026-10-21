@@ -11,6 +11,13 @@ export type { AboutContentDocument } from "./schemas/firestore";
 export { TrackOrderView } from "./components/TrackOrderView";
 export type { TrackOrderViewProps } from "./components/TrackOrderView";
 
+/*
+ * The shared prose-page banner. Exported because it is the one thing all
+ * sixteen views in this feature had in common — ten of them byte-identically.
+ */
+export { ProseHero } from "./components/ProseHero";
+export type { ProseHeroProps } from "./components/ProseHero";
+
 export { FeesView } from "./components/FeesView";
 export type { FeesViewProps } from "./components/FeesView";
 

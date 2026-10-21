@@ -1,5 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { ProseHero } from "./ProseHero";
 import { Div, FlowDiagram, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -79,12 +80,9 @@ export async function HowOffersWorkView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section color="inverse" tone="accent-banner" padding="banner">
-        <Div className={`${page.container.md} text-center`}>
-          <Heading color="inverse" level={1} variant="none" className="mb-4">{t("title")}</Heading>
-          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </Div>
-      </Section>
+      {/* One hero for every prose page — see ProseHero for the eleven
+          byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
+      <ProseHero title={t("title")} subtitle={t("subtitle")} />
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
         {renderOffersStepsSection(t, STEPS)}
         <Section>

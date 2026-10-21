@@ -1,5 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { ProseHero } from "./ProseHero";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Caption, Div, Heading, Row, Section, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 const __P = {
@@ -98,12 +99,8 @@ export async function FeesView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section color="inverse" tone="accent-banner" padding="banner">
-        <Div className={`${page.container.sm} text-center`}>
-          <Heading color="inverse" level={1} variant="none" className="mb-4">{t("title")}</Heading>
-          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </Div>
-      </Section>
+      {/* Same hero, one prop narrower — the policy/blog reading measure. */}
+      <ProseHero title={t("title")} subtitle={t("subtitle")} width="sm" />
       <Stack gap="section" className={`${page.container.sm}`} padding="content-banner">
         {renderFeeTableSection(t, themed, FEE_ROWS)}
         {renderPayoutExampleSection(t, themed, OFFER_PAYOUT_ROWS)}
