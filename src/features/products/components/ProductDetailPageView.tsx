@@ -34,7 +34,7 @@ import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { ProductOwnerQuickActions } from "./ProductOwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import {
   Button,
@@ -619,8 +619,7 @@ export async function ProductDetailPageView({
                 `createSellerProduct` writes one, so reading it would mean
                 trusting an undeclared field.
               */}
-              <ProductOwnerQuickActions
-                productId={String(product.id)}
+              <RecordOwnerQuickActions resource="PRODUCT" recordId={String(product.id)}
                 recordLabel={title || String(product.slug ?? product.id)}
                 storeId={product.storeId ? String(product.storeId) : undefined}
               />

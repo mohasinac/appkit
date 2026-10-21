@@ -20,7 +20,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 import { CardStoreLine } from "../../products/components/CardStoreLine";
-import { ProductOwnerQuickActions } from "../../products/components/ProductOwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 export type MarketplacePreorderCardData = ProductItem;
 
@@ -306,7 +306,7 @@ export function MarketplacePreorderCard({
     ? renderOwnerActions()
     : product.id
       ? (
-          <ProductOwnerQuickActions productId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
+          <RecordOwnerQuickActions resource="PRODUCT" recordId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
         )
       : null;
 

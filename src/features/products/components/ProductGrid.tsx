@@ -20,7 +20,7 @@ import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
-import { ProductOwnerQuickActions } from "./ProductOwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -461,8 +461,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   const ownerActions = renderOwnerActions ? (
     renderOwnerActions()
   ) : product.id ? (
-    <ProductOwnerQuickActions
-      productId={String(product.id)}
+    <RecordOwnerQuickActions resource="PRODUCT" recordId={String(product.id)}
       storeId={product.storeId ? String(product.storeId) : undefined}
       recordLabel={product.title}
       placement="card"

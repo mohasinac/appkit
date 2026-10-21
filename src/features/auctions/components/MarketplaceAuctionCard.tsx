@@ -1,5 +1,5 @@
 "use client"
-import { ProductOwnerQuickActions } from "../../products/components/ProductOwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -527,7 +527,7 @@ export function MarketplaceAuctionCard({
     ? renderOwnerActions()
     : product.id
       ? (
-          <ProductOwnerQuickActions productId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
+          <RecordOwnerQuickActions resource="PRODUCT" recordId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
         )
       : null;
 

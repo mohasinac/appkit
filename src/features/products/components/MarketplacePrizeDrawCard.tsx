@@ -12,7 +12,7 @@ const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-
 import { BaseListingCard, Button, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CardStoreLine } from "./CardStoreLine";
-import { ProductOwnerQuickActions } from "./ProductOwnerQuickActions";
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 export type MarketplacePrizeDrawCardData = ProductItem;
 
@@ -280,7 +280,7 @@ export function MarketplacePrizeDrawCard({
     ? renderOwnerActions()
     : product.id
       ? (
-          <ProductOwnerQuickActions productId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
+          <RecordOwnerQuickActions resource="PRODUCT" recordId={String(product.id)} storeId={product.storeId ? String(product.storeId) : undefined} recordLabel={product.title} placement="card" />
         )
       : null;
 
