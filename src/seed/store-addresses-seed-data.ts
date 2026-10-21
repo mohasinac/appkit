@@ -1,6 +1,15 @@
 /*
- * WHY: Seeds store pickup/warehouse addresses for the minimal Beyblade-focused demo — 2 stores.
- * WHAT: 3 addresses: 2 LetItRip Official (HQ + warehouse), 1 Beyblade Arena (pickup point).
+ * WHY: Store pickup/warehouse addresses. Production has none, so this is empty.
+ * WHAT: Empty. The export is kept so the loader's import resolves.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-21. This file previously seeded demo
+ * fixtures that production does not have. `appkit-seed load` has NO
+ * production guard and `.env.local` points at the live project, so every one
+ * of those rows was one command away from appearing on the live site.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test". That cost was
+ * raised with the owner before the deletion and accepted.
  *
  * EXPORTS:
  *   StoreAddressSeedData (interface)
@@ -40,55 +49,4 @@ export interface StoreAddressSeedData {
   storeSlug: string;
 }
 
-export const storeAddressesSeedData: StoreAddressSeedData[] = [
-  // ── store-letitrip-official ───────────────────────────────────────────────
-  {
-    id: "saddr-letitrip-hq-001",
-    storeSlug: "store-letitrip-official",
-    label: "LetItRip HQ",
-    fullName: "Mock User 1",
-    phone: `${_phonePrefix}9876500000`,
-    addressLine1: "12, Collector's Lane, Okhla Phase III",
-    addressLine2: "Tech City Industrial Area",
-    landmark: "Near Okhla Industrial Estate Gate 3",
-    city: "Delhi",
-    state: "Delhi",
-    postalCode: "110020",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(400),
-    updatedAt: daysAgo(1),
-  },
-  {
-    id: "saddr-letitrip-warehouse-002",
-    storeSlug: "store-letitrip-official",
-    label: "Fulfilment Warehouse",
-    fullName: "Mock User 1",
-    phone: `${_phonePrefix}9876500000`,
-    addressLine1: "Unit 7B, Connaught Logistics Park, Lajpat Nagar",
-    city: "Delhi",
-    state: "Delhi",
-    postalCode: "110024",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(350),
-    updatedAt: daysAgo(30),
-  },
-
-  // ── store-beyblade-arena ─────────────────────────────────────────────────
-  {
-    id: "saddr-beyblade-arena-main-001",
-    storeSlug: "store-beyblade-arena",
-    label: "Beyblade Arena Pickup Point",
-    fullName: "Tyson Blader",
-    phone: `${_phonePrefix}9876502001`,
-    addressLine1: "Shop 9, T Nagar Collectibles Market, Pondy Bazaar",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    postalCode: "600017",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(150),
-    updatedAt: daysAgo(4),
-  },
-];
+export const storeAddressesSeedData: StoreAddressSeedData[] = [];

@@ -1,16 +1,16 @@
 /*
- * WHY: Seeds auction bids representing participant offers on the live Beyblade auctions
- *      in products-auctions-seed-data.ts.
- * WHAT: Exports bids for the 2 seeded auctions (auction-beyblade-original-dragoon-storm,
- *       auction-beyblade-metal-lightning-l-drago) — bid counts and final amounts match
- *       each auction's `bidCount`/`currentBid` fields exactly, so the product card's
- *       "N bids" summary and the detail page's bid-history list agree. Bidders: 3 buyer
- *       personas (Mock User 11, Mock User 14, Mock User 9), never the store's own seller
- *       (user-tyson-blader owns store-beyblade-arena). Status: newest bid per auction is
- *       "active", the rest "outbid". Bid IDs: bid-{productSlug}-{userName}-{YYYYMMDD}-{rand6}.
- *       L-Drago's ladder is deliberately 13 bids deep (cycling the 3 personas) so the
- *       auction detail page's paginated Bid History section (pageSize 5) and the /user/bids
- *       dashboard both have real multi-page data to exercise — see CollapsibleBidHistory.tsx.
+ * WHY: Auction bid fixtures. Production has none, so this is empty.
+ * WHAT: Empty. The export and its `withBidDefaults` pipeline are kept so
+ * `seed/index.ts` and `seed-cli`'s import still resolve.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-21. This file previously seeded demo
+ * fixtures that production does not have. `appkit-seed load` has NO
+ * production guard and `.env.local` points at the live project, so every one
+ * of those rows was one command away from appearing on the live site.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test". That cost was
+ * raised with the owner before the deletion and accepted.
  *
  * EXPORTS:
  *   bidsSeedData — Array of bid documents, one set per seeded auction, counts matching
@@ -30,7 +30,6 @@
  */
 import type { BidPlain } from "../features/auctions/schemas/firestore";
 import { buildBidSearchTxt } from "../utils/search-txt-builders";
-import type { FirestoreDocument } from "@mohasinac/appkit";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -214,21 +213,6 @@ const _rawBidsSeedData: Partial<BidPlain>[] = [
     currentBid: 3100,
     bidderIds: ["user-meera-bey", "user-ananya-collector", "user-rohit-collector"],
     closed: true,
-  }).map((b) => ({ ...b, status: "lost" as const, isWinning: false })),
-  {
-    id: "bid-beyblade-burst-spriggan-requiem-seto-kaiba-20260820-buyout",
-    productId: "auction-beyblade-burst-spriggan-requiem-bought-out",
-    productTitle: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
-    userId: "user-seto-kaiba",
-    userName: "Mock User 2",
-    bidAmount: 4999,
-    status: "won",
-    isWinning: true,
-    isBuyout: true,
-    bidDate: daysAgo(4),
-    createdAt: daysAgo(4),
-    orderId: "order-1-20260820-buyout",
-  },
-];
+  }).map((b) => ({ ...b, status: "lost" as const, isWinning: false })),];
 
 export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidPlain[];

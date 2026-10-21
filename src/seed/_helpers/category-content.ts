@@ -252,71 +252,91 @@ type Band = { median: number; p25?: number; p75?: number; n?: number; src: strin
  *    confidence signal replaced with a guess. `sampleSize` is optional now,
  *    and these 21 rows legitimately have none.
  *
- * SOURCE PRIORITY: worldhobbyshop first wherever it has data, which is every
- * Beyblade band except HMS. HMS is beybladeshopindia at n=39 against WHS's
+ * SOURCE PRIORITY: source A first wherever it has data, which is every
+ * Beyblade band except HMS. HMS is source B at n=39 against source A's
  * n=2, and `src` records that so the decision is reviewable rather than
- * buried. Parts pricing is raikages-only (the sole component-level source in
+ * buried. Parts pricing is source C only (the sole component-level source in
  * the crawl), and TCG / figures / Hot Wheels come from the sites that sell
- * them, since WHS carries none of those verticals.
+ * them, since source A carries none of those verticals.
+ *
+ * 🛑 `src` CARRIES AN OPAQUE KEY, NEVER A COMPETITOR'S NAME — by instruction,
+ * and enforced here rather than at the renderer.
+ *
+ * The surface used to print "Source: worldhobbyshop (spin-gear-sf)" under
+ * every band. Stripping that in the view would leave the name in the database,
+ * one careless `{...row}` away from publication — Root Cause #70 is a public
+ * payload built by spreading a document, which published every field nobody
+ * thought to delete, including a decrypted access token. A name that is not
+ * stored cannot leak.
+ *
+ * What the key still has to do, and does: tell two sources apart, record which
+ * one won a disagreement, and let one be re-crawled or retracted wholesale.
+ * The key↔name mapping is operator knowledge and lives in
+ * `docs/research/competitor-crawl-2026-10/price-bands.md`, which is internal.
+ *
+ * 🛑 The METHODOLOGY stays in the string and must not be stripped with the
+ * names. "POOLED across all Burst parts", "ALL generations pooled" and "n=39"
+ * are the caveats that stop a reader taking a pooled band for a per-leaf
+ * measurement — they are the reason the field exists at all.
  */
 const MARKET_BANDS: Record<string, Band> = {
   // ── Beyblade tops, by line. WHS + beybladeshopindia; no per-leaf n ────────
-  "category-original-plastic-gen": { p25: 799, median: 899, p75: 1499, src: "worldhobbyshop (plastic-3-layer)" },
-  "category-original-spin-gear": { p25: 799, median: 1399, p75: 1799, src: "worldhobbyshop (spin-gear-sf)" },
-  "category-original-magnacore": { p25: 999, median: 1699, p75: 1999, src: "worldhobbyshop (magna-core-v-force)" },
+  "category-original-plastic-gen": { p25: 799, median: 899, p75: 1499, src: "source A (plastic-3-layer)" },
+  "category-original-spin-gear": { p25: 799, median: 1399, p75: 1799, src: "source A (spin-gear-sf)" },
+  "category-original-magnacore": { p25: 999, median: 1699, p75: 1999, src: "source A (magna-core-v-force)" },
   // 🛑 The one row where a larger sample beat worldhobbyshop, and it is
   // recorded because the gap is enormous: beybladeshopindia n=39 against WHS
   // n=2. HMS is also the highest-value Beyblade tier on the site, so getting
   // it from a coin-flip sample would mis-anchor every HMS listing.
-  "category-original-hms": { p25: 2999, median: 3999, p75: 9999, n: 39, src: "beybladeshopindia n=39 (worldhobbyshop had n=2)" },
-  "category-metal-phws": { p25: 799, median: 899, p75: 999, src: "worldhobbyshop (phws-metal-system)" },
-  "category-metal-fusion": { p25: 799, median: 999, p75: 1499, src: "worldhobbyshop (metal-fusion)" },
-  "category-metal-masters": { p25: 1099, median: 1499, p75: 1999, src: "worldhobbyshop (metal-masters)" },
-  "category-metal-fury-4d": { p25: 1799, median: 2399, p75: 2999, src: "worldhobbyshop (metal-fury-4d)" },
-  "category-metal-shogun-steel": { p25: 1599, median: 2499, p75: 2999, src: "worldhobbyshop (shogun-steel-zero-g)" },
+  "category-original-hms": { p25: 2999, median: 3999, p75: 9999, n: 39, src: "source B n=39 (source A had n=2)" },
+  "category-metal-phws": { p25: 799, median: 899, p75: 999, src: "source A (phws-metal-system)" },
+  "category-metal-fusion": { p25: 799, median: 999, p75: 1499, src: "source A (metal-fusion)" },
+  "category-metal-masters": { p25: 1099, median: 1499, p75: 1999, src: "source A (metal-masters)" },
+  "category-metal-fury-4d": { p25: 1799, median: 2399, p75: 2999, src: "source A (metal-fury-4d)" },
+  "category-metal-shogun-steel": { p25: 1599, median: 2499, p75: 2999, src: "source A (shogun-steel-zero-g)" },
   // The crawl lists single-layer (299/299/399) and dual-layer (299/399/399)
   // separately and the taxonomy collapses them to one leaf, so the band
   // collapses with them — to the documented 299/399/399, not to a midpoint
   // somebody computed.
-  "category-burst-classic": { p25: 299, median: 399, p75: 399, src: "worldhobbyshop (single-layer + dual-layer, collapsed)" },
-  "category-burst-god": { p25: 599, median: 599, p75: 999, src: "worldhobbyshop (burst-god-evolution)" },
-  "category-burst-cho-z": { p25: 599, median: 799, p75: 999, src: "worldhobbyshop (burst-cho-z-turbo)" },
-  "category-burst-gt": { p25: 799, median: 999, p75: 1099, src: "worldhobbyshop (burst-gt-rise)" },
-  "category-burst-superking": { p25: 999, median: 999, p75: 1499, src: "worldhobbyshop (burst-superking-surge)" },
-  "category-burst-db": { p25: 999, median: 1399, p75: 1799, src: "worldhobbyshop (burst-db-quaddrive)" },
-  "category-burst-bu": { p25: 1499, median: 1599, p75: 1799, src: "worldhobbyshop (burst-bu-quadstrike)" },
-  "category-x-basic": { p25: 799, median: 999, p75: 1499, src: "worldhobbyshop (x-basic-s1)" },
-  "category-x-unique-ux": { p25: 1199, median: 1399, p75: 1699, src: "worldhobbyshop (x-unique-ux)" },
-  "category-x-custom-cx": { p25: 1299, median: 1499, p75: 1799, src: "worldhobbyshop (x-custom-cx)" },
-  "category-x-over": { p25: 999, median: 1099, p75: 1499, src: "worldhobbyshop (x-over-remakes)" },
+  "category-burst-classic": { p25: 299, median: 399, p75: 399, src: "source A (single-layer + dual-layer, collapsed)" },
+  "category-burst-god": { p25: 599, median: 599, p75: 999, src: "source A (burst-god-evolution)" },
+  "category-burst-cho-z": { p25: 599, median: 799, p75: 999, src: "source A (burst-cho-z-turbo)" },
+  "category-burst-gt": { p25: 799, median: 999, p75: 1099, src: "source A (burst-gt-rise)" },
+  "category-burst-superking": { p25: 999, median: 999, p75: 1499, src: "source A (burst-superking-surge)" },
+  "category-burst-db": { p25: 999, median: 1399, p75: 1799, src: "source A (burst-db-quaddrive)" },
+  "category-burst-bu": { p25: 1499, median: 1599, p75: 1799, src: "source A (burst-bu-quadstrike)" },
+  "category-x-basic": { p25: 799, median: 999, p75: 1499, src: "source A (x-basic-s1)" },
+  "category-x-unique-ux": { p25: 1199, median: 1399, p75: 1699, src: "source A (x-unique-ux)" },
+  "category-x-custom-cx": { p25: 1299, median: 1499, p75: 1799, src: "source A (x-custom-cx)" },
+  "category-x-over": { p25: 999, median: 1099, p75: 1499, src: "source A (x-over-remakes)" },
 
   // ── Parts. raikages is the ONLY component-level source in the crawl ───────
-  "category-metal-energy-rings": { p25: 149, median: 199, p75: 249, n: 68, src: "raikages n=68" },
-  "category-metal-fusion-wheels": { p25: 149, median: 249, p75: 299, n: 52, src: "raikages n=52" },
-  "category-metal-spin-tracks": { p25: 149, median: 199, p75: 249, n: 53, src: "raikages n=53" },
-  "category-metal-performance-tips": { p25: 129, median: 139, p75: 149, n: 25, src: "raikages n=25" },
+  "category-metal-energy-rings": { p25: 149, median: 199, p75: 249, n: 68, src: "source C n=68" },
+  "category-metal-fusion-wheels": { p25: 149, median: 249, p75: 299, n: 52, src: "source C n=52" },
+  "category-metal-spin-tracks": { p25: 149, median: 199, p75: 249, n: 53, src: "source C n=53" },
+  "category-metal-performance-tips": { p25: 129, median: 139, p75: 149, n: 25, src: "source C n=25" },
   // WHS prices Burst parts as ONE pool (n=82) and X parts as one pool (n=14);
   // it does not split layers from discs from drivers. The three leaves share
   // the pooled band, and `src` says so rather than implying three measurements.
-  "category-burst-layers": { p25: 99, median: 149, p75: 249, n: 82, src: "worldhobbyshop n=82, POOLED across all Burst parts" },
-  "category-burst-discs": { p25: 99, median: 149, p75: 249, n: 82, src: "worldhobbyshop n=82, POOLED across all Burst parts" },
-  "category-burst-drivers": { p25: 99, median: 149, p75: 249, n: 82, src: "worldhobbyshop n=82, POOLED across all Burst parts" },
-  "category-x-blades": { p25: 199, median: 299, p75: 299, n: 14, src: "worldhobbyshop n=14, POOLED across all X parts" },
-  "category-x-ratchets": { p25: 199, median: 299, p75: 299, n: 14, src: "worldhobbyshop n=14, POOLED across all X parts" },
-  "category-x-bits": { p25: 199, median: 299, p75: 299, n: 14, src: "worldhobbyshop n=14, POOLED across all X parts" },
+  "category-burst-layers": { p25: 99, median: 149, p75: 249, n: 82, src: "source A n=82, POOLED across all Burst parts" },
+  "category-burst-discs": { p25: 99, median: 149, p75: 249, n: 82, src: "source A n=82, POOLED across all Burst parts" },
+  "category-burst-drivers": { p25: 99, median: 149, p75: 249, n: 82, src: "source A n=82, POOLED across all Burst parts" },
+  "category-x-blades": { p25: 199, median: 299, p75: 299, n: 14, src: "source A n=14, POOLED across all X parts" },
+  "category-x-ratchets": { p25: 199, median: 299, p75: 299, n: 14, src: "source A n=14, POOLED across all X parts" },
+  "category-x-bits": { p25: 199, median: 299, p75: 299, n: 14, src: "source A n=14, POOLED across all X parts" },
 
   // ── Launchers. One pooled band per generation, again as WHS measured it ───
-  "category-original-ripcord-launchers": { p25: 199, median: 299, p75: 899, n: 32, src: "worldhobbyshop n=32, POOLED across original-era launchers" },
-  "category-original-winders": { p25: 199, median: 299, p75: 899, n: 32, src: "worldhobbyshop n=32, POOLED across original-era launchers" },
-  "category-metal-string-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "worldhobbyshop n=37, POOLED across Metal Fight launchers" },
-  "category-metal-ripcord-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "worldhobbyshop n=37, POOLED across Metal Fight launchers" },
-  "category-metal-lr-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "worldhobbyshop n=37, POOLED across Metal Fight launchers" },
-  "category-burst-string-launchers": { p25: 399, median: 599, p75: 699, n: 78, src: "worldhobbyshop n=78, POOLED across Burst launchers" },
-  "category-burst-lr-launchers": { p25: 399, median: 599, p75: 699, n: 78, src: "worldhobbyshop n=78, POOLED across Burst launchers" },
-  "category-burst-grips": { p25: 399, median: 599, p75: 699, n: 78, src: "worldhobbyshop n=78, POOLED across Burst launchers" },
-  "category-x-string-launchers": { p25: 299, median: 599, p75: 700, n: 34, src: "worldhobbyshop n=34, POOLED across X launchers" },
-  "category-x-winders": { p25: 299, median: 599, p75: 700, n: 34, src: "worldhobbyshop n=34, POOLED across X launchers" },
-  "category-x-grips": { p25: 299, median: 599, p75: 700, n: 34, src: "worldhobbyshop n=34, POOLED across X launchers" },
+  "category-original-ripcord-launchers": { p25: 199, median: 299, p75: 899, n: 32, src: "source A n=32, POOLED across original-era launchers" },
+  "category-original-winders": { p25: 199, median: 299, p75: 899, n: 32, src: "source A n=32, POOLED across original-era launchers" },
+  "category-metal-string-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "source A n=37, POOLED across Metal Fight launchers" },
+  "category-metal-ripcord-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "source A n=37, POOLED across Metal Fight launchers" },
+  "category-metal-lr-launchers": { p25: 399, median: 599, p75: 849, n: 37, src: "source A n=37, POOLED across Metal Fight launchers" },
+  "category-burst-string-launchers": { p25: 399, median: 599, p75: 699, n: 78, src: "source A n=78, POOLED across Burst launchers" },
+  "category-burst-lr-launchers": { p25: 399, median: 599, p75: 699, n: 78, src: "source A n=78, POOLED across Burst launchers" },
+  "category-burst-grips": { p25: 399, median: 599, p75: 699, n: 78, src: "source A n=78, POOLED across Burst launchers" },
+  "category-x-string-launchers": { p25: 299, median: 599, p75: 700, n: 34, src: "source A n=34, POOLED across X launchers" },
+  "category-x-winders": { p25: 299, median: 599, p75: 700, n: 34, src: "source A n=34, POOLED across X launchers" },
+  "category-x-grips": { p25: 299, median: 599, p75: 700, n: 34, src: "source A n=34, POOLED across X launchers" },
 
   // ── Stadiums. ONE band, EIGHT leaves ──────────────────────────────────────
   // WHS does not split stadiums by generation — its single "Stadiums & Arenas"
@@ -324,47 +344,47 @@ const MARKET_BANDS: Record<string, Band> = {
   // could not hold it. So there is no per-generation evidence, and inventing
   // four bands from one sample of seven would be fabrication. The leaves stay
   // split (a BX-10 Xtreme Stadium is a Beyblade X product); the band does not.
-  "category-original-bakuten-arena": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-original-attack-stadium": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-metal-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-metal-zero-g-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-burst-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-burst-stadium-variants": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-x-xtreme-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
-  "category-x-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "worldhobbyshop n=7, ALL generations pooled" },
+  "category-original-bakuten-arena": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-original-attack-stadium": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-metal-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-metal-zero-g-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-burst-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-burst-stadium-variants": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-x-xtreme-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
+  "category-x-standard-stadiums": { p25: 2000, median: 2999, p75: 3499, n: 7, src: "source A n=7, ALL generations pooled" },
 
   // ── TCG. tcgrepublic + hobbykart. WHS sells no cards ─────────────────────
-  "category-pokemon-singles": { p25: 350, median: 400, p75: 500, n: 545, src: "tcgrepublic n=545 (singles, all games)" },
-  "category-one-piece-singles": { p25: 350, median: 400, p75: 500, n: 545, src: "tcgrepublic n=545 (singles, all games)" },
-  "category-pokemon-graded": { p25: 4600, median: 8000, p75: 11000, n: 15, src: "hobbykart n=15 (graded slabs)" },
-  "category-one-piece-graded": { p25: 4600, median: 8000, p75: 11000, n: 15, src: "hobbykart n=15 (graded slabs)" },
-  "category-tcg-weiss-schwarz": { p25: 3500, median: 6500, p75: 7500, n: 14, src: "tcgrepublic n=14" },
-  "category-card-sleeves-toploaders": { p25: 250, median: 800, p75: 1800, n: 31, src: "tcgrepublic n=31 (supplies, pooled)" },
-  "category-card-binders-boxes": { p25: 250, median: 800, p75: 1800, n: 31, src: "tcgrepublic n=31 (supplies, pooled)" },
-  "category-card-slab-display": { p25: 250, median: 800, p75: 1800, n: 31, src: "tcgrepublic n=31 (supplies, pooled)" },
+  "category-pokemon-singles": { p25: 350, median: 400, p75: 500, n: 545, src: "source D n=545 (singles, all games)" },
+  "category-one-piece-singles": { p25: 350, median: 400, p75: 500, n: 545, src: "source D n=545 (singles, all games)" },
+  "category-pokemon-graded": { p25: 4600, median: 8000, p75: 11000, n: 15, src: "source E n=15 (graded slabs)" },
+  "category-one-piece-graded": { p25: 4600, median: 8000, p75: 11000, n: 15, src: "source E n=15 (graded slabs)" },
+  "category-tcg-weiss-schwarz": { p25: 3500, median: 6500, p75: 7500, n: 14, src: "source D n=14" },
+  "category-card-sleeves-toploaders": { p25: 250, median: 800, p75: 1800, n: 31, src: "source D n=31 (supplies, pooled)" },
+  "category-card-binders-boxes": { p25: 250, median: 800, p75: 1800, n: 31, src: "source D n=31 (supplies, pooled)" },
+  "category-card-slab-display": { p25: 250, median: 800, p75: 1800, n: 31, src: "source D n=31 (supplies, pooled)" },
 
   // ── Figures. hobson + redeyemerch ────────────────────────────────────────
-  "category-anime-scale-1-12": { p25: 3499, median: 5900, p75: 7999, n: 34, src: "hobson n=34 (1/12 scale)" },
+  "category-anime-scale-1-12": { p25: 3499, median: 5900, p75: 7999, n: 34, src: "source F n=34 (1/12 scale)" },
   // The only band the crawl has for mid-scale statues is its general "Anime
   // Figures" tag, not a 1/7-or-1/8 measurement. Used, and labelled as general.
-  "category-anime-scale-1-7-1-8": { p25: 1199, median: 1699, p75: 2499, n: 94, src: "redeyemerch n=94, GENERAL anime-figure band (not scale-specific)" },
-  "category-anime-prize-figures": { p25: 1999, median: 2699, p75: 2999, n: 23, src: "hobson n=23 (prize figures)" },
-  "category-comic-marvel-legends": { p25: 2999, median: 3999, p75: 5499, n: 41, src: "hobson n=41" },
-  "category-comic-vintage-toybiz": { p25: 3499, median: 3999, p75: 4499, n: 22, src: "hobson n=22" },
+  "category-anime-scale-1-7-1-8": { p25: 1199, median: 1699, p75: 2499, n: 94, src: "source G n=94, GENERAL anime-figure band (not scale-specific)" },
+  "category-anime-prize-figures": { p25: 1999, median: 2699, p75: 2999, n: 23, src: "source F n=23 (prize figures)" },
+  "category-comic-marvel-legends": { p25: 2999, median: 3999, p75: 5499, n: 41, src: "source F n=41" },
+  "category-comic-vintage-toybiz": { p25: 3499, median: 3999, p75: 4499, n: 22, src: "source F n=22" },
 
   // ── Hot Wheels. toycollectorsindia ───────────────────────────────────────
   // 🛑 NO QUARTILES EXIST for either row. The crawl recorded a median and a
   // RANGE (₹99–36,500 for the pooled 1:64 band; ₹130–999 for their own plain
   // mainline collection), and a range is not a quartile. So these two carry a
   // median only, which is why `p25`/`p75` are optional at all.
-  "category-hw-mainline-series": { median: 399, n: 27, src: "toycollectorsindia n=27 (their own plain mainline collection); range 130-999, no quartiles measured" },
-  "category-hw-treasure-hunt": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-car-culture": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-boulevard": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-team-transport": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-fast-and-furious": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-pop-culture": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
-  "category-hw-rlc": { median: 850, n: 7418, src: "toycollectorsindia n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-mainline-series": { median: 399, n: 27, src: "source H n=27 (their own plain mainline collection); range 130-999, no quartiles measured" },
+  "category-hw-treasure-hunt": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-car-culture": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-boulevard": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-team-transport": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-fast-and-furious": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-pop-culture": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
+  "category-hw-rlc": { median: 850, n: 7418, src: "source H n=7418, 1:64 POOLED across mainline and premium; range 99-36500, no quartiles" },
 
   /*
    * 🛑 DELIBERATELY ABSENT — the crawl measured no band for these, and a
