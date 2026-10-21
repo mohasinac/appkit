@@ -94,7 +94,7 @@ const SECTIONS: ShoppingSection[] = [
         </Text>
         <Ul className={`${GC.listDiscMuted} mt-3`}>
           <Li>An email confirmation to your registered address</Li>
-          <Li>A WhatsApp message if you&apos;ve added and verified your phone number</Li>
+          <Li>An in-app notification you can read any time from the bell in the header</Li>
         </Ul>
         <Text className={`${GC.textMuted} mt-3`}>
           View all your orders at any time under <Span weight="bold">My Account → My Orders</Span>.
