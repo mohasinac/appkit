@@ -223,12 +223,5 @@ export function AdminBeysView({ children, ...props }: AdminBeysViewProps) {
       </ListingLayout>
     );
   }
-  return (
-    <>
-      <Heading level={1} className="sr-only">
-        Beyblades
-      </Heading>
-      <DataListingView config={ADMIN_BEYS_CONFIG} />
-    </>
-  );
+  return <DataListingView config={ADMIN_BEYS_CONFIG} />;
 }

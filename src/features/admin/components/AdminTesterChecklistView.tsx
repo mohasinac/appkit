@@ -247,12 +247,5 @@ export function AdminTesterChecklistView({
       </ListingLayout>
     );
   }
-  return (
-    <>
-      <Heading level={1} className="sr-only">
-        Tester Checklist
-      </Heading>
-      <DataListingView config={config} />
-    </>
-  );
+  return <DataListingView config={config} />;
 }

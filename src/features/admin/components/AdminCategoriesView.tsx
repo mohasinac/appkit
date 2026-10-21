@@ -231,12 +231,5 @@ export function AdminCategoriesView({
       </ListingLayout>
     );
   }
-  return (
-    <>
-      <Heading level={1} className="sr-only">
-        Categories
-      </Heading>
-      <DataListingView config={ADMIN_CATEGORIES_CONFIG} />
-    </>
-  );
+  return <DataListingView config={ADMIN_CATEGORIES_CONFIG} />;
 }

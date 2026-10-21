@@ -180,12 +180,5 @@ export function AdminFaqsView({
       </ListingLayout>
     );
   }
-  return (
-    <>
-      <Heading level={1} className="sr-only">
-        FAQs
-      </Heading>
-      <DataListingView config={config} />
-    </>
-  );
+  return <DataListingView config={config} />;
 }

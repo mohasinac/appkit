@@ -24,7 +24,7 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
-import { BulkActionBar, Button, Div, Icon, IconButton, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar, TextLink } from "../../../ui";
+import { BulkActionBar, Button, Div, Heading, Icon, IconButton, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, Stack, StickyToolbar, Text, TextLink } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../layout";
@@ -95,6 +95,14 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
   // -- Header
   title: string;
   subtitle?: string;
+  /**
+   * Suppress the `<h1>` this view renders from `title`.
+   *
+   * For the handful of pages that already author their own heading — a second
+   * `<h1>` is a worse outline than none, which is the defect this header was
+   * added to fix. Everything else leaves it unset and gets the heading.
+   */
+  hideHeader?: boolean;
   /**
    * Search box copy. OPTIONAL — declaring it is what makes the box exist.
    *
@@ -482,6 +490,45 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 
   return (
     <Div className={config.className ?? "min-h-screen"}>
+      {/*
+        ── THE PAGE HEADING ────────────────────────────────────────────────────
+        🛑 `config.title` HAS ALWAYS BEEN DECLARED AND NEVER RENDERED.
+
+        Every one of the ~86 configs sets `title`, and this component used it
+        for exactly two things: the editor drawer's label ("Edit Product") and
+        the empty-state sentence ("No products found"). It never put it on the
+        page. That is the audit's "no `<h1>` on 87 listing pages" — not a
+        missing string, a string with no renderer.
+
+        The consequence is bigger than a missing line of text. With no `<h1>`,
+        a screen reader's document outline for `/admin/products` begins at
+        whatever the first `<h2>` inside a card happens to be, and the heading
+        order skips a level on every one of those pages. The audit scored the
+        skip separately on 299 pages.
+
+        `subtitle` was in the same position and is rendered here too.
+
+        🛑 Rendered BY THE SHELL rather than asked of each page, because the
+        ~86 pages are thin shims — `/admin/products/page.tsx` is four lines
+        that render `<AdminProductsView>`. There is nowhere in a consumer page
+        to put a heading without rebuilding the shim, and a per-page heading
+        is what let all 86 go missing in the first place.
+
+        Pages that DO author their own `<h1>` pass `hideHeader` so the outline
+        never gains a second one.
+      */}
+      {!config.hideHeader && (
+        <Stack gap="xs" className="mb-[var(--appkit-space-4)]">
+          <Heading level={1} size="2xl" weight="bold">
+            {config.title}
+          </Heading>
+          {config.subtitle && (
+            <Text size="sm" color="muted">
+              {config.subtitle}
+            </Text>
+          )}
+        </Stack>
+      )}
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}

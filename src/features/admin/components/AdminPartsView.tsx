@@ -203,12 +203,5 @@ export function AdminPartsView({ children, ...props }: AdminPartsViewProps) {
       </ListingLayout>
     );
   }
-  return (
-    <>
-      <Heading level={1} className="sr-only">
-        Parts
-      </Heading>
-      <DataListingView config={ADMIN_PARTS_CONFIG} />
-    </>
-  );
+  return <DataListingView config={ADMIN_PARTS_CONFIG} />;
 }

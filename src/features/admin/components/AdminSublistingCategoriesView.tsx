@@ -38,6 +38,8 @@ export function AdminSublistingCategoriesView({
   const config: ListingViewConfig<SublistingCategoriesResponse, SublistingRow> = {
     portal: "admin",
     title: "Sub-listing Categories",
+    // The page authors its own visible <h1>, so the shell must not add a second.
+    hideHeader: true,
     /*
      * Restored 2026-10-17, same reasoning as `AdminBrandsView`. `itemCode` is
      * named because it is genuinely in `buildCategorySearchTxt`'s source list —

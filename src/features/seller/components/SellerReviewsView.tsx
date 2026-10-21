@@ -276,6 +276,8 @@ export function SellerReviewsView({
   const config: ListingViewConfig<ReviewsListResponse, ReviewItem> = {
     portal: "seller",
     title: "Reviews",
+    // The page authors its own visible <h1>, so the shell must not add a second.
+    hideHeader: true,
     searchPlaceholder: "Search product, reviewer, or comment…",
     emptyLabel: "No reviews found.",
     filterKeys: ["rating", "replied"],
