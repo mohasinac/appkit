@@ -412,13 +412,24 @@ const bundleRows: Partial<CategoryDocument>[] = [
   },
   {
     id: "bundle-x-premium-tops",
-    name: "X Premium Tops Trio",
+    name: "Prize Beys Trio — 10% Off",
     slug: "bundle-x-premium-tops",
-    description: "AeroPegasus 3-70A, CobaltDrake 4-60F and ValkyrieVolt S4-70V — the three flagship Beyblade X tops in one order.",
+    description: "The three prize Beyblade X tops together — CobaltDrake 4-60F, AeroPegasus 3-70A and ValkyrieVolt S4-70V — at 10% off buying them separately.",
     categoryType: "bundle",
     bundleKind: "special",
     brandSlug: "brand-takara-tomy",
-    bundlePrice: 42199,
+    /*
+     * 🛑 EXACTLY 10% off `bundleOriginalTotal`, and the two must stay in step.
+     *
+     * `computeBundleDiscount()` derives the badge percentage from this pair,
+     * so a price that drifts from the members' real total advertises a saving
+     * that is not real. It was 42199 against 48000 — 12.08% — which read as a
+     * deliberate 10% deal to nobody and matched no copy anywhere.
+     *
+     * 48000 = 20000 (AeroPegasus) + 17500 (CobaltDrake) + 10500 (ValkyrieVolt);
+     * 43200 = 48000 × 0.9.
+     */
+    bundlePrice: 43200,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-x-aeropegasus-3-70a", "product-beyblade-x-cobaltdrake-4-60f", "product-beyblade-x-valkyrievolt-s4-70v"],
@@ -430,7 +441,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     display: { coverImage: seedPhoto("bundle-x-premium-tops-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
-    isFeatured: false,
+    isFeatured: true,
     order: 2,
     rootId: "bundle-x-premium-tops",
     parentIds: [],

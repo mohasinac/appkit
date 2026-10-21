@@ -238,6 +238,36 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     updatedAt: daysAgo(2),
     stats: { totalUses: 41, totalRevenue: 205000, totalDiscount: 20500 },
   },
+
+  /*
+   * ── The cashback code the "coming soon" event advertises ─────────────────
+   *
+   * 🛑 Its `validity.startDate` MUST match `event-festive-cashback-10`'s
+   * `startsAt` in `events-seed-data.ts`. The event publishes the code before
+   * it is spendable — that is the point of a coming-soon offer — so two
+   * independently-typed dates would either let the code work a week early or
+   * leave it dead on launch day, and nothing would report either.
+   *
+   * Both are 7 days out, and the event copy states the opening date from the
+   * same offset.
+   */
+  {
+    id: "coupon-cashback10",
+    code: "CASHBACK10",
+    name: "Festive Cashback — 10% Back",
+    description:
+      "Get 10% of your order value back as cashback, up to ₹1,000, on orders above ₹999. Applies across the whole catalogue.",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
+    discount: { value: 10, maxDiscount: 1000, minPurchase: 999 },
+    usage: { totalLimit: 2000, perUserLimit: 1, currentUsage: 0 },
+    validity: { startDate: daysAhead(7), endDate: daysAhead(37), isActive: true },
+    restrictions: { firstTimeUserOnly: false },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+    stats: { totalUses: 0, totalRevenue: 0, totalDiscount: 0 },
+  },
 // Derived through the wrapper, never per record — an inline literal is how
 // five product seed files shipped their last fixture with no tokens.
 ].map(withCouponSearchTxt);

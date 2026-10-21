@@ -22,6 +22,7 @@ import type { LotteryConfig } from "../features/lottery/types";
 import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
 import { seedExtMedia, seedPhoto } from "./_helpers/media";
+import { editorialImage } from "./_helpers/editorial-media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -379,6 +380,58 @@ const _raweventsSeedData: EventDocument[] = [
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(25),
     updatedAt: daysAgo(6),
+  } as EventDocument,
+
+  // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
+  /*
+   * 🛑 `type: "offer"` + `offerConfig.displayCode` is what renders the
+   * COPY-TO-CLIPBOARD card. `events/[id]/page.tsx` mounts `<EventOfferCard>`
+   * on exactly that pair; a `sale` event renders `<EventSaleBanner>`, which
+   * shows the code as text with no copy button.
+   *
+   * 🛑 `status: "active"` with a FUTURE `startsAt` is how this codebase
+   * spells "coming soon". There is no `upcoming` member of the status union,
+   * and `listPublicEvents` hard-filters `status==active` — so a `draft` here
+   * would be invisible on `/events` AND on the homepage strip, which is the
+   * opposite of what an announcement is for.
+   *
+   * 🛑 `startsAt` MUST match `coupon-cashback10`'s `validity.startDate`
+   * (both `daysAhead(7)`). The code is deliberately readable before it is
+   * spendable; two independently-typed dates would silently break that in one
+   * direction or the other.
+   */
+  {
+    id: "event-festive-cashback-10",
+    slug: "festive-cashback-10",
+    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
+    title: "Coming Soon: 10% Cashback on Every Order",
+    description:
+      `<p><strong>Our biggest cashback event of the year opens in a week.</strong></p>` +
+      `<p>Spend ₹999 or more and get <strong>10% of your order value back</strong>, up to ₹1,000. It applies right across the catalogue — Beyblade X tops, spares, stickers and bundles alike.</p>` +
+      `<img src="${editorialImage("event-content-cashback-10")}" alt="Indian rupee banknotes" />` +
+      `<h2>How it works</h2>` +
+      `<ol><li>Copy the code <strong>CASHBACK10</strong> below.</li>` +
+      `<li>Paste it at checkout once the event opens.</li>` +
+      `<li>Cashback is credited to your wallet within 24 hours of delivery.</li></ol>` +
+      `<p><em>The code is published now so you can save it. It becomes spendable when the event opens — one use per account, up to ₹1,000 back.</em></p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAhead(7),
+    endsAt: daysAhead(37),
+    coverImage: {
+      type: "image",
+      url: editorialImage("event-cover-cashback-10"),
+      alt: "Indian rupee banknotes",
+    },
+    tags: ["offer", "cashback", "coming-soon", "festive"],
+    offerConfig: {
+      couponId: "coupon-cashback10",
+      displayCode: "CASHBACK10",
+      bannerText: "10% back on orders above ₹999, up to ₹1,000. One use per account.",
+    },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
   } as EventDocument,
 ];
 

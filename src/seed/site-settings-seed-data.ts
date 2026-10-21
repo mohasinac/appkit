@@ -542,7 +542,14 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       category: true,
       sublisting: true,
       brand: true,
-      bundle: false,
+      /*
+       * 🛑 Paired with `section-featured-bundles.enabled` in
+       * `homepage-sections-seed-data.ts` — flipping one without the other
+       * makes the admin homepage builder and the live page disagree. Turned
+       * back on 2026-10-21 now that five bundles exist with real member
+       * mosaics, including the 10%-off prize-bey trio.
+       */
+      bundle: true,
     },
   },
   credentials: {

@@ -40,6 +40,7 @@
  */
 
 import { seedGallery } from "./_helpers/media";
+import { editorialImage } from "./_helpers/editorial-media";
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
@@ -353,6 +354,74 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
       "brand-beyblade",
       ["Eight Heavy", "Weight Disks", "Original Parts"],
       ["spares", "weight-disk", "sold-out"],
+    ]),
+  } as unknown as Partial<ProductDocument>,
+
+  /*
+   * ── Beyblade X Elevate bit (E) ───────────────────────────────────────────
+   *
+   * The first X-generation spare in this file — every other row is Original /
+   * Metal / Burst. `category-elevate` is a real tier-4 part leaf and
+   * `bit--elevate` is a real glossary row (3.2 g, Basic Line, BX-36 /
+   * Hasbro G1669, 14 Sep 2024), both verified against the committed seed.
+   *
+   * 🛑 `mainImage` is NOT the part leaf's own cover — `category-elevate` has
+   * no uploaded image, which is exactly the case the file header says to leave
+   * out rather than point at a slug that 404s. So the photo was fetched from
+   * the wiki specifically for this listing by
+   * `scripts/fetch-elevate-bit-image.mjs` and uploaded under its own shortId;
+   * `editorialImage()` resolves it to `/media/spare-image-elevate-bit`.
+   *
+   * Condition is NEW and stock is 40: this is a retail spare off a boosted
+   * pull, not a single used component like the rows above it.
+   */
+  {
+    id: "spare-bit-elevate-beyblade-x",
+    slug: "spare-bit-elevate-beyblade-x",
+    title: "Elevate Bit (E) — Beyblade X spare",
+    description:
+      "A loose Elevate bit for Beyblade X. 3.2 g, Basic Line, first released 14 September 2024 as BX-36 (Takara-Tomy) / G1669 (Hasbro). Its raised dome lifts the blade off the floor on impact, trading some stamina for burst resistance and a distinctive high-angle recovery. Shipped with WhaleWave 5-80E and SharkEdge 4-70E among others.",
+    categorySlugs: [
+      "category-elevate",
+      "category-x-bits",
+      "category-x-parts",
+      "category-beyblade-x",
+      "category-spinning-tops",
+    ],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    franchiseSlug: "franchise-beyblade",
+    franchise: "Beyblade",
+    price: 299,
+    currency: "INR",
+    gstRate: 5,
+    hsnCode: "95030020",
+    stockQuantity: 40,
+    availableQuantity: 40,
+    isSold: false,
+    mainImage: editorialImage("spare-image-elevate-bit"),
+    images: seedGallery(editorialImage("spare-image-elevate-bit")),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "spares" as const,
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    partGlossaryId: "bit--elevate",
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["spares", "bit", "beyblade-x", "basic-line"],
+    createdAt: new Date("2026-10-21"),
+    updatedAt: new Date("2026-10-21"),
+    searchTxt: buildSearchTxt([
+      "Elevate Bit (E) — Beyblade X spare",
+      "A loose Elevate bit for Beyblade X, 3.2 g, Basic Line, BX-36.",
+      "Takara-Tomy",
+      "brand-takara-tomy",
+      ["Elevate", "Bits", "Beyblade X Parts"],
+      ["spares", "bit", "beyblade-x", "basic-line"],
     ]),
   } as unknown as Partial<ProductDocument>,
 ];

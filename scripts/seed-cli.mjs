@@ -273,7 +273,7 @@ const {
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
-  mediaAssetsSeedData,
+  mediaAssetsSeedData, mediaAssetsEditorialSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
   authenticityKnowledgeSeedData,
   partGlossarySeedData, modelCompositionSeedData,
@@ -758,7 +758,10 @@ const SEED_DATA_MAP = {
   groupedListings: groupedListingsSeedData,
   // The other half of the wiring — load() short-circuits on an empty array, so
   // the COLLECTION_MAP entry above does nothing on its own (Root Cause #90).
-  mediaAssets: mediaAssetsSeedData,
+  // Two source files, one collection: the taxonomy rows are GENERATED and
+  // rewritten wholesale by upload-taxonomy-images.mjs, so the editorial rows
+  // are kept beside them rather than inside that file.
+  mediaAssets: [...mediaAssetsSeedData, ...mediaAssetsEditorialSeedData],
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
   authenticityKnowledge: authenticityKnowledgeSeedData,

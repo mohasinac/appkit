@@ -192,6 +192,13 @@ export {
   mediaAssetsSeedData,
   MEDIA_ASSET_SEED_COUNT,
 } from "./media-assets-seed-data";
+/*
+ * Editorial image rows live in their own file because
+ * `media-assets-seed-data.ts` is rewritten wholesale by
+ * `upload-taxonomy-images.mjs`. `seed-cli` concatenates the two into one
+ * `mediaAssets` collection.
+ */
+export { mediaAssetsEditorialSeedData } from "./media-assets-editorial-seed-data";
 export {
   productsCatalogueSeedData,
   CATALOGUE_LISTING_COUNT,

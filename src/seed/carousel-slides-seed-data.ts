@@ -1,14 +1,29 @@
 /*
- * WHY: Seeds 6 carousel slides for the marketplace homepage promo carousel.
- * WHAT: 4 active + 2 inactive. Deterministic Picsum backgrounds with a dim
- * overlay, plus a headline / supporting line / CTA on each.
+ * WHY: Seeds the carousel slides for the marketplace homepage promo carousel.
+ * WHAT: 8 slides — 5 active + 3 inactive — each a CC0/public-domain background
+ * with a dim overlay, plus a headline / supporting line / CTA.
  *
- * 🛑 FOUR ACTIVE, NOT FIVE, SINCE 2026-10-20. `MAX_ACTIVE_SLIDES` is a
- * ceiling, not a quota — `slide-beyblade-auction` went inactive with
- * `listings.listingTypes.auction: false` and nothing was promoted to backfill
- * it. Do NOT activate `slide-upcoming-promo` to get back to five: that one is
- * the fixture `getActiveSlides()`' own filter is tested against, and it says
+ * 🛑 FIVE ACTIVE SINCE 2026-10-21, which exactly MEETS `MAX_ACTIVE_SLIDES`.
+ * A sixth active slide is not an error — `features/homepage/api/carousel/
+ * route.ts` slices to five, so the extra is silently never rendered. Adding
+ * one means disabling one.
+ *
+ * This replaced an earlier note reading "FOUR ACTIVE, NOT FIVE, SINCE
+ * 2026-10-20 … nothing was promoted to backfill it". Two slides were promoted
+ * on 2026-10-21 (`slide-festive-cashback`, `slide-bundles-save`) and two
+ * demoted: `slide-beyblade-auction` (CTA into a vertical switched off at
+ * `listings.listingTypes.auction: false`) and `slide-beyblade-collection-hunt`
+ * (a restatement of the hero's own first card).
+ *
+ * Do NOT activate `slide-upcoming-promo` to change the count: that one is the
+ * fixture `getActiveSlides()`' own filter is tested against, and it says
  * "A draft slide kept unpublished so admins have a starting point to copy."
+ *
+ * 🛑 `order` must stay UNIQUE across all eight (currently 1-8).
+ * `MarketplaceHomepageView` tie-breaks on `updatedAt` then `id.localeCompare`,
+ * so two slides sharing an order makes the running order alphabetical by
+ * accident rather than a layout decision — which is exactly what happened
+ * when `slide-beyblade-auction` and `slide-upcoming-promo` both sat on 6.
  *
  * 🛑 EVERY ACTIVE SLIDE MUST CARRY AN `overlay` OR `cards`, OR IT RENDERS BLANK.
  * `HeroCarousel` gates all slide copy on `slide.overlay` (line ~412) and the
@@ -72,13 +87,45 @@ const SLIDE_SETTINGS = { autoplayDelayMs: 6000, height: "medium" as const };
  * responses and 52.52 GB of origin transfer against a 10 GB allowance, and a
  * suspended project.
  *
- * 🛑 These are publisher product shots on white, not action photography. They
- * are a floor, not a ceiling — see the shot list in the plan for what should
- * eventually replace them. Each one still carries a `dimOverlay` because the
- * overlay copy is fixed-inverse ink and needs a guaranteed-dark backdrop
- * (Root Cause #67).
+ * 🛑 SUPERSEDED 2026-10-21 for the BACKGROUNDS, still true for everything
+ * else. This paragraph read "These are publisher product shots on white, not
+ * action photography … a floor, not a ceiling". Correct, and the reason the
+ * backgrounds moved off them: a product shot on white behind inverse-ink copy
+ * at 55% dim is a grey rectangle with text on it. Slide and card backgrounds
+ * are now abstract CC0 art fetched for the purpose (see the block below); the
+ * product shots stay where they read properly — the rails, the cards' own
+ * subject matter, and the blog.
+ *
+ * Each background still carries a `dimOverlay` because the overlay copy is
+ * fixed-inverse ink and needs a guaranteed-dark backdrop (Root Cause #67).
  */
 const MEDIA = {
+  /*
+   * ── Carousel backgrounds: CC0 / public domain, abstract, fetched for this ──
+   *
+   * 🛑 These are NOT product shots, deliberately. A carousel background sits
+   * full-bleed under inverse-ink copy at ~55% dim; a photograph of a top
+   * competes with the headline and both lose. Item photography belongs on the
+   * CARDS, the rails and the blog — which is where it now is.
+   *
+   * 🛑 CC0 / public domain ONLY. CC BY and CC BY-SA are free but require
+   * visible credit, and a full-bleed hero has nowhere to render it. Enforced
+   * at fetch time by `publicDomainOnly` in
+   * `scripts/lib/editorial-image-manifest.mjs`, not left to review.
+   *
+   * Staged by `scripts/fetch-editorial-images.mjs`, uploaded with their
+   * `mediaAssets` rows by `scripts/push-editorial-images.mjs`; provenance in
+   * `docs/research/editorial-images/image-provenance.json`.
+   */
+  bgHero: "/media/carousel-bg-hero",
+  bgCashback: "/media/carousel-bg-cashback",
+  bgBundles: "/media/carousel-bg-bundles",
+  bgPreorders: "/media/carousel-bg-preorders",
+  bgAuthenticity: "/media/carousel-bg-authenticity",
+  cardShop: "/media/carousel-card-shop",
+  cardBundles: "/media/carousel-card-bundles",
+  cardPreorders: "/media/carousel-card-preorders",
+
   franchise: "/media/franchise-beyblade-image",
   genOriginal: "/media/category-beyblade-original-image",
   genMetal: "/media/category-beyblade-metal-image",
@@ -99,8 +146,8 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: MEDIA.franchise,
-      dimOverlay: { enabled: true, opacity: 0.55 },
+      url: MEDIA.bgHero,
+      dimOverlay: { enabled: true, opacity: 0.6 },
     },
     // The ONE cards slide — and therefore the one slide with no `overlay`.
     // Exists so the zone-grid render path has real data to exercise; all three
@@ -110,7 +157,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-shop-now",
         zone: 1,
         mobileZone: 2,
-        background: { type: "image", url: MEDIA.dranzer, dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.cardShop, dimOverlay: { enabled: true, opacity: 0.5 } },
         content: {
           eyebrow: "Buy now",
           title: "Ready to ship",
@@ -141,7 +188,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-browse",
         zone: 2,
         mobileZone: 2,
-        background: { type: "image", url: MEDIA.lDrago, dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.cardBundles, dimOverlay: { enabled: true, opacity: 0.5 } },
         content: {
           eyebrow: "Explore",
           title: "Shop by category",
@@ -154,7 +201,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         id: "card-hero-reserve",
         zone: 3,
         mobileZone: 2,
-        background: { type: "image", url: MEDIA.aeroPegasus, dimOverlay: { enabled: true, opacity: 0.45 } },
+        background: { type: "image", url: MEDIA.cardPreorders, dimOverlay: { enabled: true, opacity: 0.5 } },
         content: {
           eyebrow: "Reserve",
           title: "Pre-orders",
@@ -168,6 +215,83 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(60),
     updatedAt: daysAgo(3),
+  },
+
+  /*
+   * ── Two promo slides, added 2026-10-21 ───────────────────────────────────
+   *
+   * Both took slots freed by disabling `slide-beyblade-auction` (a CTA into a
+   * switched-off vertical) and `slide-beyblade-collection-hunt` (the hero's
+   * first card restated). `MAX_ACTIVE_SLIDES` is 5 and remains exactly met —
+   * a sixth active slide is not an error, it is silently never rendered.
+   *
+   * Overlay-only with `cards: []`, per the header's rule 2.
+   */
+  {
+    id: "slide-festive-cashback",
+    title: "Festive cashback (promo)",
+    order: 2,
+    active: true,
+    background: {
+      type: "image",
+      url: MEDIA.bgCashback,
+      dimOverlay: { enabled: true, opacity: 0.55 },
+    },
+    cards: [],
+    overlay: {
+      enabled: true,
+      subtitle: "Coming soon",
+      title: "10% cashback on every order",
+      description:
+        "Spend ₹999 or more and get 10% back, up to ₹1,000. Copy the code now — it goes live when the event opens.",
+      /*
+       * Links by SLUG, matching `EventCard`'s own `event.slug ?? event.id`.
+       * `getPublicEventById` resolves through `findByIdOrSlug`, so either
+       * works — the slug is the one a human would recognise in the address
+       * bar, and it is what every other link to this event uses.
+       */
+      button: {
+        id: "slide-cashback-cta",
+        text: "See the offer",
+        link: String(ROUTES.PUBLIC.EVENT_DETAIL("festive-cashback-10")),
+        variant: "primary",
+        openInNewTab: false,
+      },
+    },
+    settings: SLIDE_SETTINGS,
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  },
+  {
+    id: "slide-bundles-save",
+    title: "Bundles",
+    order: 3,
+    active: true,
+    background: {
+      type: "image",
+      url: MEDIA.bgBundles,
+      dimOverlay: { enabled: true, opacity: 0.55 },
+    },
+    cards: [],
+    overlay: {
+      enabled: true,
+      subtitle: "Buy the set, pay less",
+      title: "Prize Beys Trio — 10% off",
+      description:
+        "CobaltDrake 4-60F, AeroPegasus 3-70A and ValkyrieVolt S4-70V in one order, ₹43,200 instead of ₹48,000.",
+      button: {
+        id: "slide-bundles-cta",
+        text: "Browse bundles",
+        link: String(ROUTES.PUBLIC.BUNDLES),
+        variant: "primary",
+        openInNewTab: false,
+      },
+    },
+    settings: SLIDE_SETTINGS,
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
   },
   {
     /*
@@ -188,7 +312,10 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
      */
     id: "slide-beyblade-auction",
     title: "Live auctions",
-    order: 2,
+    // Moved 2 → 6 to free the top slots for the two promo slides added
+    // 2026-10-21. A disabled slide keeps a slot so re-enabling restores its
+    // position; it does not need an EARLY one.
+    order: 6,
     active: false,
     background: {
       type: "video",
@@ -222,8 +349,16 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   {
     id: "slide-beyblade-collection-hunt",
     title: "Complete your collection",
-    order: 3,
-    active: true,
+    /*
+     * 🛑 DISABLED 2026-10-21 — not because it is broken, but because it is a
+     * DUPLICATE. "Complete your collection → Start browsing → /products" is
+     * the hero's first card in different words, and the hero says it above
+     * the fold with a picture. `MAX_ACTIVE_SLIDES` is 5 and the carousel now
+     * has two promo slides with something specific to say (a live cashback
+     * code, a priced bundle), so the generic one gives up its slot.
+     */
+    order: 7,
+    active: false,
     background: {
       type: "image",
       url: MEDIA.genBurst,
@@ -255,7 +390,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: MEDIA.genX,
+      url: MEDIA.bgPreorders,
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     overlay: {
@@ -322,7 +457,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: MEDIA.genOriginal,
+      url: MEDIA.bgAuthenticity,
       dimOverlay: { enabled: true, opacity: 0.55 },
     },
     overlay: {
@@ -386,7 +521,11 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   {
     id: "slide-upcoming-promo",
     title: "Seasonal promo (draft)",
-    order: 6,
+    // Moved 6 → 8: `slide-beyblade-auction` now holds 6, and two slides on
+    // one order is the collision the header warns about —
+    // `MarketplaceHomepageView` tie-breaks on `updatedAt` then
+    // `id.localeCompare`, making the running order alphabetical by accident.
+    order: 8,
     active: false,
     background: {
       type: "image",

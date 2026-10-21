@@ -7,6 +7,18 @@
  * own note on the switch that did it. A disabled row KEEPS its order slot, so
  * the range stays contiguous and re-enabling one puts it back where it was
  * rather than at the end.
+ *
+ * 🛑 TWO OF THOSE SWAPPED ON 2026-10-21, so the count is unchanged and the
+ * MEMBERSHIP is not: `featured-bundles` (9) came back ON — five real bundles
+ * now exist, and its site-settings lock was flipped with it — while
+ * `collector-reviews` (11) went OFF, because the `reviews` collection is
+ * empty and a rail headed "What Buyers Say" over blank space is a claim the
+ * page cannot support.
+ *
+ * The rule both decisions follow: a section is enabled when its collection
+ * can fill it, and that is COUNTED rather than assumed —
+ * `scripts/push-editorial-content.mjs` re-derives it from live counts, so
+ * neither flag is a standing opinion about what the catalogue holds.
  * `google-reviews` is a REGISTERED type with no document — see the note
  * beside the deliberate budget-tile omission below for why.
  *
@@ -311,13 +323,27 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // Disabled 2026-10-20 with `listings.categoryTypes.bundle: false`. Same
-  // two-lock arrangement as the auctions rail above — see that note.
+  /*
+   * 🛑 RE-ENABLED 2026-10-21, and BOTH locks had to move.
+   *
+   * It was disabled 2026-10-20 together with
+   * `listings.categoryTypes.bundle: false` — the same two-lock arrangement as
+   * the auctions rail above. Five real bundles now exist with resolvable
+   * member mosaics, including the 10%-off prize-bey trio, so the rail has
+   * genuine content.
+   *
+   * The site setting is the lock that actually hides it:
+   * `MarketplaceHomepageView` filters through `HOMEPAGE_SECTION_CATEGORY_TYPE`
+   * -> `isCategoryTypeEnabled`, so with the setting still `false` this flag
+   * alone changes nothing on the page while the admin homepage builder shows
+   * the section as on — two surfaces contradicting each other. Both were
+   * flipped together; see `site-settings-seed-data.ts`.
+   */
   {
     id: "section-featured-bundles",
     type: "featured-bundles",
     order: 9,
-    enabled: false,
+    enabled: true,
     config: {
       title: "Curated Bundles",
       subtitle: "Multiple items, one discounted price.",
@@ -349,11 +375,24 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ---- 10. Social proof ----------------------------------------------------
+  /*
+   * 🛑 DISABLED 2026-10-21 — the `reviews` collection is EMPTY.
+   *
+   * A review rail with nothing in it renders a heading, a "See all reviews →"
+   * link and blank space. That is worse than absent: the heading is a claim
+   * ("What Buyers Say") the page cannot support, and the link leads to an
+   * empty list. The site has also never had a customer, so there is nothing
+   * honest to seed here — a fabricated testimonial is the one thing this
+   * codebase already refuses for `testimonials`, for the same reason.
+   *
+   * The `order: 11` slot is HELD so re-enabling puts it back in place rather
+   * than at the end. Flip `enabled` the moment a real review exists.
+   */
   {
     id: "section-collector-reviews",
     type: "reviews",
     order: 11,
-    enabled: true,
+    enabled: false,
     config: {
       title: "What Buyers Say",
       maxReviews: 12,

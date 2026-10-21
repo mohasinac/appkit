@@ -21,6 +21,7 @@ import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto, seedGallery } from "./_helpers/media";
+import { editorialImage } from "./_helpers/editorial-media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -318,6 +319,103 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
       ["stickers", "made-to-order"],
+    ]),
+  } as unknown as Partial<ProductDocument>,
+
+  /*
+   * ── Beyblade X special-event sheets ──────────────────────────────────────
+   *
+   * Sold by `store-letitrip-official` rather than `store-beyblade-arena`: it
+   * is the only ACTIVE store in the live catalogue, and a listing on a store
+   * that is not active is invisible on every public surface.
+   *
+   * 🛑 Images come from `editorialImage()`, not `seedPhoto()`. These two map
+   * to real Beyblade X photography already in our bucket — the stickers depict
+   * those beys — so they resolve to `/media/<shortId>` rather than a grey
+   * placeholder tile. See `_helpers/editorial-media.ts`.
+   */
+  {
+    id: "sticker-beyblade-x-special-event-sheet",
+    slug: "sticker-beyblade-x-special-event-sheet",
+    title: "Beyblade X Special Event Sticker Sheet",
+    description:
+      "A commemorative A5 sticker sheet produced for the Beyblade X special event — 18 die-cut vinyl stickers covering the X-series blades, ratchets and bits, plus the event wordmark. Weatherproof and UV-laminated.",
+    categorySlugs: ["category-x-basic", "category-x-tops", "category-beyblade-x", "category-spinning-tops"],
+    categoryNames: ["Basic Line", "Beyblade X Tops", "Beyblade X", "Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    franchiseSlug: "franchise-beyblade",
+    franchise: "Beyblade",
+    price: 249,
+    currency: "INR",
+    stockQuantity: 120,
+    availableQuantity: 120,
+    isSold: false,
+    mainImage: editorialImage("sticker-image-beyblade-x-event-sheet"),
+    images: seedGallery(editorialImage("sticker-image-beyblade-x-event-sheet")),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "stickers" as const,
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    printMeta: { size: "A5 (14.8 x 21 cm) sheet", material: "Vinyl", finish: "Matte UV-laminated" },
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["stickers", "beyblade-x", "event-exclusive"],
+    createdAt: new Date("2026-10-21"),
+    updatedAt: new Date("2026-10-21"),
+    searchTxt: buildSearchTxt([
+      "Beyblade X Special Event Sticker Sheet",
+      "Commemorative A5 die-cut vinyl sticker sheet for the Beyblade X special event.",
+      "Takara-Tomy",
+      "brand-takara-tomy",
+      ["Beyblade X", "Spinning Tops"],
+      ["stickers", "beyblade-x", "event-exclusive"],
+    ]),
+  } as unknown as Partial<ProductDocument>,
+  {
+    id: "sticker-beyblade-x-special-event-holo",
+    slug: "sticker-beyblade-x-special-event-holo",
+    title: "Beyblade X Special Event Holographic Sticker Pack",
+    description:
+      "The holographic companion to the special-event sheet — 8 rainbow-shimmer stickers of the event's featured X blades, on a split-back liner so each peels cleanly.",
+    categorySlugs: ["category-x-basic", "category-x-tops", "category-beyblade-x", "category-spinning-tops"],
+    categoryNames: ["Basic Line", "Beyblade X Tops", "Beyblade X", "Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    franchiseSlug: "franchise-beyblade",
+    franchise: "Beyblade",
+    price: 349,
+    currency: "INR",
+    stockQuantity: 120,
+    availableQuantity: 120,
+    isSold: false,
+    mainImage: editorialImage("sticker-image-beyblade-x-event-holo"),
+    images: seedGallery(editorialImage("sticker-image-beyblade-x-event-holo")),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "stickers" as const,
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    printMeta: { size: "10 x 15 cm sheet", material: "Holographic vinyl", finish: "Holographic" },
+    customFields: [],
+    customSections: [],
+    featured: false,
+    isPromoted: false,
+    isOnSale: false,
+    tags: ["stickers", "beyblade-x", "event-exclusive", "holographic"],
+    createdAt: new Date("2026-10-21"),
+    updatedAt: new Date("2026-10-21"),
+    searchTxt: buildSearchTxt([
+      "Beyblade X Special Event Holographic Sticker Pack",
+      "Eight rainbow-shimmer holographic stickers of the event's featured Beyblade X blades.",
+      "Takara-Tomy",
+      "brand-takara-tomy",
+      ["Beyblade X", "Spinning Tops"],
+      ["stickers", "beyblade-x", "event-exclusive", "holographic"],
     ]),
   } as unknown as Partial<ProductDocument>,
 ];

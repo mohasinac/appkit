@@ -1906,7 +1906,7 @@ export function SellerProductShell({
    * yet — it needs the sections — so it is composed in below. That ordering is
    * why the original `wizardShellCtx` existed; only its contents change.
    */
-  const { shellCtx: baseShellCtx, setFieldError, clearErrors, validate } =
+  const { shellCtx: baseShellCtx, setFieldError, clearErrors, validate, markSubmitAttempted } =
     /*
      * 🛑 "Create & add another" OFFERED ONLY IN CREATE MODE. Editing an
      * existing listing and then "adding another" would have to mean "save this
@@ -2009,6 +2009,30 @@ export function SellerProductShell({
         (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
         setFieldError,
       );
+      /*
+       * 🛑 WITHOUT THIS THE TOAST IS A LIE — Root Cause #74, regressed here.
+       *
+       * `<FormErrorSummary>` early-returns `null` unless `ctx.submitAttempted`,
+       * and the per-field inline errors gate on `touched` — so on a field the
+       * seller never visited, nothing renders either. This form's Save and
+       * Publish are `type="button"` with `onClick`, which fires no native
+       * submit event, so nothing was marking the attempt. The result was a
+       * toast reading "Fix the highlighted errors and try again" with
+       * **nothing highlighted anywhere on the page** — four of them stacked up
+       * in the reported screenshot, and no way to find a single field.
+       *
+       * CLAUDE.md states the rule exactly: "Marking the attempt has to happen
+       * where an attempt happens", and a `type="button"` submit must call this
+       * itself. It is marked only on the FAILURE path: a save that succeeds
+       * has no errors to reveal, and flipping the flag anyway would arm the
+       * summary for every later keystroke.
+       *
+       * Marked even when `silent` (auto-save). The summary is the only durable
+       * record of what is wrong — auto-save deliberately suppresses its toast
+       * to avoid one every two seconds, so suppressing the summary too would
+       * leave the seller with no signal at all.
+       */
+      markSubmitAttempted();
       if (!silent) {
         showToast(
           saveFailureMessage(
@@ -2022,7 +2046,7 @@ export function SellerProductShell({
       void normalizeError(err);
       if (!silent) showToast("Failed to save.", "error");
     }
-  }, [draft, onSave, markClean, clearErrors, setFieldError, showToast]);
+  }, [draft, onSave, markClean, clearErrors, setFieldError, showToast, markSubmitAttempted]);
   const handleAutoSave = useCallback(async () => {
     try {
       await handleSave(true);
@@ -2082,6 +2106,9 @@ export function SellerProductShell({
         (result.issues as { path: (string | number)[]; message: string }[] | undefined) ?? [],
         setFieldError,
       );
+      // See the note on the same call in `handleSave` — without this the
+      // "Fix the highlighted errors" toast points at nothing (Root Cause #74).
+      markSubmitAttempted();
       showToast(
         saveFailureMessage(
           result.code,
@@ -2093,7 +2120,7 @@ export function SellerProductShell({
       void normalizeError(err);
       showToast("Failed to publish.", "error");
     }
-  }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast, addAnother, nextDraftForAnother]);
+  }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast, addAnother, nextDraftForAnother, markSubmitAttempted]);
 
   const listingTypeLabel = pluginForMode(listingType).typeLabel;
   const typeSpecificSection: TypeSpecificSectionDef | null = TYPE_SPECIFIC_SECTIONS[listingType] ?? null;
