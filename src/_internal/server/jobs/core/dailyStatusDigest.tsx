@@ -157,6 +157,7 @@ export interface DailyStatusDigestSummary {
   nearestCaseDueAt: Date | null;
   /** Gateway events that never reached a terminal status — the inbox backlog. */
   unprocessedGatewayEventCount: number;
+}
 
 function currency(amount: number): string {
   return `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
