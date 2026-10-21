@@ -40,6 +40,15 @@ export const PAYMENT_CASES_COLLECTION = "paymentCases";
  * | `amount_mismatch` | captured amount ≠ the order's recorded total |
  * | `dead_job` | a job exhausted its retries (Phase 8) |
  * | `grievance` | a statutory grievance with a clock (Phase 10) |
+ * | `shipping_unpriced` | a store's shipping could not be priced, so we shipped free |
+ *
+ * 🛑 `shipping_unpriced` is a CONFIGURATION fault with a money consequence,
+ * which is why it belongs in this queue rather than in `serverErrors`. An
+ * `estimate`-mode store with no carrier rate quoted `unavailable`, which the
+ * checkout mapped to `shippingFee: 0` — so every parcel for that store shipped
+ * free at our expense, silently, for as long as nobody looked (D44). Keyed on
+ * the STORE, so a misconfigured seller produces one case however many
+ * checkouts hit them.
  */
 export type PaymentCaseKind =
   | "missing_order"
@@ -49,7 +58,8 @@ export type PaymentCaseKind =
   | "refund_mismatch"
   | "amount_mismatch"
   | "dead_job"
-  | "grievance";
+  | "grievance"
+  | "shipping_unpriced";
 
 /**
  * Identical to `ReportStatus`, deliberately — see the header. `actioned` means
@@ -195,6 +205,7 @@ const PAYMENT_CASE_KIND_MAP: Record<PaymentCaseKind, true> = {
   amount_mismatch: true,
   dead_job: true,
   grievance: true,
+  shipping_unpriced: true,
 };
 export const PAYMENT_CASE_KINDS = Object.keys(PAYMENT_CASE_KIND_MAP) as PaymentCaseKind[];
 

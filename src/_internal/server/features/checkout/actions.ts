@@ -51,6 +51,13 @@ import {
   toStoreShippingPolicy,
   type StoreShippingPolicy,
 } from "../../../shared/features/shipping/mode";
+/*
+ * D44's first consumer of `shippingUnavailable`. A store whose shipping cannot
+ * be priced is a configuration fault with a money consequence — we ship free —
+ * so it belongs in the operator queue, keyed on the store so a hundred
+ * checkouts produce one case.
+ */
+import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { computeProtectionFees } from "../../../shared/features/shipping/protections";
 import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
 import {
@@ -389,6 +396,41 @@ function accumulateCouponUsage(
  */
 export async function resolveShippingCost(
   storeId: string | undefined,
+  /**
+   * The cart facts needed to QUOTE rather than merely resolve the policy.
+   *
+   * 🛑 D44 — OMITTING THIS IS TWO MONEY BUGS IN OPPOSITE DIRECTIONS, and until
+   * now every one of the five call sites omitted it.
+   *
+   * `quoteShipping` was called exactly once, here, with `goodsValue: 0` and
+   * `carrierRate: null`. Measured against its own logic
+   * (`shared/features/shipping/mode.ts`):
+   *
+   * 1. **Free-above-threshold can never fire.** The test is
+   *    `goodsValue >= policy.freeAbove`, and `0 >= 999` is false for any
+   *    positive threshold — so a store advertising "free shipping over ₹999"
+   *    **charged its base rate on a ₹5,000 order.** The buyer is OVERCHARGED,
+   *    and the seller's own offer silently does not exist.
+   * 2. **`estimate` mode ships FREE.** No carrier rate returns
+   *    `kind: "unavailable"`, which the mapping below turns into
+   *    `shippingFee: 0` — and `shippingUnavailable` had **zero consumers**, so
+   *    nobody noticed. The platform/seller is UNDERCHARGED, which is what that
+   *    field's own 🛑 warns about: "a zero there would ship every parcel free
+   *    at our expense, silently, until somebody noticed."
+   *
+   * `flat` and `free` modes were unaffected, which is why this survived: the
+   * common cases are correct and only a store with a threshold or an estimate
+   * policy is mispriced.
+   *
+   * Still optional, because the one legitimate caller is the seller-settings
+   * surface that wants the POLICY and has no cart. Every money path passes it.
+   */
+  opts?: {
+    /** The group's goods value in decimal rupees, from `lineTotalFor`. */
+    goodsValue?: number;
+    /** A real carrier rate, when one was obtained. `null` = none available. */
+    carrierRate?: number | null;
+  },
 ): Promise<{
   shippingFee: number;
   storeOwnerId: string | undefined;
@@ -480,17 +522,77 @@ export async function resolveShippingCost(
     : await legacyFlatPolicy(storeOwnerId);
 
   /*
-   * 🛑 `goodsValue: 0` and no carrier rate here, deliberately.
+   * 🛑 D44 FIXED HERE: the quote now uses the caller's real goods value.
    *
-   * This function resolves the POLICY; it does not know the cart. A caller
-   * that needs the charged amount calls `quoteShipping` with the group's goods
-   * value and, for `estimate` mode, a rate — and `shippingFee` below stays the
-   * non-carrier answer so every existing caller behaves exactly as before
-   * until it is converted. An `estimate`-mode store therefore reports
-   * `shippingUnavailable`, which is the signal to go and get a rate rather
-   * than a zero that would ship for free at our expense.
+   * This comment used to read *"`goodsValue: 0` and no carrier rate here,
+   * deliberately… a caller that needs the charged amount calls `quoteShipping`
+   * with the group's goods value"*. The design was right and **no caller ever
+   * did it** — `quoteShipping` had exactly one call site, this one, and all
+   * five callers destructured `shippingFee` and ignored both `shippingPolicy`
+   * and `shippingUnavailable`. A seam nobody used is not a seam; it is a
+   * default, and this default mispriced two policy shapes (see the `opts`
+   * docstring above).
+   *
+   * Defaulting `goodsValue` to 0 keeps the policy-only callers behaving
+   * exactly as before, so this is additive for them and corrective for the
+   * money paths.
    */
-  const quote = quoteShipping({ policy, goodsValue: 0, carrierRate: null });
+  const quote = quoteShipping({
+    policy,
+    goodsValue: opts?.goodsValue ?? 0,
+    carrierRate: opts?.carrierRate ?? null,
+  });
+
+  /*
+   * ── D44, the other half: `shippingUnavailable` gets its FIRST CONSUMER ────
+   *
+   * The field was declared, assigned twice, and read by nothing — its own 🛑
+   * said "the caller MUST act on this rather than trusting `shippingFee: 0`"
+   * and no caller did. So an `estimate`-mode store shipped every parcel free.
+   *
+   * 🛑 IT DOES NOT REFUSE THE CHECKOUT, and that is a deliberate choice rather
+   * than timidity. **There is no carrier-rate source in the system at all**:
+   * Shiprocket is authenticated but its create-order/AWB/rate calls are
+   * unverified with zero callers, so `carrierRate` can only ever be null today.
+   * Throwing here would therefore break checkout for every estimate-mode store
+   * outright — converting a silent revenue leak into a total outage for those
+   * sellers, which is the worse of the two.
+   *
+   * So the leak is made VISIBLE instead: one case per store (the dedupe key is
+   * the store, so a hundred checkouts produce one row), carrying the amount we
+   * failed to charge. Once somebody has measured how many stores are actually
+   * in `estimate` mode, refusing becomes the correct stricter behaviour — and
+   * that measurement is a one-line query, not a design question.
+   *
+   * Fire-and-forget: a case write must never fail the checkout it is
+   * reporting on.
+   */
+  if (quote.kind === "unavailable" && opts?.goodsValue !== undefined) {
+    void paymentCasesRepository()
+      .openOrObserve({
+        kind: "shipping_unpriced",
+        subjectId: storeId,
+        severity: "warning",
+        title: `Shipping could not be priced — ${storeId} is shipping free`,
+        detail: [
+          `This store's shipping policy is \`estimate\` mode and no carrier rate`,
+          `was available, so the quote came back "unavailable" and the checkout`,
+          `charged ₹0 for shipping.`,
+          "",
+          `Store: ${storeId}`,
+          `Goods value on this order group: ${opts.goodsValue}`,
+          "",
+          `🛑 There is no carrier-rate integration wired, so this will recur for`,
+          `every order from this store. Fix by giving the store a \`flat\` or`,
+          `\`free\` policy in its shipping settings, or by wiring a rate source.`,
+        ].join("\n"),
+        entityType: "store",
+        entityId: storeId,
+      })
+      .catch((err: unknown) => {
+        void normalizeError(err);
+      });
+  }
 
   return {
     shippingFee: quote.kind === "charge" ? quote.amount : 0,
@@ -935,8 +1037,19 @@ async function createOrderForGroup(
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
+  /*
+   * D44: the group's real goods value, so free-above-threshold can fire.
+   *
+   * `lineTotalFor`, never `item.price * item.quantity` — that is the
+   * hand-rolled rule Root Cause #75 is about, and on a locked-price or
+   * grouped line the two differ.
+   */
+  const groupGoodsValue = group.reduce(
+    (sum, { item, product }) => sum + lineTotalFor(item, product),
+    0,
+  );
   const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity } =
-    await resolveShippingCost(firstItem.storeId);
+    await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
 
   /*
    * 🛑 The buyer's quote WINS over the seller's configured rate, and it is
@@ -2076,8 +2189,15 @@ export async function previewCheckoutPricing(
     const firstItem = group[0].item;
     const groupTotal = group.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0);
 
+    /*
+     * D44: `groupTotal` is already computed one line above with `lineTotalFor`
+     * and was simply not being passed — so the PREVIEW told the buyer they owed
+     * shipping on an order that qualified for the store's free-above threshold,
+     * and then the order path (equally unpassed) charged it. Preview and charge
+     * agreed, and both were wrong in the same direction.
+     */
     const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled } =
-      await resolveShippingCost(firstItem.storeId);
+      await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
     // Add-ons are per store, read off the cart document — the same entry
     // createOrderForGroup will read when the order is actually placed.
@@ -2636,7 +2756,9 @@ async function createPhonePeGroupOrder(
   // Reuses the same store/seller lookup as the COD/UPI path above instead
   // of re-implementing it inline — was two sequential findById calls per
   // seller group here, duplicated from resolveShippingCost.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections } = await resolveShippingCost(firstItem.storeId);
+  // D44: `groupTotal` is computed just above — pass it so a free-above
+  // threshold can fire and an unpriceable store is recorded.
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
   /*
    * Same supplier-of-record rule as `createOrderForGroup`, through the same
@@ -3362,7 +3484,30 @@ export async function verifyAndPlaceGatewayOrderAction(
     );
     const expectedDiscountedSubtotal = Math.max(0, cartSubtotalRs - expectedCouponDiscount);
     const expectedShippingFees = await Promise.all(
-      expectedShippingGroups.map((g) => resolveShippingCost(g.items[0].item.storeId)),
+      /*
+       * 🛑 D44 — THE GUARD MUST PASS `goodsValue` TOO, AND IN THIS SAME
+       * COMMIT. This is the D37/D38 sequencing trap, one defect over.
+       *
+       * The capture route and both order paths now quote with the group's real
+       * goods value, so a store's free-above threshold can fire and shipping
+       * can legitimately be ₹0. A guard still quoting with `goodsValue: 0`
+       * would compute the UN-thresholded fee, expect more than was collected,
+       * trip `paid < expected − 1`, and **throw after the money was taken** —
+       * converting a fixed overcharge into a charged-with-no-order, which is
+       * the D64 incident class and strictly worse than the bug being fixed.
+       *
+       * Verified by construction rather than by hope: the goods value here is
+       * computed with `lineTotalFor` over the same `expectedShippingGroups`
+       * the capture route groups, so the two cannot disagree about the base.
+       */
+      expectedShippingGroups.map((g) =>
+        resolveShippingCost(g.items[0].item.storeId, {
+          goodsValue: g.items.reduce(
+            (sum, { item, product }) => sum + lineTotalFor(item, product),
+            0,
+          ),
+        }),
+      ),
     );
     const expectedShippingFee = expectedShippingFees.reduce((sum, r) => sum + r.shippingFee, 0);
     // Add-ons are per store, so the expected total sums each group's own
