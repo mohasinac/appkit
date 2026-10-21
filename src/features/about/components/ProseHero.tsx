@@ -61,6 +61,16 @@ export interface ProseHeroProps {
    * Pass `false` for the two that deliberately left it ranged left.
    */
   centered?: boolean;
+  /**
+   * Subtitle scale.
+   *
+   * 🛑 TWO REAL CASES, not a styling knob. The ten identical callers use the
+   * default because their subtitle is a SENTENCE explaining the page. The
+   * policy pages use `sm` because theirs is a "Last updated 14 March 2026"
+   * line — metadata, not prose, and at body size it competes with the heading
+   * it sits under. Anything beyond these two is drift waiting to happen.
+   */
+  subtitleSize?: "sm" | "base";
   /** Extra content inside the banner — a form, a filter row, a CTA. */
   children?: React.ReactNode;
 }
@@ -70,6 +80,7 @@ export function ProseHero({
   subtitle,
   width = "md",
   centered = true,
+  subtitleSize = "base",
   children,
 }: ProseHeroProps) {
   return (
@@ -99,7 +110,17 @@ export function ProseHero({
           <Text
             color="inverse-muted"
             variant="none"
-            className="max-w-2xl mx-auto"
+            size={subtitleSize}
+            /*
+             * 🛑 `mx-auto` ONLY WHEN CENTRED. Left in unconditionally it
+             * centres the subtitle's own block inside a left-ranged banner —
+             * so on the three policy pages the heading sat left and its
+             * "Last updated …" line drifted toward the middle, which reads as
+             * a mistake rather than a layout. The original callers never hit
+             * this because the ranged-left ones had no `max-w`/`mx-auto` at
+             * all; collapsing them into one component is what surfaced it.
+             */
+            className={centered ? "max-w-2xl mx-auto" : "max-w-2xl"}
           >
             {subtitle}
           </Text>

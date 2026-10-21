@@ -1,5 +1,6 @@
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
+import { ProseHero } from "./ProseHero";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import {
   THEMED_BG_PRIMARY,
@@ -63,18 +64,7 @@ export async function TrackOrderView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
-      <Section color="inverse" 
-        tone="accent-banner" padding="banner"
-      >
-        <Div className={`${page.container.sm} text-center`}>
-          <Heading color="inverse" level={1} variant="none" className="mb-4">
-            {t("title")}
-          </Heading>
-          <Text color="inverse-muted" variant="none" >
-            {t("subtitle")}
-          </Text>
-        </Div>
-      </Section>
+      <ProseHero width="sm" title={t("title")} subtitle={t("subtitle")} />
 
       <Div className={page.container.md} padding="y-4xl">
         <Stack gap="hero">

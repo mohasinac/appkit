@@ -1,6 +1,9 @@
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
-import { Anchor, Avatar, Badge, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { ProseHero } from "./ProseHero";
+// `Section` dropped — `ProseHero` owns the banner now and this view had no
+// other use for it.
+import { Anchor, Avatar, Badge, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { siteSettingsRepository } from "../../../repositories";
@@ -45,16 +48,13 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section color="inverse" tone="accent-banner" padding="banner">
-        <Div className={`${page.container.sm}`}>
-          <Heading color="inverse" level={1} variant="none" className="mb-3">
-            {labels.title ?? "Meet the Developer"}
-          </Heading>
-          <Text color="inverse-muted" variant="none" size="sm">
-            {labels.subtitle ?? "The person building LetItRip, one feature at a time."}
-          </Text>
-        </Div>
-      </Section>
+      <ProseHero
+        width="sm"
+        centered={false}
+        subtitleSize="sm"
+        title={labels.title ?? "Meet the Developer"}
+        subtitle={labels.subtitle ?? "The person building LetItRip, one feature at a time."}
+      />
 
       <Div className={`${page.container.sm}`} padding="content-banner">
         {developers.length === 0 ? (

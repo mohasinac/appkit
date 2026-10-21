@@ -1,5 +1,6 @@
 import { ROUTES } from "../../../constants";
 import type { JsonValue } from "@mohasinac/appkit";
+import { ProseHero } from "./ProseHero";
 import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
 import { Aside, Container, Div, Heading, Nav, Row, Section, Span, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -49,18 +50,21 @@ export async function FAQPageView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Hero */}
-      <Section color="inverse" 
-        tone="accent-banner" padding="banner"
-      >
-        <Container size="md" className="text-center">
-          <Heading color="inverse" level={1} variant="none" className="mb-3">
-            {activeCategory ? activeCategory.label : t("title")}
-          </Heading>
-          <Text color="inverse-muted" variant="none" className="max-w-2xl mx-auto">
-            {t("subtitle")}
-          </Text>
-        </Container>
-      </Section>
+      {/*
+        The last of the sixteen. It used `<Container size="md">` where the
+        others used `<Div className={page.container.md}>` — VERIFIED
+        equivalent rather than assumed: `.appkit-container--md` is
+        `max-width: 56rem` (= `max-w-4xl`) and `.appkit-container` carries the
+        same `mx-auto` plus the identical responsive padding. Two spellings of
+        one measure, which is the duplication this component exists to end.
+
+        The title is dynamic here — a category's label when one is selected —
+        which `ProseHero` takes as a ReactNode without caring.
+      */}
+      <ProseHero
+        title={activeCategory ? activeCategory.label : t("title")}
+        subtitle={t("subtitle")}
+      />
 
       <Container size="md" padding="content-banner">
         <Stack direction="md-row" gap="xl">

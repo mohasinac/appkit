@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
+import { ProseHero } from "./ProseHero";
 import { siteSettingsRepository } from "../../../repositories";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -108,18 +109,18 @@ export async function ShippingPolicyView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
-      <Section color="inverse" 
-        tone="accent-banner" padding="banner"
-      >
-        <Div className={`${page.container.sm}`}>
-          <Heading color="inverse" level={1} variant="none" className="mb-3">
-            {t("title")}
-          </Heading>
-          <Text color="inverse-muted" variant="none" >
-            {t("lastUpdated")}
-          </Text>
-        </Div>
-      </Section>
+      {/*
+        `subtitleSize="sm"` here where the original had the default, matching
+        PolicyPageView: both subtitles are a "Last updated …" line and the two
+        pages are siblings. The difference was drift, like the mb-3/mb-4 one.
+      */}
+      <ProseHero
+        width="sm"
+        centered={false}
+        subtitleSize="sm"
+        title={t("title")}
+        subtitle={t("lastUpdated")}
+      />
 
       <Div className={`${page.container.sm}`} padding="content-banner">
         {adminHtml ? (
