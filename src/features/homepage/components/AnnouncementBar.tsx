@@ -67,6 +67,43 @@ export function AnnouncementBar({ message, link, className = "", onDismiss }: An
   }, [message, userAlreadyDismissed]);
 
   if (dismissed) return null;
+
+  /*
+   * ── THE CLS STORY, AND WHY THIS CLASS EXISTS ──────────────────────────────
+   *
+   * 🛑 THIS COMPONENT USED TO CAUSE A TOP-OF-PAGE LAYOUT SHIFT ON EVERY
+   * RETURNING VISIT, and a shift at the top of the document moves everything
+   * below it — so it counts against CLS at close to full weight. The mobile
+   * homepage measured 0.822 against a 0.1 "good" threshold.
+   *
+   * The mechanism: `dismissed` starts `false` for anyone without a resolved
+   * session, so the server and the first client frame BOTH render the bar at
+   * full height — at `opacity-0`, because `mounted` is also false. Then the
+   * effect above reads `localStorage`, finds a dismissal, and returns `null`.
+   * The bar's whole height disappears after paint and the page jumps upward.
+   * The visitor saw a coloured strip they could not read, which then vanished.
+   *
+   * It cannot be fixed from inside this component. The dismissal is in
+   * `localStorage`, which does not exist during the server render, and the
+   * root locale layout must stay STATIC (Root Cause #82) so it cannot read a
+   * cookie instead. Something has to decide before React runs.
+   *
+   * So `src/app/layout.tsx` carries a pre-paint inline script — the same
+   * mechanism already used there for theme, font and hand mode — which sets
+   * `data-banner-dismissed="1"` on `<html>`. This class is what that attribute
+   * acts on: `display: none` from the first frame, so the bar reserves nothing
+   * and there is nothing to collapse.
+   *
+   * 🛑 THE CLASS STAYS ON EVEN AFTER MOUNT. Removing it once React knows
+   * better would re-introduce the shift for the exact visitor it protects. The
+   * component's own `dismissed` state unmounts the bar in the same frame, so
+   * the two agree; the attribute is the pre-React half of one decision, not a
+   * guess to be corrected.
+   *
+   * The `opacity` transition is kept for the OTHER case — a visitor with no
+   * dismissal, where the bar is genuinely shown and fading it in avoids a hard
+   * pop. That case reserves its space on the server and does not shift.
+   */
   /*
    * 🛑 THE `overlay` PROP IS GONE — DO NOT REINTRODUCE IT.
    *
@@ -89,7 +126,10 @@ export function AnnouncementBar({ message, link, className = "", onDismiss }: An
    */
   const positionCls = "relative w-full bg-primary-700";
   return (
-    <Div className={`${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
+    <Div
+      className={`appkit-announcement-bar ${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`}
+      role="banner"
+    >
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         <Row textWeight="medium" textSize="sm" className="relative text-left text-white" padding="y-xs" align="center" justify="start">
           {link ? (

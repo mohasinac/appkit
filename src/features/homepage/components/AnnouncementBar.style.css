@@ -1,0 +1,30 @@
+/*
+ * The announcement bar's pre-paint suppression.
+ *
+ * 🛑 THE SELECTOR IS A CONTRACT WITH AN INLINE SCRIPT IN `src/app/layout.tsx`.
+ * That script reads `localStorage['letitrip:announcement-dismissed']` before
+ * the first paint and sets `data-banner-dismissed="1"` on `<html>`; this rule
+ * is the half that acts on it.
+ *
+ * Why it has to be CSS and not React: the bar renders at full height on the
+ * server (nothing has told it the visitor dismissed it), so by the time a
+ * `useEffect` can read `localStorage` the space is already painted — and
+ * removing it then is a top-of-page layout shift that moves the whole
+ * document. Mobile homepage CLS measured 0.822 against a 0.1 threshold.
+ *
+ * 🛑 `display: none`, NOT `visibility: hidden` or `opacity: 0`. The point is
+ * to reserve NO SPACE. The previous behaviour was effectively `opacity: 0`
+ * while still occupying its height, which is the worst of both: an unreadable
+ * coloured strip that then collapsed.
+ *
+ * 🛑 NOT scoped to a media query. The shift happens at every width; it is
+ * merely worst on a phone, where the bar wraps to two lines and the viewport
+ * is short enough that its height is a large fraction of the fold.
+ *
+ * @tag domain:homepage
+ * @tag layer:feature
+ */
+
+:root[data-banner-dismissed="1"] .appkit-announcement-bar {
+  display: none;
+}

@@ -31,6 +31,22 @@
  */
 @import "./ui/forms/FormShell.style.css";
 /*
+ * The announcement bar's pre-paint suppression — a feature stylesheet, which
+ * this chain otherwise has none of.
+ *
+ * 🛑 IT MUST BE HERE AND NOT A JS IMPORT, for exactly the reason the FormShell
+ * note above records: `bundle-css.mjs` flattens only the `@import` chain rooted
+ * in this file, so a stylesheet reachable only from JS ships as nothing. That
+ * failure was silent and measured — `.appkit-formshell` appeared ZERO times in
+ * the built dist.
+ *
+ * Here the silence would be worse than unstyled: the rule is what stops a
+ * top-of-page layout shift, so a missing import means CLS quietly stays at
+ * 0.822 while the component, the inline script and the attribute all look
+ * correct.
+ */
+@import "./features/homepage/components/AnnouncementBar.style.css";
+/*
  * Third-party stylesheet, vendored into dist/vendor by copy-assets.mjs.
  * It used to be a JS import inside ImageEditor.tsx, which made it invisible to
  * this bundle and fatal to Node-based resolution — see that script's header.
