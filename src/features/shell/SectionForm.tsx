@@ -7,6 +7,10 @@ import { CollapsibleSection } from "../../ui/components/CollapsibleSection";
 import { Badge } from "../../ui/components/Badge";
 import { Div, Row, Span, Stack } from "../../ui";
 import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
+import {
+  LabelPlacementContext,
+  type LabelPlacement,
+} from "../../ui/forms/FieldLabel";
 import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
 import { useIsDesktop } from "../layout/useIsDesktop";
 import { useSectionState } from "../account/hooks/useCollapsedSections";
@@ -48,6 +52,24 @@ export interface SectionDef<T extends object = Record<string, JsonValue>> {
    * `CollapsibleSection.keepMounted`.
    */
   keepMounted?: boolean;
+  /**
+   * How every field in THIS section labels itself: `"above"` (the default),
+   * `"inline"`, or `"hidden"`.
+   *
+   * 🛑 A SECTION-LEVEL DECISION, which is the whole reason it lives here
+   * rather than on each field. One field labelling above beside one labelling
+   * inline reads as broken rather than as varied, and the choice is really
+   * about a section's density — a 12-field address block wants inline, a
+   * 3-field settings panel wants above. The field-level prop exists as an
+   * escape hatch and should stay unused.
+   *
+   * `"hidden"` renders the label to assistive technology and hides it visually
+   * (`sr-only`, never `display: none`, which would remove it from the
+   * accessibility tree and produce the unlabelled field it was meant to
+   * avoid). It is for fields whose purpose is obvious from context, NOT a way
+   * to suppress the unlabelled-field count.
+   */
+  labelPlacement?: LabelPlacement;
   render: (props: {
     values: T;
     onChange: (partial: Partial<T>) => void;
@@ -621,11 +643,23 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
              * `touched`-gated context errors are unaffected — that path does not
              * come through here.
              */}
-            {section.render({
-              values,
-              onChange: handleFieldChange,
-              errors: submitAttempted ? fieldErrors : EMPTY_ERRORS,
-            })}
+            {/*
+              The section's label placement reaches every field inside it
+              through context — so a section sets it once and nothing has to
+              be threaded through `render`, which takes a fixed three-prop
+              object that every one of ~64 screens destructures.
+              `LabelPlacementContext` defaults to `"above"`, so a section that
+              says nothing renders exactly as it did before.
+            */}
+            <LabelPlacementContext.Provider
+              value={section.labelPlacement ?? "above"}
+            >
+              {section.render({
+                values,
+                onChange: handleFieldChange,
+                errors: submitAttempted ? fieldErrors : EMPTY_ERRORS,
+              })}
+            </LabelPlacementContext.Provider>
           </CollapsibleSection>
         );
       })}

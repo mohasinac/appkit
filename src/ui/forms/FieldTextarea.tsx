@@ -2,7 +2,8 @@
 import React, { useContext, useId } from "react";
 import { FormShellContext } from "./FormShell";
 import { Textarea } from "../components/Textarea";
-import { Label, Text, Span } from "../components/Typography";
+import { Text } from "../components/Typography";
+import { FieldLabel, type LabelPlacement } from "./FieldLabel";
 
 export interface FieldTextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {
@@ -15,6 +16,8 @@ export interface FieldTextareaProps
   error?: string;
   /** Show a `{n}/{maxLength}` counter when maxLength is set */
   showCharCount?: boolean;
+  /** Override the section's label placement. Omit it — see `FieldLabel`. */
+  labelPlacement?: LabelPlacement;
 }
 
 export function FieldTextarea({
@@ -27,6 +30,7 @@ export function FieldTextarea({
   onBlur,
   className,
   showCharCount,
+  labelPlacement,
   ...textareaProps
 }: FieldTextareaProps) {
   const ctx = useContext(FormShellContext);
@@ -64,10 +68,11 @@ export function FieldTextarea({
   return (
     <div className={["appkit-form-field", className].filter(Boolean).join(" ")}>
       {label && (
-        <Label htmlFor={fieldId} className="appkit-form-field__label">
+        /* One label implementation — see FieldLabel's header on the four
+           byte-identical copies this replaced. */
+        <FieldLabel htmlFor={fieldId} required={required} placement={labelPlacement}>
           {label}
-          {required && <Span className="appkit-form-field__required"> *</Span>}
-        </Label>
+        </FieldLabel>
       )}
       <Textarea
         id={fieldId}

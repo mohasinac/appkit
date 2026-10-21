@@ -1,6 +1,8 @@
 "use client";
+import { useId } from "react";
 import { Div, FormGroup } from "../../../ui";
 import { Label, Checkbox, RichTextEditor, Text } from "../../../ui";
+import { FieldLabel } from "../../../ui/forms";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";
 import { flattenCategories, type Category } from "../types";
@@ -58,6 +60,15 @@ export function CategoryForm({
 }: CategoryFormProps) {
   const { upload } = useMediaUpload();
   const L = { ...DEFAULT_LABELS, ...labels };
+  /*
+   * Unique per instance via `useId`, not a literal. Two CategoryForms on one
+   * page would otherwise both emit the same label id, and `aria-labelledby`
+   * resolves the FIRST match — so the second editor would be named by the
+   * first form’s label. The same defect FieldInput’s own note records
+   * fixing for `htmlFor`.
+   */
+  const reactId = useId();
+  const descriptionLabelId = `category-description-label-${reactId}`;
 
   const update = (partial: Partial<Category>) => {
     onChange({ ...category, ...partial });
@@ -94,13 +105,28 @@ export function CategoryForm({
       </FormGroup>
 
       <Div className="appkit-form-field">
-        <Label className="appkit-form-field__label">{L.description}</Label>
+        {/*
+          🛑 WAS A BARE `<Label>` WITH NO ASSOCIATION AT ALL — found by
+          `audit-field-label-owner` on its first real run, as the fifth
+          hand-rolled copy of the markup `FieldLabel` now owns.
+
+          It was also an unlabelled field: the label was visibly present and
+          programmatically attached to nothing, so a screen reader announced
+          the editor with no name. `htmlFor` cannot fix it — that only
+          associates with a labelable element and this is a contenteditable
+          div — so the editor takes `ariaLabelledBy` instead. The prop did not
+          exist, which means every rich-text field in the app was in this state.
+
+          `id`, not `htmlFor`: the editor points BACK at this label.
+        */}
+        <FieldLabel id={descriptionLabelId}>{L.description}</FieldLabel>
         <RichTextEditor
           value={normalizeRichTextHtml(category.description || "")}
           onChange={(value) => update({ description: value })}
           disabled={isReadonly}
           minHeightClassName="min-h-[140px]"
           placeholder="Enter category description"
+          ariaLabelledBy={descriptionLabelId}
         />
         <Text size="sm" variant="secondary" className="appkit-form-field__hint">
           Rich text is supported for category descriptions.

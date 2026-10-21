@@ -2,7 +2,8 @@
 import React, { useContext, useId } from "react";
 import { FormShellContext } from "./FormShell";
 import { Input } from "../components/Input";
-import { Label, Text, Span } from "../components/Typography";
+import { Text } from "../components/Typography";
+import { FieldLabel, type LabelPlacement } from "./FieldLabel";
 
 export interface FieldInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -27,6 +28,12 @@ export interface FieldInputProps
    * which one it means will eventually reach the wrong one.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Override the section's label placement. Omit it — placement is a
+   * section-level decision (see `FieldLabel`), and a field that disagrees with
+   * its neighbours reads as broken rather than varied.
+   */
+  labelPlacement?: LabelPlacement;
 }
 
 export function FieldInput({
@@ -39,6 +46,7 @@ export function FieldInput({
   onBlur,
   className,
   inputRef,
+  labelPlacement,
   ...inputProps
 }: FieldInputProps) {
   const ctx = useContext(FormShellContext);
@@ -75,11 +83,16 @@ export function FieldInput({
 
   return (
     <div className={["appkit-form-field", className].filter(Boolean).join(" ")}>
+      {/*
+        One label implementation, shared with FieldSelect and FieldTextarea.
+        These three carried byte-identical copies of the markup; FormField
+        carried a fourth that had already drifted (its required marker had no
+        leading space). See FieldLabel's header.
+      */}
       {label && (
-        <Label htmlFor={inputId} className="appkit-form-field__label">
+        <FieldLabel htmlFor={inputId} required={required} placement={labelPlacement}>
           {label}
-          {required && <Span className="appkit-form-field__required"> *</Span>}
-        </Label>
+        </FieldLabel>
       )}
       <Input
         ref={inputRef}

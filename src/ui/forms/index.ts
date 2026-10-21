@@ -28,5 +28,12 @@ export type { FormErrorSummaryProps } from "./FormErrorSummary";
 export { FormErrorSummary } from "./FormErrorSummary";
 export type { AddAnotherToggleProps } from "./AddAnotherToggle";
 export { AddAnotherToggle, addAnotherSubmitLabel } from "./AddAnotherToggle";
+
+export type { FieldLabelProps, LabelPlacement } from "./FieldLabel";
+export {
+  FieldLabel,
+  LabelPlacementContext,
+  useLabelPlacement,
+} from "./FieldLabel";
 export type { FormErrorListProps } from "./FormErrorList";
 export { FormErrorList } from "./FormErrorList";

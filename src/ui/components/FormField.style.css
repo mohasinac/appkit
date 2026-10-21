@@ -4,16 +4,49 @@
   width: 100%;
 }
 
+/*
+ * 🛑 ONE THEME-INVERTING TOKEN, NOT A LIGHT/DARK PAIR OF HARDCODED ZINCS.
+ *
+ * This was `--appkit-color-zinc-700` with an `:is(.dark)` override to
+ * `--appkit-color-zinc-300`. Both halves worked — `ThemeProvider` does add the
+ * `.dark` class — but the zinc scale is declared ONCE under `:root` and never
+ * inverts (Root Cause #79), so these were two fixed greys standing in for a
+ * theme decision. A custom admin theme with its own palette got zinc anyway,
+ * on every form label in the app.
+ *
+ * `--appkit-color-text` inverts per theme and carries a MEASURED contrast
+ * ratio in its own declaration (tokens.css notes `~7:1` and `~9:1` for the
+ * muted variants, and records that the faint one was darkened to clear WCAG AA
+ * for normal text). A hardcoded zinc carries no such guarantee and cannot,
+ * because it does not know what it is sitting on.
+ *
+ * So one declaration replaces two, and there is no longer a pairing to get
+ * wrong — the same reasoning that made the hover fix a REMOVAL rather than an
+ * addition.
+ */
 .appkit-form-field__label {
   display: block;
   margin-bottom: 0.375rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--appkit-color-zinc-700);
+  color: var(--appkit-color-text);
 }
 
-:is(.dark) .appkit-form-field__label {
-  color: var(--appkit-color-zinc-300);
+/*
+ * Inline placement — the label sits beside its control rather than above it,
+ * for dense sections (a 12-field address block). Set once per section via
+ * `SectionDef.labelPlacement`, never per field: one field labelling above
+ * beside one labelling inline reads as broken rather than as varied.
+ *
+ * The margin is reset because `above` owns a bottom margin that becomes a gap
+ * in the wrong axis once the label is beside the control.
+ */
+.appkit-form-field__label--inline {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+  min-width: 8rem;
+  vertical-align: middle;
 }
 
 .appkit-form-field__required {
@@ -21,8 +54,15 @@
   color: var(--appkit-color-error);
 }
 
+/*
+ * The hint is MUTED, not faint. `--appkit-color-text-faint` exists and its own
+ * token comment records being darkened to clear AA for normal text at all —
+ * i.e. it is the bottom of the usable range. A hint explains a field's rules
+ * and is read by whoever is unsure, so it belongs a tier up.
+ */
 .appkit-form-field__hint {
   margin-top: 0.375rem;
+  color: var(--appkit-color-text-muted);
 }
 
 .appkit-form-field__error {

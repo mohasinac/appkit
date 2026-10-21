@@ -3,7 +3,8 @@ import React, { useContext, useId } from "react";
 import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";
 import { Textarea } from "./Textarea";
-import { Label, Text, Span } from "./Typography";
+import { Text } from "./Typography";
+import { FieldLabel } from "../forms/FieldLabel";
 /*
  * 🛑 FROM THE DEFINING MODULES, NOT the `features/media` barrel.
  *
@@ -198,13 +199,19 @@ export function FormField({
 
   return (
     <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-507">
+      {/*
+        🛑 THIS WAS THE DRIFTED COPY. Its required marker was `>*<` where the
+        three `Field*` wrappers had `> *<`, so the asterisk sat flush against
+        the last letter of the label on every screen using `FormField` and
+        spaced on every screen using the wrappers. Nobody chose that — it is
+        what four copies of five lines become. `FieldLabel` is now the only
+        implementation, which also means the leading space is a decision made
+        once rather than a coincidence held in four places.
+      */}
       {label ? (
-        <Label htmlFor={inputId} className="appkit-form-field__label">
+        <FieldLabel htmlFor={inputId} required={required}>
           {label}
-          {required ? (
-            <Span className="appkit-form-field__required">*</Span>
-          ) : null}
-        </Label>
+        </FieldLabel>
       ) : null}
 
       {type === "select" ? (

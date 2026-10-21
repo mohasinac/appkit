@@ -9,6 +9,25 @@ export interface RichTextEditorProps {
   className?: string;
   minHeightClassName?: string;
   placeholder?: string;
+  /**
+   * The `id` of the element labelling this editor.
+   *
+   * 🛑 `aria-labelledby`, NOT `htmlFor` ON THE LABEL — and that is a hard
+   * constraint rather than a preference. `htmlFor` only associates with a
+   * LABELABLE element (`input`, `select`, `textarea`, `button`, `output`,
+   * `meter`, `progress`), and this editor is a `contenteditable` div, which is
+   * none of them. A `<Label htmlFor>` pointing here associates with nothing:
+   * the label is visibly present, the editor has no accessible name, and an
+   * accessibility pass reports an unlabelled field while a human sees a
+   * perfectly labelled one.
+   *
+   * This prop did not exist, so EVERY rich-text field in the app was
+   * unlabelled — `CategoryForm` rendered a bare `<Label>` with no `htmlFor` at
+   * all, which is the honest version of the same gap.
+   */
+  ariaLabelledBy?: string;
+  /** Use when there is no visible label to point at. */
+  ariaLabel?: string;
 }
 
 type ToolbarAction = {
@@ -79,6 +98,8 @@ export function RichTextEditor({
   className = "",
   minHeightClassName = "min-h-[180px]",
   placeholder = "Write formatted content...",
+  ariaLabelledBy,
+  ariaLabel,
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
 
@@ -174,6 +195,19 @@ export function RichTextEditor({
         aria-label="Rich text editor"
         contentEditable={!disabled}
         suppressContentEditableWarning
+        /*
+         * 🛑 `role="textbox"` AND `aria-multiline` ARE REQUIRED FOR THE NAME TO
+         * BE ANNOUNCED. A bare `contenteditable` div has no role, and
+         * `aria-labelledby` on a roleless generic element is not reliably
+         * exposed — the name attaches to something the user is never told is
+         * editable. The role is what makes it a form control to assistive
+         * technology, and only then does the label mean anything.
+         */
+        role="textbox"
+        aria-multiline="true"
+        aria-labelledby={ariaLabelledBy}
+        aria-label={ariaLabelledBy ? undefined : ariaLabel}
+        aria-disabled={disabled || undefined}
         data-placeholder={placeholder}
         onInput={emitChange}
         onBlur={emitChange}

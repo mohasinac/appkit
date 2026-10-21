@@ -2,7 +2,8 @@
 import React, { useContext, useId } from "react";
 import { FormShellContext } from "./FormShell";
 import { Select, type SelectOption } from "../components/Select";
-import { Label, Text, Span } from "../components/Typography";
+import { Text } from "../components/Typography";
+import { FieldLabel, type LabelPlacement } from "./FieldLabel";
 
 export interface FieldSelectProps {
   name: string;
@@ -18,6 +19,8 @@ export interface FieldSelectProps {
   /** Override error — falls back to FormShell context error for this field */
   error?: string;
   className?: string;
+  /** Override the section's label placement. Omit it — see `FieldLabel`. */
+  labelPlacement?: LabelPlacement;
 }
 
 export function FieldSelect({
@@ -68,11 +71,12 @@ export function FieldSelect({
 
   return (
     <div className={["appkit-form-field", className].filter(Boolean).join(" ")}>
+      {/* One label implementation — see FieldLabel's header on the four
+          byte-identical copies this replaced. */}
       {label && (
-        <Label htmlFor={inputId} className="appkit-form-field__label">
+        <FieldLabel htmlFor={inputId} required={required} placement={labelPlacement}>
           {label}
-          {required && <Span className="appkit-form-field__required"> *</Span>}
-        </Label>
+        </FieldLabel>
       )}
       <Select
         id={inputId}
