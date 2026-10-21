@@ -929,6 +929,30 @@ export async function generateBarcodeId(productId: string): Promise<string> {
   return `LIR-${hex.slice(0, 8).toUpperCase()}`;
 }
 
+export interface StorageBoxIdInput {
+  /** `AC60-03` — exactly what is written on the physical label. */
+  code: string;
+  customId?: string;
+}
+
+/**
+ * `storagebox-ac60-03` — a PURE SLUG, and that is the whole point.
+ *
+ * 🛑 No date, no random suffix, unlike `generateShipmentId` beside it. A
+ * second `AC60-03` *is the same physical box*: two registry rows for one
+ * object means "where is this" has two answers with no way to tell which
+ * shelf was meant. A generated id would permit exactly that, and the
+ * duplicate would look like a legitimate second box in every list.
+ *
+ * The same reasoning the slug table already applies to stores and categories,
+ * and the opposite of `stickersheet-`, where re-scanning one sheet is normal
+ * and a pure slug would make the second scan overwrite the first.
+ */
+export function generateStorageBoxId(input: StorageBoxIdInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+  return `storagebox-${slugify(input.code)}`;
+}
+
 /** A short uppercase token from a slug or name — `beyblade-burst` -> `BURS`. */
 function skuToken(input: string | undefined, length: number): string {
   const letters = (input ?? "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();

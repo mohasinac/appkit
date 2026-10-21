@@ -188,6 +188,21 @@ export function buildStoreSearchTxt(s: Partial<StoreDocument>): string[] {
   ]);
 }
 
+/**
+ * storageBoxes — the printed code, the type, and where the box is.
+ *
+ * One builder per entity, matching every sibling here. The code is the field
+ * an operator actually types or scans; `location` is free text and is indexed
+ * so "shelf B" finds the boxes on it.
+ */
+export function buildStorageBoxSearchTxt(x: {
+  code?: string;
+  boxType?: string;
+  location?: string;
+}): string[] {
+  return buildSearchTxt([x.code, x.boxType, x.location]);
+}
+
 /** events — title, description, type, tags. */
 export function buildEventSearchTxt(e: Partial<EventDocument>): string[] {
   return buildSearchTxt([
