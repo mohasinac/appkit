@@ -610,9 +610,9 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
               {loadError && !loading && (
                 <li className={C.empty} role="alert">
                   {loadError}{" "}
-                  <button type="button" onClick={() => void load(query, 1, true)}>
+                  <Button variant="ghost" size="sm" onClick={() => void load(query, 1, true)}>
                     Try again
-                  </button>
+                  </Button>
                 </li>
               )}
 
