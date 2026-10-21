@@ -25,7 +25,4 @@
 
 import type { GroupedListingDocument } from "../features/grouped/schemas/firestore";
 
-const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
 export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [];

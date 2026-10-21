@@ -29,42 +29,8 @@
  * `Encrypted<string>`, so typing this array as the document would assert that
  * these literals are ciphertext.
  */
-import type { SupportTicketPlain, TicketMessage } from "../features/support/schemas/firestore";
+import type { SupportTicketPlain } from "../features/support/schemas/firestore";
 import { buildSearchTxt } from "../utils/search-txt";
-import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
-
-function msg(
-  id: string,
-  authorId: string,
-  authorRole: TicketMessage["authorRole"],
-  body: string,
-  daysAgo: number,
-): TicketMessage {
-  const createdAt = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-  return { id, authorId, authorRole, body, createdAt };
-}
-
-const BASE = Date.now();
-function daysBack(n: number) {
-  return new Date(BASE - n * 24 * 60 * 60 * 1000);
-}
-
-/**
- * A timeline entry for the W18 `statusHistory` fixtures.
- *
- * `actorUid` only, never a name — `withHistory` scrubs
- * SUPPORT_TICKET_PII_FIELDS (which includes `assignedToName`) from real
- * writes, so a fixture carrying one would be the single place that is untrue.
- */
-function entry(
-  at: Date,
-  actorRole: "system" | "admin" | "buyer",
-  trigger: string,
-  changes: Record<string, FieldChange>,
-  extra?: { reason?: string; note?: string; actorUid?: string },
-): StatusChangeEntry {
-  return { at, actorRole, trigger, changes, ...extra };
-}
 
 const supportTicketRecords: Partial<SupportTicketPlain>[] = [];
 

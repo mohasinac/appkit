@@ -26,28 +26,6 @@
 
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import { withScammerSearchTxt } from "./_helpers/search-txt-wrappers";
-import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
-
-const NOW = new Date("2026-05-10T00:00:00.000Z");
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
-/**
- * A timeline entry for the W18 `statusHistory` fixtures.
- *
- * 🛑 `actorUid` only. A scammer profile is built ENTIRELY out of identifying
- * details, which is why `SCAMMER_HISTORY_PII_FIELDS` is the longest scrub
- * list of any adopter — a fixture carrying a name here would be modelling the
- * exact leak the primitive exists to prevent.
- */
-function entry(
-  at: Date,
-  actorRole: "system" | "admin",
-  trigger: string,
-  changes: Record<string, FieldChange>,
-  extra?: { reason?: string; note?: string; actorUid?: string },
-): StatusChangeEntry {
-  return { at, actorRole, trigger, changes, ...extra };
-}
 
 // Annotated HERE, not on the export, so the literal is contextually typed as
 // Partial<ScammerDocument> before `.map` sees it. Without this TS infers a

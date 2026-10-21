@@ -31,10 +31,6 @@ import {
 } from "../_internal/shared/features/notifications/action-url";
 import type { NotificationType } from "../features/admin/schemas";
 
-const NOW = new Date();
-const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
 const notificationRecords: Partial<NotificationDocument>[] = [];
 
 /*

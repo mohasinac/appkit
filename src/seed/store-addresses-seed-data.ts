@@ -28,9 +28,6 @@ import { getSeedLocale, getDefaultPhonePrefix } from "./seed-market-config";
 const _locale = getSeedLocale();
 const _phonePrefix = getDefaultPhonePrefix();
 
-const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
 export interface StoreAddressSeedData {
   id: string;
   label: string;

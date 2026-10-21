@@ -27,28 +27,9 @@ import type { StoreDocument } from "../features/stores/schemas";
 import { withStoreSearchTxt } from "./_helpers/search-txt-wrappers";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
-import type { FieldChange, StatusChangeEntry } from "../_internal/shared/history/types";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
-/**
- * A timeline entry for the W18 `statusHistory` fixtures.
- *
- * Dates come from this file's own `daysAgo()`, never `Date.now()` in an ID
- * position (Root Cause #25). `actorUid` only, never a name — `withHistory`
- * scrubs PII from real writes, and a fixture carrying a name would be the one
- * place that rule is broken.
- */
-function entry(
-  at: Date,
-  actorRole: "system" | "admin" | "buyer" | "seller",
-  trigger: string,
-  changes: Record<string, FieldChange>,
-  extra?: { reason?: string; note?: string; actorUid?: string },
-): StatusChangeEntry {
-  return { at, actorRole, trigger, changes, ...extra };
-}
 
 const _rawstoresSeedData: Partial<StoreDocument>[] = [
   // ── Store 1: LetItRip Official (admin-owned, platform storefront) ──────────
