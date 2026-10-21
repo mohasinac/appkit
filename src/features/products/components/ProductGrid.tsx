@@ -2,8 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "../../../next/routing/route-map";
 import type { LayoutSlots } from "../../../contracts";
 import { BaseListingCard, Button, Div, GatedPrice, Grid, PriceDisplay, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
@@ -15,6 +13,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { CardStoreLine } from "./CardStoreLine";
 import { isFinalSale } from "../constants/final-sale";
+import { CARD_BADGE, resolveCardBadges } from "../constants/card-badges";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
@@ -32,22 +31,6 @@ const __O = {
 } as const;
 
 const CLS_BADGE_NEW = "rounded-full bg-error-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] text-error-on-solid shadow-sm";
-const CLS_BADGE_SALE = "rounded-full bg-success-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-success-on-solid shadow-sm";
-const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
-const CLS_BADGE_LIMITED = "rounded-full bg-info-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-info-on-solid shadow-sm";
-// Overlay badge sitting on the product photo, so the pairing is `-solid` +
-// `-on-solid` (Root Cause #67) — never `text-white` on a status colour, which
-// inverts with the theme. `warning` because success/info/error are each already
-// taken by a sibling pill in this same stack.
-const CLS_BADGE_OFFERABLE = "rounded-full bg-warning-solid px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-warning-on-solid shadow-sm";
-/*
- * Final sale. A fixed dark scrim with white ink, following CLS_BADGE_TRENDING's
- * precedent rather than a `-surface` token: this sits on top of the product
- * PHOTO, where a theme-relative tint is a near-white fill that vanishes against
- * a light image (Root Cause #67). Not `warning-solid`, which "Taking Offers"
- * already owns — two amber pills stacked would read as one control.
- */
-const CLS_BADGE_FINAL_SALE = "rounded-full bg-zinc-900/90 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
 const CLS_STAR = "text-[11px] text-warning";
 const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-error";
 const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
@@ -107,11 +90,67 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
-  const router = useRouter();
   const listingPlugin = pluginFor(normalizeListingType(product));
   const typeBadge = listingPlugin.badge
     ? { label: listingPlugin.badge.label, cls: listingPlugin.badge.className }
     : null;
+
+  /*
+   * The badge corner, resolved once. Two candidates, ordered and capped by
+   * `card-badges.ts` — see the stack below for what the other five badges were
+   * and where they went.
+   */
+  const cardBadges = resolveCardBadges([
+    discount
+      ? {
+          id: CARD_BADGE.DISCOUNT,
+          label: `-${discount}%`,
+          className: CLS_BADGE_NEW,
+          title: `${discount}% off the original price`,
+        }
+      : null,
+    typeBadge
+      ? {
+          id: CARD_BADGE.LISTING_TYPE,
+          label: typeBadge.label,
+          // The plugin's own class, plus the shared pill geometry the inline
+          // version used to spell out at the call site.
+          className: `rounded-full px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] shadow-sm ${typeBadge.cls}`,
+        }
+      : null,
+  ]);
+
+  /*
+   * The five demoted badges, as plain words on the metadata line.
+   *
+   * 🛑 DEMOTED, NOT DELETED. Each states something true that a buyer needs —
+   * "Final Sale" is a refund-policy warning and dropping it silently would be
+   * a worse defect than crowding the image. But a 10px pill over a photograph
+   * is the wrong place to say it: a shopper scanning a grid cannot act on any
+   * of them, and five of them hid the two they could act on.
+   *
+   * `isFinalSale(product)` rather than `product.finalSale` — absent MEANS
+   * final sale, so reading the raw field would leave every listing created
+   * before it existed unlabelled while still being final sale at the refund
+   * gate.
+   */
+  const cardNotes = [
+    product.partOfBundleIds && product.partOfBundleIds.length > 0
+      ? product.partOfBundleTitles?.[0]
+        ? `In bundle: ${product.partOfBundleTitles[0]}`
+        : "In a bundle"
+      : null,
+    product.groupId
+      ? product.isGroupParent
+        ? "Set parent"
+        : product.groupTitle
+          ? `Part of set: ${product.groupTitle}`
+          : "Part of a set"
+      : null,
+    product.allowOffers ? "Taking offers" : null,
+    isFinalSale(product) ? "Final sale" : null,
+    product.sublistingCategoryId ? "Has variants" : null,
+  ].filter((n): n is string => n != null);
 
   const longPress = useLongPress(() => onSelect?.(product.id));
 
@@ -176,85 +215,40 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           />
         )}
 
-        {/* Top-left: badges (offset right when checkbox is shown) */}
+        {/*
+          ── Top-left: AT MOST TWO BADGES ───────────────────────────────────
+
+          🛑 THIS WAS SEVEN. Discount, listing type, "Bundled", "In Set",
+          "Taking Offers", "Final Sale" and "Has Variants" each rendered
+          unconditionally when its own condition held, into one absolutely-
+          positioned stack, with none of them aware of the others. A
+          discounted auction that is a bundled set member with offers enabled,
+          final sale and variants showed all seven — covering the product
+          photograph the card exists to show.
+
+          Nothing was wrong with any ONE of them. The defect was that nobody
+          decided which mattered, so `card-badges.ts` does: a badge earns the
+          corner only if it changes whether the shopper CLICKS. Type and
+          discount do; the other five matter when deciding to BUY, so they
+          move to the metadata line below and to the detail page, where there
+          is room to state them in words instead of a 10px pill.
+
+          See `resolveCardBadges` for the precedence and why the cap has to
+          exist separately from it.
+        */}
         <Stack className={`absolute top-2 ${onSelect ? "left-10" : "left-2"}`} gap="xs">
-          {!selectionMode && !isSelected && (
-            <>
-              {discount && (
-                <Span weight="bold" className={CLS_BADGE_NEW}>
-                  -{discount}%
-                </Span>
-              )}
-              {typeBadge && (
-                <Span weight="bold" className={`text-[10px] ${typeBadge.cls}`} rounded="full" padding="pill-xs" shadow="sm">
-                  {typeBadge.label}
-                </Span>
-              )}
-              {/* SB7-A — "In bundle" pill when this product is a bundle member.
-                  Badge is visual only; the bundle link lives on the product
-                  detail page (SB7-B) where it has room to be a real Link
-                  without nesting inside the card's outer Link. */}
-              {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
-                <Span
-                  className={CLS_BADGE_SALE}
-                  title={
-                    product.partOfBundleTitles && product.partOfBundleTitles.length > 0
-                      ? `In bundle: ${product.partOfBundleTitles[0]}`
-                      : "In a bundle"
-                  }
-                >
-                  Bundled
-                </Span>
-              )}
-              {/* "Set" pill — product is part of a curated group/set */}
-              {product.groupId && (
-                <Span
-                  className={CLS_BADGE_TRENDING}
-                  title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
-                >
-                  {product.isGroupParent ? "Set Parent" : "In Set"}
-                </Span>
-              )}
-              {/* "Taking Offers" pill — the seller accepts price negotiation on
-                  this listing (`allowOffers`). Deliberately NOT gated on the
-                  site-wide offers kill switch (itself deleted 2026-08-29): that
-                  would have meant threading the settings doc into every card
-                  data path — the mirror-drift trap of Root Cause #42. The badge states a
-                  LISTING attribute; the flag gates the ACTION, and the detail
-                  page's CTA is where that gate lives. */}
-              {product.allowOffers && (
-                <Span
-                  className={CLS_BADGE_OFFERABLE}
-                  title="The seller accepts offers on this listing"
-                >
-                  Taking Offers
-                </Span>
-              )}
-              {/*
-                "Final Sale" pill. Absent means final sale, so this is resolved
-                through isFinalSale() and NOT `product.finalSale` — the latter
-                would leave every listing created before the field existed
-                unlabelled while still being final sale at the refund gate.
-              */}
-              {isFinalSale(product) && (
-                <Span
-                  className={CLS_BADGE_FINAL_SALE}
-                  title="Final sale — no change-of-mind returns. Not-received, damaged, wrong-item, not-as-described and counterfeit claims are still accepted."
-                >
-                  Final Sale
-                </Span>
-              )}
-              {/* "Variants" pill — product has sub-listings/variants */}
-              {product.sublistingCategoryId && (
-                <Span
-                  className={CLS_BADGE_LIMITED}
-                  title="Has variants or sub-listings"
-                >
-                  Has Variants
-                </Span>
-              )}
-            </>
-          )}
+          {!selectionMode &&
+            !isSelected &&
+            cardBadges.map((b) => (
+              <Span
+                key={b.id}
+                weight="bold"
+                className={b.className}
+                title={b.title}
+              >
+                {b.label}
+              </Span>
+            ))}
         </Stack>
 
         {/* W1-45 — group/sublisting icon overlay (bottom-right) */}
@@ -292,66 +286,41 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {product.title}
         </Text>
 
-        {/* Category + brand chips — W1-46: show up to 3 categories with "+N more" overflow */}
-        {(() => {
-          const categories = Array.isArray(product.categoryNames)
-            ? product.categoryNames.filter(Boolean)
-            : product.categoryName
-              ? [product.categoryName]
-              : [];
-          if (!categories.length && !product.brand) return null;
-          const MAX_CHIPS = 3;
-          const visible = categories.slice(0, MAX_CHIPS);
-          const overflow = Math.max(0, categories.length - MAX_CHIPS);
-          return (
-            <Row className="mt-1" gap="xs" wrap>
-              {visible.map((name) => (
-                <Span padding="pill-2xs" layout="inline-flex"
-                  key={name}
-                  className="gap-[0.125rem] text-[10px]" rounded="full" surface="subtle" color="muted"
-                >
-                  <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
-                  </svg>
-                  {name}
-                </Span>
-              ))}
-              {overflow > 0 && (
-                <Span padding="pill-2xs" layout="inline-flex" 
-                  weight="medium"
-                  className="text-[10px]" rounded="full" surface="subtle" color="muted"
-                  title={categories.slice(MAX_CHIPS).join(", ")}
-                >
-                  +{overflow}
-                </Span>
-              )}
-              {product.brand && (
-                <Span
-                  padding="pill-2xs" layout="inline-flex" gap="2xs"
-                  className={`text-[10px] ${product.brandSlug ? "cursor-pointer hover:underline" : ""}`}
-                  rounded="full" surface="subtle" color="muted"
-                  {...(product.brandSlug
-                    ? {
-                        onClick: (e: React.MouseEvent) => {
-                          // The whole card is already wrapped in a <Link> — a nested
-                          // <a> here would be invalid HTML, so this navigates via
-                          // stopPropagation + router.push instead of a real Link.
-                          e.preventDefault();
-                          e.stopPropagation();
-                          router.push(String(ROUTES.PUBLIC.BRAND_DETAIL(product.brandSlug!)));
-                        },
-                      }
-                    : {})}
-                >
-                  <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
-                  {product.brand}
-                </Span>
-              )}
-            </Row>
-          );
-        })()}
+        {/*
+          ── Brand only. CATEGORY CHIPS ARE GONE. ─────────────────────────
+
+          🛑 This was an IIFE computing up to three category chips plus a
+          "+N" overflow chip plus a brand chip, each a pill carrying its own
+          inline SVG — five elements and two hand-written icons on every card
+          in every grid. The categories were the bulk of it and the least
+          useful part: a shopper on a category page is already IN that
+          category, so the chip repeats back the page they are standing on,
+          and on a search grid three truncated taxonomy names crowd out the
+          title.
+
+          Brand survives as PLAIN TEXT because it is a real shopping signal
+          and the one thing people filter by in this catalogue — but not as a
+          pill, and not clickable: the whole card is already a Link, so the
+          chip had to fake navigation with preventDefault + stopPropagation +
+          router.push to avoid nesting an anchor inside an anchor. A control
+          that has to fight its own container is a control in the wrong place;
+          the brand page is one click away via the detail page.
+        */}
+        {product.brand && (
+          <Text className="mt-1" size="xs" color="muted" truncate={1}>
+            {product.brand}
+          </Text>
+        )}
+
+        {/*
+          The five badges demoted from the image corner, as words. See the
+          `cardNotes` block above for why each one lost its pill.
+        */}
+        {cardNotes.length > 0 && (
+          <Text className="mt-1" size="xs" color="muted" truncate={1} title={cardNotes.join(" · ")}>
+            {cardNotes.join(" · ")}
+          </Text>
+        )}
 
         <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
 
@@ -412,11 +381,27 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             />
           )}
 
-          {/* Action buttons */}
+          {/*
+            ── Action buttons: TEXT ONLY ──────────────────────────────────────
+
+            🛑 BOTH HAND-ROLLED INLINE SVGs ARE GONE — a lightning bolt on
+            "Buy Now" and a trolley on "Cart". Not replaced with `<Icon>`,
+            which is the usual fix (Root Cause #80, and the wishlist button a
+            few lines up records doing exactly that): removed, because the goal
+            here is FEWER atoms and an icon beside a two-word label inside a
+            half-width button is decoration. "Buy Now" and "Cart" are already
+            unambiguous; the glyph adds an element per button per card in every
+            grid and tells the shopper nothing the word did not.
+
+            It also removes the last two hand-written `<path d="…">` in this
+            card — and the bolt had no registry entry, so keeping it would have
+            meant either adding an icon to the catalogue for one decorative use
+            or leaving a raw SVG behind.
+          */}
           {(onAddToCart || onBuyNow) && (
             <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
               {onBuyNow && (
-                <Button gap="sm" 
+                <Button
                   type="button"
                   variant="primary"
                   size="sm"
@@ -427,14 +412,11 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   }}
                   className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
                 >
-                  <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
                   Buy Now
                 </Button>
               )}
               {onAddToCart && (
-                <Button gap="sm" 
+                <Button
                   type="button"
                   variant="outline"
                   size="sm"
@@ -445,9 +427,6 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   }}
                   className="justify-center text-[length:var(--appkit-text-xs)]"
                 >
-                  <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v7a1 1 0 001 1h8a1 1 0 001-1v-7M9 21h6" />
-                  </svg>
                   Cart
                 </Button>
               )}
