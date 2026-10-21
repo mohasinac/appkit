@@ -42,6 +42,68 @@ export interface Refund {
   createdAt: string; // ISO-8601
 }
 
+/**
+ * A chargeback / dispute, normalised at the provider boundary.
+ *
+ * ## Units
+ *
+ * 🛑 `amount` and `amountDeducted` are **decimal rupees**. Razorpay's own
+ * entity reports both in currency SUBUNITS (`RazorpayDispute.amount`), so the
+ * adapter converts with `paiseToRupees` and nothing downstream ever sees the
+ * subunit figure — `audit-money-units` blocks both the raw `/100` and the word
+ * for the subunit in a comment or label.
+ *
+ * 🛑 **This deliberately differs from `Refund` above, which is in SUBUNITS**,
+ * and the inconsistency is real rather than an oversight here: `refund()` takes
+ * `rupeesToPaise(input.amount)` from its one call site and returns
+ * `Number(result.amount)` unconverted. That is pre-existing and is NOT changed
+ * by this type — flipping it would silently alter what every refund consumer
+ * reads, which is the money-unit migration's whole cautionary tale. A new
+ * surface gets the correct convention; an existing one gets a measured
+ * migration or nothing. If you are here because the two look inconsistent:
+ * they are, `Dispute` is the right one, and `Refund` is a separate job.
+ *
+ * 🛑 `respondBy` and `createdAt` are `Date`. Razorpay reports both as **Unix
+ * timestamps in SECONDS**, so `new Date(respond_by)` yields 1970 and reads as
+ * corrupt data rather than as a unit error — the same trap the Vercel token's
+ * `expiresAt` sets. Multiply by 1000 at the boundary, once.
+ *
+ * ## `status` and `phase` are strings, not unions, on purpose
+ *
+ * The SDK declares both as `string` (`disputes.d.ts`), and the value set is
+ * Razorpay's to change. Inventing a union here would mean a real dispute in a
+ * state we did not anticipate either fails a parse or gets asserted into the
+ * wrong member — and a dispute is the one record where being wrong has a
+ * deadline attached. Treat them as opaque, compare against known values where
+ * a decision depends on it, and never exhaustively switch.
+ */
+export interface Dispute {
+  /** The gateway's own dispute id. */
+  id: string;
+  /** The payment this dispute is against — the join key to our orders. */
+  paymentId: string;
+  /** Decimal rupees. */
+  amount: number;
+  currency: string;
+  /** Decimal rupees. What the gateway takes from our balance if we lose. */
+  amountDeducted: number;
+  /** The gateway's reason code, verbatim. */
+  reasonCode: string;
+  /**
+   * The gateway's own deadline for a response. **An external, hard date** — not
+   * an SLA we invented — which is why a `paymentCases` row built from a dispute
+   * takes its `dueAt` from here and from nowhere else.
+   */
+  respondBy: Date;
+  /** Opaque — see the docstring. */
+  status: string;
+  /** Opaque — see the docstring. */
+  phase: string;
+  createdAt: Date;
+  /** The provider's short name, so a mixed-gateway queue stays attributable. */
+  gateway: string;
+}
+
 // --- Payment Contract -----------------------------------------------------
 
 /**
@@ -65,4 +127,59 @@ export abstract class IPaymentProvider {
   abstract capturePayment(orderId: string): Promise<PaymentCapture>;
   abstract refund(paymentId: string, amount?: number): Promise<Refund>;
   abstract getOrder(orderId: string): Promise<PaymentOrder>;
+
+  /*
+   * ── DISPUTES ──────────────────────────────────────────────────────────────
+   *
+   * Added as abstract members deliberately: `IPaymentProvider` is an abstract
+   * CLASS, so this breaks every implementation at compile time and each one has
+   * to state what it does about disputes. A set of optional methods would have
+   * let a provider stay silent, and silence on a chargeback is the expensive
+   * answer.
+   */
+
+  /** Fetch one dispute by the gateway's id. */
+  abstract getDispute(disputeId: string): Promise<Dispute>;
+
+  /**
+   * Every dispute the gateway knows about.
+   *
+   * 🛑 A gateway with no dispute concept returns `[]`, and that is the CORRECT
+   * documented answer rather than a silent degrade: "this provider cannot have
+   * chargebacks" is a true statement about manual bank transfers, not a
+   * swallowed failure. `audit-silent-degrade` draws that line, and the
+   * difference is that an empty array here is a fact while a `.catch(() => [])`
+   * would be a guess.
+   */
+  abstract listDisputes(): Promise<Dispute[]>;
+
+  /**
+   * Accept liability. **Irreversible** — the gateway debits us and the dispute
+   * is closed in the buyer's favour.
+   *
+   * `confirmIrrevocable` is a required literal `true`, so the call cannot be
+   * made by a caller who has not read what it does; a boolean parameter that
+   * could be `false` would be a flag, and this is a gate.
+   */
+  abstract acceptDispute(disputeId: string, confirmIrrevocable: true): Promise<Dispute>;
+
+  /*
+   * 🛑 THERE IS NO `contestDispute` AND NO `submitEvidence`, AND THAT ABSENCE
+   * IS THE RULE — not an unimplemented stub.
+   *
+   * The Razorpay SDK has `disputes.contest(id, { shipping_proof, billing_proof,
+   * explanation_letter, … })`, verified present in the installed 2.9.8. We
+   * deliberately do not expose it.
+   *
+   * Submitting evidence is irreversible, it is judged by a third party, and it
+   * is the one decision a human must make while looking at the actual
+   * documents. Putting it on this contract would make it callable from a
+   * route, and from there from a bulk action.
+   *
+   * The correct surface is Razorpay's own dashboard. Reinforced three ways:
+   * nothing on this contract can call it, `acceptDispute` demands an explicit
+   * confirmation, and the ingest handler is READS ONLY. A later session wanting
+   * to "finish the dispute feature" should read this paragraph first — the
+   * feature is finished; this is the shape.
+   */
 }

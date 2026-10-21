@@ -168,6 +168,44 @@ export type {
   DuplicateResolution,
 } from "./_internal/server/features/gateway-events";
 
+/*
+ * [SERVER-ONLY] paymentCases — the one operator queue for money at risk.
+ *
+ * Same reason as gatewayEvents above: the repository's chain reaches
+ * `firebase-admin`, so this must never appear in `index.ts`.
+ */
+export {
+  PaymentCasesRepository,
+  paymentCasesRepository,
+} from "./features/payment-cases/repository/payment-cases.repository";
+export type {
+  OpenCaseInput,
+  OpenCaseResult,
+  ResolveCaseInput,
+} from "./features/payment-cases/repository/payment-cases.repository";
+export {
+  PAYMENT_CASES_COLLECTION,
+  PAYMENT_CASE_FIELDS,
+  PAYMENT_CASE_KINDS,
+  PAYMENT_CASE_STATUSES,
+  PAYMENT_CASE_ACTIVE_STATUSES,
+  PAYMENT_CASE_SEVERITY_RANK,
+  PAYMENT_CASE_RESOLUTION_MIN,
+  createPaymentCaseId,
+} from "./features/payment-cases/schemas/firestore";
+export type {
+  PaymentCaseDocument,
+  PaymentCaseKind,
+  PaymentCaseStatus,
+  PaymentCaseSeverity,
+} from "./features/payment-cases/schemas/firestore";
+export {
+  ingestDispute,
+  reconcileDisputes,
+  DISPUTE_EVENT_PREFIX,
+} from "./_internal/server/features/payment-cases";
+export type { DisputeWebhookEntity } from "./_internal/server/features/payment-cases";
+
 // [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
 // Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
 export {

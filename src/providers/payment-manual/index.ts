@@ -22,6 +22,7 @@ import type {
   PaymentOrder,
   PaymentCapture,
   Refund,
+  Dispute,
 } from "../../contracts";
 import type { JsonValue } from "../../schemas/types";
 
@@ -101,5 +102,41 @@ export class ManualPaymentProvider extends IPaymentProvider {
       });
     }
     return order;
+  }
+
+  /*
+   * ── DISPUTES: THERE IS NO SUCH THING HERE ─────────────────────────────────
+   *
+   * A manual payment is a bank transfer or cash the buyer made outside the
+   * system, reconciled by an admin against an uploaded proof. There is no
+   * card network and no acquirer, so there is no chargeback mechanism to
+   * query — a buyer's complaint arrives as a support ticket or a grievance,
+   * which is a different (and human) path.
+   *
+   * 🛑 `listDisputes()` returning `[]` is therefore a FACT, not a silent
+   * degrade: "this provider cannot have chargebacks" is true. The single-
+   * dispute getters throw, because being ASKED for a specific dispute id on a
+   * provider that has none means the caller is confused, and answering a
+   * confident wrong thing is how a reconciler reports clean.
+   */
+
+  async getDispute(disputeId: string): Promise<Dispute> {
+    throw Object.assign(
+      new Error(
+        `Manual payments have no dispute mechanism — nothing can be fetched for ${disputeId}`,
+      ),
+      { httpStatus: 400 },
+    );
+  }
+
+  async listDisputes(): Promise<Dispute[]> {
+    return [];
+  }
+
+  async acceptDispute(disputeId: string, _confirmIrrevocable: true): Promise<Dispute> {
+    throw Object.assign(
+      new Error(`Manual payments have no dispute to accept (${disputeId})`),
+      { httpStatus: 400 },
+    );
   }
 }

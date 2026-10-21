@@ -54,8 +54,9 @@
 import Razorpay from "razorpay";
 import type { JsonValue } from "@mohasinac/appkit";
 import { IPaymentProvider } from "../../contracts";
-import type { PaymentOrder, PaymentCapture, Refund } from "../../contracts";
+import type { PaymentOrder, PaymentCapture, Refund, Dispute } from "../../contracts";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
+import { paiseToRupees } from "../../core/money";
 import { verifyWebhookSignature } from "./signature";
 
 export {
@@ -102,6 +103,26 @@ function toNotes(metadata?: Record<string, JsonValue>): Record<string, string> |
     notes[key] = String(value).slice(0, 256);
   }
   return Object.keys(notes).length > 0 ? notes : undefined;
+}
+
+/**
+ * The subset of Razorpay's dispute entity this adapter reads.
+ *
+ * Verified field-by-field against `node_modules/razorpay/dist/types/disputes.d.ts`
+ * in the installed 2.9.8. `amount` and `amount_deducted` are currency subunits;
+ * `respond_by` and `created_at` are Unix timestamps in SECONDS.
+ */
+interface RazorpayDisputeEntity {
+  id: string;
+  payment_id: string;
+  amount: number;
+  currency: string;
+  amount_deducted?: number;
+  reason_code?: string;
+  respond_by: number;
+  status?: string;
+  phase?: string;
+  created_at: number;
 }
 
 // --- IPaymentProvider implementation ------------------------------------------
@@ -263,5 +284,76 @@ export class RazorpayProvider extends IPaymentProvider {
        */
       metadata: order.notes as Record<string, JsonValue> | undefined,
     };
+  }
+
+  /*
+   * ── DISPUTES ──────────────────────────────────────────────────────────────
+   *
+   * Razorpay is the only registered provider that HAS disputes, so this is the
+   * only real implementation of the three.
+   *
+   * 🛑 Two unit conversions, both easy to get wrong and both silent when wrong:
+   *
+   *   amount / amount_deducted — currency SUBUNITS → decimal rupees.
+   *   respond_by / created_at  — Unix timestamp in SECONDS → Date.
+   *
+   * The second is the nastier one. `new Date(1761000000)` is 21 January 1970,
+   * so a missed `* 1000` does not throw and does not look like a unit bug — it
+   * looks like corrupt data, and on a dispute it would make a live `respondBy`
+   * deadline sort as 55 years overdue, which an escalation query would then
+   * either flood on or ignore. The existing `refund`/`getOrder` methods above
+   * already multiply, which is the precedent to copy.
+   */
+
+  /**
+   * Typed STRUCTURALLY rather than against the SDK's `Disputes.RazorpayDispute`
+   * namespace type.
+   *
+   * Two reasons: the namespace is declared inside `types/disputes.d.ts` and is
+   * not part of the package's documented export surface, so importing it couples
+   * us to an internal; and naming only the fields we read makes the mapping
+   * auditable against the SDK by eye. Every field below was checked against the
+   * installed 2.9.8 declaration — `id`, `payment_id`, `amount`, `currency`,
+   * `amount_deducted`, `reason_code`, `respond_by`, `status`, `phase`,
+   * `created_at` — rather than recalled.
+   *
+   * `status` and `phase` are `string` in the SDK too, so nothing is lost by not
+   * importing it.
+   */
+  private toDispute(d: RazorpayDisputeEntity): Dispute {
+    return {
+      id: String(d.id),
+      paymentId: String(d.payment_id),
+      amount: paiseToRupees(Number(d.amount)),
+      currency: String(d.currency),
+      amountDeducted: paiseToRupees(Number(d.amount_deducted ?? 0)),
+      reasonCode: String(d.reason_code ?? ""),
+      respondBy: new Date(Number(d.respond_by) * 1000),
+      status: String(d.status ?? ""),
+      phase: String(d.phase ?? ""),
+      createdAt: new Date(Number(d.created_at) * 1000),
+      gateway: this.name,
+    };
+  }
+
+  async getDispute(disputeId: string): Promise<Dispute> {
+    return this.toDispute(await this.razorpay.disputes.fetch(disputeId));
+  }
+
+  async listDisputes(): Promise<Dispute[]> {
+    const result = await this.razorpay.disputes.all();
+    return (result.items ?? []).map((d) => this.toDispute(d));
+  }
+
+  /**
+   * Accept liability — irreversible.
+   *
+   * `confirmIrrevocable` is required by the contract and is not read here, and
+   * that is the point: its job is to make the CALLER state intent at the call
+   * site. A runtime check would be theatre, since the type already makes
+   * `false` uncompilable.
+   */
+  async acceptDispute(disputeId: string, _confirmIrrevocable: true): Promise<Dispute> {
+    return this.toDispute(await this.razorpay.disputes.accept(disputeId));
   }
 }

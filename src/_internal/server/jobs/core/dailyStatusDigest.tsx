@@ -31,6 +31,22 @@ import {
 import { SCAMMER_COLLECTION, SCAMMER_FIELDS } from "../../../../features/scams/schemas/firestore";
 import { ADMIN_AUDIT_LOG_COLLECTION } from "../../../../features/audit-log/schemas/firestore";
 import { ADMIN_NOTIFICATIONS_COLLECTION } from "../../../../features/store-extensions/schemas/rbac";
+/*
+ * Schema modules only — constants and types, no repository. This file is
+ * reachable from the Functions bundle and already queries nine collections
+ * through `getAdminDb()` directly; importing two repositories for four
+ * `count()` calls would widen that graph for nothing. Same reasoning as the
+ * `CountableQuery` structural type below.
+ */
+import {
+  PAYMENT_CASES_COLLECTION,
+  PAYMENT_CASE_ACTIVE_STATUSES,
+  PAYMENT_CASE_FIELDS,
+} from "../../../../features/payment-cases/schemas/firestore";
+import {
+  GATEWAY_EVENTS_COLLECTION,
+  GATEWAY_EVENT_FIELDS,
+} from "../../../../features/gateway-events/schemas/firestore";
 import {
   EmailBold,
   EmailContainer,
@@ -114,7 +130,33 @@ export interface DailyStatusDigestSummary {
   /** Privileged admin actions recorded in 24h — replaces the per-save settings email. */
   adminActionCount: number;
   unreadAdminNotificationCount: number;
-}
+
+  /*
+   * ── MONEY AT RISK ─────────────────────────────────────────────────────────
+   *
+   * 🛑 The cheapest surface in the whole payment-protection plan, and the
+   * reason it is here rather than on a page: this digest PUSHES. The admin
+   * queue, the reconcilers and the event inbox are all useless on the day they
+   * ship if nobody opens the admin panel — and the one case class with a hard
+   * external deadline (a chargeback's `respond_by`) is lost by DEFAULT when
+   * nobody looks. ~20 lines of rendering buys the whole phase its first real
+   * consumer.
+   */
+
+  /** Active (open + under-review) `paymentCases`, by severity. */
+  paymentCasesError: number;
+  paymentCasesWarning: number;
+  paymentCasesInfo: number;
+  /**
+   * The soonest external deadline across active cases, or null.
+   *
+   * 🛑 Not "oldest case" and not a count: a deadline is the only thing in this
+   * digest that gets WORSE on its own, so it is the one figure worth printing
+   * as a date rather than a number.
+   */
+  nearestCaseDueAt: Date | null;
+  /** Gateway events that never reached a terminal status — the inbox backlog. */
+  unprocessedGatewayEventCount: number;
 
 function currency(amount: number): string {
   return `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
@@ -263,6 +305,74 @@ export async function collectDailyStatusSummary(): Promise<DailyStatusDigestSumm
   ]);
 
   /*
+   * ── MONEY AT RISK ─────────────────────────────────────────────────────────
+   *
+   * Three counts and one date. Deliberately NOT through
+   * `paymentCasesRepository`: this file is reachable from the Functions bundle,
+   * and the digest already talks to `getAdminDb()` directly for its other nine
+   * collections. Pulling a repository in here for three `count()` calls would
+   * widen the bundle's graph for no gain — the same reasoning the file's own
+   * `CountableQuery` comment gives for not importing a firebase-admin type.
+   *
+   * 🛑 Every one goes through `safeCount`, which returns 0 on failure. That is
+   * right for a digest and wrong almost anywhere else: a missing composite
+   * index must not stop the OTHER eleven sections being delivered, and a stuck
+   * zero beside live numbers reads as "that one broke". It is also why the
+   * nearest-deadline query below swallows and returns null rather than
+   * throwing.
+   */
+  const [paymentCasesError, paymentCasesWarning, paymentCasesInfo, unprocessedGatewayEventCount] =
+    await Promise.all([
+      safeCount(
+        db
+          .collection(PAYMENT_CASES_COLLECTION)
+          .where(PAYMENT_CASE_FIELDS.STATUS, "in", [...PAYMENT_CASE_ACTIVE_STATUSES])
+          .where(PAYMENT_CASE_FIELDS.SEVERITY, "==", "error"),
+      ),
+      safeCount(
+        db
+          .collection(PAYMENT_CASES_COLLECTION)
+          .where(PAYMENT_CASE_FIELDS.STATUS, "in", [...PAYMENT_CASE_ACTIVE_STATUSES])
+          .where(PAYMENT_CASE_FIELDS.SEVERITY, "==", "warning"),
+      ),
+      safeCount(
+        db
+          .collection(PAYMENT_CASES_COLLECTION)
+          .where(PAYMENT_CASE_FIELDS.STATUS, "in", [...PAYMENT_CASE_ACTIVE_STATUSES])
+          .where(PAYMENT_CASE_FIELDS.SEVERITY, "==", "info"),
+      ),
+      safeCount(
+        db
+          .collection(GATEWAY_EVENTS_COLLECTION)
+          .where(GATEWAY_EVENT_FIELDS.STATUS, "in", ["received", "processing", "failed"]),
+      ),
+    ]);
+
+  /*
+   * The soonest external deadline. One document, ordered — and note it can only
+   * see cases that HAVE a `dueAt`, because a Firestore inequality excludes
+   * documents lacking the field (Root Cause #100). Correct here: a case with no
+   * deadline has nothing to be nearest about.
+   */
+  let nearestCaseDueAt: Date | null = null;
+  try {
+    const dueSnap = await db
+      .collection(PAYMENT_CASES_COLLECTION)
+      .where(PAYMENT_CASE_FIELDS.STATUS, "in", [...PAYMENT_CASE_ACTIVE_STATUSES])
+      .orderBy(PAYMENT_CASE_FIELDS.DUE_AT, "asc")
+      .limit(1)
+      .get();
+    const raw = dueSnap.docs[0]?.get(PAYMENT_CASE_FIELDS.DUE_AT) as
+      | { toDate?: () => Date }
+      | Date
+      | undefined;
+    if (raw instanceof Date) nearestCaseDueAt = raw;
+    else if (raw && typeof raw.toDate === "function") nearestCaseDueAt = raw.toDate();
+  } catch (err) {
+    void normalizeError(err);
+  }
+
+  /*
    * `contactSubmissions` carries NO PII encryption — name, email, subject and
    * message are stored in plaintext (see `ContactSubmissionDocument`). That is
    * what lets the digest render a real `mailto:` reply link.
@@ -305,6 +415,11 @@ export async function collectDailyStatusSummary(): Promise<DailyStatusDigestSumm
     newSubscriberCount,
     adminActionCount,
     unreadAdminNotificationCount,
+    paymentCasesError,
+    paymentCasesWarning,
+    paymentCasesInfo,
+    nearestCaseDueAt,
+    unprocessedGatewayEventCount,
   };
 }
 
@@ -403,6 +518,35 @@ function renderDigestHtml(
           <StatLine label="New newsletter subscribers" value={summary.newSubscriberCount} />
           <StatLine label="Admin actions logged" value={summary.adminActionCount} />
         </EmailRow>
+        {/*
+          Money at risk. Rendered LAST and as its own section rather than folded
+          into "Needs attention", because it is the only block in this digest
+          whose items get worse on their own — a chargeback deadline passes
+          whether or not anyone read the email.
+
+          Shown unconditionally, including when every number is zero. A section
+          that disappears when clean is a section whose absence is ambiguous:
+          "no cases" and "the query broke" would look identical, and `safeCount`
+          returns 0 on failure precisely so the other sections still arrive.
+          Three zeroes are a reassuring fact; a missing block is not.
+        */}
+        <EmailDivider />
+        <EmailRow>
+          <EmailBold>Money at risk</EmailBold>
+          <br />
+          <br />
+          <StatLine label="Open cases — urgent" value={summary.paymentCasesError} />
+          <StatLine label="Open cases — warning" value={summary.paymentCasesWarning} />
+          <StatLine label="Open cases — info" value={summary.paymentCasesInfo} />
+          <StatLine
+            label="Nearest external deadline"
+            value={summary.nearestCaseDueAt ? summary.nearestCaseDueAt.toISOString() : "none"}
+          />
+          <StatLine
+            label="Unfinished gateway events"
+            value={summary.unprocessedGatewayEventCount}
+          />
+        </EmailRow>
         <EmailFooter
           copyright={`© ${new Date().getFullYear()}${siteName ? ` ${siteName}` : ""}. All rights reserved.`}
         />
@@ -456,6 +600,24 @@ function renderDigestText(summary: DailyStatusDigestSummary, version?: string): 
     `New scam reports: ${summary.newScamReportCount}`,
     `New newsletter subscribers: ${summary.newSubscriberCount}`,
     `Admin actions logged: ${summary.adminActionCount}`,
+  );
+
+  /*
+   * The text twin of the HTML "Money at risk" section — this is the pairing
+   * the docstring above exists to enforce. Same five figures, same order, and
+   * the same unconditional rendering, because a mail client showing the text
+   * part must not get a digest missing the one block with a deadline in it.
+   */
+  lines.push(
+    "",
+    "MONEY AT RISK",
+    `Open cases — urgent: ${summary.paymentCasesError}`,
+    `Open cases — warning: ${summary.paymentCasesWarning}`,
+    `Open cases — info: ${summary.paymentCasesInfo}`,
+    `Nearest external deadline: ${
+      summary.nearestCaseDueAt ? summary.nearestCaseDueAt.toISOString() : "none"
+    }`,
+    `Unfinished gateway events: ${summary.unprocessedGatewayEventCount}`,
   );
 
   return lines.join("\n");

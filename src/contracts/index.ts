@@ -35,7 +35,7 @@ export type {
 export type { UploadOptions, StorageFile, IStorageProvider } from "./storage";
 
 // Payment
-export type { PaymentOrder, PaymentCapture, Refund } from "./payment";
+export type { PaymentOrder, PaymentCapture, Refund, Dispute } from "./payment";
 // IPaymentProvider is an abstract class (not a pure type) — subclasses need
 // the runtime constructor to `extends` it, so it's a value export.
 export { IPaymentProvider } from "./payment";

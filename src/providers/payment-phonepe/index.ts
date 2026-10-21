@@ -47,7 +47,7 @@ import {
 } from "phonepe-pg-sdk-node";
 import type { JsonValue } from "@mohasinac/appkit";
 import { IPaymentProvider } from "../../contracts";
-import type { PaymentOrder, PaymentCapture, Refund } from "../../contracts";
+import type { PaymentOrder, PaymentCapture, Refund, Dispute } from "../../contracts";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { normalizeError } from "../../errors/normalize";
 
@@ -274,5 +274,41 @@ export class PhonePeProvider extends IPaymentProvider {
       transactionId: status.paymentDetails?.[0]?.transactionId,
       metadata: intent as unknown as Record<string, JsonValue> | undefined,
     };
+  }
+
+  /*
+   * ── DISPUTES: NOT EXPOSED BY THIS GATEWAY'S API ───────────────────────────
+   *
+   * Distinct from the manual provider's reason, and the distinction matters.
+   * PhonePe transactions CAN be disputed — UPI has a chargeback process — but
+   * the PG Checkout API this adapter wraps exposes no dispute resource, so we
+   * have no way to read one. A PhonePe chargeback reaches us as an email or a
+   * dashboard notification, not as data.
+   *
+   * So `[]` here means "we cannot see them", not "they cannot exist", and that
+   * is worth saying out loud: a reconciler that treats an empty list as "no
+   * disputes outstanding" would be drawing a false conclusion on this gateway.
+   * PhonePe is currently dormant (Razorpay wins the provider tie-break), which
+   * is why this is a documented limitation rather than a gap being worked.
+   */
+
+  async getDispute(disputeId: string): Promise<Dispute> {
+    throw Object.assign(
+      new Error(`PhonePe exposes no dispute API — cannot fetch ${disputeId}`),
+      { httpStatus: 501 },
+    );
+  }
+
+  async listDisputes(): Promise<Dispute[]> {
+    return [];
+  }
+
+  async acceptDispute(disputeId: string, _confirmIrrevocable: true): Promise<Dispute> {
+    throw Object.assign(
+      new Error(
+        `PhonePe exposes no dispute API — ${disputeId} must be handled in PhonePe's own dashboard`,
+      ),
+      { httpStatus: 501 },
+    );
   }
 }
