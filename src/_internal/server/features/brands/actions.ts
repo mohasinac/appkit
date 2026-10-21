@@ -24,9 +24,28 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
   if (input.website !== undefined) out.brandWebsite = input.website;
   if (input.country !== undefined) out.brandCountry = input.country;
   if (input.founded !== undefined) out.brandFounded = input.founded;
-  if (input.logoURL !== undefined) {
-    out.display = { coverImage: input.logoURL, showInMenu: false, showInFooter: false };
-  }
+  /*
+   * 🛑 `display` IS NOT WRITTEN HERE ANY MORE — IT WAS DESTRUCTIVE.
+   *
+   * This read `out.display = { coverImage, showInMenu: false, showInFooter:
+   * false }`, and `BaseRepository.update` calls Firestore's `doc().update()`,
+   * which REPLACES a nested map rather than merging into it. So saving a
+   * brand's cover image deleted every other `display` key — `icon`, `color`,
+   * `mosaicImages` — and additionally forced `showInMenu` and `showInFooter`
+   * to `false`, silently removing the brand from the menu and the footer for
+   * anyone who touched its image.
+   *
+   * This is the identical defect Phase 0 found and fixed on the CATEGORY
+   * editor (which sent `display: { showInMenu }` and wiped the cover image,
+   * emoji, colour and a bundle's `mosaicImages` collage on every save). Both
+   * sublisting routes already merged correctly; the category route was fixed;
+   * the BRAND path was never looked at — the same root cause in a third place,
+   * found only because this file was open for an unrelated field.
+   *
+   * The merge now happens in `updateBrandAction`, which has the stored
+   * document in hand. Create still writes the full map, which is correct:
+   * there is nothing to preserve, and the caller's defaults are the record.
+   */
   if (input.isActive !== undefined) out.isActive = input.isActive;
   if (input.displayOrder !== undefined) out.order = input.displayOrder;
   return out;
@@ -73,6 +92,22 @@ export async function createBrandAction(input: unknown): Promise<ActionResult<un
           lastUpdated: new Date(),
         },
         seo: { title: parsed.data.name, description: parsed.data.description ?? "", keywords: [parsed.data.name] },
+        /*
+         * Written in FULL here, and that is correct on create: there is no
+         * stored map to preserve, so these defaults ARE the record. The
+         * mapper no longer supplies it — see the note there on why merging
+         * belongs in the update path.
+         *
+         * 🛑 `icon` is deliberately left UNSET rather than given a value.
+         * `resolveTaxonomyVisual` checks `icon` BEFORE `coverImage`, and the
+         * seed convention puts an EMOJI there — so an icon set here would win
+         * over the real logo the admin just uploaded (`brand-rows.ts` trap 2).
+         */
+        display: {
+          coverImage: parsed.data.logoURL,
+          showInMenu: false,
+          showInFooter: false,
+        },
         ancestors: [],
         createdBy: actor.uid,
         createdAt: new Date(),
@@ -88,7 +123,34 @@ export async function updateBrandAction(brandId: string, input: unknown): Promis
       await assertBrandExists(brandId);
       const parsed = brandUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
-      return categoriesRepository.update(brandId, brandInputToCategoryFields(parsed.data));
+
+      const fields = brandInputToCategoryFields(parsed.data);
+
+      /*
+       * 🛑 `display` MERGED OVER WHAT IS STORED, never replaced. `update()`
+       * replaces a nested map, so a payload carrying a partial `display`
+       * deletes every key it omits — which is how a cover-image save used to
+       * destroy a brand's `icon`, `color` and `mosaicImages` and force it out
+       * of the menu and footer.
+       *
+       * Same shape and same fix as `PATCH /api/admin/categories/[id]`.
+       * Merged rather than written as `display.x` DOT PATHS for the reason
+       * recorded there: `categoriesRepository.update` is typed
+       * `Partial<CategoryDocument>`, which a dot-path key does not satisfy.
+       *
+       * 🛑 The read is only taken when there is something to merge, so a save
+       * that does not touch the image still costs no extra Firestore read —
+       * `assertBrandExists` above does not hand back the document.
+       */
+      if (parsed.data.logoURL !== undefined) {
+        const existing = await categoriesRepository.findById(brandId);
+        fields.display = {
+          ...((existing?.display ?? {}) as Record<string, JsonValue>),
+          coverImage: parsed.data.logoURL,
+        };
+      }
+
+      return categoriesRepository.update(brandId, fields);
   });
 }
 
