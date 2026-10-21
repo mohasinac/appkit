@@ -59,9 +59,12 @@
  * — one reversal per order, checked by query before the write, because an
  * append-only ledger cannot net off a double reversal.
  *
- * 🛑 It is a NO-OP today and still correct to call. No order has consumed
- * points yet: `pointsToRedeem` has no caller, no route field and no UI tender
- * (D46/D47), so the query finds no redemption and returns `{ reversed: 0 }`.
+ * 🛑 It is a NO-OP today and still correct to call. No order has ever consumed
+ * points: the one code path that redeemed any was deleted on 2026-10-21
+ * because it debited the buyer without reducing the charge (D46 — see the note
+ * at its former site in `checkout/actions.ts`), and it had no caller, route
+ * field or UI tender before that. So the query finds no redemption and returns
+ * `{ reversed: 0 }`.
  * Wiring it now rather than later is the cheap half — the expensive half is the
  * ledger write, which is already keyed. When redemption becomes a real tender,
  * cancellation already gives the points back instead of needing to remember to.

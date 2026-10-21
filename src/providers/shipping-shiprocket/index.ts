@@ -293,6 +293,24 @@ export class ShiprocketShippingProvider extends IShippingProvider {
     };
   }
 
+  /**
+   * 🛑 WIRING A CALLER FOR THIS OWES ONE EXTRA WRITE: set
+   * `order.platformBookedShipment = true` in the same commit.
+   *
+   * That flag is the gate `isReimbursableShipment()`
+   * (`_internal/shared/shipping/quote.ts`) uses to decide whether a seller may
+   * be reimbursed for postage. It FAILS OPEN — absent means "the seller shipped
+   * it themselves", which is correct and deliberate, because a self-shipped
+   * parcel has no flag to set and a fail-closed gate would refuse every
+   * legitimate claim.
+   *
+   * Measured 2026-10-21: this method has **no callers**, and the flag has
+   * **no writers**. Those two facts cancel out — there are no platform-booked
+   * parcels, so nothing is wrongly reimbursed. Wire this without the flag and
+   * they stop cancelling out: the platform pays the courier here, then
+   * reimburses the seller for that same spend on approval. Postage paid twice,
+   * silently, because the gate has no way to know we booked it.
+   */
   async createShipment(data: CreateShipmentInput): Promise<Shipment> {
     const body = {
       order_id: data.orderId,

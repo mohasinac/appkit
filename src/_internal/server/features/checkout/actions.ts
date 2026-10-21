@@ -17,8 +17,6 @@ import {
   roundShippingUp,
   type SelectedShippingQuote,
 } from "../../../shared/shipping/quote";
-import { pointsRepository } from "../../../../features/points/repository/points.repository";
-import { maxRedeemablePoints } from "../../../../features/points/schemas/firestore";
 import {
   unitOfWork,
   adminNotificationsRepository,
@@ -340,18 +338,22 @@ export interface CreateCheckoutOrderInput {
    * outbound call on the payment path and is tracked separately.
    */
   selectedShippingQuote?: SelectedShippingQuote;
-  /**
-   * Points the buyer chose to spend on this checkout. 1 point = ₹1.
+  /*
+   * 🛑 `pointsToRedeem` was REMOVED from this interface, 2026-10-21 (D46).
    *
-   * 🛑 Requested, never trusted. The server re-reads the balance, re-applies
-   * the 50% cap against the real cart total, and spends the LESSER of the two
-   * — a client that asks for more than it holds gets its request trimmed, not
-   * an error, because the honest reading of "spend 500 when you have 300" is a
-   * stale page rather than an attack. `pointsRepository.redeem` then re-checks
-   * the balance a third time inside its own transaction, which is the check
-   * that actually prevents a negative balance under concurrency.
+   * Its handler debited points without reducing the charge — see the long note
+   * at the former call site, further down this file. The field is deleted
+   * rather than left as an accepted-but-ignored input, because an input a
+   * caller can set is an input somebody wires up: this one had a careful
+   * docstring about trimming and triple-checking the balance, all of which was
+   * true and none of which mattered, since nothing ever reduced what the
+   * gateway captured.
+   *
+   * When redemption is built properly it arrives as a STAGE in
+   * `computeCheckoutTotal`, so the amount flows through the same pipeline as
+   * every other money term and the capture, the guard and the order record
+   * cannot disagree about it.
    */
-  pointsToRedeem?: number;
   notes?: string;
   excludedProductIds?: string[];
   /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
@@ -1972,44 +1974,46 @@ export async function createCheckoutOrderAction(
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
 
   /*
-   * Spend points AFTER the orders exist.
+   * ── 🛑 THE POINTS REDEMPTION BLOCK WAS DELETED HERE, 2026-10-21 (D46) ─────
    *
-   * 🛑 This ordering is the whole safety argument. Redeeming first and then
-   * failing to create an order would debit a buyer for something they never
-   * received, and points have no refund path that does not need a human. This
-   * way the worst case is an order placed at full price with the balance
-   * intact — recoverable, and visible to the buyer, who still has their
-   * points.
+   * It debited the buyer's points and reduced NOTHING, and its own comment
+   * asserted the opposite. Preserved verbatim because the reasoning error is
+   * the instructive part:
    *
-   * The amount is re-derived server-side against the real total rather than
-   * taken from the request; `maxRedeemablePoints` applies the 50% cap, and
-   * `redeem` re-checks the balance inside its own transaction.
+   *     "This ordering is the whole safety argument. … This way the worst case
+   *      is an order placed at full price with the balance intact."
+   *
+   * The balance was not intact. It was debited. That sentence reasons only
+   * about the branch where `redeem` THROWS — in which case, yes, the buyer
+   * keeps their points. The SUCCESS branch is the broken one: by the time this
+   * ran, `createOrderForGroup` had already created every order and the gateway
+   * had already captured `total`, so a successful redeem took points from a
+   * buyer who had just paid full price. No order field, no cart field and no
+   * gateway amount was ever reduced by `spend`.
+   *
+   * 🛑 It was unreachable, and that is the only reason it cost nothing: no
+   * route schema, no caller and no UI ever passed `pointsToRedeem` — verified
+   * across `src/` and `appkit/src/`. So the hazard was not the behaviour, it
+   * was that ADDING ONE FIELD to one route schema would have made it live,
+   * while `UserPointsView` already promises buyers "up to half of an order's
+   * total can be paid with points". Somebody would have wired it.
+   *
+   * Deleting it leaves a promise with no mechanism, which is a disappointment.
+   * Keeping it left a mechanism that silently takes points, which is a theft.
+   *
+   * ## What the real tender has to do instead
+   *
+   * Points are a TENDER, so they belong in the pricing pipeline, not after it:
+   * a stage in `computeCheckoutTotal` AFTER rounding — `amountDue = total −
+   * pointsApplied` — with the gateway capturing `amountDue` and the
+   * post-capture guard comparing against `amountDue`. Anything else makes
+   * points a sixth way the captured amount can diverge from the recorded order
+   * total, which is the D37/D38/D40 family this plan exists to close.
+   *
+   * Everything that work needs now exists: `purchase_earn`, per-batch expiry,
+   * FIFO consumption, `redemption_reversal` and the seller-funded deduction.
+   * What is missing is the pipeline stage and the two document fields.
    */
-  if (input.pointsToRedeem && input.pointsToRedeem > 0 && orderIds.length > 0) {
-    try {
-      const balance = await pointsRepository.getBalance(uid);
-      const spend = maxRedeemablePoints(total, Math.min(balance, input.pointsToRedeem));
-      if (spend > 0) {
-        await pointsRepository.redeem({
-          userId: uid,
-          points: spend,
-          orderId: orderIds[0],
-          description: `Redeemed on ${orderIds[0]}`,
-        });
-      }
-    } catch (err) {
-      /*
-       * A failed redemption must not fail a placed order. The buyer keeps the
-       * points and paid full price — the strictly safer side of this trade.
-       */
-      const normalized = normalizeError(err);
-      serverLogger.error("points redemption failed after order creation", {
-        uid,
-        orderId: orderIds[0],
-        message: normalized.message,
-      });
-    }
-  }
 
   dispatchOrderConfirmationEmails(emailsToSend);
 

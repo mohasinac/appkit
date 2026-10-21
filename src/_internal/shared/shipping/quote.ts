@@ -219,18 +219,46 @@ export function reconcileShipping(
  * a fact about how the shipment was created and not something the claimant
  * supplies.
  *
- * 🛑 It returns FALSE when the booker is unknown, and that direction is
- * deliberate: paying out on an unverified premise is the error that cannot be
- * undone, while refusing one wrongly is a case an operator fixes in a minute.
- * `platformBooked` is set by the integration at booking time, so an absent
- * value means "nobody recorded a platform booking" — for a self-shipped parcel
- * the seller still has to upload evidence and have it approved, which is where
- * a wrong refusal surfaces.
+ * ## 🛑 It fails OPEN on an unknown booker, and the previous docstring claimed
+ * the opposite
+ *
+ * That text read: *"It returns FALSE when the booker is unknown, and that
+ * direction is deliberate: paying out on an unverified premise is the error
+ * that cannot be undone."* **The code has always returned TRUE.** Corrected
+ * 2026-10-21 — the code is right and the comment was wrong, which is the
+ * dangerous way round: a reader trusted a safety property that was not there.
+ *
+ * Fail-open is correct here because **nothing writes
+ * `platformBookedShipment`.** A self-shipped parcel has no flag to set, so a
+ * fail-closed gate would refuse every seller and the reimbursement feature
+ * would be entirely dead. Absence means "self-shipped", which is the common
+ * case, and the real protection on that path is the evidence-plus-approval
+ * step — a seller is paid the amount an admin approves from an uploaded
+ * receipt, never an amount they assert.
+ *
+ * ## 🛑 THE GATE IS THEREFORE INERT, and that is a prerequisite, not a bug
+ *
+ * Measured 2026-10-21: `platformBookedShipment` has ZERO writers — only this
+ * declaration, the `ShippingReconciliation` field and the order schema. The
+ * exposure is nil **today** because nothing creates a platform booking either:
+ * `ShiprocketShippingProvider` is registered in `providers.config.ts` but
+ * nothing calls its `createShipment`.
+ *
+ * So the day that booking path is wired, THE SAME COMMIT must write this flag.
+ * Otherwise the gate fails open on a parcel the platform paid for and the
+ * seller is reimbursed for our spend — the exact double-payment this function
+ * exists to prevent.
+ *
+ * Gated on WHO BOOKED rather than on whether a receipt exists, because testing
+ * for a receipt is the exploitable version: a seller could upload a receipt for
+ * a parcel the platform paid for. The discriminator has to be a fact about how
+ * the shipment was created, not something the claimant supplies — which is
+ * also why this function deliberately does NOT look at
+ * `shippingReimbursement`. That parameter was accepted and never read, and an
+ * unread parameter invites exactly the misuse it was meant to forbid, so it is
+ * gone.
  */
-export function isReimbursableShipment(order: {
-  platformBookedShipment?: boolean;
-  shippingReimbursement?: { approvedAmount?: number } | undefined;
-}): boolean {
+export function isReimbursableShipment(order: { platformBookedShipment?: boolean }): boolean {
   if (order.platformBookedShipment === true) return false;
   return true;
 }
