@@ -21,9 +21,26 @@ import type { FirestoreTriggerHandler } from "../runtime/types";
 import type { JobContext } from "../runtime/types";
 import type { JsonValue } from "@mohasinac/appkit";
 import { allocateShipmentCosts, type LotAllocationInput } from "../../../../features/shipments/utils/cost-allocation";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 
 type Doc = Record<string, JsonValue>;
 
+/*
+ * ── D58: the admin saw 6 while this used 4 ───────────────────────────────
+ *
+ * 🛑 `siteSettings.laborRate.maxHoursPerDay` is admin-editable and read by
+ * NOTHING (verified: zero readers outside the form, the schema and the seed).
+ * The form's own fallback is **6**; this constant is **4**. So an admin could
+ * set the value, see it persist, and the allocation would keep using a
+ * different number — which is the same class as D13's silent control, with
+ * the extra twist that the two numbers disagreed.
+ *
+ * Now read from settings with this as the FALLBACK, so the admin control is
+ * live and the two cannot diverge. 4 is kept as the fallback rather than 6
+ * because 4 is what every existing allocation was computed with — switching
+ * the default to the form's 6 would silently re-base historical cost figures,
+ * which is worse than the disagreement it fixes.
+ */
 const DEFAULT_MAX_HOURS_PER_DAY = 4;
 
 /*
@@ -104,13 +121,27 @@ async function recomputeShipmentAllocation(shipmentId: string, ctx: JobContext):
   const laborRatePerHour = (shipment.laborRatePerHour as number) ?? 0;
   const laborHoursSpent = (shipment.laborHoursSpent as number) ?? 0;
 
+  /*
+   * One settings read per allocation. This job is a Firestore trigger on a
+   * single shipment, not a sweep, so the read is bounded — and the
+   * alternative (keep ignoring the admin control) is the defect.
+   */
+  const laborSettings = await siteSettingsRepository
+    .getSingleton()
+    .then((s) => s.laborRate)
+    .catch(() => undefined);
+  const settingsMaxHours = laborSettings?.maxHoursPerDay;
+
   const { perLot, totals } = allocateShipmentCosts({
     lots: allocationInputs,
     customsTotal: (shipment.customsTotal as number) ?? 0,
     shippingTotal: (shipment.shippingTotal as number) ?? 0,
     laborHoursSpent,
     laborRatePerHour,
-    maxHoursPerDay: DEFAULT_MAX_HOURS_PER_DAY,
+    maxHoursPerDay:
+      typeof settingsMaxHours === "number" && Number.isFinite(settingsMaxHours) && settingsMaxHours > 0
+        ? settingsMaxHours
+        : DEFAULT_MAX_HOURS_PER_DAY,
   });
 
   const batch = ctx.db.batch();

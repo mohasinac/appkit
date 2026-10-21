@@ -1388,10 +1388,32 @@ export function AdminSiteSettingsView({
                 <Input label="Maximum platform fee (₹)" helperText="Ceiling on the buyer's platform commission, charged once per checkout on every payment method. GST is calculated on the capped amount." value={String(platformFeeMax)} onChange={(e) => setPlatformFeeMax(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
                 <Input label="Seller payout hold (days)" value={String(payoutHoldDays)} onChange={(e) => setPayoutHoldDays(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Minimum payout amount (₹)" value={String(minPayoutAmount)} onChange={(e) => setMinPayoutAmount(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Auction listing fee (₹)" value={String(auctionListingFee)} onChange={(e) => setAuctionListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Pre-order listing fee (₹)" value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Featured slot fee (₹)" value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Promoted slot fee (₹)" value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+              {/*
+                * 🛑 D57/D60 — THESE FOUR FEES CHARGE NOBODY. Verified: zero
+                * readers in any money path (the single grep hit is a comment
+                * in `fees.ts` listing them as EXCLUDED from the buyer-facing
+                * projection). `featuredSlotFee` defaults to ₹999 and
+                * `promotedSlotFee` to ₹499, and `/admin/deals` sets
+                * `isPromoted` for free — which is exactly what
+                * `promotedSlotFee` would bill for.
+                *
+                * `platformLimits`' own comment states the rule: "Do not
+                * re-add them without a reader: a control that silently does
+                * nothing is worse than an absent one."
+                *
+                * 🛑 I did NOT delete them, and the reasoning is the word
+                * SILENTLY. Deleting discards a price the owner deliberately
+                * chose; wiring them is a new seller-billing feature, not a
+                * defect fix. Labelling removes the LIE at no cost and
+                * destroys nothing — so an admin setting ₹999 now knows it
+                * records an intent rather than collecting money.
+                *
+                * Flagged for a real decision: delete, or build the billing.
+                */}
+                <Input label="Auction listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(auctionListingFee)} onChange={(e) => setAuctionListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+                <Input label="Pre-order listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+                <Input label="Featured slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+                <Input label="Promoted slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="COD deposit (%)" helperText="% of order collected upfront on COD orders; remainder paid on delivery." value={String(codDepositPercent)} onChange={(e) => setCodDepositPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
               </Grid>
               <Toggle
