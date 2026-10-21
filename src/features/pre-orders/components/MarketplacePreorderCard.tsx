@@ -316,9 +316,24 @@ export function MarketplacePreorderCard({
    * clears this card's own overlays, which all sit at `z-10`.
    */
   return (
-    <Div className="relative h-full">
+    <Div className="flex h-full flex-col">
       {card}
-      <Div className="absolute right-2 bottom-2 z-20">{ownerActions}</Div>
+    {/*
+      🛑 NORMAL FLOW AT THE FOOT, not an absolute corner.
+
+      Across the five card types this toolbar appeared in FIVE different
+      places — `top-14` on the product grid (on the photograph), `top-2`
+      here and on the prize draw (on the badges), `bottom-2` on the pre-order
+      and auction (on top of their own CTA button). Each was chosen by
+      elimination against that one card's overlays, so each landed somewhere
+      different and none of them read as a toolbar.
+
+      At the foot in normal flow there is no corner budget to reason about and
+      no overlay to dodge, so it is the same position on every card. It stays
+      a SIBLING of the card body because that body is wrapped in a `<Link>`
+      and a button inside an anchor is invalid HTML.
+    */}
+    <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">{ownerActions}</Div>
     </Div>
   );
 }

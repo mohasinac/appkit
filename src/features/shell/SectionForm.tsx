@@ -602,16 +602,27 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    */
   const showRail = ordered.length >= 3;
 
+  /*
+   * `sticky` under the measured header, and it publishes NO height: per the
+   * three-tier rule a sticky element CONSUMES the tier and never joins it.
+   * `hidden lg:block` because below `lg` there is no horizontal room and the
+   * accordion headers are already the navigation.
+   *
+   * The offset is a `top-[calc(…)]` UTILITY rather than an inline style — the
+   * sticky convention this repo already uses, and `audit-inline-styles` is
+   * strict-zero with its marker among the 24 banned ones. Scrolling is the
+   * `overflow` PROP, not a raw `overflow-y-auto`, which `audit-inline-styles`
+   * also blocks on an appkit primitive.
+   *
+   * 🛑 This comment lives ABOVE the statement because a `{/* … *␣/}` block
+   * inside the ternary's parentheses is EXPRESSION position, where JSX
+   * comment syntax does not parse. That is the fourth time today; the rule is
+   * simply that JSX comments belong in CHILDREN position and nowhere else.
+   */
   const rail = showRail ? (
-    /*
-     * `sticky` under the measured header, and it publishes NO height: per the
-     * three-tier rule a sticky element CONSUMES the tier and never joins it.
-     * `hidden lg:block` because below `lg` there is no horizontal room and the
-     * accordion headers are already the navigation.
-     */
     <Div
-      className="hidden lg:block w-56 flex-shrink-0 sticky self-start max-h-[calc(100vh-var(--header-height,3.5rem)-2rem)] overflow-y-auto"
-      style={{ top: "calc(var(--header-height, 3.5rem) + 1rem)" }}
+      overflow="auto"
+      className="hidden lg:block w-56 flex-shrink-0 sticky self-start top-[calc(var(--header-height,3.5rem)+1rem)] max-h-[calc(100vh-var(--header-height,3.5rem)-2rem)]"
     >
       <Nav aria-label="Form sections">
         <Stack gap="px">

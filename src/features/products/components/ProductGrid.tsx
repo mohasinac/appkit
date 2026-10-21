@@ -474,26 +474,38 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   if (!ownerActions || selectionMode || isSelected) return wrapped;
 
   /*
-   * 🛑 OUTSIDE the anchor, as a sibling — never inside `cardBody`.
+   * 🛑 STILL OUTSIDE THE ANCHOR, as a sibling — never inside `cardBody`.
    *
    * This card wraps its entire body in a `<Link>` whenever `href` is set, and
    * `InteractiveProductCard` wraps it in another one. A `<button>` inside an
    * `<a>` is invalid HTML that browsers resolve by closing the anchor early,
    * which breaks the CARD's navigation rather than just the button's —
-   * stopPropagation stops the click but cannot fix the parse.
+   * stopPropagation stops the click but cannot fix the parse. That constraint
+   * is unchanged and is why this sits here rather than next to the title.
    *
-   * Positioned `top-14 right-2`: directly below the 44px wishlist heart at
-   * `top-2 right-2`, so it clears every occupied corner (checkbox and badges
-   * top-left, IconOverlay bottom-right) without needing to know the hero's
-   * height. The hero is `aspect-square`, so it is always taller than
-   * 3.5rem + 44px and the toolbar lands on the photo.
+   * 🛑 BUT NO LONGER ABSOLUTE, AND NO LONGER ON THE PHOTO.
    *
-   * `z-20` beats the in-card overlays, which all sit at `z-10`.
+   * It used to be `absolute right-2 top-14 z-20`, chosen by elimination — the
+   * wishlist heart owns `top-2 right-2`, the checkbox and badges own top-left,
+   * `IconOverlay` owns bottom-right — which left the middle of the product
+   * photograph as the only free corner. So every seller-visible card had three
+   * icons sitting on the artwork, and on the pre-order card the same logic put
+   * them on top of the "Reserve now" button.
+   *
+   * In normal flow at the FOOT of the card it collides with nothing by
+   * construction: no corner budget to reason about, no overlap with a CTA, and
+   * the same position on every card type. The toolbar supplies its own box, so
+   * it reads as a distinct owner strip rather than as part of the listing.
+   *
+   * `justify-end` keeps it on the side the eye already uses for card actions;
+   * `pt-0` because the card body's own bottom padding is the gap.
    */
   return (
-    <Div className="relative h-full">
+    <Div className="flex h-full flex-col">
       {wrapped}
-      <Div className="absolute right-2 top-14 z-20">{ownerActions}</Div>
+      <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)] pt-0">
+        {ownerActions}
+      </Div>
     </Div>
   );
 }

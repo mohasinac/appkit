@@ -754,6 +754,23 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             insert shifts sibling position ranges, so a copy would carry stale
             derived state.
           */}
+          {/* Title + metrics */}
+          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
+            {category?.name ?? slug}
+          </Heading>
+
+          {/*
+            🛑 BELOW the `<h1>`, not above it.
+
+            This block used to render BEFORE the heading, so on a cover hero
+            the three icons sat on top of the title — "Spinning Tops" with a
+            pencil overlapping it. Above a heading there is nothing for a
+            control strip to belong to; below one it reads as "actions for
+            this record", which is what it is.
+
+            The toolbar supplies its own bordered box, so it no longer depends
+            on the caller finding a free corner.
+          */}
           {category?.id && (
             <RecordOwnerQuickActions
               resource="CATEGORY"
@@ -770,13 +787,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             />
           )}
 
-          {/* Title + metrics */}
-          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
-            {category?.name ?? slug}
-          </Heading>
-
+          {/*
+            The `${hasCover ? "/80" : ""}` that used to sit in the className
+            below was a DEAD ALPHA FRAGMENT — codemod residue from a stripped
+            `text-white/80`, a class Tailwind cannot generate and silently
+            drops. It did nothing; `color="inverse"` already carries the ink.
+          */}
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <Text color={hasCover ? "inverse" : "muted"} className={`max-w-2xl mb-4 ${hasCover ? "/80" : ""}`} size="base">
+            <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mb-4" size="base">
               {category.description}
             </Text>
           )}

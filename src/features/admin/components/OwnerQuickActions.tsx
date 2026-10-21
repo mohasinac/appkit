@@ -300,7 +300,18 @@ export function OwnerQuickActions({
    * therefore rendered near-black on near-black and read as "admins get no
    * edit button at all". See `onMedia` above and Root Cause #67.
    */
-  const onDark = placement === "card" || onMedia;
+  /*
+   * 🛑 `onMedia` ALONE now — `placement === "card"` no longer implies a dark
+   * backdrop and including it would be actively wrong.
+   *
+   * It used to, because every card pinned this toolbar over its hero
+   * PHOTOGRAPH, so "card" and "on media" were the same thing. The card
+   * toolbars now sit in normal flow at the foot of the card, on the card's own
+   * surface — where a dark scrim with white icons is a black rectangle on a
+   * white card. A caller that genuinely still renders over artwork passes
+   * `onMedia` explicitly, which is what that prop is for.
+   */
+  const onDark = onMedia;
   const neutralVariant = onDark ? "scrim" : "ghost";
   /*
    * Danger ink is dropped on a dark backdrop for the same reason: `danger`
@@ -310,12 +321,54 @@ export function OwnerQuickActions({
    */
   const dangerVariant = onDark ? "scrim" : "danger";
 
+  /*
+   * ── THE BOX ───────────────────────────────────────────────────────────────
+   *
+   * 🛑 THE TOOLBAR NOW CARRIES ITS OWN CONTAINER, AND THAT IS THE FIX FOR
+   * "they appear at random places".
+   *
+   * This component used to render a BARE `<Row>` and leave every decision
+   * about where it sat — and whether it read as a group at all — to each
+   * caller's `className`. Measured, the callers disagreed completely: the
+   * product grid pinned it `absolute right-2 top-14`, i.e. ON the product
+   * photo; the pre-order card landed it over its own "Reserve now" CTA; the
+   * category hero put it ABOVE the `<h1>`, overlapping the title. Three
+   * surfaces, three positions, none of them legible as a toolbar.
+   *
+   * A shared control cluster needs a shared container, or the next surface
+   * invents a fourth position. So the box is here, once:
+   *
+   *   - a real surface and border, so it reads as a discrete group of
+   *     controls rather than three icons floating on artwork;
+   *   - `rounded` + padding, so the icons have breathing room and the hit
+   *     targets do not touch;
+   *   - a shadow, which is what separates it from whatever it sits on when
+   *     the backdrop happens to be a similar tone.
+   *
+   * 🛑 `inline-flex`, never `w-full`. In normal flow this must shrink to its
+   * own content — a full-width bar would read as a section divider and would
+   * stretch across a card body it is only a corner of.
+   */
+  const boxClass = onDark
+    ? /*
+       * On media: a translucent dark scrim rather than a theme surface. The
+       * `frost` reasoning from Root Cause #67 — a theme-relative surface is a
+       * LIGHT background in every light theme, so a themed box on a dark hero
+       * photo is a white rectangle over the artwork.
+       */
+      "inline-flex rounded-[var(--appkit-radius-lg)] bg-black/55 backdrop-blur-sm p-[var(--appkit-space-1)] shadow-md"
+    : /*
+       * Off media: the real surface tokens, so it inverts with the theme
+       * instead of being a fixed near-white that disappears in dark mode.
+       */
+      "inline-flex rounded-[var(--appkit-radius-lg)] bg-[var(--appkit-color-surface-elevated)] border border-[var(--appkit-color-border)] p-[var(--appkit-space-1)] shadow-sm";
+
   return (
     <>
       <Row
         gap="xs"
         align="center"
-        className={className}
+        className={`${boxClass} ${className}`.trim()}
         /*
          * Stops the click reaching an ancestor `<Link>` or the card's own
          * `onClick`. Without it, pressing Edit on a card both navigates to the
