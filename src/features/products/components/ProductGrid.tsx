@@ -355,7 +355,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
         <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
 
-        {product.rating !== undefined && (
+        {/*
+          🛑 A REVIEW MUST EXIST. `rating !== undefined` passes for
+          `rating: 0` — what a product nobody has reviewed stores — and then
+          the card shows a star and "0.0", which reads as a product rated
+          zero rather than one with no rating. Zero reviews is not zero stars,
+          and on a grid of cards the difference is the whole impression.
+        */}
+        {product.rating !== undefined && (product.reviewCount ?? 0) > 0 && (
           <Row className="mt-1" gap="xs">
             <Span className={CLS_STAR}>★</Span>
             <Span className="text-[11px]" color="muted">
@@ -659,7 +666,8 @@ function ProductListRow<T extends ProductItem = ProductItem>({
               <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
             </PricesOnly>
           )}
-          {product.rating !== undefined && (
+          {/* Same gate as the card layout above — see its note. */}
+          {product.rating !== undefined && (product.reviewCount ?? 0) > 0 && (
             <Span layout="flex" gap="2xs" className="text-[11px]" color="faint">
               <Span className={CLS_STAR_BARE}>★</Span>
               {product.rating.toFixed(1)}

@@ -45,14 +45,12 @@ export interface SearchResultsPageViewProps {
    * A short line under the heading — "results as of 10:51". Optional because
    * the server tier has no build time to report.
    */
-  footnote?: string;
 }
 
 export function SearchResultsPageView({
   result,
   renderSearchInput,
   renderAboveGroups,
-  footnote,
 }: SearchResultsPageViewProps) {
   const { q, terms, groups, totalHits } = result;
   const hasQuery = q.trim().length > 0;
@@ -87,11 +85,6 @@ export function SearchResultsPageView({
             )}
           </Stack>
 
-          {footnote && (
-            <Text size="xs" color="muted">
-              {footnote}
-            </Text>
-          )}
 
           {renderSearchInput?.()}
 

@@ -648,8 +648,20 @@ export async function ProductDetailPageView({
                 </Heading>
               </Div>
 
-              {/* Rating + stock status */}
-              {avgRating !== null ? (
+              {/*
+                Rating + stock status
+
+                🛑 GATED ON A REVIEW EXISTING, not on the rating being
+                non-null. `avgRating !== null` alone passes for a product
+                carrying `avgRating: 0` — the natural stored value for a
+                product nobody has reviewed — and then this renders five stars
+                and "0.0" with no count beside it. That reads as "rated zero
+                out of five", which is a claim about the product; the truth is
+                that it has no score at all. Zero reviews is not zero stars.
+                The else branch already renders the stock badge on its own and
+                is the correct output here.
+              */}
+              {avgRating !== null && (reviewCount ?? 0) > 0 ? (
                 <Row align="center" gap="sm">
                   <StarRating value={avgRating} />
                   <Span size="sm" color="muted">

@@ -144,11 +144,22 @@ export function SearchResultsClient({
   return (
     <SearchResultsPageView
       result={waiting ? { ...result, groups: [], totalHits: 0 } : result}
-      footnote={
-        usingLocal && local.builtAt
-          ? `Catalogue index updated ${new Date(local.builtAt).toLocaleString()}.`
-          : undefined
-      }
+      /*
+       * 🛑 NO FOOTNOTE. This read "Catalogue index updated 19/10/2026,
+       * 16:21:48." underneath a shopper's search results.
+       *
+       * It is an implementation detail of how the client-side index is built,
+       * phrased in our vocabulary, and a shopper can do nothing with it. Worse
+       * than useless: a visible timestamp implies the results might be STALE,
+       * on the one surface where a shopper needs to trust that what they see
+       * is what we have.
+       *
+       * The two messages below are kept, and the contrast is the point —
+       * "couldn't search your account" and the index-failure line both tell
+       * the user something that changes what they should believe about the
+       * results in front of them. A build timestamp on a SUCCESSFUL search
+       * does not.
+       */
       renderAboveGroups={() => (
         <>
           {waiting && <Text color="muted">Searching…</Text>}
