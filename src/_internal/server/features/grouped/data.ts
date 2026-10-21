@@ -16,6 +16,33 @@ import {
   GROUPED_LISTINGS_PAGE_SIZE,
   GROUPED_LISTINGS_SITEMAP_LIMIT,
 } from "../../../shared/features/grouped/config";
+import { isListingTypeEnabled } from "../../../shared/listing-types/feature-flags";
+import { normalizeListingType } from "../../../../features/products/utils/listing-type";
+import { getSiteSettingsSafe } from "../site-settings/safe-settings";
+
+/**
+ * Drop members whose listing type the admin has switched off.
+ *
+ * 🛑 One helper for all three hydrators rather than the same `.filter()`
+ * repeated three times — three copies of one rule is how the next person
+ * updates two of them (Root Cause #75).
+ *
+ * `isListingTypeEnabled` reads a missing flag as ENABLED and
+ * `getSiteSettingsSafe` returns null on failure, so a settings read that fails
+ * shows every member rather than emptying the carousel — the right failure
+ * direction for a discovery surface.
+ */
+async function withEnabledMembers<T extends { items: ProductDocument[] }>(
+  groups: T[],
+): Promise<T[]> {
+  const settings = await getSiteSettingsSafe();
+  return groups.map((group) => ({
+    ...group,
+    items: group.items.filter((p) =>
+      isListingTypeEnabled(normalizeListingType(p), settings),
+    ),
+  }));
+}
 
 function mapDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): GroupedListingDocument {
   const data = doc.data() as Record<string, JsonValue>;
@@ -169,7 +196,7 @@ export const getGroupsForProduct = cache(
 export const getGroupsWithItemsForProduct = cache(
   async (productId: string): Promise<GroupedListingWithItems[]> => {
     const groups = await getGroupsForProduct(productId);
-    return Promise.all(
+    const hydrated = await Promise.all(
       groups.map(async (group) => {
         const otherIds = group.productIds.filter((id) => id !== productId);
         const items = await Promise.all(
@@ -184,6 +211,7 @@ export const getGroupsWithItemsForProduct = cache(
         return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
       }),
     );
+    return withEnabledMembers(hydrated);
   },
 );
 
@@ -195,7 +223,7 @@ export const getGroupsForCategory = cache(
       serverLogger.warn("grouped-data: getGroupsForCategory failed — returning empty", { categorySlug, error: err instanceof Error ? err.message : String(err) });
       return [];
     });
-    return Promise.all(
+    const hydrated = await Promise.all(
       groups.map(async (group) => {
         const items = await Promise.all(
           group.productIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
@@ -203,6 +231,7 @@ export const getGroupsForCategory = cache(
         return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
       }),
     );
+    return withEnabledMembers(hydrated);
   },
 );
 
@@ -214,7 +243,7 @@ export const getGroupsForBrand = cache(
       serverLogger.warn("grouped-data: getGroupsForBrand failed — returning empty", { brandSlug, error: err instanceof Error ? err.message : String(err) });
       return [];
     });
-    return Promise.all(
+    const hydrated = await Promise.all(
       groups.map(async (group) => {
         const items = await Promise.all(
           group.productIds.map((id) => productRepository.findByIdOrSlug(id).catch(() => null)),
@@ -222,6 +251,7 @@ export const getGroupsForBrand = cache(
         return { ...group, items: items.filter((p): p is ProductDocument => p !== null) };
       }),
     );
+    return withEnabledMembers(hydrated);
   },
 );
 

@@ -1138,6 +1138,79 @@ function stripAdminOwned(payload, ownedFields) {
 const ADMIN_EDIT_PROTECTED = new Set(["partGlossary", "beys"]);
 
 /**
+ * Fields a seed may CREATE but must never OVERWRITE — derived counters.
+ *
+ * 🛑 This exists because seeding silently zeroed the whole taxonomy. Every row
+ * in `categories-seed-data.ts` hard-codes
+ * `metrics: { productCount: 0, totalProductCount: 0, … }`, and `seed-cli`
+ * merge-writes — a merge overwrites any key PRESENT in the payload. So
+ * `appkit-seed load --collections categories` set every counter on every
+ * category to zero.
+ *
+ * Measured 2026-10-21: after a demo purge, all 17 categories that should have
+ * carried stock read `total=0` while their products were filed perfectly --
+ * `category-beyblade-x` stored 0 against an actual 14. Every parent looked
+ * empty. Reseeding to add four bundles then zeroed them a SECOND time,
+ * minutes after they had been repaired.
+ *
+ * Nothing errors, because a wrong number is just a number. The symptom reaches
+ * only a human looking at a page that says a category has nothing in it.
+ *
+ * 🛑 CREATE but not OVERWRITE, not "always strip" — `CategoryDocument.metrics`
+ * is a REQUIRED field with three unguarded readers (`CategoryTableColumns`,
+ * `CategoryTree`, `isFeaturedEligible`). Stripping it unconditionally would
+ * leave a freshly seeded document violating its own type until the reconciler
+ * first ran. Establishing zeros on create is correct; overwriting live counts
+ * is not.
+ *
+ * The authority for these fields is `runCountersReconcile` plus the live
+ * write triggers — see the `countersReconcileNow` Function for the on-demand
+ * run that belongs immediately after a seed.
+ */
+const DERIVED_COUNTER_FIELDS = {
+  categories: ["metrics"],
+  stores: ["stats"],
+};
+
+/**
+ * The ids a collection already holds, when it has derived counters to protect.
+ *
+ * 🛑 A `.select()` projection — ids only, no document bodies — so this costs
+ * reads but transfers almost nothing. It runs ONLY for the two collections in
+ * `DERIVED_COUNTER_FIELDS`, and only when that collection is actually being
+ * loaded; every other collection pays nothing.
+ *
+ * Fails OPEN to an empty set: if the existence probe itself fails we would
+ * rather write the seed's zeros (recoverable by one reconcile) than abort a
+ * load. The reconciler is the backstop either way.
+ */
+async function fetchExistingIds(db, collection) {
+  const fields = DERIVED_COUNTER_FIELDS[collection];
+  if (!fields) return null;
+  try {
+    const snap = await db.collection(collection).select().get();
+    return new Set(snap.docs.map((d) => d.id));
+  } catch (err) {
+    console.log(
+      `  ⚠ could not probe existing ${collection} ids (${err?.message ?? err}) — derived counters may be reset; run countersReconcileNow after this load`,
+    );
+    return null;
+  }
+}
+
+/** Drop derived-counter keys when the document already exists. */
+function stripDerivedCounters(collection, payload, docId, existingIds) {
+  const fields = DERIVED_COUNTER_FIELDS[collection];
+  if (!fields || !existingIds || !existingIds.has(docId)) return payload;
+  const out = {};
+  for (const [k, v] of Object.entries(payload)) {
+    if (fields.includes(k)) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
+/**
  * The fields a human owns, per document id, for one collection.
  *
  * 🛑 ONE INDEXED EQUALITY, not a read per document. The alternative is
@@ -1190,6 +1263,20 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
     const removed = await purgeCollection(firestoreCollection);
     if (VERBOSE) console.log(`    purged ${removed} pre-existing docs`);
   }
+  /*
+   * 🛑 Probed AFTER any replace-purge, never before. On a `REPLACE_ON_LOAD`
+   * collection the purge removes every document, so an id set taken earlier
+   * would claim rows exist that no longer do — and their derived counters
+   * would then be stripped from a payload that is now a CREATE, leaving the
+   * field absent on a required type. Probing here means a purged collection
+   * correctly reports nothing existing.
+   */
+  const existingIds = await fetchExistingIds(db, colName);
+  if (existingIds && existingIds.size > 0) {
+    console.log(
+      `  • ${colName}: preserving live ${DERIVED_COUNTER_FIELDS[colName].join("/")} on ${existingIds.size} existing doc(s)`,
+    );
+  }
   const items = [];
   for (const docData of seed) {
     let { id, ...data } = docData;
@@ -1236,9 +1323,20 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
        * merge-write leaves an absent key exactly as it was, which is how the
        * correction survives.
        */
-      data: stripAdminOwned(
-        encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, docId))),
-        adminOwned.get(docId),
+      /*
+       * 🛑 Derived counters dropped on an EXISTING document, after everything
+       * else, for the same reason admin-owned keys are: a merge-write leaves
+       * an absent key exactly as it was, which is what preserves the live
+       * value. Stripping earlier would let a later transform re-add it.
+       */
+      data: stripDerivedCounters(
+        colName,
+        stripAdminOwned(
+          encryptSeedPii(colName, stripUndefined(stampSeedPurpose(colName, data, docId))),
+          adminOwned.get(docId),
+        ),
+        docId,
+        existingIds,
       ),
     });
   }

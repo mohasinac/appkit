@@ -42,6 +42,10 @@ export { onProductWriteHandler } from "./onProductWrite";
 export { onStoreWriteHandler } from "./onStoreWrite";
 export { adminAnalyticsHandler, type AdminAnalyticsResult } from "./adminAnalytics";
 export {
+  countersReconcileNowHandler,
+  type CountersReconcileNowResult,
+} from "./countersReconcileNow";
+export {
   storeAnalyticsHandler,
   type StoreAnalyticsInput,
   type StoreAnalyticsResult,

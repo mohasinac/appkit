@@ -15,6 +15,9 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import { PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
 import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
 import { isPubliclyVisible } from "../../../shared/listing-types/availability";
+import { isListingTypeEnabled } from "../../../shared/listing-types/feature-flags";
+import { normalizeListingType } from "../../../../features/products/utils/listing-type";
+import { getSiteSettingsSafe } from "../site-settings/safe-settings";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { ListingType } from "../../../../features/products/types";
 import type { ProductItem } from "../../../../features/products/types";
@@ -196,7 +199,23 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
       .limit(PRODUCTS_SITEMAP_LIMIT)
       .get();
 
-    return snapshot.docs.map((doc) => {
+    /*
+     * 🛑 A disabled listing type must not be advertised to search engines.
+     * This is the furthest-reaching surface of the lot: a sitemap entry
+     * survives the admin toggle, gets crawled, and lands a visitor on a type
+     * the site has switched off. Filtered in memory rather than in the query
+     * because the enabled set is a settings map, not a Firestore field.
+     */
+    const settings = await getSiteSettingsSafe();
+
+    return snapshot.docs
+      .filter((doc) =>
+        isListingTypeEnabled(
+          normalizeListingType(doc.data() as { listingType?: ListingType }),
+          settings,
+        ),
+      )
+      .map((doc) => {
       const data = doc.data();
       const rawListingType = data.listingType;
       const listingType: SitemapProduct["listingType"] =
@@ -249,12 +268,36 @@ export interface RelatedItemsResult {
  * it had no branch at all for classified / live / art / stickers. It now
  * shares one definition with the listing query and the homepage.
  */
-function toRelatedItems(docs: unknown[], currentProductId: string): ProductItem[] {
+/**
+ * Mirrors the shape `isListingTypeEnabled` accepts, derived from it rather than
+ * redeclared — the same pattern `stores/tabs.ts` uses, so the two cannot drift.
+ */
+type FeatureFlagSettings = Parameters<typeof isListingTypeEnabled>[1];
+
+function toRelatedItems(
+  docs: unknown[],
+  currentProductId: string,
+  settings: FeatureFlagSettings,
+): ProductItem[] {
   const now = new Date();
   return (docs as FirestoreDocument[])
     .filter(
       (r) =>
-        r.id !== currentProductId && isPubliclyVisible(r) && isListingRowAvailable(r, now),
+        r.id !== currentProductId &&
+        isPubliclyVisible(r) &&
+        /*
+         * 🛑 A DISABLED listing type must not appear here. Related items are
+         * pure DISCOVERY — unlike a won auction sitting in the cart, nothing
+         * here is an obligation the buyer already holds, so there is no reason
+         * to surface a type the admin has switched off. Without this an
+         * auction card rendered on every related carousel with auctions
+         * disabled, and it was reachable by clicking it.
+         */
+        isListingTypeEnabled(
+          normalizeListingType(r as { listingType?: ListingType }),
+          settings,
+        ) &&
+        isListingRowAvailable(r, now),
     )
     .slice(0, RELATED_DISPLAY_LIMIT)
     .map(toProductItem);
@@ -307,11 +350,21 @@ export const computeRelatedItems = cache(
         : Promise.resolve([] as unknown[]),
     ]);
 
+    /*
+     * Fetched AFTER the four queries rather than inside the Promise.all: it is
+     * a cached single-doc read, and keeping it out of the fan-out keeps the
+     * four product queries parallel. `getSiteSettingsSafe` returns null on
+     * failure, and `isListingTypeEnabled` reads a missing flag as ENABLED — so
+     * a settings read that fails shows everything rather than hiding the page,
+     * which is the right failure direction for a discovery surface.
+     */
+    const settings = await getSiteSettingsSafe();
+
     return {
-      relatedItems: toRelatedItems(sameCategoryDocs, currentProductId),
-      relatedByBrand: toRelatedItems(sameBrandDocs, currentProductId),
-      relatedByTags: toRelatedItems(tagOverlapDocs, currentProductId),
-      relatedByStore: toRelatedItems(sameStoreDocs, currentProductId),
+      relatedItems: toRelatedItems(sameCategoryDocs, currentProductId, settings),
+      relatedByBrand: toRelatedItems(sameBrandDocs, currentProductId, settings),
+      relatedByTags: toRelatedItems(tagOverlapDocs, currentProductId, settings),
+      relatedByStore: toRelatedItems(sameStoreDocs, currentProductId, settings),
     };
   },
 );

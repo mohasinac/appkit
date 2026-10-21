@@ -203,7 +203,7 @@ export function AdminBundleEditorView({
        * would have written that blank over a live bundle.
        *
        * Verified in production 2026-10-02: /admin/bundles/
-       * bundle-every-generation-starter-pack/edit polled for 14s with
+       * bundle-x-bx53-complete/edit polled for 14s with
        * `input[name="name"]` and `input[name="priceRupees"]` both `""` and no
        * member count, while `GET /api/admin/bundles/{id}` returned 200 with the
        * real bundle (`{ success, data: <bundle> }`, no nested `data`). I did not

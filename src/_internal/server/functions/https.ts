@@ -14,6 +14,7 @@ import type { JobContext } from "../jobs/runtime/types";
 import {
   adminAnalyticsHandler,
   assignSpinPrizeHandler,
+  countersReconcileNowHandler,
   listingProcessorHandler,
   promotionsHandler,
   storeAnalyticsHandler,
@@ -143,6 +144,58 @@ type GatewayHandler = (
   ctx: JobContext,
 ) => Promise<unknown>;
 
+/**
+ * Recompute every category and store counter, on demand.
+ *
+ * `countersReconcile` already runs this nightly at 03:00 UTC, which is right
+ * for drift that accumulates on its own and wrong for drift you have just
+ * caused. A seed, a purge or a bulk import leaves the counters wrong
+ * immediately — and a catalogue that reads as empty until tomorrow morning is
+ * not an acceptable gap. Measured 2026-10-21: a demo purge left all 17 stocked
+ * categories reporting zero while their products were filed perfectly.
+ *
+ * 🛑 DELIBERATELY NOT IN `GATEWAY_HANDLERS`, and that is the whole reason it
+ * is defined separately rather than added to the multiplexer.
+ *
+ * The gateway runs at **120s**; this job's scheduled twin runs at **540s** and
+ * needs it — the category pass alone walks 4,699 rows. Behind the gateway the
+ * same handler would silently get a quarter of its budget and time out
+ * part-way, which on a reconciler means it stops after writing SOME counters
+ * and leaves the taxonomy half-corrected, with a 200 and no error.
+ *
+ * That is precisely Root Cause #85: one handler reachable by two entry points
+ * with different ceilings, where nothing at the call site says which one
+ * served it. The rule there was to align the budgets; here they cannot be
+ * aligned without raising the gateway for six unrelated handlers, so the job
+ * stays out of it instead.
+ *
+ * Matching `timeoutSeconds` and `memory` to the scheduled definition is the
+ * same discipline — cron and callable must run under identical limits, or a
+ * job that works nightly fails on demand for reasons no log explains.
+ */
+export const countersReconcileNow = defineFunction({
+  name: "countersReconcileNow",
+  description:
+    "Recompute category + store counters on demand (after a seed, purge or bulk import).",
+  trigger: { kind: "https" },
+  handler: countersReconcileNowHandler,
+  options: {
+    region: REGION,
+    /* Identical to the `countersReconcile` schedule — see above. */
+    timeoutSeconds: 540,
+    memory: "256MiB",
+    /*
+     * 🛑 ONE instance. Two concurrent reconciles read the same products and
+     * write the same counters, so the loser's writes land on top of a tally
+     * computed from a different snapshot. The scheduled twin is also
+     * `maxInstances: 1`.
+     */
+    maxInstances: 1,
+    cors: false,
+    secretEnvVar: SECRET_ENV,
+  },
+});
+
 const GATEWAY_HANDLERS: Record<string, GatewayHandler> = {
   listingProcessor: listingProcessorHandler as unknown as GatewayHandler,
   adminAnalytics: adminAnalyticsHandler as unknown as GatewayHandler,
@@ -189,5 +242,6 @@ export const HTTPS_FUNCTIONS = [
   listingProcessor,
   triggerEventRaffle,
   assignSpinPrize,
+  countersReconcileNow,
   gateway,
 ] as const;
