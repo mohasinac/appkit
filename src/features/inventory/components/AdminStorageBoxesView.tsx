@@ -19,8 +19,7 @@ import { Button, Div, Form, FieldInput, FieldSelect, Stack, Text } from "../../.
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { sortBy } from "../../../constants/sort";
-import { normalizeError } from "../../../errors/normalize";
-import { toUserMessage } from "../../../errors/error-display-map";
+import { operatorMessage } from "./operator-message";
 import { BoxTypeValues, type StorageBoxDocument } from "../schemas/firestore";
 
 interface BoxRow {
@@ -105,17 +104,20 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
                   onCreated();
                 } catch (err) {
                   /*
-                   * 🛑 Through `toUserMessage`, never the server's own text.
-                   * A raw fallback is how a Node `MODULE_NOT_FOUND` with a
-                   * require stack ended up rendered inside a bid modal (Root
-                   * Cause #86) — and the 409 here has a real message the map
-                   * resolves.
+                   * 🛑 `operatorMessage`, not a raw fallback. This read
+                   * `toUserMessage(undefined, undefined, { fallback: e.message })`
+                   * under a comment claiming it never showed server text —
+                   * which is false twice over: `undefined` for the code means
+                   * the map never runs, so the fallback is ALWAYS what shows.
+                   * A comment asserting the fix while the code reintroduces the
+                   * bug is how Root Cause #86 would come back, and how the seed
+                   * `listingType` bug survived its own fix one field over.
+                   *
+                   * The split is on status: the 409 here ("Box AC60-03 already
+                   * exists") is authored for this operator and must survive; a
+                   * 5xx terminates in a constant.
                    */
-                  const e = normalizeError(err);
-                  setFieldError(
-                    "code",
-                    toUserMessage(undefined, undefined, { fallback: e.message }),
-                  );
+                  setFieldError("code", operatorMessage(err));
                 } finally {
                   setBusy(false);
                 }

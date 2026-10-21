@@ -72,6 +72,24 @@ export const INVENTORY_MOVEMENTS_COLLECTION = "inventoryMovements";
  * Adding a type is therefore deliberately a two-line code change plus a
  * profile, not a form submission.
  */
+/**
+ * How many rows the receive station stages before it must commit.
+ *
+ * 🛑 THIS IS A FIRESTORE LIMIT, NOT A UI PREFERENCE. A transaction caps at 500
+ * writes and each received row is two of them (the placement and its movement
+ * row), so 50 rows is 100 writes with ample room for the ledger growing a
+ * field later. The whole table commits in ONE transaction because the operator
+ * has already physically filled the boxes — a partial write leaves the ledger
+ * disagreeing with the shelf and nothing saying which rows landed.
+ *
+ * 🛑 Declared here so the route and the station cannot disagree. It was a
+ * local `MAX_ROWS` in the route and a second literal in the view for one
+ * revision, which is the two-owners shape that drifts the moment either moves
+ * (Root Cause #42) — and the failure would be silent in the worst direction:
+ * a UI cap above the route's gives the operator a full table and a 400.
+ */
+export const MAX_RECEIVE_ROWS = 50;
+
 export const BoxTypeValues = ["AC60", "AC30"] as const;
 export type BoxType = (typeof BoxTypeValues)[number];
 

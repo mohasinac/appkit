@@ -294,6 +294,100 @@ export class InventoryPlacementsRepository extends BaseRepository<InventoryPlace
     });
   }
 
+  /**
+   * The receive station's bulk commit — many rows, ONE transaction.
+   *
+   * 🛑 ONE TRANSACTION FOR THE WHOLE TABLE, not a loop of them. A partial
+   * receive is the worst outcome available: the operator has already
+   * physically put everything in the boxes, so a half-written commit leaves
+   * the ledger disagreeing with the shelf and no way to tell which rows
+   * landed.
+   *
+   * Firestore caps a transaction at 500 writes and each row here is two (the
+   * placement and its movement), so the caller's row limit of 50 is what
+   * keeps this inside the cap — that is why the limit exists, rather than
+   * being a UI preference.
+   *
+   * 🛑 Lives HERE rather than in the route for two reasons. API routes do not
+   * touch Firestore directly in this codebase, and more specifically
+   * `audit-inventory-ledger-append-only` allows only this file and the
+   * movements repository to write the ledger — a route doing it would be the
+   * second writer the audit exists to prevent, and I wrote exactly that before
+   * the audit caught me.
+   *
+   * 🛑 Does NOT touch `product.stockQuantity`. The shipment-link route already
+   * does, and doing both double-counts. This records WHERE stock is, never how
+   * much exists.
+   */
+  async receiveBatch(input: {
+    rows: ReadonlyArray<{
+      boxId: string;
+      boxCode: string;
+      productId: string;
+      productTitle: string;
+      productSku?: string;
+      quantity: number;
+      slot?: string;
+    }>;
+    actorUid: string;
+    shipmentId?: string;
+  }): Promise<{ rows: number; units: number }> {
+    if (input.rows.length === 0) throw new Error("Nothing to receive");
+    for (const r of input.rows) this.assertQuantity(r.quantity);
+
+    await unitOfWork.runTransaction(async (tx) => {
+      const col = this.getCollection();
+      /*
+       * All reads first — a transaction cannot read after a write. The
+       * existing quantity is read INSIDE the transaction and the increment
+       * computed from it, so two operators receiving the same product into
+       * the same box cannot lose one of the two. Not hypothetical: that is
+       * what two people with scanners do.
+       */
+      const refs = input.rows.map((r) =>
+        col.doc(placementId(r.boxId, r.productId)),
+      );
+      const snaps = await Promise.all(refs.map((ref) => tx.get(ref)));
+      const now = new Date();
+
+      input.rows.forEach((r, i) => {
+        const snap = snaps[i]!;
+        const prior = snap.exists ? ((snap.data()?.quantity as number) ?? 0) : 0;
+        tx.set(
+          refs[i]!,
+          {
+            boxId: r.boxId,
+            productId: r.productId,
+            boxCode: r.boxCode,
+            productTitle: r.productTitle,
+            ...(r.productSku ? { productSku: r.productSku } : {}),
+            ...(r.slot ? { slot: r.slot } : {}),
+            quantity: prior + r.quantity,
+            updatedAt: now,
+            ...(snap.exists ? {} : { createdAt: now }),
+          },
+          { merge: true },
+        );
+        this.appendMovement(tx, {
+          kind: "receive",
+          productId: r.productId,
+          quantity: r.quantity,
+          toBoxId: r.boxId,
+          toBoxCode: r.boxCode,
+          productTitle: r.productTitle,
+          actorUid: input.actorUid,
+          ...(input.shipmentId ? { shipmentId: input.shipmentId } : {}),
+          occurredAt: now,
+        });
+      });
+    });
+
+    return {
+      rows: input.rows.length,
+      units: input.rows.reduce((n, r) => n + r.quantity, 0),
+    };
+  }
+
   private assertQuantity(q: number): void {
     if (!Number.isInteger(q) || q < 1) {
       throw new Error(

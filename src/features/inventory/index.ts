@@ -64,3 +64,11 @@ export type { InventoryMovementCreateInput } from "./repository/inventory-moveme
  */
 export { AdminStorageBoxesView, RegisterBoxForm } from "./components/AdminStorageBoxesView";
 export { AdminMoveLedgerView, MOVEMENT_KIND_TABS } from "./components/AdminMoveLedgerView";
+export { ReceiveStationView } from "./components/ReceiveStationView";
+export type {
+  ReceiveStationViewProps,
+  ReceivableItem,
+  UnlinkedItem,
+  BoxOption,
+} from "./components/ReceiveStationView";
+export { operatorMessage } from "./components/operator-message";

@@ -13,6 +13,20 @@ export interface FieldInputProps
   onChange?: (value: string) => void;
   /** Override error — falls back to FormShell context error for this field */
   error?: string;
+  /**
+   * A ref to the inner `<input>`, for the cases that need programmatic focus:
+   * a scan station that must re-focus after every scan, an error summary that
+   * jumps to the offending field, a drawer that focuses its first control.
+   *
+   * 🛑 NAMED `inputRef`, not a `forwardRef` on the component. This renders a
+   * wrapper `<div>`, a `<Label>`, the `<input>` and an error `<Text>` — so a
+   * bare "the ref" has no single obvious target, and the next reader could
+   * reasonably expect the wrapper. Being explicit about which element is the
+   * same lesson as `Select`'s `wrapperClassName` (Root Cause #29): when a
+   * primitive has an outer box and an inner control, a prop that does not say
+   * which one it means will eventually reach the wrong one.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export function FieldInput({
@@ -24,6 +38,7 @@ export function FieldInput({
   error: errorProp,
   onBlur,
   className,
+  inputRef,
   ...inputProps
 }: FieldInputProps) {
   const ctx = useContext(FormShellContext);
@@ -67,6 +82,7 @@ export function FieldInput({
         </Label>
       )}
       <Input
+        ref={inputRef}
         id={inputId}
         name={name}
         aria-required={required || undefined}

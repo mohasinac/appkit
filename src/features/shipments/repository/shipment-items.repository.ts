@@ -35,6 +35,31 @@ export class ShipmentItemsRepository extends BaseRepository<ShipmentItem> {
     );
   }
 
+  /**
+   * Every tracked item across a shipment's lots, in one query.
+   *
+   * The receive station needs this: an operator opening a crate works through
+   * the whole shipment, not one lot at a time, and walking the lots to fetch
+   * items per lot is an N+1 against Rule #6's ~3-round-trip budget for a page
+   * that already has a 50-row ceiling.
+   */
+  async listByShipment(
+    shipmentId: string,
+    model?: SieveModel,
+  ): Promise<FirebaseSieveResult<ShipmentItem>> {
+    return this.sieveQuery<ShipmentItem>(
+      {
+        ...(model ?? {}),
+        filters: sieveAnd(
+          sieveFilter("shipmentId", SIEVE_OP.EQ, shipmentId),
+          model?.filters,
+        ),
+      },
+      ShipmentItemsRepository.SIEVE_FIELDS,
+      { defaultPageSize: 50, maxPageSize: 100 },
+    );
+  }
+
   async countByLot(lotId: string): Promise<number> {
     const snap = await this.getCollection().where(SHIPMENT_ITEM_FIELDS.LOT_ID, "==", lotId).count().get();
     return snap.data().count;

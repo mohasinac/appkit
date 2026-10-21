@@ -3,8 +3,13 @@
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
-import { FilterChipGroup, ListingLayout } from "../../../ui";
+import { FilterChipGroup, ListingLayout, TextLink } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+// 🛑 From the DEFINING module, not `@mohasinac/appkit/client` — this file is a
+// client component, but `ROUTES` is a runtime value and the `/client` entry is
+// where Root Cause #76's React #441 comes from when a server component touches
+// the same import. One spelling everywhere is cheaper than two rules.
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -114,6 +119,20 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
         value={pendingFilters.status ?? ""}
         onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
       />
+    ),
+    /*
+     * 🛑 THE ONLY LINK TO THE RECEIVE STATION.
+     *
+     * `ROUTES.ADMIN.SHIPMENT_RECEIVE` existed with ZERO consumers — a built
+     * page reachable only by typing its URL, which is Root Cause #37's shape
+     * and the reason ~25 working admin features sat unreachable. Receiving
+     * belongs on the row rather than in the nav because it is always about one
+     * shipment; a nav entry would have to ask which.
+     */
+    renderRowActions: (row) => (
+      <TextLink href={String(ROUTES.ADMIN.SHIPMENT_RECEIVE(row.id))}>
+        Receive
+      </TextLink>
     ),
     renderEditor: ({ editId, closePanel }) => (
       <AdminShipmentEditorView shipmentId={editId ?? undefined} onSaved={closePanel} embedded />
