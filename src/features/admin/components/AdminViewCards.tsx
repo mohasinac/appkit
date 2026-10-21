@@ -159,11 +159,60 @@ function AdminCardItem({
         )}
         <RowAvatar image={row.image} alt={row.primary} icon={resourceIcon} />
         <Stack gap="none" className="flex-1 min-w-0">
-          <Text size="sm" weight="semibold" className="truncate" color="primary">{row.primary}</Text>
+          {/*
+            ── THE TITLE GETS THE ROOM ON MOBILE ──────────────────────────────
+
+            🛑 IT WAS A SINGLE-LINE `truncate` IN A ROW WITH FOUR OTHER THINGS.
+            On a 390px phone the checkbox, avatar, status badge and row-actions
+            menu take their widths first and the title gets what is left —
+            roughly 180px, which at 14px semibold is about THIRTEEN
+            CHARACTERS. "Beyblade Burst Pro Series Dran Sword" rendered as
+            "Beyblade Burs…", and so did every other listing beginning with
+            the same two words, so an admin scanning the list could not tell
+            two rows apart.
+
+            `truncate={2}` at EVERY width, not a responsive pair. A first
+            draft added `sm:line-clamp-1` to restore the single line on
+            desktop, and dropped it for two reasons: that variant is not in
+            appkit's compiled utilities (so it would have shipped as a dead
+            class until the next build — Root Cause #67's direction), and it
+            buys nothing. A title that fits one line still occupies one; only
+            a long title takes the second, which is exactly when the second
+            line is wanted.
+
+            Two is the ceiling: three pushes the row taller than the avatar and
+            the list stops being scannable.
+          */}
+          <Text size="sm" weight="semibold" truncate={2} color="primary">
+            {row.primary}
+          </Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
-          {row.barcodeId && (
-            <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
+          {/*
+            Barcode and box code on ONE line, not two. They answer the same
+            question from two directions — which object this is, and where it
+            is — and a compact row that grows a line per identifier stops
+            being compact. Joined with a middot so an absent box code leaves
+            no stray separator.
+
+            `boxCode` renders nothing when absent — never "—". An item not yet
+            put in a box and an item whose placement we could not read are
+            different facts, and a dash asserts the first about both.
+          */}
+          {(row.barcodeId || row.boxCode) && (
+            <Text size="xs" color="faint" className="truncate font-mono">
+              {[row.barcodeId, row.boxCode].filter(Boolean).join(" · ")}
+            </Text>
           )}
+          {/*
+            The status badge, repeated BELOW the title on mobile only.
+            Competing with the title for the same horizontal space is what
+            squeezed it to 13 characters; the `sm:hidden` / `hidden sm:block`
+            pair means exactly one of the two is ever rendered, so this is a
+            relocation rather than a duplicate.
+          */}
+          <Div className="sm:hidden mt-1">
+            <StatusBadge status={row.status} />
+          </Div>
         </Stack>
         {flags.length > 0 && (
           <Row gap="xs" className="hidden sm:flex shrink-0">
@@ -172,7 +221,9 @@ function AdminCardItem({
             ))}
           </Row>
         )}
-        <StatusBadge status={row.status} />
+        <Div className="hidden sm:block shrink-0">
+          <StatusBadge status={row.status} />
+        </Div>
         <Span size="xs" color="muted" className="hidden sm:block shrink-0 w-24" align="end">{row.updatedAt}</Span>
         {renderRowActions && (
           <Div data-no-row-click className="shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -230,8 +281,11 @@ function AdminCardItem({
             <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
           </Stack>
         </Row>
-        {row.barcodeId && (
-          <Text size="xs" color="faint" className="truncate font-mono">{row.barcodeId}</Text>
+        {/* Same pairing as the compact row above — see that note. */}
+        {(row.barcodeId || row.boxCode) && (
+          <Text size="xs" color="faint" className="truncate font-mono">
+            {[row.barcodeId, row.boxCode].filter(Boolean).join(" · ")}
+          </Text>
         )}
         <Row justify="between" gap="xs">
           <StatusBadge status={row.status} />

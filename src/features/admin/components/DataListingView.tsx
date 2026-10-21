@@ -52,6 +52,26 @@ export interface AdminListingScaffoldRow {
   isOnSale?: boolean;
   isSold?: boolean;
   barcodeId?: string;
+  /**
+   * The storage box this row's item is in — `AC60-03`.
+   *
+   * 🛑 OPTIONAL, AND ONLY A ROW MAPPER THAT ACTUALLY HAS IT MAY SET IT. A
+   * placement lives in `inventoryPlacements`, keyed `{boxId}__{productId}`, so
+   * a listing query does not carry it for free: a mapper that wants this
+   * column has to join, and most should not — one placements read per row is
+   * an N+1 against Rule #6's ~3-round-trip budget.
+   *
+   * It is declared here rather than left to a bespoke column because "where
+   * is this thing" is the question a warehouse screen exists to answer, and
+   * the alternative was the free-text `physicalLocation` that was retired for
+   * being three uncontrolled inputs nothing could group.
+   *
+   * 🛑 A row with no placement renders NOTHING here, never "—" and never
+   * "Unknown". An item that has not been put in a box yet and an item whose
+   * placement we failed to read are different facts, and a dash asserts the
+   * first about both.
+   */
+  boxCode?: string;
   /** Row photo/thumbnail (avatar, product image, store logo, cover image, etc). Falls back to the table's resource icon when omitted. */
   image?: string;
 }
