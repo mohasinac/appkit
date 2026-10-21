@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { apiClient } from "../../../http";
 import { NOTIFICATIONS_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -36,9 +37,38 @@ export function useNotifications<TNotification = any>(
     options?.readAllEndpoint ?? NOTIFICATIONS_ENDPOINTS.READ_ALL;
   const readEndpoint = options?.readEndpoint ?? NOTIFICATIONS_ENDPOINTS.BY_ID;
 
+  /*
+   * 🛑 SIGNED-OUT VISITORS WERE POLLING AN AUTH-ONLY ENDPOINT.
+   *
+   * The interval below was tuned carefully and at length — and the query had
+   * no `enabled` gate at all. `TitleBar` mounts this hook on every page, so a
+   * signed-out visitor fetched `/api/notifications` on mount and again every
+   * five minutes per open tab, collecting a 401 each time. That is the
+   * audit's "two 401s fire for signed-out visitors, including a notifications
+   * poll that should not run at all", and signed-out is the majority of
+   * traffic on a public catalogue.
+   *
+   * Every one of those was a billed function invocation (Rule #6) spent
+   * asking for the unread count of nobody.
+   *
+   * `useOptionalSession`, not `useSession`: this hook is library code mounted
+   * in shared chrome, so it must not require a provider — and with no
+   * provider it fails CLOSED, which is the safe direction for a request that
+   * can only 401. Same precedent as `useCanSeePrices`.
+   *
+   * `loading` is deliberately part of the gate. `SessionProvider` mounts
+   * `initialUser={null}` (the root layout must stay static), so `user` is
+   * null on every hard load until Firebase resolves — firing then would 401
+   * for a signed-IN user too, and firing again afterwards would double the
+   * request.
+   */
+  const session = useOptionalSession();
+  const isSignedIn = Boolean(session?.user?.uid) && !session?.loading;
+
   const { data, isLoading, refetch } = useQuery<
     NotificationsResponse<TNotification>
   >({
+    enabled: isSignedIn,
     queryKey: ["notifications", "list", String(limit)],
     queryFn: () =>
       apiClient.get<NotificationsResponse<TNotification>>(
