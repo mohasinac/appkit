@@ -217,6 +217,33 @@ export function AutoBreadcrumbs({
 
   if (segments.length === 0) return null;
 
+  /*
+   * 🛑 NOT RENDERED INSIDE A DASHBOARD, and the argument is redundancy rather
+   * than taste.
+   *
+   * On `/admin/products` this band reads "Home / Admin / Products" directly
+   * above an `<h1>Products</h1>` — which `DataListingView` and `FormShell`
+   * both render now — while the sidebar has that group open and its link
+   * marked via `activePath`. Three statements of the same position, in a
+   * ~38px strip that is NOT sticky, so it scrolls away and contributes
+   * nothing after the first screen. It is pure fold cost: measured, the
+   * dashboard chrome ran to ~243px before the first row of content.
+   *
+   * 🛑 The suppression is keyed on being INSIDE A DASHBOARD, never on "is a
+   * detail route". A previous version of this file claimed every detail page
+   * renders its own trail; measured, only 1 of 5 does — auction, store, blog
+   * and brand render none, so a detail-route rule would have stripped the
+   * breadcrumb from four public pages that have nothing else. A dashboard has
+   * a sidebar and an h1; a public detail page has neither.
+   *
+   * The regex matches the LOCALE-STRIPPED segments, so it is unaffected by
+   * whether a `/en` prefix is present.
+   */
+  const isDashboard = ["admin", "store", "user"].includes(
+    segments[0]?.toLowerCase() ?? "",
+  );
+  if (isDashboard) return null;
+
   const crumbs = segments.map((seg, i) => ({
     label: labels[seg] ?? capitalize(seg),
     href: `${localePrefix}/${segments.slice(0, i + 1).join("/")}`,

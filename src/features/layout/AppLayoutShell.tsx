@@ -1097,7 +1097,25 @@ export function AppLayoutShell({
               .filter(Boolean)
               .join(" ")}
           >
-            <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
+            {/*
+              🛑 THE VERTICAL PADDING IS CONDITIONAL, AND RESTORING THAT IS A
+              BUG FIX RATHER THAN A TWEAK.
+
+              `contentClassName`'s own docstring says it "replaces the default
+              `w-full px-4 py-6`" and to pass `"w-full"` for dashboards, which
+              "provide their own padding via DashboardLayoutClient". That was
+              true while the padding lived in the className. It later moved to
+              a `padding` PROP — outside the swap — so it stopped being
+              replaceable and every dashboard page paid BOTH: 24px here and 32px
+              from `DashboardLayoutClient`'s `py-[space-8]`, i.e. 56px of
+              stacked padding from two components that each believed it owned
+              the spacing.
+
+              A caller that overrides the content className owns the padding
+              outright, which is what the prop always claimed. Public pages
+              (no override) are unchanged.
+            */}
+            <Div padding={contentClassName ? "none" : "y-lg"} className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}
             </Div>
           </Main>
