@@ -194,10 +194,66 @@ function filterGroups<T extends SidebarNavGroup>(
     .filter((group) => group.items.length > 0) as T[];
 }
 
-// Asymmetric padding clears the persistent sidebar rail — right-heavy by
-// default (rail docks left), left-heavy in left-hand mode (rail docks right).
-const DEFAULT_CONTENT_PADDING_RIGHT = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
-const DEFAULT_CONTENT_PADDING_LEFT = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-14 lg:pl-6 xl:pr-16 xl:pl-10";
+/*
+ * ── Content clearance for the desktop sidebar ───────────────────────────────
+ *
+ * 🛑 THE CLEARANCE IS NOW CONDITIONAL, AND THAT IS THE DOCKING FIX.
+ *
+ * `lg:pl-14` is 3.5rem — enough to clear the COLLAPSED rail (the narrow strip
+ * with the toggle tab) and nothing like the 18rem the panel occupies when
+ * open. So at `lg` the opened sidebar sat ON TOP of the content, and
+ * `AdminSidebar` rendered a BACKDROP at `lg` to make that legible: a
+ * desktop-width drawer that dimmed the page it was navigating.
+ *
+ * 🛑 The comment this replaces called it "the persistent sidebar rail", and
+ * `DashboardLayoutClient`'s own header says "persistent rail on ≥lg". Both are
+ * true of the COLLAPSED strip and misleading about the open panel — which is
+ * why the audit plan measured the public `SidebarLayout`, found no `lg:` docked
+ * state, and concluded dashboards had none either. The dashboard had a desktop
+ * drawer, not a dock.
+ *
+ * Reserving the real width when open makes it a dock: the content narrows
+ * instead of being covered, and the backdrop is no longer needed.
+ *
+ * 🛑 BOTH HALVES SHIP TOGETHER OR NEITHER DOES. Reserving the space without
+ * removing the backdrop leaves a dimmed page beside a sidebar; removing the
+ * backdrop without reserving the space leaves 18rem of content silently
+ * underneath the panel. Half of this change is worse than none, which is why
+ * the plan declined to land it piecemeal.
+ */
+/*
+ * 🛑 ALL FOUR SPELLED OUT IN FULL — never `lg:pl-${width}`.
+ *
+ * Tailwind's content scanner reads these files as PLAIN TEXT, so a class
+ * assembled from a variable is a class it never sees and never generates. It
+ * then emits nothing, silently, and the content sits under the panel with the
+ * code looking correct. Root Cause #67 is this exact failure, and the first
+ * draft of this very function had it: `lg:pl-${near}`.
+ *
+ * Four literals, two axes: hand (which edge the rail is on) × open (how much
+ * to reserve). `14` is 3.5rem, clearing the collapsed rail and its toggle tab;
+ * `[18rem]` is the open panel's own `w-[18rem]`.
+ */
+const CONTENT_PADDING = {
+  "right-closed":
+    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10",
+  "right-open":
+    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-[18rem] lg:pr-6 xl:pr-10",
+  "left-closed":
+    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-14 lg:pl-6 xl:pr-16 xl:pl-10",
+  "left-open":
+    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-[18rem] lg:pl-6 xl:pl-10",
+} as const;
+
+function contentPaddingFor(hand: "left" | "right", desktopOpen: boolean): string {
+  /*
+   * The key is BUILT from two values but only ever INDEXES this map — the
+   * class strings themselves are literals the scanner has already seen. That
+   * is the distinction: a dynamic key into a static map is safe, a dynamic
+   * class name is not.
+   */
+  return CONTENT_PADDING[`${hand}-${desktopOpen ? "open" : "closed"}`];
+}
 const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
 export function DashboardLayoutClient({
@@ -344,7 +400,13 @@ export function DashboardLayoutClient({
       <Div className={[
         "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
         "pb-[var(--appkit-space-16)] lg:pb-[0]", // clears the fixed mobile bottom-nav
-        contentPadding ?? (hand === "left" ? DEFAULT_CONTENT_PADDING_LEFT : DEFAULT_CONTENT_PADDING_RIGHT),
+        /*
+         * 🛑 Reserves the OPEN panel's width when it is open — which is what
+         * turns a desktop drawer into a dock. A caller-supplied
+         * `contentPadding` still wins and then owns the clearance itself;
+         * nothing passes one today.
+         */
+        contentPadding ?? contentPaddingFor(hand, desktopOpen),
         contentSurface,
       ].filter(Boolean).join(" ")}>
         <Div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</Div>

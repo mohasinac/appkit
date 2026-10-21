@@ -262,14 +262,33 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
     const handleToggle = onToggle ?? close;
     return (
       <>
-        {/* Desktop backdrop */}
-        {desktopOpen && (
-          <Div surface="overlay-xs"
-            className="hidden lg:block fixed inset-0 backdrop-blur-[2px] z-30"
-            onClick={handleToggle}
-            aria-hidden="true"
-          />
-        )}
+        {/*
+          ── NO DESKTOP BACKDROP ───────────────────────────────────────────
+
+          🛑 THERE WAS ONE, AND REMOVING IT IS HALF OF THE DOCKING FIX.
+
+          A `hidden lg:block fixed inset-0 backdrop-blur-[2px]` dimmed the
+          whole page whenever this panel was open at `lg`. It existed because
+          the content only reserved `lg:pl-14` (3.5rem — the COLLAPSED rail),
+          so an open 18rem panel sat on top of the page and the blur was what
+          made that legible. A desktop-width drawer that dims the thing it is
+          navigating.
+
+          `DashboardLayoutClient` now reserves `lg:pl-[18rem]` while open, so
+          the content narrows beside the panel instead of hiding under it —
+          and a backdrop over content the user can see and use would block
+          clicks on it for no reason.
+
+          🛑 BOTH HALVES SHIP TOGETHER. Removing this without the reservation
+          leaves 18rem of live content silently underneath the panel;
+          reserving without removing leaves a dimmed page beside an open
+          sidebar. That coupling is why the audit plan declined to land this
+          piecemeal.
+
+          The mobile sheet below KEEPS its backdrop: there the panel really
+          does cover the viewport, and dismiss-on-tap-outside is the only
+          affordance a phone has.
+        */}
 
         {/* Desktop: slide-over panel + always-visible primary toggle tab */}
         <Div
