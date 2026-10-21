@@ -32,4 +32,7 @@ export {
   renderBooleanIcon,
   renderCountPill,
   renderTypeChip,
+  // The status LABEL on its own, for the handful of cells that need this
+  // feature's own tones but the shared wording — see productTableColumns.
+  statusLabel,
 } from "./cell-renderers";

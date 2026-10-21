@@ -2,6 +2,7 @@ import React from "react";
 import type { DataTableColumn } from "../../../ui/DataTable";
 import { Button, Div, GatedPrice, Row, Span } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { statusLabel } from "../../../ui/columns/cell-renderers";
 import { formatCurrency as defaultFormatCurrency } from "../../../utils/number.formatter";
 import type { ProductItem } from "../types";
 
@@ -136,7 +137,18 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
               "bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",
             ].join(" ")}
           >
-            {status.replace("_", " ")}
+            {/*
+              🛑 `status.replace("_", " ")` stood here, and a STRING pattern
+              replaces only the FIRST occurrence — so `out_of_stock` rendered
+              as "out of_stock". `statusLabel` is the one definition, shared
+              with `renderStatusBadge`.
+
+              The product-specific TONES above stay local: `getStatusTone`
+              does not know this feature's `sold`, and routing through the
+              shared renderer would silently demote it to neutral. Only the
+              label is shared.
+            */}
+            {statusLabel(status)}
           </Span>
         );
       },

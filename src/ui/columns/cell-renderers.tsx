@@ -76,12 +76,37 @@ export const STATUS_TONE_CLASSES: Record<StatusTone, string> = {
     "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
+/**
+ * A stored status value as something a person reads.
+ *
+ * 🛑 EVERY status chip in the product printed the raw enum. This renderer
+ * used `status` verbatim, so admin tables and cards showed `published`,
+ * `in_review`, `out_of_stock` — lowercase, underscored, in our vocabulary
+ * rather than the reader's. That is the audit's "status is plain lowercase
+ * text where every other surface uses badges": the chip was there, its
+ * CONTENT was the database value.
+ *
+ * 🛑 And `productTableColumns` hand-rolled `status.replace("_", " ")`, which
+ * is worse than doing nothing: a STRING pattern replaces only the FIRST
+ * occurrence, so `out_of_stock` rendered as "out of_stock". A regex with `g`
+ * is the fix, which is reason enough for one helper instead of a `.replace`
+ * at each call site.
+ *
+ * Sentence case, not Title Case: these sit in dense table cells beside real
+ * sentences, and "Out Of Stock" reads like a proper noun.
+ */
+export function statusLabel(status: string): string {
+  const words = status.replace(/[_-]+/g, " ").trim();
+  if (!words) return status;
+  return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+}
+
 /** A status string as a themed chip. Unknown statuses render neutral, not invisible. */
 export function renderStatusBadge(
   status: string | null | undefined,
   opts?: { emptyLabel?: string },
 ): React.ReactNode {
-  const label = status ?? opts?.emptyLabel ?? "—";
+  const label = status ? statusLabel(status) : (opts?.emptyLabel ?? "—");
   const tone = getStatusTone(status);
   return (
     <Span
