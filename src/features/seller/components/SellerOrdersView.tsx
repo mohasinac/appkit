@@ -403,14 +403,14 @@ export function SellerOrderDetailPanel({
               <Badge variant={STATUS_BADGE_VARIANT[order.status ?? ""] ?? "default"}>
                 {order.status ?? "Unknown"}
               </Badge>
-              <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
+              <Text size="sm" className="text-[var(--appkit-color-text-muted)]">
                 {toRelativeDate(order.createdAt)}
               </Text>
             </Row>
 
             {(order.items ?? []).length > 0 && (
               <Div>
-                <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
                     <Row key={i} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
@@ -438,7 +438,7 @@ export function SellerOrderDetailPanel({
                             here would understate any line with quantity > 1.
                           */}
                           <Text size="sm" className="truncate" weight="medium">{item.productTitle ?? item.title ?? item.productId ?? "Item"}</Text>
-                          <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
+                          <Text size="xs" className="text-[var(--appkit-color-text-muted)]">Qty: {item.quantity ?? 1}</Text>
                         </Div>
                       </Row>
                       <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.totalPrice ?? item.unitPrice ?? item.price ?? 0)}</Text>
@@ -457,7 +457,7 @@ export function SellerOrderDetailPanel({
               <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">
                 <Text size="sm" weight="semibold">🎁 Gift wrap requested</Text>
                 {order.giftWrapMessage && (
-                  <Text size="sm" className="mt-1 text-[var(--appkit-color-text-secondary)]">
+                  <Text size="sm" className="mt-1 text-[var(--appkit-color-text-muted)]">
                     &ldquo;{order.giftWrapMessage}&rdquo;
                   </Text>
                 )}
@@ -487,7 +487,7 @@ export function SellerOrderDetailPanel({
             {addrLine && (
               <Div>
                 <Text size="sm" className="mb-1" weight="semibold">Shipping address</Text>
-                <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
+                <Text size="sm" className="text-[var(--appkit-color-text-muted)]">
                   {[String(addr.fullName ?? ""), addrLine].filter(Boolean).join(" · ")}
                 </Text>
               </Div>
@@ -501,7 +501,7 @@ export function SellerOrderDetailPanel({
                     <Badge variant={sellerPaymentBadge(order).variant}>{sellerPaymentBadge(order).label}</Badge>
                   )}
                 </Row>
-                <Text size="sm" className="text-[var(--appkit-color-text-secondary)]" transform="capitalize">{order.paymentMethod}</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text-muted)]" transform="capitalize">{order.paymentMethod}</Text>
                 {/* Read-only for sellers: verifying / rejecting a manual payment
                     is admin+moderator only (`adminVerifyPaymentAction`). The
                     buyer's payment screenshot itself is deliberately not shown

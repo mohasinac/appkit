@@ -363,7 +363,7 @@ export function SellerReviewsView({
                       </Badge>
                     </Row>
                     {review.title && <Text className="mt-2" weight="medium">{review.title}</Text>}
-                    <Text className="mt-1 text-[var(--appkit-color-text-secondary)] line-clamp-3" size="sm">
+                    <Text className="mt-1 text-[var(--appkit-color-text-muted)] line-clamp-3" size="sm">
                       {review.comment}
                     </Text>
                     {review.sellerReply && (
@@ -405,7 +405,7 @@ export function SellerReviewsView({
       >
         <Stack gap="md" className={`${__P.p4}`}>
           {replyTarget && (
-            <Div className={`${__P.p3} bg-[var(--appkit-color-surface-muted)]`} rounded="default">
+            <Div className={`${__P.p3} bg-[var(--appkit-color-bg)]`} rounded="default">
               <Stars rating={replyTarget.rating} />
               <Text className="mt-1" size="sm">{replyTarget.comment}</Text>
             </Div>

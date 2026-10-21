@@ -3,6 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
 import { Alert, Badge, Button, Div, Modal, Row, Stack, Text, Textarea } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { formatCurrency } from "../../../utils/number.formatter";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
   p4: "p-[var(--appkit-space-4)]",
@@ -28,9 +29,19 @@ export interface SellerPayoutRequestViewProps {
   onRequested?: () => void;
 }
 
-function rupees(amount: number) {
-  return `₹${amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
-}
+/*
+ * 🛑 A LOCAL `rupees()` HELPER WAS DELETED HERE in favour of the one formatter.
+ *
+ * It set `minimumFractionDigits: 2` and no MAXIMUM, so a value carrying more
+ * than two decimals printed every one of them — and payout amounts are
+ * commission arithmetic, which is exactly where they come from. A seller's
+ * available earnings could read "₹17,500.333".
+ *
+ * `formatCurrency` goes through `Intl.NumberFormat` with `style: "currency"`,
+ * which pins the fraction digits to the currency's own minor-unit count (2
+ * for INR) in both directions, and takes the symbol from the locale rather
+ * than hardcoding one.
+ */
 
 export function SellerPayoutRequestView({
   payoutsApiBase = SELLER_ENDPOINTS.PAYOUTS,
@@ -96,7 +107,7 @@ export function SellerPayoutRequestView({
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Available for Payout</Text>
             <Text className="text-[var(--appkit-color-primary)]" size="2xl" weight="bold">
-              {rupees(summary.availableEarnings)}
+              {formatCurrency(summary.availableEarnings)}
             </Text>
             <Text className="text-[var(--appkit-color-text-muted)] mt-0.5" size="xs">
               {summary.eligibleOrderCount} eligible order{summary.eligibleOrderCount !== 1 ? "s" : ""}
@@ -127,9 +138,9 @@ export function SellerPayoutRequestView({
         title="Request Payout"
       >
         <Stack gap="md" className={`${__P.p4}`}>
-          <Div className={`${__P.p3} bg-[var(--appkit-color-surface-muted)]`} rounded="default">
+          <Div className={`${__P.p3} bg-[var(--appkit-color-bg)]`} rounded="default">
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Amount to be paid</Text>
-            <Text size="xl" weight="bold">{rupees(summary?.availableEarnings ?? 0)}</Text>
+            <Text size="xl" weight="bold">{formatCurrency(summary?.availableEarnings ?? 0)}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
               Via {payoutDetails?.method === "upi"
                 ? `UPI — ${payoutDetails.upiId}`

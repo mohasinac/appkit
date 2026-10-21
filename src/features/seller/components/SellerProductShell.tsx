@@ -20,6 +20,9 @@ import {
   PRODUCT_IMAGE_INDEX_MAX,
 } from "../../../_internal/shared/media/limits";
 import { isFinalSale } from "../../products/constants/final-sale";
+// The one `ProductImage[] | string[]` → `string[]` normaliser — a value
+// import, needed at runtime by `galleryFields` below.
+import { productImageUrls } from "../../products/schemas/firestore";
 import { ProductFeaturesSelector } from "../../products/components/ProductFeaturesSelector";
 import type { ProductFeatureProductType } from "../../products/schemas/product-features";
 import type { ListingType } from "../../products/types/index";
@@ -849,13 +852,21 @@ function StepMedia({
   /*
    * One control for both media kinds.
    *
-   * The document keeps `images: string[]` and a single `video` — unchanged —
-   * so this seeds from both and splits again on write. Collapsing the two
-   * into one stored `media[]` would be a Firestore migration touching cards,
-   * detail, cart, orders and search; the input surface is what needed fixing.
+   * This seeds from `images` + `video` and splits them again on write.
+   * Collapsing the two into one stored `media[]` would be a Firestore
+   * migration touching cards, detail, cart, orders and search; the input
+   * surface is what needed fixing.
+   *
+   * 🛑 `images` IS NOT `string[]` AT RUNTIME. This comment asserted it was,
+   * and the line below mapped each entry as a URL — but
+   * `ProductDocument.images` has been `ProductImage[]` (objects) since A6, so
+   * the seller's own gallery tiles rendered `MediaImage`'s 📦 placeholder
+   * instead of their photos. Same defect as `ProductForm`, same cause: a cast
+   * at the seeding boundary claims `Partial<ProductItem>` while the document
+   * holds objects. `productImageUrls` accepts both shapes.
    */
   const galleryFields: MediaField[] = [
-    ...(values.images ?? []).map((url) => ({ url, type: "image" as const })),
+    ...productImageUrls(values.images).map((url) => ({ url, type: "image" as const })),
     ...(values.video?.url
       ? [{
           url: values.video.url,
@@ -2362,7 +2373,7 @@ export function SellerProductShell({
               >
                 Save as Template
               </Button>
-              <Text className="mt-1 text-[var(--appkit-color-secondary-text)]" size="xs">
+              <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="xs">
                 Save these settings as a reusable template for future listings.
               </Text>
             </Div>

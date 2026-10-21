@@ -158,7 +158,7 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
                 {cover ? (
                   <MediaImage src={cover} alt={it.title || `Prize #${it.itemNumber}`} size="thumbnail" />
                 ) : (
-                  <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
+                  <Row className="absolute inset-0 bg-[var(--appkit-color-bg)]" align="center" justify="center">
                     <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                       No image
                     </Text>

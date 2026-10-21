@@ -728,6 +728,19 @@
 
 /* --- Spacing -------------------------------------------------------------- */
 :root {
+  /* 🛑 THE SCALE HAD NO ZERO, and 18 call sites reached for it anyway.
+   *
+   * `p-[var(--appkit-space-0)]` on a control that wants no padding resolved
+   * to an undefined var, which drops the declaration — so every one of those
+   * controls kept its DEFAULT padding, the exact opposite of the intent. The
+   * tightest case is `AdminNavigationView`'s ▲/▼ reorder buttons, which pair
+   * it with `min-h-0 h-auto` to get a glyph-sized hit area and instead got a
+   * full-size button.
+   *
+   * Declared rather than rewritten to `p-0` at each site: 18 independent
+   * authors reaching for the same name is the scale's gap, not 18 mistakes,
+   * and a scale that starts at 2px cannot express "none". */
+  --appkit-space-0:    0rem;       /*  0px */
   --appkit-space-0-5:  0.125rem;   /*  2px */
   --appkit-space-1:    0.25rem;    /*  4px */
   --appkit-space-1-5:  0.375rem;   /*  6px */

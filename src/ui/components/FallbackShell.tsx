@@ -34,7 +34,7 @@ export interface FallbackShellProps {
 }
 
 const TONE_BG: Record<FallbackShellTone, string> = {
-  neutral: "var(--appkit-color-surface-muted)",
+  neutral: "var(--appkit-color-bg)",
   danger: "var(--appkit-color-error-surface)",
   warning: "var(--appkit-color-warning-surface)",
 };

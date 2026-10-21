@@ -534,7 +534,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             helpText="Payouts are held until your balance exceeds this amount. Leave blank for no minimum."
             disabled={busy}
           />
-          <Div className={`${__P.p3} bg-[var(--appkit-color-surface-alt)] border border-[var(--appkit-color-border)]`} rounded="lg">
+          <Div className={`${__P.p3} bg-[var(--appkit-color-bg)] border border-[var(--appkit-color-border)]`} rounded="lg">
             <Text className="mb-1" size="sm" weight="medium">Payout Schedule</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.

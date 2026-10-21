@@ -3,20 +3,20 @@
 .appkit-formshell {
   display: flex;
   flex-direction: column;
-  gap: var(--appkit-spacing-6, 1.5rem);
+  gap: var(--appkit-space-6, 1.5rem);
 }
 
 /* Header */
 .appkit-formshell__header {
   display: flex;
   flex-direction: column;
-  gap: var(--appkit-spacing-4, 1rem);
+  gap: var(--appkit-space-4, 1rem);
 }
 
 .appkit-formshell__title {
-  font-size: var(--appkit-font-size-lg, 1.125rem);
+  font-size: var(--appkit-text-lg, 1.125rem);
   font-weight: 600;
-  color: var(--appkit-color-text-primary);
+  color: var(--appkit-color-text);
 }
 
 /* ─── Step Indicator ──────────────────────────────────────────────────────── */
@@ -24,22 +24,22 @@
 .appkit-formshell__step-indicator {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--appkit-spacing-1, 0.25rem);
+  gap: var(--appkit-space-1, 0.25rem);
   border-bottom: 1px solid var(--appkit-color-border);
-  padding-bottom: var(--appkit-spacing-3, 0.75rem);
+  padding-bottom: var(--appkit-space-3, 0.75rem);
 }
 
 .appkit-formshell__step-btn {
   display: flex;
   align-items: center;
-  gap: var(--appkit-spacing-2, 0.5rem);
-  padding: var(--appkit-spacing-1-5, 0.375rem) var(--appkit-spacing-3, 0.75rem);
+  gap: var(--appkit-space-2, 0.5rem);
+  padding: var(--appkit-space-1-5, 0.375rem) var(--appkit-space-3, 0.75rem);
   border-radius: var(--appkit-radius-md, 0.375rem);
   background: transparent;
   border: 1px solid transparent;
-  color: var(--appkit-color-text-secondary);
+  color: var(--appkit-color-text-muted);
   cursor: pointer;
-  font-size: var(--appkit-font-size-sm, 0.875rem);
+  font-size: var(--appkit-text-sm, 0.875rem);
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .appkit-formshell__step-btn--active {
-  background: var(--appkit-color-primary-subtle, rgb(from var(--appkit-color-primary) r g b / 0.1));
+  background: var(--appkit-color-primary-surface);
   border-color: var(--appkit-color-primary);
   color: var(--appkit-color-primary);
   font-weight: 500;
@@ -68,8 +68,8 @@
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 9999px;
-  background: var(--appkit-color-surface-secondary);
-  font-size: var(--appkit-font-size-xs, 0.75rem);
+  background: var(--appkit-color-surface-raised);
+  font-size: var(--appkit-text-xs, 0.75rem);
   font-weight: 600;
   flex-shrink: 0;
 }
@@ -103,7 +103,7 @@
   height: auto;
   border-radius: var(--appkit-radius-full, 9999px);
   padding: 0 0.375rem;
-  font-size: var(--appkit-font-size-xs, 0.75rem);
+  font-size: var(--appkit-text-xs, 0.75rem);
   font-weight: 600;
   color: #fff;
   line-height: 1.4;
@@ -125,13 +125,13 @@
 .appkit-formshell__error-summary {
   border: 1px solid var(--appkit-color-error, #dc2626);
   border-radius: var(--appkit-radius-md, 0.375rem);
-  padding: var(--appkit-spacing-3, 0.75rem);
+  padding: var(--appkit-space-3, 0.75rem);
   background: rgb(from var(--appkit-color-error, #dc2626) r g b / 0.05);
 }
 
 .appkit-formshell__error-summary__title {
   font-weight: 600;
-  margin-bottom: var(--appkit-spacing-2, 0.5rem);
+  margin-bottom: var(--appkit-space-2, 0.5rem);
 }
 
 .appkit-formshell__error-summary__list {
@@ -139,7 +139,7 @@
   padding-left: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: var(--appkit-spacing-1, 0.25rem);
+  gap: var(--appkit-space-1, 0.25rem);
 }
 
 .appkit-formshell__error-summary__step-link {
@@ -171,7 +171,7 @@
 .appkit-formshell__steps {
   display: flex;
   flex-direction: column;
-  gap: var(--appkit-spacing-1, 0.25rem);
+  gap: var(--appkit-space-1, 0.25rem);
 }
 
 .appkit-formshell__step {
@@ -194,13 +194,13 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: var(--appkit-spacing-3, 0.75rem) var(--appkit-spacing-4, 1rem);
-  background: var(--appkit-color-surface-secondary);
+  padding: var(--appkit-space-3, 0.75rem) var(--appkit-space-4, 1rem);
+  background: var(--appkit-color-surface-raised);
   border: none;
   cursor: pointer;
-  font-size: var(--appkit-font-size-sm, 0.875rem);
+  font-size: var(--appkit-text-sm, 0.875rem);
   font-weight: 500;
-  color: var(--appkit-color-text-primary);
+  color: var(--appkit-color-text);
   text-align: left;
 }
 
@@ -244,17 +244,25 @@
  * action row in the codebase. Every live footer had lost it.
  */
 
-/* ─── Dark mode ──────────────────────────────────────────────────────────── */
-
-.dark .appkit-formshell__title {
-  color: var(--appkit-color-text-primary-dark, inherit);
-}
-
-.dark .appkit-formshell__step-accordion-btn {
-  background: var(--appkit-color-surface-secondary-dark, var(--appkit-color-surface-secondary));
-  color: var(--appkit-color-text-primary-dark, inherit);
-}
-
+/* ─── Dark mode ──────────────────────────────────────────────────────────────
+ *
+ * Only the error summary needs a dark rule now. The two that stood here —
+ * `__title` and `__step-accordion-btn` — each restated the base rule's own
+ * tokens once those names were corrected, because `--appkit-color-text` and
+ * `--appkit-color-surface-raised` already invert with the theme.
+ *
+ * What they used to say is the whole reason this file mattered:
+ *
+ *   background: var(--appkit-color-surface-secondary-dark,
+ *                   var(--appkit-color-surface-secondary));
+ *   color:      var(--appkit-color-text-primary-dark, inherit);
+ *
+ * Neither name in that chain exists, so the background fell through to a
+ * second undefined name and the declaration was DROPPED — a transparent
+ * accordion header — while the colour fell through to `inherit`, so the text
+ * took whatever an ancestor happened to set. Every editor screen in the
+ * product renders through this file.
+ */
 .dark .appkit-formshell__error-summary {
   background: rgb(from var(--appkit-color-error, #dc2626) r g b / 0.1);
 }

@@ -65,7 +65,7 @@ function ToggleRow({
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <Div className={`border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl">
-      <Div className="border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-alt,var(--appkit-color-surface))]" padding="inline">
+      <Div className="border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg,var(--appkit-color-surface))]" padding="inline">
         <Text className="tracking-widest text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
           {title}
         </Text>

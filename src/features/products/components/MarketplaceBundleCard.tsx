@@ -131,14 +131,14 @@ export function MarketplaceBundleCard({
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {showCollage ? (
             <Div layout="grid"
-              className={`h-full w-full gap-[0.125rem] bg-[var(--appkit-color-surface-muted)] ${
+              className={`h-full w-full gap-[0.125rem] bg-[var(--appkit-color-bg)] ${
  collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
  }`}
             >
               {collageTiles.map((tile, i) => (
                 <Div
                   key={`${tile.productId}-${i}`}
-                  className="relative overflow-hidden bg-[var(--appkit-color-surface-muted)]"
+                  className="relative overflow-hidden bg-[var(--appkit-color-bg)]"
                 >
                   <MediaImage
                     src={tile.imageURL}
@@ -154,11 +154,11 @@ export function MarketplaceBundleCard({
               ))}
             </Div>
           ) : cover ? (
-            <Div className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]">
+            <Div className="absolute inset-0 bg-[var(--appkit-color-bg)]">
               <MediaImage src={cover} alt={bundle.name} size="card" />
             </Div>
           ) : (
-            <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
+            <Row className="absolute inset-0 bg-[var(--appkit-color-bg)]" align="center" justify="center">
               <Text className="text-[var(--appkit-color-text-muted)]" size="xs">No image</Text>
             </Row>
           )}

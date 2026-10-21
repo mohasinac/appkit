@@ -744,7 +744,7 @@ const TR_BORDER_MAP: Record<TrBorder, string> = {
   none: "",
   default: "border-b border-[var(--appkit-color-border)]",
   subtle: "border-b border-[var(--appkit-color-border-subtle)]",
-  strong: "border-b border-[var(--appkit-color-border-strong)]",
+  strong: "border-b border-[var(--appkit-color-border)]",
 };
 
 type TrSurface = "none" | "default" | "muted" | "subtle";

@@ -62,7 +62,7 @@ export function PrizeRevealModal({
 
         {!winner ? (
           // audit-content-alignment-ok: informational reveal-status panel, not marketing content
-          <Div className={`bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`} rounded="default">
+          <Div className={`bg-[var(--appkit-color-bg)] ${__P.p4} text-center`} rounded="default">
             <Text size="lg" weight="semibold">Reveal pending</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               {PENDING_COPY[revealMode]}
@@ -94,7 +94,7 @@ export function PrizeRevealModal({
         )}
 
         {/* Always-visible fairness disclaimer. */}
-        <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] text-[var(--appkit-color-text-muted)]" padding="inlineSm" rounded="default">
+        <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)] text-[var(--appkit-color-text-muted)]" padding="inlineSm" rounded="default">
           <Span weight="bold">
             Fairness guarantee:
           </Span>{" "}

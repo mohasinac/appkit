@@ -522,7 +522,7 @@ export function AdminBlogEditorView({
         {draft.category ? ` · ${draft.category}` : ""}
       </Text>
       {draft.excerpt ? (
-        <Text className="italic text-[var(--appkit-color-text-secondary)] mb-4">
+        <Text className="italic text-[var(--appkit-color-text-muted)] mb-4">
           {draft.excerpt}
         </Text>
       ) : null}

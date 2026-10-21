@@ -11,7 +11,7 @@
   min-width: 5rem;
   height: 1.25rem;
   border-radius: 0.25rem;
-  /* 🛑 `--appkit-color-surface-muted` is NOT a token — 15 uses, 0 definitions,
+  /* 🛑 `--appkit-color-bg` is NOT a token — 15 uses, 0 definitions,
      and `audit-undefined-css-vars` ratchets it down. An undefined custom
      property with no fallback makes the whole declaration invalid, so this
      placeholder had no background at all and the grid still reflowed on

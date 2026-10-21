@@ -52,23 +52,36 @@ export function defineTailwindConfig(override: TailwindConfigOverride = {}) {
           primary: "var(--appkit-color-primary)",
           secondary: "var(--appkit-color-secondary)",
           accent: "var(--appkit-color-accent)",
-          // Surface
+          /*
+           * Surface
+           *
+           * 🛑 THIRTEEN ENTRIES WERE DELETED FROM HERE, and every one of them
+           * generated an invalid declaration.
+           *
+           * They mapped to camelCase custom properties — `--appkit-color-surfaceMuted`,
+           * `--appkit-color-textPrimary`, `--appkit-color-borderStrong`,
+           * `--appkit-color-linkHover` and nine more — and **not one of those
+           * names is declared anywhere**. The real tokens are kebab-case. So
+           * `bg-surface-muted` compiled to
+           * `background-color: var(--appkit-color-surfaceMuted)`, which is
+           * undefined with no fallback, which drops the declaration at
+           * computed-value time: the utility existed, was documented by its
+           * presence here, and did nothing.
+           *
+           * Deleted rather than renamed because all ten named utilities have
+           * ZERO uses across both repos (measured), and once corrected most
+           * would have been redundant aliases of utilities that already work
+           * — `text-text-primary` for `text-[var(--appkit-color-text)]`. A
+           * config entry that advertises a utility which silently no-ops is a
+           * trap for whoever writes the natural-looking class next; an absent
+           * entry is a compile-time nothing they will notice immediately.
+           *
+           * `surface-elevated` is kept because it names a real, distinct token
+           * that no other utility reaches — with its var spelled correctly.
+           */
           surface: "var(--appkit-color-surface)",
-          "surface-muted": "var(--appkit-color-surfaceMuted)",
-          "surface-elevated": "var(--appkit-color-surfaceElevated)",
-          "on-surface": "var(--appkit-color-onSurface)",
-          "on-surface-muted": "var(--appkit-color-onSurfaceMuted)",
+          "surface-elevated": "var(--appkit-color-surface-elevated)",
           border: "var(--appkit-color-border)",
-          "border-strong": "var(--appkit-color-borderStrong)",
-          divider: "var(--appkit-color-divider)",
-          // Text
-          "text-primary": "var(--appkit-color-textPrimary)",
-          "text-secondary": "var(--appkit-color-textSecondary)",
-          "text-tertiary": "var(--appkit-color-textTertiary)",
-          "text-disabled": "var(--appkit-color-textDisabled)",
-          "text-inverse": "var(--appkit-color-textInverse)",
-          link: "var(--appkit-color-link)",
-          "link-hover": "var(--appkit-color-linkHover)",
           // State — semantic colors with surface sub-keys
           success: {
             DEFAULT: "var(--appkit-color-success)",
