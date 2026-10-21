@@ -13,6 +13,26 @@ export const brandInputSchema = z.object({
   founded: z.number().int().min(1800).max(new Date().getFullYear()).optional(),
   isActive: z.boolean().default(true),
   displayOrder: z.number().int().min(0).default(0),
+  /*
+   * Editorial content, rendered by `CategoryHighlightsAndFaqSection` on the
+   * brand page and previously unauthorable — the form did not carry them, so
+   * this schema did not need them either.
+   *
+   * 🛑 CAPPED, both of them. These render in a fixed block above the fold on
+   * a public page, and an unbounded list is how a form becomes a way to break
+   * the page it feeds. The numbers match what the category editor already
+   * enforces for the same two fields on the same renderer.
+   */
+  highlights: z.array(z.string().min(1).max(200)).max(8).optional(),
+  faqs: z
+    .array(
+      z.object({
+        question: z.string().min(1).max(300),
+        answer: z.string().min(1).max(2000),
+      }),
+    )
+    .max(8)
+    .optional(),
 });
 
 export const brandUpdateSchema = brandInputSchema.partial().omit({ slug: true });

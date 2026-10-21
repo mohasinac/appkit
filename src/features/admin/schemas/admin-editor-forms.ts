@@ -194,6 +194,55 @@ export const brandFormSchema = z.object({
     z.number().int().min(1800, "That is earlier than any brand on record.").max(new Date().getFullYear(), "A founding year cannot be in the future.").optional(),
     { section: "identity", order: 3, row: "pair", kind: "number", label: "Founded year" },
   ),
+  /*
+   * ── Editorial content ────────────────────────────────────────────────────
+   *
+   * 🛑 BOTH OF THESE HAVE RENDERED ON THE BRAND PAGE SINCE THEY SHIPPED, with
+   * no way to author them. `BrandDetailPageView:418` mounts
+   * `<CategoryHighlightsAndFaqSection highlights={brand?.highlights}
+   * faqs={brand?.faqs} />`, `CategoryDocument` declares both with a comment
+   * saying they render on "category and BRAND detail pages", and
+   * `CATEGORIES_UPDATABLE_FIELDS` has always permitted the write. The only
+   * missing piece was a form — the category editor had one, the brand editor
+   * did not, so brand highlights and FAQs were unreachable.
+   *
+   * `highlightsText` is a newline-separated textarea rather than a repeater,
+   * matching the category editor exactly: these are a flat `string[]`, an
+   * admin pasting five bullets wants to paste five lines, and order is
+   * preserved by the text itself.
+   */
+  highlightsText: annotate(z.string().optional().or(z.literal("")), {
+    section: "content", sectionLabel: "Content", order: 1, row: "full",
+    kind: "textarea", label: "Highlights — one per line",
+    help: "Short \"why shop this brand\" bullets, shown above the FAQs.",
+  }),
+  /*
+   * 🛑 DECLARED HERE SO THE PARSE COVERS IT, rendered by a custom `renderers`
+   * entry in the editor. `buildSectionsFromSchema` has no `kind` for a
+   * per-row shape, and inventing one for a single consumer would be the
+   * speculative-infra move — `logoURL` already establishes the pattern of a
+   * schema field with a bespoke renderer.
+   *
+   * It lives in the DRAFT rather than its own `useState`, unlike the category
+   * editor's three repeaters. Those predate this form being schema-driven;
+   * here the draft can hold the array, so validation, dirty-tracking and the
+   * error summary all see it, and there is one source of truth instead of two.
+   */
+  faqs: annotate(
+    z
+      .array(
+        z.object({
+          question: z.string().min(1, "A question is required").max(300),
+          answer: z.string().min(1, "An answer is required").max(2000),
+        }),
+      )
+      .max(8, "At most 8 questions")
+      .optional(),
+    {
+      section: "content", order: 2, row: "full", label: "Brand FAQs",
+      help: "Rendered beneath the highlights on the brand page.",
+    },
+  ),
   isActive: annotate(z.boolean(), {
     section: "visibility", sectionLabel: "Visibility", order: 1, row: "quarter",
     label: "Active",

@@ -22,7 +22,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
-import { ConfirmDeleteModal, Div, StackedViewShell, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, Input, StackedViewShell, Textarea, useToast } from "../../../ui";
+import { Repeater } from "../../../ui/components/Repeater";
 import type { StackedViewShellProps } from "../../../ui";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
@@ -55,6 +56,13 @@ interface BrandPayload {
   founded?: number;
   isActive: boolean;
   displayOrder?: number;
+  highlights?: string[];
+  faqs?: { question: string; answer: string }[];
+}
+
+interface BrandFaq {
+  question: string;
+  answer: string;
 }
 
 interface Values {
@@ -68,6 +76,10 @@ interface Values {
   founded: string;
   isActive: boolean;
   displayOrder: string;
+  /** Newline-separated; split into `highlights[]` on save. */
+  highlightsText: string;
+  /** Question/answer rows, edited by a Repeater. */
+  faqs: BrandFaq[];
 }
 
 const EMPTY: Values = {
@@ -80,6 +92,8 @@ const EMPTY: Values = {
   founded: "",
   isActive: true,
   displayOrder: "",
+  highlightsText: "",
+  faqs: [],
 };
 
 function toBrandSlug(str: string): string {
@@ -131,7 +145,10 @@ export function AdminBrandEditorView({
       founded: brand.founded !== undefined ? String(brand.founded) : "",
       isActive: brand.isActive ?? true,
       displayOrder: brand.displayOrder !== undefined ? String(brand.displayOrder) : "",
+      highlightsText: (brand.highlights ?? []).join("\n"),
+      faqs: brand.faqs ?? [],
     });
+
   }, [brandQuery.data]);
 
   const sections = React.useMemo(
@@ -151,6 +168,40 @@ export function AdminBrandEditorView({
               onChange={(url) => onChange({ logoURL: url })}
             />
           ),
+          /*
+           * The FAQ rows. `Repeater` is the one promoted out of
+           * `AdminCategoryEditorView` on the condition its own author set —
+           * "promote it when a fourth caller appears outside this file" — so
+           * this is that caller rather than a second implementation.
+           */
+          faqs: ({ values, onChange }) => {
+            const rows = (values.faqs as BrandFaq[]) ?? [];
+            return (
+              <Repeater<BrandFaq>
+                rows={rows}
+                onChange={(next) => onChange({ faqs: next })}
+                blank={() => ({ question: "", answer: "" })}
+                addLabel="Add a question"
+                max={8}
+                renderRow={(row, set) => (
+                  <>
+                    <Input
+                      label="Question"
+                      value={row.question}
+                      onChange={(e) => set({ question: e.target.value })}
+                      placeholder="Are Takara-Tomy releases region-locked?"
+                    />
+                    <Textarea
+                      label="Answer"
+                      rows={3}
+                      value={row.answer}
+                      onChange={(e) => set({ answer: e.target.value })}
+                    />
+                  </>
+                )}
+              />
+            );
+          },
         },
       }),
     [upload],
@@ -177,6 +228,21 @@ export function AdminBrandEditorView({
         founded: optionalNumber(form.founded),
         isActive: form.isActive,
         displayOrder: optionalNumber(form.displayOrder),
+        /*
+         * 🛑 Sent even when EMPTY, which is what makes "remove the last
+         * highlight" work. The mapper tests `!== undefined`, so an empty
+         * array clears the list; omitting the key instead would leave the
+         * stored value untouched and the admin unable to delete what they
+         * can see.
+         *
+         * Blank lines and whitespace-only rows are dropped rather than
+         * stored — an empty bullet renders as a gap on the brand page.
+         */
+        highlights: form.highlightsText
+          .split("\n")
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0),
+        faqs: (form.faqs as BrandFaq[]).filter((f) => f.question.trim() && f.answer.trim()),
       };
       if (isEdit) return apiClient.put(ADMIN_ENDPOINTS.BRAND_BY_ID(brandId!), payload);
       return apiClient.post(ADMIN_ENDPOINTS.BRANDS, payload);

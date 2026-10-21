@@ -48,6 +48,19 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
    */
   if (input.isActive !== undefined) out.isActive = input.isActive;
   if (input.displayOrder !== undefined) out.order = input.displayOrder;
+  /*
+   * 🛑 Both written as TOP-LEVEL arrays, not nested under `display` — so the
+   * replace-vs-merge hazard that this function's `display` note is about does
+   * not apply to them. `update()` replaces an array wholesale, which is the
+   * correct semantics for a list the form submits in full.
+   *
+   * And `!== undefined` rather than a truthiness test: an EMPTY array is a
+   * real instruction ("remove every highlight"), and `if (input.highlights)`
+   * would silently decline to carry it, leaving the admin unable to clear a
+   * list they can see.
+   */
+  if (input.highlights !== undefined) out.highlights = input.highlights;
+  if (input.faqs !== undefined) out.faqs = input.faqs;
   return out;
 }
 
