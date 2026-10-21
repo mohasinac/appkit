@@ -145,6 +145,29 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * spin, grade, chase. Hand-curated from the crawl. */
   productFeatures: "permanent",
   /*
+   * ── the inventory triple: all three PERMANENT ────────────────────────────
+   *
+   * They pass the test above in the strongest possible way: clearing them
+   * does not mean re-running a loader, it means **walking to the shelf with a
+   * clipboard**. There is no seed data for any of them and never will be — a
+   * box exists because someone labelled a physical box, and a placement
+   * exists because someone put something in it.
+   *
+   * 🛑 `inventoryMovements` is permanent for a second, stronger reason: it is
+   * append-only EVIDENCE. The repository overrides `update` and `delete` to
+   * throw precisely so history cannot be rewritten, and a purge that cleared
+   * the collection would do in one command what the repository refuses one
+   * row at a time.
+   *
+   * `storageBoxes` is also pointed INTO by every placement and every movement
+   * (`boxId`), the same relationship that makes `categories` permanent —
+   * clearing it orphans both other collections while leaving the physical
+   * boxes sitting there labelled.
+   */
+  storageBoxes: "permanent",
+  inventoryPlacements: "permanent",
+  inventoryMovements: "permanent",
+  /*
    * The box-code tables and generation summaries. `permanent` because they
    * are reference data compiled from archived primary sources, not exercise
    * fixtures — a purge that cleared them would leave an admin with no way to
