@@ -128,6 +128,22 @@ const categoryFormSchema = z.object({
   isActive: z.boolean().optional(),
   showInMenu: z.boolean().optional(),
   /*
+   * ── Discovery flags ──────────────────────────────────────────────────────
+   *
+   * All four are in `CATEGORIES_UPDATABLE_FIELDS`, so the repository has
+   * always accepted them — there was simply no form. An admin could not
+   * feature a category, set its priority, or take it out of search, on a
+   * taxonomy of 1,185 rows.
+   */
+  isFeatured: z.boolean().optional(),
+  featuredPriority: z
+    .string()
+    .regex(/^\d*$/, "Priority must be a whole number")
+    .optional()
+    .or(z.literal("")),
+  isSearchable: z.boolean().optional(),
+  showOnHomepage: z.boolean().optional(),
+  /*
    * `display.coverImage`, flattened into the draft because the form is flat.
    *
    * 🛑 THE DATA MODEL HAS ALWAYS CARRIED THIS AND THE EDITOR NEVER EXPOSED IT.
@@ -192,6 +208,10 @@ interface CategoryFormValues {
   order: string;
   isActive: boolean;
   showInMenu: boolean;
+  isFeatured: boolean;
+  featuredPriority: string;
+  isSearchable: boolean;
+  showOnHomepage: boolean;
   coverImage: string;
   contentBody: string;
   highlightsText: string;
@@ -218,6 +238,12 @@ const EMPTY_VALUES: CategoryFormValues = {
   order: "",
   isActive: true,
   showInMenu: true,
+  isFeatured: false,
+  featuredPriority: "",
+  /* Searchable by DEFAULT — a new category nobody can find is a worse
+     default than one that appears in results. */
+  isSearchable: true,
+  showOnHomepage: false,
   coverImage: "",
   contentBody: "",
   highlightsText: "",
@@ -260,6 +286,18 @@ interface CategoryPayload {
   parentId?: string;
   order?: number;
   isActive: boolean;
+  /*
+   * Discovery flags — TOP-LEVEL, not under `display`, so the replace-vs-merge
+   * hazard described below does not touch them.
+   *
+   * `featuredPriority` is optional because "" means not set: `Number("")` is
+   * 0, which is a real and meaningful priority, so an empty input must send
+   * `undefined` rather than coerce to the top of the list.
+   */
+  isFeatured?: boolean;
+  featuredPriority?: number;
+  isSearchable?: boolean;
+  showOnHomepage?: boolean;
   /*
    * 🛑 A PARTIAL MAP, and the route merges it over the stored one.
    *
@@ -464,6 +502,11 @@ export function AdminCategoryEditorView({
       order: cat.order !== undefined ? String(cat.order) : "",
       isActive: cat.isActive ?? true,
       showInMenu: cat.display?.showInMenu ?? true,
+      isFeatured: cat.isFeatured ?? false,
+      featuredPriority:
+        cat.featuredPriority !== undefined ? String(cat.featuredPriority) : "",
+      isSearchable: cat.isSearchable ?? true,
+      showOnHomepage: cat.showOnHomepage ?? false,
       coverImage: cat.display?.coverImage ?? "",
       contentBody: cat.contentBody ?? "",
       highlightsText: listToLines(cat.highlights),
@@ -504,6 +547,13 @@ export function AdminCategoryEditorView({
         parentId: String(values.parentId ?? "") || undefined,
         order: values.order !== "" && values.order !== undefined ? Number(values.order) : undefined,
         isActive: values.isActive ?? true,
+        isFeatured: values.isFeatured ?? false,
+        featuredPriority:
+          values.featuredPriority !== "" && values.featuredPriority !== undefined
+            ? Number(values.featuredPriority)
+            : undefined,
+        isSearchable: values.isSearchable ?? true,
+        showOnHomepage: values.showOnHomepage ?? false,
         /*
          * `coverImage` is sent even when empty — an empty string is how the
          * admin says "remove the cover", and omitting it would make clearing
@@ -643,7 +693,7 @@ export function AdminCategoryEditorView({
     {
       id: "visibility",
       label: "Display",
-      fields: ["order", "isActive", "showInMenu", "coverImage"],
+      fields: ["order", "isActive", "showInMenu", "coverImage", "isFeatured", "featuredPriority", "isSearchable", "showOnHomepage"],
       render: ({ values: v, onChange, errors }) => (
         <Stack gap="md">
           {/*
@@ -694,6 +744,47 @@ export function AdminCategoryEditorView({
             label="Show in menu"
             checked={v.showInMenu ?? true}
             onChange={(checked) => onChange({ showInMenu: checked })}
+          />
+          {/*
+            🛑 THE FOUR DISCOVERY FLAGS, none of which had a control.
+
+            All four are in `CATEGORIES_UPDATABLE_FIELDS`, so the repository
+            has always accepted them — there was simply nowhere to set them.
+            On a taxonomy of 1,185 rows that meant no category could be
+            featured, prioritised, or taken out of search from the UI at all.
+          */}
+          <Toggle
+            label="Searchable"
+            checked={v.isSearchable ?? true}
+            onChange={(checked) => onChange({ isSearchable: checked })}
+          />
+          <Toggle
+            label="Featured"
+            checked={v.isFeatured ?? false}
+            onChange={(checked) => onChange({ isFeatured: checked })}
+          />
+          {/*
+            Priority is only meaningful once featured, so it is hidden until
+            then rather than shown disabled — a number input that cannot
+            affect anything invites someone to fill it in and wonder why
+            nothing moved.
+          */}
+          {(v.isFeatured ?? false) ? (
+            <Input
+              label="Featured priority"
+              value={String(v.featuredPriority ?? "")}
+              onChange={(e) => onChange({ featuredPriority: e.target.value })}
+              type="number"
+              min={0}
+              placeholder="0"
+              helperText="Lower sorts first among featured categories."
+              error={errors.featuredPriority}
+            />
+          ) : null}
+          <Toggle
+            label="Show on homepage"
+            checked={v.showOnHomepage ?? false}
+            onChange={(checked) => onChange({ showOnHomepage: checked })}
           />
         </Stack>
       ),
