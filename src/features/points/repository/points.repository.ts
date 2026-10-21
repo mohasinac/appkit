@@ -412,6 +412,127 @@ export class PointsRepository {
       .get();
     return rows.docs.map((d) => d.data() as PointsLedgerEntry);
   }
+
+  /**
+   * Prove the mirror agrees with the ledger, and repair it where it does not.
+   *
+   * ## This is the job `sumLedger`'s own docstring has promised since day one
+   *
+   * That method says it exists "to repair the mirror and to let a
+   * reconciliation job prove the two agree" — and no such job was ever written
+   * (D49). So `users/{uid}.pointsBalance` could diverge from the entries
+   * indefinitely with nothing reporting it, which is Root Cause #102 exactly:
+   * a counter that cannot be checked drifts silently, because a wrong number
+   * raises nothing.
+   *
+   * ## 🛑 It enumerates USERS, not ledger entries
+   *
+   * Root Cause #102's reconciler could only ever ADD, because it built its
+   * tally from the events that existed rather than the entities that do — so a
+   * row whose last event was deleted was never visited and never reset. The
+   * same trap here: a user whose entries were all removed keeps a stale
+   * non-zero mirror forever if you only walk the ledger.
+   *
+   * So the candidate set is the UNION of two reads:
+   *
+   *   - every user document carrying a `pointsBalance` — catches a mirror with
+   *     no entries behind it, which is the case a ledger walk cannot see
+   *   - the distinct `userId`s in a bounded page of the ledger — catches
+   *     entries whose user has no mirror yet
+   *
+   * ## Repair direction, and why it still opens a case
+   *
+   * The ledger is append-only and is the DEFINITION of the balance, so repair
+   * is always mirror ← `sumLedger`. There is no judgement in it.
+   *
+   * 🛑 But a repaired mirror hides the writer that broke it. Every drift is
+   * therefore returned for the caller to raise a `ledger_drift` case: silent
+   * self-healing would make a persistently broken write path look like a
+   * healthy system, which is the failure this whole phase exists to remove.
+   *
+   * Absence of a mirror is NOT drift. `getBalance` already falls back to
+   * summing the ledger, so a user with entries and no mirror reads correctly —
+   * it is merely uncomputed. It is still written, because paying the scan on
+   * every balance read is what the mirror exists to avoid, but it is counted
+   * separately and never reported as a fault.
+   *
+   * Saturation is reported rather than hidden: at the page limit there are more
+   * users to check than were checked, which is a fact about the programme's
+   * size, not an error — but it must not read as "all clear".
+   */
+  async reconcileLedgerMirror(
+    limit = 500,
+  ): Promise<{
+    examined: number;
+    drifted: { userId: string; mirror: number; ledger: number }[];
+    initialised: number;
+    saturated: boolean;
+  }> {
+    const db = getAdminDb();
+
+    const mirrorSnap = await db
+      .collection(USER_COLLECTION)
+      .select("pointsBalance")
+      .limit(limit)
+      .get();
+    const ledgerSnap = await db
+      .collection(POINTS_LEDGER_COLLECTION)
+      .select(POINTS_FIELDS.USER_ID)
+      .limit(limit)
+      .get();
+
+    const mirrors = new Map<string, number | undefined>();
+    for (const d of mirrorSnap.docs) {
+      const v = d.data()?.pointsBalance;
+      if (typeof v === "number") mirrors.set(d.id, v);
+    }
+    const candidates = new Set<string>(mirrors.keys());
+    for (const d of ledgerSnap.docs) {
+      const uid = d.data()?.[POINTS_FIELDS.USER_ID];
+      if (typeof uid === "string" && uid) candidates.add(uid);
+    }
+
+    const drifted: { userId: string; mirror: number; ledger: number }[] = [];
+    let initialised = 0;
+
+    for (const userId of candidates) {
+      const ledger = await this.sumLedger(userId);
+      const mirror = mirrors.get(userId);
+
+      if (mirror === undefined) {
+        // Uncomputed, not drifted — see the docstring.
+        if (ledger !== 0) {
+          await db
+            .collection(USER_COLLECTION)
+            .doc(userId)
+            .set({ pointsBalance: ledger }, { merge: true });
+          initialised += 1;
+        }
+        continue;
+      }
+
+      /*
+       * Half-paisa epsilon, matching every other money comparison here:
+       * `0.1 + 0.2 > 0.3` is true in IEEE-754, so an exact `!==` would report
+       * drift on a balance that is correct to the last paisa — and a reconciler
+       * that cries wolf nightly is one people stop reading.
+       */
+      if (Math.abs(mirror - ledger) > 0.005) {
+        drifted.push({ userId, mirror, ledger });
+        await db
+          .collection(USER_COLLECTION)
+          .doc(userId)
+          .set({ pointsBalance: ledger }, { merge: true });
+      }
+    }
+
+    return {
+      examined: candidates.size,
+      drifted,
+      initialised,
+      saturated: mirrorSnap.size === limit || ledgerSnap.size === limit,
+    };
+  }
 }
 
 export const pointsRepository = new PointsRepository();

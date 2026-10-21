@@ -42,6 +42,8 @@ export const PAYMENT_CASES_COLLECTION = "paymentCases";
  * | `grievance` | a statutory grievance with a clock (Phase 10) |
  * | `shipping_unpriced` | a store's shipping could not be priced, so we shipped free |
  * | `manual_refund_due` | a cancellation owes money that no automatic rail can move |
+ * | `protection_claim` | a buyer claimed against cover they paid for |
+ * | `ledger_drift` | a buyer's points mirror disagreed with their ledger |
  *
  * 🛑 `shipping_unpriced` is a CONFIGURATION fault with a money consequence,
  * which is why it belongs in this queue rather than in `serverErrors`. An
@@ -93,7 +95,31 @@ export type PaymentCaseKind =
    * cannot disagree about what is owed — and the order carries it even if this
    * write fails.
    */
-  | "manual_refund_due";
+  | "manual_refund_due"
+  /**
+   * A buyer's `users/{uid}.pointsBalance` mirror disagrees with the sum of
+   * their `pointsLedger` entries.
+   *
+   * The ledger is append-only and therefore authoritative; the mirror exists
+   * only so a balance read is one document instead of a scan. So drift always
+   * means the mirror is wrong — and the reconciler repairs it. The case is
+   * raised anyway, because **a repaired mirror hides the write path that broke
+   * it.** Root Cause #102 is the same shape one domain over: a counter that
+   * drifted silently, where nothing errored because a wrong number is just a
+   * number.
+   *
+   * 🛑 Its own kind rather than `amount_mismatch`, which means the GATEWAY and
+   * our order total disagree. Nothing external is involved here; this is two of
+   * our own records disagreeing. The kind chips are what an operator triages
+   * by, and the third time this file has had to say so.
+   *
+   * `severity: "warning"` not `"error"`: the buyer's spendable balance is
+   * whatever the repair sets it to, so no money is at risk by the time anyone
+   * reads the case — but a recurring one means a writer is losing entries.
+   * Keyed on the USER, so a persistently broken mirror is one case with a
+   * rising `observedCount` rather than a new row every night.
+   */
+  | "ledger_drift";
 
 /**
  * Identical to `ReportStatus`, deliberately — see the header. `actioned` means
@@ -242,6 +268,7 @@ const PAYMENT_CASE_KIND_MAP: Record<PaymentCaseKind, true> = {
   shipping_unpriced: true,
   protection_claim: true,
   manual_refund_due: true,
+  ledger_drift: true,
 };
 export const PAYMENT_CASE_KINDS = Object.keys(PAYMENT_CASE_KIND_MAP) as PaymentCaseKind[];
 

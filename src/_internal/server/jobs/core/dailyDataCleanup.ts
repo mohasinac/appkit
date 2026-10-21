@@ -1,6 +1,7 @@
 import { sessionRepository, tokenRepository } from "../../../../repositories";
 import { gatewayEventsRepository } from "../../../../features/gateway-events/repository/gateway-events.repository";
 import { pointsRepository } from "../../../../features/points/repository/points.repository";
+import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
 import { batchDelete } from "../handlers/_helpers";
@@ -91,11 +92,92 @@ export async function runDailyDataCleanup(ctx: JobContext): Promise<void> {
     ctx.logger.error("Points expiry failed — batches stay spendable for now");
   }
 
+  /*
+   * ── Points ledger ↔ mirror reconciliation (D49) ─────────────────────────
+   *
+   * `sumLedger`'s own docstring has promised this job since the ledger was
+   * written — "to let a reconciliation job prove the two agree" — and nobody
+   * wrote it, so `users/{uid}.pointsBalance` could diverge from the entries
+   * indefinitely with nothing reporting it. Root Cause #102 one domain over.
+   *
+   * Folded in here rather than registered as its own scheduled function, the
+   * same reasoning as the two blocks above: Cloud Scheduler bills per
+   * REGISTERED JOB and "do the two agree" is a once-a-day question. The count
+   * is 33 and adding a 34th for one comparison is ~$0.10/month for work that
+   * fits in a slot already running.
+   *
+   * 🛑 It runs AFTER expiry, deliberately. Expiry writes adjustment entries and
+   * moves the mirror; reconciling first would measure a state expiry is about
+   * to change and could report drift that resolves itself seconds later.
+   *
+   * 🛑 Every drift opens a `ledger_drift` case even though the mirror is
+   * repaired on the spot. Repair without a report is self-healing that hides
+   * the write path which broke it — and `openOrObserve` is keyed on the user,
+   * so a persistently broken writer is ONE case with a rising `observedCount`
+   * rather than a fresh row every night.
+   */
+  let ledgerDrift = 0;
+  try {
+    const recon = await pointsRepository.reconcileLedgerMirror();
+    ledgerDrift = recon.drifted.length;
+
+    for (const d of recon.drifted) {
+      ctx.logger.error("points mirror disagreed with the ledger — repaired", {
+        userId: d.userId,
+        mirror: d.mirror,
+        ledger: d.ledger,
+      });
+      await paymentCasesRepository()
+        .openOrObserve({
+          kind: "ledger_drift",
+          severity: "warning",
+          subjectId: d.userId,
+          title: "Points balance disagreed with the ledger",
+          detail:
+            `The mirror on users/${d.userId} read ${d.mirror} while the ledger sums to ` +
+            `${d.ledger}. The mirror has been repaired to the ledger, which is ` +
+            `authoritative. A repeat means a write path is losing entries.`,
+          entityType: "user",
+          entityId: d.userId,
+          now: ctx.now,
+        })
+        /*
+         * Best-effort: a case that cannot be filed must not fail the cleanup,
+         * because the repair has already happened and is the part the buyer
+         * feels. The logger line above is the fallback record.
+         */
+        .catch((caseErr) => {
+          void normalizeError(caseErr);
+          ctx.logger.error("could not open a ledger_drift case", { userId: d.userId });
+        });
+    }
+
+    if (recon.initialised > 0) {
+      // Not a fault — `getBalance` already falls back to summing the ledger.
+      ctx.logger.info("points mirrors initialised", { count: recon.initialised });
+    }
+    if (recon.saturated) {
+      ctx.logger.warn(
+        "points reconciliation hit its page limit — more users are unchecked than were checked",
+      );
+    }
+  } catch (err) {
+    void normalizeError(err);
+    /*
+     * Never fails the cleanup. An unreconciled mirror is a read that may be
+     * wrong by whatever the drift is, which the next run catches; failing the
+     * job would also skip nothing useful, since every block above has already
+     * run.
+     */
+    ctx.logger.error("points reconciliation failed — mirrors unverified this run");
+  }
+
   ctx.logger.info("Daily data cleanup complete", {
     sessionsDeleted,
     tokensDeleted: emailDeleted + pwDeleted,
     gatewayEventsDeleted: eventsDeleted,
     pointsBatchesExpired: pointsExpired.expired,
     pointsExpired: pointsExpired.points,
+    pointsLedgerDrift: ledgerDrift,
   });
 }

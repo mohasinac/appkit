@@ -490,6 +490,7 @@ export const ADMIN_PAYMENT_CASE_KIND_TABS = [
   { id: "grievance", label: "Grievance" },
   { id: "shipping_unpriced", label: "Shipping unpriced" },
   { id: "dead_job", label: "Dead job" },
+  { id: "ledger_drift", label: "Points drift" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Money cases — `PaymentCaseSeverity`. Escalate-only, never downgraded. */
