@@ -59,7 +59,17 @@ export type PaymentCaseKind =
   | "amount_mismatch"
   | "dead_job"
   | "grievance"
-  | "shipping_unpriced";
+  | "shipping_unpriced"
+  /**
+   * A buyer has claimed against protection cover they paid for.
+   *
+   * 🛑 Its own kind rather than borrowed from `refund_mismatch`, which is what
+   * I reached for first and is wrong: a claim is not a disagreement with the
+   * gateway about refund totals, it is a human decision about who absorbs a
+   * loss. Filing it under a kind that means something else makes the queue's
+   * own filters lie, and the kind chips are what an operator triages by.
+   */
+  | "protection_claim";
 
 /**
  * Identical to `ReportStatus`, deliberately — see the header. `actioned` means
@@ -206,6 +216,7 @@ const PAYMENT_CASE_KIND_MAP: Record<PaymentCaseKind, true> = {
   dead_job: true,
   grievance: true,
   shipping_unpriced: true,
+  protection_claim: true,
 };
 export const PAYMENT_CASE_KINDS = Object.keys(PAYMENT_CASE_KIND_MAP) as PaymentCaseKind[];
 

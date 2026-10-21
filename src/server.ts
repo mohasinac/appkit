@@ -223,6 +223,40 @@ export type {
   CloseObligationInput,
 } from "./features/obligations/repository/obligations.repository";
 
+/*
+ * [SERVER-ONLY] protectionClaims — Phase 6. The first callers
+ * `adjudicateClaim()` and `protectionAvailability()` have ever had: we charge
+ * 2% / 3% for cover whose entire decision layer sat uncalled (D11).
+ */
+export {
+  ProtectionClaimsRepository,
+  protectionClaimsRepository,
+} from "./features/protection-claims/repository/protection-claims.repository";
+export type { FileClaimInput } from "./features/protection-claims/repository/protection-claims.repository";
+export {
+  PROTECTION_CLAIMS_COLLECTION,
+  PROTECTION_CLAIM_FIELDS,
+  PROTECTION_CLAIM_ACTIVE_STATUSES,
+  PROTECTION_CLAIM_DETAIL_MIN,
+  PROTECTION_CLAIM_DETAIL_MAX,
+  ALL_PROTECTION_CLAIM_STATUSES,
+  ALL_PROTECTION_CLAIM_REASONS,
+  REASON_TO_KIND,
+  createProtectionClaimId,
+} from "./features/protection-claims/schemas/firestore";
+export type {
+  ProtectionClaimDocument,
+  ProtectionClaimStatus,
+  ProtectionClaimReason,
+} from "./features/protection-claims/schemas/firestore";
+export {
+  fileProtectionClaimAction,
+  adjudicateProtectionClaimAction,
+  getMyProtectionClaimsAction,
+  canClaimProtection,
+} from "./_internal/server/features/protection-claims";
+export type { FileProtectionClaimInput } from "./_internal/server/features/protection-claims";
+
 // [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
 // Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
 export {
