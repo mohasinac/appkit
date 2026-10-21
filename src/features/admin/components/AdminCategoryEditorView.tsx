@@ -11,6 +11,8 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
+import { useMediaUpload } from "../../media";
+import { ImageUpload } from "../../media/upload/ImageUpload";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 
@@ -178,6 +180,20 @@ const categoryFormSchema = z.object({
     .or(z.literal("")),
   isActive: z.boolean().optional(),
   showInMenu: z.boolean().optional(),
+  /*
+   * `display.coverImage`, flattened into the draft because the form is flat.
+   *
+   * 🛑 THE DATA MODEL HAS ALWAYS CARRIED THIS AND THE EDITOR NEVER EXPOSED IT.
+   * 504 category covers live in Storage, `resolveTaxonomyVisual` reads
+   * `display.coverImage`, and the category page renders it — the only missing
+   * piece was a way for an admin to set or change one. That is why the
+   * taxonomy looked unfinished.
+   *
+   * Not validated as a URL: the value is either a `/media/<slug>` path minted
+   * by the upload flow or empty, and a stricter rule here would reject the
+   * former. An empty string is a legitimate value and means "cleared".
+   */
+  coverImage: z.string().optional().or(z.literal("")),
   // ── Content & Templates ──────────────────────────────────────────────────
   contentBody: z
     .string()
@@ -229,6 +245,7 @@ interface CategoryFormValues {
   order: string;
   isActive: boolean;
   showInMenu: boolean;
+  coverImage: string;
   contentBody: string;
   highlightsText: string;
   hasbroName: string;
@@ -254,6 +271,7 @@ const EMPTY_VALUES: CategoryFormValues = {
   order: "",
   isActive: true,
   showInMenu: true,
+  coverImage: "",
   contentBody: "",
   highlightsText: "",
   hasbroName: "",
@@ -295,7 +313,16 @@ interface CategoryPayload {
   parentId?: string;
   order?: number;
   isActive: boolean;
-  display?: { showInMenu: boolean };
+  /*
+   * 🛑 A PARTIAL MAP, and the route merges it over the stored one.
+   *
+   * `BaseRepository.update` hands a nested map to `doc().update()`, which
+   * REPLACES it — so sending `{ showInMenu }` alone used to delete
+   * `coverImage`, `icon`, `color`, `mosaicImages` and `showInFooter` on every
+   * save. `PATCH /api/admin/categories/[id]` now merges, which is what the two
+   * sublisting-category routes have always done.
+   */
+  display?: { showInMenu: boolean; coverImage?: string };
   // ── Content & Templates. EDIT ONLY — see buildContentPayload. ───────────
   contentBody?: string;
   highlights?: string[];
@@ -433,6 +460,7 @@ export function AdminCategoryEditorView({
 }: AdminCategoryEditorViewProps) {
   const isEdit = Boolean(categoryId);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const { upload } = useMediaUpload();
 
   const [values, setValues] = React.useState<CategoryFormValues>(EMPTY_VALUES);
   /*
@@ -489,6 +517,7 @@ export function AdminCategoryEditorView({
       order: cat.order !== undefined ? String(cat.order) : "",
       isActive: cat.isActive ?? true,
       showInMenu: cat.display?.showInMenu ?? true,
+      coverImage: cat.display?.coverImage ?? "",
       contentBody: cat.contentBody ?? "",
       highlightsText: listToLines(cat.highlights),
       hasbroName: cat.hasbroName ?? "",
@@ -528,7 +557,16 @@ export function AdminCategoryEditorView({
         parentId: String(values.parentId ?? "") || undefined,
         order: values.order !== "" && values.order !== undefined ? Number(values.order) : undefined,
         isActive: values.isActive ?? true,
-        display: { showInMenu: values.showInMenu ?? true },
+        /*
+         * `coverImage` is sent even when empty — an empty string is how the
+         * admin says "remove the cover", and omitting it would make clearing
+         * the field a no-op now that the route merges rather than replaces.
+         * Every reader trims and tests truthiness, so `""` reads as absent.
+         */
+        display: {
+          showInMenu: values.showInMenu ?? true,
+          coverImage: String(values.coverImage ?? ""),
+        },
       };
       if (isEdit) {
         /*
@@ -658,9 +696,39 @@ export function AdminCategoryEditorView({
     {
       id: "visibility",
       label: "Display",
-      fields: ["order", "isActive", "showInMenu"],
+      fields: ["order", "isActive", "showInMenu", "coverImage"],
       render: ({ values: v, onChange, errors }) => (
         <Stack gap="md">
+          {/*
+            The cover the category page's hero and every category card render,
+            through `resolveTaxonomyVisual`. First in the section because it is
+            the only field here a visitor actually sees.
+
+            🛑 An emoji in `display.icon` no longer beats this. The precedence
+            in `resolveTaxonomyVisual` was "icon, whatever it holds, then
+            cover" until 2026-10-20, which meant the twelve forest roots —
+            every one of which carries a decorative 🪀 — would have rendered
+            the emoji over a cover uploaded here and this field would have
+            looked broken. It is now URL-icon, then cover, then emoji, so a
+            root keeps its emoji for menus and shows the photograph on its
+            page. There is deliberately no `icon` input: one ambiguous field
+            that two conventions write to does not need a third writer.
+          */}
+          <ImageUpload
+            label="Cover image"
+            helperText="Shown on the category page hero and on category cards."
+            currentImage={String(v.coverImage ?? "")}
+            onUpload={(file) =>
+              upload(file, "categories", true, {
+                type: "category-image",
+                // The filename is content-derived, so re-uploading for the
+                // same category overwrites at the same storage path rather
+                // than orphaning the previous object.
+                name: String(v.name ?? "") || String(v.slug ?? ""),
+              })
+            }
+            onChange={(url) => onChange({ coverImage: url })}
+          />
           <Input
             label="Display order"
             value={String(v.order ?? "")}
