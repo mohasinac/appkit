@@ -3279,6 +3279,9 @@ export type { AdminAuditLogViewProps } from "./features/admin/index";
 // AdminMoneyCasesView - The payment-case operator queue (chargebacks, refunds owed, claims).
 export { AdminMoneyCasesView } from "./features/admin/index";
 export type { AdminMoneyCasesViewProps } from "./features/admin/index";
+// AdminGatewayEventsView - The webhook inbox, with reopen-for-redelivery.
+export { AdminGatewayEventsView } from "./features/admin/index";
+export type { AdminGatewayEventsViewProps } from "./features/admin/index";
 // ViewAuditLogEntryModal - Detail modal for one audit-log entry.
 export { ViewAuditLogEntryModal } from "./features/admin/index";
 export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";

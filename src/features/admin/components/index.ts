@@ -122,6 +122,8 @@ export type { AdminAuditLogViewProps } from "./AdminAuditLogView";
  */
 export { AdminMoneyCasesView } from "./AdminMoneyCasesView";
 export type { AdminMoneyCasesViewProps } from "./AdminMoneyCasesView";
+export { AdminGatewayEventsView } from "./AdminGatewayEventsView";
+export type { AdminGatewayEventsViewProps } from "./AdminGatewayEventsView";
 export { ViewAuditLogEntryModal } from "./ViewAuditLogEntryModal";
 export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./ViewAuditLogEntryModal";
 export { ViewNotificationModal } from "./ViewNotificationModal";

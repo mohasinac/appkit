@@ -225,6 +225,59 @@ export class GatewayEventsRepository extends BaseRepository<GatewayEventDocument
     return snap.docs.map((d) => this.mapDoc<GatewayEventDocument>(d));
   }
 
+  /**
+   * Make the NEXT delivery of this event be accepted instead of acked.
+   *
+   * ## 🛑 IT DOES NOT REPROCESS ANYTHING, AND THE NAME SAYS SO
+   *
+   * There is no way to replay a gateway event from here, deliberately. R1's own
+   * header gives the reason: re-dispatching from a job or an admin button would
+   * mean duplicating the webhook route's entire switch — and its RTDB
+   * signalling — in a second place, which is Root Cause #75 on the dispatch
+   * axis. The webhook route is the only thing that knows how to handle an event.
+   *
+   * So this reopens the DOOR and nothing more. The operator still has to press
+   * Resend in the gateway dashboard (or wait for the gateway's own retry); this
+   * is what stops the inbox from refusing that redelivery as a duplicate.
+   *
+   * Anything calling this must tell the operator that second step is theirs. A
+   * button labelled "Reprocess" that only did this would be the worst kind of
+   * half-truth — it would look like the work had been done.
+   *
+   * ## Why these four fields, read off `resolveDuplicateDelivery`'s table
+   *
+   * That function decides ack-vs-redispatch, and three of its branches would
+   * otherwise swallow the redelivery:
+   *
+   *   · `processed` / `ignored` / `conflict` → always ack. Hence `status` is
+   *     reset to `failed`, the one non-terminal state that redispatches.
+   *   · `failed` + `terminal: true` → ack. Hence `terminal: false`.
+   *   · lapsed lease but `attempts >= GATEWAY_EVENT_MAX_ATTEMPTS` → ack. Hence
+   *     `attempts: 0`.
+   *
+   * And the lease is set to `now`, i.e. already expired, because the
+   * received/processing branch is decided by the LEASE rather than the status —
+   * a live lease means "another worker has this" and must keep acking.
+   *
+   * `lastError` records that a human did this, so the row does not read as a
+   * fresh transient failure to whoever looks next.
+   */
+  async reopenForRedelivery(id: string, actorUid: string, now: Date = new Date()): Promise<void> {
+    await this.getCollection()
+      .doc(id)
+      .update({
+        status: "failed",
+        terminal: false,
+        attempts: 0,
+        claimedAt: now,
+        // Already lapsed — see the docstring: the lease, not the status, is what
+        // decides the received/processing branch.
+        leaseExpiresAt: now,
+        lastError: `Reopened for redelivery by ${actorUid}`,
+        updatedAt: now,
+      });
+  }
+
   /** Take over a lapsed lease and count the attempt. */
   async renewLease(id: string, attempts: number, now: Date): Promise<void> {
     await this.getCollection()

@@ -1218,6 +1218,7 @@ export {
   AdminPayoutMarkPaidModal,
   AdminAuditLogView,
   AdminMoneyCasesView,
+  AdminGatewayEventsView,
   ViewAuditLogEntryModal,
   AdminProductEditorView,
   AdminScammerEditorView,
