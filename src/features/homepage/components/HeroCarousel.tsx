@@ -192,6 +192,7 @@ function SlideBackground({
         alt=""
         size="hero"
         objectFit="cover"
+        fill
         priority={priority}
         fetchPriority={priority ? "high" : "low"}
       />
@@ -229,7 +230,7 @@ function CardBackground({ bg }: { bg: CarouselBackground }) {
   if (bg.type === "image" && bg.url) {
     // `cover` for the same reason as the slide backdrop above — this sits
     // behind the card's eyebrow/title/description, not beside them.
-    return <MediaImage src={bg.url} alt="" size="card" objectFit="cover" />;
+    return <MediaImage src={bg.url} alt="" size="card" objectFit="cover" fill />;
   }
   return null;
 }

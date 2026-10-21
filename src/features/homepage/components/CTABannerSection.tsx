@@ -78,7 +78,9 @@ export function CTABannerSection({
       {backgroundImage && (
         <>
           <Div className="absolute inset-0">
-            <MediaImage src={backgroundImage} alt="" size="banner" objectFit="cover" />
+            {/* `fill`: the wrapper is `absolute inset-0`, so the box is the
+                banner's, not the `banner` size's 3:1. */}
+            <MediaImage src={backgroundImage} alt="" size="banner" objectFit="cover" fill />
           </Div>
           <Scrim direction="left-to-right" intensity="strong" className="absolute inset-0" />
         </>

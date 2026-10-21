@@ -55,6 +55,23 @@ const ORDER_LANE_TABS = [
   { id: "standard", label: "Normal" },
   { id: "auction", label: "Auction wins" },
   { id: "offer", label: "Offer wins" },
+  /*
+   * 🛑 `"preorder"` WITHOUT A HYPHEN, and this is not a typo to tidy up.
+   *
+   * `OrderType` (`orders/utils/order-splitter.ts`) spells it `"preorder"`,
+   * while `ListingType` spells the same concept `"pre-order"` WITH a hyphen.
+   * Two unions, two spellings, and the tab must match the one actually stored
+   * on `OrderDocument.orderType` — a tab id matching no stored value returns
+   * zero rows forever with no error anywhere (Root Cause #33), which is
+   * exactly the failure this file's own comment above warns about.
+   *
+   * These two lanes existed in the union and had no tab, so pre-order and
+   * prize-draw orders were reachable only by landing on "All" and scrolling.
+   * Five lanes, four tabs — the eighth instance this session of a
+   * hand-written enumeration drifting from the union it filters.
+   */
+  { id: "preorder", label: "Pre-orders" },
+  { id: "prize-draw", label: "Prize draws" },
 ] as const;
 
 /**

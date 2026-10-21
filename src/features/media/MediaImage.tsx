@@ -30,6 +30,39 @@ const SIZE_HINTS: Record<MediaImageSize, string> = {
   avatar: "(max-width: 640px) 48px, 56px",
 };
 
+/**
+ * The BOX each size establishes on the wrapper.
+ *
+ * 🛑 THIS IS THE FIX FOR A DEFECT THAT MADE `size` A LIE. Until 2026-10-21 the
+ * `size` prop fed exactly two things — `SIZE_HINTS` (the `sizes` download
+ * attribute) and `FALLBACK_ICONS` (which emoji) — and **neither affected
+ * layout**. Every render branch was `relative w-full h-full` around an
+ * `<Image fill>`, so the component had an unstated contract: the PARENT must
+ * supply a definite height. `h-full` against an auto-height parent is 0, and a
+ * `fill` child is absolutely positioned and contributes none of its own, so
+ * the whole thing collapsed to zero and rendered as blank space.
+ *
+ * `size="hero"` therefore read as "this is hero-shaped" and produced **zero
+ * pixels**. `ProductGrid` worked only because its own call site wraps the
+ * image in `aspect-square` — so `card` was correct BY ACCIDENT OF WHERE IT WAS
+ * USED, which is why the reported symptom was "anything which is not a card".
+ *
+ * Same mechanism as Root Cause #68, one component over, and fixed the same
+ * way: at the primitive, not at ~100 call sites. A `Record<MediaImageSize, …>`
+ * means a seventh size cannot be added without declaring its shape.
+ *
+ * Call sites that must genuinely fill a parent they have already sized pass
+ * `fill` — see that prop.
+ */
+const SIZE_BOX: Record<MediaImageSize, string> = {
+  thumbnail: "aspect-square",
+  card: "aspect-square",
+  gallery: "aspect-square",
+  avatar: "aspect-square",
+  hero: "aspect-video",
+  banner: "aspect-[3/1]",
+};
+
 const FALLBACK_ICONS: Record<MediaImageSize, string> = {
   thumbnail: "📦",
   card: "📦",
@@ -104,11 +137,31 @@ export interface MediaImageProps {
    *
    * Pass `'cover'` explicitly where a FILLED box is the component's contract
    * rather than a preference — a full-bleed backdrop with text over it, or a
-   * circular avatar. Three call sites do: `MediaAvatar`, and the slide and
-   * card backgrounds in `HeroCarousel`. A letterboxed backdrop there would put
-   * the dim overlay and the headline on bare surface.
+   * circular avatar. A letterboxed backdrop would put the dim overlay and the
+   * headline on bare surface.
+   *
+   * 🛑 Counted 2026-10-21: **six** call sites, not the three this said —
+   * `MediaAvatar`, both `HeroCarousel` backgrounds, `CTABannerSection`,
+   * `CustomCardsSection` and `PublicCatalogueItemDetailView`'s thumbnail
+   * strip. Four of them also pass `fill`; the two that do not sit in parents
+   * whose shape already matches the size's own box.
    */
   objectFit?: "cover" | "contain";
+  /**
+   * Fill the parent's box instead of establishing one from `size`.
+   *
+   * 🛑 Only for a parent that ALREADY has a definite height — a full-bleed
+   * backdrop, a fixed-size avatar circle, a carousel slide. In an auto-height
+   * parent this reproduces the exact bug `SIZE_BOX` exists to fix: the image
+   * collapses to zero and renders as empty space.
+   *
+   * The call sites that need it are close to the ones already passing
+   * `objectFit="cover"` — a filled box and a cropped fit are usually the same
+   * contract stated twice — but the two are NOT the same decision, so they are
+   * separate props. `cover` says how to fit; `fill` says where the box comes
+   * from.
+   */
+  fill?: boolean;
   /**
    * Emoji or text to show when `src` is undefined.
    * Falls back to the per-size default icon.
@@ -190,6 +243,7 @@ export function MediaImage({
   style,
   sources,
   onError,
+  fill = false,
 }: MediaImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -198,6 +252,14 @@ export function MediaImage({
   const icon = fallback ?? FALLBACK_ICONS[size];
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
   const resolvedSrc = resolveMediaUrl(src);
+  /*
+   * The wrapper's box: the size's own shape by default, the parent's when the
+   * caller opts in with `fill`. Shared by all three render branches below so
+   * the placeholder, the `<picture>` and the plain `<Image>` cannot disagree
+   * about their dimensions — a fallback that occupies a different box from the
+   * image it replaces makes a grid jump as things load.
+   */
+  const boxClass = fill ? "h-full" : SIZE_BOX[size];
 
   // Reset error/load/retry state whenever the resolved src actually changes.
   // Without this, a component instance that hit a load failure once (e.g.
@@ -236,7 +298,7 @@ export function MediaImage({
   if (!resolvedSrc || hasError) {
     return (
       <Row
-        className={`relative w-full h-full overflow-hidden text-zinc-400 text-[length:var(--appkit-text-4xl)]${wrapperExtra ? ` ${wrapperExtra}` : ""}`} align="center" justify="center" surface="subtle"
+        className={`relative w-full ${boxClass} overflow-hidden text-zinc-400 text-[length:var(--appkit-text-4xl)]${wrapperExtra ? ` ${wrapperExtra}` : ""}`} align="center" justify="center" surface="subtle"
         role="img"
         aria-label={alt}
       >
@@ -267,7 +329,7 @@ export function MediaImage({
   if (sources && sources.length > 0) {
     return (
       <Div
-        className={`relative w-full h-full overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
+        className={`relative w-full ${boxClass} overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
         style={style}
       >
         {!isLoaded && (
@@ -305,7 +367,7 @@ export function MediaImage({
 
   return (
     <Div
-      className={`relative w-full h-full overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
+      className={`relative w-full ${boxClass} overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
       style={style}
     >
       {!isLoaded && (

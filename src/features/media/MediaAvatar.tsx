@@ -36,7 +36,11 @@ export function MediaAvatar({
         shape a face crop must never take. Filling the box IS the contract
         here, not a preference about cropping.
       */}
-      <MediaImage src={src} alt={alt} size="avatar" objectFit="cover" />
+      {/*
+        `fill` for the same reason: the wrapper above is already a fixed-size
+        circle, so the box comes from it rather than from the `avatar` size.
+      */}
+      <MediaImage src={src} alt={alt} size="avatar" objectFit="cover" fill />
     </Div>
   );
 }

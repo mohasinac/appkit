@@ -152,15 +152,35 @@ export async function resolveStoreTabs(
 }
 
 /**
- * Where the bare `/stores/[slug]` route should land: the first listing-type
- * tab holding anything, else Coupons, else Reviews, else About. `about` is
- * always present in `tabs`, so this never falls through to nothing.
+ * Where the bare `/stores/[slug]` route should land.
+ *
+ * Order: **About when the store has written one**, else the first
+ * listing-type tab holding anything, else Coupons, else Reviews, else About.
+ * `about` is always present in `tabs`, so this never falls through to nothing.
+ *
+ * 🛑 About was promoted to first on 2026-10-21, deliberately. Previously the
+ * richest listing tab always won, so any stocked store sent every visitor
+ * straight to a filtered product grid — the storefront read as a search
+ * result, and a seller who had written an introduction was the only person who
+ * ever saw it.
+ *
+ * It is gated on the store ACTUALLY having About content rather than applied
+ * unconditionally: landing on an empty About page would be strictly worse than
+ * landing on products, so the old behaviour remains the fallback. The caller
+ * supplies the flag because this module takes a `storeId`, not the document,
+ * and giving it store-shape knowledge it does not otherwise need would make it
+ * a second place that decides what "has an About" means.
  */
 export async function getDefaultStoreTabPath(
   storeSlug: string,
   storeId: string | undefined,
   settings: SiteSettingsSnapshot,
+  hasAboutContent?: boolean,
 ): Promise<string> {
   const { dropdownTabs, tabs } = await resolveStoreTabs(storeSlug, storeId, settings);
+  if (hasAboutContent) {
+    const about = tabs.find((t) => t.value === "about");
+    if (about) return about.href;
+  }
   return (dropdownTabs[0] ?? tabs[0]!).href;
 }

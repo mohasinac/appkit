@@ -469,7 +469,22 @@ export async function counterOfferByBuyer(
     type: "offer_received",
     priority: "normal",
     title: "Buyer counter offer",
-    message: `${offer.buyerName} countered with ₹${counterAmount} on "${offer.productTitle}".`,
+    /*
+     * 🛑 `offerPlain.buyerName`, NOT `offer.buyerName`.
+     *
+     * `buyerName` is in `OFFER_PII_FIELDS`, so the raw document holds
+     * `enc:v1:…` — and `sendNotification` BAKES this string into the
+     * notification document at write time. Reading the encrypted field here
+     * stamped ciphertext permanently into a seller's inbox on every buyer
+     * counter-offer, unfixable after the fact because the message is frozen
+     * at write.
+     *
+     * This is the same mechanism that previously put `enc:v1:…` into 383
+     * admin alerts (see `onOrderCreate`'s decrypt comment). The plaintext was
+     * already in scope 41 lines up — `offerPlain` at :431, used for the
+     * `createOffer` call at :439.
+     */
+    message: `${offerPlain.buyerName} countered with ₹${counterAmount} on "${offer.productTitle}".`,
     relatedId: newOffer.id,
     relatedType: "offer",
   });

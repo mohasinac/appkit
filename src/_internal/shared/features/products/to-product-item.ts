@@ -22,6 +22,13 @@
  */
 
 import type { FirestoreDocument } from "../../../../schemas/types";
+/*
+ * Client-safe: `products/schemas/firestore.ts` imports only `id-generators`
+ * as a value (pure, `globalThis.crypto`) plus erased types — it does not reach
+ * `providers/db-firebase`, so the header's rule above still holds. Checked
+ * rather than assumed, because that rule is what this file exists for.
+ */
+import { productImageUrls } from "../../../../features/products/schemas/firestore";
 import type { ProductItem } from "../../../../features/products/types";
 
 export function toProductItem(doc: FirestoreDocument): ProductItem {
@@ -30,11 +37,33 @@ export function toProductItem(doc: FirestoreDocument): ProductItem {
     title: String(doc.title ?? doc.name ?? ""),
     price: typeof doc.price === "number" ? doc.price : 0,
     originalPrice: typeof doc.originalPrice === "number" ? doc.originalPrice : undefined,
-    mainImage: Array.isArray(doc.images)
-      ? (doc.images[0] as string | undefined)
-      : typeof doc.mainImage === "string"
-        ? doc.mainImage
-        : undefined,
+    /*
+     * 🛑 `images` is `ProductImage[]` — OBJECTS — not `string[]`.
+     *
+     * This read `doc.images[0] as string`, and the cast is what hid it from
+     * the compiler. `MediaImage` then received `{ url: "/media/…" }`,
+     * `resolveMediaUrl` type-guarded the non-string and returned `undefined`,
+     * and every related card rendered the 📦 placeholder — with **no network
+     * request at all**, which is what distinguishes this from a genuine 404
+     * (those retry three times before latching).
+     *
+     * Blast radius was every related carousel on all seven listing-type
+     * detail pages, plus `GroupedListingsCarousel` and
+     * `FranchiseDetailPageView`. The PDP gallery had already been fixed for
+     * the identical reason and its comment says so; this was the last site
+     * still doing `doc.images[0] as string`.
+     *
+     * `mainImage` FIRST, gallery as fallback — the seller chose `mainImage`
+     * deliberately, and this matches the precedence every other card mapper
+     * uses (e.g. `StoreAuctionsListing`). `productImageUrls` is the one
+     * normaliser and it also accepts the legacy `string[]`.
+     */
+    mainImage:
+      (typeof doc.mainImage === "string" ? doc.mainImage : undefined) ??
+      productImageUrls(doc.images)[0],
+    // Carried so a card that needs a second image does not have to re-read the
+    // document. Previously dropped entirely, which left the tile no fallback.
+    images: productImageUrls(doc.images),
     status: (doc.status as ProductItem["status"]) ?? "published",
     slug: typeof doc.slug === "string" ? doc.slug : undefined,
     storeName: typeof doc.storeName === "string" ? doc.storeName : undefined,
