@@ -17,6 +17,7 @@ import {
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
+  paymentReconcileHandler,
   paymentWindowTimeoutHandler,
   hardBanReinstatementHandler,
   paymentReviewAutoApproveHandler,
@@ -234,6 +235,39 @@ export const countersReconcile = defineFunction({
 });
 
 /**
+ * Payment reconciliation — R2, R3 and R4. Daily 05:30 UTC.
+ *
+ * 🛑 ITS OWN FUNCTION, and the two obvious places to fold it are both wrong.
+ *
+ * `countersReconcile` above already runs at its 540 s ceiling, so adding work
+ * there is how a job starts timing out and taking category metrics with it.
+ * `autoPayoutEligibility` is tempting because both touch orders, but
+ * `priceIndexRollup`'s own comment sets the precedent: a job should be able to
+ * fail without taking an unrelated one down, and these two share nothing beyond
+ * the collection.
+ *
+ * Cloud Scheduler bills **per registered job** (3 free, 28 already registered),
+ * so this is ~$0.10/month — a cost the Firebase budget table explicitly accepts
+ * for a distinct cadence rather than contorting the schedule around it.
+ *
+ * 🛑 R1 is NOT here. It is folded into `paymentWindowTimeout` (every 5 minutes),
+ * because a webhook we received and lost should not wait up to 24 hours to be
+ * noticed — and its query is one indexed read, so the tight loop is free.
+ *
+ * 05:30 UTC = 11:00 IST, deliberately after `countersReconcile` (03:00) and
+ * `autoPayoutEligibility` so a payout decision is never taken on the same tick
+ * as the reconciliation that might open a case blocking it.
+ */
+export const paymentReconcile = defineFunction({
+  name: "paymentReconcile",
+  description:
+    "Reconcile the gateway's payments, refunds and disputes against our orders; open paymentCases (daily 05:30 UTC).",
+  trigger: { kind: "schedule", cron: "30 5 * * *", timeZone: "UTC" },
+  handler: paymentReconcileHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
+});
+
+/**
  * 🛑 ITS OWN FUNCTION, AND DELIBERATELY NOT A FIRESTORE TRIGGER.
  *
  * A trigger on `inventoryPlacements` writing back to `storageBoxes` would fire
@@ -247,15 +281,20 @@ export const countersReconcile = defineFunction({
  * so a day-stale rollup costs a slightly wrong number in a list and never a
  * wrong decision.
  *
- * 04:30 UTC — after `countersReconcile` (03:00) and `positionsReconcile`
- * (03:30), so three jobs each walking a collection are not competing for the
- * same read quota in the same minute.
+ * 🛑 06:15 UTC, AND THE SLOT WAS CHOSEN BY COUNTING, NOT BY EYE. My first
+ * pick was 04:30 with a comment claiming it kept three collection-walking jobs
+ * out of the same minute — while `30 4 * * *` ALREADY held two
+ * (`priceIndexRollup` at 540s/512MiB among them), so it would have made three
+ * and the comment would have asserted the opposite of what it did.
+ *
+ * `grep -o 'cron: "…"' | sort | uniq -c` over this file is the check: 06:15 is
+ * empty, clear of the dense 00:00–05:30 band and of the 10:00 IST digest.
  */
 export const boxRollupReconcile = defineFunction({
   name: "boxRollupReconcile",
   description:
-    "Recompute each storage box's product/unit rollup from its real placements (daily 04:30 UTC).",
-  trigger: { kind: "schedule", cron: "30 4 * * *", timeZone: "UTC" },
+    "Recompute each storage box's product/unit rollup from its real placements (daily 06:15 UTC).",
+  trigger: { kind: "schedule", cron: "15 6 * * *", timeZone: "UTC" },
   handler: boxRollupReconcileHandler,
   options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
 });
@@ -403,6 +442,16 @@ export const SCHEDULED_FUNCTIONS = [
   dailyStatusDigest,
   dailyDataCleanup,
   countersReconcile,
+  /*
+   * 🛑 Registering here is NOT optional and is easy to miss: `defineFunction`
+   * only creates the definition — `SCHEDULED_FUNCTIONS` is what
+   * `APPKIT_FUNCTIONS` spreads and `bindAllFromRegistry` binds. A function
+   * defined and not listed deploys nowhere and NOTHING ERRORS: the export
+   * exists, the file compiles, and the job simply never runs. That is the same
+   * silent-omission shape as `audit-barrel-no-seed`'s (an export whose absence
+   * makes a loader quietly skip a collection).
+   */
+  paymentReconcile,
   boxRollupReconcile,
   positionsReconcile,
   cartPrune,

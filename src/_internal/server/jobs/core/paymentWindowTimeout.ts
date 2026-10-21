@@ -5,6 +5,7 @@ import { restoreStockForOrder } from "../../features/checkout/stock-restore";
 import { OrderStatusValues } from "../../../../features/orders/schemas/firestore";
 import { PAYMENT_WINDOW_EXPIRED_REASON } from "../../../../features/orders/constants/payment-window";
 import { ORDER_MESSAGES } from "../handlers/messages";
+import { reconcileStuckGatewayEvents } from "./paymentReconcile";
 import type { JobContext } from "../runtime/types";
 
 /**
@@ -21,6 +22,39 @@ import type { JobContext } from "../runtime/types";
  * (`paymentReviewAutoApprove`), not this one's.
  */
 export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
+  /*
+   * ── R1 rides along: gateway events we received and lost ───────────────────
+   *
+   * Folded into this sweep rather than given its own cron, for two reasons that
+   * both matter. Cloud Scheduler bills **per registered job**, so a fifth
+   * 5-minute function is a real recurring cost for one indexed read. And this
+   * job already runs at the cadence R1 needs: a webhook whose handler died
+   * mid-dispatch leaves a lapsed lease, and noticing that within ~5 minutes
+   * rather than up to 24 hours is the difference between the gateway's own
+   * retry still being in flight and a buyer having already emailed support.
+   *
+   * 🛑 FIRST, and outside the early return below. The original shape of this
+   * function returns as soon as there are no expired payment windows — which is
+   * most ticks — so appending R1 after that return would have made it run only
+   * on the minority of ticks that happened to have unrelated work. That is the
+   * sweep-coverage trap Root Cause #27 is about: three sweeps whose filters
+   * were each disjoint, with no proof any order was covered by one.
+   *
+   * It never throws: a reconciliation failure must not stop the payment-window
+   * cancellations this job exists for.
+   */
+  try {
+    const r1 = await reconcileStuckGatewayEvents(ctx);
+    if (r1.redispatched > 0 || r1.escalated > 0) {
+      ctx.logger.warn("R1: recovered stuck gateway events", { ...r1 });
+    }
+  } catch (err) {
+    void normalizeError(err);
+    ctx.logger.error("R1 failed inside paymentWindowTimeout — continuing with the sweep", {
+      err,
+    });
+  }
+
   ctx.logger.info("Scanning orders past their 15-minute payment deadline");
 
   const expired = await orderRepository.getExpiredPaymentDeadlines();

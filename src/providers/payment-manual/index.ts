@@ -23,6 +23,7 @@ import type {
   PaymentCapture,
   Refund,
   Dispute,
+  GatewayPaymentRecord,
 } from "../../contracts";
 import type { JsonValue } from "../../schemas/types";
 
@@ -119,6 +120,20 @@ export class ManualPaymentProvider extends IPaymentProvider {
    * provider that has none means the caller is confused, and answering a
    * confident wrong thing is how a reconciler reports clean.
    */
+
+  /**
+   * 🛑 `[]` here means "THIS PROVIDER CANNOT ANSWER", not "there are no
+   * payments" — and the difference decides whether a reconciler may conclude
+   * anything. A manual payment exists only as a row we wrote plus a proof the
+   * buyer uploaded; there is no external ledger to compare against, so the
+   * gateway-vs-us check is structurally inapplicable rather than clean.
+   *
+   * The caller is required to treat an empty list as no information (see the
+   * contract), which is why this is honest rather than a silent degrade.
+   */
+  async listPayments(): Promise<GatewayPaymentRecord[]> {
+    return [];
+  }
 
   async getDispute(disputeId: string): Promise<Dispute> {
     throw Object.assign(

@@ -104,6 +104,42 @@ export interface Dispute {
   gateway: string;
 }
 
+/**
+ * One payment as the GATEWAY sees it — the input to reconciliation.
+ *
+ * 🛑 This type exists so a reconciler can compare the gateway's view against
+ * ours **in the direction that needs no trust in our own code.** Every other
+ * check in this system starts from our records and asks whether they are
+ * consistent; this one starts from the gateway's and asks whether we have an
+ * order at all. That is the only direction that could have detected the
+ * 2026-10-21 incident, where our side had nothing to be inconsistent with.
+ *
+ * `amount`, `amountRefunded` — decimal rupees, converted at the boundary.
+ * `capturedAt` — a Date; the gateway reports Unix SECONDS.
+ */
+export interface GatewayPaymentRecord {
+  /** The gateway's payment id. */
+  id: string;
+  /** The gateway's order id, when the payment is attached to one. */
+  orderId?: string;
+  /** Decimal rupees. */
+  amount: number;
+  currency: string;
+  /**
+   * The gateway's own status string, verbatim and opaque. Razorpay uses
+   * `created | authorized | captured | refunded | failed`; treat anything
+   * unrecognised as "not captured", which fails toward not drawing a
+   * conclusion.
+   */
+  status: string;
+  /** Decimal rupees already refunded against this payment, per the gateway. */
+  amountRefunded: number;
+  /** `null` | `partial` | `full`, as the gateway reports it. */
+  refundStatus?: string;
+  capturedAt?: Date;
+  gateway: string;
+}
+
 // --- Payment Contract -----------------------------------------------------
 
 /**
@@ -137,6 +173,20 @@ export abstract class IPaymentProvider {
    * let a provider stay silent, and silence on a chargeback is the expensive
    * answer.
    */
+
+  /**
+   * Every payment the gateway recorded in a window — the reconciliation feed.
+   *
+   * 🛑 A provider that cannot enumerate payments returns `[]`, and the caller
+   * MUST treat an empty list as "no information", never as "no payments".
+   * Concluding "nothing is missing" from a provider that cannot answer is the
+   * false-clean a reconciler exists to avoid.
+   */
+  abstract listPayments(opts: {
+    from: Date;
+    to: Date;
+    limit?: number;
+  }): Promise<GatewayPaymentRecord[]>;
 
   /** Fetch one dispute by the gateway's id. */
   abstract getDispute(disputeId: string): Promise<Dispute>;

@@ -21,6 +21,7 @@ export { runCleanupRtdbEvents } from "./cleanupRtdbEvents";
 export { runMediaTmpCleanup } from "./mediaTmpCleanup";
 export { runPendingOrderTimeout } from "./pendingOrderTimeout";
 export { runCountersReconcile } from "./countersReconcile";
+export { runPaymentReconcile, reconcileStuckGatewayEvents } from "./paymentReconcile";
 export { runBundleStockSync } from "./bundleStockSync";
 export { runAutoPayoutEligibility } from "./autoPayoutEligibility";
 export { runProductStatsSync } from "./productStatsSync";

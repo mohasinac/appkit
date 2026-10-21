@@ -47,7 +47,13 @@ import {
 } from "phonepe-pg-sdk-node";
 import type { JsonValue } from "@mohasinac/appkit";
 import { IPaymentProvider } from "../../contracts";
-import type { PaymentOrder, PaymentCapture, Refund, Dispute } from "../../contracts";
+import type {
+  PaymentOrder,
+  PaymentCapture,
+  Refund,
+  Dispute,
+  GatewayPaymentRecord,
+} from "../../contracts";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { normalizeError } from "../../errors/normalize";
 
@@ -291,6 +297,19 @@ export class PhonePeProvider extends IPaymentProvider {
    * PhonePe is currently dormant (Razorpay wins the provider tie-break), which
    * is why this is a documented limitation rather than a gap being worked.
    */
+
+  /**
+   * 🛑 `[]` because PhonePe's PG Checkout API is ORDER-keyed and exposes no
+   * "list my payments in a window" endpoint — not because there are none.
+   * Distinct from the manual provider's reason: there IS an external ledger
+   * here, we simply cannot read it in bulk. A reconciler must therefore not
+   * treat PhonePe as reconciled; it is unreconcilable with this API, which is
+   * a documented limitation rather than a gap being worked (PhonePe is dormant
+   * — Razorpay wins the provider tie-break).
+   */
+  async listPayments(): Promise<GatewayPaymentRecord[]> {
+    return [];
+  }
 
   async getDispute(disputeId: string): Promise<Dispute> {
     throw Object.assign(

@@ -10211,6 +10211,20 @@
       ]
     },
     {
+      "collectionGroup": "refundClaims",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "state",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "claimedAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "serverErrors",
       "queryScope": "COLLECTION",
       "fields": [

@@ -54,7 +54,13 @@
 import Razorpay from "razorpay";
 import type { JsonValue } from "@mohasinac/appkit";
 import { IPaymentProvider } from "../../contracts";
-import type { PaymentOrder, PaymentCapture, Refund, Dispute } from "../../contracts";
+import type {
+  PaymentOrder,
+  PaymentCapture,
+  Refund,
+  Dispute,
+  GatewayPaymentRecord,
+} from "../../contracts";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { paiseToRupees } from "../../core/money";
 import { verifyWebhookSignature } from "./signature";
@@ -334,6 +340,43 @@ export class RazorpayProvider extends IPaymentProvider {
       createdAt: new Date(Number(d.created_at) * 1000),
       gateway: this.name,
     };
+  }
+
+  /**
+   * Payments in a window, for reconciliation.
+   *
+   * 🛑 `from`/`to` are Unix timestamps in **SECONDS** and `count` is capped at
+   * **100 by the API** (verified in `RazorpayPaginationOptions`). The cap is
+   * NOT raised by asking: a caller wanting more must page with `skip`, and this
+   * method deliberately does not, because an unbounded page loop inside a 540 s
+   * function is how a reconciler turns into a timeout. At this project's volume
+   * one page is several days of payments; the count is logged so the day that
+   * stops being true is visible rather than silently truncating.
+   */
+  async listPayments(opts: {
+    from: Date;
+    to: Date;
+    limit?: number;
+  }): Promise<GatewayPaymentRecord[]> {
+    const result = await this.razorpay.payments.all({
+      from: Math.floor(opts.from.getTime() / 1000),
+      to: Math.ceil(opts.to.getTime() / 1000),
+      count: Math.min(opts.limit ?? 100, 100),
+    });
+    return (result.items ?? []).map((p) => {
+      const captured = Number(p.created_at);
+      return {
+        id: String(p.id),
+        ...(p.order_id ? { orderId: String(p.order_id) } : {}),
+        amount: paiseToRupees(Number(p.amount)),
+        currency: String(p.currency),
+        status: String(p.status),
+        amountRefunded: paiseToRupees(Number(p.amount_refunded ?? 0)),
+        ...(p.refund_status ? { refundStatus: String(p.refund_status) } : {}),
+        ...(Number.isFinite(captured) ? { capturedAt: new Date(captured * 1000) } : {}),
+        gateway: this.name,
+      };
+    });
   }
 
   async getDispute(disputeId: string): Promise<Dispute> {
