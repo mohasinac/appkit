@@ -224,6 +224,40 @@ export function sumGroupGst(
    * default. `audit-checkout-total-parity` is what will catch an omission.
    */
   couponDiscount = 0,
+  /**
+   * G5 — the group's TAXABLE ancillary charges, in decimal rupees: shipping,
+   * COD handling, gift wrap, shipment protection, sale protection.
+   *
+   * 🛑 These used to enter the order total as BARE ADDENDS carrying no tax at
+   * all. Delivery and handling are generally part of a composite supply and
+   * taxable at the rate of the principal supply, so a ₹100 shipping line on an
+   * 18% order was collected with ~₹15.25 of embedded tax that we declared
+   * nowhere.
+   *
+   * ── THE MECHANISM DIVERGES FROM THE PLAN, DELIBERATELY ──────────────────
+   *
+   * The plan recorded G5 as "raises buyer totals slightly", i.e. tax ADDED on
+   * top of each fee. That is the right reading for a tax-exclusive system and
+   * this one is not: `calculateGstInclusive`'s own header states "**Every
+   * price in this system is tax-inclusive**", and the product JSON-LD
+   * publicly asserts `valueAddedTaxIncluded: true`.
+   *
+   * So the fees are treated INCLUSIVE, exactly like goods:
+   *
+   *   · the buyer pays the configured ₹100 — **no total changes, no silent
+   *     re-pricing of every order**
+   *   · ₹15.25 of it is recognised as GST and remitted
+   *   · `taxableAmount` and `gstAmount` rise; the amount collected does not
+   *
+   * Adding tax on top instead would mix two conventions inside one total —
+   * which is the shape of the five-disagreeing-totals problem this phase
+   * exists to remove — and would make the published JSON-LD false. Flagged
+   * rather than silently chosen; it is still part of the CA conversation.
+   *
+   * Taxed at the PRINCIPAL rate, derived from the group's own goods (see
+   * below), because an ancillary charge follows the supply it is ancillary to.
+   */
+  taxableFees = 0,
 ): GroupGstSummary {
   let taxableAmount = 0;
   let exemptAmount = 0;
@@ -330,6 +364,64 @@ export function sumGroupGst(
           igst: b.igst,
           gstAmount: b.gstAmount,
         });
+      }
+    }
+  }
+
+  /*
+   * ── G5: the ancillary charges, taxed at the PRINCIPAL rate ──────────────
+   *
+   * A composite supply is taxed at the rate of its principal supply, and the
+   * principal supply here is the goods — shipping, handling, gift wrap and the
+   * protections exist only because the goods are being supplied.
+   *
+   * 🛑 "Principal rate" is the rate of the HIGHEST-VALUE taxable component,
+   * not the highest rate and not an average. On a mixed 5% + 18% group the
+   * principal supply is whichever dominates by value, so a cart of mostly-5%
+   * goods carries its shipping at 5%. Taking the highest RATE would
+   * over-collect on exactly the carts where the 18% item is a minor add-on;
+   * averaging would invent a rate that exists in no schedule and cannot appear
+   * on a Rule 46 invoice.
+   *
+   * 🛑 A group whose goods are entirely EXEMPT (0%) taxes its fees at 0% too —
+   * `principalRate` stays null, so the fee lands in `exemptAmount`. Ancillary
+   * to an exempt supply is exempt; defaulting to 18% there would tax delivery
+   * on a zero-rated order.
+   */
+  if (taxableFees > 0) {
+    let principalRate: number | null = null;
+    let principalValue = 0;
+    for (const slice of byRate.values()) {
+      if (slice.taxableAmount > principalValue) {
+        principalValue = slice.taxableAmount;
+        principalRate = slice.gstRate;
+      }
+    }
+
+    if (principalRate === null) {
+      // No taxed goods in this group — the fee follows them and is exempt.
+      exemptAmount += taxableFees;
+    } else {
+      // INCLUSIVE, like every other price in this system: the configured fee
+      // is what the buyer pays and the tax is backed out of it.
+      const f = calculateGstInclusive(principalRate, intraState, taxableFees);
+      taxableAmount += f.taxableAmount;
+      cgst += f.cgst;
+      sgst += f.sgst;
+      igst += f.igst;
+      gstAmount += f.gstAmount;
+
+      // Folded into the principal rate's existing bucket rather than given its
+      // own: on the invoice these are part of one taxable supply at one rate,
+      // and a separate line at the same rate would not reconcile against the
+      // Rule 46 per-rate summary.
+      const prev = byRate.get(principalRate);
+      if (prev) {
+        prev.taxableAmount = roundRupees(prev.taxableAmount + f.taxableAmount);
+        prev.cgst = roundRupees(prev.cgst + f.cgst);
+        prev.sgst = roundRupees(prev.sgst + f.sgst);
+        prev.igst = roundRupees(prev.igst + f.igst);
+        prev.gstAmount = roundRupees(prev.gstAmount + f.gstAmount);
       }
     }
   }

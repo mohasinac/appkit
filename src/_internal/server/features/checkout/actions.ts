@@ -975,50 +975,6 @@ async function createOrderForGroup(
   // then split the group total into a single cgst/sgst/igst breakdown for the
   // order document. Skipped entirely when GST is off or the buyer's state is
   // unknown (digital-only carts have no shipping address).
-  let gstBreakdown: GroupGstSummary | undefined;
-  if (gstSettings?.enabled && buyerState) {
-    /*
-     * 🛑 `isIntraStateSupply`, not `storeState === buyerState`. That raw
-     * comparison read "Karnataka" / "karnataka" / "KA" as three different
-     * states — the exact drift `constants/geo/subdivisions.ts` opens by
-     * documenting — and a store with no address resolved to `false`, i.e.
-     * silently inter-state. `null` means "cannot tell" and is logged rather
-     * than guessed; the AMOUNT is identical either way (IGST total ==
-     * CGST+SGST total), so what was wrong was the split on the invoice.
-     */
-    const intra = isIntraStateSupply(storeState, buyerState);
-    if (intra === null) {
-      serverLogger.warn(
-        "[gst] place of supply undetermined — defaulting to inter-state (IGST)",
-        { storeId: firstItem.storeId, hasStoreState: !!storeState },
-      );
-    }
-    // Per-member, not per-line: a bundle or grouped line spans several products
-    // with several different rates, and taxing the whole line at one product's
-    // rate is wrong in both directions. Shared with previewCheckoutPricing so
-    // the figure shown and the figure charged cannot drift.
-    const summary = sumGroupGst(
-      group.map(({ item }) => item),
-      ctx.productById,
-      intra ?? false,
-      // G1 — the taxable value is the POST-discount gross. See the hoist above.
-      couponDiscount,
-    );
-    /*
-     * The split is taken AS COMPUTED, per slice, by `calculateGst` inside
-     * `sumGroupGst`. It used to be re-derived here as
-     * `Math.round(gstAmount / 2)` — whole rupees, so ₹161.82 became
-     * 81.00/80.82 rather than 80.91/80.91, and a ₹0.52 total rounded to 0 and
-     * was then dropped off the invoice entirely by the `|| undefined` below.
-     *
-     * The guard is on EITHER base: an order of purely exempt goods has a real
-     * taxable value to report and zero tax, and skipping it left the invoice
-     * unable to reconcile.
-     */
-    if (summary.taxableAmount > 0 || summary.exemptAmount > 0) {
-      gstBreakdown = summary;
-    }
-  }
 
   const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
   const depositAmount = !isCodLike
@@ -1072,6 +1028,72 @@ async function createOrderForGroup(
     shippingFee: (s, sel) => computeShipmentProtectionFee(s, sel, commissions),
     saleFee: (s, sel) => computeSaleProtectionFee(s, sel, commissions),
   });
+
+  /*
+   * 🛑 THIS BLOCK WAS MOVED DOWN (2026-10-21) and its position is load-bearing.
+   *
+   * It used to sit ~90 lines above, before `codHandlingFee`, `giftWrapFee` and
+   * the two protection fees were computed — so it could not possibly tax them,
+   * and they entered the order total as bare addends carrying no tax (G5).
+   *
+   * It now runs after every ancillary charge is known and before `orderTotal`
+   * consumes them. Do not move it back up, and do not move a fee computation
+   * below it.
+   */
+  let gstBreakdown: GroupGstSummary | undefined;
+  if (gstSettings?.enabled && buyerState) {
+    /*
+     * 🛑 `isIntraStateSupply`, not `storeState === buyerState`. That raw
+     * comparison read "Karnataka" / "karnataka" / "KA" as three different
+     * states — the exact drift `constants/geo/subdivisions.ts` opens by
+     * documenting — and a store with no address resolved to `false`, i.e.
+     * silently inter-state. `null` means "cannot tell" and is logged rather
+     * than guessed; the AMOUNT is identical either way (IGST total ==
+     * CGST+SGST total), so what was wrong was the split on the invoice.
+     */
+    const intra = isIntraStateSupply(storeState, buyerState);
+    if (intra === null) {
+      serverLogger.warn(
+        "[gst] place of supply undetermined — defaulting to inter-state (IGST)",
+        { storeId: firstItem.storeId, hasStoreState: !!storeState },
+      );
+    }
+    // Per-member, not per-line: a bundle or grouped line spans several products
+    // with several different rates, and taxing the whole line at one product's
+    // rate is wrong in both directions. Shared with previewCheckoutPricing so
+    // the figure shown and the figure charged cannot drift.
+    const summary = sumGroupGst(
+      group.map(({ item }) => item),
+      ctx.productById,
+      intra ?? false,
+      // G1 — the taxable value is the POST-discount gross. See the hoist above.
+      couponDiscount,
+      /*
+       * G5 — the ancillary charges, taxed at the principal rate. Shipping,
+       * COD handling, gift wrap and both protections; NOT the platform fee,
+       * which already carries its own `platformFeeGst` and would be taxed
+       * twice, and NOT the EMI surcharge, which is a financing charge with
+       * its own treatment and is deliberately outside the decided scope.
+       */
+      roundRupees(
+        shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee,
+      ),
+    );
+    /*
+     * The split is taken AS COMPUTED, per slice, by `calculateGst` inside
+     * `sumGroupGst`. It used to be re-derived here as
+     * `Math.round(gstAmount / 2)` — whole rupees, so ₹161.82 became
+     * 81.00/80.82 rather than 80.91/80.91, and a ₹0.52 total rounded to 0 and
+     * was then dropped off the invoice entirely by the `|| undefined` below.
+     *
+     * The guard is on EITHER base: an order of purely exempt goods has a real
+     * taxable value to report and zero tax, and skipping it left the invoice
+     * unable to reconcile.
+     */
+    if (summary.taxableAmount > 0 || summary.exemptAmount > 0) {
+      gstBreakdown = summary;
+    }
+  }
 
   const groupCouponCodes = new Set<string>();
   /*
@@ -2159,6 +2181,23 @@ export async function previewCheckoutPricing(
         resolvedProductById,
         intra ?? false,
         groupCouponDiscount,
+        /*
+         * G5 — the same five ancillary charges the order path taxes, in the
+         * same order, so the figure SHOWN and the figure CHARGED cannot
+         * diverge on the tax base (Root Cause #59). All five are already in
+         * scope here, so unlike `createOrderForGroup` no block had to move.
+         *
+         * `groupEmiSurcharge` is deliberately absent — a financing charge with
+         * its own treatment, outside the decided scope — and the platform fee
+         * is absent because it already carries `platformFeeGst`.
+         */
+        roundRupees(
+          groupShippingFee +
+            groupCodHandlingFee +
+            groupGiftWrapFee +
+            groupShipmentProtectionFee +
+            groupSaleProtectionFee,
+        ),
       ).gstAmount;
     }
 
@@ -2699,6 +2738,17 @@ async function createPhonePeGroupOrder(
       phonepeProductById,
       intra ?? false,
       couponDiscount,
+      /*
+       * G5 — the ancillary charges. 🛑 FOUR, not five: this is the ONLINE
+       * payment path, so there is no `codHandlingFee` in scope and none is
+       * charged — COD is a different payment method handled by
+       * `createOrderForGroup`. The absence is correct, not an omission, and
+       * worth saying so because the other two call sites pass five and a
+       * reader comparing them would otherwise look for the missing term.
+       */
+      roundRupees(
+        shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee,
+      ),
     );
     if (summary.taxableAmount > 0 || summary.exemptAmount > 0) phonepeGst = summary;
   }
