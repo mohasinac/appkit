@@ -912,8 +912,31 @@ export interface ProductDocument extends BaseDocument {
 
   /** Scannable barcode identifier linking this listing to a physical stickered item.
    *  Auto-generated as `LIR-{8-char-hex}` on product creation when not supplied.
-   *  Override by scanning a pre-printed sticker during the create/edit flow. */
+   *  Override by scanning a pre-printed sticker during the create/edit flow.
+   *
+   *  🛑 THE MACHINE KEY, and it must stay uniform-width. This field used to
+   *  hold the semantic codes too — 23 seeded products carried
+   *  `LIR-BEY-X-005` while everything app-created carried the SHA-1 form, so
+   *  the audit found both printed in one list. Those moved to `sku`; see the
+   *  note above `generateBarcodeId` for why the widths cannot share a field.
+   */
   barcodeId?: string;
+
+  /**
+   * The HUMAN key — a stock-keeping unit a person reads, says aloud and files
+   * by. `LIR-BURS-K3F9P` from `generateSku`, or whatever the seller authored.
+   *
+   * 🛑 Distinct from `barcodeId` ON PURPOSE, and the pair is the whole
+   * reconciliation of the audit's two-barcode finding. A barcode is scanned
+   * and must be fixed-width for a label to fit; a SKU is spoken and must be
+   * meaningful. One field could not be both, and was not.
+   *
+   * Optional, and absent on most live rows until the backfill runs
+   * (`appkit/scripts/backfill-sku.mjs`). 🛑 Nothing may assume its presence:
+   * the admin toolbar advertised SKU search for a field that did not exist at
+   * all, and every row read "No SKU" as a result.
+   */
+  sku?: string;
 
   /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
   searchTxt?: string[];
@@ -1197,6 +1220,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
    * a seller who labels a shelf today should find it there tomorrow.
    */
   "physicalLocation",
+  // The human stock key. Seller-authored or generated; see ProductDocument.sku.
+  "sku",
   "pickupAddressId",
   "condition",
   "insurance",

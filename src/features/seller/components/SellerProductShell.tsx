@@ -659,6 +659,24 @@ function StepBasic({
         onChange={(tags) => onChange({ tags })}
         placeholder="pokemon, psa9, charizard, holo"
       />
+      {/*
+        🛑 TWO FIELDS, because they are two keys. `barcodeId` is the MACHINE
+        key — fixed width, scanned, and what a CODE128 label encodes. `sku` is
+        the HUMAN key — spoken, filed by, variable width.
+        Both lived in `barcodeId` until now, which is why the audit found
+        `LIR-1A99AEA8` printed directly above `LIR-BEY-X-005` in one list.
+        See `generateBarcodeId`'s header for why the widths cannot share a
+        field: the label geometry is sized for the symbol.
+      */}
+      <FormField
+        name="sku"
+        label="SKU"
+        type="text"
+        value={values.sku ?? ""}
+        onChange={(v) => onChange({ sku: v || undefined })}
+        placeholder="LIR-BURS-001"
+        helperText="Your own stock code. Leave blank and one is generated from the category."
+      />
       <BarcodeField
         value={values.barcodeId ?? ""}
         onChange={(v) => onChange({ barcodeId: v || undefined })}

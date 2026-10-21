@@ -882,6 +882,36 @@ export function deriveContextTypeFromFilename(filename: string): string | undefi
 }
 
 /**
+ * ── 🛑 BARCODE vs SKU — the two formats, reconciled ─────────────────────────
+ *
+ * `barcodeId` held BOTH of these, which is why the audit found
+ * `LIR-1A99AEA8` printed directly above `LIR-BEY-X-005` in one list:
+ *
+ *   · 23 seeded products carried a hand-authored SEMANTIC code
+ *     (`LIR-BEY-BURS-001`, `LIR-BEY-X-005`) — meaningful, variable width,
+ *     readable by a human, sortable by line.
+ *   · everything created through the app got `generateBarcodeId`'s SHA-1
+ *     form — meaningless, fixed width, verifiable only by scanning.
+ *
+ * One field was doing two jobs, and the jobs have opposite requirements. The
+ * split is the reconciliation:
+ *
+ *   `barcodeId`  THE MACHINE KEY. Fixed shape, uniform width, derived. This
+ *                is what a CODE128 symbol encodes and what a scan resolves
+ *                through `findByBarcodeId`.
+ *   `sku`        THE HUMAN KEY. Author-editable, meaningful, variable width.
+ *                The 23 semantic codes belong here and have moved.
+ *
+ * 🛑 Why the width matters and is not cosmetic: a label's geometry is sized
+ * for its symbol, and Phase 5's thermal presets derive a ~42 mm minimum from
+ * the 12-character `LIR-XXXXXXXX` form. A variable-width code in the same
+ * field means one product's label fits its stock and the next one's does
+ * not — and `labelFitsProfile()` is specified to REPORT rather than scale,
+ * so the failure surfaces as a refusal to print rather than a squashed
+ * barcode. Keeping `barcodeId` uniform is what makes that check meaningful.
+ */
+
+/**
  * Generates a scannable barcode identifier for a product listing.
  * Returns `LIR-XXXXXXXX` (8 uppercase hex chars) derived from a SHA-1
  * hash of the productId. Deterministic and stateless — calling it twice
@@ -897,5 +927,67 @@ export async function generateBarcodeId(productId: string): Promise<string> {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
   return `LIR-${hex.slice(0, 8).toUpperCase()}`;
+}
+
+/** A short uppercase token from a slug or name — `beyblade-burst` -> `BURS`. */
+function skuToken(input: string | undefined, length: number): string {
+  const letters = (input ?? "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+  return letters.slice(0, length);
+}
+
+export interface SkuInput {
+  /** The product's own id — the uniqueness source. */
+  productId: string;
+  /** Leaf category slug, for the readable middle segment. */
+  categorySlug?: string;
+  /** Brand name, used when there is no category to read. */
+  brand?: string;
+  /** A seller-authored SKU. Returned as-is when non-empty. */
+  customId?: string;
+}
+
+/**
+ * `LIR-BURS-K3F9P` — the HUMAN key for a listing.
+ *
+ * 🛑 DETERMINISTIC, not sequential, and that is the decision worth knowing.
+ *
+ * The 23 seeded codes are sequential (`-001`, `-002`), which reads beautifully
+ * and cannot be generated without a per-line counter — i.e. a Firestore read
+ * and a write on every product create, a contended document, and a number
+ * that cannot be reproduced offline. Seed files are re-executed on every
+ * `appkit-seed` invocation, so a counter there would also break idempotency
+ * outright (Root Cause #25).
+ *
+ * So the sequence is replaced by a base36 hash of the product id: unique
+ * without coordination, identical on every run, and still prefixed with a
+ * readable line token so a human can tell a Burst from a Metal Fight at a
+ * glance. Hand-authored sequential codes remain legal — `customId` is
+ * returned untouched, which is how the seeded 23 keep theirs.
+ *
+ * 🛑 NOT fed into `barcodeId`. See the note above `generateBarcodeId`: the
+ * barcode must stay uniform-width for the label geometry to mean anything.
+ */
+export function generateSku(input: SkuInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+
+  const token =
+    skuToken(input.categorySlug, 4) || skuToken(input.brand, 4) || "GEN";
+
+  /*
+   * A 5-char base36 hash of the id — ~60M values, which is far past what a
+   * physical inventory needs, and short enough to read aloud down a phone.
+   *
+   * `Math.imul` rather than a crypto digest because this must be callable
+   * SYNCHRONOUSLY from a form and from seed data. `generateBarcodeId` is
+   * async precisely because it uses `crypto.subtle`, and an async SKU would
+   * push a promise into every row builder.
+   */
+  let hash = 0;
+  for (let i = 0; i < input.productId.length; i += 1) {
+    hash = Math.imul(hash ^ input.productId.charCodeAt(i), 0x01000193);
+  }
+  const suffix = (hash >>> 0).toString(36).toUpperCase().padStart(5, "0").slice(-5);
+
+  return `LIR-${token}-${suffix}`;
 }
 

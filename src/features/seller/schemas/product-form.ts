@@ -93,6 +93,11 @@ export const productDraftSchema = z
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     barcodeId: z.string().optional(),
+    /*
+     * The human stock key. Separate from barcodeId because they are two keys
+     * with opposite requirements — see ProductDocument.sku.
+     */
+    sku: z.string().max(64).optional(),
 
     // Auction
     startingBid: z.number().optional(),

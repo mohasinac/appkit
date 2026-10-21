@@ -200,7 +200,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-original-dranzer-s",
     slug: "product-beyblade-original-dranzer-s",
-    barcodeId: "LIR-BEY-ORIG-001",
+    sku: "LIR-BEY-ORIG-001",
     title: "Beyblade Original — Dranzer S",
     description: "Plastic Generation era Dranzer S with launcher and ripcord. A classic from the original 1999-2003 Beyblade series.",
     categorySlugs: ["category-dranzer-s","category-original-spin-gear","category-original-tops","category-beyblade-original","category-spinning-tops"],
@@ -246,7 +246,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-original-driger-v",
     slug: "product-beyblade-original-driger-v",
-    barcodeId: "LIR-BEY-ORIG-002",
+    sku: "LIR-BEY-ORIG-002",
     title: "Beyblade Original — Driger V",
     description: "Vintage Driger V attack-type top from the original series, complete with launcher grip.",
     categorySlugs: ["category-driger-v","category-original-tops","category-beyblade-original","category-spinning-tops"],
@@ -279,7 +279,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-metal-storm-pegasus",
     slug: "product-beyblade-metal-storm-pegasus",
-    barcodeId: "LIR-BEY-META-001",
+    sku: "LIR-BEY-META-001",
     title: "Metal Fight Beyblade BB-28 Storm Pegasus",
     description: "Storm Pegasus 105RF from the Metal Fusion era — one of the most iconic Metal Fight tops.",
     categorySlugs: ["category-storm-pegasus-105rf","category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
@@ -311,7 +311,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-metal-flame-sagittario",
     slug: "product-beyblade-metal-flame-sagittario",
-    barcodeId: "LIR-BEY-META-002",
+    sku: "LIR-BEY-META-002",
     title: "Metal Fight Beyblade BB-43 Flame Sagittario",
     description: "Flame Sagittario C145S, a balance-type top from the Metal Masters generation.",
     categorySlugs: ["category-flame-sagittario-c145s","category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
@@ -344,7 +344,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-burst-valkyrie",
     slug: "product-beyblade-burst-valkyrie",
-    barcodeId: "LIR-BEY-BURS-001",
+    sku: "LIR-BEY-BURS-001",
     title: "Beyblade Burst B-34 Victory Valkyrie Boost Variable",
     description: "Starter set Victory Valkyrie Boost Variable with launcher and grip — an early Burst-generation Valkyrie.",
     categorySlugs: ["category-victory-valkyrie-boost-variable","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
@@ -376,7 +376,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-burst-regalia-genesis",
     slug: "product-beyblade-burst-regalia-genesis",
-    barcodeId: "LIR-BEY-BURS-002",
+    sku: "LIR-BEY-BURS-002",
     title: "Beyblade Burst Xeno Xcalibur Magnet Loop",
     description: "Xeno Xcalibur Magnet Loop with switch launcher — a Burst Classic attack-type top.",
     categorySlugs: ["category-xeno-xcalibur-magnet-loop","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
@@ -423,7 +423,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-original-dragoon-f-video-demo",
     slug: "product-beyblade-original-dragoon-f-video-demo",
-    barcodeId: "LIR-BEY-VID-001",
+    sku: "LIR-BEY-VID-001",
     title: "Beyblade Original — Dragoon F (Video Demo)",
     description: "Dragoon F attack-type top from the original series. Listed with an unboxing/spin video for gallery testing.",
     categorySlugs: ["category-dragoon-f","category-original-tops","category-beyblade-original","category-spinning-tops"],
@@ -456,7 +456,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-dran-sword-video-demo",
     slug: "product-beyblade-x-dran-sword-video-demo",
-    barcodeId: "LIR-BEY-VID-002",
+    sku: "LIR-BEY-VID-002",
     title: "Beyblade X BX-02 Dran Sword (Video Demo)",
     description: "Dran Sword 3-60F attack-type top from the Beyblade X Xtreme Gear generation. Listed with a battle-test video for gallery testing.",
     categorySlugs: ["category-dransword-3-60f","category-x-tops","category-beyblade-x","category-spinning-tops"],
@@ -497,7 +497,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     // silently wipe out.
     id: "product-beyblade-metal-dark-bull-video-demo",
     slug: "product-beyblade-metal-dark-bull-video-demo",
-    barcodeId: "LIR-BEY-VID-003",
+    sku: "LIR-BEY-VID-003",
     title: "Metal Fight Beyblade BB-118 Dark Bull (Video Demo, YouTube)",
     description: "Dark Bull H145SD, a defense-type top from the Metal Masters generation. Listed with a YouTube battle video to exercise the gallery's YouTube-embed video source.",
     categorySlugs: ["category-dark-bull-h145sd","category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
@@ -539,7 +539,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
     // product exercises the same non-YouTube external-host path too.
     id: "product-beyblade-burst-spryzen-video-demo",
     slug: "product-beyblade-burst-spryzen-video-demo",
-    barcodeId: "LIR-BEY-VID-004",
+    sku: "LIR-BEY-VID-004",
     title: "Beyblade Burst B-97 Spryzen S2 (Video Demo, Wikimedia)",
     description: "Spryzen S2 stamina-type top from the God Layer generation. Listed with a Wikimedia-hosted spin video to exercise a second raw-external-host video source.",
     categorySlugs: ["category-spryzen-s2-0q","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
@@ -653,7 +653,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beypointer-digital-battle-counter",
     slug: "product-beypointer-digital-battle-counter",
-    barcodeId: "LIR-BEY-ACC-018",
+    sku: "LIR-BEY-ACC-018",
     title: "BeyPointer Digital Battle Counter",
     description:
       "Battery-powered digital battle counter used for tournament scoring — tracks points across a best-of series, with a reset and a hold. Takes two AAA cells (not included). An electronic accessory, so it is taxed at the 18% electronic-toy rate rather than the 5% that applies to tops and parts.",

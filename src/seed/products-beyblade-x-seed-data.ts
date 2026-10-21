@@ -99,7 +99,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-aeropegasus-3-70a",
     slug: "product-beyblade-x-aeropegasus-3-70a",
-    barcodeId: "LIR-BEY-X-001",
+    sku: "LIR-BEY-X-001",
     title: "Beyblade X AeroPegasus 3-70A",
     description:
       "AeroPegasus 3-70A, an Attack-type Beyblade X top — the Rare Bey Get Battle mobile-app prize colourway, sold new in box. Previously obtainable only as a limited app reward; this is the collector-premium release, distinct from the Double Metal Coat colourway included in the BX-53 All-in-One Set (listed separately).",
@@ -127,7 +127,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-valkyrievolt-s4-70v",
     slug: "product-beyblade-x-valkyrievolt-s4-70v",
-    barcodeId: "LIR-BEY-X-002",
+    sku: "LIR-BEY-X-002",
     title: "Beyblade X ValkyrieVolt S4-70V",
     description:
       "ValkyrieVolt S4-70V, a Custom Line (CX) Beyblade X top. The CX Blade splits into a Lock Chip, a Main Blade and an Assist Blade, giving one purchase several distinct build combinations. Sold new in box.",
@@ -155,7 +155,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-cobaltdrake-4-60f",
     slug: "product-beyblade-x-cobaltdrake-4-60f",
-    barcodeId: "LIR-BEY-X-003",
+    sku: "LIR-BEY-X-003",
     title: "Beyblade X CobaltDrake 4-60F",
     description:
       "CobaltDrake 4-60F (BX-00), an Attack-type Basic Line top released as a Rare Bey Get Battle prize booster in September 2023. In the anime, piloted by Khrome Ryugu. Sold new in box.",
@@ -183,7 +183,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-phoenixwing-9-60gf",
     slug: "product-beyblade-x-phoenixwing-9-60gf",
-    barcodeId: "LIR-BEY-X-004",
+    sku: "LIR-BEY-X-004",
     title: "Beyblade X PhoenixWing 9-60GF",
     description:
       "PhoenixWing 9-60GF (BX-23), a Basic Line Beyblade X booster released December 2023. In the anime, the signature top of Blaze Fujiwara, designer of Yggdrasil Inc. Originally Attack-classed; later reclassified Stamina in the UX era. Sold new in box.",
@@ -212,7 +212,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-xtreme-stadium-bx-10",
     slug: "product-beyblade-x-xtreme-stadium-bx-10",
-    barcodeId: "LIR-BEY-X-005",
+    sku: "LIR-BEY-X-005",
     title: "Beyblade X Xtreme Stadium (BX-10)",
     description:
       "The BX-10 Xtreme Stadium — the standard 1v1 arena for Beyblade X, released July 2023. Its raised Xtreme Line rail is what the whole X generation is tuned around: a top that reaches and holds the rail accelerates along it (the Xtreme Dash). The tournament-standard stadium for both Beyblade Battle Base (B4) and World Beyblade Organization (WBO) play. Sold new.",
@@ -242,7 +242,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-all-in-one-set",
     slug: "product-beyblade-x-bx-53-all-in-one-set",
-    barcodeId: "LIR-BEY-X-006",
+    sku: "LIR-BEY-X-006",
     title: "Beyblade X BX-53 All-in-One Set",
     description:
       "The BX-53 All-in-One Set — Takara Tomy's deluxe Beyblade X starter box, released October 2026 at ¥7,480. One box, three ready-to-battle tops (Attack/Stamina/Defense), two launchers and a dedicated stadium: everything needed to go from first battle to part customisation. Every item in the box is also listed individually below — pick exactly what you want, buy the complete set, or mix and match. Buying this box does not affect the stock of the individual listings, and vice versa.",
@@ -288,7 +288,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-aeropegasus-dmc",
     slug: "product-beyblade-x-bx-53-aeropegasus-dmc",
-    barcodeId: "LIR-BEY-X-007",
+    sku: "LIR-BEY-X-007",
     title: "AeroPegasus 3-70A (Double Metal Coat) — BX-53 Set Component",
     description:
       "AeroPegasus 3-70A in the Double Metal Coat finish — the colourway exclusive to the BX-53 All-in-One Set, distinct from the Rare Bey Get Battle prize-app colourway (listed separately). Sold individually; buying this does not require buying the rest of the BX-53 set.",
@@ -318,7 +318,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-wizardarrow-v2",
     slug: "product-beyblade-x-bx-53-wizardarrow-v2",
-    barcodeId: "LIR-BEY-X-008",
+    sku: "LIR-BEY-X-008",
     title: "WizardArrow 4-80B Ver.2.0 — BX-53 Set Component",
     description:
       "WizardArrow 4-80B Version 2.0, the Stamina-type top from the BX-53 All-in-One Set. The Ver.2.0 Blade is re-tuned over the original release: Attack 17 (was 15), Defense 33 (was 30), Stamina 60 (was 55). Sold individually; buying this does not require buying the rest of the BX-53 set.",
@@ -348,7 +348,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-knightshield-v2",
     slug: "product-beyblade-x-bx-53-knightshield-v2",
-    barcodeId: "LIR-BEY-X-009",
+    sku: "LIR-BEY-X-009",
     title: "KnightShield 3-80N Ver.2.0 — BX-53 Set Component",
     description:
       "KnightShield 3-80N Version 2.0, the Defense-type top from the BX-53 All-in-One Set. The Ver.2.0 Blade improves on the original: Attack 22 (was 20), Defense 60 (was 55), Stamina 28 (was 25). Sold individually; buying this does not require buying the rest of the BX-53 set.",
@@ -378,7 +378,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-winder-launcher",
     slug: "product-beyblade-x-bx-53-winder-launcher",
-    barcodeId: "LIR-BEY-X-010",
+    sku: "LIR-BEY-X-010",
     title: "Winder Launcher — BX-53 Set Component",
     description:
       "The right-spin Winder Launcher from the BX-53 All-in-One Set — uses a rigid, notched plastic ripcord that threads into an internal gear and is pulled straight out via the ringed handle. Sold individually; buying this does not require buying the rest of the BX-53 set.",
@@ -407,7 +407,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-string-launcher",
     slug: "product-beyblade-x-bx-53-string-launcher",
-    barcodeId: "LIR-BEY-X-011",
+    sku: "LIR-BEY-X-011",
     title: "String Launcher — BX-53 Set Component",
     description:
       "The String Launcher from the BX-53 All-in-One Set — the only Beyblade X launcher type with no ripcord, using a string built into the unit itself: load the top, pull the string, launch. Shown here as packaged inside the BX-53 box (no separate studio photo exists for this launcher on its own). Sold individually; buying this does not require buying the rest of the BX-53 set.",
@@ -436,7 +436,7 @@ const _raw: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx-53-xtreme-stadium-variant",
     slug: "product-beyblade-x-bx-53-xtreme-stadium-variant",
-    barcodeId: "LIR-BEY-X-012",
+    sku: "LIR-BEY-X-012",
     title: "Xtreme Stadium — Clear Black×Green (BX-53 Set Component)",
     description:
       "The Clear Black×Green Xtreme Stadium colourway included in the BX-53 All-in-One Set — the same Xtreme Line rail as the standard-release Xtreme Stadium (listed separately), in a colourway exclusive to this box. Sold individually; buying this does not require buying the rest of the BX-53 set.",

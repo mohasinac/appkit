@@ -58,6 +58,13 @@ export function buildProductSearchTxt(p: Partial<ProductDocument>): string[] {
     p.tags,
     p.features,
     p.condition,
+    /*
+     * The human stock key. 🛑 Existing rows keep their stored searchTxt until
+     * something re-saves them, so SKU search is only true after
+     * backfill-sku.mjs runs — which is why the admin placeholder does not
+     * promise it yet.
+     */
+    p.sku,
     p.card?.setName,
     p.card?.cardNumber,
     p.grading?.service,

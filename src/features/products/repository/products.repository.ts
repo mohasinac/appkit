@@ -25,7 +25,7 @@ import {
  */
 import { cacheManager } from "../../../core/CacheManager";
 import { serverLogger } from "../../../monitoring";
-import { generateUniqueId, slugify, generateBarcodeId } from "../../../utils";
+import { generateUniqueId, slugify, generateBarcodeId, generateSku } from "../../../utils";
 import { parseSearchTxtQuery } from "../../../utils/search-txt";
 // The shared search plan/refine the other eleven migrated collections use.
 // `planSearchTxt` carries the `empty` guard that keeps a punctuation-only query
@@ -1086,6 +1086,31 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     );
 
     const barcodeId = input.barcodeId ?? await generateBarcodeId(id);
+    /*
+     * The HUMAN key, derived on create beside the machine one.
+     *
+     * 🛑 Generated here rather than left to the form, because an absent `sku`
+     * is what produced "No SKU" on every row of /admin/products and an admin
+     * search box promising a field that did not exist. A key that is only
+     * present when someone remembered to type it is a key nothing can rely on.
+     *
+     * Synchronous, unlike `generateBarcodeId` — it is a `Math.imul` hash
+     * rather than `crypto.subtle`, specifically so seed rows and form state
+     * can call it without threading a promise through every row builder.
+     *
+     * Reads the DERIVED taxonomy below where it can, but the leaf is not
+     * resolved until `deriveTaxonomy` runs, so this uses the inbound value and
+     * accepts a slightly less specific token over a second await.
+     */
+    const sku =
+      input.sku ??
+      generateSku({
+        productId: id,
+        categorySlug: Array.isArray(input.categorySlugs)
+          ? input.categorySlugs[0]
+          : input.category,
+        brand: input.brand,
+      });
     // Always derive on create — one extra read per listing created, and it is
     // what makes a UI-created product reachable from its own category page at
     // all. A seed row already carrying the correct chain derives to the same
@@ -1100,6 +1125,15 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const withTaxonomy = {
       ...input,
       ...derived,
+      /*
+       * 🛑 `sku` goes in HERE, not just on `productData` below, and the
+       * difference matters: `buildProductSearchTxt(withTaxonomy)` is what
+       * builds the stored token list. A `sku` added only to the stored
+       * document would be invisible to every search — which is Root Cause
+       * #101's shape exactly, a field present on the object and absent from
+       * what a query reads.
+       */
+      sku,
       ...(input.images !== undefined ? { images: toProductImages(input.images) } : {}),
     };
     const productData: Omit<ProductDocument, "id"> = {
