@@ -6314,6 +6314,8 @@ export type { OrderSiblingPaymentsProps } from "./features/orders/index";
 export { OrderPaymentSummary } from "./features/orders/index";
 export type { OrderPaymentSummaryProps } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/index";
+// OrderCompletionPanel - Per-line ratings + Mark complete, the buyer's fast path.
+export { OrderCompletionPanel } from "./features/orders/index";
 // [CLIENT] StatusTimeline — the ONE rail both orders and offers render.
 // Each feature supplies only its phase vocabulary; the never-fabricate-a-
 // timestamp rule and the dot/connector rail live in one place.
@@ -6322,6 +6324,7 @@ export type { StatusTimelineProps, TimelineEntry, TimelineStep } from "./feature
 export { OfferPhaseTimeline } from "./features/seller/components/OfferPhaseTimeline";
 export type { OfferPhaseTimelineProps, OfferChainRound } from "./features/seller/components/OfferPhaseTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/index";
+export type { OrderCompletionPanelProps, RateableLine } from "./features/orders/index";
 export type {
   OrderPaymentRecord,
   OrderPaymentRecordMethod,

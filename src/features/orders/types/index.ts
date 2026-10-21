@@ -298,6 +298,44 @@ export interface Order {
   disputeRaised?: boolean;
   disputeStatus?: "open" | "resolved";
   /**
+   * Completion — the owner's rule, and both writers of one fact.
+   *
+   * 🛑 Added to the CLIENT type and the adapter together, because adding it to
+   * one alone is Root Cause #57 and the symptom is invisible: with
+   * `completedAt` undefined, `OrderCompletionPanel` renders its rating UI
+   * forever and never shows the "this order is complete" confirmation — which
+   * reads as correct behaviour rather than as a dropped field. That is exactly
+   * how the whole manual-payment flow sat dead for every buyer: the page gated
+   * its render on `paymentMethod`, the adapter mapped only `paymentStatus`, and
+   * the result was a polite "this order does not require manual payment".
+   *
+   * `completedBy` distinguishes the two paths, and they are not the same
+   * signal: `"system"` means nobody complained for seven days, a buyer's uid
+   * means they said they were happy. Same effect, different fact — so the
+   * confirmation copy says which one happened.
+   */
+  completedAt?: string;
+  completedBy?: string;
+  /**
+   * Anchors the panel needs to decide whether anything is contested.
+   *
+   * `returnRequestedAt` is load-bearing beyond the status check: a return can
+   * be requested and then the status moved on, so the status alone is not a
+   * complete answer to "is there a live return".
+   */
+  returnRequestedAt?: string;
+  /**
+   * Refund COUNT only, never the events.
+   *
+   * 🛑 Deliberately not `refunds[]`. The panel needs one bit — "has any money
+   * already moved on this order" — and the events carry `refundedBy` (a staff
+   * uid), `gatewayRefundId` and a `reason` string assembled for operators.
+   * Publishing all that to a buyer's page to answer a yes/no question is the
+   * spread-and-publish shape (Root Cause #70); a count answers it and leaks
+   * nothing.
+   */
+  refundCount?: number;
+  /**
    * Manual-payment (cash / UPI / EMI) fields. Every one of these already
    * existed on `OrderDocument` but was dropped by `orderDocumentToOrder`,
    * so the buyer-facing surfaces that need them read `undefined`:

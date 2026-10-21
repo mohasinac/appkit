@@ -30,3 +30,11 @@ export {
   EmiInstallmentsPanel,
   type EmiInstallmentsPanelProps,
 } from "./EmiInstallmentsPanel";
+
+/*
+ * The buyer's completion surface — per-line ratings plus Mark complete. The
+ * owner's completion rule had no UI at all before this: a grep for
+ * `markOrderCompleteAction` across the app returned two hits, both comments.
+ */
+export { OrderCompletionPanel } from "./OrderCompletionPanel";
+export type { OrderCompletionPanelProps, RateableLine } from "./OrderCompletionPanel";

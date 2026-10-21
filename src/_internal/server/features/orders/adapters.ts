@@ -239,6 +239,32 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     autoApproved: doc.autoApproved,
     disputeRaised: doc.disputeRaised,
     disputeStatus: doc.disputeStatus,
+    /*
+     * Completion, and the two anchors `OrderCompletionPanel` needs to decide
+     * whether anything is contested.
+     *
+     * 🛑 Mapped in the SAME change as the client type, because the failure mode
+     * of mapping neither — or one — is invisible. With `completedAt` undefined
+     * the panel renders its rating UI forever and never confirms completion,
+     * which reads as ordinary behaviour; with `returnRequestedAt` undefined it
+     * offers "Mark complete" on an order with a live return, the server refuses
+     * it, and the buyer gets an error for pressing a button we showed them.
+     *
+     * This is the field-by-field repeat of the manual-payment incident four
+     * lines below: `paymentStatus` was mapped, nothing else payment-related
+     * was, and the whole proof-upload flow was dead for every buyer while the
+     * page politely said it did not apply.
+     */
+    completedAt: toIsoOrUndefined(doc.completedAt),
+    completedBy: doc.completedBy,
+    returnRequestedAt: toIsoOrUndefined(doc.returnRequestedAt),
+    /*
+     * A COUNT, not the events. The panel needs one bit — has any money already
+     * moved — and `refunds[]` carries staff uids, gateway refund ids and
+     * operator-facing reason strings. Publishing those to a buyer's page to
+     * answer a yes/no question is the spread-and-publish shape (Root Cause #70).
+     */
+    refundCount: doc.refunds?.length ?? 0,
     // Manual-payment (cash / UPI / EMI) passthrough. These were previously
     // dropped here, which silently disabled the entire buyer proof-upload
     // flow: `/user/orders/[id]/payment` branches on `paymentMethod` and so
