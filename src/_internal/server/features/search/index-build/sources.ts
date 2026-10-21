@@ -192,7 +192,26 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
        * those words appeared was a facet nobody searches. Humanised, so
        * "pre-order" and "digital code" read as words rather than slugs.
        */
-      const human = (v: unknown) => (str(v) ?? "").replace(/[-_]/g, " ");
+      /*
+       * Capitalised, not just de-slugged.
+       *
+       * This returned the lowercase value, so a shopper's result subtitle read
+       * "Beyblade · Victory Valkyrie Boost Variable · standard · new" — two
+       * database values sitting in a line of otherwise presentable text, which
+       * is the audit's "subtitles print raw field values".
+       *
+       * 🛑 Casing is FREE here, which is the only reason to do it in the index
+       * rather than at the renderer. `prepareIndex` matches through
+       * `normalizeSearchText`, which lowercases both the haystack and the
+       * query — so "Standard" is still found by typing "standard", and the
+       * searchability this field exists for (see the note above) is untouched.
+       * The alternative, a second display-only string per record, would grow
+       * every row of an index the client downloads.
+       */
+      const human = (v: unknown) => {
+        const words = (str(v) ?? "").replace(/[-_]/g, " ").trim();
+        return words ? words.charAt(0).toUpperCase() + words.slice(1) : "";
+      };
       return {
         title,
         // Leaf-first, so [0] is the most specific label.
