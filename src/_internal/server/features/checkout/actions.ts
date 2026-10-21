@@ -857,6 +857,36 @@ async function createOrderForGroup(
     0,
   );
 
+  /*
+   * ── G1: the discount is computed HERE, before the GST, on purpose ────────
+   *
+   * This used to sit ~150 lines below, after `sumGroupGst` had already backed
+   * the tax out of the UNDISCOUNTED gross — so the order recorded tax on money
+   * the buyer never paid (₹30.51 on a ₹1,000 item with a ₹200 coupon at 18%,
+   * verified).
+   *
+   * A discount shown on the invoice generally reduces the value of supply, so
+   * the pipeline order has to be goods → discount → tax, and that makes the
+   * computation's POSITION load-bearing rather than incidental. Moved up
+   * rather than duplicated: it is pure (no Firestore, no side effects — the
+   * usage-accumulator bookkeeping is layered on separately below), so hoisting
+   * it changes nothing but the order of two pure steps.
+   *
+   * 🛑 Do not move `sumGroupGst` above this, and do not recompute the discount
+   * below. Both re-open the defect.
+   */
+  const groupLines = group.map(({ item, product }) => ({
+    itemId: item.itemId,
+    lineTotal: lineTotalFor(item, product),
+  }));
+  const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
+    appliedCoupons,
+    groupLines,
+    groupTotal,
+    cartSubtotal,
+    firstItem.storeId,
+  );
+
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // A multi-member line expands into one row PER MEMBER sharing a groupSlug, so
   // each row carries its own HSN/GST and can be cancelled independently; the
@@ -937,6 +967,8 @@ async function createOrderForGroup(
       group.map(({ item }) => item),
       ctx.productById,
       intra ?? false,
+      // G1 — the taxable value is the POST-discount gross. See the hoist above.
+      couponDiscount,
     );
     /*
      * The split is taken AS COMPUTED, per slice, by `calculateGst` inside
@@ -1009,38 +1041,22 @@ async function createOrderForGroup(
 
   const groupCouponCodes = new Set<string>();
   /*
-   * 🛑 `lineTotalFor(item, product)`, not `item.price * item.quantity`.
+   * 🛑 `couponDiscount` / `appliedDiscounts` are HOISTED to just after
+   * `groupTotal` (~line 860), not computed here. The move is load-bearing:
+   * `sumGroupGst` sits between the two and now takes the discount, because the
+   * taxable value is the post-discount gross (G1). Recomputing here would be a
+   * second copy; moving the GST call below this would re-open the defect.
    *
-   * This was the raw multiplication until 2026-10-21, while `groupTotal` —
-   * computed 155 lines earlier in THIS SAME FUNCTION (line ~856) — uses
-   * `lineTotalFor`. And `computeGroupCouponDiscount` divides one by the other:
+   * What REMAINS here is the side effect — accumulating coupon usage — which
+   * must stay where it is, after the group has been confirmed placeable.
    *
-   *     (eligibleTotal / groupTotal) * coupon.discountAmount
-   *
-   * So the numerator and denominator were built by two different price rules.
-   * `item.price` skips `unitPriceFor`, which is the ONLY place that knows about
-   * `lockedPrice` — so on a coupon applied to an accepted offer or a won
-   * auction, the numerator carried the seller's LIST price while the
-   * denominator carried the AGREED price, the ratio exceeded 1, and the coupon
-   * over-discounted that group (clamped to `eligibleTotal`, i.e. landing on the
-   * list price rather than the negotiated one).
-   *
-   * Root Cause #75 is exactly this — six hand-rolled copies of one price rule —
-   * and `unitPriceFor`'s docstring already forbids reading `item.price`
-   * directly. `product` is in scope here: `group` is typed
-   * `Array<{ item, product }>`.
+   * Also fixed in the hoist: `groupLines` was built with
+   * `item.price * item.quantity` while `groupTotal` (155 lines above, same
+   * function) used `lineTotalFor`, and `computeGroupCouponDiscount` divides one
+   * by the other — so on a locked-price line the numerator carried the LIST
+   * price and the denominator the AGREED one, the ratio exceeded 1, and the
+   * coupon over-discounted that group. Root Cause #75, sixth copy.
    */
-  const groupLines = group.map(({ item, product }) => ({
-    itemId: item.itemId,
-    lineTotal: lineTotalFor(item, product),
-  }));
-  const { couponDiscount, appliedDiscounts } = computeGroupCouponDiscount(
-    appliedCoupons,
-    groupLines,
-    groupTotal,
-    cartSubtotal,
-    firstItem.storeId,
-  );
   for (const discount of appliedDiscounts) {
     if (discount.couponId) {
       accumulateCouponUsage(couponUsageAccumulator, discount.code, discount.couponId, discount.discountAmount);
@@ -2073,6 +2089,24 @@ export async function previewCheckoutPricing(
       saleFee: (s, sel) => computeSaleProtectionFee(s, sel, commissions),
     });
 
+    /*
+     * G1 — the discount is computed BEFORE the GST block below, the same hoist
+     * `createOrderForGroup` now has. It sat AFTER it until 2026-10-21, so the
+     * tax figure SHOWN to the buyer was backed out of the undiscounted gross.
+     *
+     * The preview and the charge must agree on the taxable BASE, not only on
+     * the total (Root Cause #59) — so the ordering has to match in both, which
+     * makes the position of this block load-bearing rather than incidental.
+     */
+    const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
+    const { couponDiscount: groupCouponDiscount } = computeGroupCouponDiscount(
+      appliedCoupons,
+      groupLines,
+      groupTotal,
+      cartSubtotal,
+      firstItem.storeId,
+    );
+
     let groupGstAmount = 0;
     if (siteSettings?.gst?.enabled && resolvedAddress?.state) {
       /*
@@ -2090,17 +2124,9 @@ export async function previewCheckoutPricing(
         group.map(({ item }) => item),
         resolvedProductById,
         intra ?? false,
+        groupCouponDiscount,
       ).gstAmount;
     }
-
-    const groupLines = group.map(({ item, product }) => ({ itemId: item.itemId, lineTotal: lineTotalFor(item, product) }));
-    const { couponDiscount: groupCouponDiscount } = computeGroupCouponDiscount(
-      appliedCoupons,
-      groupLines,
-      groupTotal,
-      cartSubtotal,
-      firstItem.storeId,
-    );
 
     stores.push({
       storeId: firstItem.storeId,
@@ -2631,7 +2657,15 @@ async function createPhonePeGroupOrder(
         { storeId: firstItem.storeId, hasStoreState: !!storeState },
       );
     }
-    const summary = sumGroupGst(group.map(({ item }) => item), phonepeProductById, intra ?? false);
+    // G1 — post-discount taxable base. `couponDiscount` is already computed
+    // ~100 lines above in this function, so unlike the other two call sites no
+    // hoist was needed here; only the argument was missing.
+    const summary = sumGroupGst(
+      group.map(({ item }) => item),
+      phonepeProductById,
+      intra ?? false,
+      couponDiscount,
+    );
     if (summary.taxableAmount > 0 || summary.exemptAmount > 0) phonepeGst = summary;
   }
 

@@ -201,6 +201,29 @@ export function sumGroupGst(
    * there. The consumer's create-order route holds an honestly-nullable map. */
   productById: Map<string, ProductDocument | null>,
   intraState: boolean,
+  /**
+   * G1 — the group's coupon discount, in decimal rupees. **Reduces the taxable
+   * value**, prorated across the group's tax slices.
+   *
+   * 🛑 WHY THIS PARAMETER EXISTS. Without it the tax was backed out of the
+   * UNDISCOUNTED gross, so on a ₹1,000 item @18% with a ₹200 coupon the order
+   * recorded taxable ₹847.46 + GST ₹152.54 = ₹1,000 while the buyer paid ₹800
+   * for the goods. **₹30.51 of tax recorded on money that was never
+   * collected** — remitted by us, on every discounted order.
+   *
+   * A discount shown on the invoice generally reduces the value of supply
+   * under s.15(3)(a) CGST Act, so the post-discount base is both the honest
+   * figure and the lower liability. 🛑 This changes what we remit and is a CA
+   * question, not a code preference; it is implemented because it was decided,
+   * and it is flagged in the plan's standing-risk section for review.
+   *
+   * Optional, defaulting to 0, so the behaviour is unchanged for any caller
+   * that does not pass it — a REQUIRED parameter would have been better at
+   * forcing every call site to answer, but three of the four callers compute
+   * the discount after the tax today and the reorder is riskier than the
+   * default. `audit-checkout-total-parity` is what will catch an omission.
+   */
+  couponDiscount = 0,
 ): GroupGstSummary {
   let taxableAmount = 0;
   let exemptAmount = 0;
@@ -210,8 +233,40 @@ export function sumGroupGst(
   let gstAmount = 0;
   const byRate = new Map<number, GstRateSlice>();
 
-  for (const item of items) {
-    for (const slice of lineTaxComponentsFor(item, productById)) {
+  /*
+   * ── G1: apply the discount to the slice GROSSES before backing tax out ───
+   *
+   * Collected up front rather than taxed inline, because a discount is a
+   * property of the GROUP and has to be spread across its slices before any
+   * one of them can be taxed. Three properties matter:
+   *
+   *   1. **Prorated by gross share**, including exempt slices. A coupon on a
+   *      mixed 0%/18% group reduces both proportionally; excluding the exempt
+   *      slice would concentrate the whole discount on the taxed one and
+   *      under-report the tax.
+   *   2. **`allocateAcrossMembers` for the split**, not per-slice
+   *      multiplication. It pushes the rounding remainder onto the last slice
+   *      so the parts sum to EXACTLY the discounted gross — which is the
+   *      invariant that keeps the invoice reconciling against the amount
+   *      charged. Independent `× (1 − d/total)` roundings do not.
+   *   3. **Clamped at zero.** A discount exceeding the group total (possible
+   *      on a free-item promotion) must not produce negative taxable values.
+   */
+  const rawSlices = items.flatMap((item) => lineTaxComponentsFor(item, productById));
+  const grossTotal = rawSlices.reduce((s, sl) => s + sl.taxable, 0);
+  const discount = Math.min(Math.max(0, couponDiscount), grossTotal);
+  const discountedGross = grossTotal - discount;
+  const sliceGross =
+    discount > 0 && grossTotal > 0
+      ? allocateAcrossMembers(
+          discountedGross,
+          rawSlices.map((sl) => sl.taxable),
+        )
+      : rawSlices.map((sl) => sl.taxable);
+
+  for (const [i, raw] of rawSlices.entries()) {
+    const slice = { ...raw, taxable: sliceGross[i] ?? raw.taxable };
+    {
       /*
        * 🛑 A 0%-rated slice is EXEMPT, not absent. It was `continue`d
        * entirely, so `order.taxableAmount` excluded exempt goods while
