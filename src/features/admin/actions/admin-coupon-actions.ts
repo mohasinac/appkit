@@ -8,6 +8,8 @@
 import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
+import { normalizeError } from "../../../errors/normalize";
+import { claimedCouponsRepository } from "../../promotions/repository/claimed-coupons.repository";
 import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
 import { AdminAuditActionValues } from "../../audit-log/schemas/firestore";
 import type {
@@ -82,6 +84,43 @@ export async function adminUpdateCoupon(
   };
 
   const updated = await couponsRepository.update(id, updateData);
+
+  /*
+   * D59 — re-sync every wallet's denormalised snapshot. Nothing did this, so
+   * `/user/coupons` kept rendering the terms as they were at CLAIM time while
+   * checkout applied the live ones.
+   *
+   * 🛑 Display only, verified: redemption reads the live coupon via
+   * `getCouponByCode`, so the drift never changed what was charged. Fixing it
+   * stops the wallet advertising terms checkout will not honour.
+   *
+   * Best-effort and fire-and-forget: the admin's edit has already committed,
+   * and a failed re-sync must not fail it. The fallback is a stale display —
+   * which is exactly today's behaviour, so the worst case is no regression.
+   */
+  void claimedCouponsRepository
+    .resyncSnapshotsForCoupon(id, {
+      name: updated.name,
+      ...(updated.description ? { description: updated.description } : {}),
+      type: updated.type,
+      scope: updated.scope ?? "admin",
+      ...(updated.storeId ? { storeId: updated.storeId } : {}),
+      discount: updated.discount,
+      restrictions: updated.restrictions,
+    })
+    .then((n) => {
+      if (n > 0) serverLogger.info("adminUpdateCoupon: wallet snapshots re-synced", { couponId: id, wallets: n });
+      if (n === 500) {
+        serverLogger.warn(
+          "adminUpdateCoupon: snapshot re-sync hit its 500-wallet bound — later wallets still show stale terms",
+          { couponId: id },
+        );
+      }
+    })
+    .catch((err: unknown) => {
+      void normalizeError(err);
+      serverLogger.warn("adminUpdateCoupon: wallet snapshot re-sync failed (display only)", { couponId: id });
+    });
 
   serverLogger.info("adminUpdateCoupon", {
     adminId,
