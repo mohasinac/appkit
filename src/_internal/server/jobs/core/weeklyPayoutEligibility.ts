@@ -13,6 +13,8 @@ import {
 import { BATCH_LIMIT } from "../handlers/messages";
 import { getDefaultCurrency } from "../../../../core";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
+import { payoutCutoff } from "../../../shared/fees/payout-hold";
+import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping/protections";
 import { ordersTaxableValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 
@@ -26,10 +28,39 @@ export async function runWeeklyPayoutEligibility(
   ctx: JobContext,
 ): Promise<WeeklyPayoutEligibilityResult> {
   // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `autoPayoutEligibility.ts`.
-  ctx.logger.info("Starting weekly payout eligibility sweep");
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings.commissions;
-  const eligible = await orderRepository.getEligibleForPayoutSweep();
+
+  /*
+   * 🛑 This sweep used to call `getEligibleForPayoutSweep()`, which filtered
+   * on `payoutStatus == "eligible" && status == "delivered"` and **nothing
+   * else** — no time cutoff of any kind. So every Saturday it paid out orders
+   * delivered the day before, which made the 7-day hold in the sibling daily
+   * job unreachable as a floor: whatever that one withheld, this one released.
+   *
+   * It now consumes the SAME `payoutCutoff` the daily sweep does. Two sweeps
+   * with two predicates is how one intended hold ended up honoured by neither.
+   */
+  const { cutoff, hold } = payoutCutoff(
+    {
+      payoutHoldDays: commissions?.payoutHoldDays,
+      returnWindowDays: siteSettings.returns?.windowDays,
+      maxClaimWindowHours: Math.max(
+        PROTECTION_CLAIM_WINDOW_HOURS.shipping,
+        PROTECTION_CLAIM_WINDOW_HOURS.sale,
+      ),
+    },
+    { onWarn: (m, meta) => ctx.logger.warn(m, meta) },
+  );
+  ctx.logger.info("Starting weekly payout eligibility sweep", {
+    holdDays: hold.days,
+    holdSource: hold.source,
+    cutoff: cutoff.toISOString(),
+  });
+
+  const eligible = await orderRepository.getEligibleAutomatic(cutoff, {
+    onWarn: (m, meta) => ctx.logger.warn(m, meta),
+  });
   if (eligible.length === 0) {
     ctx.logger.info("No eligible delivered orders found");
     return { payoutsCreated: 0, ordersProcessed: 0, payoutIds: [] };

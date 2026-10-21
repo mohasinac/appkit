@@ -499,7 +499,20 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     platformShippingPercent: 0,
     platformShippingFixedMin: 0,
     autoPayoutWindowDays: 7,
-    payoutHoldDays: 2,
+    /*
+     * 🛑 7, not 2 — corrected 2026-10-21.
+     *
+     * Seeded at 2 while the hardcoded window in `autoPayoutEligibility` was 7
+     * and the sale-protection claim window is 7 days. Nothing read the
+     * setting, so the disagreement was invisible; the moment it was wired up
+     * it would have SHORTENED the hold to 2 and released a seller's money
+     * five days before the buyer could claim against protection we had sold
+     * and would have to fund ourselves.
+     *
+     * `resolvePayoutHoldDays` clamps up to the floor regardless, so this is
+     * the honest value rather than the enforcing one.
+     */
+    payoutHoldDays: 7,
     minPayoutAmount: 100,
     auctionListingFee: 0,
     preOrderListingFee: 0,

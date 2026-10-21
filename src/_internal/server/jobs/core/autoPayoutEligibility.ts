@@ -7,33 +7,70 @@ import {
 } from "../../../../repositories";
 import { getDefaultCurrency } from "../../../../core/index";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
+import { payoutCutoff } from "../../../shared/fees/payout-hold";
+import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping/protections";
 import { ordersTaxableValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 import { BATCH_LIMIT } from "../handlers/messages";
 
-const AUTO_PAYOUT_WINDOW_DAYS = 7;
-
-function getBusinessDayCutoff(daysAgo: number): Date {
-  const now = new Date();
-  const cutoff = new Date(now);
-  cutoff.setUTCDate(cutoff.getUTCDate() - daysAgo);
-  cutoff.setUTCHours(4, 30, 0, 0);
-  return cutoff;
-}
+/*
+ * 🛑 `AUTO_PAYOUT_WINDOW_DAYS = 7` and `getBusinessDayCutoff` were REMOVED on
+ * 2026-10-21. Do not reinstate either.
+ *
+ * The constant was a hardcoded duplicate of `commissions.payoutHoldDays`,
+ * which no code read (D28) — so the admin-facing setting was inert while this
+ * number decided every payout.
+ *
+ * The helper was worse: it did `cutoff.setUTCDate(cutoff.getUTCDate() -
+ * daysAgo)`, i.e. it subtracted CALENDAR days under a name that said business
+ * days. Measured from Monday 2026-10-19, 7 business days back is 2026-10-08
+ * and that helper returned 2026-10-12 — **four calendar days short**, so the
+ * stated 7-business-day hold was really about five, and every hold spanning a
+ * weekend released early in the seller's favour with nothing recording that
+ * the stated hold had not been honoured.
+ *
+ * Both now come from `payoutCutoff`, which is shared with
+ * `weeklyPayoutEligibility` so the two sweeps cannot disagree about the hold —
+ * they did, and one of them had no cutoff at all.
+ */
 
 export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
   // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `auctionSettlement.ts`.
   // This was the one flag actually set (`functions/.env.letitrip-in-app`), so
   // unlike its four siblings this job was running; removing the gate is a
   // no-op in behaviour and removes the lever that could silently stop payouts.
-  ctx.logger.info("Starting daily auto-payout eligibility sweep", {
-    windowDays: AUTO_PAYOUT_WINDOW_DAYS,
-  });
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings.commissions;
 
-  const cutoff = getBusinessDayCutoff(AUTO_PAYOUT_WINDOW_DAYS);
-  const eligible = await orderRepository.getEligibleAutomatic(cutoff);
+  const { cutoff, hold } = payoutCutoff(
+    {
+      payoutHoldDays: commissions?.payoutHoldDays,
+      returnWindowDays: siteSettings.returns?.windowDays,
+      maxClaimWindowHours: Math.max(
+        PROTECTION_CLAIM_WINDOW_HOURS.shipping,
+        PROTECTION_CLAIM_WINDOW_HOURS.sale,
+      ),
+    },
+    { onWarn: (m, meta) => ctx.logger.warn(m, meta) },
+  );
+
+  /*
+   * Log the hold AND which input won. The admin setting is seeded at 2 days
+   * against a 7-day floor, so the honoured value will usually not be the one
+   * they configured — saying `source: "floor"` is what stops that reading as
+   * a bug to whoever set it.
+   */
+  ctx.logger.info("Starting daily auto-payout eligibility sweep", {
+    holdDays: hold.days,
+    holdSource: hold.source,
+    floorDays: hold.floor,
+    configured: commissions?.payoutHoldDays ?? null,
+    cutoff: cutoff.toISOString(),
+  });
+
+  const eligible = await orderRepository.getEligibleAutomatic(cutoff, {
+    onWarn: (m, meta) => ctx.logger.warn(m, meta),
+  });
 
   if (eligible.length === 0) {
     ctx.logger.info("No auto-payout eligible orders found");

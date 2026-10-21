@@ -8,6 +8,13 @@ import { Alert, BackgroundRenderer, Button, Div, FormActions, Grid, Input, Pagin
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
+/*
+ * One definition of the floor, shared with the Zod schema that enforces it
+ * and the resolver that honours it. `payout-hold.ts` and its only dependency
+ * `business-days.ts` are pure TypeScript with no firebase-admin and no
+ * `_internal/server` reach, so this is safe in a `"use client"` file.
+ */
+import { PAYOUT_HOLD_FLOOR_DAYS } from "../../../_internal/shared/fees/payout-hold";
 import { MediaUploadField } from "../../media/upload/MediaUploadField";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -560,7 +567,17 @@ export function AdminSiteSettingsView({
     setMinimumTransactionFee(s.commissions?.minimumTransactionFee ?? 0);
     setPlatformFeeMax(s.commissions?.platformFeeMax ?? 10);
     setGatewayFeePercent(s.commissions?.gatewayFeePercent ?? 2);
-    setPayoutHoldDays(s.commissions?.payoutHoldDays ?? 7);
+    /*
+     * 🛑 Clamped UP to the floor on load, deliberately.
+     *
+     * The live document is seeded `2`, and the payload Zod schema now refuses
+     * anything below `PAYOUT_HOLD_FLOOR_DAYS` (7) — so without this clamp an
+     * admin opening this tab would load 2, change something unrelated, and be
+     * blocked from saving by a field they never touched. The honoured value is
+     * already 7 (`resolvePayoutHoldDays` clamps at read time), so showing 7 is
+     * showing the truth, not silently overriding them.
+     */
+    setPayoutHoldDays(Math.max(s.commissions?.payoutHoldDays ?? 7, PAYOUT_HOLD_FLOOR_DAYS));
     setMinPayoutAmount(s.commissions?.minPayoutAmount ?? 100);
     setAuctionListingFee(s.commissions?.auctionListingFee ?? 0);
     setPreOrderListingFee(s.commissions?.preOrderListingFee ?? 0);

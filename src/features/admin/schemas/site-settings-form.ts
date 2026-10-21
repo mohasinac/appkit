@@ -42,6 +42,13 @@
  */
 
 import { z } from "zod";
+/*
+ * The floor lives with the payout-hold resolver that enforces it at read
+ * time, so the validation message and the honoured behaviour cannot drift —
+ * two copies of "7" is how `payoutHoldDays: 2` coexisted with a hardcoded 7
+ * for months (D28).
+ */
+import { PAYOUT_HOLD_FLOOR_DAYS } from "../../../_internal/shared/fees/payout-hold";
 
 /** A percentage a human types into a settings box. */
 const percent = (label: string) =>
@@ -112,7 +119,32 @@ export const siteSettingsFormSchema = z
         gatewayFeePercent: percent("Gateway fee"),
         platformFeeMax: money("Platform fee cap"),
         minPayoutAmount: money("Minimum payout"),
-        payoutHoldDays: z.coerce.number().int().min(0).max(365).optional(),
+        /*
+         * 🛑 `.min(PAYOUT_HOLD_FLOOR_DAYS)`, not `.min(0)` — and the floor is
+         * not arbitrary.
+         *
+         * The hold must outlast every window during which money can still
+         * flow back OUT of the order: the 7-day return window
+         * (`returns.windowDays`) and the 7-day sale-protection claim window
+         * (`PROTECTION_CLAIM_WINDOW_HOURS.sale` = 168h). Allowing 0 let an
+         * admin release a seller's money before the buyer could even claim
+         * against protection WE had already sold and would have to fund —
+         * and the stored value was seeded **2**, i.e. inside that window.
+         *
+         * `resolvePayoutHoldDays` already clamps up to the floor at read
+         * time, so behaviour is correct either way. This exists so the admin
+         * is TOLD, at the moment they try it, instead of setting 2 and
+         * believing it took effect.
+         */
+        payoutHoldDays: z.coerce
+          .number()
+          .int()
+          .min(
+            PAYOUT_HOLD_FLOOR_DAYS,
+            `Payout hold must be at least ${PAYOUT_HOLD_FLOOR_DAYS} days — it has to outlast the return window and the protection claim window, or a seller is paid before a buyer can claim.`,
+          )
+          .max(365)
+          .optional(),
         codHandlingFee: money("COD handling fee"),
         codDepositPercent: percent("COD deposit"),
       })

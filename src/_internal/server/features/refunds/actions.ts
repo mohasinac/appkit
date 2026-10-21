@@ -227,8 +227,23 @@ export async function processRefundAction(
       // SB-UNI-N — revoke any available (unclaimed) digital codes linked to this order.
       revokeAvailableDigitalCodes(input.orderId, digitalCodeItems);
     
-      // Fire-and-forget: deduct from the store's pending payout if one exists.
-      // Failure here must not roll back the already-posted refund event.
+      /*
+       * Clawback — deduct from the store's pending payout if one exists.
+       *
+       * 🛑 Still fire-and-forget on the FAILURE path, and that part is
+       * correct: the refund event is already posted and the buyer's money is
+       * already moving, so an accounting side effect must never roll it back.
+       *
+       * What changed on 2026-10-21 is that the RESULT is no longer discarded.
+       * This read `.catch(() => {})` with no `.then`, on the strength of the
+       * action's own docstring claiming an unrecovered clawback was "reflected
+       * in the next payout cycle" — which is false, verified: there is no
+       * seller ledger and each payout is computed fresh from a new batch of
+       * delivered orders, so the seller simply keeps money for goods that came
+       * back (D10). The action now records that case durably and returns a
+       * destination; this logs which one, so a refund and its clawback can be
+       * followed in one place.
+       */
       if (order.storeId) {
         applyRefundDeductionAction({
           storeId: order.storeId,
@@ -238,7 +253,39 @@ export async function processRefundAction(
           // Same derived string the refund event records, so the payout
           // deduction and the refund history read identically.
           reason: event.reason,
-        }).catch(() => {/* payout deduction is best-effort */});
+        })
+          .then((res) => {
+            if (!res.ok) {
+              serverLogger.error("clawback action failed", {
+                orderId: input.orderId,
+                refundId,
+              });
+              return;
+            }
+            if (res.data.applied) {
+              serverLogger.info("clawback netted off a pending payout", {
+                orderId: input.orderId,
+                payoutId: res.data.payoutId,
+              });
+            } else {
+              /*
+               * The seller has been paid for returned goods. Loud, because
+               * there is no automatic recovery — `recordedAs` names the
+               * durable row at /admin/maintenance/payment-rollbacks.
+               */
+              serverLogger.error("clawback UNRECOVERED — seller retains refunded amount", {
+                orderId: input.orderId,
+                storeId: res.data.storeId,
+                amount: res.data.amount,
+                reason: res.data.reason,
+                recordedAs: res.data.recordedAs,
+              });
+            }
+          })
+          .catch((clawbackErr: unknown) => {
+            void normalizeError(clawbackErr);
+            serverLogger.error("clawback threw", { orderId: input.orderId, refundId });
+          });
       }
     
       return { success: true, refundId };

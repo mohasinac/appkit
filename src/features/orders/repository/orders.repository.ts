@@ -76,6 +76,102 @@ const ACTIVE_ALLOWANCE_STATUSES: ReadonlyArray<string> = [
   ORDER_FIELDS.STATUS_VALUES.DELIVERED,
 ];
 
+/**
+ * Status → the timestamp field recording when the order ENTERED that status.
+ *
+ * 🛑 `deliveryDate` had NO WRITER anywhere in the live application until
+ * 2026-10-21 — only seed data and display components referenced it — and that
+ * single omission unanchored every post-delivery deadline in the product:
+ *
+ *   · `assertReturnWindowOpen` fell through to an `updatedAt` fallback, so the
+ *     return window was measured from the order's LAST MUTATION. Any write at
+ *     all — a note, `assignWorker`, a `statusHistory` append — silently
+ *     restarted the buyer's clock.
+ *   · `PROTECTION_CLAIM_WINDOW_HOURS` had nothing to measure from, so the
+ *     shipment- and sale-protection claim windows (which we charge 2% and 3%
+ *     for) could not open or close.
+ *   · The payout hold had no anchor, which is half of why three payout paths
+ *     honour one intended hold between them (D25).
+ *
+ * A FACT, never a deadline. The deadline is derived from it on read, so a
+ * policy change re-dates nothing and there is no stored mirror to drift
+ * (Root Cause #42).
+ *
+ * 🛑 `cancellationDate` is deliberately ABSENT from this map even though the
+ * field exists. `cancelOrder` already sets it in the same patch, and stamping
+ * it here too would be a second writer for one fact — the exact shape the rest
+ * of this comment is about. Add a status here only when nothing else owns its
+ * anchor.
+ */
+const STATUS_ANCHOR_FIELD = {
+  [ORDER_FIELDS.STATUS_VALUES.SHIPPED]: "shippingDate",
+  [ORDER_FIELDS.STATUS_VALUES.DELIVERED]: "deliveryDate",
+} as const satisfies Partial<Record<OrderStatus, keyof OrderDocument>>;
+
+/**
+ * Stamp the anchor for a status this patch is moving INTO.
+ *
+ * Three properties, each load-bearing:
+ *
+ * 1. **Only on a real transition.** Gated on `current?.status !== patch.status`,
+ *    so re-writing `delivered` over `delivered` (a tracking-number edit, a
+ *    replayed webhook) does not move the anchor. Without that gate every
+ *    subsequent write would push the return window further out — which is the
+ *    `updatedAt` bug this exists to remove, reintroduced by the fix for it.
+ * 2. **Never overwrites an explicit value.** A caller passing its own
+ *    `deliveryDate` — a backfill, an admin correcting a date, a courier
+ *    webhook reporting when delivery actually happened — wins. We are
+ *    supplying a default, not asserting authority.
+ * 3. **Costs no reads.** `updateWithHistory` already holds `current`, which is
+ *    why this belongs there and not in a service layer (Rule #6).
+ */
+/**
+ * Coerce whatever Firestore actually handed us into a `Date`, or `null`.
+ *
+ * 🛑 FOUR shapes reach this, and the type annotations claim only one.
+ * `OrderDocument` declares these fields `Date`, but the queries below read
+ * `d.data()` RAW — no `mapDoc`, because they need the `DocumentReference` for
+ * a later batch write — so what arrives is:
+ *
+ *   · a Firestore `Timestamp` (the normal case, exposing `.toDate()`)
+ *   · a real `Date` (when a doc was just written in-process)
+ *   · a **string** — `/api/store/orders/[id]` wrote `shippingDate` as
+ *     `new Date().toISOString()` until 2026-10-21 while the sibling
+ *     `customShipOrder` wrote a `Date`, so live documents carry both
+ *   · a number (epoch ms), from any hand-written fixture
+ *
+ * A bare `o.data.deliveryDate.getTime()` therefore throws on the common case
+ * (a Timestamp has no `getTime`), and `new Date(timestamp)` yields an Invalid
+ * Date rather than failing — which would silently compare as `false` and
+ * withhold the payout forever with no error. Mirrors the four-shape handling
+ * in `orders/adapters.ts:27`, returning a `Date` rather than an ISO string.
+ */
+function toDateOrNull(value: unknown): Date | null {
+  if (!value) return null;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+  if (typeof value === "object" && typeof (value as { toDate?: () => Date }).toDate === "function") {
+    const d = (value as { toDate: () => Date }).toDate();
+    return d instanceof Date && !Number.isNaN(d.getTime()) ? d : null;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
+function stampStatusAnchor(
+  current: OrderDocument | null | undefined,
+  patch: Partial<OrderDocument>,
+): Partial<OrderDocument> {
+  const nextStatus = patch.status;
+  if (!nextStatus || current?.status === nextStatus) return patch;
+  const field = (STATUS_ANCHOR_FIELD as Record<string, string | undefined>)[nextStatus];
+  if (!field) return patch;
+  if ((patch as Record<string, unknown>)[field] !== undefined) return patch;
+  return { ...patch, [field]: new Date() };
+}
+
 class OrderRepository extends BaseRepository<OrderDocument> {
   constructor() {
     super(ORDER_COLLECTION);
@@ -210,6 +306,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     known?: OrderDocument | null,
   ): Promise<OrderDocument> {
     const current = known !== undefined ? known : await this.findById(orderId);
+    patch = stampStatusAnchor(current, patch);
     const withEntry = withHistory(
       current as unknown as FirestoreDocument | undefined,
       patch as unknown as FirestoreDocument,
@@ -903,24 +1000,24 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    * once it's delivered (a seller-enabled `allowShipBeforeEmiComplete` item
    * can be delivered long before EMI collection finishes).
    */
-  async getEligibleForPayoutSweep(): Promise<
-    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
-  > {
-    const snap = await this.db
-      .collection(this.collection)
-      .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
-      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
-      .limit(500)
-      .get();
+  /*
+   * 🛑 `getEligibleForPayoutSweep()` was DELETED on 2026-10-21. Do not
+   * reinstate it.
+   *
+   * It filtered on `payoutStatus == "eligible" && status == "delivered"` and
+   * NOTHING ELSE — no time cutoff of any kind. `weeklyPayoutEligibility` (the
+   * Saturday job) called it, so the intended 7-day payout hold was not merely
+   * miscomputed, it was **unreachable as a floor**: the weekly sweep paid out
+   * an order delivered yesterday, every Saturday.
+   *
+   * Three payout paths existed and ONE hold was intended; it was honoured by
+   * zero of the three. The manual seller "Request payout"
+   * (`seller-actions.ts`) had no time check either. Collapsing to a single
+   * query is what makes the hold enforceable at all — a second entry point
+   * with its own predicate is how this happened, so the fix is one query, not
+   * a cutoff added to two.
+   */
 
-    return snap.docs
-      .map((d) => ({
-        id: d.id,
-        ref: d.ref as DocumentReference,
-        data: ({ id: d.id, ...d.data() } as OrderDocument),
-      }))
-      .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
-  }
 
   /**
    * Cloud Functions: find auto-payout eligible delivered orders older than windowDays business days.
@@ -931,24 +1028,80 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    */
   async getEligibleAutomatic(
     cutoff: Date,
+    opts?: { onWarn?: (msg: string, meta?: Record<string, unknown>) => void },
   ): Promise<
     Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
   > {
+    /*
+     * 🛑 NO DATE INEQUALITY IN THE QUERY, and this is the load-bearing
+     * decision in the whole payout-hold fix. Both obvious shapes are wrong:
+     *
+     * (a) `.where(UPDATED_AT, "<=", cutoff)` — what this used to do (D29).
+     *     `updatedAt` is bumped by EVERY write, so a note, an `assignWorker`,
+     *     a `statusHistory` append or a tracking-number edit silently RESTARTS
+     *     the hold. The clock measured "time since anyone last touched this
+     *     order", not "time since delivery".
+     *
+     * (b) `.where(DELIVERY_DATE, "<=", cutoff)` — the obvious fix, and it
+     *     would pay out NOBODY, FOREVER, SILENTLY. A Firestore inequality
+     *     excludes every document that LACKS the field, and `deliveryDate`
+     *     had no writer at all until 2026-10-21 — so every order delivered
+     *     before today is missing it, the query returns zero rows, and
+     *     "no eligible orders" is indistinguishable from a working sweep with
+     *     nothing to do. That is Root Cause #100 exactly, which is the
+     *     incident where `orderBy("itemsSold")` returned 0 of 95 products and
+     *     the endpoint answered 200.
+     *
+     * So the query finds CANDIDATES on fields that certainly exist, bounded,
+     * and the anchor test is a per-row predicate below. One query, no new
+     * composite index, and no way to silently return nothing.
+     */
     const snap = await this.db
       .collection(this.collection)
       .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
       .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
-      .where(ORDER_FIELDS.UPDATED_AT, "<=", cutoff)
       .limit(500)
       .get();
 
-    return snap.docs
+    let missingAnchor = 0;
+    const rows = snap.docs
       .map((d) => ({
         id: d.id,
         ref: d.ref as DocumentReference,
         data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
-      .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
+      .filter((o) => !o.data.emiEnabled || o.data.emiComplete)
+      .filter((o) => {
+        /*
+         * The anchor, with a conservative fallback. `deliveryDate` is the
+         * truth; `updatedAt` is what every pre-2026-10-21 order has instead.
+         *
+         * Falling back is safe in the one direction that matters: `updatedAt`
+         * is always >= `deliveryDate` (any write bumps it), so the fallback can
+         * only ever WITHHOLD a payout longer than intended, never release one
+         * early. Withholding is recoverable — the next sweep picks it up;
+         * releasing early is not, because the money has gone.
+         */
+        const anchor = toDateOrNull(o.data.deliveryDate) ?? toDateOrNull(o.data.updatedAt);
+        if (!o.data.deliveryDate) missingAnchor++;
+        if (!anchor) return false;
+        return anchor.getTime() <= cutoff.getTime();
+      });
+
+    if (missingAnchor > 0) {
+      /*
+       * Visible, because the fallback is a transitional state and not the
+       * design. As orders delivered after 2026-10-21 flow through, this count
+       * should trend to zero; if it does not, something is still setting
+       * `delivered` by a path that bypasses `updateWithHistory`'s anchor
+       * stamp, and these sellers are being paid late for no stated reason.
+       */
+      opts?.onWarn?.(
+        `${missingAnchor} delivered order(s) have no deliveryDate — the payout hold fell back to updatedAt, which withholds longer than intended`,
+        { missingAnchor, candidates: snap.size },
+      );
+    }
+    return rows;
   }
 
   /**

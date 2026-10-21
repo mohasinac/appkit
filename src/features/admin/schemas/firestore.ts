@@ -1109,7 +1109,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,
     autoPayoutWindowDays: 7,
-    payoutHoldDays: 2,
+    // 7, not 2 — see `PAYOUT_HOLD_FLOOR_DAYS`. A 2-day hold releases the
+    // seller's money inside both the 7-day return window and the 7-day
+    // sale-protection claim window, so it was never a legal value; it was
+    // merely an unread one (D28).
+    payoutHoldDays: 7,
     minPayoutAmount: 100,
     auctionListingFee: 0,
     preOrderListingFee: 0,

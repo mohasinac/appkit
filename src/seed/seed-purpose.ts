@@ -237,9 +237,30 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   eventEntries: "test",
   groupedListings: "test",
   scammerProfiles: "test",
-  procurementShipments: "test",
-  shipmentLots: "test",
-  shipmentItems: "test",
+  /*
+   * 🛑 PERMANENT since 2026-10-21 — these three were `"test"`, i.e. deleted by
+   * `appkit-seed delete`.
+   *
+   * They hold the only real LANDED-COST data in the system: what a shipment
+   * from Japan actually cost, per lot, including customs and labour. That is
+   * purchase history — a fact about money that left the business — and it is
+   * the foundation of COGS, actual-vs-projected margin, and the whole
+   * double-entry books phase.
+   *
+   * A reseed wiped the books, silently, and reported success. Nothing could
+   * detect it afterwards either: `appkit-seed status` counts documents by id,
+   * so once they were gone it would simply report the seed's own fixtures as
+   * in sync.
+   *
+   * 🛑 `seedPurpose` is only HALF the protection. The Claude tester has an
+   * independent tier system (`tester/scripts/lib/collections.mjs`), and a
+   * collection needs to be safe in BOTH — `assertDeletable` throws on an
+   * unlisted name, so these must be named in its PRESERVE tier too, not left
+   * to a default. Two unlinked systems, both required.
+   */
+  procurementShipments: "permanent",
+  shipmentLots: "permanent",
+  shipmentItems: "permanent",
   payoutMethods: "test",
   analyticsAlerts: "test",
   storeCategories: "test",
