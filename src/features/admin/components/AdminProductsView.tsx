@@ -257,7 +257,42 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
   const config: ListingViewConfig<AdminProductsResponse, ProductRow> = {
     portal: "admin",
     title: "Products",
-    searchPlaceholder: "Search products, SKUs, or seller names",
+    /*
+     * 🛑 THE BOX PROMISED TWO MATCHES THE INDEX CANNOT MAKE. It read "Search
+     * products, SKUs, or seller names", and product search is
+     * `array-contains` over `searchTxt`, which `buildProductSearchTxt` feeds
+     * from title, description, brand, categoryNames, tags, features,
+     * condition, card and grading fields and part-code aliases.
+     *
+     * Neither promise was keepable. There is NO SKU FIELD on
+     * `ProductDocument` at all, and `storeName` — the real seller-name field
+     * — is not among the tokens. So an admin searching a seller got a
+     * plausible empty list, which is the harder version of a dead box: it
+     * looks like an answer.
+     *
+     * Declared through the structured `search` capability rather than a bare
+     * `searchPlaceholder`, so `fields` records what the corpus actually
+     * matches and the audit can check the placeholder against it.
+     *
+     * 🛑 The promise is narrowed rather than the index widened, deliberately.
+     * Adding `storeName` to `buildProductSearchTxt` would make the sentence
+     * true only for products written AFTER the change — every existing row
+     * keeps its stored `searchTxt` until something re-saves it — so it needs
+     * a backfill, and that builder already truncates at 600 tokens with a
+     * documented eviction order. A real "search by seller" is its own change.
+     */
+    search: {
+      placeholder: "Search by title, brand, category or tag",
+      fields: [
+        "title",
+        "description",
+        "brand",
+        "categoryNames",
+        "tags",
+        "features",
+        "condition",
+      ],
+    },
     emptyLabel: "No products found",
     filterKeys: ["status", "type"],
     defaultSort: sortBy("createdAt", "DESC"),
@@ -307,12 +342,48 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
         const base: ProductRow = {
           id,
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
+          /*
+           * 🛑 EVERY ROW READ "Unknown seller · No SKU", and both halves were
+           * fallbacks for fields that do not exist.
+           *
+           * `sellerName` is not on `ProductDocument` — the real field is
+           * `storeName`, which a dedicated `storeNameBackfill` job keeps
+           * populated precisely so a list row needs no second read. And there
+           * is NO SKU FIELD ANYWHERE on the document, so "No SKU" was not a
+           * missing value, it was a column for a concept the schema has never
+           * had. Same shape as the fix recorded in `AdminOrdersView`, where
+           * `buyerName ?? customerName` named two fields the order document
+           * never carried.
+           *
+           * A fallback with no real field behind it is worse than a blank: it
+           * reads as data about the record, so "Unknown seller" looked like a
+           * catalogue of orphaned listings rather than a view asking for the
+           * wrong key.
+           *
+           * Price and stock replace the SKU slot because they are what an
+           * admin scanning this list is actually checking, and they are the
+           * two facts the audit named as missing from the row — it measured
+           * ~550px of empty space between the title and the status with "no
+           * price, stock, category or location column to fill it".
+           *
+           * 🛑 `sku` stays unprinted rather than being invented. Phase 5 of
+           * the plan adds a real SKU field with a generator, a backfill and an
+           * index; until it exists, a row that says "No SKU" on every product
+           * tells an admin nothing except that we asked.
+           */
           secondary:
             auctionSecondary ||
             [
-              toStringValue(item.sellerName, "Unknown seller"),
-              toStringValue(item.sku, "No SKU"),
-            ].join(" · "),
+              toStringValue(item.storeName, "No store"),
+              typeof item.price === "number"
+                ? `₹${item.price.toLocaleString("en-IN")}`
+                : null,
+              typeof item.stockQuantity === "number"
+                ? `${item.stockQuantity} in stock`
+                : null,
+            ]
+              .filter(Boolean)
+              .join(" · "),
           status: toStringValue(item.status, "Unknown"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           featured: Boolean(item.featured),
