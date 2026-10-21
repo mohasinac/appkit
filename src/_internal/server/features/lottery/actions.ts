@@ -2,7 +2,8 @@
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { getAdminDb } from "../../../../providers/db-firebase";
-import { eventRepository, productRepository } from "../../../../repositories";
+import { eventRepository, productRepository, orderRepository } from "../../../../repositories";
+import { serverLogger } from "../../../../monitoring";
 import { lotteryEntryRepository } from "../../../../features/lottery/repository/lottery-entry.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { ValidationError } from "../../../shared/errors/index";
@@ -98,14 +99,106 @@ export async function submitLotteryPullAction(
       throw new LotteryError("USER_LIMIT_REACHED", "You have reached the maximum number of pulls for this lottery.");
     }
 
-    // Enforce maxPullsPerTransaction
+    /*
+     * ── D52: THE TRANSACTION MUST BE A REAL, PAID, CALLER-OWNED ORDER ──────
+     *
+     * 🛑 Before this, `data.transactionId` was a user-supplied STRING
+     * (`z.string().min(4)`) and the only thing checked was a COUNT of prior
+     * entries carrying the same string. Nothing verified that the transaction
+     * existed, that it was paid, or that it belonged to the caller — and
+     * `paymentTime` was user-supplied too.
+     *
+     * So **anyone could claim a lottery slot for free** by typing any
+     * four-character string, up to `maxPullsPerUser`, and then another
+     * `maxPullsPerUser` under the next string. On a lottery whose slots carry
+     * real prices and real prizes.
+     *
+     * The code knew: `// FUTURE_FINANCIAL_DB: external_tx_id →
+     * lottery_transactions.external_tx_id`, pointing at a collection that does
+     * not exist. The gap was marked and left open.
+     *
+     * It does not need that collection: a prize-draw entry is bought through
+     * the ordinary cart, so a paid ORDER is the payment record we already
+     * have. `maxPullsPerTransaction` then does what its name says — it bounds
+     * pulls per PAYMENT rather than per guessed string.
+     *
+     * 🛑 THE TWO SOURCES HAVE DIFFERENT PAYMENT REALITIES, and pretending
+     * otherwise would either leave the hole open or break a working feature.
+     *
+     * · A PRODUCT-sourced lottery is a `prize-draw` listing bought through the
+     *   ordinary cart, so a paid ORDER exists and is verifiable. Required.
+     *
+     * · An EVENT-sourced lottery carries real slot prices (the seed has both
+     *   `uniform` and `variable` events) and has **no cart or checkout path at
+     *   all** — an event is not a product and cannot be added to a cart. So
+     *   the typed `transactionId` was the ENTIRE payment record: an
+     *   honour-system reference with nothing behind it.
+     *
+     *   Requiring an order here would break every event lottery. Accepting the
+     *   string silently is the hole. So the entry is accepted and marked
+     *   `isFlagged` for admin review BEFORE the draw — `flagLotteryEntry`
+     *   already exists for exactly this, and an admin can clear or void it.
+     *   That makes the unverified state VISIBLE instead of indistinguishable
+     *   from a paid one.
+     *
+     * 🛑 This is a stopgap, not a fix, and it is the honest one available
+     * without building a checkout path for events. The real fix is to make an
+     * event lottery purchasable (or free), which is a product decision.
+     */
+    let paymentUnverified = false;
+    if (data.sourceType === "product") {
+      const payingOrder = await orderRepository.findById(data.transactionId);
+      /*
+       * "Not found" and "not yours" share one message DELIBERATELY.
+       * Distinguishing them confirms that an order id exists and belongs to
+       * someone else, which is an enumeration oracle over order ids.
+       */
+      if (!payingOrder || payingOrder.userId !== user.uid) {
+        throw new LotteryError(
+          "TX_ALREADY_USED",
+          "That order could not be found. Enter the order ID from your confirmation email.",
+        );
+      }
+      if (payingOrder.paymentStatus !== "paid") {
+        throw new LotteryError(
+          "TX_ALREADY_USED",
+          "That order has not been paid yet. Once the payment is confirmed you can claim your slot.",
+        );
+      }
+      /*
+       * The order must contain THIS prize draw, or one paid order could be
+       * spent across every open lottery on the site.
+       *
+       * Both shapes are checked: `items[]` is the fan-out form, and the flat
+       * `productId` is the PRIMARY field on an order — CLAUDE.md's own
+       * correction records that `items` is OPTIONAL and the flat fields are
+       * not legacy residue, so checking only one misses real orders.
+       */
+      const orderCoversSource =
+        payingOrder.productId === sourceId ||
+        (payingOrder.items ?? []).some((i) => i.productId === sourceId);
+      if (!orderCoversSource) {
+        throw new LotteryError(
+          "TX_ALREADY_USED",
+          "That order does not include this prize draw. Check the order ID.",
+        );
+      }
+    } else {
+      paymentUnverified = true;
+      serverLogger.warn(
+        "[lottery] event pull accepted with an UNVERIFIED payment reference — flagged for admin review",
+        { eventId: sourceId, uid: user.uid, transactionId: data.transactionId },
+      );
+    }
+
+    // Enforce maxPullsPerTransaction — now per PAYMENT, not per guessed string.
     const existingTxPulls = await lotteryEntryRepository.countByTransactionId(
       sourceId,
       sourceField,
       data.transactionId,
     );
     if (existingTxPulls >= lotteryConfig.maxPullsPerTransaction) {
-      throw new LotteryError("TX_ALREADY_USED", "This transaction ID has already been used the maximum number of times.");
+      throw new LotteryError("TX_ALREADY_USED", "This order has already been used for the maximum number of pulls.");
     }
 
     // Atomically: pick slot + create entry + mark slot booked
@@ -177,7 +270,23 @@ export async function submitLotteryPullAction(
       userLotteryNumber,
       assignedPrizeSlotNumber: assignedSlot.slotNumber,
       status: "drawn",
-      isFlagged: false,
+      /*
+       * D52 — an EVENT pull carries no verifiable payment (events have no
+       * cart path), so it is flagged on creation rather than recorded as if it
+       * were paid. A product pull reached here only after its order was
+       * verified paid, caller-owned and covering this draw, so it is not
+       * flagged.
+       *
+       * This is what makes the unverified state visible to an admin before the
+       * draw instead of indistinguishable from a paid one.
+       */
+      isFlagged: paymentUnverified,
+      ...(paymentUnverified
+        ? {
+            flagNote:
+              "Payment reference not verified — event lotteries have no checkout path, so this reference was typed by the entrant. Confirm the payment before the draw.",
+          }
+        : {}),
       submittedAt: new Date(),
       drawnAt: new Date(),
     };

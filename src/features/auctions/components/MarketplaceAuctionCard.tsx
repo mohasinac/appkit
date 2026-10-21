@@ -426,6 +426,8 @@ export function MarketplaceAuctionCard({
     currentBid: product.currentBid,
     isEnded,
     isSold: product.isSold === true,
+    // D53 — a card must not advertise a buyout price the server refuses.
+    reservePrice: typeof product.reservePrice === "number" ? product.reservePrice : null,
   })
     ? rawBuyoutPrice
     : undefined;

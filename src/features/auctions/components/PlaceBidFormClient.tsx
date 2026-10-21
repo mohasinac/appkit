@@ -85,6 +85,13 @@ export interface PlaceBidFormClientProps {
   isEnded: boolean;
   auctionEndDate: Date | null;
   buyNowPrice: number | null;
+  /**
+   * The seller's floor (D53). Threaded so the Buy-Now control is not offered
+   * for a buyout the server will refuse — `isBuyNowAvailable` now rejects
+   * `buyNowPrice < reservePrice`, and without this prop the button would
+   * render and then error on click.
+   */
+  reservePrice?: number | null;
   bidCount: number;
   tags?: string[];
   onPlaceBid: (input: PlaceBidInput) => Promise<BidActionEnvelope<unknown>>;
@@ -101,6 +108,7 @@ export function PlaceBidFormClient({
   isEnded: ssrIsEnded,
   auctionEndDate,
   buyNowPrice,
+  reservePrice,
   bidCount: ssrBidCount,
   tags = [],
   onPlaceBid,
@@ -213,7 +221,7 @@ export function PlaceBidFormClient({
   // moment another bidder passes the buyout price — without a page reload, and
   // without this component owning a second copy of the rule.
   const buyNowAvailable =
-    isBuyNowAvailable({ buyNowPrice, currentBid, isEnded }) && !!onBuyNow;
+    isBuyNowAvailable({ buyNowPrice, currentBid, isEnded, reservePrice }) && !!onBuyNow;
   const schema = placeBidSchema(minBid, formatCurrency(minBid, currency));
 
   async function submitBid(

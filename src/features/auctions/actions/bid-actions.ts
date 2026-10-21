@@ -435,7 +435,21 @@ export async function buyNowAuction(
   // Replaces the old `bidsHaveStarted` gate. Buy Now used to vanish the instant
   // anybody bid, eBay-style, which hid it on almost every real auction. What
   // actually matters is whether it is still a better deal than the bidding.
-  if (!isBuyNowAvailable({ buyNowPrice, currentBid: standingBid, isEnded: false, isSold: product.isSold })) {
+  /*
+   * 🛑 `reservePrice` is passed HERE above all: this is the server-side money
+   * gate for a buyout. Omitting it is what let a Buy-Now below the seller's
+   * floor complete (D53) — the reserve was enforced only in
+   * `auctionSettlement`, i.e. only on the competitive path.
+   */
+  if (
+    !isBuyNowAvailable({
+      buyNowPrice,
+      currentBid: standingBid,
+      isEnded: false,
+      isSold: product.isSold,
+      reservePrice: product.reservePrice,
+    })
+  ) {
     throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_UNAVAILABLE, {
       code: BID_ERROR_CODES.BUY_NOW_UNAVAILABLE,
     });

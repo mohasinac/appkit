@@ -114,6 +114,19 @@ export interface BuyNowAvailabilityInput {
   currentBid: number | null | undefined;
   isEnded: boolean;
   isSold?: boolean;
+  /**
+   * The seller's floor for the item (D53). Buy-Now below it is refused.
+   *
+   * 🛑 OPTIONAL so every existing call site keeps compiling — but a caller
+   * that has the product and omits it silently reopens the hole, which is the
+   * weakness of this shape. The two server call sites that decide money
+   * (`placeBuyNow`, and the capability gate it consults) both pass it; a
+   * display-only caller that omits it renders a button the server will refuse,
+   * which is a worse UX than a hidden button but is not an exploit.
+   *
+   * Absent / 0 / non-finite means NO reserve — the common case.
+   */
+  reservePrice?: number | null;
 }
 
 /**
@@ -140,9 +153,41 @@ export function isBuyNowAvailable({
   currentBid,
   isEnded,
   isSold,
+  reservePrice,
 }: BuyNowAvailabilityInput): boolean {
   if (isEnded || isSold === true) return false;
   if (typeof buyNowPrice !== "number" || !Number.isFinite(buyNowPrice) || buyNowPrice <= 0) {
+    return false;
+  }
+  /*
+   * ── D53: BUY-NOW MUST CLEAR THE RESERVE ─────────────────────────────────
+   *
+   * 🛑 This function consulted end state, sold state and the standing bid —
+   * and never `reservePrice`, which was enforced in ONE place:
+   * `auctionSettlement`, i.e. only on the competitive path. So a Buy-Now
+   * priced below the reserve completed, and the seller was bound to a price
+   * the reserve existed to refuse.
+   *
+   * The reserve is the seller's floor for the ITEM, not for a particular sale
+   * mechanism. A buyout that undercuts it defeats it entirely — and does so on
+   * the path with no competing bidders to push the price up, which is the one
+   * where the floor matters most.
+   *
+   * 🛑 Checked here rather than at the call site, deliberately: this is the
+   * gate `placeBuyNow` already consults AND the predicate the UI uses to
+   * decide whether to render the button at all, so one change closes the
+   * exploit and stops offering a control that must then refuse.
+   *
+   * Absent/zero/non-finite reserve means NO reserve — which is the common case
+   * and must stay permissive, or every reserve-less auction would lose its
+   * Buy-Now.
+   */
+  if (
+    typeof reservePrice === "number" &&
+    Number.isFinite(reservePrice) &&
+    reservePrice > 0 &&
+    buyNowPrice < reservePrice
+  ) {
     return false;
   }
   return buyNowPrice > (currentBid ?? 0);

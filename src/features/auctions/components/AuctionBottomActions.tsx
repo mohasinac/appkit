@@ -47,7 +47,7 @@ function formatCountdownLabel(
  * button can report an error or route to `/checkout?lane=auction`.
  */
 export function AuctionBottomActions(props: AuctionBottomActionsProps) {
-  const { currentBid, currency, bidCount, isEnded: ssrIsEnded, auctionEndDate, buyNowPrice } =
+  const { currentBid, currency, bidCount, isEnded: ssrIsEnded, auctionEndDate, buyNowPrice, reservePrice } =
     props;
   /*
    * Derived client-side — see `useIsAuctionEnded`. This bar is a FIXED, always-
@@ -67,7 +67,7 @@ export function AuctionBottomActions(props: AuctionBottomActionsProps) {
   // Same single predicate the form and the card use. `!!props.onBuyNow` matters
   // because the preview/demo mount passes no action.
   const buyNowAvailable =
-    isBuyNowAvailable({ buyNowPrice, currentBid, isEnded }) && !!props.onBuyNow;
+    isBuyNowAvailable({ buyNowPrice, currentBid, isEnded, reservePrice }) && !!props.onBuyNow;
 
   useBottomActions(
     isEnded

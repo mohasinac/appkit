@@ -380,6 +380,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     currentBid,
     isEnded,
     isSold: p.isSold === true,
+    // D53 — so the button is not offered for a buyout the server will refuse.
+    reservePrice: typeof p.reservePrice === "number" ? p.reservePrice : null,
   });
 
   const condition = typeof p.condition === "string" ? p.condition : null;
