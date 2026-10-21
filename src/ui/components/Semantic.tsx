@@ -787,6 +787,31 @@ type CellTypographyWeight = "normal" | "medium" | "semibold" | "bold";
 type CellPadding = "none" | "xs" | "xs-tall" | "xs-3" | "sm" | "sm-tall" | "md" | "lg" | "lg-tight" | "lg-3" | "compact";
 type CellColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info";
 
+/**
+ * 🛑 A MAP, because `text-${align}` was a class Tailwind never saw.
+ *
+ * `Th` and `Td` both built their alignment as `align ? \`text-${align}\` : ""`.
+ * Tailwind's content scanner reads source as PLAIN TEXT, so an interpolated
+ * class is one it never generates — and these only worked because OTHER files
+ * happen to write `text-left`, `text-center` and `text-right` literally.
+ * Measured in `dist/tailwind-utilities.css`: all three present, so nothing is
+ * broken today.
+ *
+ * They worked BY ACCIDENT. Delete the last literal `text-right` anywhere in
+ * the codebase and every right-aligned table cell silently loses its
+ * alignment, with these two files looking untouched and correct. Root Cause
+ * #67 is this failure mode, and a fourth `CellAlign` value — `justify`, say —
+ * would be dead on arrival: `text-justify` is NOT in the compiled output.
+ *
+ * A `Record<CellAlign, string>` makes the literals visible to the scanner and
+ * makes a new union member a compile error rather than a silent no-op.
+ */
+const CELL_ALIGN_MAP: Record<CellAlign, string> = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+};
+
 const CELL_PADDING_MAP: Record<CellPadding, string> = {
   none: "",
   xs: "px-2 py-1",
@@ -879,7 +904,7 @@ export function Th({ align, size, weight, padding, paddingX, paddingY, paddingSi
     <th
       className={[
         "appkit-th",
-        align ? `text-${align}` : "",
+        align ? CELL_ALIGN_MAP[align] : "",
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
         padding ? CELL_PADDING_MAP[padding] : "",
@@ -916,7 +941,7 @@ export function Td({ align, size, weight, padding, paddingX, paddingY, paddingSi
     <td
       className={[
         "appkit-td",
-        align ? `text-${align}` : "",
+        align ? CELL_ALIGN_MAP[align] : "",
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
         padding ? CELL_PADDING_MAP[padding] : "",
