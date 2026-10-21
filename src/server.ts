@@ -2344,3 +2344,22 @@ export type { PlatformSupplierIdentity } from "./_internal/shared/features/site-
 // at construction when unconfigured. See the module header.
 export { ShiprocketShippingProvider } from "./providers/shipping-shiprocket/index";
 export type { ShiprocketConfig } from "./providers/shipping-shiprocket/index";
+
+/*
+ * [SERVER-ONLY] grievance — Phase 10 intake and clock.
+ *
+ * 🛑 Intake and clock ONLY. Nothing is published: the Consumer Protection
+ * (E-Commerce) Rules 2020 require a NAMED grievance officer and statutory
+ * periods, and this project publishes the business name with designation
+ * "Support" on the same generic support address (D17). The periods here are
+ * internal defaults chosen SHORTER than any plausible statutory period, so the
+ * clock fires early — a deadline we beat is harmless, one we miss is the thing
+ * the regime punishes. The public page stays untouched until the owner supplies
+ * the officer and the real numbers.
+ */
+export {
+  fileGrievanceAction,
+  recordGrievanceFirstResponseAction,
+} from "./_internal/server/features/grievance";
+export type { FileGrievanceInput } from "./_internal/server/features/grievance";
+export { GRIEVANCE_PERIODS } from "./features/support/schemas/firestore";

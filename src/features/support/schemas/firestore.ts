@@ -38,6 +38,16 @@ export const TicketCategoryValues = {
   // ST-3 — buyers/sellers request mutation of order line items
   // (wrong item shipped, partial fulfilment, bundle correction).
   ORDER_MODIFICATION_REQUEST: "order_modification_request",
+  /*
+   * Phase 10 — a formal grievance, with a statutory clock.
+   *
+   * 🛑 Its own category rather than `general` with a flag, because the
+   * category is what the admin queue filters by and what decides whether
+   * `dueAt` is set. A grievance filed as `general` is a grievance nobody can
+   * find, and the clock would be invisible — which is the whole failure this
+   * closes (D18: no form, no route, no record, only a `mailto:`).
+   */
+  GRIEVANCE: "grievance",
   // ST-5 — users appeal a soft-ban or hard-ban via this category.
   // Server bypasses the create_support_tickets soft-ban guard and the
   // active-ticket limit so the user always has an appeal channel.
@@ -76,12 +86,62 @@ export const ACTIVE_TICKET_STATUSES: TicketStatus[] = [
 ];
 
 /** Order statuses that are eligible for a support ticket. */
+/**
+ * 🛑 THIS CONSTANT IS DEAD — it has no consumer, and that CORRECTS D22.
+ *
+ * The plan records: *"`DELIVERED` is absent from
+ * `ELIGIBLE_ORDER_STATUSES_FOR_TICKET` — the status most money complaints arise
+ * in — as is `REFUNDED`"*, and concludes a buyer whose delivered order is wrong
+ * *"may be unable to attach a ticket to it"*.
+ *
+ * Measured: the only references anywhere are this declaration and its
+ * re-export from `appkit/src/index.ts`. **`createTicket` applies no order-status
+ * gate at all**, so nothing is excluded and no buyer is blocked. The list is
+ * also in UPPERCASE while `OrderStatus` is lowercase, so had anything compared
+ * against it directly it would have matched *nothing* and blocked EVERY order —
+ * the Root Cause #33 shape, latent.
+ *
+ * Left in place rather than deleted: it is exported from the public barrel, so
+ * removing it is a breaking change for a consumer, and `DELIVERED`/`REFUNDED`
+ * are added so that if anything ever does consume it, it is correct on the day
+ * it becomes live rather than wrong in the direction the plan feared.
+ *
+ * The plan's other D22 claims are also stale and worth recording:
+ * `resolvedAt`/`closedAt` DO have a writer (`support.repository.ts` stamps them
+ * on the transition into RESOLVED, fixed 2026-08-26), and no per-order ticket
+ * limit is enforced anywhere. What was genuinely missing is the CLOCK —
+ * `acknowledgedAt`, `dueAt`, `firstResponseAt`, `disputedAmount` — which Phase
+ * 10 adds above.
+ */
 export const ELIGIBLE_ORDER_STATUSES_FOR_TICKET = [
   "PENDING",
   "PROCESSING",
   "SHIPPED",
   "RETURN_REQUESTED",
+  // Added for correctness-if-ever-used: these are the statuses most money
+  // complaints arise in, and their absence is what D22 flagged.
+  "DELIVERED",
+  "REFUNDED",
 ] as const;
+
+/**
+ * Statutory grievance periods, in hours. **Defaults, pending the owner.**
+ *
+ * 🛑 I am not asserting the real statutory numbers from memory. These are
+ * placeholders chosen to be *shorter* than any plausible statutory period, so
+ * the internal clock fires EARLY rather than late — a deadline we beat is
+ * harmless, one we miss is the thing the regime exists to punish.
+ *
+ * Nothing published reads these. The public `/grievance` page is untouched
+ * until the owner supplies a named officer and the actual periods (D17), at
+ * which point these become the `settingPath`-backed values.
+ */
+export const GRIEVANCE_PERIODS = {
+  /** Acknowledge receipt within this. */
+  acknowledgeHours: 48,
+  /** Resolve within this. */
+  resolveHours: 30 * 24,
+} as const;
 
 // ============================================================================
 // TICKET MESSAGE
@@ -210,6 +270,55 @@ export interface SupportTicketDocument extends BaseDocument {
   resolvedAt?: Date;
   closedAt?: Date;
 
+  /*
+   * ── THE STATUTORY CLOCK (Phase 10) ───────────────────────────────────────
+   *
+   * Only meaningful on `category: "grievance"`. Optional on every other
+   * category rather than split into a second collection, because a grievance
+   * IS a support ticket with a deadline — and a separate collection would mean
+   * two inboxes, two list views, and the one you forget being the one with the
+   * legal clock on it.
+   *
+   * 🛑 Built against CONFIGURABLE periods and publishing nothing. The
+   * Consumer Protection (E-Commerce) Rules 2020 require a named grievance
+   * officer and statutory acknowledgement/resolution periods, and this project
+   * currently publishes neither — `BUSINESS_GRIEVANCE_NAME` is the business
+   * name, the designation is "Support", and the contact is the same generic
+   * support address, so there is no escalation tier at all (D17).
+   *
+   * I am deliberately NOT asserting the statutory numbers from memory. A
+   * published timeline we then miss is worse than the present silence, so the
+   * intake measures against `GRIEVANCE_PERIODS` (defaults below) and the
+   * public page stays untouched until the owner supplies the officer and the
+   * real periods.
+   */
+
+  /** When we acknowledged receipt. Server-stamped at intake. */
+  acknowledgedAt?: Date;
+  /**
+   * The resolution deadline.
+   *
+   * 🛑 A hard date, like a chargeback's `respond_by` — not an SLA we invented
+   * for comfort. It is what makes "how long do tickets take" answerable for
+   * the first time, which is the evidence a grievance regime actually requires.
+   */
+  dueAt?: Date;
+  /**
+   * When a human first replied — distinct from `acknowledgedAt`, which is
+   * automatic. An acknowledgement is a receipt; a first response is a person.
+   * Conflating them would let an auto-reply satisfy a human obligation.
+   */
+  firstResponseAt?: Date;
+  /**
+   * The amount in dispute, in decimal rupees.
+   *
+   * Structured rather than left in the prose, because a money complaint whose
+   * amount an admin has to read out of a paragraph cannot be sorted, totalled
+   * or prioritised — and "which open grievances are worth the most" is the
+   * first question anyone asks of this queue.
+   */
+  disputedAmount?: number;
+
   /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
    * Append-only, capped at STATUS_HISTORY_MAX, oldest evicted first.
@@ -267,6 +376,21 @@ export type SupportTicketCreateInput = Pick<
   | "description"
   | "orderId"
   | "storeId"
+  /*
+   * Phase 10 — the grievance clock, settable AT INTAKE.
+   *
+   * 🛑 Added to the Pick rather than cast past it at the call site. A
+   * `as Parameters<typeof createTicket>[0]` would have compiled and the fields
+   * would still have persisted (`createTicket` spreads `...input`), which is
+   * exactly the shape of Root Cause #98: a cast at a boundary silences the one
+   * type-level signal that the write and the contract disagree.
+   *
+   * Only the grievance path sets them; every other category leaves them
+   * absent, which is why they are optional on the document.
+   */
+  | "acknowledgedAt"
+  | "dueAt"
+  | "disputedAmount"
 >;
 
 /*
