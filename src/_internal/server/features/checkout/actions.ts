@@ -61,6 +61,7 @@ import {
 import {
   activeLane,
   defaultCheckoutItems,
+  resolveCheckoutItems,
   laneOf,
   type CartLane,
 } from "../../../shared/checkout/lanes";
@@ -3155,15 +3156,36 @@ export async function verifyAndPlaceGatewayOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
 
-  // Same lane priority + locked-line revalidation the manual/COD path runs.
-  //
-  // 🛑 This path carries no selectedItemIds, so it settles the ACTIVE LANE —
-  // not the cart. It used to pass `cart.items` as its own "selected" set,
-  // which made assertCheckoutLane compare the whole cart against its own
-  // active lane and throw on every multi-lane cart. Everything downstream
-  // reads `settleItems` for the same reason: stock decrements, jurisdiction
-  // and the order rows must cover exactly what was charged for.
-  const settleItems = defaultCheckoutItems(cart.items);
+  /*
+   * Same lane priority + locked-line revalidation the manual/COD path runs.
+   *
+   * 🛑 D40 — THIS LINE USED TO IGNORE THE BUYER'S SELECTION, and the capture
+   * route did not. `defaultCheckoutItems(cart.items)` is the active lane and
+   * nothing else, while `/api/payment/create-order` filtered by
+   * `cart.selectedItemIds` and fell back to the WHOLE CART across every lane.
+   * Two divergences fell out of that:
+   *
+   *   with a selection → charged for the selected items, orders for the whole
+   *                      lane: goods and stock leaving without payment.
+   *   no selection     → charged for EVERY lane, orders for one: the buyer
+   *                      OVERPAYS, and multi-lane carts are the normal product
+   *                      of the lane model (see `defaultCheckoutItems`).
+   *
+   * `resolveCheckoutItems` is now the one definition both paths call: active
+   * lane first, then the selection as a filter within it. Everything
+   * downstream still reads `settleItems`, because stock decrements,
+   * jurisdiction checks and the order rows must cover exactly what was charged.
+   */
+  const settleItems = resolveCheckoutItems(cart.items, cart.selectedItemIds);
+  if (settleItems.length === 0) {
+    /*
+     * An empty intersection is a refusal, not a fallback. It means the
+     * selection names only off-lane items — so the buyer is looking at
+     * something the server will not sell them, and widening to the whole lane
+     * would charge them for lines they deliberately unticked.
+     */
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
+  }
   assertCheckoutLane(cart.items, settleItems);
   await assertLockedLinesStillValid(settleItems, uid);
 

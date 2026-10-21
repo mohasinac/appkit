@@ -189,6 +189,55 @@ export function defaultCheckoutItems<T extends LaneAssignable>(
 }
 
 /**
+ * THE item set a checkout charges for and settles. One definition, both paths.
+ *
+ * ## 🛑 D40: the captured item set was not the settled item set, in TWO ways
+ *
+ * Measured, because the plan recorded only the first half:
+ *
+ * | | capture (`/api/payment/create-order`) | settle (gateway path) |
+ * |---|---|---|
+ * | with a selection | the selected items, **any lane** | **the active lane**, selection IGNORED |
+ * | with no selection | **the whole cart, every lane** | the active lane only |
+ *
+ * The first row is the one the plan describes: deselect half the cart, pay for
+ * half, receive orders for the whole lane — the buyer gets goods they did not
+ * pay for and the seller's stock leaves without payment.
+ *
+ * 🛑 **The second row is worse and was not recorded anywhere: the buyer is
+ * OVERCHARGED.** With no explicit selection the capture route billed
+ * `cart.items` — every lane — while settle created orders for the active lane
+ * only. And multi-lane carts are not an edge case: `defaultCheckoutItems`' own
+ * docstring above says they "are what the lane model produces", because
+ * `auctionSettlement` pushes a won auction into whatever is already in the
+ * cart. So a buyer with a won auction and ordinary items in the cart was
+ * charged for both and received orders for one.
+ *
+ * ## The rule
+ *
+ * **Active lane first, then the selection as a filter within it.** Not the
+ * other way round, and not selection-instead-of-lane:
+ *
+ * - The lane invariant is non-negotiable — `assertCheckoutLane` refuses any
+ *   settle whose items are not the active lane, so a selection spanning lanes
+ *   could be charged and then never settled. That is the D64 class (money
+ *   taken, no order).
+ * - An empty intersection is a REFUSAL, not a silent widening. A selection
+ *   naming only off-lane items means the buyer is looking at something the
+ *   server will not sell them, and falling back to the whole lane would charge
+ *   them for items they deliberately unticked.
+ */
+export function resolveCheckoutItems<T extends LaneAssignable & { itemId: string }>(
+  items: readonly T[],
+  selectedItemIds?: readonly string[] | null,
+): T[] {
+  const inLane = defaultCheckoutItems(items);
+  if (!selectedItemIds?.length) return inLane;
+  const selected = new Set(selectedItemIds);
+  return inLane.filter((item) => selected.has(item.itemId));
+}
+
+/**
  * Why `lane` can't be checked out right now — null when it can.
  * Phrased for the buyer, naming the lane that's blocking and what to do.
  */

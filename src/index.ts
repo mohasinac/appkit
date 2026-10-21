@@ -9672,6 +9672,15 @@ export {
   laneBlockReason,
   isLockedLane,
   canAddNewItems,
+  /*
+   * 🛑 `resolveCheckoutItems` is THE definition of "what this checkout charges
+   * for and settles", and it is exported because the CONSUMER owns the capture
+   * route (`/api/payment/create-order`) — which was one of the two sites that
+   * disagreed. Exporting it is what makes the agreement structural instead of
+   * a convention two files have to keep independently (D40, Root Cause #75).
+   */
+  defaultCheckoutItems,
+  resolveCheckoutItems,
   type CartLane,
   type LaneAssignable,
 } from "./_internal/shared/checkout/lanes";
