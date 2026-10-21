@@ -356,6 +356,20 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
      */
     precondition: (o) =>
       Boolean(o.deliveryDate) &&
+      /*
+       * 🛑 `!o.completedAt` — the BUYER may have completed it already.
+       *
+       * The owner's fast path (`markOrderCompleteAction`: rate an item, mark
+       * complete, immediate disburse) sets `completedAt` and closes this
+       * obligation as `met`. Without this clause the sweep would still consider
+       * the order due at day 7 and fire a second completion — re-closing a
+       * closed window and, once Phase P lands, awarding points a second time
+       * against an append-only ledger.
+       *
+       * Belt and braces with the obligation already being closed, deliberately:
+       * the row is an index and the order is the truth, so the truth gets a say.
+       */
+      !o.completedAt &&
       notTerminal(o) &&
       o.status !== "return_requested" &&
       o.status !== "returned" &&

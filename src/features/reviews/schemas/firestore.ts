@@ -49,6 +49,43 @@ export interface ReviewDocument extends BaseDocument {
   userSlug?: string;
   userName: Encrypted<string>;
   userAvatar?: string;
+  /*
+   * ── PER-ITEM RATING, ZOMATO-STYLE (owner's requirement, 2026-10-21) ───────
+   *
+   * *"like in zomato, each item of the order can be individually rated and a
+   * comment can be given — use that."*
+   *
+   * `ReviewDocument` was ALREADY per-product (`productId` + `rating` +
+   * `comment`), so the shape needed no change — what it lacked was any link
+   * back to the ORDER. Measured: there is no `orderId` anywhere on this
+   * document, and `isVerifiedPurchase` is **read in two places and written by
+   * nothing**, so a review has never been attributable to a purchase at all.
+   *
+   * That gap is what made the owner's completion rule unanswerable: *"if review
+   * is given and order marked complete by the buyer — immediate disburse"*
+   * requires knowing whether THIS order's items were rated, and nothing
+   * connected the two.
+   */
+
+  /**
+   * The order whose line this review rates.
+   *
+   * 🛑 Optional, because every review written before this field existed has
+   * none — and any query over it must therefore treat a missing `orderId` as
+   * "unknown", never as "not from an order". A default-exclusive filter would
+   * hide every pre-existing review and manufacture a backfill nobody budgeted
+   * for (the same rule `serverErrors.entityType` carries).
+   */
+  orderId?: string;
+  /**
+   * The specific order LINE, when the order carries `items[]`.
+   *
+   * Needed because one order can contain the same `productId` twice — a
+   * grouped line and a standalone purchase of the same bey — and Zomato-style
+   * rating is per LINE, not per product. Without it, rating one of the two
+   * lines would mark both as rated.
+   */
+  orderItemId?: string;
   rating: number;
   title: string;
   comment: string;

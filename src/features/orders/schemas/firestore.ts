@@ -474,6 +474,33 @@ export interface OrderDocument extends BaseDocument {
   acceptedAt?: Date;
   shippingDate?: Date;
   deliveryDate?: Date;
+  /**
+   * When the order was marked COMPLETE — the fact that awards points and
+   * closes the dispute window.
+   *
+   * 🛑 Owner's rule, 2026-10-21: *"auto assigned after 7 days of delivery, when
+   * order is marked complete; if review is given and order marked complete by
+   * the buyer before — immediate disburse."*
+   *
+   * So there are two writers and they are not equivalent:
+   *
+   * | writer | when | `completedBy` |
+   * |---|---|---|
+   * | `obligationSweep` | 7 days after delivery, nothing contested | `"system"` |
+   * | `markOrderCompleteAction` | the buyer, having left a review | their uid |
+   *
+   * The buyer's path is the FAST one — it skips the remaining wait, which is
+   * what "immediate disburse" asks for. And because `payout-release` is
+   * `blockedBy: ["order-complete", …]`, an early completion opens the seller's
+   * payout gate early **with no extra mechanism**: the buyer confirming
+   * satisfaction is exactly the signal a quiet period exists to wait for.
+   *
+   * A FACT, never a deadline — the 7-day deadline itself stays derived
+   * (`deadlinesFor`), so changing the period does not need a backfill.
+   */
+  completedAt?: Date;
+  /** `"system"` for the timer, or the buyer's uid for the fast path. */
+  completedBy?: string;
   cancellationDate?: Date;
   cancellationReason?: string;
   /**

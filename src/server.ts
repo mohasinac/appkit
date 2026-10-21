@@ -2363,3 +2363,23 @@ export {
 } from "./_internal/server/features/grievance";
 export type { FileGrievanceInput } from "./_internal/server/features/grievance";
 export { GRIEVANCE_PERIODS } from "./features/support/schemas/firestore";
+
+/*
+ * [SERVER-ONLY] order-completion — per-item ratings and the fast completion
+ * path (owner's rule, 2026-10-21).
+ *
+ * Completion has two writers: `obligationSweep`'s `order-complete` at 7 days,
+ * and the buyer marking it complete after rating at least one item. The second
+ * is the "immediate disburse" path — and it needs no extra mechanism, because
+ * `payout-release` is already blocked on `order-complete`, so closing that
+ * obligation early opens the payout gate early as a consequence.
+ */
+export {
+  getRateableItemsAction,
+  rateOrderItemAction,
+  markOrderCompleteAction,
+} from "./_internal/server/features/order-completion";
+export type {
+  RateableOrderItem,
+  RateOrderItemInput,
+} from "./_internal/server/features/order-completion";

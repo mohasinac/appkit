@@ -121,6 +121,17 @@ async function performAction(
      * fact to award against rather than a window it has to re-derive.
      */
     case "order-complete":
+      /*
+       * Stamps the same FACT the buyer's fast path stamps, so both completion
+       * routes converge on one field. `completedBy: "system"` is what
+       * distinguishes the timer from the buyer — and it is the difference
+       * between "nobody complained" and "the buyer said they were happy",
+       * which are not the same signal even though they have the same effect.
+       */
+      await orderRepository.update(order.id, {
+        completedAt: ctx.now,
+        completedBy: "system",
+      } as Partial<OrderDocument>);
       ctx.logger.info("obligation: dispute window closed — order complete", {
         orderId: order.id,
         deliveredAt: order.deliveryDate?.toISOString(),
