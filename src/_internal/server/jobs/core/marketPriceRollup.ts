@@ -116,14 +116,17 @@ function groupByKind(
   return out;
 }
 
-export interface MarketPriceRollupResult {
-  leavesScanned: number;
-  leavesWritten: number;
-  leavesCleared: number;
-  observationsCounted: number;
-}
-
-export async function runMarketPriceRollup(ctx: JobContext): Promise<MarketPriceRollupResult> {
+/**
+ * 🛑 Returns `void`, and the counts go to the LOG rather than to a caller.
+ *
+ * `ScheduleHandler` is `(ctx) => Promise<void>`, and matching it exactly is
+ * what lets `marketPriceRollupHandler` be a bare alias instead of a wrapper
+ * that discards a value — the same shape `priceIndexRollup` already has. A
+ * result object with no reader would also be speculative infrastructure: the
+ * only consumer today is an operator reading the run log, and
+ * `ctx.logger.info` is what they read.
+ */
+export async function runMarketPriceRollup(ctx: JobContext): Promise<void> {
   const now = new Date();
   const leafIds = await priceObservationRepository.listLeafIdsWithObservations();
 
@@ -169,11 +172,4 @@ export async function runMarketPriceRollup(ctx: JobContext): Promise<MarketPrice
     recentWindowDays: RECENT_WINDOW_DAYS,
     minObservations: MIN_BAND_OBSERVATIONS,
   });
-
-  return {
-    leavesScanned: leafIds.length,
-    leavesWritten: written,
-    leavesCleared: cleared,
-    observationsCounted: counted,
-  };
 }
