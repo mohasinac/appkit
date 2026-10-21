@@ -103,6 +103,30 @@ export interface FormShellContextValue {
   submitAttemptCount: number;
   /** Call from a submit handler, before validating. */
   markSubmitAttempted: () => void;
+
+  /*
+   * ── "Create & add another" ────────────────────────────────────────────────
+   *
+   * 🛑 OFFERED PER FORM, NOT EVERYWHERE. `addAnotherEnabled` is false unless
+   * the caller opts in, and that is the whole design.
+   *
+   * The toggle is a promise about what happens AFTER a successful save, and
+   * only the caller can keep it: `FormShell` does not own the draft, so it
+   * cannot know what a fresh one looks like or which fields are sticky. A
+   * checkbox rendered on all ~59 editors when one honours it is a control that
+   * does nothing on 58 of them — which is the single most common defect this
+   * codebase has paid for (a declaration with no reader: `config.title` on 86
+   * configs, `--appkit-color-focus-ring` in four themes, `display.coverImage`
+   * with 504 covers behind it). Opting in means the control exists exactly
+   * where it works.
+   *
+   * The division of labour: this context owns the AFFORDANCE and the INTENT;
+   * the caller's submit handler reads `addAnother` and owns the draft reset.
+   */
+  addAnotherEnabled: boolean;
+  /** Ticked? Meaningless unless `addAnotherEnabled`. */
+  addAnother: boolean;
+  setAddAnother: (next: boolean) => void;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -124,6 +148,19 @@ export function useFormShell(): FormShellContextValue {
 //   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 //   // wrap JSX in <FormShellContext.Provider value={shellCtx}>
 //   // call setFieldError("name", "Required") in submit handler to show inline err
+
+export interface FormShellStateOptions {
+  /**
+   * Offer "Create & add another".
+   *
+   * 🛑 OPT-IN, and the caller is taking on an obligation by passing it: its
+   * submit handler MUST read `addAnother` and, when true, keep the user on the
+   * form with a fresh draft instead of navigating away. Passing this without
+   * honouring it ships a checkbox that does nothing — the defect shape this
+   * codebase has paid for most often. `audit-add-another-honoured` blocks it.
+   */
+  allowAddAnother?: boolean;
+}
 
 export interface UseFormShellStateResult {
   shellCtx: FormShellContextValue;
@@ -166,9 +203,19 @@ export interface UseFormShellStateResult {
 export function useFormShellState<TSchema extends import("zod").ZodTypeAny = import("zod").ZodTypeAny>(
   schema?: TSchema,
   nav?: FormShellNav,
+  opts?: FormShellStateOptions,
 ): UseFormShellStateResult {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitAttemptCount, setSubmitAttemptCount] = useState(0);
+  /*
+   * 🛑 DEFAULTS TO UNTICKED, even when offered. "Create & add another" changes
+   * what happens after a successful save, and a user who did not ask for a
+   * batch and is silently kept on the form reads it as "the save failed" —
+   * then saves again, and creates a duplicate. Defaulting a destination change
+   * is not a convenience.
+   */
+  const [addAnother, setAddAnother] = useState(false);
+  const addAnotherEnabled = opts?.allowAddAnother ?? false;
   const markSubmitAttempted = useCallback(() => setSubmitAttemptCount((n) => n + 1), []);
   const submitAttempted = submitAttemptCount > 0;
 
@@ -234,7 +281,14 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
     submitAttempted,
     submitAttemptCount,
     markSubmitAttempted,
-  }), [errors, setFieldError, navSections, navGoTo, navFieldMap, submitAttempted, submitAttemptCount, markSubmitAttempted]);
+    addAnotherEnabled,
+    // 🛑 Forced to `false` when the feature is not offered, rather than passed
+    // through. Otherwise a caller that never opted in but reads `addAnother`
+    // (a copy-paste from one that did) could branch on a value no control can
+    // change — a dead branch that looks live.
+    addAnother: addAnotherEnabled && addAnother,
+    setAddAnother,
+  }), [errors, setFieldError, navSections, navGoTo, navFieldMap, submitAttempted, submitAttemptCount, markSubmitAttempted, addAnotherEnabled, addAnother]);
 
   return {
     shellCtx,
@@ -382,6 +436,24 @@ export function FormShellProvider({
     submitAttempted,
     submitAttemptCount,
     markSubmitAttempted,
+    /*
+     * 🛑 `FormShellProvider` DOES NOT OFFER "Create & add another", and this
+     * is a decision rather than an omission.
+     *
+     * This provider backs the multi-step WIZARD (`features/shell/FormShell` +
+     * `StepForm`) — auto-save, draft, publish. "Add another" means "stay here
+     * with a fresh draft", and in a wizard that would also have to mean "and
+     * go back to step one", silently discarding a publish flow the user had
+     * walked through. It also auto-saves drafts, so a half-cleared wizard
+     * would persist. If a batch-create wizard is ever wanted, it needs its own
+     * design; a checkbox here would be the control-that-lies shape.
+     *
+     * `addAnother` is hard `false`, so `<AddAnotherToggle>` inside a wizard
+     * renders nothing and any handler reading it takes the normal branch.
+     */
+    addAnotherEnabled: false,
+    addAnother: false,
+    setAddAnother: () => {},
   }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty, onGoToStep, fieldToStepIndex, sections, submitAttempted, submitAttemptCount, markSubmitAttempted]);
 
   return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;

@@ -63,6 +63,19 @@ export interface FormProps
    * this in a modal is a no-op rather than a bug.
    */
   bottomBar?: FormBottomBarConfig;
+  /**
+   * Offer "Create & add another" — render `<AddAnotherToggle>` somewhere in
+   * the form and read `addAnother` from the render-prop helpers' `shellCtx`.
+   *
+   * 🛑 PASSING THIS IS AN OBLIGATION, not a flag. The submit handler must keep
+   * the user on the form with a fresh draft when `addAnother` is true;
+   * otherwise it ships a checkbox that does nothing, which is the shape this
+   * codebase has paid for most often. `audit-add-another-honoured` blocks it.
+   *
+   * Ignored when `shellCtx` is supplied — the parent that owns the state owns
+   * this decision too, and two sources would disagree the first time one moved.
+   */
+  allowAddAnother?: boolean;
   /** Cross-axis alignment of flex/grid children. Replaces raw `items-*` className. */
   align?: "start" | "center" | "end" | "stretch";
   /** Gap between children — use instead of raw `gap-*` className. */
@@ -114,8 +127,8 @@ export interface FormBottomBarConfig {
   disabled?: boolean;
 }
 
-export function Form({ children, spacing, schema, shellCtx: shellCtxProp, bottomBar, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
-  const helpers = useFormShellState(schema);
+export function Form({ children, spacing, schema, shellCtx: shellCtxProp, bottomBar, allowAddAnother, align, gap, surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, className = "", ...props }: FormProps) {
+  const helpers = useFormShellState(schema, undefined, { allowAddAnother });
   const effectiveCtx = shellCtxProp ?? helpers.shellCtx;
 
   /*

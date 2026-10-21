@@ -3,6 +3,7 @@ export type {
   FormShellStep,
   FormShellNav,
   FormShellContextValue,
+  FormShellStateOptions,
   UseFormShellStateResult,
 } from "./FormShell";
 export { FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./FormShell";
@@ -25,5 +26,7 @@ export { ColorPickerField } from "./ColorPickerField";
 
 export type { FormErrorSummaryProps } from "./FormErrorSummary";
 export { FormErrorSummary } from "./FormErrorSummary";
+export type { AddAnotherToggleProps } from "./AddAnotherToggle";
+export { AddAnotherToggle, addAnotherSubmitLabel } from "./AddAnotherToggle";
 export type { FormErrorListProps } from "./FormErrorList";
 export { FormErrorList } from "./FormErrorList";

@@ -249,6 +249,20 @@ export function QuickFormDrawer({
     submitAttempted,
     submitAttemptCount,
     markSubmitAttempted: () => setSubmitAttemptCount((n) => n + 1),
+    /*
+     * 🛑 Not offered here. This drawer's whole purpose is the 1-3 field
+     * inline edit opened from a picker's "+ Create new" — it CLOSES on
+     * success and auto-selects what it just made, which is the opposite of
+     * staying put. "Add another" would have to mean "create a second one you
+     * did not ask for and cannot select", so the control has no coherent
+     * meaning in this shell.
+     *
+     * Also note this context backs ONLY `<FormErrorSummary>` — the comment
+     * above says so — so even a `true` here would reach no submit handler.
+     */
+    addAnotherEnabled: false,
+    addAnother: false,
+    setAddAnother: () => {},
   }), [liveErrors, submitting, submitAttempted, submitAttemptCount]);
 
   if (!isOpen) return null;

@@ -4,7 +4,14 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FormShell, SectionForm, useSectionFormNav, useFormShell } from "../../shell";
 import type { FormShellSection, SectionDef } from "../../shell";
-import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
+import {
+  FormShellContext,
+  useFormShellState,
+  applyZodIssues,
+  FormErrorSummary,
+  AddAnotherToggle,
+  addAnotherSubmitLabel,
+} from "../../../ui/forms";
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast, Row } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
@@ -1900,7 +1907,17 @@ export function SellerProductShell({
    * why the original `wizardShellCtx` existed; only its contents change.
    */
   const { shellCtx: baseShellCtx, setFieldError, clearErrors, validate } =
-    useFormShellState(sellerProductSchema);
+    /*
+     * 🛑 "Create & add another" OFFERED ONLY IN CREATE MODE. Editing an
+     * existing listing and then "adding another" would have to mean "save this
+     * one, then start a blank one" — a different action, and not one anybody
+     * reaches for while fixing a typo. The toggle hides itself on edit too,
+     * but gating the OFFER means the branch below cannot be reached from edit
+     * at all rather than relying on a component to hide.
+     */
+    useFormShellState(sellerProductSchema, undefined, {
+      allowAddAnother: mode === "create",
+    });
   const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
@@ -1936,6 +1953,38 @@ export function SellerProductShell({
     if (onDiscard) onDiscard();
     else router.back();
   }, [onDiscard, router]);
+
+  /*
+   * ── "Create & add another": what survives, and what must not ──────────────
+   *
+   * 🛑 AN ALLOW-LIST, NOT A DELETE-LIST. The obvious implementation is
+   * `{ ...draft, title: "", images: [] }` — spread the last one and blank the
+   * bits that look item-specific. That is the deny-list shape this codebase
+   * has been bitten by all session (Root Cause #70: a public payload built by
+   * spreading a document and deleting three keys published everything nobody
+   * thought to delete). Here it would carry the previous listing's barcode,
+   * its SKU, its slug, its SEO title, its stock count and its video into the
+   * next record — and `barcodeId` and `slug` are UNIQUE, so the second save
+   * would either collide or silently overwrite the first listing.
+   *
+   * So the next draft is built from NOTHING plus the four fields a batch
+   * genuinely shares. A field added to the draft type later is excluded by
+   * default, which is the direction that cannot lose data.
+   *
+   * `listingType` and the store are PROPS, not draft fields, so they persist
+   * without being listed — they are part of which editor is mounted.
+   */
+  const nextDraftForAnother = useCallback(
+    (saved: SellerProductDraft): SellerProductDraft => ({
+      status: "draft",
+      condition: saved.condition ?? "new",
+      category: saved.category,
+      brand: saved.brand,
+    }),
+    [],
+  );
+
+  const addAnother = baseShellCtx.addAnother;
 
   // `silent` suppresses the success toast — used by the debounced auto-save
   // effect above so it doesn't pop a "Saved." toast every couple of seconds
@@ -2002,6 +2051,30 @@ export function SellerProductShell({
       if (result.ok) {
         markClean();
         clearErrors();
+        /*
+         * 🛑 THE TOAST NAMES WHAT WAS PUBLISHED, because the form is about to
+         * be empty. "Published." over a blank form reads as though the thing
+         * on screen vanished; "Published Dran Sword. Next one — category and
+         * condition kept." says what happened and what was kept, which is the
+         * only confirmation the seller gets that their work landed.
+         */
+        if (addAnother) {
+          const title = draft.title?.trim();
+          setDraft(nextDraftForAnother(draft));
+          /*
+           * `markClean()` ran above, and the fresh draft must stay clean:
+           * `update()` marks dirty, and `setDraft` here deliberately bypasses
+           * it. Otherwise the 2-second create-mode auto-save effect fires on
+           * the empty draft and writes a second, blank listing.
+           */
+          showToast(
+            title
+              ? `Published ${title}. Next one — category and condition kept.`
+              : "Published. Next one — category and condition kept.",
+            "success",
+          );
+          return;
+        }
         showToast("Published.", "success");
         return;
       }
@@ -2020,7 +2093,7 @@ export function SellerProductShell({
       void normalizeError(err);
       showToast("Failed to publish.", "error");
     }
-  }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast]);
+  }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast, addAnother, nextDraftForAnother]);
 
   const listingTypeLabel = pluginForMode(listingType).typeLabel;
   const typeSpecificSection: TypeSpecificSectionDef | null = TYPE_SPECIFIC_SECTIONS[listingType] ?? null;
@@ -2249,6 +2322,19 @@ export function SellerProductShell({
               </Div>
             </FormShellContext.Provider>
             <Div paddingX="x-5" padding="b-sm">
+              {/*
+                The toggle sits WITH the submit button, not in a settings
+                section. It changes what that button does, and a control whose
+                effect is a scroll away from the thing it modifies gets ticked
+                by accident and missed when it matters. It renders nothing
+                outside create mode (`allowAddAnother` is false there).
+              */}
+              <FormShellContext.Provider value={shellCtx}>
+                <AddAnotherToggle
+                  noun={listingTypeLabel.toLowerCase()}
+                  isCreate={mode === "create"}
+                />
+              </FormShellContext.Provider>
               <Row gap="sm" justify="between" wrap>
                 {/* "Save as draft" was gated on being on step 0. It is now
                     always available — a draft is a draft whichever section the
@@ -2267,7 +2353,13 @@ export function SellerProductShell({
                   isLoading={isLoading}
                   disabled={isLoading}
                 >
-                  {`Publish ${listingTypeLabel}`}
+                  {/*
+                    🛑 THE LABEL MUST CHANGE. A button reading "Publish
+                    listing" that then leaves the seller on a blank form has
+                    lied about what it did, and their next move is to press it
+                    again — which publishes a second listing.
+                  */}
+                  {addAnotherSubmitLabel(`Publish ${listingTypeLabel}`, addAnother)}
                 </Button>
               </Row>
             </Div>
