@@ -121,6 +121,53 @@ export type {
   ServerErrorSource,
 } from "./features/server-errors/schemas/firestore";
 
+/*
+ * [SERVER-ONLY] gatewayEvents — the durable inbox for payment-gateway webhooks.
+ *
+ * Exported from `server.ts` ONLY, never `index.ts`. The repository's import
+ * chain reaches `firebase-admin` through `providers/db-firebase`, and a symbol
+ * reachable from the main barrel drags that into the CLIENT bundle — which
+ * fails the Turbopack production build on every page (Root Cause #6/#24), since
+ * `firebase-admin/app` is a static top-level import.
+ */
+export {
+  GatewayEventsRepository,
+  gatewayEventsRepository,
+} from "./features/gateway-events/repository/gateway-events.repository";
+export type {
+  GatewayEventClaimInput,
+  GatewayEventClaimResult,
+  GatewayEventSettleInput,
+} from "./features/gateway-events/repository/gateway-events.repository";
+export {
+  GATEWAY_EVENTS_COLLECTION,
+  GATEWAY_EVENT_FIELDS,
+  GATEWAY_EVENT_RETENTION_DAYS,
+  GATEWAY_EVENT_LEASE_SECONDS,
+  GATEWAY_EVENT_MAX_ATTEMPTS,
+  GATEWAY_EVENT_PAYLOAD_MAX_BYTES,
+  GATEWAY_EVENT_ERROR_MAX_BYTES,
+  createGatewayEventId,
+} from "./features/gateway-events/schemas/firestore";
+export type {
+  GatewayEventDocument,
+  GatewayEventKind,
+  GatewayEventStatus,
+} from "./features/gateway-events/schemas/firestore";
+export {
+  ingestGatewayEvent,
+  settleGatewayEvent,
+  statusForDispatch,
+  resolveDuplicateDelivery,
+  redactGatewayPayload,
+} from "./_internal/server/features/gateway-events";
+export type {
+  IngestGatewayEventInput,
+  SettleGatewayEventInput,
+  DuplicateAction,
+  DuplicateResolution,
+} from "./_internal/server/features/gateway-events";
+
 // [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
 // Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
 export {

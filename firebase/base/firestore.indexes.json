@@ -10063,6 +10063,62 @@
       ]
     },
     {
+      "collectionGroup": "gatewayEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "leaseExpiresAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "gatewayEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "gatewayOrderId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "receivedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "gatewayEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "gateway",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "receivedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "gatewayEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "kind",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "receivedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "serverErrors",
       "queryScope": "COLLECTION",
       "fields": [
