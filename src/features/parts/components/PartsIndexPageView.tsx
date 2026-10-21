@@ -36,6 +36,13 @@ import {
   type PartGlossaryDocument,
   type PartSlot,
 } from "../schemas/firestore";
+/*
+ * 🛑 Rendered as JSX from a Server Component, which is the normal RSC
+ * boundary and is fine — the trap Root Cause #76 describes is CALLING a
+ * `/client` runtime value or reading a property off it, not rendering a
+ * client component. The toolbar needs the session, so it owns that itself.
+ */
+import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 export interface PartsIndexPageViewProps {
   hrefForClassification: (slot: string) => string;
@@ -157,6 +164,31 @@ export function PartClassificationPageView({
                       {p.code}
                     </Badge>
                   )}
+                  {/*
+                    Inline edit for the parts DATABASE.
+
+                    🛑 The two part/bey DETAIL pages already had this; the
+                    index did not, so an admin spotting a wrong weight or a
+                    mistyped name in the list had to open the part, then the
+                    editor. This is the row-level path to the same editor.
+
+                    It renders NOTHING for a signed-out visitor or a
+                    non-admin — the component resolves that itself — so the
+                    public parts reference is unchanged for everyone who is
+                    not staff, DOM included.
+
+                    🛑 A SIBLING of the link, not inside it: the name is a
+                    `<TextLink>` and a button nested in an anchor is invalid
+                    HTML, which browsers resolve by closing the anchor early
+                    and breaking the ROW's navigation rather than the
+                    button's.
+                  */}
+                  <RecordOwnerQuickActions
+                    resource="PART"
+                    recordId={p.id}
+                    placement="detail"
+                    recordLabel={p.name}
+                  />
                 </Row>
               ))}
             </Stack>
