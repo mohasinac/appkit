@@ -25,7 +25,19 @@ export function MaintenanceDashboardView({
         Errors and failures across the platform — server, client, and Cloud Functions.
       </Text>
 
-      <Div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
+      {/*
+        🛑 `auto-fill`, NEVER `auto-fit` — and this was `auto-fit`.
+        `Layout.style.css` states the rule outright and explains it: auto-fit
+        COLLAPSES the empty tracks in a short final row and lets `1fr` absorb
+        the freed space, so a lone leftover tile stretches across the whole
+        container. With four counters at 170px minimum this happens at common
+        widths — three fit, the fourth sits alone on row two and renders
+        three times as wide as its siblings.
+
+        `audit-card-grid-cols` could not see it: that audit reads `className`
+        ladders and never looked at `auto-fit` in an inline style. It does now.
+      */}
+      <Div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
         <Div style={card}>
           <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Last 24 hours</Div>
           <Div style={{ fontSize: "1.75rem", fontWeight: 700 }}>{counts.last24h}</Div>
@@ -78,7 +90,8 @@ export function MaintenanceDashboardView({
         </Ul>
       </Section>
 
-      <Nav aria-label="Maintenance sections" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
+      {/* Same auto-fit → auto-fill fix as the counter grid above. */}
+      <Nav aria-label="Maintenance sections" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "0.5rem" }}>
         <Anchor href={`${basePath}/server-errors`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Server errors</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Vercel function failures</Div>
