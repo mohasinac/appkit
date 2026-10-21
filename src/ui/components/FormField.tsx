@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useId } from "react";
 import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";
 import { Textarea } from "./Textarea";
@@ -101,7 +101,20 @@ export function FormField({
       ? touched && !!error
       : !!error
     : false;
-  const inputId = `field-${name}`;
+  const reactId = useId();
+  /*
+   * 🛑 UNIQUE PER INSTANCE. This was `field-${name}`, so two fields sharing a
+   * name on one page produced two elements with the SAME id — `/auth/login`
+   * shipped two `id="field-email"` (the sign-in form and the footer
+   * newsletter).
+   *
+   * That is not cosmetic. `htmlFor` resolves to the FIRST element with the
+   * id, so the second field's label points at the first field's input: the
+   * label is present in the markup and the input has no accessible name, which
+   * is what an accessibility pass reports as an unlabelled field. Clicking the
+   * second label also focuses the first input.
+   */
+  const inputId = `field-${name}-${reactId}`;
   const errorId = `${inputId}-error`;
   const describedBy = showError ? errorId : undefined;
 
