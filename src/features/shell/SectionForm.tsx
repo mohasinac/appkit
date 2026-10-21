@@ -180,10 +180,32 @@ export function useSectionFormNav<T extends object = Record<string, JsonValue>>(
   }, [sections, values]);
 
   const sectionIds = useMemo(() => ordered.map((s) => s.id), [ordered]);
-  const defaultOpen = useMemo(
-    () => ordered.filter((s) => s.required).map((s) => s.id),
-    [ordered],
-  );
+  /*
+   * 🛑 `undefined` WHEN NOTHING IS REQUIRED, not an empty array.
+   *
+   * This returned the required section ids unconditionally, and
+   * `useSectionState` documents `[]` as meaning "all collapsed" — its
+   * first-section-open default only applies when `defaultOpen` is absent. So a
+   * form whose sections are all optional opened with EVERY section collapsed:
+   * a stack of grey strips and a Save button, with no content on screen.
+   *
+   * `/admin/site` is the worst case and is what the audit screenshotted. It
+   * builds each of its 19 tabs through `SettingsTabForm`, which declares one
+   * section and marks nothing required — so picking any tab showed the
+   * tab's name on a collapsed bar above ~450px of empty white. A settings
+   * page that renders none of its settings.
+   *
+   * Falling back to `undefined` hands the decision to the hook, whose default
+   * is "first section open". For a single-section form that means open, which
+   * is the only sensible state: collapsing exists to navigate AMONG sections,
+   * and a lone section has nothing to navigate.
+   *
+   * A form that genuinely wants everything shut can still pass its own state.
+   */
+  const defaultOpen = useMemo(() => {
+    const required = ordered.filter((s) => s.required).map((s) => s.id);
+    return required.length > 0 ? required : undefined;
+  }, [ordered]);
 
   /*
    * The open set is `useSectionState`, not a local `useState` — which is what
