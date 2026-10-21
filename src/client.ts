@@ -799,6 +799,18 @@ export type { OrderStatusTimelineProps } from "./features/orders/components/Orde
 /*
  * The buyer's completion surface. Client entry only — it fetches and posts.
  */
+/*
+ * Buyer-facing claim reason labels. A pure `Record<Reason, string>` — no
+ * firebase-admin anywhere in its chain, so it is client-safe.
+ *
+ * 🛑 CLIENT entry only, not also `index.ts`. The buyer's claim form is the only
+ * consumer and it is a `"use client"` module; adding it to the main barrel
+ * would widen the graph the build-weight work is unwinding for no reader. The
+ * admin queue reads the same map through `/server`, which already exports the
+ * schema module.
+ */
+export { PROTECTION_CLAIM_REASON_LABEL } from "./features/protection-claims/schemas/firestore";
+export type { ProtectionClaimReason } from "./features/protection-claims/schemas/firestore";
 export { OrderCompletionPanel } from "./features/orders/components/OrderCompletionPanel";
 export type { OrderCompletionPanelProps, RateableLine } from "./features/orders/components/OrderCompletionPanel";
 // Buyer-facing EMI schedule with a pay-any-instalment action.

@@ -204,6 +204,35 @@ export const ALL_PROTECTION_CLAIM_REASONS = Object.keys(
  * 7-day sale window after the 48-hour transit window had closed, which is the
  * window rule defeated by a dropdown.
  */
+/**
+ * Buyer-facing labels for the six claim reasons.
+ *
+ * Lives beside the enum rather than in the claim form, matching
+ * `RETURN_REASON_LABEL` and for the same stated reason: these strings appear in
+ * the buyer's form, the admin queue and the notification body, and three copies
+ * of them would drift. It is also the half of `PROTECTION_COPY` the plan
+ * records as missing — `protections.ts` owns the RULES and says its own
+ * `ProtectionUnavailableReason` "is rendered to the buyer, so it is copy",
+ * while every buyer string sat inline in `StoreAddonsPicker`.
+ *
+ * `Record<ProtectionClaimReason, string>`, so a seventh reason is a COMPILE
+ * error here rather than a radio option rendering `undefined`.
+ *
+ * 🛑 Phrased as what HAPPENED, never as what the buyer wants. The reason
+ * decides the cover kind through `REASON_TO_KIND`, so it is a statement of
+ * fact that a window is measured against — not a request. "It never arrived"
+ * is a transit failure; "I changed my mind" is not a claim at all and is
+ * deliberately absent from the union.
+ */
+export const PROTECTION_CLAIM_REASON_LABEL: Record<ProtectionClaimReason, string> = {
+  "not-delivered": "It never arrived",
+  "damaged-in-transit": "It arrived damaged",
+  "not-as-described": "It is not what the listing described",
+  counterfeit: "It is counterfeit or not authentic",
+  "missing-parts": "Parts are missing",
+  other: "Something else is wrong with the item",
+};
+
 export const REASON_TO_KIND: Record<ProtectionClaimReason, ProtectionKind> = {
   "not-delivered": "shipping",
   "damaged-in-transit": "shipping",

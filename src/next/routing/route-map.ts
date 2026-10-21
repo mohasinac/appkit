@@ -304,6 +304,12 @@ export const DEFAULT_ROUTE_MAP = {
     ORDER_CANCEL: (id: string) => `/user/orders/${id}/cancel`,
     ORDER_TRACK: (id: string) => `/user/orders/${id}/track`,
     ORDER_RETURN: (id: string) => `/user/orders/${id}/return`,
+    /*
+     * The buyer's protection claim. Its own route rather than a tab on the
+     * order page: the form is a decision with a required account of what
+     * happened, and the order page is already the densest surface in the app.
+     */
+    ORDER_CLAIM: (id: string) => `/user/orders/${id}/claim`,
     ORDER_INVOICE: (id: string) => `/user/orders/${id}/invoice`,
     ORDER_PAYMENT: (id: string) => `/user/orders/${id}/payment`,
     NOTIFICATIONS: "/user/notifications",
