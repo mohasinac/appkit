@@ -446,3 +446,116 @@ export const SELLER_BID_STATUS_TABS = [
   { id: "lost", label: "Lost" },
   { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
+
+// ============================================================================
+// PAYMENT PROTECTION — the four collections the money spine writes to
+//
+// All eight arrays below are registered in `audit-filter-tab-enums`, whose
+// COVERAGE check is what makes them worth having: a kind with no chip is a kind
+// an operator cannot isolate, and these are the queues where that costs money
+// rather than convenience (Root Cause #72).
+//
+// They are rendered in a filter PANEL, not an always-visible chip row — eleven
+// case kinds and twelve obligation kinds are a complete set, not a scannable
+// one, and `renderFilterPanel` is where a complete set belongs.
+// ============================================================================
+
+/** Admin > Money cases — `PaymentCaseStatus`. `open` is the birth state. */
+export const ADMIN_PAYMENT_CASE_STATUS_TABS = [
+  ALL_TAB,
+  { id: "open", label: "Open" },
+  { id: "under-review", label: "Under review" },
+  { id: "actioned", label: "Actioned" },
+  { id: "dismissed", label: "Dismissed" },
+] as const satisfies readonly AdminFilterTab[];
+
+/**
+ * Admin > Money cases — `PaymentCaseKind`, all eleven.
+ *
+ * Labels are what an operator recognises, not the field value: `missing_order`
+ * reads as "Captured, no order", which is what the problem IS. The ids stay
+ * byte-exact against the union because they go straight into a Sieve equality
+ * and a near-miss returns zero rows forever with no error (Root Cause #33).
+ */
+export const ADMIN_PAYMENT_CASE_KIND_TABS = [
+  ALL_TAB,
+  { id: "missing_order", label: "Captured, no order" },
+  { id: "dispute", label: "Chargeback" },
+  { id: "manual_refund_due", label: "Refund owed" },
+  { id: "refund_mismatch", label: "Refund mismatch" },
+  { id: "amount_mismatch", label: "Amount mismatch" },
+  { id: "unprocessed_event", label: "Unprocessed event" },
+  { id: "status_conflict", label: "Status conflict" },
+  { id: "protection_claim", label: "Protection claim" },
+  { id: "grievance", label: "Grievance" },
+  { id: "shipping_unpriced", label: "Shipping unpriced" },
+  { id: "dead_job", label: "Dead job" },
+] as const satisfies readonly AdminFilterTab[];
+
+/** Admin > Money cases — `PaymentCaseSeverity`. Escalate-only, never downgraded. */
+export const ADMIN_PAYMENT_CASE_SEVERITY_TABS = [
+  ALL_TAB,
+  { id: "error", label: "Error" },
+  { id: "warning", label: "Warning" },
+  { id: "info", label: "Info" },
+] as const satisfies readonly AdminFilterTab[];
+
+/**
+ * Admin > Gateway events — `GatewayEventStatus`.
+ *
+ * `ignored` is a real, healthy outcome and not a failure: an event type we are
+ * subscribed to but do not implement is recorded verbatim and settled
+ * `ignored`, which is the whole reason the inbox records unknown events rather
+ * than dropping them. `conflict` means a late event would have regressed an
+ * order's status — also not an error.
+ */
+export const ADMIN_GATEWAY_EVENT_STATUS_TABS = [
+  ALL_TAB,
+  { id: "received", label: "Received" },
+  { id: "processing", label: "Processing" },
+  { id: "processed", label: "Processed" },
+  { id: "failed", label: "Failed" },
+  { id: "conflict", label: "Late / conflict" },
+  { id: "ignored", label: "Ignored" },
+] as const satisfies readonly AdminFilterTab[];
+
+/** Admin > Gateway events — `GatewayEventKind`. */
+export const ADMIN_GATEWAY_EVENT_KIND_TABS = [
+  ALL_TAB,
+  { id: "paid", label: "Paid" },
+  { id: "failed", label: "Failed" },
+  { id: "refund", label: "Refund" },
+  { id: "dispute", label: "Dispute" },
+  { id: "other", label: "Other" },
+] as const satisfies readonly AdminFilterTab[];
+
+/*
+ * 🛑 NO obligation tab arrays, and the absence is deliberate.
+ *
+ * `ADMIN_OBLIGATION_STATE_TABS` and `ADMIN_OBLIGATION_KIND_TABS` were written
+ * here and removed before shipping, because `/admin/maintenance/obligations`
+ * does not filter:
+ *
+ *   · the page reads `obligationsRepository.listDue()`, which returns OPEN and
+ *     overdue rows by definition — so a state filter would offer five chips of
+ *     which exactly one can ever match anything;
+ *   · `ObligationsRepository` declares **no `SIEVE_FIELDS`**, on its own stated
+ *     reasoning that a filterable surface nothing calls is the speculative-infra
+ *     pattern. Adding one to feed chips nobody needs would be that pattern
+ *     twice over.
+ *
+ * Twelve chips with nothing behind them is exactly the dead control this file's
+ * COVERAGE note exists to prevent — it would just fail in the other direction.
+ */
+
+/** Admin > Protection claims — `ProtectionClaimStatus`. */
+export const ADMIN_PROTECTION_CLAIM_STATUS_TABS = [
+  ALL_TAB,
+  { id: "open", label: "Open" },
+  { id: "awaiting-return", label: "Awaiting return" },
+  { id: "inspecting", label: "Inspecting" },
+  { id: "upheld", label: "Upheld" },
+  { id: "rejected", label: "Rejected" },
+  { id: "withdrawn", label: "Withdrawn" },
+  { id: "expired", label: "Expired" },
+] as const satisfies readonly AdminFilterTab[];

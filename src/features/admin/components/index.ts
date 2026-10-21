@@ -116,6 +116,12 @@ export { AdminPayoutMarkPaidModal } from "./AdminPayoutMarkPaidModal";
 export type { AdminPayoutMarkPaidModalProps } from "./AdminPayoutMarkPaidModal";
 export { AdminAuditLogView } from "./AdminAuditLogView";
 export type { AdminAuditLogViewProps } from "./AdminAuditLogView";
+/*
+ * Payment protection — the operator queue for everything where money is at
+ * risk, and the first surface `paymentCases` has ever had.
+ */
+export { AdminMoneyCasesView } from "./AdminMoneyCasesView";
+export type { AdminMoneyCasesViewProps } from "./AdminMoneyCasesView";
 export { ViewAuditLogEntryModal } from "./ViewAuditLogEntryModal";
 export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./ViewAuditLogEntryModal";
 export { ViewNotificationModal } from "./ViewNotificationModal";

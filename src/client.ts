@@ -1217,6 +1217,7 @@ export {
   AdminOrderEditorView,
   AdminPayoutMarkPaidModal,
   AdminAuditLogView,
+  AdminMoneyCasesView,
   ViewAuditLogEntryModal,
   AdminProductEditorView,
   AdminScammerEditorView,
@@ -1230,7 +1231,7 @@ export {
   AdminSublistingCategoryEditorView,
   AdminSupportTicketDetailView,
 } from "./features/admin/index";
-export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
+export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AdminMoneyCasesViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
 // NavItemData — the whole nav record AdminNavEditorView takes (it has no
 // id-based loader), needed by the /admin/navigation page clients.
 export type { NavItemData } from "./features/admin/index";

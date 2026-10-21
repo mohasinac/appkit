@@ -555,6 +555,24 @@ export const DEFAULT_ROUTE_MAP = {
     PAYOUTS: "/admin/payouts",
     PAYOUT_DETAIL: (id: string) => `/admin/payouts/${id}/view`,
     AUDIT_LOG: "/admin/audit-log",
+    /*
+     * 🛑 MONEY_CASES is deliberately NOT under `/admin/maintenance/`.
+     *
+     * Maintenance means "something broke, look when you can" and is granted to
+     * `maintenance_employee`. A payment case can carry a gateway's own
+     * `respond_by`: miss it and the chargeback is lost by default whoever was
+     * right. Burying that beside Cloud Logs is how a deadline is missed, so it
+     * gets its own section and an admin-only permission.
+     *
+     * Gateway events and obligations DO belong under maintenance — they are
+     * diagnostics with no external clock, and the cases they produce are what
+     * carries urgency.
+     */
+    MONEY_CASES: "/admin/money-cases",
+    MONEY_CASE_DETAIL: (id: string) => `/admin/money-cases/${id}`,
+    PROTECTION_CLAIMS: "/admin/protection-claims",
+    MAINTENANCE_GATEWAY_EVENTS: "/admin/maintenance/gateway-events",
+    MAINTENANCE_OBLIGATIONS: "/admin/maintenance/obligations",
     EVENTS: "/admin/events",
     EVENTS_NEW: "/admin/events/new",
     EVENTS_EDIT: (id: string) => `/admin/events/${id}/edit`,

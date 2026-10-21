@@ -10141,24 +10141,6 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "severity",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "lastObservedAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "paymentCases",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
           "fieldPath": "dueAt",
           "order": "ASCENDING"
         }
@@ -10220,6 +10202,20 @@
         },
         {
           "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "paymentCases",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastObservedAt",
           "order": "DESCENDING"
         }
       ]

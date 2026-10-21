@@ -209,6 +209,17 @@ export const ADMIN_ENDPOINTS = {
   PAYOUTS_EXPORT: "/api/admin/payouts/export",
   AUDIT_LOG: "/api/admin/audit-log",
   AUDIT_LOG_BY_ID: (id: string) => `/api/admin/audit-log/${id}`,
+  /*
+   * Payment protection. `payment-cases` is NOT under `maintenance/` — see the
+   * route-map entry for why: maintenance means "something broke, look when you
+   * can", and a chargeback has a clock and real money.
+   */
+  PAYMENT_CASES: "/api/admin/payment-cases",
+  PAYMENT_CASE_BY_ID: (id: string) => `/api/admin/payment-cases/${id}`,
+  PROTECTION_CLAIMS: "/api/admin/protection-claims",
+  PROTECTION_CLAIM_BY_ID: (id: string) => `/api/admin/protection-claims/${id}`,
+  MAINTENANCE_GATEWAY_EVENTS: "/api/admin/maintenance/gateway-events",
+  MAINTENANCE_OBLIGATIONS: "/api/admin/maintenance/obligations",
   SHIPMENTS: "/api/admin/shipments",
   SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
   SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,

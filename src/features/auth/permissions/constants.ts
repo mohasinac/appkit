@@ -234,7 +234,27 @@ export type Permission =
   | "admin:maintenance:view-cloud-logs"
   | "admin:maintenance:view-payment-rollbacks"
   | "admin:maintenance:run-analysis"
-  | "admin:maintenance:purge-errors";
+  | "admin:maintenance:purge-errors"
+  | "admin:maintenance:view-gateway-events"
+  | "admin:maintenance:view-obligations"
+
+  /*
+   * Payment protection — the operator queues the money spine writes to.
+   *
+   * 🛑 These are NOT `admin:maintenance:*` and are NOT granted to
+   * `maintenance_employee`, deliberately. A payment case can carry a gateway's
+   * own `respond_by` and an `amountAtRisk`; a protection claim decides who
+   * absorbs a real loss. Maintenance is "something broke, look when you can",
+   * which is the wrong urgency and the wrong audience for both.
+   *
+   * Split read/write so a future analyst role can see the queue without being
+   * able to close a case — closing one is what asserts a human understood it,
+   * and `resolve()` refuses `resolvedBy: "system"` precisely to protect that.
+   */
+  | "admin:payment-cases:read"
+  | "admin:payment-cases:write"
+  | "admin:protection-claims:read"
+  | "admin:protection-claims:write";
 
 // ============================================================================
 // BANNED ACTION TYPE
@@ -558,6 +578,16 @@ export const PERMISSION_GROUPS: Record<
     "admin:maintenance:view-cloud-logs",
     "admin:maintenance:view-payment-rollbacks",
     "admin:maintenance:run-analysis",
+    /*
+     * The two new diagnostics surfaces DO belong to this role — a stuck
+     * gateway event and an overdue obligation are exactly what a maintenance
+     * employee should be able to look at.
+     *
+     * 🛑 `admin:payment-cases:*` and `admin:protection-claims:*` deliberately
+     * are NOT here. Those decide money and carry external deadlines.
+     */
+    "admin:maintenance:view-gateway-events",
+    "admin:maintenance:view-obligations",
   ],
 } as const;
 
@@ -627,6 +657,11 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/maintenance/cloud-logs": "admin:maintenance:view-cloud-logs",
   "/admin/maintenance/payment-rollbacks": "admin:maintenance:view-payment-rollbacks",
   "/admin/maintenance/analysis": "admin:maintenance:run-analysis",
+  "/admin/maintenance/gateway-events": "admin:maintenance:view-gateway-events",
+  "/admin/maintenance/obligations": "admin:maintenance:view-obligations",
+  // Payment protection — admin-only, see the permission union's own 🛑 note.
+  "/admin/money-cases": "admin:payment-cases:read",
+  "/admin/protection-claims": "admin:protection-claims:read",
 };
 
 // ============================================================================

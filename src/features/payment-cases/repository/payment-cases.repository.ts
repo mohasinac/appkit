@@ -283,15 +283,63 @@ export class PaymentCasesRepository extends BaseRepository<PaymentCaseDocument> 
       .update({ assignedTo, status: "under-review", updatedAt: now });
   }
 
-  /** Open + under-review, worst first, then oldest-observed first. */
+  /**
+   * Open + under-review, worst first, then most-recently-observed first.
+   *
+   * ## 🛑 `orderBy(SEVERITY)` IS THE BUG THIS FIXES — never put it back
+   *
+   * This read `.orderBy(SEVERITY, "desc").orderBy(LAST_OBSERVED_AT, "desc")`
+   * under the docstring "worst first". **It returned the opposite.** `severity`
+   * stores the STRINGS `error` / `warning` / `info`, and Firestore orders
+   * strings lexicographically — so `desc` yields **warning, info, error**, the
+   * most urgent cases last, in the one query whose whole job is to put them
+   * first. Nothing errored; the list was simply backwards.
+   *
+   * So the QUERY now selects its window by `lastObservedAt` — always written by
+   * `openOrObserve`, one index, no composite on an enum — and the ORDER is
+   * applied in memory from `PAYMENT_CASE_SEVERITY_RANK`, which already exists
+   * and is exact. A stored numeric rank would also work and is worse: a second
+   * representation of severity that can drift from the first.
+   *
+   * ## Why it SURVIVED, and what measuring corrected
+   *
+   * The order was wrong and harmless, because **neither consumer reads it** —
+   * `countActiveBySeverity` tallies and `activeGatewayEventIds` collects into a
+   * Set. Two of my own assumptions were false and are recorded so they are not
+   * re-assumed:
+   *
+   *   · *"the digest reads this"* — it does NOT. `dailyStatusDigest` runs three
+   *     `.count()` queries, one per severity, so it never ordered by severity
+   *     and was correct throughout.
+   *   · *"it has zero consumers, so delete it"* — it has TWO, both in this
+   *     file. A grep for `listActive()` with empty parentheses missed
+   *     `listActive(500)` twice, and deleting on that basis would have broken
+   *     the digest's counts and the gateway-event retention exclusion.
+   *
+   * 🛑 The order DOES still matter to those two, via the WINDOW: at >500 active
+   * cases, a severity-ordered window filled with alphabetically-first
+   * `warning`s would have cut `error`s out of the count entirely. Theoretical
+   * at this volume, real in principle, and fixed by the same change.
+   *
+   * `/admin/money-cases` deliberately does NOT use this — `DataListingView`
+   * needs pagination, filters and a sort dropdown, so it goes through the Sieve
+   * `list()` below. That view's `sortOptions` carries the matching 🛑 about why
+   * it offers no severity sort: same arithmetic, found at the same time.
+   */
   async listActive(limit = 100): Promise<PaymentCaseDocument[]> {
     const snap = await this.getCollection()
       .where(PAYMENT_CASE_FIELDS.STATUS, "in", [...PAYMENT_CASE_ACTIVE_STATUSES])
-      .orderBy(PAYMENT_CASE_FIELDS.SEVERITY, "desc")
       .orderBy(PAYMENT_CASE_FIELDS.LAST_OBSERVED_AT, "desc")
       .limit(limit)
       .get();
-    return snap.docs.map((d) => this.mapDoc<PaymentCaseDocument>(d));
+    const rows = snap.docs.map((d) => this.mapDoc<PaymentCaseDocument>(d));
+    return rows.sort((a, b) => {
+      const bySeverity =
+        (PAYMENT_CASE_SEVERITY_RANK[b.severity] ?? 0) -
+        (PAYMENT_CASE_SEVERITY_RANK[a.severity] ?? 0);
+      if (bySeverity !== 0) return bySeverity;
+      return b.lastObservedAt.getTime() - a.lastObservedAt.getTime();
+    });
   }
 
   /**
@@ -317,7 +365,20 @@ export class PaymentCasesRepository extends BaseRepository<PaymentCaseDocument> 
     return snap.docs.map((d) => this.mapDoc<PaymentCaseDocument>(d));
   }
 
-  /** Counts by severity over active cases — what the daily digest prints. */
+  /**
+   * Counts by severity over active cases.
+   *
+   * 🛑 Its docstring said *"what the daily digest prints"* and that is FALSE,
+   * measured 2026-10-21: `dailyStatusDigest` runs its own three `.count()`
+   * aggregations against the collection directly — deliberately, because that
+   * file is reachable from the Functions bundle and avoids the repository. So
+   * this method currently has no caller, and the digest does not depend on it.
+   *
+   * Kept rather than deleted because `activeGatewayEventIds` beside it is live
+   * and shares `listActive`, so the pair earns its keep — but do not "wire the
+   * digest to it" on the strength of the old comment: three `.count()`s are
+   * cheaper than paging 500 documents to tally them.
+   */
   async countActiveBySeverity(): Promise<Record<PaymentCaseSeverity, number>> {
     const rows = await this.listActive(500);
     const out: Record<PaymentCaseSeverity, number> = { info: 0, warning: 0, error: 0 };
