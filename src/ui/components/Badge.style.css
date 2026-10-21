@@ -68,7 +68,7 @@
 .appkit-badge--secondary {
   background: var(--appkit-color-secondary-50);
   color: var(--appkit-color-secondary-700);
-  border-color: rgba(101, 196, 8, 0.25);
+  border-color: color-mix(in srgb, var(--appkit-color-secondary) 25%, transparent);
 }
 
 .dark .appkit-badge--active,

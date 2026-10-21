@@ -10,7 +10,7 @@
 
 .appkit-icon-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.2);
+  box-shadow: var(--appkit-focus-ring-compact);
 }
 
 .appkit-icon-button:disabled {

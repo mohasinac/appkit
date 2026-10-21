@@ -168,15 +168,15 @@
 }
 
 .appkit-data-table__view-btn--active {
-  background: rgba(80, 156, 2, 0.05);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 5%, transparent);
   color: var(--appkit-color-secondary-600);
-  box-shadow: inset 0 0 0 1px rgba(80, 156, 2, 0.3);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--appkit-color-secondary) 30%, transparent);
 }
 
 :is(.dark) .appkit-data-table__view-btn--active {
-  background: rgba(233, 30, 140, 0.1);
+  background: color-mix(in srgb, var(--appkit-color-primary) 10%, transparent);
   color: var(--appkit-color-primary);
-  box-shadow: inset 0 0 0 1px rgba(233, 30, 140, 0.3);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--appkit-color-primary) 30%, transparent);
 }
 
 .appkit-data-table__mobile-cards {

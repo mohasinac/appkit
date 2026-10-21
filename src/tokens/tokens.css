@@ -335,6 +335,41 @@
   --appkit-color-info-on-solid:    #ffffff;
 
   --appkit-color-focus-ring:       #0d9488;    /* primary-600 = teal */
+
+  /* --- The focus ring, in ONE place ----------------------------------------
+   *
+   * 🛑 `--appkit-color-focus-ring` HAD NO READER. It is declared by all four
+   * built-in themes, listed in `required.ts`, and surfaced as an editable
+   * swatch in the admin Theme Manager — and not one stylesheet consumed it.
+   * Every ring in the product was a hardcoded `rgba()` of the brand RETIRED
+   * on 2026-08-17: lime green `rgba(101, 196, 8, …)` in 9 primitives and hot
+   * pink `rgba(233, 30, 140, …)` in 6. So an admin could pick a focus colour
+   * and change nothing, while every focused control showed a dead brand.
+   *
+   * Three tokens because the primitives use three genuinely different ring
+   * SHAPES, and the shapes are kept byte-for-byte as they were — only the
+   * colour is re-pointed, so this carries no visual risk beyond the hue:
+   *
+   *   -ring      text fields (Input, Select, Textarea): 3px + a 1px inset
+   *   -compact   buttons (Button, IconButton, TagInput): a flat 2px
+   *   -halo      Checkbox / Radio / Toggle: 2px, then a 4px surface-coloured
+   *              gap so the ring reads against the control it is hugging
+   *
+   * They resolve `--appkit-color-focus-ring` at USE time, so each theme's own
+   * value applies automatically and every `.dark` focus override in the
+   * primitives becomes dead weight — which is the structural half of the fix:
+   * light and dark can no longer disagree, because there is only one value.
+   *
+   * `color-mix` unguarded, matching `--appkit-gradient-glass` above and
+   * `--glow-color` in globals.css. */
+  --appkit-focus-ring:
+    0 0 0 3px color-mix(in srgb, var(--appkit-color-focus-ring) 25%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--appkit-color-focus-ring) 15%, transparent);
+  --appkit-focus-ring-compact:
+    0 0 0 2px color-mix(in srgb, var(--appkit-color-focus-ring) 20%, transparent);
+  --appkit-focus-ring-halo:
+    0 0 0 2px color-mix(in srgb, var(--appkit-color-focus-ring) 30%, transparent),
+    0 0 0 4px var(--appkit-color-surface);
 }
 
 /* --- Gradients — default-light defaults (overridden at runtime by ThemeProvider) - */

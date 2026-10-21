@@ -21,7 +21,7 @@
 
 .appkit-toggle__track:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px var(--appkit-color-surface);
+  box-shadow: var(--appkit-focus-ring-halo);
 }
 
 .appkit-toggle__track--off {

@@ -22,8 +22,8 @@
 
 .appkit-textarea:focus-visible {
   outline: none;
-  border-color: var(--appkit-color-secondary);
-  box-shadow: 0 0 0 3px rgba(101, 196, 8, 0.25), inset 0 0 0 1px rgba(101, 196, 8, 0.15);
+  border-color: var(--appkit-color-focus-ring);
+  box-shadow: var(--appkit-focus-ring);
 }
 
 .appkit-textarea:disabled {
@@ -45,11 +45,6 @@
 
 .dark .appkit-textarea:hover:not(:disabled):not(:focus-visible) {
   border-color: var(--appkit-color-slate-500);
-}
-
-.dark .appkit-textarea:focus-visible {
-  border-color: var(--appkit-color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.25), inset 0 0 0 1px rgba(233, 30, 140, 0.15);
 }
 
 .dark .appkit-textarea:disabled {

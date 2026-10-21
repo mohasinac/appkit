@@ -15,8 +15,8 @@
 
 .appkit-view-toggle__button--active {
   color: var(--appkit-color-secondary-600);
-  background: rgba(80, 156, 2, 0.08);
-  border-color: rgba(80, 156, 2, 0.3);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 8%, transparent);
+  border-color: color-mix(in srgb, var(--appkit-color-secondary) 30%, transparent);
 }
 
 .appkit-view-toggle__button--inactive {
@@ -36,8 +36,8 @@
 
 .dark .appkit-view-toggle__button--active {
   color: var(--appkit-color-primary);
-  background: rgba(233, 30, 140, 0.14);
-  border-color: rgba(233, 30, 140, 0.35);
+  background: color-mix(in srgb, var(--appkit-color-primary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 35%, transparent);
 }
 
 .dark .appkit-view-toggle__button--inactive {

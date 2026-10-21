@@ -26,8 +26,8 @@
 }
 
 .appkit-tag-input__field:focus-within {
-  border-color: var(--appkit-color-secondary-600);
-  box-shadow: 0 0 0 2px rgba(80, 156, 2, 0.2);
+  border-color: var(--appkit-color-focus-ring);
+  box-shadow: var(--appkit-focus-ring-compact);
 }
 
 .appkit-tag-input__field--disabled {
@@ -40,7 +40,7 @@
   align-items: center;
   gap: 0.25rem;
   border-radius: 9999px;
-  background: rgba(80, 156, 2, 0.1);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 10%, transparent);
   padding: 0.125rem 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
@@ -90,13 +90,8 @@
   background: var(--appkit-color-surface);
 }
 
-.dark .appkit-tag-input__field:focus-within {
-  border-color: var(--appkit-color-primary);
-  box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.2);
-}
-
 .dark .appkit-tag-input__tag {
-  background: rgba(233, 30, 140, 0.15);
+  background: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
   color: var(--appkit-color-primary-300);
 }
 

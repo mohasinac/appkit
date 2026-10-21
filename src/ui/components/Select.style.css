@@ -42,13 +42,8 @@
 
 .appkit-select__trigger--default:focus-visible {
   outline: none;
-  border-color: var(--appkit-color-secondary);
-  box-shadow: 0 0 0 3px rgba(101, 196, 8, 0.25), inset 0 0 0 1px rgba(101, 196, 8, 0.15);
-}
-
-.dark .appkit-select__trigger--default:focus-visible {
-  border-color: var(--appkit-color-primary);
-  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.25), inset 0 0 0 1px rgba(233, 30, 140, 0.15);
+  border-color: var(--appkit-color-focus-ring);
+  box-shadow: var(--appkit-focus-ring);
 }
 
 .appkit-select__trigger--error {
@@ -174,7 +169,7 @@
 }
 
 .dark .appkit-select__option--selected {
-  background: rgba(233, 30, 140, 0.15);
+  background: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
   color: var(--appkit-color-primary-300);
 }
 

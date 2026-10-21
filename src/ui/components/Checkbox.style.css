@@ -50,7 +50,7 @@
 }
 .appkit-checkbox__input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px var(--appkit-color-surface);
+  box-shadow: var(--appkit-focus-ring-halo);
 }
 .appkit-checkbox__input:not(:disabled):hover {
   border-color: var(--appkit-color-secondary);

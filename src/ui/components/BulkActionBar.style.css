@@ -2,7 +2,7 @@
   position: relative;
   border-radius: 0.5rem;
   overflow: hidden;
-  border: 1px solid rgba(80, 156, 2, 0.2);
+  border: 1px solid color-mix(in srgb, var(--appkit-color-secondary) 20%, transparent);
   animation: appkit-slide-in 150ms ease;
 }
 
@@ -34,14 +34,14 @@
   height: 2rem;
   padding: 0 0.75rem 0 0.5rem;
   border-radius: 9999px;
-  border: 1px solid rgba(80, 156, 2, 0.3);
-  background: rgba(80, 156, 2, 0.07);
+  border: 1px solid color-mix(in srgb, var(--appkit-color-secondary) 30%, transparent);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 7%, transparent);
   color: var(--appkit-color-secondary-700);
   transition: background-color 0.15s ease;
 }
 
 .appkit-bulk-bar__count-pill:hover {
-  background: rgba(80, 156, 2, 0.14);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 14%, transparent);
 }
 
 .appkit-bulk-bar__count-icon {
