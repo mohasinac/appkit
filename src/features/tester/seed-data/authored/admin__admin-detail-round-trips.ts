@@ -37,7 +37,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Restore the description by deleting the word you appended, then save again. coupons is SEED_OWNED so a reseed would fix it either way, but a run does not reseed — three earlier runs left this text reading 'roundtrip roundtrip roundtrip', and a later case reading this description would be reading what this one wrote.",
       "Note the editor keeps Limits and Validity in COLLAPSIBLE sections. After the reload they are closed, so their fields are absent from the page rather than empty — read those four numbers off the coupon card in the list, which renders them directly, or expand the sections again before judging.",
     ],
-    inputs: { couponCode: "ARENA25", descriptionSuffix: "roundtrip" },
+    inputs: { couponCode: "CASHBACK10", descriptionSuffix: "roundtrip" },
     expectedBehaviour:
       "Editing one field writes that field and leaves the rest as they were. A handler that merges a partial validity or restrictions object wholesale wipes whatever the caller did not resend — and a handler that never calls the repository at all returns a 200 that echoes the submission back, which is indistinguishable from a save.",
     expectedUiState:

@@ -14,76 +14,25 @@
  */
 
 import type { ClaimedCouponDocument } from "../features/promotions/schemas";
-import { createClaimedCouponId } from "../features/promotions/schemas";
 
-const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
+/* `NOW` / date helpers and the id factory were dropped with the fixtures that
+ * used them; re-add them alongside any fixture that returns. */
 
 export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
-  // Active — won from a spin wheel, expires in 14 days
-  {
-    id: createClaimedCouponId("user-yugi-muto", "REHAN10"),
-    userId: "user-yugi-muto",
-    couponId: "coupon-rehan10",
-    couponCode: "REHAN10",
-    source: "spin",
-    couponSnapshot: {
-      name: "Rehan's Welcome 10% Off",
-      description: "10% off your first order on LetItRip.",
-      type: "percentage",
-      scope: "admin",
-      discount: { value: 10, maxDiscount: 500, minPurchase: 999 },
-      restrictions: { firstTimeUserOnly: true },
-    },
-    status: "active",
-    expiresAt: daysAhead(14),
-    claimedAt: daysAgo(2),
-    createdAt: daysAgo(2),
-    updatedAt: daysAgo(2),
-  },
-  // Expired — manually claimed 30 days ago, no purchase made
-  {
-    id: createClaimedCouponId("user-yugi-muto", "BLADER50"),
-    userId: "user-yugi-muto",
-    couponId: "coupon-blader50",
-    couponCode: "BLADER50",
-    source: "manual",
-    couponSnapshot: {
-      name: "Blader's Power ₹500 Off",
-      description: "₹500 flat discount on orders above ₹5,000.",
-      type: "fixed",
-      scope: "admin",
-      discount: { value: 500, minPurchase: 5000 },
-      restrictions: { firstTimeUserOnly: false },
-    },
-    status: "expired",
-    expiresAt: daysAgo(5),
-    claimedAt: daysAgo(45),
-    createdAt: daysAgo(45),
-    updatedAt: daysAgo(5),
-  },
-  // Used — applied to a prior order
-  {
-    id: createClaimedCouponId("user-yugi-muto", "FREESHIP499"),
-    userId: "user-yugi-muto",
-    couponId: "coupon-freeship499",
-    couponCode: "FREESHIP499",
-    source: "manual",
-    couponSnapshot: {
-      name: "Free Shipping Over ₹499",
-      description: "Free shipping on orders above ₹499.",
-      type: "free_shipping",
-      scope: "admin",
-      discount: { value: 0, minPurchase: 499 },
-      restrictions: { firstTimeUserOnly: false },
-    },
-    status: "used",
-    expiresAt: daysAhead(60),
-    usedAt: daysAgo(10),
-    usedOrderId: "order-3-20260508-a1b2c3",
-    claimedAt: daysAgo(20),
-    createdAt: daysAgo(20),
-    updatedAt: daysAgo(10),
-  },
+  /*
+   * 🛑 EMPTIED 2026-10-21. All three rows were Rehan's wallet — REHAN10
+   * (spin), BLADER50 (expired) and FREESHIP499 (used) — and none of those
+   * coupons survived the purge that left CASHBACK10 as the only code.
+   *
+   * Repointing them at CASHBACK10 would be wrong three ways at once: it is a
+   * Diwali offer that has not opened, so there is nothing to have claimed;
+   * its `perUserLimit` is 1, so a "used" row would consume the only use that
+   * account has; and the Expired tab needs a coupon whose window has CLOSED,
+   * which CASHBACK10's has not.
+   *
+   * 🛑 The Active / Expired / Used tabs on /user/coupons therefore have no
+   * fixture and render empty. That is a real loss of coverage, stated rather
+   * than papered over — restoring it needs a second coupon with a past
+   * validity window, not an edit to this file alone.
+   */
 ];

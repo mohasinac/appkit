@@ -104,10 +104,15 @@ const _raweventsSeedData: EventDocument[] = [
     endsAt: daysAhead(7),
     coverImage: { type: "image", url: seedPhoto("event-cover-original-clearance-20260101", 1200, 600), alt: "Original series Beyblade clearance sale" },
     tags: ["sale", "clearance", "original-series", "singles"],
+    /*
+     * 🛑 NO `couponCode`. It advertised TOURNAMENT2026, which was removed in
+     * the 2026-10-21 coupon purge. A sale event does not need a code — the
+     * discount is applied by category — and pointing it at CASHBACK10 would
+     * be worse: a 20% clearance banner handing out a 10% cashback code.
+     */
     saleConfig: {
       discountPercent: 20,
       applicableCategories: ["category-beyblade-original"],
-      couponCode: "TOURNAMENT2026",
     },
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",
@@ -150,7 +155,11 @@ const _raweventsSeedData: EventDocument[] = [
     coverImage: { type: "image", url: seedPhoto("event-cover-daily-pull-wheel-20260101", 1200, 600), alt: "Spin wheel prize wheel" },
     tags: ["spin-wheel", "daily", "prizes", "coupons"],
     spinPrizes: [
-      { id: "spin-10pct", label: "10% Off Coupon", couponId: "coupon-rehan10", weight: 15, isActive: true },
+      // 🛑 No `couponId`: coupon-rehan10 was removed in the 2026-10-21 purge.
+      // A prize naming a coupon that does not exist mints nothing on a win and
+      // the spinner is told they won it. `spin-5pct` beside it has always
+      // been label-only, so this shape is already supported.
+      { id: "spin-10pct", label: "10% Off Coupon", weight: 15, isActive: true },
       { id: "spin-5pct", label: "5% Off Coupon", weight: 25, isActive: true },
       { id: "spin-grip", label: "Free Launcher Grip Tape", weight: 10, isActive: true },
       { id: "spin-try-again", label: "Try Again Tomorrow!", weight: 50, isActive: true },
@@ -193,28 +202,23 @@ const _raweventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(2),
   } as EventDocument,
 
-  // ── 7. ACTIVE — Offer: Buy 3 Beyblades, Get 10% Off ──────────────────────
-  {
-    id: "event-buy-3-get-1-beyblades",
-    slug: "buy-3-get-1-beyblades",
-    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Buy 3 Beyblades, Get 10% Off",
-    description: "Buy any 3 beyblades from Beyblade Arena and get 10% off the total. Applies to original, metal, burst, and X series.",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(1),
-    endsAt: daysAhead(20),
-    coverImage: { type: "image", url: seedPhoto("event-cover-buy3get1-20260101", 1200, 600), alt: "Buy 3 beyblades, get 10% off offer" },
-    tags: ["offer", "buy-3-get-10-percent", "singles"],
-    offerConfig: {
-      couponId: "coupon-buynow10",
-      displayCode: "BUYNOW10",
-      bannerText: "Buy any 3 beyblades from Beyblade Arena and get 10% off the total!",
-    },
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
-    createdBy: "user-admin-letitrip",
-    createdAt: daysAgo(2),
-    updatedAt: daysAgo(1),
-  } as EventDocument,
+  /*
+   * ── REMOVED 2026-10-21: "Buy 3 Beyblades, Get 10% Off" ─────────────────
+   *
+   * 🛑 Deleted rather than repointed. It was an `offer` event whose whole
+   * substance was `offerConfig.displayCode: "BUYNOW10"` — and BUYNOW10 went
+   * in the coupon purge that left CASHBACK10 as the only code.
+   *
+   * The two alternatives were both worse. Dropping just the `offerConfig`
+   * leaves an offer event with nothing to offer: `events/[id]/page.tsx`
+   * mounts `<EventOfferCard>` only when `type === "offer"` AND a
+   * `displayCode` exists, so the page would render a title and no offer.
+   * Repointing it at CASHBACK10 would advertise a Diwali cashback code
+   * under a "buy 3, get 10% off" headline — two different promotions.
+   *
+   * It also named `store-beyblade-arena`, which is not in the live
+   * catalogue, so the offer could not have been honoured anyway.
+   */
 
   // ── 8. ENDED — Raffle: Won Complete Original Series Set (drawn) ─────────
   {
@@ -306,7 +310,7 @@ const _raweventsSeedData: EventDocument[] = [
     title: "Beyblade Slot Raffle — Coming Soon",
     description: "<p>10 rare beyblade slots up for grabs. Details coming soon!</p>",
     status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
-    startsAt: daysAhead(7),
+    startsAt: daysAhead(16),
     endsAt: daysAhead(14),
     coverImage: { type: "image", url: seedPhoto("event-cover-beyblade-slot-raffle-20260101", 1200, 600), alt: "Beyblade Slot Raffle" },
     tags: ["lottery", "beyblade", "prizes"],
@@ -404,29 +408,31 @@ const _raweventsSeedData: EventDocument[] = [
     id: "event-festive-cashback-10",
     slug: "festive-cashback-10",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Coming Soon: 10% Cashback on Every Order",
+    title: "Diwali Cashback: 10% Back on Every Order",
     description:
-      `<p><strong>Our biggest cashback event of the year opens in a week.</strong></p>` +
-      `<p>Spend ₹999 or more and get <strong>10% of your order value back</strong>, up to ₹1,000. It applies right across the catalogue — Beyblade X tops, spares, stickers and bundles alike.</p>` +
-      `<img src="${editorialImage("event-content-cashback-10")}" alt="Indian rupee banknotes" />` +
+      `<p><strong>Our Diwali sale opens on Dhanteras — Friday 6 November — and runs through the festival.</strong></p>` +
+      `<p>Spend ₹999 or more and get <strong>10% of your order value back</strong>, up to ₹1,000. It applies right across the catalogue — Beyblade X tops, spares, sticker sheets and bundles alike.</p>` +
+      `<img src="${editorialImage("event-content-cashback-10")}" alt="Fireworks over a city skyline at night" />` +
       `<h2>How it works</h2>` +
       `<ol><li>Copy the code <strong>CASHBACK10</strong> below.</li>` +
-      `<li>Paste it at checkout once the event opens.</li>` +
+      `<li>Paste it at checkout from Dhanteras onwards.</li>` +
       `<li>Cashback is credited to your wallet within 24 hours of delivery.</li></ol>` +
-      `<p><em>The code is published now so you can save it. It becomes spendable when the event opens — one use per account, up to ₹1,000 back.</em></p>`,
+      `<h2>Dates</h2>` +
+      `<p>Dhanteras falls on Friday 6 November 2026 and Diwali itself on Sunday 8 November. The code stays live until 16 November, so there is a week after Bhai Dooj to use it.</p>` +
+      `<p><em>The code is published now so you can save it ahead of time. It becomes spendable when the sale opens — one use per account, up to ₹1,000 back.</em></p>`,
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAhead(7),
-    endsAt: daysAhead(37),
+    endsAt: daysAhead(26),
     coverImage: {
       type: "image",
       url: editorialImage("event-cover-cashback-10"),
-      alt: "Indian rupee banknotes",
+      alt: "Fireworks over a city skyline at night",
     },
-    tags: ["offer", "cashback", "coming-soon", "festive"],
+    tags: ["offer", "cashback", "diwali", "festive", "coming-soon"],
     offerConfig: {
       couponId: "coupon-cashback10",
       displayCode: "CASHBACK10",
-      bannerText: "10% back on orders above ₹999, up to ₹1,000. One use per account.",
+      bannerText: "Diwali: 10% back on orders above ₹999, up to ₹1,000. One use per account.",
     },
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",
@@ -505,7 +511,6 @@ export const eventEntriesSeedData: EventEntryPlain[] = [
     spinUsed: true,
     spinCount: 1,
     spinPrizeId: "spin-10pct",
-    spinPrizeCouponCode: "REHAN10",
     spinWonAt: daysAgo(1),
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(1),

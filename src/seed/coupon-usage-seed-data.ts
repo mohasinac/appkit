@@ -14,8 +14,8 @@
  * @tag sideEffects:none
  */
 
-const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+/* `NOW` / date helpers and the id factory were dropped with the fixtures that
+ * used them; re-add them alongside any fixture that returns. */
 
 export interface CouponUsageSeedRecord {
   userId: string;
@@ -27,43 +27,18 @@ export interface CouponUsageSeedRecord {
 }
 
 export const couponUsageSeedData: CouponUsageSeedRecord[] = [
-  // Rehan used REHAN10 once (perUserLimit: 1 → exhausted)
-  {
-    userId: "user-yugi-muto",
-    couponId: "coupon-rehan10",
-    couponCode: "REHAN10",
-    usageCount: 1,
-    lastUsedAt: daysAgo(45),
-    orders: ["order-2-20260325-a1b2c3"],
-  },
-
-  // Rehan used FREESHIP499 once (no perUserLimit)
-  {
-    userId: "user-yugi-muto",
-    couponId: "coupon-freeship499",
-    couponCode: "FREESHIP499",
-    usageCount: 1,
-    lastUsedAt: daysAgo(20),
-    orders: ["order-1-20260410-j1k2l3"],
-  },
-
-  // Vivaan used ARENA25 once (perUserLimit: 2 → one more use left)
-  {
-    userId: "user-seto-kaiba",
-    couponId: "coupon-arena25",
-    couponCode: "ARENA25",
-    usageCount: 1,
-    lastUsedAt: daysAgo(15),
-    orders: ["order-1-20260425-p7q8r9"],
-  },
-
-  // Admin used BLADER50 once (perUserLimit: 1 → exhausted)
-  {
-    userId: "user-admin-letitrip",
-    couponId: "coupon-blader50",
-    couponCode: "BLADER50",
-    usageCount: 1,
-    lastUsedAt: daysAgo(10),
-    orders: ["order-1-20260430-g7h8i9"],
-  },
+  /*
+   * 🛑 EMPTIED 2026-10-21. Every row here recorded usage of a coupon that no
+   * longer exists — REHAN10, FREESHIP499, ARENA25, BLADER50 — after the purge
+   * that left CASHBACK10 as the only code.
+   *
+   * Repointing them at CASHBACK10 was the obvious move and is wrong: a row
+   * here asserts a named user has ALREADY SPENT that code, and CASHBACK10 is
+   * a Diwali offer that has not opened. `getUserCouponUsageCount` reads these
+   * to enforce `perUserLimit`, which is 1 — so a fabricated row would
+   * silently consume the single use that account gets, and the buyer would be
+   * refused at checkout with no way to see why.
+   *
+   * Empty is the honest state until there is a second coupon to spend.
+   */
 ];
