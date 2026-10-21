@@ -11,28 +11,22 @@
 
 import React from "react";
 import Link from "next/link";
-import { Badge, Div, GatedPrice, Grid, Heading, PricesOnly, Row, Section, Stack, Text } from "../../../ui";
-import { MediaImage } from "../../media/MediaImage";
+/*
+ * 🛑 The import list shrank with the card. Badge, GatedPrice, PricesOnly,
+ * MediaImage, Div, formatCurrency, BUNDLE_STOCK_VARIANT,
+ * computeBundleDiscount, the two className constants and the placeholder
+ * emoji were ALL only reachable from the deleted `FeaturedBundleCard`.
+ * `tsc` does not flag an unused import, so leaving them would have kept a
+ * card's worth of dependencies on a file that no longer draws a card — and
+ * `MarketplaceBundleCard` owns every one of those concerns now.
+ */
+import { Grid, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
-import { formatCurrency } from "../../../utils/number.formatter";
-import {
-  BUNDLE_COPY,
-  BUNDLE_STOCK_VARIANT,
-} from "../../../_internal/shared/features/categories/bundle-copy";
-import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
+import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import { MarketplaceBundleCard } from "../../products/components/MarketplaceBundleCard";
+import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 import { useHandMode } from "../../../_internal/client/hand-mode";
 import type { CategoryDocument } from "../../categories/schemas";
-import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
-
-const __P = {
-  p3: "p-[var(--appkit-space-3)]",
-} as const;
-
-const __O = {
-  hidden: "overflow-hidden",
-} as const;
-
-const PLACEHOLDER_EMOJI = "📦" as const;
 
 export interface FeaturedBundlesSectionProps {
   title?: string;
@@ -88,14 +82,43 @@ export function FeaturedBundlesSection({
           </Link>
         </Row>
 
+        {/*
+          🛑 THE SAME CARD `/bundles` USES, not a homepage-only one.
+
+          This section rendered a bespoke `FeaturedBundleCard` whose hero was
+          `bundle.display?.coverImage` and nothing else — the CATEGORY row's
+          own cover, which for every seeded bundle is a generic placeholder.
+          So the homepage advertised bundles as flat placeholder tiles while
+          `/bundles` showed what is actually in them.
+
+          `MarketplaceBundleCard` renders the CONTENTS first — a collage built
+          from `bundleItemDetails`, with a `+N` overflow tile — and falls back
+          to the cover only when there are fewer than two member images. That
+          ordering is the documented rule: every bundle also carries a generic
+          cover, so a card that tests the cover first never shows the collage.
+
+          It needs no new data. Its prop type is a `Pick<CategoryDocument, …>`
+          and this section is already handed full `CategoryDocument`s.
+        */}
         <Grid cols="cards" gap="3">
           {items.map((bundle) => (
-            <FeaturedBundleCard
-              key={bundle.id}
-              bundle={bundle}
-              showSavingsBadge={showSavingsBadge}
-              onBuyNow={onBuyNow}
-            />
+            <Stack key={bundle.id}>
+              <MarketplaceBundleCard bundle={bundle} />
+              {/*
+                The Buy-Now CTA stays a sibling, exactly as
+                `CategoryBundlesListing` mounts it on /bundles — the card is a
+                link to the detail page and a button nested in an anchor is
+                invalid HTML.
+              */}
+              {onBuyNow && (
+                <BundleBuyNowCta
+                  bundleSlug={bundle.slug}
+                  outOfStock={bundle.bundleStockStatus === "out_of_stock"}
+                  onBuyNow={onBuyNow}
+                  compact
+                />
+              )}
+            </Stack>
           ))}
         </Grid>
       </Stack>
@@ -103,91 +126,12 @@ export function FeaturedBundlesSection({
   );
 }
 
-interface FeaturedBundleCardProps {
-  bundle: CategoryDocument;
-  showSavingsBadge?: boolean;
-  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
-}
 
-function FeaturedBundleCard({
-  bundle,
-  showSavingsBadge = true,
-  onBuyNow,
-}: FeaturedBundleCardProps) {
-  const stock = bundle.bundleStockStatus ?? "in_stock";
-  const memberCount = bundle.bundleProductIds?.length ?? 0;
-  const cover = bundle.display?.coverImage;
-  const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
-  const discount = computeBundleDiscount(bundle.bundlePrice, bundle.bundleOriginalTotal);
-
-  return (
-    <Stack
-      gap="none" surface="default" rounded="xl" border="default"
-    >
-      <Link href={href} className="group block p-[var(--appkit-space-3)] hover:no-underline">
-        <Div className={`relative mb-2 aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
-          {cover ? (
-            <MediaImage
-              src={cover}
-              alt={bundle.name}
-              size="card"
-              className="transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <Row textSize="3xl" className="h-full w-full" align="center" justify="center">
-              {PLACEHOLDER_EMOJI}
-            </Row>
-          )}
-          {/*
-            PricesOnly, for the same reason the struck-through original total
-            below carries it: a discount percentage is a secondary money detail
-            beside an already-gated price. `showSavingsBadge` is a layout prop
-            that defaults to true and says nothing about who may see prices.
-          */}
-          {showSavingsBadge && discount && (
-            <PricesOnly>
-              <Badge variant="success" className="absolute left-2 top-2">
-                {BUNDLE_COPY.detail.discountBadge(discount.percent)}
-              </Badge>
-            </PricesOnly>
-          )}
-        </Div>
-        <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
-        <Row gap="sm" align="center" className="mt-1" wrap>
-          <Text size="sm" weight="bold">
-            <GatedPrice label="Sign in to see the bundle price">
-              {bundle.bundlePrice
-                ? formatCurrency(bundle.bundlePrice, "INR")
-                : BUNDLE_COPY.featured.priceFallback}
-            </GatedPrice>
-          </Text>
-          {discount && (
-            <PricesOnly>
-              <Text size="xs" color="muted" className="line-through">
-                {formatCurrency(discount.originalTotal, "INR")}
-              </Text>
-            </PricesOnly>
-          )}
-          <Text size="xs" color="muted">
-            · {BUNDLE_COPY.featured.itemCount(memberCount)}
-          </Text>
-          {stock !== "in_stock" && (
-            <Badge variant={BUNDLE_STOCK_VARIANT[stock]}>
-              {BUNDLE_COPY.stockBadge.listVariantOutOfStock}
-            </Badge>
-          )}
-        </Row>
-      </Link>
-      {onBuyNow && (
-        <Div border="subtle" className={`border-t ${__P.p3}`} padding="t-xs">
-          <BundleBuyNowCta
-            bundleSlug={bundle.slug}
-            outOfStock={stock === "out_of_stock"}
-            onBuyNow={onBuyNow}
-            compact
-          />
-        </Div>
-      )}
-    </Stack>
-  );
-}
+/*
+ * The bespoke `FeaturedBundleCard` that used to live here is DELETED, not
+ * left sitting beside its replacement. It rendered `display.coverImage` and
+ * nothing else, so the homepage showed a generic placeholder where /bundles
+ * showed what is actually in the bundle — two surfaces disagreeing about
+ * what a bundle looks like. Keeping a second card around is how they came
+ * to disagree in the first place.
+ */
