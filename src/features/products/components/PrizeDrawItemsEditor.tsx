@@ -295,6 +295,7 @@ export function PrizeDrawItemsEditor({
                     <Text size="sm" weight="medium">Video (optional)</Text>
                     <Input
                       bare
+                      aria-label={`Video for item ${it.itemNumber} (optional)`}
                       type="file"
                       accept="video/*"
                       disabled={locked}

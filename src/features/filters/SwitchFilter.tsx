@@ -110,7 +110,7 @@ export function SwitchFilter({
           <Span size="sm" color="muted">
             {label}
           </Span>
-          <Toggle checked={checked} onChange={onChange} size="sm" />
+          <Toggle checked={checked} onChange={onChange} size="sm" aria-label={label} />
         </Row>
       )}
     </Div>

@@ -297,6 +297,7 @@ export function AdminBlogEditorView({
               Content
             </Text>
             <RichTextEditor
+              ariaLabel="Content"
               value={values.content}
               onChange={(v) => onChange({ content: v })}
               placeholder="Write your article here..."

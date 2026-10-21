@@ -765,8 +765,8 @@ export function AdminCategoryEditorView({
             render: ({ values: v, onChange, errors }) => (
               <Stack gap="md">
                 <Stack gap="xs">
-                  <Text size="sm" weight="medium">Category page body</Text>
                   <Textarea
+                    label="Category page body"
                     value={String(v.contentBody ?? "")}
                     onChange={(e) => onChange({ contentBody: e.target.value })}
                     rows={8}
@@ -796,8 +796,8 @@ export function AdminCategoryEditorView({
                 />
 
                 <Stack gap="xs">
-                  <Text size="sm" weight="medium">Highlights — one per line</Text>
                   <Textarea
+                    label="Highlights — one per line"
                     value={String(v.highlightsText ?? "")}
                     onChange={(e) => onChange({ highlightsText: e.target.value })}
                     rows={4}
@@ -962,8 +962,10 @@ export function AdminCategoryEditorView({
                 </Stack>
 
                 <Stack gap="xs">
-                  <Text size="sm" weight="medium">What&apos;s in the box — one per line</Text>
+                  {/* A JSX *attribute* takes a real apostrophe — `&apos;` is
+                      only escaped in children, and would print literally. */}
                   <Textarea
+                    label="What's in the box — one per line"
                     value={String(v.inTheBoxText ?? "")}
                     onChange={(e) => onChange({ inTheBoxText: e.target.value })}
                     rows={4}
@@ -995,8 +997,8 @@ export function AdminCategoryEditorView({
                 </Div>
 
                 <Stack gap="xs">
-                  <Text size="sm" weight="medium">SEO keywords — one per line</Text>
                   <Textarea
+                    label="SEO keywords — one per line"
                     value={String(v.seoKeywordsText ?? "")}
                     onChange={(e) => onChange({ seoKeywordsText: e.target.value })}
                     rows={3}

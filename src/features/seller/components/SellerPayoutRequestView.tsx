@@ -151,8 +151,8 @@ export function SellerPayoutRequestView({
           {submitError && <Alert variant="error">{submitError}</Alert>}
 
           <Div>
-            <Text className="mb-1.5" size="sm" weight="medium">Notes (optional)</Text>
             <Textarea
+              label="Notes (optional)"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

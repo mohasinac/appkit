@@ -162,7 +162,7 @@ export function AdminCatalogueApprovalsView() {
       <Modal isOpen={!!rejectTarget} onClose={() => setRejectTarget(null)} title="Reject this catalogue listing?" size="sm">
         <Stack gap="md">
           <Text variant="secondary">The owner will see this reason.</Text>
-          <Textarea value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} rows={3} placeholder="Reason for rejection" />
+          <Textarea label="Reason for rejection" value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} rows={3} placeholder="Reason for rejection" />
           <Button isLoading={rejectMutation.isPending} disabled={!rejectReason.trim()} variant="danger" onClick={() => rejectMutation.mutate()}>
             Reject
           </Button>

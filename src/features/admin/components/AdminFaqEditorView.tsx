@@ -260,6 +260,7 @@ export function AdminFaqEditorView({
               Answer
             </Text>
             <RichTextEditor
+              ariaLabel="Answer"
               value={String(v.answer ?? "")}
               onChange={(val) => onChange({ answer: val })}
               placeholder="Write a clear, helpful answer..."

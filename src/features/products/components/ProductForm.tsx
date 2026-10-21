@@ -353,6 +353,7 @@ export function ProductForm({
             {t("formDescription")}
           </Text>
           <RichTextEditor
+            ariaLabel={t("formDescription")}
             value={normalizeRichTextHtml(product.description || "")}
             onChange={(value) => update({ description: value })}
             disabled={isReadonly}

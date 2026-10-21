@@ -1034,8 +1034,8 @@ export function AdminSiteSettingsView({
               <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
               <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
               <>
-                <Text className="mb-1" color="muted" size="sm" weight="medium">Mission text</Text>
                 <Textarea
+                  label="Mission text"
                   value={aboutMissionText}
                   onChange={(e) => setAboutMissionText(e.target.value)}
                   placeholder="LetItRip was built to democratise commerce…"
@@ -1657,8 +1657,8 @@ export function AdminSiteSettingsView({
                 />
               </Grid>
               <Stack gap="xs">
-                <Text size="sm" weight="semibold">Registered address</Text>
                 <Textarea
+                  label="Registered address"
                   value={gstAddress}
                   onChange={(e) => setGstAddress(e.target.value)}
                   placeholder="Registered business address for GST invoices…"
@@ -2037,6 +2037,7 @@ export function AdminSiteSettingsView({
                     </Grid>
                     <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
                     <PaginatedSelect<string>
+                      ariaLabel="Notification types"
                       multiple
                       options={NOTIF_TYPE_OPTIONS}
                       value={notifEmailTypes}

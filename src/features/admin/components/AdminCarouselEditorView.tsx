@@ -199,6 +199,7 @@ function BackgroundEditor({
               <Div>
                 <Text className="mb-1" size="sm" weight="medium">Opacity ({value.dimOverlay.opacity}%)</Text>
                 <Slider
+                  aria-label={`Dim overlay opacity, ${value.dimOverlay.opacity}%`}
                   min={0}
                   max={90}
                   step={5}
