@@ -903,7 +903,28 @@ export interface ProductDocument extends BaseDocument {
   weightG?: number;
   dimensionsCm?: { l: number; w: number; h: number };
 
-  /** Physical storage location for inventory management (Print & Label Center). */
+  /**
+   * @deprecated Free-text storage location. Superseded by `inventoryPlacements`.
+   *
+   * 🛑 READ-ONLY FROM 2026-10-21. Three uncontrolled text inputs with no
+   * registry behind them, so "shelf 3", "Shelf-3" and "AC60 3" all meant one
+   * place: no list could group them, no query could find everything on a
+   * shelf, and the label printed whichever spelling that one product carried.
+   * Three boxes a human types into cannot be made consistent by validation.
+   *
+   * Where something lives is now a PLACEMENT (`storageBoxes` +
+   * `inventoryPlacements`), which carries a quantity and permits one product
+   * in two boxes — neither expressible here.
+   *
+   * 🛑 NOT DELETED, AND THE REASON IS NOT TIMIDITY. The stored strings cannot
+   * be mechanically mapped to box codes — that impossibility is exactly why
+   * the registry exists — so an automatic migration would either invent boxes
+   * from free text or lose the data. Listings that carry a value still show it
+   * (the product form and the label both do) until a human has re-placed them
+   * in a real box. The inputs are gone, so nothing new accumulates;
+   * `audit-no-physical-location-input` keeps it that way, and the field goes
+   * when the last value does.
+   */
   physicalLocation?: {
     zone: string;
     shelf: string;

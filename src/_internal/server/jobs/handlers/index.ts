@@ -17,6 +17,7 @@ export { cleanupRtdbEventsHandler } from "./cleanupRtdbEvents";
 export { auctionSettlementHandler } from "./auctionSettlement";
 export { autoPayoutEligibilityHandler } from "./autoPayoutEligibility";
 export { countersReconcileHandler } from "./countersReconcile";
+export { boxRollupReconcileHandler } from "./boxRollupReconcile";
 export { onOrderCreateHandler } from "./onOrderCreate";
 export { onOrderStatusChangeHandler } from "./onOrderStatusChange";
 export { onJobCreatedHandler } from "./onJobCreated";

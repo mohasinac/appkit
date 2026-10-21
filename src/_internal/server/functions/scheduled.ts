@@ -8,6 +8,7 @@ import {
   cartPruneHandler,
   cleanupRtdbEventsHandler,
   countersReconcileHandler,
+  boxRollupReconcileHandler,
   couponExpiryHandler,
   dailyDataCleanupHandler,
   draftPruneHandler,
@@ -232,6 +233,33 @@ export const countersReconcile = defineFunction({
   options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
 });
 
+/**
+ * 🛑 ITS OWN FUNCTION, AND DELIBERATELY NOT A FIRESTORE TRIGGER.
+ *
+ * A trigger on `inventoryPlacements` writing back to `storageBoxes` would fire
+ * on every pick, move and receive — a 50-row receive is 50 placement writes and
+ * would wake it 50 times to recompute the same two boxes. It is also one
+ * refactor away from Root Cause #92's shape, which cost 1,017,548 invocations
+ * in 24 hours against a 2M/month free quota.
+ *
+ * Nightly is right because the rollup is ADVISORY: every surface that must be
+ * correct reads placements directly (the box detail page does, and says so),
+ * so a day-stale rollup costs a slightly wrong number in a list and never a
+ * wrong decision.
+ *
+ * 04:30 UTC — after `countersReconcile` (03:00) and `positionsReconcile`
+ * (03:30), so three jobs each walking a collection are not competing for the
+ * same read quota in the same minute.
+ */
+export const boxRollupReconcile = defineFunction({
+  name: "boxRollupReconcile",
+  description:
+    "Recompute each storage box's product/unit rollup from its real placements (daily 04:30 UTC).",
+  trigger: { kind: "schedule", cron: "30 4 * * *", timeZone: "UTC" },
+  handler: boxRollupReconcileHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
+});
+
 export const positionsReconcile = defineFunction({
   name: "positionsReconcile",
   description: "Reconcile bid/auction positions (daily 03:30 UTC).",
@@ -375,6 +403,7 @@ export const SCHEDULED_FUNCTIONS = [
   dailyStatusDigest,
   dailyDataCleanup,
   countersReconcile,
+  boxRollupReconcile,
   positionsReconcile,
   cartPrune,
   notificationPrune,

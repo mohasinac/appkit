@@ -26,6 +26,9 @@ import { CustomSectionsEditor } from "./CustomSectionsEditor";
 import { SublistingCategorySelect } from "./SublistingCategorySelect";
 import { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 import type { CustomSection } from "../schemas/firestore";
+// The one `ProductImage[] | string[]` → `string[]` normaliser. Value import,
+// not a type: the gallery needs it at runtime (see `galleryImages` below).
+import { productImageUrls } from "../schemas/firestore";
 import type { ProductFeatureProductType } from "../schemas/product-features";
 import {
   ImageUpload,
@@ -35,6 +38,9 @@ import {
 } from "../../media";
 import { useMediaUpload } from "../../media";
 import { resolveDate } from "../../../utils/date.formatter";
+// Read-only here: the inputs that WROTE this field are gone — see the Physical
+// Inventory block for why three free-text boxes could not be made consistent.
+import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { DEFAULT_MIN_OFFER_PERCENT } from "../../../_internal/shared/features/offers/config";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
@@ -239,12 +245,40 @@ export function ProductForm({
   };
 
   /*
+   * The legacy free-text location, if this listing carries one. Shown so the
+   * value is not invisible while it still exists; there is no input for it any
+   * more. `formatPhysicalLocation` returns `undefined` when all three parts are
+   * blank, which is what distinguishes "never set" from "set to nothing".
+   */
+  const existingLocation = formatPhysicalLocation(
+    product.physicalLocation as
+      | { zone?: string; shelf?: string; bin?: string }
+      | undefined,
+  );
+
+  /*
    * One control for both media kinds — see the matching comment in
-   * SellerProductShell's StepMedia. The document keeps `images: string[]` plus
-   * a single `video`; this seeds from both and splits again on write.
+   * SellerProductShell's StepMedia. This seeds from `images` + `video` and
+   * splits them again on write.
+   *
+   * 🛑 `images` IS NOT `string[]` AT RUNTIME, whatever the type says. This
+   * comment used to assert "the document keeps `images: string[]`" and the
+   * line below mapped each entry as a URL — but `ProductDocument.images` has
+   * been `ProductImage[]` (objects) since A6, and the editors seed this form
+   * by CASTING the raw API document to `Partial<ProductItem>`
+   * (`AdminProductEditorView:231`). The cast is what makes the compiler agree
+   * with a shape the data does not have.
+   *
+   * The result was `{ url: { url: "/media/…" }, type: "image" }`, so the
+   * gallery tile handed `MediaImage` an object, `resolveMediaUrl` returned
+   * undefined for a non-string, and the tile rendered the 📦 placeholder with
+   * no network request at all.
+   *
+   * `productImageUrls` is the one normaliser and accepts both shapes, so this
+   * is correct whether the seeder passed documents or legacy strings.
    */
   const galleryImages: MediaField[] = [
-    ...(product.images ?? []).map((url) => ({ url, type: "image" as const })),
+    ...productImageUrls(product.images).map((url) => ({ url, type: "image" as const })),
     ...(product.video?.url
       ? [{
           url: product.video.url,
@@ -1276,67 +1310,51 @@ export function ProductForm({
         placeholder="Return policy details..."
       />
 
-      {/* ── Physical Inventory Location ── */}
+      {/*
+        ── Physical Inventory ──
+
+        🛑 THE THREE FREE-TEXT INPUTS (Zone / Shelf / Bin) ARE GONE, AND NOT
+        REPLACED BY THREE DIFFERENT ONES.
+
+        They were uncontrolled text with no registry behind them, so "shelf 3",
+        "Shelf-3" and "AC60 3" all meant one place and no list could group
+        them, no query could find everything on a shelf, and the Print Center
+        printed whichever spelling that product happened to carry. Three boxes
+        a human types into cannot be made consistent by validation — the fix is
+        a registry of real boxes with real codes, which `storageBoxes` and
+        `inventoryPlacements` now are.
+
+        Where a product lives is therefore recorded by PLACING it in a box — at
+        the receive station, or from the box's own page — never by typing here.
+        That is also why this is not a picker: a placement carries a QUANTITY,
+        and one product can legitimately sit in two boxes, which a single
+        "location" field cannot express at all.
+
+        The field is NOT deleted. ~91 references still read it and whatever
+        live products carry one still need their value shown until a human has
+        re-placed them properly — the strings cannot be mechanically mapped to
+        box codes, which is the same reason the registry exists. Closing the
+        INPUTS stops new ones accumulating, which is the half that can be done
+        without guessing. `audit-no-physical-location-input` holds the line.
+      */}
       <Div>
         <Heading level={3} className="mb-1" color="muted" size="sm" weight="semibold">
           Physical Inventory
         </Heading>
-        <Text className="mb-3" color="muted" size="xs">
-          Assign a storage location for warehouse or shelf organisation. Used by the Print & Label Center.
-        </Text>
-        <FormGroup columns={3}>
-          <FormField
-            name="physicalLocation.zone"
-            label="Zone"
-            type="text"
-            placeholder="e.g. A"
-            value={(product.physicalLocation as { zone?: string } | undefined)?.zone ?? ""}
-            onChange={(v) =>
-              update({
-                physicalLocation: {
-                  zone: v,
-                  shelf: (product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? "",
-                  bin: (product.physicalLocation as { bin?: string } | undefined)?.bin ?? "",
-                },
-              })
-            }
-            disabled={isReadonly}
-          />
-          <FormField
-            name="physicalLocation.shelf"
-            label="Shelf"
-            type="text"
-            placeholder="e.g. 3"
-            value={(product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? ""}
-            onChange={(v) =>
-              update({
-                physicalLocation: {
-                  zone: (product.physicalLocation as { zone?: string } | undefined)?.zone ?? "",
-                  shelf: v,
-                  bin: (product.physicalLocation as { bin?: string } | undefined)?.bin ?? "",
-                },
-              })
-            }
-            disabled={isReadonly}
-          />
-          <FormField
-            name="physicalLocation.bin"
-            label="Bin"
-            type="text"
-            placeholder="e.g. Blue"
-            value={(product.physicalLocation as { bin?: string } | undefined)?.bin ?? ""}
-            onChange={(v) =>
-              update({
-                physicalLocation: {
-                  zone: (product.physicalLocation as { zone?: string } | undefined)?.zone ?? "",
-                  shelf: (product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? "",
-                  bin: v,
-                },
-              })
-            }
-            disabled={isReadonly}
-          />
-        </FormGroup>
+        {existingLocation ? (
+          <Text className="mb-3" color="muted" size="xs">
+            Legacy location on this listing: <strong>{existingLocation}</strong>.
+            It is still printed on labels, but it is free text with no box
+            behind it — place this item in a storage box to replace it.
+          </Text>
+        ) : (
+          <Text className="mb-3" color="muted" size="xs">
+            Where this item is stored is recorded by placing it in a storage
+            box, not typed here — a placement has a quantity, and one product
+            can sit in two boxes. Use the receive station or the box&apos;s own
+            page.
+          </Text>
+        )}
       </Div>
 
       {product.storeName && (
