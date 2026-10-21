@@ -53,6 +53,9 @@
  * a missing rule means two stacked breadcrumbs with nothing looking wrong.
  */
 @import "./features/layout/AutoBreadcrumbs.style.css";
+/* 🛑 Must be imported HERE — `bundle-css.mjs` flattens only this chain, so a
+   feature stylesheet not listed in it ships nowhere. */
+@import "./features/shell/SectionForm.style.css";
 /*
  * Third-party stylesheet, vendored into dist/vendor by copy-assets.mjs.
  * It used to be a JS import inside ImageEditor.tsx, which made it invisible to

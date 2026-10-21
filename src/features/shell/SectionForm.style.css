@@ -1,0 +1,54 @@
+/*
+ * The section rail — `SectionForm`'s `lg+` navigation column.
+ *
+ * 🛑 THIS FILE EXISTS BECAUSE `audit-dead-css-classes` CAUGHT ME INVENTING A
+ * CLASS WITH NO RULE. `appkit-section-rail__item--active` was written into the
+ * component and defined nowhere, so the active item would have been
+ * indistinguishable from the rest — a rail whose whole job is to say "you are
+ * here" saying nothing. Tailwind silently drops an unknown utility and a
+ * hand-written BEM class simply never matches, so neither failure announces
+ * itself; the audit is the only thing that does.
+ *
+ * ── WHY A CLASS RATHER THAN A VARIANT PROP ──────────────────────────────────
+ *
+ * Root Cause #21 says styling goes through variant props, and that is right
+ * for anything a primitive already models. This is the exception the rule
+ * allows: the active marker is a left border INSIDE the button's own box plus
+ * a tinted surface, and `Button` exposes neither a "selected" state nor a
+ * border-inline-start variant. Adding both to `Button` for one consumer would
+ * be the wider change.
+ *
+ * The ink is still carried by a prop (`<Span color="primary">` vs `"muted"`),
+ * so this file only draws the parts a variant cannot.
+ */
+
+.appkit-section-rail__item--active {
+  /*
+   * 🛑 A THEME-RELATIVE SURFACE, NOT A NAMED PALETTE TINT. Root Cause #79: a
+   * `bg-primary-50`-style tint is the same near-white fill in every theme, so
+   * under dark ink it is white-on-white. `--appkit-color-primary-surface` is
+   * declared per theme and inverts with it.
+   */
+  background: var(--appkit-color-primary-surface);
+
+  /*
+   * `border-inline-start`, not `border-left` — the app ships an RTL-capable
+   * locale set and the marker belongs on the reading-order edge.
+   *
+   * Inset via a transparent border on the inactive state would be cleaner, but
+   * `Button` owns its own padding; a box-shadow draws the bar without
+   * participating in layout, so the label does not shift by 2px when a section
+   * opens.
+   */
+  box-shadow: inset 2px 0 0 0 var(--appkit-color-primary);
+}
+
+/*
+ * 🛑 `:hover` must not out-rank the active state. Both configs set
+ * `important: true`, so a Tailwind hover utility on the Button would beat this
+ * file's normal declaration — which is why the active marker is a
+ * `box-shadow` (nothing sets that) and a `background` applied through a
+ * dedicated class rather than a utility that a hover variant could tie with.
+ * See Root Cause #106: for `!important`, un-layered CSS sorts LOWEST, so a
+ * plain file like this one can never win an importance tie.
+ */

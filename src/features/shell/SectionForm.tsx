@@ -5,7 +5,7 @@ import type { ZodTypeAny } from "zod";
 import { Button } from "../../ui/components/Button";
 import { CollapsibleSection } from "../../ui/components/CollapsibleSection";
 import { Badge } from "../../ui/components/Badge";
-import { Div, Row, Span, Stack } from "../../ui";
+import { Div, Nav, Row, Span, Stack } from "../../ui";
 import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
 import {
   LabelPlacementContext,
@@ -574,7 +574,108 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     ).length;
   }, [fieldErrors]);
 
-  return (
+  /*
+   * ── THE SECTION RAIL ────────────────────────────────────────────────────
+   *
+   * 🛑 EVERY EDITOR IN THIS APP WAS ONE NARROW COLUMN AT EVERY WIDTH. This
+   * component had no `lg:` branch anywhere, so on a 2560px display the
+   * category editor rendered four stacked accordions and `SellerProductShell`
+   * eight — ~44 controls in a single column with the whole right half of the
+   * screen empty, and the only way to reach section six was to scroll past
+   * five you were not editing.
+   *
+   * The rail is a RENDERER OVER STATE THAT ALREADY EXISTED: `ordered`,
+   * `openIds`, `errorCountFor` and the module-level `scrollToSection` are all
+   * here for the submit handler's "jump to the first invalid section"
+   * behaviour. Nothing new is stored, so the rail and the panels cannot
+   * disagree about which section is open.
+   *
+   * 🛑 FIELDS ARE NOT REFLOWED INTO TWO COLUMNS, and that is deliberate. A
+   * two-column field grid reorders tab sequence against reading order, and a
+   * form where Tab jumps right-then-left is worse than a long one. Sections
+   * side by side is safe; fields inside a section are not.
+   *
+   * 🛑 Below three sections it does not render. A two-section form has
+   * nothing to navigate — the same reasoning `useSectionFormNav` already
+   * applies to a lone section ("collapsing exists to navigate AMONG
+   * sections").
+   */
+  const showRail = ordered.length >= 3;
+
+  const rail = showRail ? (
+    /*
+     * `sticky` under the measured header, and it publishes NO height: per the
+     * three-tier rule a sticky element CONSUMES the tier and never joins it.
+     * `hidden lg:block` because below `lg` there is no horizontal room and the
+     * accordion headers are already the navigation.
+     */
+    <Div
+      className="hidden lg:block w-56 flex-shrink-0 sticky self-start max-h-[calc(100vh-var(--header-height,3.5rem)-2rem)] overflow-y-auto"
+      style={{ top: "calc(var(--header-height, 3.5rem) + 1rem)" }}
+    >
+      <Nav aria-label="Form sections">
+        <Stack gap="px">
+          {ordered.map((section) => {
+            const errorCount = errorCountFor(section);
+            const isOpen =
+              section.required === true ||
+              openIds.includes(section.id) ||
+              forceOpenIds.includes(section.id);
+            return (
+              <Button
+                key={section.id}
+                type="button"
+                /* `ghost`, not `bare` — UI_BUTTON has no `bare` variant. */
+                variant="ghost"
+                size="sm"
+                justify="between"
+                gap="sm"
+                className={`w-full text-left ${
+                  isOpen ? "appkit-section-rail__item--active" : ""
+                }`}
+                /*
+                 * `aria-current` rather than a colour alone — "which section
+                 * am I in" must survive both a screen reader and a theme
+                 * where the active tint is subtle.
+                 */
+                aria-current={isOpen ? "true" : undefined}
+                onClick={() => {
+                  if (!openIds.includes(section.id)) {
+                    setOpenIds(
+                      expandMode === "single"
+                        ? [section.id]
+                        : [...openIds, section.id],
+                    );
+                  }
+                  scrollToSection(section.id);
+                }}
+              >
+                <Span size="sm" color={isOpen ? "primary" : "muted"}>
+                  {section.label}
+                  {section.required === true && (
+                    <Span className="appkit-form-field__required"> *</Span>
+                  )}
+                </Span>
+                {/*
+                  The error count is the rail's real justification: on an
+                  eight-section form a failed save used to scroll you to the
+                  first bad section with no indication that three others were
+                  also wrong.
+                */}
+                {errorCount > 0 && (
+                  <Span size="xs" color="error" weight="semibold">
+                    {errorCount}
+                  </Span>
+                )}
+              </Button>
+            );
+          })}
+        </Stack>
+      </Nav>
+    </Div>
+  ) : null;
+
+  const panels = (
     <Stack gap="md">
       {ordered.map((section) => {
         const isRequired = section.required === true;
@@ -732,6 +833,21 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
         </Row>
       )}
     </Stack>
+  );
+
+  if (!rail) return panels;
+
+  /*
+   * `min-w-0` on the panel column is load-bearing: a flex child defaults to
+   * `min-width: auto`, so one wide table or a long unbroken string inside a
+   * section would push the column past the container instead of wrapping, and
+   * the rail would be shoved off-screen.
+   */
+  return (
+    <Row gap="lg" align="start">
+      {rail}
+      <Div className="min-w-0 flex-1">{panels}</Div>
+    </Row>
   );
 }
 
