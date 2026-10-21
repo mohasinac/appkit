@@ -129,10 +129,19 @@ export function StickerCommitPanel({
   if (!file) {
     return (
       <Card variant="default">
-        <Text color="muted">
-          Pick a scan and tune it above. Nothing is uploaded until you commit a
-          run — the trace you are watching runs entirely in this tab.
-        </Text>
+        {/*
+          🛑 SAYS WHAT THIS PANEL NEEDS, not what the tool is.
+          It used to repeat the privacy promise the page's own intro already
+          makes a few hundred pixels above — "nothing is uploaded until you
+          commit a run" twice on one screen, which is the audit's "prints the
+          same sentence three times" (the third is the `/tools` index card,
+          where it belongs: that is a different page, describing the tool to
+          someone who has not opened it).
+          Repetition is not emphasis. A reader who has just read the promise
+          and immediately reads it again concludes they misunderstood it the
+          first time.
+        */}
+        <Text color="muted">Pick a scan and tune it above to commit a run.</Text>
       </Card>
     );
   }
