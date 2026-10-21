@@ -1178,6 +1178,25 @@ export const PRODUCT_UPDATABLE_FIELDS = [
    * (which both renderers read) was not in this list either. */
   "isLot",
   "lotSize",
+  /*
+   * 🛑 `physicalLocation` WAS MISSING, and the comment five lines above
+   * describes the identical defect one field over: "the form wrote
+   * `compareAtPrice`, nothing declared it, and `originalPrice` was not in
+   * this list either".
+   *
+   * `ProductForm` renders three inputs for it — zone, shelf, bin. They
+   * accept typing, they parse, and the repository dropped the whole object
+   * on every save, so 0 of the catalogue's products carry one. The field is
+   * declared on `ProductDocument`, and `physicalLocation.zone` is even in
+   * the searchable-field list, so everything existed except the one entry
+   * that lets a write through.
+   *
+   * Added rather than removing the inputs. Phase 5 of the current plan
+   * retires this field in favour of a box registry with a move ledger, and
+   * until that lands a working field is better than three inputs that lie —
+   * a seller who labels a shelf today should find it there tomorrow.
+   */
+  "physicalLocation",
   "pickupAddressId",
   "condition",
   "insurance",
