@@ -869,6 +869,7 @@ export {
   SCAM_CATEGORY_LABELS,
   getScamType,
   getScamTypesByCategory,
+  isScamType,
 } from "./features/scams/constants/scam-types";
 export type { ScamType, ScamCategory, ScamTypeDefinition, ScamCategoryDefinition } from "./features/scams/constants/scam-types";
 export {

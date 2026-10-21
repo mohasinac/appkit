@@ -177,6 +177,71 @@ function isPdf(url: string): boolean {
   return /\.pdf(\?|$)/i.test(url);
 }
 
+/** What the preview panel renders. Wider than `MediaFieldType`, which has no PDF. */
+type PreviewKind = "image" | "video" | "pdf" | "file";
+
+/**
+ * 🛑 AN EXTENSION REGEX CANNOT CLASSIFY ANYTHING THIS APP UPLOADED.
+ *
+ * `POST /api/media/finalize` returns `/media/{shortId}` where the shortId is the
+ * filename with its extension deliberately STRIPPED:
+ *
+ *   const baseShortId = filename.replace(/\.[^.]+$/, "");   // finalize route
+ *
+ * so `isImage` / `isVideo` / `isPdf` above were ALL false for every freshly
+ * uploaded file. `MediaPreviewPanel` fell through its three branches to the bare
+ * `<Anchor>` at the bottom — a text link where the preview belongs — and the
+ * "Edit video" button, gated on `isVideo(value)`, never appeared either. The
+ * upload itself always worked, which is why this read as a missing feature
+ * rather than a broken one.
+ *
+ * Three signals, in order of how much each actually knows:
+ *
+ *   1. a real extension — seed fixtures and `source: "external"` URLs, which
+ *      never pass through finalize. Unchanged behaviour for those.
+ *   2. the slug's own kind token, read off `MEDIA_FILENAME_PATTERNS` in
+ *      `id-generators.ts` — stripping the extension leaves the token intact.
+ *      (`deriveContextTypeFromFilename` is NOT usable here even though it owns
+ *      that table: every one of its patterns is anchored with `\.<ext>$`, so it
+ *      returns undefined for precisely the refs this has to classify.)
+ *   3. nothing recognisable — `"file"`, i.e. the bare link it renders today. A
+ *      wrong guess is worse than the status quo, so this never guesses.
+ *
+ * 🛑 The token is a SUFFIX for most families and a PREFIX for three of them, so
+ * both are tested. A suffix-only rule silently misses `catalogue-image-{slug}-3`
+ * (the word is at the front, the number at the back) and
+ * `tester-screenshot-{case}-{tester}-{date}` — verified by running the real
+ * table's outputs through it.
+ *
+ * The three `*-proof` families are deliberately absent: their generators accept
+ * any extension, so a proof is as likely to be a PDF as a screenshot and there
+ * is nothing in the name to separate them. They keep the existing link.
+ *
+ * The authoritative answer is the uploaded file's own MIME, which `afterUpload`
+ * has and now remembers; this resolver is for a value that arrives as a prop
+ * (reopening an editor on a saved record), where no MIME is available.
+ */
+function previewKindFor(url: string): PreviewKind {
+  if (isVideo(url)) return "video";
+  if (isPdf(url)) return "pdf";
+  if (isImage(url)) return "image";
+
+  const slug = url.split("?")[0].split("/").pop() ?? "";
+  if (/-video(-\d+)?$/i.test(slug)) return "video";
+  if (/-(image|logo|banner|avatar)(-\d+)?$/i.test(slug)) return "image";
+  if (/^(catalogue-image|tester-screenshot)-/i.test(slug)) return "image";
+  if (/^(invoice|payout-doc)-/i.test(slug)) return "pdf";
+  return "file";
+}
+
+/** The uploaded MIME wins over any name-based guess, for the url it was seen on. */
+function previewKindFromMime(mimeType: string): PreviewKind {
+  if (mimeType.startsWith("video/")) return "video";
+  if (mimeType.startsWith("image/")) return "image";
+  if (mimeType === "application/pdf") return "pdf";
+  return "file";
+}
+
 function isPdfAccept(accept: string): boolean {
   return accept
     .toLowerCase()
@@ -285,6 +350,7 @@ function ExternalUrlTabPanel({
 
 function MediaPreviewPanel({
   value,
+  kind,
   label,
   disabled,
   enableTrim,
@@ -295,6 +361,11 @@ function MediaPreviewPanel({
   tMediaEditor,
 }: {
   value: string;
+  /**
+   * Resolved by the owner, never re-derived here — the owner is the only place
+   * that knows the uploaded file's MIME. See `previewKindFor`.
+   */
+  kind: PreviewKind;
   label: string;
   disabled: boolean;
   enableTrim: boolean;
@@ -306,7 +377,7 @@ function MediaPreviewPanel({
 }) {
   return (
     <Div padding="sm" rounded="lg" surface="muted" border="default">
-      {isVideo(value) ? (
+      {kind === "video" ? (
         <Stack gap="sm">
           <Div className="relative aspect-video" overflow="hidden" rounded="lg">
             <MediaVideo src={value} alt={label} controls objectFit="contain" />
@@ -316,11 +387,18 @@ function MediaPreviewPanel({
             Video uploaded successfully. Large videos may take longer to process.
           </Text>
         </Stack>
-      ) : isImage(value) ? (
+      ) : kind === "image" ? (
         <Div className="relative aspect-video" overflow="hidden" rounded="lg">
-          <MediaImage src={value} alt={label} size="card" objectFit="contain" />
+          {/*
+            `fill` because the wrapper above already has a definite height. Since
+            `MediaImage` gained `SIZE_BOX`, `size="card"` establishes its OWN
+            `aspect-square` — a square inside this 16:9 box, overflowing it and
+            getting clipped. `fill` is the documented opt-out for a parent that
+            has already been sized.
+          */}
+          <MediaImage src={value} alt={label} size="card" objectFit="contain" fill />
         </Div>
-      ) : isPdf(value) ? (
+      ) : kind === "pdf" ? (
         <Stack gap="sm">
           <Div
             className="relative w-full" overflow="hidden" rounded="lg" border="default"
@@ -349,7 +427,7 @@ function MediaPreviewPanel({
 
       {!disabled && (
         <Row wrap gap="sm" className="mt-2">
-          {isVideo(value) && (enableTrim || enableThumbnail) && (
+          {kind === "video" && (enableTrim || enableThumbnail) && (
             <Button type="button" onClick={() => onEditVideo(value)} variant="secondary" size="sm">
               {tMediaEditor("editVideo")}
             </Button>
@@ -403,6 +481,17 @@ export function MediaUploadField({
   const [ytError, setYtError] = useState("");
   const [extInput, setExtInput] = useState("");
   const [extError, setExtError] = useState("");
+  /*
+   * The kind of the file we just uploaded, remembered WITH the url it belongs to.
+   *
+   * Keyed on the url rather than held as a bare kind so it cannot go stale: a
+   * parent that swaps `value` out from under us (switching records, a reset, the
+   * trim flow replacing the url) simply stops matching and the resolver takes
+   * over. An effect clearing it on `value` change would be a second mechanism
+   * that has to agree with this one.
+   */
+  const [uploadedKind, setUploadedKind] =
+    useState<{ url: string; kind: PreviewKind } | null>(null);
 
   const hasAlternateSources = showYoutube || showExternal;
   /*
@@ -534,6 +623,10 @@ export function MediaUploadField({
     autoPosterUrl?: string,
     duration?: number,
   ) => {
+    // The one authoritative signal there is: the file's real MIME. Recorded
+    // before anything else so the preview is correct on the very first render
+    // after an upload, including for a video that is about to be trimmed.
+    setUploadedKind({ url, kind: previewKindFromMime(fileType) });
     onChangeField?.({
       url,
       type: inferMediaTypeFromMime(fileType, url),
@@ -559,6 +652,10 @@ export function MediaUploadField({
   };
 
   const handleTrimSave = (trimmedUrl: string) => {
+    // A trim mints a NEW url, so the kind recorded against the original no
+    // longer matches. It is a video by construction — the trim modal only opens
+    // for one — so carry that across rather than letting the resolver re-guess.
+    setUploadedKind({ url: trimmedUrl, kind: "video" });
     setShowTrimModal(false);
     if (enableThumbnail) {
       setPendingVideoUrl(trimmedUrl);
@@ -684,6 +781,7 @@ export function MediaUploadField({
     }
     onChange("");
     onChangeField?.(null);
+    setUploadedKind(null);
     setError(null);
   };
 
@@ -766,6 +864,7 @@ export function MediaUploadField({
       {(!hasAlternateSources || sourceTab === "upload") && value && !isLoading && (
         <MediaPreviewPanel
           value={value}
+          kind={uploadedKind?.url === value ? uploadedKind.kind : previewKindFor(value)}
           label={label}
           disabled={disabled}
           enableTrim={enableTrim}

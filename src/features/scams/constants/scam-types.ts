@@ -593,6 +593,26 @@ export function getScamType(id: ScamType): ScamTypeDefinition | undefined {
   return SCAM_TYPES.find((t) => t.id === id);
 }
 
+/**
+ * The set of real ids, for narrowing an arbitrary string.
+ *
+ * `getScamType` already takes a `ScamType`, so it cannot be used to VALIDATE
+ * one — which is why the scam-report form had nothing to check against and
+ * `POST /api/scams/reports` accepted `z.string().min(1)`. A free-text value
+ * stores fine (the repository's `create` does no enum check), and then the
+ * registry's type chips and `SCAM_TYPE_LABELS` can never match it: the profile
+ * renders no type at all and the report is unfilterable.
+ *
+ * Derived from `SCAM_TYPES` rather than restating the union, so documenting a
+ * 28th pattern needs one edit and cannot drift from what the form offers.
+ */
+const SCAM_TYPE_ID_SET: ReadonlySet<string> = new Set(SCAM_TYPES.map((t) => t.id));
+
+/** Is `value` one of the 27 documented scam-type ids? */
+export function isScamType(value: string): value is ScamType {
+  return SCAM_TYPE_ID_SET.has(value);
+}
+
 /** Get all scam types in a given category. */
 export function getScamTypesByCategory(
   category: ScamCategory,

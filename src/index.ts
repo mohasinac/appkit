@@ -9254,6 +9254,7 @@ export {
  getScamType,
  getScamTypesByCategory,
  getCategoryForScamType,
+ isScamType,
 } from "./features/scams/constants/scam-types";
 export type {
  ScamType,

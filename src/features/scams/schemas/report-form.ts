@@ -34,6 +34,7 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
+import { isScamType } from "../constants/scam-types";
 
 const UPI_VPA_RE = /^[\w.\-_]{2,256}@[a-zA-Z]{2,64}$/;
 const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
@@ -58,8 +59,32 @@ export const scamReportFormSchema = z
       { section: "who", order: 4, row: "full", kind: "list" },
     ),
 
-    scamType: annotate(z.string().trim().min(1, "Choose what kind of scam this was."), {
+    /*
+     * 🛑 `kind: "select"` IS LOAD-BEARING, not decoration.
+     *
+     * `buildSectionsFromSchema` reads `opts.options[name]` only inside its
+     * `case "select"` branch. With no `kind` the generator inferred `"text"`
+     * from the `ZodString` — so the page's 27-entry `SCAM_TYPE_OPTIONS` list
+     * was passed in and ignored, and the field rendered as a FREE-TEXT input.
+     * There was no way to choose a scam type at all.
+     *
+     * Verified by running the shipped resolver against this schema:
+     *   scamType     | kind: text    ← before
+     *   scamPlatform | kind: select  ← its sibling, which was annotated
+     *
+     * The sibling being correct is why this read as a styling quirk rather
+     * than a dead control.
+     *
+     * The refine is the other half. `min(1)` accepted any non-empty string,
+     * matching the route, and nothing downstream validates: the repository's
+     * `create` has no enum check, so a typed value stored and then matched no
+     * chip in the registry and no key in `SCAM_TYPE_LABELS`. A select cannot
+     * produce a bad value, but a direct POST can — see the mirror of this on
+     * `POST /api/scams/reports`.
+     */
+    scamType: annotate(z.string().trim().refine(isScamType, { message: "Choose what kind of scam this was." }), {
       section: "what", sectionLabel: "What happened", sectionRequired: true, quick: true, order: 1, row: "pair",
+      kind: "select",
     }),
     /*
      * Required, matching `POST /api/scams/reports` (`z.string().min(1)`).
