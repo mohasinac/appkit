@@ -622,7 +622,7 @@ export async function bulkSellerOrder(
   const bulkDeduction = computePayoutDeduction(
     grossAmount,
     bulkSiteSettings.commissions,
-    ordersShippingReimbursement(eligibleOrders),
+    ordersShippingReimbursement(eligible),
   );
 
   const payoutDoc = await payoutRepository.createPayout({

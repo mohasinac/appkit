@@ -104,6 +104,14 @@ export async function fileGrievanceAction(
      */
     const ticket = await supportRepository.createTicket({
       userId: user.uid,
+      /*
+       * Both REQUIRED by `SupportTicketCreateInput`, which is a `Pick` of the
+       * PLAIN document — so plaintext here is correct, and the repository
+       * encrypts on write. Omitting them was a compile error rather than a
+       * silent gap, which is the Pick working as intended.
+       */
+      userEmail: user.email ?? "",
+      userDisplayName: user.name ?? user.email ?? "Buyer",
       category: TicketCategoryValues.GRIEVANCE,
       subject,
       description: detail,
@@ -192,7 +200,7 @@ export async function recordGrievanceFirstResponseAction(
 
     await supportRepository.update(ticketId, {
       firstResponseAt: new Date(),
-    } as Partial<SupportTicketDocument>);
+    });
 
     serverLogger.info("grievance first response recorded", { ticketId, by: user.uid });
   });

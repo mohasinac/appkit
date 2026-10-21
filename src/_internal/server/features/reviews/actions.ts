@@ -50,8 +50,9 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
         // line translated it. Both now use the document's own name.
         comment,
         images: images ?? [],
-        verified: false,
-        status: "pending",
+    /* `verified` and `status` are set by `createReview` itself and are
+       omitted from `ReviewCreateInput` — passing them here duplicated the
+       repository default and was the reason the input type demanded them. */
       });
   });
 }

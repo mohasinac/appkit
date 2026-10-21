@@ -49,6 +49,17 @@ export interface MarketplaceAuctionCardData {
    */
   isSold?: boolean;
   /**
+   * D53 — the reserve, read by `isBuyNowAvailable` so a card cannot advertise
+   * a buyout the server will refuse.
+   *
+   * 🛑 Declared late: the predicate already read `product.reservePrice` while
+   * this type did not carry it, so the card was a type error AND every
+   * doc→card mapper was free to drop it. That is the exact failure the
+   * `isSold` note directly above warns about — a shared predicate reading a
+   * field the card shape does not guarantee.
+   */
+  reservePrice?: number | null;
+  /**
    * The seller. Absent from this hand-rolled type entirely until now, so the
    * auction card could not show a seller even where every other card did —
    * the same dropped-field shape the `isSold` note directly above warns about,

@@ -140,6 +140,27 @@ function money(value: JsonValue | undefined): string | null {
 
 export type AdminMoneyCasesViewProps = ListingLayoutProps;
 
+/**
+ * Narrow a JSON value to status-history entries.
+ *
+ * 🛑 A FUNCTION, NOT A CAST. This was `detail.statusHistory as
+ * StatusChangeEntry[] | undefined`, which `tsc` rejects as insufficiently
+ * overlapping — and the suggested `as unknown as` is the double cast this
+ * repo bans outright, because it has zero runtime effect and silences the one
+ * type-level signal there was.
+ *
+ * `detail` is a `JsonObject` off the wire, so narrowing is genuinely needed;
+ * the file already does exactly this for scalars via `toStringValue`. An
+ * array whose members are not objects returns undefined rather than being
+ * waved through — the timeline renders nothing, which is the honest outcome
+ * for data it cannot read.
+ */
+function toStatusHistory(value: unknown): StatusChangeEntry[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const ok = value.every((e) => typeof e === "object" && e !== null);
+  return ok ? (value as StatusChangeEntry[]) : undefined;
+}
+
 export function AdminMoneyCasesView({ children, ...props }: AdminMoneyCasesViewProps) {
   const [detail, setDetail] = useState<Record<string, JsonValue> | null>(null);
   const [resolveTargetId, setResolveTargetId] = useState<string | null>(null);
@@ -374,7 +395,7 @@ export function AdminMoneyCasesView({ children, ...props }: AdminMoneyCasesViewP
                 </Row>
               ) : null}
               <RecordStatusTimeline
-                entries={detail.statusHistory as StatusChangeEntry[] | undefined}
+                entries={toStatusHistory(detail.statusHistory)}
                 truncatedCount={
                   typeof detail.statusHistoryTruncated === "number"
                     ? detail.statusHistoryTruncated

@@ -98,8 +98,9 @@ export async function createReview(
           duration: 0,
         }
       : undefined,
-    verified: false,
-    status: "pending",
+    /* `verified` and `status` are set by `createReview` itself and are
+       omitted from `ReviewCreateInput` — passing them here duplicated the
+       repository default and was the reason the input type demanded them. */
   });
 }
 

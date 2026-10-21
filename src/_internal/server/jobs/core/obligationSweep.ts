@@ -100,7 +100,7 @@ async function performAction(
     case "delivery-confirm":
       await orderRepository.updateStatus(order.id, "delivered", {
         deliveryDate: ctx.now,
-      } as Partial<OrderDocument>);
+      });
       return "acted";
 
     /*
@@ -148,7 +148,7 @@ async function performAction(
       await orderRepository.update(order.id, {
         completedAt: ctx.now,
         completedBy: "system",
-      } as Partial<OrderDocument>);
+      });
 
       /*
        * ── THE POINTS AWARD, now that its key exists (Phase P) ─────────────
@@ -186,7 +186,9 @@ async function performAction(
 
       ctx.logger.info("obligation: dispute window closed — order complete", {
         orderId: order.id,
-        deliveredAt: order.deliveryDate?.toISOString(),
+        /* `?? null` — the logger takes JsonValue, which excludes undefined,
+           and an absent delivery date is a fact worth logging as null. */
+        deliveredAt: order.deliveryDate?.toISOString() ?? null,
       });
       return "acted";
 
@@ -257,7 +259,7 @@ async function performAction(
     case "return-respond":
       await orderRepository.update(order.id, {
         returnApprovedAt: ctx.now,
-      } as Partial<OrderDocument>);
+      });
       ctx.logger.info("obligation: return approved on the seller's behalf", {
         orderId: order.id,
       });
@@ -266,7 +268,7 @@ async function performAction(
     case "return-post":
       await orderRepository.updateStatus(order.id, "delivered", {
         updatedAt: ctx.now,
-      } as Partial<OrderDocument>);
+      });
       ctx.logger.info("obligation: return window closed — buyer never posted", {
         orderId: order.id,
       });

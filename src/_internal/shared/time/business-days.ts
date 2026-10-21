@@ -41,6 +41,14 @@
  * (04:30 UTC = 10:00 IST) without saying so. Making the offset explicit is
  * what lets the weekend test be correct rather than approximately correct.
  */
+/*
+ * `JsonValue`, because `onWarn`'s meta is handed straight to a logger whose
+ * own signature is `Record<string, JsonValue>`. Declaring it `unknown` — as
+ * it was — promised callers more than the logger could accept, so every job
+ * that forwarded `ctx.logger.warn` failed to compile.
+ */
+import type { JsonValue } from "../../../schemas/types";
+
 const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
 
 /** `YYYY-MM-DD` in IST. The key format the holiday list uses. */
@@ -104,7 +112,7 @@ export interface BusinessDayOptions {
    */
   extraHolidays?: readonly string[];
   /** Injected for the warning path; defaults to no-op so pure callers stay pure. */
-  onWarn?: (message: string, meta?: Record<string, unknown>) => void;
+  onWarn?: (message: string, meta?: Record<string, JsonValue>) => void;
 }
 
 /**

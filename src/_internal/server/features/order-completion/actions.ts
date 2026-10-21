@@ -230,7 +230,9 @@ export async function rateOrderItemAction(
       productId: line.productId,
       productTitle: line.productTitle,
       userId: user.uid,
-      userName: user.displayName ?? user.email ?? "Buyer",
+      /* `name`, not `displayName` — AuthPayload carries the Google "name"
+         claim under that key and has no `displayName` at all. */
+      userName: user.name ?? user.email ?? "Buyer",
       rating: input.rating,
       title: input.title?.trim() || line.productTitle,
       comment,
@@ -326,7 +328,7 @@ export async function markOrderCompleteAction(
     await orderRepository.update(orderId, {
       completedAt: now,
       completedBy: user.uid,
-    } as Partial<OrderDocument>);
+    });
 
     /*
      * Close the timer, so the sweep does not re-fire on an order the buyer has

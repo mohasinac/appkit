@@ -112,7 +112,7 @@ export async function submitShippingEvidence(
        * affordance: the alternative is a support ticket to fix a typo.
        */
     },
-  } as Partial<OrderDocument>);
+  });
 
   return { ok: true };
 }
@@ -254,7 +254,7 @@ export async function approveShippingReimbursement(
       ...(input.note ? { approvalNote: input.note } : {}),
     },
     shippingReconciliation: { ...result, reconciledAt: new Date() },
-  } as Partial<OrderDocument>);
+  });
 
   serverLogger.info("shipping reimbursement approved", {
     orderId: input.orderId,

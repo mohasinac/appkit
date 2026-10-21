@@ -199,7 +199,15 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
               bankName: sellerPlain.payoutDetails.bankAccount.bankName,
             }
           : undefined,
-      notes: `Auto-payout — ${orders.length} delivered order(s) past ${AUTO_PAYOUT_WINDOW_DAYS}-day window`,
+      /*
+       * 🛑 `hold.days`, NOT the deleted `AUTO_PAYOUT_WINDOW_DAYS`. This note
+       * still named the constant that was removed on 2026-10-21 for being a
+       * hardcoded duplicate of `commissions.payoutHoldDays` — see the header.
+       * Reinstating it is explicitly forbidden there, and it would also make
+       * the note LIE: `hold.days` is the value actually honoured, which is
+       * the floor or the admin setting, whichever won.
+       */
+      notes: `Auto-payout — ${orders.length} delivered order(s) past the ${hold.days}-day hold`,
       requestedAt: new Date(),
     };
 

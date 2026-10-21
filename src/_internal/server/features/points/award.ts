@@ -119,7 +119,7 @@ export async function awardPurchasePoints(
      * every tick forever.
      */
     await orderRepository
-      .update(order.id, { pointsAwardedAt: new Date() } as Partial<OrderDocument>)
+      .update(order.id, { pointsAwardedAt: new Date() })
       .catch((err: unknown) => {
         void normalizeError(err);
       });
@@ -157,7 +157,7 @@ export async function awardPurchasePoints(
   await orderRepository.update(order.id, {
     pointsAwardedAt: now,
     pointsAwarded: amount,
-  } as Partial<OrderDocument>);
+  });
 
   serverLogger.info("purchase points awarded", {
     orderId: order.id,

@@ -174,6 +174,16 @@ export type ReviewCreateInput = Omit<
   | "id"
   | "createdAt"
   | "updatedAt"
+  /*
+   * 🛑 `status` and `verified` are OMITTED because `createReview` SETS BOTH
+   * ("pending" / false) — a caller cannot influence them and should not be
+   * asked to supply them. Requiring them made every call site either repeat
+   * the repository defaults or reach for a cast, and the per-item-rating
+   * caller did the latter, which `tsc` then rejected as insufficiently
+   * overlapping. A create input should name what the caller decides.
+   */
+  | "status"
+  | "verified"
   | "helpfulCount"
   | "reportCount"
   | "moderatorId"

@@ -1078,6 +1078,28 @@ export interface OrderDocument extends BaseDocument {
   }[];
   /** Set true only when an automatic partial refund (for dropped Razorpay items) failed and needs manual follow-up. */
   refundPending?: boolean;
+  /**
+   * Marks an order created by the tester harness.
+   *
+   * 🛑 DECLARED LATE: three readers already depended on it —
+   * `deadlinesFor()`, `protection-claims/actions.ts` and
+   * `orders.repository.ts` — while `OrderDocument` never carried the field,
+   * so all three were type errors. The intent is documented in
+   * `obligations/deadlines.ts`: a test order COMPRESSES its obligation
+   * windows, so a tester can watch a deadline lapse inside one run instead of
+   * waiting the real number of days.
+   *
+   * 🛑 This does NOT enrol orders in the test-data purge. `runTestDataCleanup`
+   * deliberately leaves `orders`/`reviews`/`wishlists`/`history` alone — they
+   * denormalise what they display, so a swept order would leave a
+   * half-rendered row rather than disappear. The flag is read for timing, not
+   * for deletion, and adding it to `TEST_DATA_COLLECTIONS` would be a
+   * different and much larger decision.
+   *
+   * Optional, so no migration: every existing order reads `undefined`, which
+   * `deadlinesFor` tests with `=== true`.
+   */
+  isTestData?: boolean;
 }
 
 export type OrderPaymentRecordMethod = "manual" | "phonepe" | "razorpay" | "cod";

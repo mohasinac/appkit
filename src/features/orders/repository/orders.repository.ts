@@ -8,7 +8,14 @@ import {
 import { normalizeError } from "../../../errors/normalize";
 
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
-import { DatabaseError, NotFoundError } from "../../../errors";
+/*
+ * `ValidationError` from `../../../errors`, which is the REAL one — the class
+ * `mapToHttpError` instanceof-checks to produce a 400. The other
+ * `ValidationError` (in `_internal/shared/errors`) is a structurally
+ * unrelated class that falls through to a generic 500; Root Cause #53 records
+ * that mix-up swallowing ~100 call sites' validation messages.
+ */
+import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -1371,7 +1378,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    */
   async getEligibleAutomatic(
     cutoff: Date,
-    opts?: { onWarn?: (msg: string, meta?: Record<string, unknown>) => void },
+    opts?: { onWarn?: (msg: string, meta?: Record<string, JsonValue>) => void },
   ): Promise<
     Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
   > {

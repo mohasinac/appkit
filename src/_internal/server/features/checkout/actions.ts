@@ -132,7 +132,10 @@ import {
 // The `GroupCouponDiscountResult` type is deliberately NOT imported: every
 // call site here destructures the result inline, so naming the type would be
 // an unused import.
-import { computeGroupCouponDiscount } from "../../../shared/checkout/coupon-discount";
+import {
+  computeCartCouponDiscount,
+  computeGroupCouponDiscount,
+} from "../../../shared/checkout/coupon-discount";
 import { revalidateGroupLines } from "./group-rule-revalidation";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
