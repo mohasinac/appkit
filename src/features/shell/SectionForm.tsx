@@ -650,11 +650,23 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
                   scrollToSection(section.id);
                 }}
               >
+                {/*
+                  🛑 NO REQUIRED ASTERISK HERE, and `audit-field-label-owner`
+                  was right to block the one I first wrote. Reusing
+                  `appkit-form-field__required` puts a second copy of
+                  `FieldLabel`'s marker — leading space and all — in the tree,
+                  which is the exact drift that audit exists to catch and the
+                  reason `FieldLabel` was extracted (three owners had `> *<`,
+                  the fourth `>*<`).
+
+                  It is also the wrong concept: a required SECTION is not a
+                  required FIELD. The panels already convey it — a required
+                  section is always open and renders as a plain heading with
+                  no collapse control — so the rail stays what it is,
+                  navigation plus error counts.
+                */}
                 <Span size="sm" color={isOpen ? "primary" : "muted"}>
                   {section.label}
-                  {section.required === true && (
-                    <Span className="appkit-form-field__required"> *</Span>
-                  )}
                 </Span>
                 {/*
                   The error count is the rail's real justification: on an
