@@ -189,6 +189,17 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  /*
+   * 🛑 A failed load is NOT "no results".
+   *
+   * `load` below had `try`/`finally` with no `catch`, so a rejected
+   * `loadOptions` left `asyncOptions` untouched and the dropdown rendered
+   * "No results" — reporting a 500 as a measured zero. That is what made a
+   * missing Firestore composite index on the category picker look like an
+   * empty taxonomy: the route threw FAILED_PRECONDITION, ApiClient rejected,
+   * and the user saw a confident, wrong answer.
+   */
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const labelMap = useRef<Map<V, string>>(new Map());
@@ -287,6 +298,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
       if (!loadOptions) return;
       const requestId = ++requestIdRef.current;
       setLoading(true);
+      setLoadError(null);
       try {
         const response = await loadOptions(search, nextPage);
         // A newer request (new search, or the dropdown reopened) was issued
@@ -300,6 +312,14 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         });
         setPage(nextPage);
         setHasMore(response.hasMore);
+      } catch (err) {
+        const normalized = normalizeError(err);
+        // Same staleness rule as the success path: a superseded request must
+        // not paint its failure over a newer request's results.
+        if (requestId === requestIdRef.current) {
+          setLoadError(normalized.message || "Could not load options.");
+          if (reset) setAsyncOptions([]);
+        }
       } finally {
         if (requestId === requestIdRef.current) setLoading(false);
       }
@@ -580,7 +600,23 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
                 );
               })}
 
-              {filtered.length === 0 && !loading && (
+              {/*
+                A failure and an empty result are different answers and must
+                read differently — "No results" for a 500 is the same class of
+                lie as a swallowed query error. The retry is offered because
+                the common causes (a cold index, a transient 5xx) succeed on a
+                second attempt.
+              */}
+              {loadError && !loading && (
+                <li className={C.empty} role="alert">
+                  {loadError}{" "}
+                  <button type="button" onClick={() => void load(query, 1, true)}>
+                    Try again
+                  </button>
+                </li>
+              )}
+
+              {!loadError && filtered.length === 0 && !loading && (
                 <li className={C.empty}>{noResultsText}</li>
               )}
 
