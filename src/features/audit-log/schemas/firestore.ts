@@ -33,6 +33,20 @@ export const AdminAuditActionValues = {
    * offer's own `statusHistory`.
    */
   OFFER_CANCEL: "offer_cancel",
+  /**
+   * Admin credited or debited a buyer's points by hand.
+   *
+   * 🛑 Belongs here rather than only in the ledger, even though the ledger is
+   * already append-only and already records `actorUid` and `adminReason`. The
+   * two answer different questions: the ledger answers "why does THIS ACCOUNT
+   * have 53 points", this answers "what have admins done lately" — and the
+   * second is the one you need when the account is not yet suspected.
+   *
+   * 1 point = ₹1 of spendable discount, so a credit is a liability the platform
+   * must honour and a debit removes value a buyer already holds. That is the
+   * same class as `payout_mark_paid` and `coupon_update`, which are both here.
+   */
+  POINTS_ADJUST: "points_adjust",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

@@ -254,7 +254,23 @@ export type Permission =
   | "admin:payment-cases:read"
   | "admin:payment-cases:write"
   | "admin:protection-claims:read"
-  | "admin:protection-claims:write";
+  | "admin:protection-claims:write"
+  /**
+   * Credit or debit a buyer's points by hand.
+   *
+   * 🛑 WRITE ONLY, with no matching `:read`, and that asymmetry is deliberate:
+   * a buyer's balance and ledger are already visible on the admin user detail
+   * page under the permissions that get you there. What needs its own gate is
+   * the act of CREATING SPENDABLE MONEY — 1 point = ₹1 against a future order,
+   * so a credit is a liability the platform must honour.
+   *
+   * Granted to no employee bundle. `createRouteHandler` lets an effective admin
+   * through without consulting the array at all, so this exists to be the thing
+   * an employee bundle would have to name explicitly — and nothing names it.
+   * Same reasoning as `admin:payment-cases:*`: a queue an analyst may read is
+   * different from a decision that moves money.
+   */
+  | "admin:points:write";
 
 // ============================================================================
 // BANNED ACTION TYPE

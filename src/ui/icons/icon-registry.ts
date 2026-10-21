@@ -44,6 +44,7 @@ import {
   Archive,
   ArrowLeft,
   Ban,
+  Coins,
   Bell,
   Check,
   CheckCircle,
@@ -195,6 +196,22 @@ export const ICONS = {
    */
   spares: Puzzle,
   live: PawPrint,
+  /*
+   * Buyer points. Minted rather than reused, which this registry's header
+   * allows only when nothing already means it — and nothing did.
+   *
+   * `deals` (Tag) was the closest and is wrong: a tag means a DISCOUNT ON A
+   * LISTING, while points are a buyer's balance. `analytics` (TrendingUp) is a
+   * chart. Reusing either would make the admin row action read as something it
+   * is not, and the glyph is what an operator scans before the label.
+   *
+   * `Coins` over `Wallet` deliberately: `points/schemas/firestore.ts` opens by
+   * stating this is NOT a wallet, and that the distinction is legal rather than
+   * stylistic (a wallet is stored value, which is PPI territory with RBI
+   * authorisation attached). An icon that says "wallet" would undercut the one
+   * property the feature must not have.
+   */
+  points: Coins,
 } as const;
 
 /** Every valid `iconKey`. A typo is a compile error, not a silent blank. */

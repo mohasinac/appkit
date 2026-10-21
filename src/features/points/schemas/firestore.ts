@@ -253,6 +253,33 @@ export const POINTS_EXPIRY_MONTHS = 3;
 export const POINTS_EARN_PERCENT = 5;
 
 /**
+ * The largest single manual adjustment an admin may make, in points (= ₹).
+ *
+ * 🛑 The realistic failure here is a TYPO, not malice. `isPointsEntryWellFormed`
+ * checks sign and reason but says nothing about magnitude, so `50000` where
+ * `500` was meant passes every check and mints ₹50,000 of spendable liability
+ * in one click. Bounded on the ABSOLUTE value so the debit direction is guarded
+ * too — a mistyped debit wipes a balance the buyer earned, and the only undo is
+ * another adjustment.
+ *
+ * A genuinely larger correction is several deliberate adjustments, each with
+ * its own reason and its own `adminAuditLog` row. That is the right amount of
+ * friction for a number this size.
+ */
+export const POINTS_ADJUSTMENT_MAX = 5_000;
+
+/**
+ * Minimum length of an adjustment's `adminReason`.
+ *
+ * Deliberately the same 10 characters as `paymentCaseResolveFormSchema`, so an
+ * operator meets ONE rule across the admin surfaces rather than two that differ
+ * for no reason. A length rather than mere presence because the reader is the
+ * next admin asking "why does this account have 53 points", and "fix" answers
+ * nothing.
+ */
+export const POINTS_ADJUSTMENT_REASON_MIN = 10;
+
+/**
  * When does a batch of points issued now expire?
  *
  * A function rather than a constant offset because months are not a fixed

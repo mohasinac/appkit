@@ -1884,6 +1884,31 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
       permissions: ["admin"],
     },
+    /**
+     * Credit or debit a buyer's points by hand — `admin_adjustment`'s first
+     * human writer (D48).
+     *
+     * 🛑 `permissions: ["admin"]` only, no moderator. 1 point = ₹1 of spendable
+     * discount, so a credit is a liability the platform must honour and a debit
+     * removes value a buyer already holds. `ban-user` admits a moderator
+     * because a ban is reversible and moves no money; this is neither.
+     *
+     * No `confirmation` block, deliberately — the drawer it opens IS the
+     * confirmation, and it collects three mandatory fields (a signed amount
+     * under `POINTS_ADJUSTMENT_MAX`, a buyer-facing line, and a ≥10-character
+     * internal reason). A confirm dialog in front of a form that already
+     * demands a written justification is a click that asks nothing.
+     */
+    "adjust-user-points": {
+      iconKey: "points",
+      id: "admin.adjust-user-points",
+      label: "Adjust points",
+      ariaLabel: "Credit or debit this user's points",
+      description:
+        "Credit or debit a buyer's points balance, with a reason recorded in the ledger and the admin audit log.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
     "bulk-suspend-users": {
       iconKey: "ban",
       id: "admin.bulk-suspend-users",

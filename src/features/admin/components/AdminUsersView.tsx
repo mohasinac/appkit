@@ -31,6 +31,13 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
+import { pointsAdjustFormSchema } from "../../points/schemas/adjust-form";
+import type { PointsAdjustFormValues } from "../../points/schemas/adjust-form";
+import {
+  POINTS_ADJUSTMENT_MAX,
+  POINTS_ADJUSTMENT_REASON_MIN,
+} from "../../points/schemas/firestore";
 import { AdminUserEditorView } from "./AdminUserEditorView";
 import { useBulkAction } from "../../../react";
 import { useBulkEvent } from "../../events/hooks/useBulkEvent";
@@ -66,6 +73,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [banTargetId, setBanTargetId] = useState<string | null>(null);
   const [banReason, setBanReason] = useState("");
+  const [pointsTargetId, setPointsTargetId] = useState<string | null>(null);
   const [bulkConfirmTarget, setBulkConfirmTarget] = useState<{
     action: "suspend" | "delete";
     ids: string[];
@@ -129,6 +137,27 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     mutationFn: (uid: string) => apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(uid), {}),
     onSuccess: () => {
       toast.showToast("Ban lifted.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
+    },
+  });
+
+  /*
+   * Points adjustment (D48). `useApiMutation` is the house idiom here — it owns
+   * the loading toast and the error toast, so this only has to say what success
+   * means and what to invalidate.
+   *
+   * 🛑 Invalidates the users listing because `pointsBalance` lives on the user
+   * document, so the row an admin is looking at is stale the moment this
+   * succeeds. Without it the operator applies a credit and sees the old number,
+   * which reads as the adjustment having failed.
+   */
+  const adjustPoints = useApiMutation({
+    errorMessage: "Failed to adjust points.",
+    mutationFn: (payload: PointsAdjustFormValues) =>
+      apiClient.post<{ entryId: string; balance: number }>(ADMIN_ENDPOINTS.POINTS, payload),
+    onSuccess: (data) => {
+      toast.showToast(`Points adjusted. New balance: ${data.balance}.`, "success");
+      setPointsTargetId(null);
       void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
     },
   });
@@ -278,6 +307,10 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               label: ACTIONS.ADMIN["unban-user"].label,
               onClick: () => unbanUser.mutate(row.id),
               disabled: !isBanned || unbanUser.isPending,
+            },
+            {
+              label: ACTIONS.ADMIN["adjust-user-points"].label,
+              onClick: () => setPointsTargetId(row.id),
             },
           ]}
         />
@@ -472,6 +505,76 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
           </Button>
         </FormActions>
       </Modal>
+
+      {/*
+        Points adjustment — `admin_adjustment`'s first human writer (D48).
+
+        🛑 A drawer rather than a confirm dialog, and no `confirmation` block on
+        the ActionDef, because the form IS the confirmation: it will not submit
+        without a signed amount under the cap, a buyer-facing line and a
+        reason of at least POINTS_ADJUSTMENT_REASON_MIN characters. A confirm
+        step in front of a form that already demands a written justification is
+        a click that asks nothing.
+
+        The schema is passed, so the Zod parse is the single source of
+        validation (`audit-quick-form-drawer-schema` requires it) and the cap
+        is enforced before the request rather than only at the route.
+      */}
+      <QuickFormDrawer
+        isOpen={Boolean(pointsTargetId)}
+        onClose={() => setPointsTargetId(null)}
+        title={ACTIONS.ADMIN["adjust-user-points"].label}
+        schema={pointsAdjustFormSchema}
+        submitLabel="Apply adjustment"
+        defaultValues={{ userId: pointsTargetId ?? "" }}
+        fields={[
+          /*
+           * `userId` is carried as a hidden-in-practice text field rather than
+           * injected at submit time, so the schema validates the SAME object
+           * the route will receive. Pre-filled from the row and not meant to be
+           * retyped.
+           */
+          {
+            name: "userId",
+            label: "User ID",
+            type: "text",
+            required: true,
+            helperText: "Pre-filled from the row you opened.",
+          },
+          {
+            name: "amount",
+            label: "Points (negative to debit)",
+            type: "number",
+            required: true,
+            helperText: `1 point = ₹1 against a future order. Whole numbers, up to ${POINTS_ADJUSTMENT_MAX} per adjustment.`,
+          },
+          {
+            name: "description",
+            label: "What the buyer sees",
+            type: "text",
+            required: true,
+            placeholder: "Goodwill credit for the delayed BX-53 order",
+          },
+          {
+            name: "adminReason",
+            label: "Internal reason",
+            type: "textarea",
+            required: true,
+            helperText: `At least ${POINTS_ADJUSTMENT_REASON_MIN} characters. Never shown to the buyer — the reader is the next admin.`,
+          },
+        ]}
+        isLoading={adjustPoints.isPending}
+        onSubmit={(values) => {
+          /*
+           * 🛑 The cast is to the SCHEMA'S OWN inferred type, and it is safe
+           * only because `schema={pointsAdjustFormSchema}` is passed above —
+           * the drawer will not call this until that parse succeeds, so the
+           * shape is already proven. `FormValues` is an index-signature bag,
+           * which is why a cast is needed at all rather than a widening.
+           */
+          adjustPoints.mutate(values as unknown as PointsAdjustFormValues);
+        }}
+      />
     </>
   );
 }

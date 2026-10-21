@@ -994,6 +994,19 @@ export type {
   CancelWithRefundOptions,
   CancelWithRefundResult,
 } from "./_internal/server/features/orders/cancellation-refund";
+/**
+ * `admin_adjustment`'s first human writer (D48).
+ *
+ * Public for the same reason `cancelOrderWithRefund` above is: the consumer
+ * owns `POST /api/admin/points`, and **there is no `./_internal/*` subpath**, so
+ * a consumer route cannot reach it any other way.
+ *
+ * 🛑 Export the ACTION, not the repository's `append`. `append` would let a
+ * route write any kind with any actor; this function fixes the kind, applies
+ * the credit-only expiry, writes the `adminAuditLog` row and notifies the
+ * buyer. A route reaching past it would silently skip three of those.
+ */
+export { adjustUserPoints } from "./_internal/server/features/points/adjust";
 export { pointsRepository, PointsRepository } from "./features/points/repository/points.repository";
 export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components

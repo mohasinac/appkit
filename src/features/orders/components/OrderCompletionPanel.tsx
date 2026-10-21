@@ -63,6 +63,7 @@ import { Button } from "../../../ui/components/Button";
  * barrel is also what the build-weight work is unwinding.
  */
 import { Div } from "../../../ui/components/Div";
+import { Icon } from "../../../ui/components/Icon";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { Textarea } from "../../../ui/components/Textarea";
@@ -128,7 +129,16 @@ function StarRow({
           aria-pressed={n === value}
           onClick={() => onChange(n)}
         >
-          {n <= value ? "★" : "☆"}
+          {/*
+            🛑 `<Icon>`, not "★"/"☆". A text character cannot be sized — no
+            width or height utility reaches it, so it renders at the platform
+            font fallback inside a 36px-min control. That is Root Cause #80
+            exactly, and `audit-icon-sizing` caught this very line; it was
+            written with glyphs and the audit is why it is not still.
+            `filled` is what distinguishes a scored star from an empty one, so
+            the single registry glyph serves both states.
+          */}
+          <Icon name="review" filled={n <= value} />
         </Button>
       ))}
     </Row>

@@ -218,6 +218,12 @@ export const ADMIN_ENDPOINTS = {
   PAYMENT_CASE_BY_ID: (id: string) => `/api/admin/payment-cases/${id}`,
   PROTECTION_CLAIMS: "/api/admin/protection-claims",
   PROTECTION_CLAIM_BY_ID: (id: string) => `/api/admin/protection-claims/${id}`,
+  /**
+   * Credit or debit a buyer's points by hand — `admin_adjustment`'s first human
+   * writer (D48). POST only; the balance and ledger are already readable from
+   * the user detail surfaces, so there is no matching GET.
+   */
+  POINTS: "/api/admin/points",
   MAINTENANCE_GATEWAY_EVENTS: "/api/admin/maintenance/gateway-events",
   MAINTENANCE_OBLIGATIONS: "/api/admin/maintenance/obligations",
   SHIPMENTS: "/api/admin/shipments",
