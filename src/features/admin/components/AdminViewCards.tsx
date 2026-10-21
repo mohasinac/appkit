@@ -20,6 +20,8 @@ interface AdminViewCardsProps {
   view: "grid" | "list";
   isLoading?: boolean;
   emptyLabel?: string;
+  /** Rendered beneath `emptyLabel` when there are no rows — see DataTable's note. */
+  emptyAction?: React.ReactNode;
   onRowClick?: (row: AdminListingScaffoldRow) => void;
   selectedIdSet?: Set<string>;
   onToggleSelect?: (id: string) => void;
@@ -312,6 +314,7 @@ export function AdminViewCards({
   view,
   isLoading,
   emptyLabel = "No items found",
+  emptyAction,
   onRowClick,
   selectedIdSet,
   onToggleSelect,
@@ -336,7 +339,10 @@ export function AdminViewCards({
 
   if (rows.length === 0) {
     return (
-      <Text paddingY="3xl" size="sm" color="muted" align="center">{emptyLabel}</Text>
+      <Stack paddingY="y-3xl" gap="md" align="center">
+        <Text size="sm" color="muted" align="center">{emptyLabel}</Text>
+        {emptyAction}
+      </Stack>
     );
   }
 

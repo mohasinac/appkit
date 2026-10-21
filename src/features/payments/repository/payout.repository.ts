@@ -150,8 +150,6 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * in `security/pii-encrypt.ts`.
    */
 
-  /** Override mapDoc to auto-decrypt PII on every Firestore read */
-
   /**
    * Create a new payout request
    */

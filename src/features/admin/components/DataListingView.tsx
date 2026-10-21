@@ -334,6 +334,80 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
     typeof config.queryKey[1] === "string" ? config.queryKey[1] : undefined,
   );
 
+  /**
+   * ONE renderer for `config.primaryAction`, used by the toolbar AND by the
+   * empty state.
+   *
+   * 🛑 WHY THIS EXISTS: the action was rendered in the toolbar and nowhere
+   * else, so an admin landing on an EMPTY list was told "No X found" with no
+   * way forward — while the button that creates the first record sat in a
+   * toolbar above an empty table. 27 of ~84 listing configs declare a
+   * `primaryAction`; all 27 had that hole.
+   *
+   * 🛑 And it is a FUNCTION rather than two copies, because the alternative is
+   * the shape Root Cause #75 is about: a rule spelled out twice, where the
+   * copy made first learns nothing when the other gains a branch. The `href`
+   * vs `onClick` split and the `asChild` anchor are exactly the sort of detail
+   * that would drift.
+   *
+   * `size` is the only difference between the two placements — a toolbar
+   * button is `sm`, and an empty state is the one thing on screen, so it gets
+   * the default.
+   */
+  /*
+   * 🛑 TWO DIFFERENT EMPTY STATES, and offering the wrong action is worse than
+   * offering none.
+   *
+   * "No products found" with a New Product button is right on a fresh install
+   * and actively misleading when the admin has just filtered to
+   * `status=archived` — there may be a thousand products, and the useful move
+   * is to clear the filter, not to create a thousand-and-first. `resetAll`
+   * and `hasActiveState` already exist for the toolbar's own Reset control,
+   * so this needs no new state and cannot disagree with it.
+   */
+  const emptyIsFiltered = hasActiveState;
+  const emptyLabel =
+    config.emptyLabel ?? `No ${config.title.toLowerCase()} found`;
+  const resolvedEmptyLabel = emptyIsFiltered
+    ? `No ${config.title.toLowerCase()} match these filters`
+    : emptyLabel;
+
+  const renderPrimaryAction = (size?: "sm") => {
+    const action = config.primaryAction;
+    if (!action) return null;
+    const icon = action.icon ?? <Plus className="h-4 w-4" />;
+    return action.href ? (
+      // `asChild` so a create PAGE is a real anchor — middle-click and
+      // copy-link work, and it is not a button that happens to navigate (a
+      // Known-TS-Pattern this repo bans outright).
+      <Button gap="sm" size={size} asChild>
+        <TextLink variant="inherit" href={action.href}>
+          {icon}
+          {action.label}
+        </TextLink>
+      </Button>
+    ) : (
+      <Button
+        gap="sm"
+        size={size}
+        onClick={() => action.onClick?.({ openCreatePanel: panel.openCreatePanel })}
+      >
+        {icon}
+        {action.label}
+      </Button>
+    );
+  };
+
+  /** What an empty list offers: clear the filters, or create the first record. */
+  const renderEmptyAction = () =>
+    emptyIsFiltered ? (
+      <Button variant="secondary" onClick={resetAll}>
+        Clear filters
+      </Button>
+    ) : (
+      renderPrimaryAction()
+    );
+
   const bulkActionItems = config.buildBulkActions?.(selectionContext);
 
   // Mobile bulk bar
@@ -572,30 +646,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           config.primaryAction || config.toolbarExtra ? (
             <Row align="center" gap="sm">
               {config.toolbarExtra}
-              {config.primaryAction &&
-                (config.primaryAction.href ? (
-                  // `asChild` so the create PAGE is a real anchor — middle-click
-                  // and copy-link work, and it is not a button that happens to
-                  // navigate (a Known-TS-Pattern this repo bans outright).
-                  <Button gap="sm" size="sm" asChild>
-                    <TextLink variant="inherit" href={config.primaryAction.href}>
-                      {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
-                      {config.primaryAction.label}
-                    </TextLink>
-                  </Button>
-                ) : (
-                  <Button gap="sm"
-                    size="sm"
-                    onClick={() =>
-                      config.primaryAction!.onClick?.({
-                        openCreatePanel: panel.openCreatePanel,
-                      })
-                    }
-                  >
-                    {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
-                    {config.primaryAction.label}
-                  </Button>
-                ))}
+              {renderPrimaryAction("sm")}
             </Row>
           ) : undefined
         }
@@ -641,7 +692,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             rows={rows}
             resourceIcon={resourceIcon}
             isLoading={isLoading}
-            emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
+            emptyLabel={resolvedEmptyLabel}
+            emptyAction={renderEmptyAction()}
             selectedIds={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
             onToggleSelectAll={(next) =>
@@ -678,7 +730,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             view={view === "table" ? "grid" : view}
             resourceIcon={resourceIcon}
             isLoading={isLoading}
-            emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
+            emptyLabel={resolvedEmptyLabel}
+            emptyAction={renderEmptyAction()}
             onRowClick={
               resolvedRowClick
                 ? (row) => resolvedRowClick(row as unknown as TRow)

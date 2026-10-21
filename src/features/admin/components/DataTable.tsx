@@ -67,6 +67,17 @@ interface DataTableProps<T extends { id: string }> {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   emptyLabel?: string;
+  /**
+   * Rendered beneath `emptyLabel` when there are no rows — normally the
+   * listing's own create button.
+   *
+   * 🛑 A ReactNode rather than `{label, href}`: the caller already owns a
+   * renderer for its primary action, and a second description of the same
+   * button here would be two things to keep in step. Optional, because a
+   * listing with nothing to offer should say so and stop — an empty state
+   * with a fabricated action is worse than a quiet one.
+   */
+  emptyAction?: React.ReactNode;
   /** When provided, renders a leading checkbox column + long-press to toggle. */
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string, selected: boolean) => void;
@@ -164,6 +175,7 @@ export function DataTable<T extends { id: string }>({
   currentPage = 1,
   onPageChange,
   emptyLabel = "No records found",
+  emptyAction,
   rowHrefTemplate,
   onRowClick,
   renderRowActions,
@@ -234,7 +246,13 @@ export function DataTable<T extends { id: string }>({
                   colSpan={columns.length + (selectionEnabled ? 1 : 0) + (renderRowActions ? 1 : 0)}
                   align="center" color="faint" paddingX="md" paddingY="md"
                 >
-                  {emptyLabel}
+                  {/* `Td`'s own padding scale stops at `md` (CellPaddingY), so
+                      the breathing room an empty state wants comes from the
+                      Stack rather than from the cell. */}
+                  <Stack paddingY="y-xl" gap="md" align="center">
+                    <Text size="sm" color="muted">{emptyLabel}</Text>
+                    {emptyAction}
+                  </Stack>
                 </Td>
               </Tr>
             ) : (
