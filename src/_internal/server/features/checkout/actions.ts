@@ -31,6 +31,7 @@ import {
   productRepository,
 } from "../../../../repositories";
 import { calculateGst, isIntraStateSupply } from "../../../shared/fees/calculator";
+import { resolveStateKey, INDIA_STATES } from "../../../shared/fees/india-states";
 import {
   computePreOrderDepositAmount,
   lineTotalFor,
@@ -446,7 +447,11 @@ export async function resolveShippingCost(
   const store = await storeRepository.findById(storeId);
   const storeOwnerId = store?.ownerId;
   const storeEmiEnabled = store?.emiEnabled === true;
-  const storeState = await resolveStoreState(storeId);
+  // `store` is passed in rather than re-fetched inside: G3 needs its `gstin`,
+  // and the document is already in hand one line above. A second
+  // `storeRepository` read here is what line ~504's comment warns against,
+  // and it would cost a Firestore read on every checkout (Rule #6).
+  const storeState = await resolveStoreState(storeId, store?.gstin);
 
   /*
    * ── C5b: the store's shipping MODE, not a flat number ──────────────────
@@ -538,7 +543,36 @@ async function legacyFlatPolicy(
 }
 
 /** P-8 GST — the seller's registered/pickup state, used to determine intra- vs inter-state tax. */
-async function resolveStoreState(storeId: string): Promise<string | undefined> {
+async function resolveStoreState(
+  storeId: string,
+  /**
+   * The store's GSTIN, supplied by the caller which already holds the store
+   * document. Not re-fetched here — see the call site.
+   */
+  storeGstin?: string,
+): Promise<string | undefined> {
+  /*
+   * ── G3: the GSTIN's state code wins over the typed pickup address ────────
+   *
+   * A GSTIN's first two characters ARE the state of registration — it is
+   * issued per state, so for a registered seller it is the authoritative
+   * place of supply. The pickup address is free text a seller typed, and a
+   * store whose pickup state disagrees with its GSTIN prefix (a warehouse in
+   * another state, a typo, a seller who moved) splits the tax on the wrong
+   * one.
+   *
+   * `resolveStateKey` accepts a bare code, a full GSTIN, or a name, so the
+   * GSTIN goes to it whole rather than being sliced here — that keeps the
+   * "first two characters are the state" knowledge in exactly one place.
+   *
+   * 🛑 Falls back to the pickup address rather than failing: an UNREGISTERED
+   * seller legitimately has no GSTIN and is the common case on this platform.
+   * Returns the canonical display NAME, not the raw code, so every downstream
+   * reader still receives a state name.
+   */
+  const fromGstin = resolveStateKey(storeGstin);
+  if (fromGstin) return INDIA_STATES[fromGstin].name;
+
   const addresses = await addressesRepository.listByOwner("store", storeId);
   const pickup = addresses.find((a) => a.isDefault) ?? addresses[0];
   return pickup?.state;

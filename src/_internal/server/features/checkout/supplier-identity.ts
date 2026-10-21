@@ -76,7 +76,24 @@ export function resolveSupplierIdentity(
    * A seller with a GSTIN and no legal name is a data gap worth seeing as a
    * blank on the invoice, not one worth papering over with the wrong name.
    */
-  if (sellerGstin) {
+  /*
+   * 🛑 G8 — `&& settings?.gst?.enabled`, added 2026-10-21.
+   *
+   * This branch returned on the GSTIN ALONE while the platform branch below
+   * was correctly gated on `gst.enabled`. So with GST disabled, a seller who
+   * happens to have a GSTIN still got it stamped onto the order — producing a
+   * document that LOOKS like a tax invoice, names a registration, and carries
+   * **no tax at all**, because the whole GST computation is skipped when the
+   * flag is off (`previewCheckoutPricing` and `createOrderForGroup` both gate
+   * their `sumGroupGst` call on it).
+   *
+   * An invoice asserting a GSTIN with zero tax on it is worse than a plain
+   * invoice: it implies a taxable supply was made and nil tax was due. The two
+   * branches now agree that `gst.enabled` is the switch for whether this is a
+   * tax document at all — which is what that flag already means everywhere
+   * else, and what the platform branch's own comment below says.
+   */
+  if (sellerGstin && settings?.gst?.enabled) {
     return {
       gstin: sellerGstin,
       legalName: trimmed(store?.legalName),

@@ -16,6 +16,7 @@
  */
 
 import { roundRupees } from "../../../utils/number.formatter";
+import { resolveStateKey } from "./india-states";
 
 export interface FeeCommissionRates {
   platformFeePercent: number;
@@ -306,6 +307,44 @@ export function isIntraStateSupply(
   storeState: string | undefined | null,
   buyerState: string | undefined | null,
 ): boolean | null {
+  /*
+   * ── G2: resolve through the state TABLE first, not string equality ───────
+   *
+   * This was `normaliseStateName(a) === normaliseStateName(b)` — lowercase,
+   * strip non-letters, compare. Correct only when both sides happen to be
+   * spelled the same way, and they are not: a seller types their pickup
+   * state, a buyer types their delivery state, and a GSTIN carries the state
+   * as a two-digit CODE. So `"KA"` vs `"Karnataka"` compared unequal and the
+   * supply read as INTER-state, recording **IGST where CGST+SGST was due**.
+   *
+   * Worse, the old normaliser's `.replace(/[^a-z\s]/g, " ")` DESTROYED
+   * digits, so a state held as `"29"` — or a full GSTIN — normalised to the
+   * empty string and returned `null`, i.e. "place of supply undetermined",
+   * which both callers then resolve to IGST with a warning.
+   *
+   * None of this changed the TOTAL (IGST total == CGST+SGST total), which is
+   * precisely why it could live indefinitely: no figure in the system
+   * disagreed with any other. Only the split was wrong, and the split is what
+   * a GST return is built from.
+   *
+   * Verified against the table: "KA", "29", "29ABCDE1234F1Z5" and
+   * "karnataka." all resolve to one key; "AP" vs "Arunachal Pradesh", "MP" vs
+   * "Maharashtra" and "Punjab" vs "Puducherry" stay distinct (7 negative
+   * controls, 0 false positives).
+   */
+  const keyA = resolveStateKey(storeState);
+  const keyB = resolveStateKey(buyerState);
+  if (keyA && keyB) return keyA === keyB;
+
+  /*
+   * 🛑 The string fallback STAYS, and it is a widening rather than a
+   * replacement. An input the table cannot resolve — a typo, a non-Indian
+   * state — used to be handled by plain equality, and for the case where BOTH
+   * sides carry the SAME unrecognised spelling ("Karnatka" twice) that
+   * produced the right answer. Dropping it would turn those into
+   * "undetermined", which resolves to IGST, so a pure replacement would
+   * REGRESS exactly the inputs the table was added to improve.
+   */
   const a = normaliseStateName(storeState);
   const b = normaliseStateName(buyerState);
   if (!a || !b) return null;
