@@ -609,6 +609,87 @@ export function ordersTaxableValue(orders: readonly PayableOrderLike[]): number 
   return roundRupees(orders.reduce((sum, o) => sum + orderTaxableValue(o), 0));
 }
 
+/** The subset `orderShippingReimbursement` reads. */
+export interface ReimbursableOrderLike {
+  platformBookedShipment?: boolean;
+  shippingReimbursement?: { approvedAmount?: number };
+  shippingReconciliation?: { reimbursable?: number };
+}
+
+/**
+ * Postage the seller is owed back on one order — **D45, and it is NOT revenue.**
+ *
+ * ## Why this is a separate term from the taxable value
+ *
+ * `orderTaxableValue` above is deliberately goods-only, and that stays true:
+ * shipping is not a sale and must never be grossed into the figure GST is
+ * backed out of. A reimbursement is a **cost being refunded**, so it is added
+ * AFTER the taxable value rather than folded into it — which also means it
+ * carries no commission, because commissioning a seller's postage would be
+ * charging them for the privilege of posting a parcel.
+ *
+ * ## 🛑 It reads `approvedAmount`, and absence means NOT YET DECIDED
+ *
+ * The self-shipped branch pays what an admin approved, never what the seller
+ * declared: *"the only approved amount will be given to them."* An absent
+ * `approvedAmount` therefore returns 0 — and that is "nothing is payable yet",
+ * not "nothing is owed". The distinction matters because a payout batch built
+ * before approval must not silently settle the order at zero postage and leave
+ * the seller with no later claim; the quiet-period invariant is what holds the
+ * order back until the reimbursement is decided.
+ *
+ * ## 🛑 Shiprocket-booked parcels get NOTHING, gated on the booking
+ *
+ * We paid that courier. The gate is `platformBookedShipment`, a fact about how
+ * the shipment was created — never "does a receipt exist", which a seller
+ * supplies and could therefore supply for a parcel they did not pay for.
+ *
+ * ## The quoted branch pays `reimbursable` from the reconciliation
+ *
+ * On an order that went through the courier picker, `reconcileOrderShipping`
+ * has already computed `min(spent, charged)` at dispatch and stored it. No
+ * approval step there: the seller declared a spend against a quote the buyer
+ * chose, which is its own evidence, and the cap does the rest.
+ *
+ * Either way **the platform nets exactly zero on shipping** — the seller is
+ * made whole up to what the buyer paid, and any saving goes to the buyer as
+ * points.
+ */
+export function orderShippingReimbursement(order: ReimbursableOrderLike): number {
+  if (order.platformBookedShipment === true) return 0;
+
+  /*
+   * The self-shipped branch first: an approved amount is an explicit human
+   * decision and outranks the dispatch-time computation, which on this branch
+   * would not exist anyway.
+   */
+  const approved = order.shippingReimbursement?.approvedAmount;
+  if (typeof approved === "number" && Number.isFinite(approved)) {
+    return roundRupees(Math.max(0, approved));
+  }
+
+  const reimbursable = order.shippingReconciliation?.reimbursable;
+  if (typeof reimbursable === "number" && Number.isFinite(reimbursable)) {
+    return roundRupees(Math.max(0, reimbursable));
+  }
+
+  /*
+   * No reconciliation and no approval. Zero, and deliberately silent: an order
+   * dispatched before this feature existed has neither field, and warning on
+   * every one of those would make the log useless for the cases that matter.
+   */
+  return 0;
+}
+
+/** Sum of `orderShippingReimbursement` across a batch. */
+export function ordersShippingReimbursement(
+  orders: readonly ReimbursableOrderLike[],
+): number {
+  return roundRupees(
+    orders.reduce((sum, o) => sum + orderShippingReimbursement(o), 0),
+  );
+}
+
 /**
  * P-6 — pre-order groups charge each product's own `preOrderDepositPercent`
  * (falling back to the generic COD deposit % when a product doesn't have one

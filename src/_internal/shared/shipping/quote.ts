@@ -123,6 +123,45 @@ export interface ShippingReconciliation {
   sellerAbsorbs: number;
   /** Points credited to the buyer, 1 point = ₹1. */
   buyerPoints: number;
+  /**
+   * Rupees the seller is REIMBURSED for postage — `min(spent, charged)`.
+   *
+   * ## 🛑 This is the D45 decision, and it applies to BOTH branches
+   *
+   * Owner, 2026-10-21: *"if seller ships on their own then they have to upload
+   * the receipt of the shipment with the tracking number so that it is paid to
+   * them directly; if they use our platform's integration (Shiprocket) they do
+   * not get the money, the platform keeps it."* Plus: reimbursement **capped at
+   * what the buyer paid**, and the saving goes to the **buyer as points**.
+   *
+   * So shipping stops being revenue to allocate and becomes a COST TO
+   * REIMBURSE. The third output completes a formula whose other two terms this
+   * function already computed from the same two inputs:
+   *
+   * ```
+   * reimbursable  = min(spent, charged)
+   * sellerAbsorbs = max(0, spent − charged)
+   * buyerPoints   = max(0, charged − spent)
+   * ```
+   *
+   * 🛑 **The platform nets exactly zero on shipping in every case**, which is
+   * the property that makes it defensible to both sides and is worth stating as
+   * an invariant rather than leaving to be inferred:
+   *
+   * | buyer paid | receipt | seller gets | buyer gets | platform |
+   * |---|---|---|---|---|
+   * | ₹120 | ₹80 | ₹80 | ₹40 points | **₹0** |
+   * | ₹80 | ₹120 | ₹80 | — | **₹0** |
+   * | ₹100 | ₹100 | ₹100 | — | **₹0** |
+   *
+   * It is computed here for every order rather than only on the self-shipped
+   * branch, because today the platform keeps shipping in the QUOTED path too —
+   * so this is the fix for both, not a new rule for one. Whether it is actually
+   * PAID is gated separately: a Shiprocket-booked parcel was paid for by us, so
+   * `reimbursable` must not reach the payout base there. See
+   * `isReimbursableShipment`.
+   */
+  reimbursable: number;
   /** True when the seller shipped with a courier the buyer did not choose. */
   courierChanged: boolean;
 }
@@ -153,8 +192,47 @@ export function reconcileShipping(
   return {
     sellerAbsorbs: delta < 0 ? Math.abs(delta) : 0,
     buyerPoints: delta > 0 ? delta : 0,
+    /*
+     * `min(spent, charged)` — capped at what the buyer paid, per the owner's
+     * decision. Rounded through the same helper as the others: a bare
+     * `Math.min` of two 2dp figures is safe, but keeping all three terms on one
+     * rounding path is what stops `reimbursable + buyerPoints` drifting a paisa
+     * away from `charged`, which is the invariant an auditor would check.
+     */
+    reimbursable: roundMoney(Math.min(spent, charged)),
     courierChanged: quote.courierId !== actual.courierId,
   };
+}
+
+/**
+ * May this order's postage be reimbursed to the seller at all?
+ *
+ * ## 🛑 Gated on WHO BOOKED, never on whether a receipt exists
+ *
+ * Owner's rule: a seller who ships themselves is paid the approved amount on
+ * proof; a seller who uses our Shiprocket integration gets nothing, because we
+ * already paid the courier.
+ *
+ * Testing for a receipt instead would be the exploitable version — a seller
+ * could upload a receipt for a parcel the platform paid for and be reimbursed
+ * for someone else's spend. The discriminator has to be the booking, which is
+ * a fact about how the shipment was created and not something the claimant
+ * supplies.
+ *
+ * 🛑 It returns FALSE when the booker is unknown, and that direction is
+ * deliberate: paying out on an unverified premise is the error that cannot be
+ * undone, while refusing one wrongly is a case an operator fixes in a minute.
+ * `platformBooked` is set by the integration at booking time, so an absent
+ * value means "nobody recorded a platform booking" — for a self-shipped parcel
+ * the seller still has to upload evidence and have it approved, which is where
+ * a wrong refusal surfaces.
+ */
+export function isReimbursableShipment(order: {
+  platformBookedShipment?: boolean;
+  shippingReimbursement?: { approvedAmount?: number } | undefined;
+}): boolean {
+  if (order.platformBookedShipment === true) return false;
+  return true;
 }
 
 /**

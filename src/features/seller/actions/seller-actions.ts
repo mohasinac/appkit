@@ -39,7 +39,10 @@ import { couponsRepository } from "../../promotions/repository/coupons.repositor
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { computePayoutDeduction } from "../../../_internal/shared/fees/calculator";
-import { ordersTaxableValue } from "../../../_internal/shared/checkout/order-math";
+import {
+  ordersTaxableValue,
+  ordersShippingReimbursement,
+} from "../../../_internal/shared/checkout/order-math";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   finalizeStagedMediaUrl,
@@ -457,7 +460,22 @@ async function computeSellerEarnings(sellerId: string) {
    */
   const grossAmount = ordersTaxableValue(eligibleOrders);
   const siteSettings = await siteSettingsRepository.getSingleton();
-  const deduction = computePayoutDeduction(grossAmount, siteSettings.commissions);
+  /*
+   * D45 — postage the seller is owed back, added AFTER the fee bases by
+   * `computePayoutDeduction` so no commission or gateway percentage is charged
+   * on a cost being refunded. Shiprocket-booked parcels return 0 (we paid that
+   * courier), and the self-shipped branch pays only what an admin APPROVED.
+   *
+   * 🛑 Passed at ALL FOUR payout call sites or they disagree to the rupee, and
+   * a seller shown one figure and paid another is worse than either being wrong
+   * alone.
+   */
+  const shippingReimbursement = ordersShippingReimbursement(eligibleOrders);
+  const deduction = computePayoutDeduction(
+    grossAmount,
+    siteSettings.commissions,
+    shippingReimbursement,
+  );
 
   return {
     eligibleOrders,
@@ -601,7 +619,11 @@ export async function bulkSellerOrder(
    * scheduled job pay differently for the same orders. */
   const grossAmount = ordersTaxableValue(eligible);
   const bulkSiteSettings = await siteSettingsRepository.getSingleton();
-  const bulkDeduction = computePayoutDeduction(grossAmount, bulkSiteSettings.commissions);
+  const bulkDeduction = computePayoutDeduction(
+    grossAmount,
+    bulkSiteSettings.commissions,
+    ordersShippingReimbursement(eligibleOrders),
+  );
 
   const payoutDoc = await payoutRepository.createPayout({
     storeId: userId,

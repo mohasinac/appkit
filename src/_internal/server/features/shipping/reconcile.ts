@@ -17,8 +17,17 @@ export interface ReconcileShippingResult {
   outcome: "credited" | "seller-absorbed" | "exact" | null;
   sellerAbsorbs: number;
   buyerPoints: number;
+  /**
+   * Rupees of postage the seller is owed back — `min(spent, charged)`.
+   *
+   * 🛑 Computed on BOTH branches, because today the platform keeps shipping in
+   * the quoted path too, so D45 is a fix for both rather than a new rule for
+   * one. Whether it is PAID is a separate gate: `isReimbursableShipment`
+   * refuses a Shiprocket-booked parcel, which we paid for ourselves.
+   */
+  reimbursable: number;
   /** Why nothing happened, when `outcome` is null. For logs and the UI. */
-  skipped?: "no-quote" | "already-reconciled" | "no-buyer";
+  skipped?: "no-quote" | "already-reconciled" | "no-buyer" | "awaiting-evidence";
 }
 
 /**
@@ -46,7 +55,13 @@ export async function reconcileOrderShipping(
   const order = await orderRepository.findById(orderId);
 
   if (!order) {
-    return { outcome: null, sellerAbsorbs: 0, buyerPoints: 0, skipped: "no-quote" };
+    return {
+      outcome: null,
+      sellerAbsorbs: 0,
+      buyerPoints: 0,
+      reimbursable: 0,
+      skipped: "no-quote",
+    };
   }
 
   /*
@@ -57,7 +72,24 @@ export async function reconcileOrderShipping(
    * against a number that was never a courier quote.
    */
   if (!order.selectedShippingQuote) {
-    return { outcome: null, sellerAbsorbs: 0, buyerPoints: 0, skipped: "no-quote" };
+    /*
+     * 🛑 THIS SKIP BRANCH IS THE D45 CASE, and that is why it is still a skip
+     * HERE rather than being handled inline.
+     *
+     * No quote means the seller shipped manually, so there is no quoted figure
+     * to measure a saving against — and the money question is a different one:
+     * what did the postage actually cost, proven by a receipt an admin has
+     * approved. That is an admin-triggered event, not a dispatch-triggered one,
+     * so it lives in `approveShippingReimbursement` below. Both write the SAME
+     * `shippingReconciliation` field and therefore share one idempotency key.
+     */
+    return {
+      outcome: null,
+      sellerAbsorbs: 0,
+      buyerPoints: 0,
+      reimbursable: 0,
+      skipped: "no-quote",
+    };
   }
 
   if (order.shippingReconciliation) {
@@ -65,6 +97,7 @@ export async function reconcileOrderShipping(
       outcome: null,
       sellerAbsorbs: order.shippingReconciliation.sellerAbsorbs,
       buyerPoints: order.shippingReconciliation.buyerPoints,
+      reimbursable: order.shippingReconciliation.reimbursable ?? 0,
       skipped: "already-reconciled",
     };
   }
@@ -84,7 +117,13 @@ export async function reconcileOrderShipping(
         orderId,
         buyerPoints: result.buyerPoints,
       });
-      return { outcome: null, sellerAbsorbs: 0, buyerPoints: 0, skipped: "no-buyer" };
+      return {
+        outcome: null,
+        sellerAbsorbs: 0,
+        buyerPoints: 0,
+        reimbursable: 0,
+        skipped: "no-buyer",
+      };
     }
 
     await pointsRepository.append({
@@ -115,5 +154,6 @@ export async function reconcileOrderShipping(
       result.buyerPoints > 0 ? "credited" : result.sellerAbsorbs > 0 ? "seller-absorbed" : "exact",
     sellerAbsorbs: result.sellerAbsorbs,
     buyerPoints: result.buyerPoints,
+    reimbursable: result.reimbursable,
   };
 }

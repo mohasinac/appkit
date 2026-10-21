@@ -15,7 +15,12 @@ import { getDefaultCurrency } from "../../../../core";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import { payoutCutoff } from "../../../shared/fees/payout-hold";
 import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping/protections";
-import { ordersTaxableValue, type PayableOrderLike } from "../../../shared/checkout/order-math";
+import {
+  ordersTaxableValue,
+  ordersShippingReimbursement,
+  type PayableOrderLike,
+  type ReimbursableOrderLike,
+} from "../../../shared/checkout/order-math";
 import type { JobContext } from "../runtime/types";
 
 export interface WeeklyPayoutEligibilityResult {
@@ -97,7 +102,18 @@ export async function runWeeklyPayoutEligibility(
     const grossAmount = ordersTaxableValue(
       orders.map((o) => o.data as PayableOrderLike),
     );
-    const { platformFee, gatewayFee, gstOnFee, netAmount } = computePayoutDeduction(grossAmount, commissions);
+    const { platformFee, gatewayFee, gstOnFee, netAmount } = computePayoutDeduction(
+      grossAmount,
+      commissions,
+      /*
+       * D45 — postage refunded to the seller, added AFTER the fee bases so no
+       * commission is charged on a cost being refunded. `.data` for the same
+       * reason `ordersTaxableValue` above needs it: `orders` holds
+       * `{ id, data }` wrappers, and passing the wrapper would read every field
+       * as undefined and silently reimburse zero.
+       */
+      ordersShippingReimbursement(orders.map((o) => o.data as ReimbursableOrderLike)),
+    );
 
     /*
      * 🛑 REVEALED before building a payout — see the identical note in

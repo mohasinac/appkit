@@ -141,17 +141,60 @@ export interface PayoutDeduction {
   gstOnFee: number;
   /** platformFee + gatewayFee + gstOnFee. */
   totalDeduction: number;
-  /** grossAmount - totalDeduction, floored at 0. */
+  /** grossAmount - totalDeduction + shippingReimbursement, floored at 0. */
   netAmount: number;
+  /**
+   * Postage refunded to the seller, added AFTER the deductions (D45).
+   *
+   * Reported separately so a payout can be explained: "₹951 goods less ₹10 fee
+   * plus ₹80 postage" is a sentence; one net figure is not.
+   */
+  shippingReimbursement: number;
 }
 
-export function computePayoutDeduction(grossAmount: number, commissions: FeeCommissionRates): PayoutDeduction {
+/**
+ * What a seller is actually paid.
+ *
+ * ## 🛑 `shippingReimbursement` is added AFTER the fee bases, never into them
+ *
+ * D45 makes postage a **cost being refunded**, not revenue. So it is the one
+ * term in this function that is added to `netAmount` while being excluded from
+ * `platformFee` and `gatewayFee` — because commissioning a seller's postage
+ * would mean charging them for the privilege of posting the parcel, and taking
+ * a gateway percentage of it would mean charging them a card fee on money that
+ * is reimbursing a cash outlay.
+ *
+ * That is also why it is a parameter here rather than something a caller adds
+ * to `grossAmount` before calling: `grossAmount` IS the commission base, so
+ * folding postage into it silently commissions it. Four payout paths call this
+ * (the seller's own earnings view, the manual request, and both jobs) and all
+ * four must agree to the rupee — a seller shown one number and paid another is
+ * worse than either number being wrong alone. One owner is what guarantees it.
+ *
+ * Defaulted to 0, so the three call sites that do not yet pass it keep their
+ * current behaviour exactly rather than silently gaining a term.
+ */
+export function computePayoutDeduction(
+  grossAmount: number,
+  commissions: FeeCommissionRates,
+  shippingReimbursement = 0,
+): PayoutDeduction {
   const platformFee = roundRupees(grossAmount * (commissions.platformFeePercent / 100));
   const gatewayFee = roundRupees(grossAmount * ((commissions.gatewayFeePercent ?? 0) / 100));
   const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
   const totalDeduction = roundRupees(platformFee + gatewayFee + gstOnFee);
-  const netAmount = Math.max(0, roundRupees(grossAmount - totalDeduction));
-  return { platformFee, gatewayFee, gstOnFee, totalDeduction, netAmount };
+  const postage = Number.isFinite(shippingReimbursement)
+    ? Math.max(0, shippingReimbursement)
+    : 0;
+  const netAmount = Math.max(0, roundRupees(grossAmount - totalDeduction + postage));
+  return {
+    platformFee,
+    gatewayFee,
+    gstOnFee,
+    totalDeduction,
+    netAmount,
+    shippingReimbursement: roundRupees(postage),
+  };
 }
 
 export interface CodHandlingFeeRates {

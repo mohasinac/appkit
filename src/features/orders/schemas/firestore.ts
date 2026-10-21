@@ -788,6 +788,56 @@ export interface OrderDocument extends BaseDocument {
    */
   shippingReconciliation?: ShippingReconciliation & { reconciledAt: Date };
   /**
+   * Did WE book this shipment through the Shiprocket integration?
+   *
+   * 🛑 The discriminator for whether postage may be reimbursed at all, and it
+   * must be a fact about the BOOKING rather than about the evidence — see
+   * `isReimbursableShipment`. If reimbursement were gated on "a receipt
+   * exists", a seller could upload a receipt for a parcel the platform paid
+   * for and be reimbursed for our spend.
+   *
+   * Written by the integration at booking time. Absent means nobody recorded a
+   * platform booking, which for a self-shipped parcel is correct and still
+   * requires evidence and approval before anything is paid.
+   */
+  platformBookedShipment?: boolean;
+  /**
+   * The self-shipped reimbursement workflow: evidence in, approved amount out.
+   *
+   * ## 🛑 `declaredAmount` is an ESTIMATE; `approvedAmount` is the entitlement
+   *
+   * Owner, 2026-10-21: *"The seller may set an initial value of shipping but
+   * the only approved amount will be given to them."* So a seller who quotes
+   * ₹120 and posts for ₹80 is reimbursed ₹80 — the two numbers are different
+   * things and must never be conflated, which is why they are separate fields
+   * rather than one that gets overwritten.
+   *
+   * `approvedAmount` is absent until an admin approves. A missing value means
+   * "not yet decided", never zero: defaulting it to 0 would make an
+   * un-reviewed claim indistinguishable from a rejected one, and the payout
+   * base reads this field.
+   *
+   * 🛑 **`approvedBy` must never be `"system"`.** Approving a reimbursement
+   * moves money to a seller on the strength of a document a human has to look
+   * at. Same rule, and the same reason, as `paymentCases.resolve()` refusing a
+   * system resolver.
+   */
+  shippingReimbursement?: {
+    /** What the seller says it cost. An estimate, not an entitlement. */
+    declaredAmount: number;
+    /** Receipt / postage slip. Uploaded by the seller. */
+    evidenceUrl?: string;
+    /** The tracking number on that receipt — ties the evidence to the parcel. */
+    trackingNumber?: string;
+    submittedAt: Date;
+    /** Present only once an admin has decided. Absent ≠ zero. */
+    approvedAmount?: number;
+    approvedBy?: string;
+    approvedAt?: Date;
+    /** Required when the approved amount differs from the declared one. */
+    approvalNote?: string;
+  };
+  /**
    * The carrier's label PDF, once a shipment has been booked.
    *
    * 🛑 DECLARED 2026-10-11, and the reason is that it was being READ without

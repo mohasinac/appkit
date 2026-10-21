@@ -967,6 +967,19 @@ export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/c
  */
 export { reconcileOrderShipping } from "./_internal/server/features/shipping/reconcile";
 /*
+ * D45's self-shipped half. Server entry only: it writes an order, appends to
+ * the points ledger, and `approveShippingReimbursement` throws on a `"system"`
+ * approver — none of which belongs anywhere a client bundle can reach.
+ */
+export {
+  submitShippingEvidence,
+  approveShippingReimbursement,
+} from "./_internal/server/features/shipping/reimbursement";
+export type {
+  SubmitShippingEvidenceInput,
+  ApproveShippingReimbursementInput,
+} from "./_internal/server/features/shipping/reimbursement";
+/*
  * Cancel an order and settle the refund it owes (D14). SERVER ENTRY ONLY, for
  * the same reason as its neighbour above: it calls the payment provider and
  * writes to `orders` and `paymentCases`.
