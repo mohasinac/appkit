@@ -14,7 +14,7 @@ import {
 import { serverLogger } from "../../../monitoring";
 import { getProviders } from "../../../contracts";
 import { orderRepository } from "../repository/orders.repository";
-import type { OrderDocument, OrderDocumentItem } from "../schemas";
+import type { OrderDocument, OrderDocumentItem, OrderPlain } from "../schemas";
 import type { TrackingInfo } from "../../../contracts/shipping";
 import { ORDER_CANCELLABLE_STATUSES } from "../../../_internal/shared/features/orders/config";
 
@@ -125,14 +125,30 @@ export async function listOrdersForUser(
   return orderRepository.findByUser(userId);
 }
 
+/**
+ * One order, for the buyer who placed it.
+ *
+ * 🛑 RETURNS PLAINTEXT, and the return TYPE says so. See
+ * `getAddressByIdForUser` for the full reasoning — same defect, same shape.
+ *
+ * `OrderRepository.mapDoc` does not decrypt, so this returned `enc:v1:` blobs
+ * for `userName`, `userEmail` and the `shippingAddress` name and phone, to
+ * the buyer, about their own order. Its caller is a server action that hands
+ * the result straight to the client.
+ *
+ * Revealing here rather than at the caller, because this function is what
+ * knows the read is owner-scoped: it throws `NotFoundError` — not Forbidden,
+ * deliberately, so the response cannot confirm an order exists — for any
+ * order whose `userId` is not the caller's.
+ */
 export async function getOrderByIdForUser(
   userId: string,
   orderId: string,
-): Promise<OrderDocument> {
+): Promise<OrderPlain> {
   const order = await orderRepository.findById(orderId);
   if (!order) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
   if (order.userId !== userId) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
-  return order;
+  return orderRepository.revealOrder(order);
 }
 
 /**
