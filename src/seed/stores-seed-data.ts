@@ -55,8 +55,22 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "The official LetItRip curated store. Hand-picked, authenticated collectibles with every item personally inspected before listing.",
     storeCategory: "category-spinning-tops",
-    storeLogoURL: seedPhoto("store-logo-letitrip-official-20260101", 400, 400),
-    storeBannerURL: seedPhoto("store-banner-letitrip-official-20260101", 1600, 400),
+    /*
+     * 🛑 The PLATFORM store carries the PLATFORM mark, not a fetched image.
+     *
+     * The logo is `public/logo.svg` rasterised by
+     * `scripts/make-store-logo.mjs` — already in the repo, already the
+     * watermark mark, and the one image in this pipeline with no licence
+     * question at all. It is composited onto a fixed dark plate there because
+     * `MediaAvatar` passes `objectFit="cover"` into a `rounded-full` box on a
+     * surface that inverts with the theme; a transparent gradient glyph would
+     * otherwise read as two different logos in light and dark.
+     *
+     * The banner is CC0, for the same reason as the carousel backgrounds: it
+     * is a wide strip with the store name over it and nowhere to print credit.
+     */
+    storeLogoURL: "/media/store-logo-letitrip-official",
+    storeBannerURL: "/media/store-banner-letitrip-official",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Curated by the LetItRip team. All items authenticated before listing. Fast dispatch, collector-grade packaging.",
     location: "Mumbai, Maharashtra, India",

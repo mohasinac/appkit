@@ -1,6 +1,17 @@
 /*
  * WHY: Seeds the homepage layout — which sections render, in what order, with what copy.
- * WHAT: 26 sections (21 enabled + 5 deliberately disabled), ordered 1..26 contiguously.
+ * WHAT: 27 sections (22 enabled + 5 deliberately disabled), ordered 1..27 contiguously.
+ *
+ * 🛑 CHANGED 2026-10-21: `section-shop-extras` was INSERTED at 10, which
+ * pushed every section from the old 10 onward down one. An insert is a
+ * RENUMBER, never a single write — writing the new row at 10 alone put it
+ * beside `section-featured-stores`, and two sections on one order makes the
+ * running order alphabetical by accident (see the unique-and-contiguous note
+ * below, which this reproduced within the hour of citing it).
+ *
+ * `section-systems-matrix` also moved 8 → 5 at the owner's request, to sit
+ * directly under pre-orders; carousel/trust/categories each took one step
+ * down to keep the range contiguous.
  *
  * 🛑 Four of those five were disabled on 2026-10-20 — auctions (3),
  * featured-bundles (9), event-raffles (13) and prize-draws (14) — each with its
@@ -146,7 +157,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-hero-carousel",
     type: "carousel",
-    order: 5,
+    order: 6,
     enabled: true,
     config: {
       title: "Featured promotions",
@@ -166,7 +177,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-trust-indicators",
     type: "trust-indicators",
-    order: 6,
+    order: 7,
     enabled: true,
     config: {
       title: "Why buyers trust us",
@@ -212,7 +223,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-collectibles-categories",
     type: "categories",
-    order: 7,
+    order: 8,
     enabled: true,
     config: {
       title: "Shop by Category",
@@ -355,11 +366,81 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ---- 9. Supply side ------------------------------------------------------
+  // ---- 10. The other three ways to buy -------------------------------------
+  /*
+   * 🛑 THIS IS A `custom-cards` RAIL, NOT A "STICKERS SECTION".
+   *
+   * There is no `stickers` member of `SectionType`, and
+   * `ProductsSectionConfig` marks `filterByCategory` / `filterByBrand`
+   * **NO-RENDERER** ("SSR uses one shared fetch", Rule #6) — so a products
+   * rail genuinely cannot be scoped to one listing type today. A real
+   * per-type rail needs a union member, a config interface, a renderer and an
+   * SSR fetch, which is appkit code rather than seed data.
+   *
+   * `custom-cards` is the honest thing that works now: real tiles, real
+   * images, real links, and no fiction about what the section is.
+   *
+   * 🛑 Stickers browse at `/art`. There is no public `/stickers` route —
+   * `ROUTES.ADMIN.STICKERS` and `ROUTES.STORE.STICKERS` are dashboard-only,
+   * and `ROUTES.PUBLIC.ART` is the combined art-and-stickers page.
+   *
+   * 🛑 THE COPY IS SIZED TO THE REAL CATALOGUE (measured 2026-10-21: stickers
+   * 2 published, spares 1, art 0, bundles 4). No tile says "hundreds of" or
+   * "every part" — a tile promising a catalogue the page cannot show is the
+   * dead-end-CTA defect that removed the hero's auctions card. The seed holds
+   * 6 more spares and 6 more stickers, but all sit on `store-beyblade-arena`,
+   * which does not exist in live Firestore; widening these rails means
+   * seeding that store, not loosening the words.
+   */
+  {
+    id: "section-shop-extras",
+    type: "custom-cards",
+    order: 10,
+    enabled: true,
+    config: {
+      title: "Stickers, spares and bundles",
+      subtitle:
+        "Three more ways to buy — sheets to decorate with, single parts off a build, and sets that cost less together.",
+      layout: "grid",
+      cards: [
+        {
+          id: "extras-stickers",
+          image: "/media/sticker-image-beyblade-x-event-sheet",
+          imageAlt: "A Beyblade X special event sticker sheet",
+          eyebrow: "Printed",
+          title: "Sticker sheets",
+          body: "Die-cut vinyl and holographic sheets of the X-series blades, from the special-event run. Weatherproof and UV-laminated.",
+          buttons: [{ label: "Shop stickers", href: String(ROUTES.PUBLIC.ART), variant: "primary" }],
+        },
+        {
+          id: "extras-spares",
+          image: "/media/spare-image-elevate-bit",
+          imageAlt: "A Beyblade X Elevate bit",
+          eyebrow: "Single parts",
+          title: "Spares",
+          body: "One component off a build, priced on condition — bits, ratchets and blades, so a broken combo costs a part and not a whole top.",
+          buttons: [{ label: "Browse spares", href: String(ROUTES.PUBLIC.SPARES), variant: "primary" }],
+        },
+        {
+          id: "extras-bundles",
+          image: "/media/bundle-cover-bundle-x-premium-tops",
+          imageAlt: "The three prize Beyblade X tops",
+          eyebrow: "Save",
+          title: "Bundles",
+          body: "Buy the set in one order and pay less than the parts. The Prize Beys Trio is ₹43,200 instead of ₹48,000.",
+          buttons: [{ label: "Browse bundles", href: String(ROUTES.PUBLIC.BUNDLES), variant: "primary" }],
+        },
+      ],
+    },
+    createdAt: NOW,
+    updatedAt: NOW,
+  },
+
+  // ---- 11. Supply side -----------------------------------------------------
   {
     id: "section-featured-stores",
     type: "stores",
-    order: 10,
+    order: 11,
     enabled: true,
     config: {
       title: "Featured Stores",
@@ -391,7 +472,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-collector-reviews",
     type: "reviews",
-    order: 11,
+    order: 12,
     enabled: false,
     config: {
       title: "What Buyers Say",
@@ -411,7 +492,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-upcoming-events",
     type: "events",
-    order: 12,
+    order: 13,
     enabled: true,
     config: {
       title: "Events & Offers",
@@ -439,7 +520,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
      * block (src/constants/navigation.tsx) — a per-document flag is the whole
      * mechanism for this one, which is exactly why it is spelled out.
      */
-    order: 13,
+    order: 14,
     enabled: false,
     config: {
       title: "Raffles & Spin Wheels",
@@ -458,7 +539,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     type: "prize-draws",
     // Disabled 2026-10-20 with `listings.listingTypes.prize-draw: false` — the
     // same two-lock arrangement as the auctions rail.
-    order: 14,
+    order: 15,
     enabled: false,
     config: {
       title: "Prize Draws",
@@ -478,7 +559,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-collector-blog",
     type: "blog-articles",
-    order: 15,
+    order: 16,
     enabled: true,
     config: {
       title: "From Our Blog",
@@ -502,7 +583,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-beyblade-banner",
     type: "banner",
-    order: 16,
+    order: 17,
     enabled: true,
     config: {
       height: "md",
@@ -534,7 +615,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-newsletter",
     type: "newsletter",
-    order: 17,
+    order: 18,
     enabled: true,
     config: {
       title: "Get new listings first",
@@ -554,7 +635,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-platform-stats",
     type: "stats",
-    order: 18,
+    order: 19,
     enabled: true,
     config: {
       /*
@@ -600,7 +681,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-platform-features",
     type: "features",
-    order: 19,
+    order: 20,
     enabled: true,
     config: {
       title: "Security You Can Trust",
@@ -637,7 +718,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-whatsapp-community",
     type: "whatsapp-community",
-    order: 20,
+    order: 21,
     enabled: true,
     config: {
       title: "Join the community",
@@ -649,14 +730,40 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
          subject: the value it was protecting (a bare `https://chat.whatsapp.com/`
          with no invite code) is gone, so the comment defended a string that no
          longer existed while discouraging anyone from touching the field. */
-      // Left unset: a bare chat.whatsapp.com URL is not a valid invite code and
-      // opens a page that resolves to no group. The real link is env-owned
-      // (WHATSAPP_GROUP_INVITE) and reaches the card through appkit.config.
+      /*
+       * 🛑 STILL UNSET HERE, AND THAT IS NOT THE SAME AS "NOT SET ANYWHERE".
+       *
+       * A bare chat.whatsapp.com URL is not a valid invite and opens a page
+       * resolving to no group, so a placeholder would be worse than nothing.
+       * The real invite is env-owned (`WHATSAPP_GROUP_INVITE`) and must not be
+       * committed to a seed file that ships in the package.
+       *
+       * What changed 2026-10-21: the indirection this comment relied on —
+       * "reaches the card through appkit.config" — was NOT reaching
+       * production. The live document had no `groupLink` at all, while
+       * `WhatsAppCommunitySectionConfig` declares it required and the
+       * component renders its join button only `{groupLink && …}`. So the
+       * section showed "Join the community" with the button silently missing.
+       *
+       * `scripts/push-editorial-content.mjs --only layout` now resolves the
+       * env var onto the live document, and refuses anything that is not a
+       * `chat.whatsapp.com/` invite (a `wa.me/` link opens a DM, not the
+       * group — it would look fixed and behave wrongly). Run it after changing
+       * the env var; seeding alone will not set this.
+       */
       groupLink: undefined,
+      /*
+       * 🛑 NO AUCTION PROMISE. A benefits list is a list of promises, and
+       * "Reminders when auctions you watch are closing" could not be kept —
+       * auctions are switched off at `listings.listingTypes.auction: false`,
+       * the rail is disabled and the hero's auctions card was removed for the
+       * same reason. Replaced with restock pings, which the catalogue can
+       * actually do.
+       */
       benefits: [
         "Deal alerts before they hit the homepage",
-        "Reminders when auctions you watch are closing",
-        "Early access to limited drops",
+        "Early access to limited drops and event codes",
+        "Restock pings for sold-out tops, parts and stickers",
         "Direct line to the team for order questions",
       ],
       buttonText: "Join the group",
@@ -668,7 +775,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-homepage-faq",
     type: "faq",
-    order: 21,
+    order: 22,
     enabled: true,
     config: {
       title: "Frequently Asked Questions",
@@ -738,7 +845,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-top-brands",
     type: "brands",
-    order: 22,
+    order: 23,
     enabled: true,
     config: {
       title: "Top Brands",
@@ -760,7 +867,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-social-feed-instagram",
     type: "social-feed",
-    order: 23,
+    order: 24,
     enabled: false,
     config: {
       title: "Follow along",
@@ -824,7 +931,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-systems-matrix",
     type: "custom-cards",
-    order: 8,
+    order: 5,
     enabled: true,
     config: {
       title: "Every system, every part family",
@@ -926,7 +1033,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-top-collections",
     type: "collection-cards",
-    order: 24,
+    order: 25,
     enabled: true,
     config: {
       title: "Explore the Marketplace",
@@ -973,7 +1080,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-how-it-works",
     type: "how-it-works",
-    order: 25,
+    order: 26,
     enabled: true,
     config: {
       title: "How buying here works",
@@ -1026,7 +1133,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   {
     id: "section-generation-promos",
     type: "promo-grid",
-    order: 26,
+    order: 27,
     enabled: true,
     config: {
       eyebrow: "FOUR GENERATIONS",

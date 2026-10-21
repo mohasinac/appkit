@@ -317,7 +317,31 @@ function withBundleMosaic(row: Partial<CategoryDocument>): Partial<CategoryDocum
     )
     .filter((src): src is string => typeof src === "string" && src.length > 0);
   if (images.length === 0) return row;
-  return { ...row, display: { ...row.display, mosaicImages: images } };
+  /*
+   * 🛑 The COVER is a single composited image, not a client-side collage.
+   *
+   * `mosaicImages` stays — it is still true and still cheap — but it is no
+   * longer what a card renders. Measured on production 2026-10-21: all four
+   * bundles carried three resolvable member images and every bundle card
+   * STILL showed the grey placeholder `coverImage`, so either
+   * `MarketplaceBundleCard` never reaches the collage or the cover wins, and
+   * the card gives no way to tell which.
+   *
+   * `scripts/make-bundle-mosaics.mjs` composites the members into one webp
+   * per bundle and uploads it as `bundle-cover-<id>`, so a bundle looks like
+   * its contents on EVERY surface — including ones that never knew about
+   * `mosaicImages` (OG images, the admin list, a share preview) — in one
+   * request instead of three.
+   *
+   * Only when there are ≥2 members: a single tile is not a collage, and that
+   * member's own photo would be the better cover. The script applies the same
+   * floor, so the id written here always has an object behind it.
+   */
+  const display = { ...row.display, mosaicImages: images };
+  if (images.length >= 2 && row.id) {
+    display.coverImage = `/media/bundle-cover-${row.id}`;
+  }
+  return { ...row, display };
 }
 
 /*
