@@ -191,8 +191,17 @@ export function RichTextEditor({
       </div>
       <div
         ref={editorRef}
-        role="textbox"
-        aria-label="Rich text editor"
+        /*
+         * 🛑 `role` and `aria-label` USED TO BE DECLARED HERE TOO, hardcoded
+         * to "Rich text editor" — and when the labelling props were added
+         * below, that made two of each on one element (`TS17001: JSX elements
+         * cannot have multiple attributes with the same name`). Removed here
+         * rather than there, because the hardcoded name was the weaker of the
+         * two: every rich-text field in the app announced itself as "Rich
+         * text editor", which says what the WIDGET is and never which FIELD
+         * it is — on the category editor that is the one describing the
+         * category, and the user could not tell.
+         */
         contentEditable={!disabled}
         suppressContentEditableWarning
         /*

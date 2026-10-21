@@ -36,6 +36,14 @@ export function FieldSelect({
   placeholder,
   error: errorProp,
   className,
+  /*
+   * 🛑 Declared on `FieldSelectProps` and never destructured, so line 77 read
+   * a free variable that does not exist — `TS2304: Cannot find name
+   * 'labelPlacement'`. A prop that is typed but not unpacked is the exact
+   * shape of the `schema: _schema` defect `audit-dead-underscore-prop` exists
+   * for, except here it did not even compile.
+   */
+  labelPlacement,
 }: FieldSelectProps) {
   const ctx = useContext(FormShellContext);
   const contextError = ctx?.errors[name];

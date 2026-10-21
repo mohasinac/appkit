@@ -237,6 +237,22 @@ export interface SellerProductDraft {
   liveCites?: boolean;
   /** Barcode ID of the physical sticker on this item. Auto-generated on save if blank. */
   barcodeId?: string;
+  /**
+   * The seller's OWN stock-keeping code — human-chosen, human-typed, and
+   * distinct from `barcodeId`, which is machine-generated.
+   *
+   * 🛑 This was RENDERED WITHOUT BEING DECLARED. The `sku` FormField read
+   * `values.sku` and wrote `onChange({ sku })` while the property existed on
+   * neither this interface nor `sellerProductSchema`, so both lines were hard
+   * type errors — invisible only because a syntax error elsewhere in appkit
+   * was stopping tsc before it got here.
+   *
+   * It did not fail silently at runtime, which is the part worth noting:
+   * `sellerProductSchema` is `.passthrough()`, so a typed value survived to
+   * Firestore untyped and unvalidated — exactly the trap this file's own
+   * `isLot` and `categoryIds` comments warn about, two hundred lines up.
+   */
+  sku?: string;
   // Print meta (art / stickers) — shared block, both types use the same fields.
   printSize?: string;
   printMaterial?: string;
@@ -675,6 +691,20 @@ function StepBasic({
         See `generateBarcodeId`'s header for why the widths cannot share a
         field: the label geometry is sized for the symbol.
       */}
+      {/*
+        🛑 `hint`, not `helperText`. `FormField` and `FieldInput` call it
+        `hint`; `ImageUpload`, `MediaUploadField`, `MediaUploadList`,
+        `TagInput` and `BarcodeField` all call it `helperText` — two names for
+        one concept across the form primitives, which is why this was wrong
+        here and wrong again in the box-code form.
+
+        🛑 And this comment sits ABOVE the element, because a JSX comment is
+        only valid in CHILDREN position. Written among the attributes it is
+        `TS1005: '...' expected` — the same mistake as the one that took
+        `AutoBreadcrumbs` down an hour ago, in a second position. There are
+        exactly two safe places for a comment around JSX: above the element,
+        or inside its children.
+      */}
       <FormField
         name="sku"
         label="SKU"
@@ -682,7 +712,7 @@ function StepBasic({
         value={values.sku ?? ""}
         onChange={(v) => onChange({ sku: v || undefined })}
         placeholder="LIR-BURS-001"
-        helperText="Your own stock code. Leave blank and one is generated from the category."
+        hint="Your own stock code. Leave blank and one is generated from the category."
       />
       <BarcodeField
         value={values.barcodeId ?? ""}
