@@ -146,6 +146,17 @@ export interface PointsLedgerEntry extends BaseDocument {
    * O(ledger) per balance check and gets slower forever.
    */
   consumed?: number;
+  /**
+   * On a `redemption` only: the credit batches this spend drew from, in the
+   * order it drew from them.
+   *
+   * 🛑 Recorded ON the spend rather than derived later. A reversal needs to know
+   * what to give back, and by then those batches may themselves have expired —
+   * "return it where it came from" is only answerable if the spend wrote it
+   * down. Deriving it afterwards would mean replaying the whole ledger and
+   * guessing at a FIFO order that may since have changed.
+   */
+  drawnFrom?: string[];
 }
 
 /**

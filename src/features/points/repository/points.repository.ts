@@ -2,6 +2,7 @@ import { getAdminDb } from "../../../providers/db-firebase";
 import {
   POINTS_FIELDS,
   POINTS_LEDGER_COLLECTION,
+  POINTS_EXPIRY_MONTHS,
   isPointsEntryWellFormed,
   type PointsEntryKind,
   type PointsLedgerEntry,
@@ -163,6 +164,75 @@ export class PointsRepository {
     const db = getAdminDb();
     const entryRef = db.collection(POINTS_LEDGER_COLLECTION).doc();
     const userRef = db.collection(USER_COLLECTION).doc(input.userId);
+    const now = new Date();
+
+    /*
+     * ── FIFO: which BATCHES does this spend draw from? ────────────────────
+     *
+     * 🛑 Queried OUTSIDE the transaction, and that is a Firestore constraint
+     * rather than a preference: a transaction must complete all reads before
+     * any write, and a collection QUERY cannot be mixed with the per-document
+     * updates below it. The part that must not race — the balance check — stays
+     * inside.
+     *
+     * The residual risk is two concurrent redemptions picking the same batches
+     * and over-consuming one, leaving a `consumed` figure above that entry's
+     * `amount`. That is an artefact on an EXPIRY calculation, not on a balance:
+     * the balance is guarded transactionally and still cannot go negative. The
+     * reconciliation job reports it, and a lock here would buy nothing a buyer
+     * can see.
+     */
+    const credits = await db
+      .collection(POINTS_LEDGER_COLLECTION)
+      .where(POINTS_FIELDS.USER_ID, "==", input.userId)
+      .where(POINTS_FIELDS.AMOUNT, ">", 0)
+      .orderBy(POINTS_FIELDS.AMOUNT)
+      .limit(200)
+      .get();
+
+    /*
+     * 🛑 Re-sorted in memory, because the QUERY CANNOT RETURN FIFO ORDER.
+     * Firestore forces an inequality's field to lead the `orderBy` (Root Cause
+     * #59), so `amount > 0` means the results arrive smallest-credit-first.
+     * Skipping this sort would consume the SMALLEST batches first — which looks
+     * exactly like FIFO on a ledger where every credit happens to be the same
+     * size, and silently is not.
+     *
+     * Oldest first, so a buyer never loses points they could have spent.
+     * Newest-first silently maximises expiry: the house winning by a mechanism
+     * nobody announced.
+     */
+    const batches = credits.docs
+      .map((d) => d.data() as PointsLedgerEntry)
+      .filter((e) => {
+        /*
+         * An expired batch is not spendable. Absent `expiresAt` means never
+         * expires — correct for every entry written before the field existed.
+         */
+        if (!e.expiresAt) return true;
+        const exp =
+          e.expiresAt instanceof Date ? e.expiresAt : new Date(e.expiresAt as unknown as string);
+        return exp.getTime() > now.getTime();
+      })
+      .sort((a, b) => {
+        const at = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+        const bt = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+        return at - bt;
+      });
+
+    let toDraw = input.points;
+    const draws: Array<{ id: string; consumed: number }> = [];
+    for (const batch of batches) {
+      if (toDraw <= 0) break;
+      const remaining = Math.round((batch.amount - (batch.consumed ?? 0)) * 100) / 100;
+      if (remaining <= 0) continue;
+      const take = Math.min(remaining, toDraw);
+      draws.push({
+        id: batch.id,
+        consumed: Math.round(((batch.consumed ?? 0) + take) * 100) / 100,
+      });
+      toDraw = Math.round((toDraw - take) * 100) / 100;
+    }
 
     const balance = await db.runTransaction(async (tx) => {
       const userSnap = await tx.get(userRef);
@@ -184,12 +254,151 @@ export class PointsRepository {
         description: input.description,
         createdAt: new Date(),
         updatedAt: new Date(),
+        /*
+         * Which batches paid for this spend, recorded ON the spend rather than
+         * derived later — a reversal needs to know what to give back, and by
+         * then those batches may have expired. "Return it where it came from"
+         * is only answerable if the spend wrote it down.
+         */
+        ...(draws.length ? { drawnFrom: draws.map((d) => d.id) } : {}),
       });
+      for (const d of draws) {
+        tx.update(db.collection(POINTS_LEDGER_COLLECTION).doc(d.id), {
+          consumed: d.consumed,
+          updatedAt: new Date(),
+        });
+      }
       tx.set(userRef, { pointsBalance: next }, { merge: true });
       return next;
     });
 
     return { entryId: entryRef.id, balance };
+  }
+
+  /**
+   * Expire every lapsed batch, debiting whatever was never spent.
+   *
+   * ## 🛑 Expiry is a LEDGER ENTRY, never a silent balance edit
+   *
+   * The balance is DEFINED as the sum of the ledger. Quietly lowering the
+   * mirror would make the two disagree by exactly the expired amount, and the
+   * reconciliation job would then report drift forever with no way to tell it
+   * from a real fault. An adjustment row with a stated reason is the honest
+   * representation: the points left, and the row says why.
+   *
+   * 🛑 `actorUid: "system:points-expiry"` is a sentinel and this is the ONE
+   * place a system actor may write an adjustment — because expiry is a rule
+   * with a date attached, not a discretionary decision. Every other adjustment
+   * is a human's, which is why `adminReason` is mandatory on the kind.
+   *
+   * Marks the batch fully `consumed` in the same pass, and THAT is the
+   * idempotency key: without it an expiry job that ran twice would debit the
+   * buyer twice for one lapse.
+   */
+  async expireLapsedBatches(
+    now: Date,
+    limit = 200,
+  ): Promise<{ examined: number; expired: number; points: number }> {
+    const db = getAdminDb();
+    const snap = await db
+      .collection(POINTS_LEDGER_COLLECTION)
+      .where(POINTS_FIELDS.EXPIRES_AT, "<=", now)
+      .orderBy(POINTS_FIELDS.EXPIRES_AT, "asc")
+      .limit(limit)
+      .get();
+
+    let expired = 0;
+    let points = 0;
+
+    for (const doc of snap.docs) {
+      const e = doc.data() as PointsLedgerEntry;
+      /*
+       * Credits only. A redemption carries no `expiresAt` so should never
+       * appear here — but the guard is free, and the cost of being wrong is
+       * debiting a buyer for a spend they already made.
+       */
+      if (e.amount <= 0) continue;
+      const remaining = Math.round((e.amount - (e.consumed ?? 0)) * 100) / 100;
+      if (remaining <= 0) continue;
+
+      await this.append({
+        userId: e.userId,
+        kind: "admin_adjustment",
+        amount: -remaining,
+        description: `${remaining} points expired.`,
+        adminReason: `Automatic expiry after ${POINTS_EXPIRY_MONTHS} months — batch ${e.id}.`,
+        actorUid: "system:points-expiry",
+      });
+
+      await doc.ref.update({ consumed: e.amount, updatedAt: now });
+      expired += 1;
+      points = Math.round((points + remaining) * 100) / 100;
+    }
+
+    return { examined: snap.size, expired, points };
+  }
+
+  /**
+   * Return points a cancelled order had consumed — `redemption_reversal`.
+   *
+   * ## 🛑 Points come back as POINTS, never as money
+   *
+   * The schema header states it as a legal boundary rather than a preference:
+   * *"never refunded as cash when an order is cancelled; points SPENT on a
+   * cancelled order are returned as points."* Paying them out in rupees is what
+   * would make this stored value, and stored value in India is PPI territory
+   * with RBI authorisation attached. This is the writer that makes that stated
+   * rule true — the kind has existed with no writer since it was declared (D48).
+   *
+   * 🛑 NO fresh `expiresAt`. A reversal restores points whose original clock has
+   * already been consumed; granting three new months would be a quiet extension
+   * nobody authorised, and it would reward cancelling an order with a longer
+   * window than keeping it.
+   *
+   * Idempotent on the ORDER: one reversal per order, found by querying for an
+   * existing `redemption_reversal` carrying the same `orderId`. An append-only
+   * ledger cannot net off a double reversal, so the check has to happen before
+   * the write.
+   */
+  async reverseRedemptionForOrder(
+    orderId: string,
+    reason: string,
+  ): Promise<{ reversed: number }> {
+    const db = getAdminDb();
+
+    const already = await db
+      .collection(POINTS_LEDGER_COLLECTION)
+      .where(POINTS_FIELDS.ORDER_ID, "==", orderId)
+      .where(POINTS_FIELDS.KIND, "==", "redemption_reversal")
+      .limit(1)
+      .get();
+    if (!already.empty) return { reversed: 0 };
+
+    const spends = await db
+      .collection(POINTS_LEDGER_COLLECTION)
+      .where(POINTS_FIELDS.ORDER_ID, "==", orderId)
+      .where(POINTS_FIELDS.KIND, "==", "redemption")
+      .get();
+    if (spends.empty) return { reversed: 0 };
+
+    const rows = spends.docs.map((d) => d.data() as PointsLedgerEntry);
+    /*
+     * `Math.abs`, because a redemption is stored NEGATIVE and a reversal must
+     * be positive — `isPointsEntryWellFormed` refuses the wrong sign, so a
+     * missing `abs` here would throw rather than silently credit a negative.
+     */
+    const total = Math.round(rows.reduce((sum, r) => sum + Math.abs(r.amount), 0) * 100) / 100;
+    if (total <= 0) return { reversed: 0 };
+
+    await this.append({
+      userId: rows[0].userId,
+      kind: "redemption_reversal",
+      amount: total,
+      orderId,
+      description: `${total} points returned — ${reason}`,
+    });
+
+    return { reversed: total };
   }
 
   /** Most recent entries first, for the buyer's own points page. */

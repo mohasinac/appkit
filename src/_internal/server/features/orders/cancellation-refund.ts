@@ -47,22 +47,24 @@
  * button, a retried server action and a sweep all collapse to one refund. A
  * `randomUUID()` here would be D2 wearing a new name.
  *
- * ## What is deliberately NOT here: reversing points
+ * ## Points ARE reversed here now (Phase P)
  *
- * `pointsLedger`'s own header states the rule — *"points spent on a cancelled
- * order are returned as points"* — and `redemption_reversal` is a declared
- * entry kind with **no writer** (D48). It stays that way, and the reason is
- * sequencing rather than oversight: **no order has ever consumed points.**
- * `pointsToRedeem` exists on an input interface and in one block of
- * `createOrderForGroup`, with no caller, no route field and no UI tender
- * (D46/D47) — so there is nothing to reverse, and `OrderDocument` has no points
- * field to read it from.
+ * `pointsLedger`'s own header states the rule as a legal boundary: *"points
+ * spent on a cancelled order are returned as points"* — never as money, because
+ * paying them out in rupees is what would make this stored value, which in
+ * India is PPI territory with RBI authorisation attached.
  *
- * Writing the reversal first would be the expensive half of the feature shipped
- * against a value that is always zero, and an append-only ledger punishes a
- * wrong credit permanently. It belongs in Phase P, in the same change that
- * makes redemption a real tender — at which point this function is where it
- * hooks in.
+ * `reverseRedemptionForOrder` is that rule's first writer; the kind had been
+ * declared with none since it was written (D48). It is idempotent on the order
+ * — one reversal per order, checked by query before the write, because an
+ * append-only ledger cannot net off a double reversal.
+ *
+ * 🛑 It is a NO-OP today and still correct to call. No order has consumed
+ * points yet: `pointsToRedeem` has no caller, no route field and no UI tender
+ * (D46/D47), so the query finds no redemption and returns `{ reversed: 0 }`.
+ * Wiring it now rather than later is the cheap half — the expensive half is the
+ * ledger write, which is already keyed. When redemption becomes a real tender,
+ * cancellation already gives the points back instead of needing to remember to.
  *
  * **Cancel, then stock, then money.** The cancellation is the urgent half and
  * must not be held hostage to a gateway round trip; the restock is a local
@@ -98,6 +100,7 @@ import { resolveRefundCapacity } from "../refunds/capacity";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { processRefundAction } from "../refunds/actions";
 import { restoreStockForOrder } from "../checkout/stock-restore";
+import { pointsRepository } from "../../../../features/points/repository/points.repository";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { classifyCancellation } from "./service";
 import type { HistoryActor } from "../../../shared/history/types";
@@ -177,6 +180,47 @@ async function releaseStock(order: OrderDocument): Promise<void> {
     void normalizeError(err);
     serverLogger.error(
       "cancellation: stock was NOT restored — these units are unavailable to other buyers until this is repaired",
+      { orderId: order.id },
+    );
+  }
+}
+
+/**
+ * Give back any points this order consumed — `redemption_reversal`.
+ *
+ * 🛑 As POINTS, never as money. `pointsLedger`'s header states that as a legal
+ * boundary rather than a preference: cash-refunding them is what would make
+ * this stored value, and stored value in India is PPI territory with RBI
+ * authorisation attached.
+ *
+ * Idempotent on the order inside the repository, so calling it on every
+ * cancellation — including a re-run — is safe. Currently a no-op for every
+ * order, because nothing consumes points yet; wiring it now means cancellation
+ * will already be correct on the day redemption becomes a real tender, rather
+ * than needing somebody to remember.
+ *
+ * Never throws upward: the order is cancelled and the buyer has been told. A
+ * failed reversal is points the buyer should have back, so it is logged loudly
+ * and the balance is recoverable by an admin adjustment — whereas failing the
+ * cancellation here would leave them unable to retry something that already
+ * happened.
+ */
+async function returnPoints(order: OrderDocument): Promise<void> {
+  try {
+    const { reversed } = await pointsRepository.reverseRedemptionForOrder(
+      order.id,
+      `order ${order.id} was cancelled`,
+    );
+    if (reversed > 0) {
+      serverLogger.info("cancellation: points returned to the buyer", {
+        orderId: order.id,
+        points: reversed,
+      });
+    }
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.error(
+      "cancellation: points were NOT returned — the buyer is short by whatever they spent",
       { orderId: order.id },
     );
   }
@@ -320,6 +364,7 @@ export async function cancelOrderWithRefund(
    * gateway's latency for no benefit.
    */
   await releaseStock(order);
+  await returnPoints(order);
 
   /*
    * ── Goods have left the seller ────────────────────────────────────────────
