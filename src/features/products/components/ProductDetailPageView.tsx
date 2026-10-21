@@ -552,7 +552,21 @@ export async function ProductDetailPageView({
         productType="product"
         snapshot={{
           title: product.title,
-          thumb: product.mainImage ?? product.images?.[0],
+          /*
+           * 🛑 `images` is `ProductImage[]`, not `string[]` — reading
+           * `product.images?.[0]` here wrote an OBJECT into the history
+           * snapshot, which `resolveMediaUrl` then refuses on every later
+           * render of `/user/history` ("expected a string, received
+           * [object Object]") and shows a placeholder for. The three sibling
+           * detail views (classified, digital-code, live) already use the
+           * derived `images` array for exactly this reason; this one was
+           * missed by the `string[]` -> `ProductImage[]` migration.
+           *
+           * `mainImage` stays first because it is the authored cover and is
+           * not part of the gallery array, so `images[0]` is a different
+           * picture whenever both exist.
+           */
+          thumb: typeof product.mainImage === "string" ? product.mainImage : images[0],
           price: product.price,
           storeId: product.storeId,
           storeName: product.storeName,

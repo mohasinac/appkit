@@ -563,7 +563,19 @@ function StepBasic({
       */}
       <FormGroup columns={2}>
         {renderCategorySelector ? (
-          <>
+          /*
+           * 🛑 ONE element, not a Fragment. `.appkit-form-group` is
+           * `display: grid` (Form.style.css), and a Fragment renders no DOM
+           * node — so `<>{label}{picker}</>` handed the grid THREE children
+           * instead of two. At `md:grid-cols-2` that put the word "Category"
+           * alone in the left cell, the picker in the right cell, and pushed
+           * Condition onto its own row: three different label layouts in one
+           * section, from one pair of angle brackets.
+           *
+           * `FormField` (the else branch, and Condition beside it) renders its
+           * own single wrapper, which is why only this branch was affected.
+           */
+          <Div>
             <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">Category</Text>
             {renderCategorySelector({
               value: values.category ?? "",
@@ -588,7 +600,7 @@ function StepBasic({
                   categoryIds: [values.category ?? "", ...ids].filter(Boolean),
                 }),
             })}
-          </>
+          </Div>
         ) : (
           <FormField
             name="category"
