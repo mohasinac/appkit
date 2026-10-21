@@ -18,8 +18,86 @@ export async function assertOrderOwnership(orderId: string, userId: string): Pro
   return order;
 }
 
+/**
+ * What a buyer asking to cancel is actually asking for.
+ *
+ * 🛑 **`shippingDate != null` IS THE DISCRIMINATOR, not the status set**, and
+ * the plan calls codifying this the single highest-value line in the obligation
+ * design. The reason is that "cancel before dispatch" and "cancel after
+ * dispatch" are different EVENTS with different money:
+ *
+ * | | before dispatch | after dispatch |
+ * |---|---|---|
+ * | what happens | cancel, restock, full refund | refuse the cancel — convert to a return/RTO |
+ * | who bears shipping | nobody; it is refunded | the buyer bears the outbound leg |
+ * | when money moves | immediately | on receipt of the goods |
+ *
+ * The status set cannot express that, because `processing` covers both "paid,
+ * sitting in a queue" and "packed, courier collecting this afternoon" — while
+ * `shippingDate` is the fact that the parcel physically left.
+ *
+ * And the old behaviour was a dead end: `ORDER_CANCELLABLE_STATUSES` is
+ * `["pending", "confirmed"]`, so a buyer whose order was `processing` — or
+ * shipped an hour ago — got a flat *"Only pending or confirmed orders can be
+ * cancelled"* and **no alternative offered**. That is the Root Cause #56 shape
+ * (a surface that refuses without routing anywhere) applied to money.
+ */
+export type CancellationRoute =
+  | { route: "cancel"; reason: "not yet dispatched" }
+  | { route: "return"; reason: "already dispatched"; dispatchedAt: Date }
+  | { route: "refused"; reason: string };
+
+export function classifyCancellation(order: OrderDocument): CancellationRoute {
+  /*
+   * Terminal first. A cancelled or refunded order is not a cancellation
+   * request, it is a duplicate — and answering "convert this to a return"
+   * would send the buyer into a flow for goods they no longer have.
+   */
+  if (order.status === "cancelled" || order.status === "refunded") {
+    return { route: "refused", reason: `this order is already ${order.status}` };
+  }
+
+  /*
+   * A return already in flight is its own conversation. Offering a cancellation
+   * on top would give the buyer two parallel money paths for one order, which
+   * is how a double refund starts.
+   */
+  if (order.status === "return_requested" || order.status === "returned") {
+    return { route: "refused", reason: "a return is already in progress for this order" };
+  }
+
+  if (order.shippingDate) {
+    return {
+      route: "return",
+      reason: "already dispatched",
+      dispatchedAt: order.shippingDate,
+    };
+  }
+
+  return { route: "cancel", reason: "not yet dispatched" };
+}
+
 export async function assertOrderCancellable(orderId: string, userId: string): Promise<OrderDocument> {
   const order = await assertOrderOwnership(orderId, userId);
+  /*
+   * 🛑 The classifier decides, and `ORDER_CANCELLABLE_STATUSES` is now only a
+   * BACKSTOP below rather than the rule.
+   *
+   * Kept in that order deliberately: the classifier widens what is cancellable
+   * (a `processing` order that has not shipped now qualifies, correctly), and
+   * the status check behind it still refuses anything the classifier admitted
+   * but the lifecycle does not recognise. Replacing the status check outright
+   * would have been a wider behaviour change than the evidence supports.
+   */
+  const route = classifyCancellation(order);
+  if (route.route === "return") {
+    throw new OrderCancelError(
+      `${order.status} (dispatched ${route.dispatchedAt.toISOString()} — request a return instead)`,
+    );
+  }
+  if (route.route === "refused") {
+    throw new OrderCancelError(`${order.status} (${route.reason})`);
+  }
   const cancellable = ORDER_CANCELLABLE_STATUSES as readonly string[];
   if (!cancellable.includes(order.status)) {
     throw new OrderCancelError(order.status);

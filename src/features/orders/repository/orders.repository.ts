@@ -46,6 +46,8 @@ import {
   isLegalOrderTransition,
   describeIllegalTransition,
 } from "../constants/transitions";
+import { reconcileObligations } from "../../../_internal/shared/obligations/deadlines";
+import { obligationsRepository } from "../../obligations/repository/obligations.repository";
 import { ORDER_FIELDS } from "../../../constants/field-names";
 
 /**
@@ -410,7 +412,82 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // `null` means no tracked field actually changed — write the patch as-is
     // so an untracked update never grows the array.
     // Plain: this is a write payload and `update` encrypts.
-    return this.update(orderId, (withEntry ?? patch) as Partial<OrderPlain>);
+    const written = await this.update(orderId, (withEntry ?? patch) as Partial<OrderPlain>);
+
+    /*
+     * ── OBLIGATION RECONCILIATION (Phase 5b) ──────────────────────────────────
+     *
+     * Reconciled from the order's OWN write, here, for two reasons.
+     *
+     * 🛑 NOT a Firestore trigger. An `onOrderWrite` trigger that wrote
+     * `obligations`, whose sweep then wrote `orders`, is Root Cause #92's
+     * self-write loop exactly — 1,017,548 invocations in 24 hours against a
+     * 2M/month quota, plus a correctly-guarded sibling woken a million times
+     * just to return. A correct guard does not save you from a neighbour's
+     * loop.
+     *
+     * 🛑 And it costs ZERO extra reads: the post-write document is assembled
+     * from `current` plus `patch` rather than re-read. `reconcileObligations`
+     * is a pure function over that shape.
+     *
+     * Fire-and-forget, and that is deliberate: an obligation is a derived HINT.
+     * Letting its write fail the ORDER write — the one the caller is waiting on,
+     * which may be a payment confirmation — would trade a real transaction for
+     * a bookkeeping row. The next write reconciles again, and the sweep's
+     * re-read of the subject is what makes a missed row self-correcting.
+     */
+    void this.reconcileObligationsFor(
+      { ...(current ?? {}), ...patch, id: orderId } as OrderDocument,
+      current,
+    ).catch((err: unknown) => {
+      void normalizeError(err);
+    });
+
+    return written;
+  }
+
+  /**
+   * Open/close this order's obligations to match what its own facts imply.
+   *
+   * Public so the obligation sweep can re-run it after acting, and so a
+   * backfill can reconcile existing orders without a synthetic write.
+   */
+  async reconcileObligationsFor(
+    order: OrderDocument,
+    /**
+     * The pre-write document, so the close set is `was-open MINUS is-open`
+     * rather than every kind that is not open. Omit ONLY for a deliberate
+     * backfill — see `reconcileObligations`' own 🛑 on the cost.
+     */
+    previous?: OrderDocument | null,
+  ): Promise<void> {
+    const { open, close } = reconcileObligations(order, previous);
+    const repo = obligationsRepository();
+
+    for (const deadline of open) {
+      await repo.open({
+        kind: deadline.kind,
+        subjectCollection: ORDER_COLLECTION,
+        subjectId: order.id,
+        dueAt: deadline.dueAt,
+        ...(order.isTestData ? { isTestData: true } : {}),
+        note: deadline.policy.describe,
+      });
+    }
+
+    /*
+     * Closed as `met`, not `superseded`: reaching here means the order's own
+     * facts no longer satisfy the precondition, i.e. the thing the obligation
+     * was waiting for HAPPENED. `superseded` is reserved for the sweep finding
+     * a stale row at fire time, which is a different story and worth
+     * distinguishing in the record.
+     */
+    for (const kind of close) {
+      await repo.close(order.id, kind, {
+        state: "met",
+        closeReason: "the order's own state no longer requires it",
+      });
+    }
   }
 
   async updateStatus(

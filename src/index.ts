@@ -6430,6 +6430,43 @@ export {
   isLegalOrderTransition,
   describeIllegalTransition,
 } from "./features/orders/constants/transitions";
+
+/*
+ * Obligations — the PURE half only.
+ *
+ * `deadlinesFor(order)` is a pure function over the policy registry with no
+ * reads and no writes, which is the entire reason deadlines are derived rather
+ * than stored: a buyer or seller page renders "Dispatch by Thu 3 Nov" from an
+ * order it already has. Safe in the main barrel because nothing here reaches
+ * `providers/db-firebase` — the repository does, and stays in `server.ts`.
+ */
+export {
+  OBLIGATION_POLICIES,
+  durationToMinutes,
+} from "./features/obligations/constants/policies";
+export type {
+  ObligationPolicy,
+  Duration,
+  DurationUnit,
+} from "./features/obligations/constants/policies";
+export {
+  OBLIGATIONS_COLLECTION,
+  OBLIGATION_FIELDS,
+  ALL_OBLIGATION_KINDS,
+  createObligationId,
+} from "./features/obligations/schemas/firestore";
+export type {
+  ObligationDocument,
+  ObligationKind,
+  ObligationState,
+  ObligationDueAction,
+} from "./features/obligations/schemas/firestore";
+export {
+  deadlinesFor,
+  resolveDueAt,
+  reconcileObligations,
+} from "./_internal/shared/obligations/deadlines";
+export type { ResolvedDeadline } from "./_internal/shared/obligations/deadlines";
 export {
   ORDER_SCOPE_VALUES,
   ORDER_SCOPE_TABS,

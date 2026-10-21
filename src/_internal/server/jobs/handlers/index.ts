@@ -18,6 +18,7 @@ export { auctionSettlementHandler } from "./auctionSettlement";
 export { autoPayoutEligibilityHandler } from "./autoPayoutEligibility";
 export { countersReconcileHandler } from "./countersReconcile";
 export { paymentReconcileHandler } from "./paymentReconcile";
+export { obligationSweepHandler } from "./obligationSweep";
 export { boxRollupReconcileHandler } from "./boxRollupReconcile";
 export { onOrderCreateHandler } from "./onOrderCreate";
 export { onOrderStatusChangeHandler } from "./onOrderStatusChange";

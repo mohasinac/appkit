@@ -17,6 +17,7 @@ import {
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
+  obligationSweepHandler,
   paymentReconcileHandler,
   paymentWindowTimeoutHandler,
   hardBanReinstatementHandler,
@@ -258,6 +259,35 @@ export const countersReconcile = defineFunction({
  * `autoPayoutEligibility` so a payout decision is never taken on the same tick
  * as the reconciliation that might open a case blocking it.
  */
+/**
+ * Every deadline in the order lifecycle — one job, every 5 minutes.
+ *
+ * 🛑 ONE JOB FOR ~20 SCENARIOS, and the Scheduler count goes DOWN.
+ *
+ * The alternative was a cron per scenario, which is ~$2/month *and* `O(n²)`
+ * coverage reasoning — D25, D27 and the duplicate buyout notification are all
+ * that pattern failing. Here it is one indexed query per tick, empty when idle,
+ * and `obligations`' deterministic document id gives "at most one open
+ * obligation per (subject, kind)" so a double reconcile is a no-op.
+ *
+ * Phase 8 retires `paymentWindowTimeout`, `pendingOrderTimeout` and
+ * `paymentReviewAutoApprove` once their policy rows are proven, taking the
+ * registered count **28 → 29 → 27**.
+ *
+ * 🛑 NOT a Firestore trigger on `orders`. A trigger writing `obligations`
+ * whose sweep writes `orders` is Root Cause #92's self-write loop — the one
+ * that cost 1,017,548 invocations in 24 hours. Obligations are reconciled
+ * inside the order's own write, where the document is already in hand.
+ */
+export const obligationSweep = defineFunction({
+  name: "obligationSweep",
+  description:
+    "Fire, warn on, or escalate every order-lifecycle deadline that has come due (every 5 minutes).",
+  trigger: { kind: "schedule", cron: EVERY_5_MIN },
+  handler: obligationSweepHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
 export const paymentReconcile = defineFunction({
   name: "paymentReconcile",
   description:
@@ -452,6 +482,7 @@ export const SCHEDULED_FUNCTIONS = [
    * makes a loader quietly skip a collection).
    */
   paymentReconcile,
+  obligationSweep,
   boxRollupReconcile,
   positionsReconcile,
   cartPrune,

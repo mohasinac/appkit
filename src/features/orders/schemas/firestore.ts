@@ -456,6 +456,22 @@ export interface OrderDocument extends BaseDocument {
   trackingNumber?: string;
   notes?: string;
   orderDate: Date;
+  /**
+   * When the SELLER accepted the order — the first fact in the fulfilment
+   * lifecycle, and it did not exist before Phase 5b.
+   *
+   * 🛑 D30: there was no seller-acceptance step at all. `customShipOrder`
+   * requires `status === "confirmed"` and **nothing ever set `confirmed` on a
+   * paid order** except an admin PATCH, while `onOrderCreate` wrote one admin
+   * notification and stopped. So a seller could silently ignore a paid order
+   * forever and no clock anywhere noticed.
+   *
+   * Its presence is what distinguishes "the seller has not looked at this yet"
+   * from "the seller accepted it and has not packed it" — two different
+   * obligations with two different deadlines (`seller-accept` then
+   * `seller-dispatch`), which is unexpressible with a single status field.
+   */
+  acceptedAt?: Date;
   shippingDate?: Date;
   deliveryDate?: Date;
   cancellationDate?: Date;
@@ -501,6 +517,21 @@ export interface OrderDocument extends BaseDocument {
   returnDestination?: "warehouse" | "seller";
   /** The address the buyer was given, resolved once and recorded verbatim. */
   returnAddress?: string;
+  /**
+   * When the seller APPROVED the return — the anchor the buyer's posting
+   * deadline is measured from.
+   *
+   * 🛑 Added for Phase 5b, and its absence was load-bearing: without it, "the
+   * buyer has 7 days to post an approved return" had nothing to count from, so
+   * the only available anchor was `returnRequestedAt` — which starts the
+   * buyer's clock while the seller is still deciding, i.e. a seller who takes
+   * 48 hours to approve silently eats two days of the buyer's window.
+   *
+   * A FACT, never a deadline. Deadlines are derived (`deadlinesFor`), never
+   * stored — a stored deadline needs a backfill and drifts from the policy the
+   * day somebody edits one (Root Cause #42).
+   */
+  returnApprovedAt?: Date;
   /** Set when the buyer marks it posted; `in_transit` without one is a bug. */
   returnPostedAt?: Date;
   returnReceivedAt?: Date;

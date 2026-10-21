@@ -206,6 +206,23 @@ export {
 } from "./_internal/server/features/payment-cases";
 export type { DisputeWebhookEntity } from "./_internal/server/features/payment-cases";
 
+/*
+ * [SERVER-ONLY] obligations — deadlines with money consequences.
+ *
+ * The REPOSITORY is server-only (its chain reaches firebase-admin). The pure
+ * `deadlinesFor` / `resolveDueAt` helpers and the policy registry go in the
+ * MAIN barrel instead, because a buyer page rendering "Dispatch by Thu 3 Nov"
+ * is exactly the point of them being pure — see `index.ts`.
+ */
+export {
+  ObligationsRepository,
+  obligationsRepository,
+} from "./features/obligations/repository/obligations.repository";
+export type {
+  OpenObligationInput,
+  CloseObligationInput,
+} from "./features/obligations/repository/obligations.repository";
+
 // [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
 // Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
 export {
