@@ -111,16 +111,18 @@ export function BundleDetailView({
                   are all resolved at WRITE time, so a copy would carry another
                   bundle's resolved state rather than its own.
                 */}
+                <Heading
+                  level={1} size="3xl" weight="semibold" color="primary">
+                  {bundle.name}
+                </Heading>
+                {/* Below the title — above a heading there is nothing for a
+                    control strip to belong to. */}
                 <RecordOwnerQuickActions
                   resource="BUNDLE"
                   recordId={String(bundle.id)}
                   placement="detail"
                   recordLabel={String(bundle.name)}
                 />
-                <Heading
-                  level={1} size="3xl" weight="semibold" color="primary">
-                  {bundle.name}
-                </Heading>
 
                 <Row gap="sm" align="center" wrap>
                   <Text size="lg" weight="bold">

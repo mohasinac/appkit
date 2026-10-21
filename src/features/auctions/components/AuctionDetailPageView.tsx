@@ -141,6 +141,8 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           scope here; without it the owner branch could never match and the
           toolbar would be silently admin-only.
         */}
+        <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>
+        {/* Below the title — see BundleDetailView. */}
         <OwnerQuickActions
           resource="PRODUCT"
           placement="detail"
@@ -148,7 +150,6 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           storeId={storeId}
           editHref={String(ROUTES.STORE.PRODUCTS_EDIT(productId))}
         />
-        <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>
       </Div>
       <Div>
         <Text className="mb-0.5" color="muted" size="xs">Current bid</Text>

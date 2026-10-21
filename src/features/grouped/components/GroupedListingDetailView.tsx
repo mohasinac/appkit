@@ -65,6 +65,8 @@ export function GroupedListingDetailView({ group, members }: GroupedListingDetai
               Owner quick-actions, rendered directly — the component self-gates on
               the session, so an async RSC can hand it the record. A grouped listing may belong to a store, so storeId goes in when present.
             */}
+            <Heading level={1}>{group.title}</Heading>
+            {/* Below the title — see BundleDetailView. */}
             <RecordOwnerQuickActions
               resource="GROUP"
               recordId={String(group.id)}
@@ -72,7 +74,6 @@ export function GroupedListingDetailView({ group, members }: GroupedListingDetai
               recordLabel={String(group.title)}
               storeId={group.storeId ? String(group.storeId) : undefined}
             />
-            <Heading level={1}>{group.title}</Heading>
             {group.description && (
               <Text color="muted">{group.description}</Text>
             )}

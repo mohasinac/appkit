@@ -286,11 +286,24 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 {brand.display.icon}
               </Span>
             )}
-            <>
+            {/*
+              🛑 A `<Stack>`, not a bare `<>` fragment. A fragment is not an
+              element, so its children became flex items of the `<Row>` above
+              — the heading, this toolbar and the description were all laid
+              out SIDE BY SIDE next to the brand logo, rather than stacked
+              beside it. The Row's job is [logo] [text block]; the text block
+              needs a box of its own to be one.
+            */}
+            <Stack gap="xs" className="min-w-0">
               {/* See CategoryDetailPageView for why this is rendered directly
                   rather than threaded through a slot prop. Brands have no
                   owner either, so this is admin-only, and they carry the same
                   derived tree fields — hence no clone. */}
+              <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
+                {brand?.name ?? slug}
+              </Heading>
+              {/* Below the title, matching CategoryDetailPageView — above a
+                  heading there is nothing for a control strip to belong to. */}
               {brand?.id && (
                 <RecordOwnerQuickActions
                   resource="BRAND"
@@ -302,15 +315,17 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                   recordLabel={brand.name ?? slug}
                 />
               )}
-              <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
-                {brand?.name ?? slug}
-              </Heading>
+              {/* The `/80` that used to be interpolated into the className
+                  below was a DEAD ALPHA FRAGMENT — codemod residue from a
+                  stripped `text-white/80`, which Tailwind cannot generate and
+                  silently drops. `color="inverse"` already carries the ink.
+                  Same one the category hero had. */}
               {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
-                <Text color={hasCover ? "inverse" : "muted"} className={`max-w-2xl mt-1 ${hasCover ? "/80" : ""}`} size="base">
+                <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mt-1" size="base">
                   {brand.description}
                 </Text>
               )}
-            </>
+            </Stack>
           </Row>
 
           {/* Item count chips */}

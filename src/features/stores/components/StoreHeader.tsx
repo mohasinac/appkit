@@ -80,25 +80,33 @@ export function StoreHeader({
                 </Span>
               )}
               {trust && <SellerTrustBadge trust={trust} />}
-              {/*
-                🛑 PENCIL ONLY — the STORE mapping in `OwnerQuickActions`
-                omits a delete leaf, so no bin renders here however this is
-                called. Deleting a store orphans its products, orders and
-                payouts; `suspend-store` / `verify-store` on the dashboard are
-                the operations an admin actually wants from a store page.
-
-                Admin-only (no `storeId` passed): the target is the admin store
-                page, and a seller editing their own shop goes through
-                /store/settings, which is a different href per viewer and not
-                something one `editHref` can express.
-              */}
-              <OwnerQuickActions
-                resource="STORE"
-                placement="detail"
-                editHref={String(ROUTES.ADMIN.STORE_DETAIL(store.storeSlug))}
-                recordLabel={store.storeName}
-              />
             </Row>
+            {/*
+              🛑 OUT OF THE TITLE ROW, onto its own line beneath it.
+
+              This used to sit INSIDE the `<Row>` above, on the same line as
+              the store name, the rating and the trust badge — so a control
+              strip competed with the page title for the one line a reader
+              scans first. Now that the toolbar carries a bordered box it also
+              made that row taller than the heading needs.
+
+              🛑 PENCIL ONLY — the STORE mapping in `OwnerQuickActions` omits a
+              delete leaf, so no bin renders here however this is called.
+              Deleting a store orphans its products, orders and payouts;
+              `suspend-store` / `verify-store` on the dashboard are the
+              operations an admin actually wants from a store page.
+
+              Admin-only (no `storeId` passed): the target is the admin store
+              page, and a seller editing their own shop goes through
+              /store/settings, which is a different href per viewer and not
+              something one `editHref` can express.
+            */}
+            <OwnerQuickActions
+              resource="STORE"
+              placement="detail"
+              editHref={String(ROUTES.ADMIN.STORE_DETAIL(store.storeSlug))}
+              recordLabel={store.storeName}
+            />
             <Row textSize="xs" className="text-[var(--appkit-color-text-muted)] mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}
               {store.totalProducts != null && store.totalProducts > 0 && (

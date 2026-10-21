@@ -160,6 +160,10 @@ function PreOrderInfoSection({
           component, so the product is not in scope, and without the store
           slug the owner branch could never match.
         */}
+        <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">
+          {title}
+        </Heading>
+        {/* Below the title — see BundleDetailView. */}
         {productId && (
           <OwnerQuickActions
             resource="PRODUCT"
@@ -169,9 +173,6 @@ function PreOrderInfoSection({
             editHref={String(ROUTES.STORE.PRODUCTS_EDIT(productId))}
           />
         )}
-        <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">
-          {title}
-        </Heading>
       </Div>
 
       {deliveryDate && (
