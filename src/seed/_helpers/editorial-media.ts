@@ -57,3 +57,36 @@ const REUSED_MEDIA: Record<string, string> = {};
 export function editorialImage(slotKey: string): string {
   return REUSED_MEDIA[slotKey] ?? `/media/${slotKey}`;
 }
+
+/*
+ * ── 🛑 CHANGING AN IMAGE MEANS CHANGING ITS KEY ───────────────────────────
+ *
+ * `/api/media/[...slug]` answers `Cache-Control: public, max-age=2592000,
+ * immutable`. Under `immutable` the URL *is* the version identifier: new
+ * bytes uploaded to the same shortId are never re-fetched for the life of the
+ * cache entry, at any edge that already has one.
+ *
+ * Measured 2026-10-21, rebranding the cashback event for Diwali. The obvious
+ * move was to keep `event-cover-cashback-10` so the Storage object and the
+ * `mediaAssets` row were not orphaned — which is sound reasoning and produced
+ * a bug anyway:
+ *
+ *   Firestore  → the Diwali copy, correct
+ *   Storage    → the fireworks, correct (mean RGB 107,98,92)
+ *   The page   → the ₹2000 banknote, `X-Vercel-Cache: HIT`, `age=2890`,
+ *                mean RGB 188,146,173
+ *
+ * Everything was right except what anyone could actually see, and no check in
+ * this repo looks at rendered pixels. The fix was a NEW key
+ * (`event-cover-diwali-fireworks`), which is self-healing because nothing has
+ * ever cached that URL.
+ *
+ * So: a slot's key names its CONTENT, not its slot. Re-cropping or re-sourcing
+ * an image is a new key; the old object stays uploaded and unreferenced, which
+ * costs a few KB and is the honest price of an immutable cache.
+ *
+ * 🛑 Do NOT "fix" this by lowering the TTL. That turns every product image
+ * into a repeat function invocation, which is Root Cause #104 — ~900K proxy
+ * responses and 52.52 GB of origin transfer against a 10 GB allowance, and a
+ * suspended project.
+ */

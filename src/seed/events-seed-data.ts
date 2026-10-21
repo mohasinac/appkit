@@ -412,7 +412,7 @@ const _raweventsSeedData: EventDocument[] = [
     description:
       `<p><strong>Our Diwali sale opens on Dhanteras — Friday 6 November — and runs through the festival.</strong></p>` +
       `<p>Spend ₹999 or more and get <strong>10% of your order value back</strong>, up to ₹1,000. It applies right across the catalogue — Beyblade X tops, spares, sticker sheets and bundles alike.</p>` +
-      `<img src="${editorialImage("event-content-cashback-10")}" alt="Fireworks over a city skyline at night" />` +
+      `<img src="${editorialImage("event-content-diwali-fireworks")}" alt="Fireworks over a city skyline at night" />` +
       `<h2>How it works</h2>` +
       `<ol><li>Copy the code <strong>CASHBACK10</strong> below.</li>` +
       `<li>Paste it at checkout from Dhanteras onwards.</li>` +
@@ -425,7 +425,7 @@ const _raweventsSeedData: EventDocument[] = [
     endsAt: daysAhead(26),
     coverImage: {
       type: "image",
-      url: editorialImage("event-cover-cashback-10"),
+      url: editorialImage("event-cover-diwali-fireworks"),
       alt: "Fireworks over a city skyline at night",
     },
     tags: ["offer", "cashback", "diwali", "festive", "coming-soon"],

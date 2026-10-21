@@ -119,6 +119,7 @@ const MEDIA = {
    */
   bgHero: "/media/carousel-bg-hero",
   bgCashback: "/media/carousel-bg-cashback",
+  eventDiwali: "/media/event-cover-diwali-fireworks",
   bgBundles: "/media/carousel-bg-bundles",
   bgPreorders: "/media/carousel-bg-preorders",
   bgAuthenticity: "/media/carousel-bg-authenticity",
@@ -234,7 +235,9 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: MEDIA.bgCashback,
+      // Uses the EVENT cover so the slide and the page it links to look
+      // like one promotion. `bgCashback` stays in MEDIA for the next promo.
+      url: MEDIA.eventDiwali,
       dimOverlay: { enabled: true, opacity: 0.55 },
     },
     cards: [],
