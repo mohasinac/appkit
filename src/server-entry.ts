@@ -317,6 +317,27 @@ export {
   type GroupCouponDiscountResult,
 } from "./_internal/shared/checkout/coupon-discount";
 
+/*
+ * Refund capacity. Exported because the admin refund ROUTE carried its own
+ * copy of the `amount >= totalPrice` test (D3) — a second answer to "is this
+ * refund full", already wrong, in a file that cannot deep-import
+ * `_internal/shared`. One implementation, or they drift again.
+ *
+ * `platformFeeWithheld` is the single worst money defect's fix (D32): it
+ * returns the fee ACTUALLY CHARGED, never a recomputed percentage, which is
+ * how a ₹5,000 order came to withhold ₹118 from a buyer who paid ₹11.80.
+ */
+export {
+  refundCapacity,
+  refundableBase,
+  committedRefundTotal,
+  platformFeeWithheld,
+  wouldBeFullRefund,
+  MONEY_EPSILON,
+  type RefundCapacity,
+  type RefundableOrderLike,
+} from "./_internal/shared/checkout/refundable-base";
+
 // S-SBUNI-RULES: refund action
 export {
   processRefundAction,

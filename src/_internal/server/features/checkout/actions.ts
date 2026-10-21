@@ -1223,6 +1223,16 @@ async function createOrderForGroup(
     // This group's pro-rata share of the checkout's single capped commission —
     // the shares across a multi-store checkout sum to exactly what was charged.
     platformFee: !adminBypass && platformFee > 0 ? platformFee : undefined,
+    /*
+     * Persisted alongside the fee, 2026-10-21. It was computed here, charged
+     * to the buyer as its own term in `orderTotal`, and then folded into
+     * `gstAmount` — so no field held the fee's own tax and a refund had to
+     * re-derive it from live percentages, which is how D32's ~10x
+     * over-deduction happened. The note above this function's `orderTotal`
+     * already explains why the two are kept separate; this persists the second
+     * one so a later reader does not have to reconstruct it.
+     */
+    platformFeeGst: !adminBypass && platformFeeGst > 0 ? platformFeeGst : undefined,
     giftWrapAddon: !adminBypass && giftWrapFee > 0 ? true : undefined,
     giftWrapFee: !adminBypass && giftWrapFee > 0 ? giftWrapFee : undefined,
     giftWrapMessage: !adminBypass && giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
@@ -2465,6 +2475,18 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
        */
       reasonCode: "not_received",
       reasonNote: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
+      /*
+       * A NATURAL key, not a uuid — and this is a money fix in its own right,
+       * not just satisfying a new required field.
+       *
+       * This path runs inside the gateway-settlement flow, which is itself
+       * retried: by the browser's `/verify`, by the webhook, and now (Phase 0)
+       * by the gateway's own 5xx retry. Every one of those retries used to
+       * mint a fresh `randomUUID()` and issue ANOTHER real refund for the same
+       * dropped items. Keying on the gateway order id makes the whole
+       * auto-refund idempotent across every retry of the checkout.
+       */
+      idempotencyKey: `oos_${phonepeOrderId}`,
       method: "phonepe",
       phonepeOrderId,
       confirmIrrevocable: true,
@@ -2849,6 +2871,10 @@ async function createPhonePeGroupOrder(
     shippingAddress,
     notes,
     platformFee,
+    // Persisted alongside the fee — see the COD/UPI path's note. Both paths
+    // charged this to the buyer and recorded only the combined `gstAmount`,
+    // leaving the refund path to re-derive it from live percentages (D32).
+    platformFeeGst: platformFeeGst > 0 ? platformFeeGst : undefined,
     shippingFee: shippingFee > 0 ? shippingFee : undefined,
     giftWrapAddon: giftWrapFee > 0 ? true : undefined,
     giftWrapFee: giftWrapFee > 0 ? giftWrapFee : undefined,

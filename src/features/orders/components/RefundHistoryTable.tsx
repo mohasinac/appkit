@@ -48,9 +48,41 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
             {REFUND_COPY.history.labelTxn} {event.manualTransactionId}
           </Text>
         )}
-        {event.phonepeRefundId && (
+        {/*
+          * 🛑 D7 — this rendered ONLY `phonepeRefundId`, so a Razorpay refund
+          * showed no reference at all. Combined with the action writing
+          * Razorpay's id INTO `phonepeRefundId` (no provider branch), a
+          * Razorpay refund either showed nothing or showed its id under a
+          * PhonePe label. Either way reconciliation against the gateway's own
+          * dashboard was impossible.
+          *
+          * `gatewayRefundId` is the gateway-blind field and is preferred;
+          * `phonepeRefundId` remains the fallback so refunds recorded before
+          * 2026-10-21 still render. The label follows `gateway` rather than
+          * being hardcoded, because labelling a Razorpay id "PhonePe" is how
+          * this was wrong in the first place.
+          */}
+        {(event.gatewayRefundId ?? event.phonepeRefundId) && (
           <Text size="xs" color="muted">
-            {REFUND_COPY.history.labelPhonePe} {event.phonepeRefundId}
+            {event.gateway
+              ? `${event.gateway} refund:`
+              : REFUND_COPY.history.labelPhonePe}{" "}
+            {event.gatewayRefundId ?? event.phonepeRefundId}
+          </Text>
+        )}
+        {/*
+          * A failed refund must SAY so. Without this a `failed` entry renders
+          * identically to a processed one — same row, same amount — which
+          * would tell an operator money moved when it did not.
+          */}
+        {event.status === "failed" && (
+          <Text size="xs" color="error">
+            Failed{event.failureReason ? ` — ${event.failureReason}` : ""}
+          </Text>
+        )}
+        {event.status === "reserved" && (
+          <Text size="xs" color="muted">
+            In progress — awaiting the gateway
           </Text>
         )}
       </Stack>

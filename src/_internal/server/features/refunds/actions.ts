@@ -17,8 +17,20 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
  * Setting `contestable` to false is a side-effect of `orderRepository.postRefundEvent`.
  */
 
-import { randomUUID } from "crypto";
+/*
+ * `createHash`, not `randomUUID` — see `idempotencyKey` on the input type. A
+ * server-minted random id cannot be idempotent, which is what made a
+ * double-clicked button issue two real gateway refunds (D2).
+ */
+import { createHash } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
+import {
+  refundCapacity,
+  wouldBeFullRefund,
+  MONEY_EPSILON,
+} from "../../../shared/checkout/refundable-base";
+import { REFUND_CLAIMS_COLLECTION } from "../../../../features/orders/schemas/firestore";
 import { normalizeError } from "../../../../errors/normalize";
 import { rupeesToPaise } from "../../../../core/money";
 import { orderRepository } from "../../../../features/orders/repository/orders.repository";
@@ -118,6 +130,26 @@ export type ProcessRefundInput = {
   confirmIrrevocable: true;
   /** uid of the user processing the refund (admin / seller). */
   refundedBy: string;
+  /**
+   * 🛑 REQUIRED (D2). The caller's stable key for this logical refund.
+   *
+   * `refundId` used to be a server-side `randomUUID()` per call, which can
+   * never be idempotent: a double-clicked button minted two ids and issued
+   * **two real gateway refunds**. The entry id is now
+   * `sha256(idempotencyKey)`, so a retry reproduces the identical entry and
+   * the claim document refuses the second attempt.
+   *
+   * Required rather than optional ON PURPOSE — an optional key with a
+   * `randomUUID()` fallback is the old bug wearing a new name, and it would
+   * be reached by exactly the callers that forgot.
+   *
+   * What to pass: the submitting UI generates ONE uuid per form OPEN (so a
+   * double-click reuses it and a genuine second refund gets a new one);
+   * server-initiated paths use a NATURAL key — the out-of-stock auto-refund
+   * uses `oos_{merchantOrderId}`, which also makes it idempotent across
+   * checkout retries, a money fix in its own right.
+   */
+  idempotencyKey: string;
 } & (
   | {
       method: "phonepe";
@@ -144,8 +176,53 @@ export async function processRefundAction(
       if (!order) throw new NotFoundError(`Order ${input.orderId} not found`);
     
       if (input.amount <= 0) throw new ValidationError("Refund amount must be positive");
-      if (input.amount > order.totalPrice) {
-        throw new ValidationError("Refund amount exceeds order total");
+
+      /*
+       * One settings read, and only for the LEGACY case: orders written before
+       * `platformFeeGst` was persisted (2026-10-21) need their fee's GST
+       * derived, and deriving it from a rate we had to look up is still far
+       * better than D32's mistake of deriving the whole fee from a live
+       * percentage. Orders written after that date ignore this value entirely.
+       *
+       * Accepted cost: one read on an operator-initiated, rare action. The
+       * alternative — skipping it — would under-withhold on legacy orders,
+       * which sounds buyer-friendly but inflates `refundableBase`, so a
+       * "refund everything" would leave a residue and the order would never
+       * reach `status: "refunded"` (the D3 defect, reintroduced).
+       */
+      const siteSettings = await siteSettingsRepository.getSingleton().catch((err: unknown) => {
+        void normalizeError(err);
+        return null;
+      });
+
+      /*
+       * ── D1: the cap is the REMAINING balance, not the order total ────────
+       *
+       * This read `input.amount > order.totalPrice`, i.e. it compared each
+       * refund against the whole order — while the function's own docstring
+       * promised "≤ remaining refundable amount". So on a ₹600 order, ₹500 and
+       * then another ₹500 BOTH passed: ₹1,000 refunded, two real gateway
+       * calls, both successful.
+       *
+       * 🛑 The ceiling is `refundableBase`, not `totalPrice`: the platform fee
+       * is non-refundable by policy, which the product already tells the buyer
+       * (`REFUND_COPY.request.acknowledgments[2]`).
+       *
+       * This check is the EARLY, friendly one — it gives the operator a useful
+       * message before any provider call. It is NOT the authority: the real
+       * cap is re-evaluated inside `reserveRefund`'s transaction, because a
+       * check outside a transaction is TOCTOU and two concurrent requests
+       * could each see a clear cap and both proceed. That is exactly how the
+       * double refund above was reachable even with a correct comparison.
+       */
+      const capacity = refundCapacity(order, siteSettings?.commissions?.gstPercent);
+      if (input.amount > capacity.remaining + MONEY_EPSILON) {
+        throw new ValidationError(
+          `Refund of ₹${input.amount.toFixed(2)} exceeds the ₹${capacity.remaining.toFixed(2)} still refundable on this order` +
+            (capacity.withheld > 0
+              ? ` (₹${capacity.withheld.toFixed(2)} platform fee is non-refundable).`
+              : "."),
+        );
       }
     
       // Guard: non-refundable orders (prize draws, bundles). A property of the
@@ -182,18 +259,73 @@ export async function processRefundAction(
       );
       await assertDigitalCodesNotClaimed(input.orderId, digitalCodeItems);
     
-      const refundId = randomUUID();
+      /*
+       * ── D2: IDEMPOTENCY ──────────────────────────────────────────────────
+       *
+       * `const refundId = randomUUID()` was generated SERVER-SIDE, per call.
+       * A server-minted id can never be idempotent: a double-clicked button
+       * produced two different ids and therefore **two real gateway refunds**.
+       *
+       * The id is now derived from the caller's `idempotencyKey`, so a retry
+       * of the same logical request produces the identical entry. The client
+       * generates one key per form OPEN, so a double-click reuses it while a
+       * genuine second refund gets a new one.
+       *
+       * Truncated to 32 chars to stay comfortably inside a Firestore document
+       * id while keeping ~128 bits of the digest — collision risk is
+       * negligible and a collision degrades to "treated as a retry", which is
+       * the safe direction.
+       */
+      const refundId = createHash("sha256").update(input.idempotencyKey).digest("hex").slice(0, 32);
       const now = new Date();
-      let phonepeRefundId: string | undefined;
 
-      if (input.method === "phonepe") {
-        const payment = getProviders().payment;
-        if (!payment) throw new ValidationError("Payment provider not configured");
-        const result = await payment.refund(input.phonepeOrderId, rupeesToPaise(input.amount));
-        phonepeRefundId = result.id;
+      /*
+       * The at-most-once gate, BEFORE any provider call. Same `.create()`
+       * fails-if-exists primitive the gateway order claim uses — the fourth
+       * use of it in this codebase.
+       *
+       * 🛑 Claimed first and released on nothing. A claim that outlives a
+       * crash is deliberate: it is what stops a retry from issuing a second
+       * provider call for a refund that may already have succeeded. An
+       * unsettled claim older than an hour is what the reconciler looks for
+       * (Phase 4 R3), and resolving it means READING the gateway, never
+       * guessing.
+       */
+      const claimRef = getAdminDb().collection(REFUND_CLAIMS_COLLECTION).doc(refundId);
+      try {
+        await claimRef.create({
+          orderId: input.orderId,
+          amount: input.amount,
+          state: "claimed",
+          claimedAt: now,
+          claimedBy: input.refundedBy,
+        });
+      } catch (claimErr) {
+        void normalizeError(claimErr);
+        /*
+         * Already claimed. Return the WINNER's refundId as a SUCCESS, not an
+         * error — the refund either happened or is in flight, and an error
+         * here makes the operator click again, which is the behaviour this
+         * whole mechanism exists to stop.
+         */
+        serverLogger.info("refund: duplicate idempotency key — returning the existing refund", {
+          orderId: input.orderId,
+          refundId,
+        });
+        return { success: true as const, refundId };
       }
 
-      const isFull = input.amount >= order.totalPrice;
+      /*
+       * ── D3: `isFull` measured against the REFUNDABLE BASE ────────────────
+       *
+       * This was `input.amount >= order.totalPrice`, which is unreachable once
+       * the platform fee is withheld: the largest possible refund is strictly
+       * LESS than `totalPrice`, so an order could **never** reach
+       * `status: "refunded"` and stayed fully refundable forever. It also
+       * ignored prior partial refunds entirely — ₹300 then ₹200 of ₹500 left
+       * the order open.
+       */
+      const isFull = wouldBeFullRefund(order, input.amount, siteSettings?.commissions?.gstPercent);
 
       const event: OrderRefundEvent = {
         refundId,
@@ -210,7 +342,6 @@ export async function processRefundAction(
           : RETURN_REASON_LABEL[input.reasonCode],
         refundedAt: now,
         refundedBy: input.refundedBy,
-        ...(phonepeRefundId ? { phonepeRefundId } : {}),
         ...(input.method === "manual" && input.manualTransactionId
           ? { manualTransactionId: input.manualTransactionId }
           : {}),
@@ -221,9 +352,109 @@ export async function processRefundAction(
             }
           : {}),
       };
-    
-      await orderRepository.postRefundEvent(input.orderId, event, isFull);
-    
+
+      /*
+       * ── D6: TWO-PHASE WRITE AROUND THE PROVIDER CALL ─────────────────────
+       *
+       * The old sequence was: call the gateway, then `postRefundEvent`, which
+       * does `findById` then `[...existing, event]`. Two problems.
+       *
+       * (a) The append is a read-then-write, so two concurrent refunds both
+       *     read the same array and the second **loses the first's event
+       *     entirely**.
+       * (b) A crash between the gateway call and the write leaves money gone
+       *     from the gateway and NO RECORD of it on our side — unrecoverable
+       *     without manually reading the provider.
+       *
+       * Reserve (transactional, cap enforced inside) → provider call (outside
+       * any transaction, because a transaction RETRIES its body and a retried
+       * network call is a second refund) → settle. This is the only ordering
+       * in which "money left and we do not know" is impossible: a crash now
+       * leaves a `reserved` entry plus an unsettled claim, which is a
+       * detectable, resolvable state.
+       */
+      await orderRepository.reserveRefund(input.orderId, event, {
+        refundableBase: capacity.base,
+        epsilon: MONEY_EPSILON,
+      });
+
+      let gatewayRefundId: string | undefined;
+      let gatewayName: string | undefined;
+      if (input.method === "phonepe") {
+        const payment = getProviders().payment;
+        if (!payment) throw new ValidationError("Payment provider not configured");
+        try {
+          const result = await payment.refund(input.phonepeOrderId, rupeesToPaise(input.amount));
+          gatewayRefundId = result.id;
+          gatewayName = payment.name;
+        } catch (providerErr) {
+          void normalizeError(providerErr);
+          /*
+           * Release the reservation by settling it `failed`, so the amount
+           * returns to the refundable balance — `committedRefundTotal` skips
+           * failed entries, which is why no explicit release exists to forget.
+           * Then rethrow: the operator must know the gateway refused.
+           */
+          await orderRepository
+            .settleRefund(input.orderId, refundId, {
+              status: "failed",
+              failureReason:
+                providerErr instanceof Error ? providerErr.message : String(providerErr),
+            })
+            .catch((settleErr: unknown) => {
+              void normalizeError(settleErr);
+              serverLogger.error("refund: could not mark a failed reservation — it will hold the balance until reconciled", {
+                orderId: input.orderId,
+                refundId,
+              });
+            });
+          await claimRef
+            .update({ state: "failed", settledAt: new Date() })
+            .catch(() => {/* the reconciler resolves an unsettled claim */});
+          throw providerErr;
+        }
+      }
+
+      /*
+       * ── D7: the gateway id, recorded gateway-BLIND and provider-specific ──
+       *
+       * Razorpay's refund id used to be written to `phonepeRefundId`
+       * unconditionally (`phonepeRefundId = result.id`, no branch), while the
+       * declared `razorpayRefundId` was written by nothing — so a Razorpay
+       * refund existed in their dashboard with no way to tie it to ours.
+       *
+       * `gatewayRefundId` is what a reconciler reads and needs no knowledge of
+       * which provider ran. The provider-specific field is populated too, by
+       * the provider that actually produced the id, for an operator searching
+       * one dashboard.
+       */
+      await orderRepository.settleRefund(
+        input.orderId,
+        refundId,
+        {
+          status: "processed",
+          ...(gatewayRefundId ? { gatewayRefundId } : {}),
+          ...(gatewayName ? { gateway: gatewayName } : {}),
+          providerFields:
+            gatewayRefundId && gatewayName === "razorpay"
+              ? { razorpayRefundId: gatewayRefundId }
+              : gatewayRefundId
+                ? { phonepeRefundId: gatewayRefundId }
+                : {},
+        },
+        isFull,
+      );
+
+      await claimRef
+        .update({ state: "settled", settledAt: new Date() })
+        .catch((err: unknown) => {
+          void normalizeError(err);
+          // Harmless: the refund is recorded. An unsettled claim only means
+          // the reconciler will look at it once and find it already done.
+          serverLogger.warn("refund: claim not marked settled", { refundId });
+        });
+
+
       // SB-UNI-N — revoke any available (unclaimed) digital codes linked to this order.
       revokeAvailableDigitalCodes(input.orderId, digitalCodeItems);
     

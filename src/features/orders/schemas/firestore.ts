@@ -347,6 +347,44 @@ export interface OrderRefundEvent {
   reasonCode?: ReturnReason;
   refundedAt: Date;
   refundedBy: string; // userId of admin / seller who issued the refund
+  /**
+   * Lifecycle of this refund entry. **Optional on purpose** — every row
+   * written before the two-phase scheme (2026-10-21) has none, and those are
+   * all committed refunds, so a missing status must COUNT as committed.
+   *
+   * · `reserved`  a slot was claimed and the provider call is in flight. The
+   *               amount is already spoken for, so it counts toward the
+   *               cumulative cap — that is what closes the TOCTOU.
+   * · `processed` the provider confirmed. Money moved.
+   * · `failed`    the provider refused. The reservation is RELEASED simply by
+   *               being skipped in the cumulative sum, which is why there is
+   *               no explicit release step to forget.
+   *
+   * A `reserved` entry that never settles is a crash between the provider call
+   * and our write — detectable, and exactly what the reconciler looks for.
+   */
+  status?: "reserved" | "processed" | "failed";
+  /** Why the provider refused, when `status === "failed"`. */
+  failureReason?: string;
+  /**
+   * The gateway's own refund reference, whichever gateway ran.
+   *
+   * 🛑 ADDED 2026-10-21 because reconciliation was impossible (D7). Razorpay's
+   * refund id was written to **`phonepeRefundId`** unconditionally — the
+   * action did `phonepeRefundId = result.id` with no branch on provider — while
+   * the declared `razorpayRefundId` was written by NOTHING, and
+   * `RefundHistoryTable` rendered no reference at all for a Razorpay refund.
+   * So a refund existed in Razorpay's dashboard with no way to tie it to ours.
+   *
+   * This is the field a reconciler reads, and it is gateway-BLIND on purpose:
+   * a reconciler that has to know which provider ran before it can find the id
+   * is a reconciler that breaks on the next provider. The two
+   * provider-specific fields below stay, populated only by the provider that
+   * actually produced the id, for operators who search a specific dashboard.
+   */
+  gatewayRefundId?: string;
+  /** Which gateway produced `gatewayRefundId` (`payment.name`). */
+  gateway?: string;
   /** Set when PhonePe processed the refund. */
   phonepeRefundId?: string;
   /** Set when Razorpay processed the refund (`rfnd_…`). Mutually exclusive with `phonepeRefundId` — one online gateway runs at a time. */
@@ -497,6 +535,37 @@ export interface OrderDocument extends BaseDocument {
   /** Full list of all applied coupons/discounts for this order group */
   appliedDiscounts?: AppliedOrderDiscount[];
   platformFee?: number;
+  /**
+   * GST charged on the platform fee, in decimal rupees.
+   *
+   * 🛑 ADDED 2026-10-21 because its ABSENCE made a refund over-deduct by ~10x.
+   *
+   * This was computed at checkout (`gstOnFee`), charged to the buyer as its own
+   * term in `orderTotal`, and then folded into `gstAmount` — so the order
+   * recorded the combined figure and no field held the fee's own tax. The
+   * platform fee is non-refundable by policy, so a refund has to withhold
+   * `platformFee + its GST`, and with the second half unavailable
+   * `previewCancellationRefund` re-derived BOTH from live percentages:
+   *
+   *     effectiveRate = platformFeePercent × (1 + gstPercent / 100)
+   *     feeDeducted   = grossRefund × effectiveRate / 100
+   *
+   * That ignores `commissions.platformFeeMax` (default **₹10**) entirely, so on
+   * a ₹5,000 order it withheld **₹118** from a buyer who had paid **₹11.80** —
+   * keeping ~₹106 of their goods money and calling it a platform fee. The
+   * error grows with order value.
+   *
+   * Stored rather than re-derived for the same reason every other agreed term
+   * is: the rate in force when the order was placed is the rate that governs
+   * it. `platformFeeWithheld()` reads this field and falls back to deriving it
+   * only for orders written before it existed.
+   *
+   * 🛑 Note the ASYMMETRY with product GST, which is deliberate: product
+   * prices are tax-INCLUSIVE so their tax is backed out for reporting, while
+   * this is GST on OUR service fee charged to the buyer ON TOP of the fee. See
+   * the note above `orderTotal` in `createOrderForGroup`.
+   */
+  platformFeeGst?: number;
   depositAmount?: number;
   codRemainingAmount?: number;
   /** COD handling fee charged to the buyer: min(subtotal × codHandlingFeePercent / 100, codHandlingFeeCap). Only set when paymentMethod === "cod". */
@@ -889,6 +958,31 @@ export interface OrderPaymentRecord {
 }
 
 export const ORDER_COLLECTION = "orders" as const;
+
+/**
+ * At-most-once gate for refunds. Document id = `sha256(idempotencyKey)`,
+ * claimed with `.create()` BEFORE any provider call.
+ *
+ * 🛑 A claim is deliberately NOT released on failure. Surviving a crash is the
+ * whole point: it stops a retry from issuing a second provider call for a
+ * refund that may already have succeeded at the gateway. An unsettled claim
+ * older than an hour is a crash between "provider called" and "entry settled",
+ * and resolving it means READING the gateway, never guessing — that is Phase
+ * 4's R3 reconciler.
+ *
+ * Classified **PRESERVE** in the tester tier (`tester/scripts/lib/collections.mjs`)
+ * because it is the only record that a refund was attempted and wiping it
+ * would let a replay re-refund.
+ *
+ * 🛑 It deliberately gets NO `SEED_COLLECTION_PURPOSE` entry, and that is not
+ * an oversight. `audit-seed-purpose`'s R1 requires that registry to match
+ * `COLLECTION_MAP` EXACTLY in both directions — a key for a collection the
+ * seeder never writes is a DEAD entry, the same shape as the `offers` entry in
+ * `TEST_DATA_COLLECTIONS` that could only ever match zero rows while reading
+ * as coverage. This collection has no seed data, so the tester tier is the
+ * only list it belongs in. (I added it to both first; R1 would have failed.)
+ */
+export const REFUND_CLAIMS_COLLECTION = "refundClaims" as const;
 
 export const ORDER_INDEXED_FIELDS = [
   "searchTxt",

@@ -60,15 +60,37 @@ export const orderDocumentItemSchema = z.object({
   prizeRevealStatus: z.enum(["pending", "open", "closed", "revealed"]).optional(),
 });
 
+/**
+ * Mirror of `OrderRefundEvent`.
+ *
+ * 🛑 THIS HAD ALREADY DRIFTED, and silently in the dangerous direction.
+ * `z.object()` STRIPS unknown keys, so a field present on the interface and
+ * absent here is **removed on parse** — it does not error, it vanishes. Before
+ * 2026-10-21 it was missing `reasonCode` AND `razorpayRefundId`, which means a
+ * Razorpay refund reference would have been discarded by the very schema meant
+ * to validate it.
+ *
+ * Keep this in lockstep with the interface. When adding a field there, add it
+ * here in the same change.
+ */
 export const orderRefundEventSchema = z.object({
   refundId: z.string(),
   type: orderRefundTypeSchema,
   amount: rupeesSchema,
   itemIds: z.array(z.string()).optional(),
   reason: z.string(),
+  reasonCode: z.string().optional(),
   refundedAt: firestoreDateSchema,
   refundedBy: z.string(),
+  // Two-phase lifecycle. Optional because pre-2026-10-21 rows carry none, and
+  // a missing status means "committed" to every reader.
+  status: z.enum(["reserved", "processed", "failed"]).optional(),
+  failureReason: z.string().optional(),
+  // Gateway-blind reference, the one a reconciler reads.
+  gatewayRefundId: z.string().optional(),
+  gateway: z.string().optional(),
   phonepeRefundId: z.string().optional(),
+  razorpayRefundId: z.string().optional(),
   manualTransactionId: z.string().optional(),
   proofDocumentUrl: z.string().optional(),
   proofDocumentMimeType: z.string().optional(),

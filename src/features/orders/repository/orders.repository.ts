@@ -770,6 +770,166 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    * Append one refund event to the order and mark it non-contestable.
    * If `becomeRefunded` is true, also transitions the order status to "refunded".
    */
+  /**
+   * PHASE A — reserve a refund slot atomically, enforcing the cumulative cap.
+   *
+   * 🛑 WHY A TRANSACTION, AND WHY NOT `arrayUnion` (D1 + D6).
+   *
+   * `postRefundEvent` below does `findById` then `[...existing, event]` — a
+   * read-then-write. Two concurrent refunds both read the same `existing` and
+   * the second write **overwrites the first's append, losing an event
+   * entirely**. And the cap check lived in the ACTION, outside any
+   * transaction, so it was TOCTOU: two requests could each see a clear cap and
+   * both proceed. Combined with the cap comparing against `totalPrice` rather
+   * than the remaining balance (D1), ₹500 and another ₹500 both passed on a
+   * ₹600 order — **two real gateway refunds, both successful.**
+   *
+   * `arrayUnion` is the obvious fix and is WRONG here on three counts: it
+   * cannot evaluate the cumulative cap (the whole point), it cannot build the
+   * `withHistory` entry, and it dedupes by DEEP EQUALITY — so two legitimate
+   * identical ₹100 partial refunds would silently merge into one.
+   *
+   * The entry lands with `status: "reserved"`, which `committedRefundTotal`
+   * counts. That is what makes the reservation real: a concurrent request sees
+   * the pending amount and cannot refund against a balance already spoken for.
+   * A later `failed` settlement releases it simply by being skipped.
+   *
+   * Throws rather than returning a flag — a caller that ignores a boolean here
+   * calls the gateway anyway, which is the failure this prevents.
+   */
+  async reserveRefund(
+    orderId: string,
+    event: OrderRefundEvent,
+    /** Resolved by the caller from `refundCapacity`; see `refundable-base.ts`. */
+    opts: { refundableBase: number; epsilon: number },
+  ): Promise<void> {
+    const docRef = this.getCollection().doc(orderId);
+    await this.db.runTransaction(async (tx) => {
+      const snap = (await tx.get(docRef as never)) as unknown as {
+        exists?: boolean;
+        data?: () => Record<string, unknown> | undefined;
+      };
+      const data = typeof snap?.data === "function" ? snap.data() : undefined;
+      if (!data) throw new NotFoundError(`Order ${orderId} not found`);
+
+      const existing = (data.refunds ?? []) as Array<{ amount?: number; status?: string; refundId?: string }>;
+
+      /*
+       * Idempotency inside the transaction too, not only at the claim doc.
+       * The claim is the at-most-once gate for a RETRY of the same request;
+       * this catches the case where a reservation landed but the claim write
+       * did not, and makes re-entry a no-op rather than a second slot.
+       */
+      if (existing.some((r) => r.refundId === event.refundId)) return;
+
+      const committed = existing
+        .filter((r) => r.status !== "failed")
+        .reduce((sum, r) => sum + (r.amount ?? 0), 0);
+
+      /*
+       * The cap, evaluated HERE rather than by the caller — inside the
+       * transaction is the only place it is not a race.
+       */
+      if (committed + event.amount > opts.refundableBase + opts.epsilon) {
+        const remaining = Math.max(0, opts.refundableBase - committed);
+        throw new ValidationError(
+          `Refund of ₹${event.amount.toFixed(2)} exceeds the ₹${remaining.toFixed(2)} still refundable on this order.`,
+        );
+      }
+
+      tx.update(docRef as never, {
+        refunds: [...existing, { ...event, status: "reserved" }],
+        contestable: false,
+        updatedAt: new Date(),
+      } as never);
+    });
+  }
+
+  /**
+   * PHASE B — settle a reserved refund: `processed` with the gateway's id, or
+   * `failed`, which releases the reservation.
+   *
+   * Runs AFTER the provider call, which must sit outside any transaction: a
+   * Firestore transaction retries its body, and a retried network call is a
+   * second refund. This is the only ordering in which "money left the gateway
+   * and we have no record of it" is impossible — a crash between the provider
+   * call and this write leaves a `reserved` entry and an unsettled claim,
+   * which is exactly the shape Phase 4's reconciler looks for.
+   *
+   * Goes through `updateWithHistory`, so the TIMELINE entry is written at
+   * settlement rather than at reservation. That is deliberate: the history
+   * should record money that moved, not an intent that may yet fail.
+   */
+  async settleRefund(
+    orderId: string,
+    refundId: string,
+    outcome:
+      | { status: "processed"; gatewayRefundId?: string; gateway?: string; providerFields?: Record<string, string> }
+      | { status: "failed"; failureReason?: string },
+    becomeRefunded = false,
+    ctx?: OrderWriteContext,
+  ): Promise<OrderDocument> {
+    const order = await this.findById(orderId);
+    if (!order) throw new NotFoundError(`Order ${orderId} not found`);
+    const existing = order.refunds ?? [];
+    const target = existing.find((r) => r.refundId === refundId);
+    if (!target) throw new NotFoundError(`Reserved refund ${refundId} not found on order ${orderId}`);
+
+    const settled = existing.map((r) =>
+      r.refundId === refundId
+        ? {
+            ...r,
+            ...outcome,
+            ...(outcome.status === "processed" ? (outcome.providerFields ?? {}) : {}),
+          }
+        : r,
+    );
+
+    return this.updateWithHistory(
+      orderId,
+      {
+        refunds: settled as OrderRefundEvent[],
+        /*
+         * `becomeRefunded` only on a SUCCESSFUL settlement. Marking an order
+         * refunded on a failed gateway call would be the worst possible lie:
+         * terminal status, no money moved.
+         */
+        ...(becomeRefunded && outcome.status === "processed"
+          ? { status: "refunded" as OrderStatus }
+          : {}),
+        updatedAt: new Date(),
+      },
+      {
+        ...ctx,
+        extraChanges: {
+          refund: {
+            from: null,
+            to: {
+              refundId,
+              type: target.type,
+              amount: target.amount,
+              reason: target.reason,
+              outcome: outcome.status,
+            },
+          },
+        },
+        actor: ctx?.actor ?? { uid: target.refundedBy, role: "admin" },
+        reason: ctx?.reason ?? target.reason,
+      },
+      "orderRepository.settleRefund",
+      order,
+    );
+  }
+
+  /**
+   * 🛑 LEGACY — prefer `reserveRefund` + `settleRefund`.
+   *
+   * Kept because several non-gateway paths (manual refunds with no provider
+   * call, and the out-of-stock auto-refund) post a single terminal event with
+   * nothing to reserve against. Its read-then-write append is still a lost-
+   * update risk under concurrency (D6); do not route a new gateway refund
+   * through it.
+   */
   async postRefundEvent(
     orderId: string,
     event: OrderRefundEvent,

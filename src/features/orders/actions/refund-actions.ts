@@ -15,9 +15,15 @@ import { serverLogger } from "../../../monitoring";
 import { orderRepository } from "../../orders/repository/orders.repository";
 import { RefundStatusValues } from "../../orders/schemas";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
+/*
+ * One owner for "how much of the platform fee is withheld". Shared with the
+ * cumulative refund cap, so the figure SHOWN to the buyer and the money
+ * actually withheld cannot diverge — they did: this file showed a net figure
+ * while `cancelOrder` moved no money at all (D14).
+ */
+import { platformFeeWithheld } from "../../../_internal/shared/checkout/refundable-base";
 import { sendNotification } from "../../admin/actions/notification-actions";
 
-const DEFAULT_PLATFORM_FEE_PERCENT = 5;
 const DEFAULT_GST_PERCENT = 18;
 
 export interface PartialRefundResult {
@@ -42,14 +48,38 @@ export async function issuePartialRefund(
     throw new ValidationError("Order has already been fully refunded.");
 
   const settings = await siteSettingsRepository.getSingleton();
-  const platformFeePercent = settings.commissions?.platformFeePercent ?? DEFAULT_PLATFORM_FEE_PERCENT;
   const gstPercent = settings.commissions?.gstPercent ?? DEFAULT_GST_PERCENT;
-  const effectiveRate = platformFeePercent * (1 + gstPercent / 100);
 
+  /*
+   * ── D32: THE SINGLE WORST MONEY DEFECT IN THE AUDIT ─────────────────────
+   *
+   * This computed a PERCENTAGE OF THE REFUND:
+   *
+   *     const effectiveRate = platformFeePercent * (1 + gstPercent / 100);
+   *     const feeDeducted   = (grossRefund * effectiveRate) / 100;
+   *
+   * which ignores `commissions.platformFeeMax` (default **₹10**) entirely, and
+   * ignores `order.platformFee` — the amount that was ACTUALLY COLLECTED and
+   * is stored on the order.
+   *
+   * Measured on a ₹5,000 order at 2% + 18% GST: it deducted **₹118** from a
+   * buyer who had paid **₹11.80**, keeping ~₹106.20 of their GOODS money and
+   * labelling it a platform fee. The error grows with order value, so it was
+   * largest exactly where a buyer would notice.
+   *
+   * 🛑 `platformFeeWithheld` returns the fee as CHARGED, never a recomputed
+   * rate, and it is shared with the cumulative refund cap — so the figure
+   * SHOWN to the buyer here and the money actually withheld now come from one
+   * place. They did not before: this function showed a net figure while
+   * `cancelOrder` moved no money at all (D14).
+   *
+   * `gstPercent` is passed only as the LEGACY fallback, for orders written
+   * before `platformFeeGst` was persisted (2026-10-21). An order that carries
+   * the field ignores it entirely — which is the point, since reading today's
+   * rate for a historical order is the mistake this replaces.
+   */
   const grossRefund = order.totalPrice;
-  const feeDeducted = deductFees
-    ? parseFloat(((grossRefund * effectiveRate) / 100).toFixed(2))
-    : 0;
+  const feeDeducted = deductFees ? platformFeeWithheld(order, gstPercent) : 0;
   const netRefund = parseFloat((grossRefund - feeDeducted).toFixed(2));
 
   await orderRepository.update(orderId, {
@@ -102,12 +132,24 @@ export async function previewCancellationRefund(
   if (order.paymentStatus !== "paid") return null;
 
   const settings = await siteSettingsRepository.getSingleton();
-  const platformFeePercent = settings.commissions?.platformFeePercent ?? DEFAULT_PLATFORM_FEE_PERCENT;
   const gstPercent = settings.commissions?.gstPercent ?? DEFAULT_GST_PERCENT;
-  const effectiveRate = platformFeePercent * (1 + gstPercent / 100);
 
+  /*
+   * 🛑 A SECOND COPY of D32 lived here, and the plan only named one.
+   *
+   * Identical arithmetic to the function above — `platformFeePercent × (1 +
+   * gstPercent/100)` applied to the whole refund, ignoring the ₹10 cap and the
+   * stored `order.platformFee`. And this is the WORSE of the two, because this
+   * is the function whose output is shown to the BUYER before they confirm a
+   * cancellation: it quoted a net refund ₹106 short on a ₹5,000 order.
+   *
+   * Found by grepping for the shape rather than the name — the plan cited
+   * `refund-actions.ts:104-110`, which is the other one. Root Cause #75's
+   * lesson exactly: a rule reachable by copy-paste gets copied, and the copy
+   * is not found by searching for the function that was supposed to own it.
+   */
   const grossRefund = order.totalPrice;
-  const feeDeducted = parseFloat(((grossRefund * effectiveRate) / 100).toFixed(2));
+  const feeDeducted = platformFeeWithheld(order, gstPercent);
   const netRefund = parseFloat((grossRefund - feeDeducted).toFixed(2));
 
   return {
