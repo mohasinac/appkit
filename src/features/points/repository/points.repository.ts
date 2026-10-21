@@ -78,6 +78,21 @@ export class PointsRepository {
     orderId?: string;
     adminReason?: string;
     actorUid?: string;
+    /**
+     * When this batch stops being spendable. Decision 4: three months.
+     *
+     * 🛑 Optional, and ABSENT MEANS NEVER EXPIRES — which is the right default
+     * for every entry written before the field existed. Treating absence as
+     * "expired" would retroactively void live balances.
+     *
+     * A caller crediting points SHOULD pass it; `pointsExpiryFrom(now)` is the
+     * one helper that computes it, so the three-month figure has one owner.
+     * Spends and reversals deliberately pass nothing: a spend has nothing to
+     * expire, and a reversal restores points whose original clock was already
+     * consumed — a fresh three months there would be a quiet extension nobody
+     * granted.
+     */
+    expiresAt?: Date;
   }): Promise<{ entryId: string; balance: number }> {
     if (!isPointsEntryWellFormed(input)) {
       /*
@@ -112,6 +127,7 @@ export class PointsRepository {
         ...(input.orderId ? { orderId: input.orderId } : {}),
         ...(input.adminReason ? { adminReason: input.adminReason } : {}),
         ...(input.actorUid ? { actorUid: input.actorUid } : {}),
+        ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}),
         createdAt: new Date(),
         updatedAt: new Date(),
       } as PointsLedgerEntry;

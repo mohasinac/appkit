@@ -33,6 +33,7 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 import { cancelOrderWithRefund } from "../../features/orders/cancellation-refund";
+import { awardPurchasePoints } from "../../features/points/award";
 import { processRefundAction } from "../../features/refunds/actions";
 import { resolveRefundCapacity } from "../../features/refunds/capacity";
 import { MONEY_EPSILON } from "../../../shared/checkout/refundable-base";
@@ -125,16 +126,16 @@ async function performAction(
      * blocked on this kind, so the seller's funds become payable as a
      * consequence rather than by a second decision here.
      *
-     * 🛑 THE POINTS AWARD IS NOT WRITTEN HERE YET, and that is deliberate
-     * rather than forgotten. Phase P (step 16) owns the ledger, and the award
-     * must be IDEMPOTENT because completion has two triggers — this sweep and
-     * the buyer posting a review. `pointsLedger` is append-only, so an
+     * 🛑 THE POINTS AWARD IS NOW WRITTEN HERE, and the ordering of those two
+     * events is the point. This comment used to say the award was deliberately
+     * absent: the ledger is append-only, completion has two triggers, and an
      * un-keyed second append would be a permanent double credit with no way to
-     * net it off. Writing the award before that key exists would be the
-     * expensive half of the feature shipped first.
+     * net it off. So the completion FACT was recorded first and the award
+     * waited for `pointsAwardedAt` to exist as a key.
      *
-     * The completion itself is recorded now, so when Phase P lands it has a
-     * fact to award against rather than a window it has to re-derive.
+     * It does now, so both triggers award through the same keyed function —
+     * which is what makes "the buyer completed early and this tick found it
+     * already complete" a no-op rather than a second credit.
      */
     case "order-complete":
       /*
@@ -148,6 +149,41 @@ async function performAction(
         completedAt: ctx.now,
         completedBy: "system",
       } as Partial<OrderDocument>);
+
+      /*
+       * ── THE POINTS AWARD, now that its key exists (Phase P) ─────────────
+       *
+       * 🛑 A double call is the NORMAL case, not an edge: the buyer may have
+       * completed this order early, in which case this tick finds it already
+       * complete. `awardPurchasePoints` checks `pointsAwardedAt` and writes it
+       * alongside the credit, which is what makes that safe — an append-only
+       * ledger cannot net off a second credit, so the key had to exist before
+       * the award did. That is why the earlier version of this branch
+       * deliberately recorded the completion and stopped.
+       *
+       * Best-effort: the window HAS closed and that fact is already written,
+       * so a failed credit must not make the sweep retry the close. It is
+       * logged loudly and the next tick re-attempts the award keyed.
+       */
+      try {
+        const award = await awardPurchasePoints({
+          ...order,
+          completedAt: ctx.now,
+          completedBy: "system",
+        } as OrderDocument);
+        if (award.awarded > 0) {
+          ctx.logger.info("obligation: purchase points awarded", {
+            orderId: order.id,
+            amount: award.awarded,
+          });
+        }
+      } catch (err) {
+        void normalizeError(err);
+        ctx.logger.error("obligation: order completed but points were NOT credited", {
+          orderId: order.id,
+        });
+      }
+
       ctx.logger.info("obligation: dispute window closed — order complete", {
         orderId: order.id,
         deliveredAt: order.deliveryDate?.toISOString(),

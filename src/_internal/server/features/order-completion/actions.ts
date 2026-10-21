@@ -41,6 +41,7 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import { reviewRepository } from "../../../../features/reviews/repository/reviews.repository";
 import { obligationsRepository } from "../../../../features/obligations/repository/obligations.repository";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
+import { awardPurchasePoints } from "../points/award";
 
 /** The lines of an order a buyer can rate — one entry per order line. */
 export interface RateableOrderItem {
@@ -275,7 +276,9 @@ export async function rateOrderItemAction(
  */
 export async function markOrderCompleteAction(
   orderId: string,
-): Promise<ActionResult<{ completedAt: string; payoutUnblocked: boolean }>> {
+): Promise<
+  ActionResult<{ completedAt: string; payoutUnblocked: boolean; pointsAwarded: number }>
+> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
 
@@ -353,12 +356,38 @@ export async function markOrderCompleteAction(
     });
 
     /*
-     * 🛑 THE POINTS AWARD IS STILL NOT WRITTEN HERE — Phase P owns the ledger.
-     * Both completion paths now record the same FACT (`completedAt`), so the
-     * award has one thing to key on and can be idempotent across both. Writing
-     * it from two places before that key exists is how an append-only ledger
-     * ends up with a permanent double credit.
+     * ── THE POINTS AWARD (Phase P, 2026-10-21) ────────────────────────────
+     *
+     * Now written, because the key it needed exists: `awardPurchasePoints`
+     * checks `order.pointsAwardedAt` and writes it alongside the credit, which
+     * is what makes a double fire safe. This path and the 7-day sweep both
+     * call the same function — and a double call is the NORMAL case here, not
+     * an edge, because a buyer completing early means the sweep later finds an
+     * order already complete.
+     *
+     * 🛑 Best-effort, and awaited rather than fire-and-forget. Awaited so the
+     * response can honestly say points were credited; best-effort because the
+     * order IS complete and the buyer has been told so — failing the whole
+     * action over the credit would leave them unable to retry a completion
+     * that already happened. A miss is recoverable (the sweep re-attempts on
+     * its next tick, keyed) and loud.
      */
-    return { completedAt: now.toISOString(), payoutUnblocked };
+    let pointsAwarded = 0;
+    try {
+      const award = await awardPurchasePoints({
+        ...order,
+        completedAt: now,
+        completedBy: user.uid,
+      } as OrderDocument);
+      pointsAwarded = award.awarded;
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.error("order completed but points were NOT credited", {
+        orderId,
+        userId: user.uid,
+      });
+    }
+
+    return { completedAt: now.toISOString(), payoutUnblocked, pointsAwarded };
   });
 }

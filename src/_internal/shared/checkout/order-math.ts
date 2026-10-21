@@ -681,6 +681,52 @@ export function orderShippingReimbursement(order: ReimbursableOrderLike): number
   return 0;
 }
 
+/**
+ * Points this order issued, which the STORE funds.
+ *
+ * ## 🛑 A DEDUCTION, and never a clawback
+ *
+ * Owner, 2026-10-21: *"so stores bear it"*, framed as *"like a sale discount
+ * for getting a repeat customer — you get to pay few loss."* So the earn is a
+ * discount expense the seller absorbs, and it comes off their payout.
+ *
+ * That works as a simple deduction — with no ledger, no clawback and no
+ * negative balance — only because of an ordering guarantee worth stating
+ * explicitly, since I had it backwards in the plan for a while:
+ *
+ * ```
+ * delivered → completion (points issued) → order-complete closes
+ *           → payout-release unblocks → payout computed → payout settled
+ * ```
+ *
+ * `payout-release` is `blockedBy: ["order-complete", …]`, so the payout gate
+ * opens BECAUSE the order completed — and completion is the same event that
+ * issues the points. The award is therefore **always strictly before** the
+ * payout is computed, by construction rather than by timing luck. I had
+ * recorded this as "the buyer's fast path RELEASES the payout early, so the
+ * absorption may happen after the money has left", which would have required
+ * a `sellerLedger` debit against a future payout. The fast path *unblocks*;
+ * it does not release. One planned mechanism deleted rather than built.
+ *
+ * Reads `pointsAwarded` off the order rather than recomputing a percentage:
+ * the figure must be what was actually credited, and the goods value may have
+ * changed since (a partial cancellation) — recomputing would deduct an amount
+ * the buyer never received.
+ */
+export function orderPointsFunded(order: { pointsAwarded?: number }): number {
+  const awarded = order.pointsAwarded;
+  return typeof awarded === "number" && Number.isFinite(awarded)
+    ? roundRupees(Math.max(0, awarded))
+    : 0;
+}
+
+/** Sum of `orderPointsFunded` across a batch. */
+export function ordersPointsFunded(
+  orders: readonly { pointsAwarded?: number }[],
+): number {
+  return roundRupees(orders.reduce((sum, o) => sum + orderPointsFunded(o), 0));
+}
+
 /** Sum of `orderShippingReimbursement` across a batch. */
 export function ordersShippingReimbursement(
   orders: readonly ReimbursableOrderLike[],

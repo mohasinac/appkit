@@ -501,6 +501,33 @@ export interface OrderDocument extends BaseDocument {
   completedAt?: Date;
   /** `"system"` for the timer, or the buyer's uid for the fast path. */
   completedBy?: string;
+  /**
+   * When purchase points were credited for this order.
+   *
+   * ## 🛑 THE IDEMPOTENCY KEY, and it is the whole reason the award exists
+   *
+   * `pointsLedger` is append-only and `pointsRepository.append` takes no key,
+   * so an append does not deduplicate itself. Completion has TWO triggers —
+   * the buyer's fast path and the 7-day `order-complete` sweep — and a double
+   * fire would credit twice **permanently, with no way to net it off.**
+   *
+   * Both triggers check this field before awarding and write it after, which
+   * is the same mechanism `order.shippingReconciliation` already provides for
+   * the points credit on shipping savings: the marker is written in the same
+   * step as the credit precisely so it can be the key.
+   *
+   * It is also set on an order that earned ZERO (fully cancelled, zero value),
+   * so the sweep stops revisiting it — "we looked and there was nothing to
+   * give" is a decision, and leaving it unmarked re-reads that order on every
+   * tick forever.
+   */
+  pointsAwardedAt?: Date;
+  /**
+   * How many points were credited. Recorded for the seller's payout deduction
+   * and for explaining a balance, so neither has to re-derive a percentage of a
+   * figure the order may since have changed.
+   */
+  pointsAwarded?: number;
   cancellationDate?: Date;
   cancellationReason?: string;
   /**
