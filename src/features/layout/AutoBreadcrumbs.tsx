@@ -209,7 +209,19 @@ export function AutoBreadcrumbs({
   const allCrumbs = [{ label: "Home", href: localePrefix || "/" }, ...crumbs];
 
   return (
-    <Div border="default" className="border-y /80 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-slate-950/85" surface="default">
+    {/*
+      🛑 The `/80` here was NOT leading, which is why the hand-sweep that
+      fixed the other 28 missed it and `audit-dead-css-classes` caught it:
+      the regexes assumed `className="/80 …"`, and this was
+      `className="border-y /80 …"`.
+
+      It is the same codemod residue — a stripped `bg-white/80` leaving its
+      modifier — and the same silent no-op. Dropped rather than restored: the
+      element already takes `surface="default"`, so the translucency it was
+      reaching for belongs in that token, and the two `supports-[…]` rules
+      beside it already handle the backdrop-filter case with their own alphas.
+    */}
+    <Div border="default" className="border-y backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-slate-950/85" surface="default">
       <Div className="container mx-auto max-w-[1920px] px-[var(--appkit-space-5)] sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]" padding="y-xs">
         <Nav aria-label="Breadcrumb" className={className}>
           <Ol className="flex items-center gap-[var(--appkit-space-2)] flex-wrap" size="sm">

@@ -1,0 +1,46 @@
+/*
+ * Print-layout classes for physical labels and printable documents.
+ *
+ * 🛑 THESE LIVE IN A STATIC STYLESHEET, NOT ONLY IN `labelPageCss`'s STRING.
+ *
+ * `labelPageCss()` and `documentPageCss()` emit an `@page` rule plus these
+ * same `break-*` declarations into a runtime `<style>`. That is necessary for
+ * `@page` — its `size` is computed from the chosen profile, so it cannot be
+ * static — but it meant `.appkit-label` and `.appkit-label-sheet` existed
+ * ONLY inside a template literal.
+ *
+ * Consequence: `audit-dead-css-classes` reported them as classes generating no
+ * CSS rule, correctly, because nothing it can read defines them. A class whose
+ * only definition is a string concatenation is invisible to every tool — the
+ * audit, an editor's go-to-definition, and anyone grepping the stylesheets.
+ * Declaring them here makes them real; the runtime string still carries its
+ * own copy because a print view may be opened in a context where the bundled
+ * stylesheet has not loaded, and a duplicated `break-inside: avoid` is
+ * harmless where a missing one splits a label across two pages.
+ *
+ * @tag domain:print
+ * @tag layer:feature
+ */
+
+@media print {
+  /*
+   * A label must never be split across a page boundary. On thermal stock a
+   * page IS a label, so a split would print the top half on one label and the
+   * bottom half on the next — and the operator discovers it after both have
+   * been peeled and stuck to something.
+   */
+  .appkit-label {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /*
+   * A sheet is one A4 page of die-cut labels, or one contents sheet. Same
+   * rule, different unit — splitting it would offset every label after the
+   * break from its die-cut hole.
+   */
+  .appkit-label-sheet {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
