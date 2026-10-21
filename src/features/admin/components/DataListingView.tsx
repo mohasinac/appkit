@@ -24,8 +24,9 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
-import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar, TextLink } from "../../../ui";
+import { BulkActionBar, Button, Div, Icon, IconButton, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar, TextLink } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
+import { ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../layout";
 import { useAdminListing } from "../hooks/useAdminListing";
 import type { AdminListingConfig } from "../hooks/useAdminListing";
@@ -354,6 +355,128 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           }
         : undefined;
 
+  /*
+   * ── A DIRECT EDIT AFFORDANCE ON EVERY ROW ─────────────────────────────────
+   *
+   * Measured across 16 admin and store listings: ZERO edit links in rows and
+   * zero pencils on admin. Editing meant opening a `⋯` menu first — two
+   * clicks and a hidden menu for the single most common action an admin
+   * performs. `/store/products` had 15 pencil-labelled buttons and admin had
+   * none, so the two halves of the product did not even agree.
+   *
+   * Composed here rather than added to each config because ~105 listing
+   * screens render through this one component, and both row renderers
+   * (`DataTable` and `AdminViewCards`) already drop `renderRowActions` into a
+   * click-stopped container — so one wrapper reaches every surface.
+   *
+   * 🛑 ONLY WHEN AN EDIT TARGET ACTUALLY RESOLVES. This file already carries a
+   * long note about `AdminViewCards` once wiring every card to
+   * `openEditPanel` whether or not the config had anywhere to go, so cards
+   * looked clickable and silently did nothing. A pencil that opens nothing is
+   * that same lie with a sharper point on it: the two real targets are a
+   * drawer (`renderEditor`) and a route (`rowHrefTemplate`), and a config with
+   * neither keeps exactly the actions it declared.
+   *
+   * 🛑 `onRowClick` is deliberately NOT a target. It is an arbitrary callback
+   * — several configs use it to open a *view* modal, toggle a selection, or
+   * navigate somewhere that is not an editor — so labelling it "Edit" would
+   * promise one thing and do another.
+   *
+   * Label and icon come from `ROW_ACTION_META[ROW_ACTION_ID.EDIT]` per Rule
+   * #7, so this shares one definition with every `⋯` menu's own Edit entry
+   * rather than hardcoding a second "Edit" string.
+   */
+  const rowEditHref = React.useCallback(
+    (row: TRow): string | null => {
+      const t = config.rowHrefTemplate;
+      if (!t) return null;
+      return typeof t === "function"
+        ? t(row)
+        : t.replace("{id}", encodeURIComponent(row.id));
+    },
+    [config.rowHrefTemplate],
+  );
+
+  const hasEditTarget = Boolean(config.renderEditor ?? config.rowHrefTemplate);
+
+  /*
+   * The row's own name for the accessible label, falling back to its id.
+   *
+   * 🛑 A RUNTIME CHECK, not a cast. `TRow` is only `{ id: string }` here, but
+   * every config maps its rows through `mapRows` into `AdminDataRow`, so
+   * `primary` is present in practice — which is exactly the situation where
+   * `(row as AdminDataRow).primary` would compile and then read `undefined`
+   * on the one config that is shaped differently. `typeof` proves it instead.
+   *
+   * It matters because the alternative is ~50 buttons on a page all announcing
+   * "Edit product": a screen-reader user hears the control and not the record,
+   * which is the same as having no label at all.
+   */
+  const rowEditLabel = React.useCallback(
+    (row: TRow): string => {
+      const primary = (row as { primary?: unknown }).primary;
+      const name =
+        typeof primary === "string" && primary.trim() ? primary.trim() : row.id;
+      return `${ROW_ACTION_META[ROW_ACTION_ID.EDIT].label} ${name}`;
+    },
+    [],
+  );
+
+  /*
+   * Hoisted so the memo below depends on plain identifiers.
+   * `react-hooks/exhaustive-deps` cannot track a property read inside the
+   * nested function the memo RETURNS, so reading `config.x` there asks for
+   * `config` itself as a dependency — and `config` is a fresh object on every
+   * render for every inline config, which would make the memo recompute each
+   * time and hand `DataTable` a new prop identity on every render.
+   */
+  const { renderEditor, renderRowActions } = config;
+  const { openEditPanel } = panel;
+
+  const renderRowActionsWithEdit = React.useMemo(() => {
+    if (!hasEditTarget) return renderRowActions;
+    return (row: TRow) => {
+      const href = rowEditHref(row);
+      return (
+        <Row align="center" justify="end" gap="xs">
+          {renderEditor ? (
+            <IconButton
+              aria-label={rowEditLabel(row)}
+              size="sm"
+              variant="ghost"
+              icon={<Icon name="edit" />}
+              onClick={() => openEditPanel(row.id)}
+            />
+          ) : href ? (
+            /*
+             * A real link, not a click handler calling `window.location`.
+             * The row's own navigation still does that — changing it is the
+             * Phase 3 chrome work — but a NEW affordance has no reason to
+             * inherit a full page load, and a link is also middle-clickable,
+             * which is how an admin opens three records to compare them.
+             *
+             * Conditional rather than falling back to `href="#"`: the branch
+             * already guarantees a template exists, so a null here would mean
+             * one returned nothing — and a pencil linking to the current page
+             * is worse than no pencil.
+             */
+            <TextLink href={href} variant="bare" aria-label={rowEditLabel(row)}>
+              <Icon name="edit" size="sm" />
+            </TextLink>
+          ) : null}
+          {renderRowActions?.(row)}
+        </Row>
+      );
+    };
+  }, [
+    hasEditTarget,
+    renderRowActions,
+    renderEditor,
+    rowEditHref,
+    rowEditLabel,
+    openEditPanel,
+  ]);
+
   // A box exists only when the config asks for one.
   const searchEnabled = Boolean(config.search ?? config.searchPlaceholder);
 
@@ -470,7 +593,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                   ? (row) => panel.openEditPanel(row.id)
                   : undefined
             }
-            renderRowActions={config.renderRowActions}
+            renderRowActions={renderRowActionsWithEdit}
             // Note: rowHrefTemplate above already gives DataTable's own rows
             // `cursor-pointer`/navigate-on-click even when onRowClick is
             // undefined — resolvedRowClick (used by the card branch below)
@@ -497,8 +620,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             selectedIdSet={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
             renderRowActions={
-              config.renderRowActions
-                ? (row) => config.renderRowActions!(row as unknown as TRow)
+              renderRowActionsWithEdit
+                ? (row) => renderRowActionsWithEdit(row as unknown as TRow)
                 : undefined
             }
           />
