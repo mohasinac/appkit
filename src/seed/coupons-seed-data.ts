@@ -206,7 +206,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     usage: { totalLimit: 100, perUserLimit: 2, currentUsage: 19 },
     validity: { startDate: daysAgo(5), endDate: daysAhead(55), isActive: true },
     restrictions: {
-      applicableCategories: ["bundle-original-collectors-set", "bundle-metal-fusion-duo", "bundle-burst-battlers-pack", "bundle-x-series-starter"],
+      applicableCategories: ["bundle-x-starter-duo", "bundle-x-premium-tops", "bundle-x-battle-ready", "bundle-x-bx53-complete"],
       firstTimeUserOnly: false,
     },
     createdBy: "user-tyson-blader",

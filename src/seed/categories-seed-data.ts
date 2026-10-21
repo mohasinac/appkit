@@ -320,34 +320,53 @@ function withBundleMosaic(row: Partial<CategoryDocument>): Partial<CategoryDocum
   return { ...row, display: { ...row.display, mosaicImages: images } };
 }
 
+/*
+ * ── 🛑 EVERY MEMBER MUST BE A PRODUCT THAT EXISTS ─────────────────────────
+ *
+ * `loadableBundlesOnly` in seed-cli drops any bundle whose members are not all
+ * in the loaded catalogue, so a bundle pointing at a deleted product does not
+ * fail loudly — it silently stops being seeded, and the Bundles tab goes
+ * empty with nothing to indicate why. That is exactly what happened when the
+ * demo data was purged: all five bundles referenced demo listings and all five
+ * vanished.
+ *
+ * The three generation-named bundles were NOT repointed, they were replaced.
+ * A "Metal Fusion Duo" with zero Metal Fusion products in stock is not a
+ * broken bundle, it is a claim the catalogue cannot support.
+ *
+ * 🛑 `bundleOriginalTotal` is the sum of the members' own prices and is
+ * GENERATED, never typed — it drives the discount-% badge through
+ * `computeBundleDiscount()`, so a total that disagrees with its members shows
+ * the buyer a saving that is not real.
+ */
 const bundleRows: Partial<CategoryDocument>[] = [
   {
-    id: "bundle-original-collectors-set",
-    name: "Original Collector's Set",
-    slug: "bundle-original-collectors-set",
-    description: "Both original-generation Beyblades — Dranzer S and Driger V — bundled at a discount.",
+    id: "bundle-x-starter-duo",
+    name: "X Starter Duo",
+    slug: "bundle-x-starter-duo",
+    description: "The two BX-53 Ver.2.0 tops — WizardArrow 4-80B and KnightShield 3-80N — with a Winder Launcher to spin them. Everything needed for a first X battle.",
     categoryType: "bundle",
     bundleKind: "special",
-    brandSlug: "brand-beyblade",
-    bundlePrice: 2999,
+    brandSlug: "brand-takara-tomy",
+    bundlePrice: 2899,
     bundleQueryRule: {
       type: "static",
-      productIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
+      productIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-x-bx-53-winder-launcher"],
     },
-    bundleProductIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"]),
-    bundleOriginalTotal: 4597, // 1499 + 1799 + 1299
+    bundleProductIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-x-bx-53-winder-launcher"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-x-bx-53-winder-launcher"]),
+    bundleOriginalTotal: 3250, // 1500 + 1500 + 250
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedPhoto("bundle-original-collectors-set-20260101", 1200, 900), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-x-starter-duo-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: true,
     order: 0,
-    rootId: "bundle-original-collectors-set",
+    rootId: "bundle-x-starter-duo",
     parentIds: [],
     childrenIds: [],
     tier: 0,
-    path: "bundle-original-collectors-set",
+    path: "bundle-x-starter-duo",
     position: 0,
     subtreeSize: 1,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
@@ -357,165 +376,109 @@ const bundleRows: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(5),
   },
   {
-    id: "bundle-metal-fusion-duo",
-    name: "Metal Fusion Duo",
-    slug: "bundle-metal-fusion-duo",
-    description: "Storm Pegasus and Flame Sagittario — the classic Metal Fight rivalry, together.",
+    id: "bundle-x-battle-ready",
+    name: "X Battle-Ready Set",
+    slug: "bundle-x-battle-ready",
+    description: "A BX-10 Xtreme Stadium, PhoenixWing 9-60GF and a String Launcher — a complete arena setup rather than a top on its own.",
     categoryType: "bundle",
     bundleKind: "special",
     brandSlug: "brand-takara-tomy",
-    bundlePrice: 3499,
+    bundlePrice: 6499,
     bundleQueryRule: {
       type: "static",
-      productIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
+      productIds: ["product-beyblade-x-xtreme-stadium-bx-10", "product-beyblade-x-phoenixwing-9-60gf", "product-beyblade-x-bx-53-string-launcher"],
     },
-    bundleProductIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"]),
-    bundleOriginalTotal: 3997, // 1299 + 1199 + 1499
+    bundleProductIds: ["product-beyblade-x-xtreme-stadium-bx-10", "product-beyblade-x-phoenixwing-9-60gf", "product-beyblade-x-bx-53-string-launcher"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-xtreme-stadium-bx-10", "product-beyblade-x-phoenixwing-9-60gf", "product-beyblade-x-bx-53-string-launcher"]),
+    bundleOriginalTotal: 7250, // 4500 + 2500 + 250
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedPhoto("bundle-metal-fusion-duo-20260101", 1200, 900), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-x-battle-ready-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: false,
     order: 1,
-    rootId: "bundle-metal-fusion-duo",
+    rootId: "bundle-x-battle-ready",
     parentIds: [],
     childrenIds: [],
     tier: 0,
-    path: "bundle-metal-fusion-duo",
-    position: 0,
+    path: "bundle-x-battle-ready",
+    position: 1,
     subtreeSize: 1,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
     createdBy: "user-admin-letitrip",
     createdByType: "admin",
-    createdAt: daysAgo(18),
-    updatedAt: daysAgo(4),
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(5),
   },
   {
-    id: "bundle-burst-battlers-pack",
-    name: "Burst Battlers Pack",
-    slug: "bundle-burst-battlers-pack",
-    description: "Valkyrie and Regalia Genesis — top-tier Burst-era attackers in one set.",
-    categoryType: "bundle",
-    bundleKind: "special",
-    brandSlug: "brand-beyblade",
-    // Was 3799 — priced ABOVE the 999+1399+1199=3597 member total (no real
-    // discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
-    bundlePrice: 2899,
-    bundleQueryRule: {
-      type: "static",
-      productIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
-    },
-    bundleProductIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"]),
-    bundleOriginalTotal: 3597, // 999 + 1399 + 1199
-    bundleStockStatus: "in_stock",
-    display: { coverImage: seedPhoto("bundle-burst-battlers-pack-20260101", 1200, 900), showInFooter: false },
-    isActive: true,
-    isSearchable: true,
-    isFeatured: true,
-    order: 2,
-    rootId: "bundle-burst-battlers-pack",
-    parentIds: [],
-    childrenIds: [],
-    tier: 0,
-    path: "bundle-burst-battlers-pack",
-    position: 0,
-    subtreeSize: 1,
-    metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
-    createdBy: "user-admin-letitrip",
-    createdByType: "admin",
-    createdAt: daysAgo(15),
-    updatedAt: daysAgo(3),
-  },
-  {
-    id: "bundle-x-series-starter",
-    name: "X-Series Starter Set",
-    slug: "bundle-x-series-starter",
-    description: "WizardArrow and KnightShield Ver.2.0 — the re-tuned Stamina and Defense tops from the BX-53 set, paired with a Burst-era Valkyrie.",
+    id: "bundle-x-premium-tops",
+    name: "X Premium Tops Trio",
+    slug: "bundle-x-premium-tops",
+    description: "AeroPegasus 3-70A, CobaltDrake 4-60F and ValkyrieVolt S4-70V — the three flagship Beyblade X tops in one order.",
     categoryType: "bundle",
     bundleKind: "special",
     brandSlug: "brand-takara-tomy",
-    bundlePrice: 2499,
+    bundlePrice: 42199,
     bundleQueryRule: {
       type: "static",
-      productIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"],
+      productIds: ["product-beyblade-x-aeropegasus-3-70a", "product-beyblade-x-cobaltdrake-4-60f", "product-beyblade-x-valkyrievolt-s4-70v"],
     },
-    bundleProductIds: ["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-bx-53-wizardarrow-v2", "product-beyblade-x-bx-53-knightshield-v2", "product-beyblade-burst-valkyrie"]),
-    // 1500 + 1500 + 999. Recomputed 2026-10-19 when the two fictional X
-    // fixtures (899 + 949) were replaced by the real BX-53 component
-    // listings — a stale total here drives a wrong discount-% badge.
-    bundleOriginalTotal: 3999,
+    bundleProductIds: ["product-beyblade-x-aeropegasus-3-70a", "product-beyblade-x-cobaltdrake-4-60f", "product-beyblade-x-valkyrievolt-s4-70v"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-aeropegasus-3-70a", "product-beyblade-x-cobaltdrake-4-60f", "product-beyblade-x-valkyrievolt-s4-70v"]),
+    bundleOriginalTotal: 48000, // 20000 + 17500 + 10500
     bundleStockStatus: "in_stock",
-    display: { coverImage: seedPhoto("bundle-x-series-starter-20260101", 1200, 900), showInFooter: false },
+    display: { coverImage: seedPhoto("bundle-x-premium-tops-20260101", 1200, 900), showInFooter: false },
+    isActive: true,
+    isSearchable: true,
+    isFeatured: false,
+    order: 2,
+    rootId: "bundle-x-premium-tops",
+    parentIds: [],
+    childrenIds: [],
+    tier: 0,
+    path: "bundle-x-premium-tops",
+    position: 2,
+    subtreeSize: 1,
+    metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
+    createdBy: "user-admin-letitrip",
+    createdByType: "admin",
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(5),
+  },
+  {
+    id: "bundle-x-bx53-complete",
+    name: "BX-53 Complete Set",
+    slug: "bundle-x-bx53-complete",
+    description: "The full BX-53 line-up — the All-in-One Set, the Clear Black×Green Xtreme Stadium and the Double Metal Coat AeroPegasus.",
+    categoryType: "bundle",
+    bundleKind: "special",
+    brandSlug: "brand-takara-tomy",
+    bundlePrice: 21099,
+    bundleQueryRule: {
+      type: "static",
+      productIds: ["product-beyblade-x-bx-53-all-in-one-set", "product-beyblade-x-bx-53-xtreme-stadium-variant", "product-beyblade-x-bx-53-aeropegasus-dmc"],
+    },
+    bundleProductIds: ["product-beyblade-x-bx-53-all-in-one-set", "product-beyblade-x-bx-53-xtreme-stadium-variant", "product-beyblade-x-bx-53-aeropegasus-dmc"],
+    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-x-bx-53-all-in-one-set", "product-beyblade-x-bx-53-xtreme-stadium-variant", "product-beyblade-x-bx-53-aeropegasus-dmc"]),
+    bundleOriginalTotal: 23500, // 12500 + 3500 + 7500
+    bundleStockStatus: "in_stock",
+    display: { coverImage: seedPhoto("bundle-x-bx53-complete-20260101", 1200, 900), showInFooter: false },
     isActive: true,
     isSearchable: true,
     isFeatured: false,
     order: 3,
-    rootId: "bundle-x-series-starter",
+    rootId: "bundle-x-bx53-complete",
     parentIds: [],
     childrenIds: [],
     tier: 0,
-    path: "bundle-x-series-starter",
-    position: 0,
+    path: "bundle-x-bx53-complete",
+    position: 3,
     subtreeSize: 1,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
     createdBy: "user-admin-letitrip",
     createdByType: "admin",
-    createdAt: daysAgo(12),
-    updatedAt: daysAgo(2),
-  },
-  {
-    id: "bundle-every-generation-starter-pack",
-    name: "Every Generation Starter Pack",
-    slug: "bundle-every-generation-starter-pack",
-    description: "One top from every Beyblade generation — Original, Metal Fight, Burst, and X — the ultimate collector's starter pack.",
-    categoryType: "bundle",
-    bundleKind: "special",
-    // Deliberately no brandSlug — genuinely cross-brand (2 Beyblade + 2
-    // Takara-Tomy member products), a real "no specific brand" test case.
-    // Was 5999 — priced ABOVE the 1799+1299+999+899=4996 member total (no
-    // real discount, contradicted the bundle's whole purpose). Corrected 2026-08-19.
-    bundlePrice: 3999,
-    bundleQueryRule: {
-      type: "static",
-      productIds: [
-        "product-beyblade-original-driger-v",
-        "product-beyblade-metal-storm-pegasus",
-        "product-beyblade-burst-valkyrie",
-        "product-beyblade-x-bx-53-wizardarrow-v2",
-      ],
-    },
-    bundleProductIds: [
-      "product-beyblade-original-driger-v",
-      "product-beyblade-metal-storm-pegasus",
-      "product-beyblade-burst-valkyrie",
-      "product-beyblade-x-bx-53-wizardarrow-v2",
-    ],
-    bundleCategorySlugs: bundleCategorySlugsFor(["product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus", "product-beyblade-burst-valkyrie", "product-beyblade-x-bx-53-wizardarrow-v2"]),
-    // 1799 + 1299 + 999 + 1500. Recomputed 2026-10-19 — the X member changed
-    // from the fictional "wizard-arrow" (899) to the real BX-53 WizardArrow
-    // 4-80B Ver.2.0 (1500).
-    bundleOriginalTotal: 5597,
-    bundleStockStatus: "in_stock",
-    display: { coverImage: seedPhoto("bundle-every-generation-starter-pack-20260101", 1200, 900), showInFooter: false },
-    isActive: true,
-    isSearchable: true,
-    isFeatured: true,
-    order: 4,
-    rootId: "bundle-every-generation-starter-pack",
-    parentIds: [],
-    childrenIds: [],
-    tier: 0,
-    path: "bundle-every-generation-starter-pack",
-    position: 0,
-    subtreeSize: 1,
-    metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 0, totalAuctionCount: 0, totalItemCount: 0, lastUpdated: NOW },
-    createdBy: "user-admin-letitrip",
-    createdByType: "admin",
-    createdAt: daysAgo(10),
-    updatedAt: daysAgo(1),
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(5),
   },
 ];
 

@@ -696,8 +696,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "bundle-purchase",
           label: "Purchasing a bundle works and shows all included items in the order",
-          description: "Verify against \"Test Bundle\" (bundle-original-collectors-set, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
-          href: "/bundles/bundle-original-collectors-set",
+          description: "Verify against \"Test Bundle\" (bundle-x-starter-duo, findable from the bundles listing page) — after checkout, the order should show a single \"Test Bundle\" line item, not two separate product lines.",
+          href: "/bundles/bundle-x-starter-duo",
         },
         {
           key: "product-group-set-widget",
@@ -749,7 +749,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       // a regression. Bundle tiles rendered blank for weeks before this.
       pageKey: "image-tile-layout",
       pageLabel: "Image Tiles & Collages",
-      href: "/bundles/bundle-burst-battlers-pack",
+      href: "/bundles/bundle-x-battle-ready",
       cases: [
         {
           key: "bundle-member-thumbnails",
@@ -1163,7 +1163,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         // product-beyblade-burst-valkyrie with product-beyblade-original-dranzer-s
         // and product-beyblade-x-dran-buster-sold-out (the blocked member) as
         // children — and removed afterwards.
-        // bundle-original-collectors-set is a real, priced, all-or-nothing bundle
+        // bundle-x-starter-duo is a real, priced, all-or-nothing bundle
         // and needs no setup.
         {
           key: "group-picker-opens",
@@ -1249,7 +1249,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A bundle page has a \"Copies\" +/- stepper and BOTH \"Buy now\" and \"Add to cart\" — Add to cart stays on the page, Buy now goes to checkout",
           description:
             "A bundle is all-or-nothing: there must be no per-member quantity controls anywhere on the bundle page, only the copies stepper.",
-          href: "/bundles/bundle-original-collectors-set",
+          href: "/bundles/bundle-x-starter-duo",
         },
         {
           key: "bundle-line-in-cart",
@@ -6633,7 +6633,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "pageviews-tracks-all-listing-types",
             label: "Visiting a blog post, event, pre-order, prize draw, classified, digital-code, live item, or bundle detail page records a page view that shows up in Admin Analytics → Page Views, filtered to that entity type",
-            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-beyblade-x-bx-08-wave (pre-order), /prize-draws/prizedraw-beyblade-mystery-box (prize-draw), /classified/classified-beyblade-stadium-set (classified), /digital-codes/digitalcode-beyblade-x-app-starter-pack (digital-code), /live/live-golden-retriever-puppy (live), /bundles/bundle-original-collectors-set (bundle).",
+            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-beyblade-x-bx-08-wave (pre-order), /prize-draws/prizedraw-beyblade-mystery-box (prize-draw), /classified/classified-beyblade-stadium-set (classified), /digital-codes/digitalcode-beyblade-x-app-starter-pack (digital-code), /live/live-golden-retriever-puppy (live), /bundles/bundle-x-starter-duo (bundle).",
             href: "/blog/spot-genuine-takara-tomy-beyblade",
           },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },

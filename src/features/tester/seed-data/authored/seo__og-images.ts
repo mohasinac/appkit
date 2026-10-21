@@ -57,7 +57,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /products/product-beyblade-burst-valkyrie, view source, find the og:image tag and open its URL in a fresh tab.",
       "Read every figure printed on the card.",
-      "Repeat for /bundles/bundle-every-generation-starter-pack.",
+      "Repeat for /bundles/bundle-x-bx53-complete.",
       "Repeat for /classified/classified-beyblade-stadium-set.",
       "Repeat for /digital-codes/digitalcode-beyblade-x-app-starter-pack.",
       "Repeat for /live/live-golden-retriever-puppy.",

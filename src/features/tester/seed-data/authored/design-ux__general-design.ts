@@ -167,7 +167,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Click a thumbnail and check the main image changes.",
       "Open /products/product-beyblade-original-dranzer-s and look at the 'Photos' grid on its reviews. That product is the seed's deep-review fixture — 14 reviews, of which every fourth carries images, so FOUR have photos. Picking any other product risks one with no photo grid at all, and an absent grid is indistinguishable from the collapsed one this case is looking for.",
       "Open the review lightbox and look at its thumbnail strip.",
-      "Open /bundles/bundle-original-collectors-set and look at its member collage.",
+      "Open /bundles/bundle-x-starter-duo and look at its member collage.",
     ],
     expectedBehaviour:
       "An image inside a button renders at its intended size. A fill-style image resolves its percentages against its parent, so a shrink-to-fit wrapper between the button and the image collapses both to nothing — the tile becomes an empty bordered square while the button still looks and clicks correctly.",

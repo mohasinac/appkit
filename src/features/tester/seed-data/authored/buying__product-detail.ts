@@ -65,17 +65,17 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-product-detail-bundle-purchase": {
     roles: ["buyer"],
-    startPage: "/bundles/bundle-original-collectors-set",
+    startPage: "/bundles/bundle-x-starter-duo",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /bundles/bundle-original-collectors-set.",
+      "Open /bundles/bundle-x-starter-duo.",
       "Click 'Buy now'.",
       "On the checkout address step, select the first saved address, or add one named 'QA Address bundle-purchase' if none exists.",
       "Continue to the payment step and choose Cash on Delivery.",
       "Place the order.",
       "Open /user/orders and open the order just created.",
     ],
-    inputs: { bundleId: "bundle-original-collectors-set", bundlePrice: 2999, memberTotal: 4597, paymentMethod: "Cash on Delivery" },
+    inputs: { bundleId: "bundle-x-starter-duo", bundlePrice: 2999, memberTotal: 4597, paymentMethod: "Cash on Delivery" },
     expectedBehaviour:
       "The bundle is charged at its own locked price of ₹2,999, not the ₹4,597 sum of its three members, and the receipt collapses the members back into one line. A bundle is all-or-nothing: the buyer never chose which parts to include, so presenting them as separate purchasable lines would misrepresent what was bought.",
     expectedUiState:

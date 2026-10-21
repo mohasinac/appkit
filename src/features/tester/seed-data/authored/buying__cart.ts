@@ -628,17 +628,17 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-bundle-copies-stepper": {
     roles: ["buyer"],
-    startPage: "/bundles/bundle-original-collectors-set",
+    startPage: "/bundles/bundle-x-starter-duo",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /bundles/bundle-original-collectors-set and find the copies stepper.",
+      "Open /bundles/bundle-x-starter-duo and find the copies stepper.",
       "Read the price shown at one copy.",
       "Raise the copies to 2 and read the price.",
       "Check both 'Buy now' and 'Add to cart' are present.",
       "Use 'Add to cart' and read whether the browser stayed on the bundle page.",
       "Open /cart and read the line.",
     ],
-    inputs: { bundleId: "bundle-original-collectors-set", copies: 2, bundlePrice: 2999, memberTotal: 4597 },
+    inputs: { bundleId: "bundle-x-starter-duo", copies: 2, bundlePrice: 2999, memberTotal: 4597 },
     expectedBehaviour:
       "A bundle is all-or-nothing, so its stepper counts COPIES of the whole selection rather than members. Add to cart stays on the page — a buyer adding two copies may want a third — while Buy now proceeds to checkout.",
     expectedUiState:
@@ -658,7 +658,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Check it rose by the bundle price rather than by the members' summed price.",
       "RELOAD and confirm.",
     ],
-    inputs: { bundleId: "bundle-original-collectors-set", bundlePrice: 2999, memberTotal: 4597 },
+    inputs: { bundleId: "bundle-x-starter-duo", bundlePrice: 2999, memberTotal: 4597 },
     expectedBehaviour:
       "A bundle's members are fixed and its copies vary — the exact inverse of a group line. The price rule's bundle branch must be evaluated BEFORE its members branch: a bundle line carries members too, and summing them would charge the undiscounted total and throw away the discount that is the entire point of a bundle.",
     expectedUiState:
