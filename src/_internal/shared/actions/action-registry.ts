@@ -3265,6 +3265,34 @@ export const ACTIONS: ActionTree = {
         confirmLabel: "Close ticket",
       },
     },
+    /*
+     * Raising a dispute on an order.
+     *
+     * Filed under SUPPORT rather than a new ORDER bucket: there is no such
+     * bucket, and a dispute's destination is a support investigation. A first
+     * draft of the form wrote `ACTIONS.ORDERS?.["raise-dispute"]`, where the
+     * optional chain would have silently resolved to `undefined` and rendered
+     * a button with no label, no aria-label and no confirmation — which is
+     * precisely what Rule #7 exists to stop.
+     *
+     * NO `confirmation`, deliberately. It is not destructive: nothing is
+     * cancelled, no money moves, and the action's own docstring says it "does
+     * not itself reverse payment/order status". A confirm dialog in front of
+     * "tell us something went wrong" adds friction to the one path a buyer
+     * with a problem needs to be able to take.
+     */
+    "raise-dispute": {
+      // `report`, which IS the Flag glyph (icon-registry.ts:133). `"flag"` is
+      // not a registered key — and because `iconKey` is typed `IconKey` rather
+      // than `string`, that would have been a compile error rather than the
+      // silent no-op it used to be.
+      iconKey: "report",
+      id: "support.raise-dispute",
+      label: "Report this",
+      ariaLabel: "Report a problem with this order",
+      description: "Raise a dispute on an order for support to investigate.",
+      kind: "primary",
+    },
   },
   TESTER: {
     "save-note": {

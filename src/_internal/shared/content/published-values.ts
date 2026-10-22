@@ -50,6 +50,10 @@ import {
 import { PAYMENT_WINDOW_MINUTES } from "../../../features/orders/constants/payment-window";
 import { SALE_PROTECTION_MAX_VALUE } from "../features/shipping/protections";
 import { LANE_CHECKOUT_WINDOW_MS } from "../checkout/lanes";
+import {
+  DISPUTE_TRANSIT_WINDOW_DAYS,
+  DISPUTE_NOT_REACHED_GRACE_DAYS,
+} from "../features/orders/dispute-reasons";
 
 /**
  * The offer checkout deadline, in hours, derived from the constant the lapse
@@ -86,6 +90,17 @@ export type PublishedValueKey =
   | "orderCompleteDays"
   | "shipmentClaimHours"
   | "saleClaimHours"
+  /*
+   * The two numbers the `not_reached` dispute gate is built from.
+   *
+   * SEPARATE on purpose: the transit window is "when should it have arrived",
+   * the grace is "how long after that before we believe it is lost". Folded
+   * into a single 10 neither number is explicable on a policy page, and the
+   * page is the whole reason they are published — a buyer told "you can raise
+   * a delivery issue once it's late" needs to know what late means.
+   */
+  | "disputeTransitWindowDays"
+  | "disputeNotReachedGraceDays"
   // ── Money ────────────────────────────────────────────────────────────────
   | "platformFeeMax"
   | "platformFeePercent"
@@ -211,6 +226,14 @@ export function resolvePublishedValues(
     orderCompleteDays: String(policyDays("order-complete")),
     shipmentClaimHours: String(policyHours("claim-shipping")),
     saleClaimHours: String(policyHours("claim-sale")),
+    /*
+     * Straight from the dispute module's own constants, not re-typed here.
+     * Two copies of a published number is the exact drift Phase 9 exists to
+     * remove — the table in this file's own header records a return window
+     * that code said 7, one FAQ said 2 and another said 48 hours.
+     */
+    disputeTransitWindowDays: String(DISPUTE_TRANSIT_WINDOW_DAYS),
+    disputeNotReachedGraceDays: String(DISPUTE_NOT_REACHED_GRACE_DAYS),
 
     // ── Money: settings-driven, with the schema defaults as the fallback ───
     platformFeeMax: formatRupees(settings?.platformFeeMax ?? 10),

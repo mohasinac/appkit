@@ -814,6 +814,9 @@ export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTim
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
 export { OrderProvenanceCard } from "./features/orders/components/OrderProvenanceCard";
 export type { OrderProvenanceCardProps } from "./features/orders/components/OrderProvenanceCard";
+// The buyer's dispute form: pick a kind, pick a reason, say what happened.
+export { RaiseDisputeForm } from "./features/orders/components/RaiseDisputeForm";
+export type { RaiseDisputeFormProps } from "./features/orders/components/RaiseDisputeForm";
 // The provenance union itself — a consumer passing `sourceContext` has to be
 // able to name its type.
 export type { OrderSourceContext } from "./features/orders/schemas/firestore";
