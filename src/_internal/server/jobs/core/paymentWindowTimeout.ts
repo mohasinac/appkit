@@ -6,6 +6,9 @@ import { OrderStatusValues } from "../../../../features/orders/schemas/firestore
 import { PAYMENT_WINDOW_EXPIRED_REASON } from "../../../../features/orders/constants/payment-window";
 import { ORDER_MESSAGES } from "../handlers/messages";
 import { reconcileStuckGatewayEvents } from "./paymentReconcile";
+/* Phase 8 — the job retry sweep. Folded in here rather than given its own
+ * Scheduler job; see its own docstring and the 🛑 at the call site. */
+import { runDueJobRetries } from "./onJobCreated";
 import type { JobContext } from "../runtime/types";
 
 /**
@@ -51,6 +54,36 @@ export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
   } catch (err) {
     void normalizeError(err);
     ctx.logger.error("R1 failed inside paymentWindowTimeout — continuing with the sweep", {
+      err,
+    });
+  }
+
+  /*
+   * ── Phase 8 rides along too: job retries whose backoff has elapsed ────────
+   *
+   * Same two reasons as R1 above, and the same placement rule: **FIRST, before
+   * the early return**. A retry is a `pending` job document with a future
+   * `nextAttemptAt`, and nothing else in the system will ever run it — the
+   * create trigger deliberately defers to this sweep, because creating the
+   * retry document fires that trigger instantly and would collapse the backoff
+   * to zero.
+   *
+   * So if this call sat after the early return, a retry would run only on a
+   * tick that happened to have an expired payment window — which is the
+   * minority — and a job scheduled on a quiet afternoon could wait hours.
+   * Root Cause #27 again, now with a second mechanism depending on it.
+   *
+   * Never throws, for the same reason R1 does not: a stuck job must not stop
+   * the payment-window cancellations this function exists for.
+   */
+  try {
+    const retries = await runDueJobRetries(ctx);
+    if (retries.ran > 0) {
+      ctx.logger.info("Phase 8: ran due job retries", { ...retries });
+    }
+  } catch (err) {
+    void normalizeError(err);
+    ctx.logger.error("job retry sweep failed inside paymentWindowTimeout — continuing", {
       err,
     });
   }

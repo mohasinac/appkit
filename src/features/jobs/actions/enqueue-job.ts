@@ -16,7 +16,7 @@
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring";
 import { jobsRepository } from "../../../repositories";
-import { JobStatusValues } from "../schemas/firestore";
+import { JOB_MAX_ATTEMPTS, JobStatusValues } from "../schemas/firestore";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -38,6 +38,23 @@ export async function enqueueJob(input: EnqueueJobInput): Promise<EnqueueJobResu
     status: JobStatusValues.PENDING,
     payload: input.payload,
     requestedBy: input.requestedBy,
+    /*
+     * Phase 8 — attempt 1 of N, stated rather than implied.
+     *
+     * `attempt` defaults to 1 everywhere it is read, so this write is not
+     * strictly required — but an explicit 1 is what makes an ENQUEUED job
+     * distinguishable from a pre-Phase-8 row at a glance, and it is what a
+     * reader of the collection needs when three documents share a
+     * `parentJobId`.
+     *
+     * 🛑 `nextAttemptAt` is deliberately ABSENT. It is the retry sweep's query
+     * field, and the create trigger skips any job carrying a future one — so
+     * setting it here (even to `now`) would put every first attempt at the
+     * mercy of a 5-minute sweep instead of running immediately, turning a
+     * synchronous-feeling admin action into one that appears to hang.
+     */
+    attempt: 1,
+    maxAttempts: JOB_MAX_ATTEMPTS,
   });
 
   try {

@@ -58,9 +58,47 @@ export const pendingOrderTimeout = defineFunction({
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
+/*
+ * ── 🛑 THE "RETIRE THREE SWEEPS" PLAN STEP IS SELF-CONTRADICTORY ────────────
+ *
+ * Phase 8's plan text reads: *"a retry is a new document … picked up by a
+ * sweep folded into `paymentWindowTimeout` … **Then** retire the three
+ * superseded sweeps"* — and names those three as `pendingOrderTimeout`,
+ * **`paymentWindowTimeout`** and `paymentReviewAutoApprove`.
+ *
+ * It cannot be both. `paymentWindowTimeout` is now the HOST of the job-retry
+ * sweep (see `runDueJobRetries`, called first in its handler, before the early
+ * return), so retiring it would delete the only mechanism that runs a
+ * scheduled retry — and the create trigger deliberately defers to that sweep,
+ * because creating the retry document fires the trigger instantly and would
+ * collapse the backoff to zero. Deleting the host leaves every retry
+ * permanently `pending`: a stall that reads as a queue, which is the exact
+ * failure Phase 8 exists to remove.
+ *
+ * So the retry/DLQ half is built and the retirement is NOT done. That is a
+ * deliberate stop, not an omission:
+ *
+ *  - These three cancel unpaid orders and restock real inventory. Deleting
+ *    them on the strength of a plan line, in a session that cannot run a
+ *    single check, is the autonomous destructive decision Rule #1 forbids.
+ *  - The claim that obligations supersede them needs reading all three
+ *    against the obligation policies AND confirming `obligationSweep`'s `act`
+ *    tier covers each — and the sweep's own comment records that its acting
+ *    branch was narrowed precisely because monetary outcomes were not safe to
+ *    automate. That narrowing was widened for six kinds; whether it covers
+ *    these three is a measurement, not an inference.
+ *  - The Scheduler arithmetic in the plan (34 → 31) is therefore unchanged by
+ *    this commit. Nothing was added either, so the count stands wherever it
+ *    actually is — and CLAUDE.md says to recount rather than quote it, this
+ *    number having drifted six times.
+ *
+ * Whoever takes the retirement: pick a different host for the retry sweep
+ * first, or keep `paymentWindowTimeout` and retire only the other two.
+ */
 export const paymentWindowTimeout = defineFunction({
   name: "paymentWindowTimeout",
-  description: "Cancel + restock orders whose 15-minute manual-payment window expired without proof.",
+  description:
+    "Cancel + restock orders whose 15-minute manual-payment window expired without proof. Also hosts R1 (stuck gateway events) and the Phase 8 job-retry sweep, both before its early return.",
   trigger: { kind: "schedule", cron: EVERY_5_MIN },
   handler: paymentWindowTimeoutHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },

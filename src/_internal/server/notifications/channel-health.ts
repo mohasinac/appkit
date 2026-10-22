@@ -15,10 +15,33 @@ import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring";
 
 /**
- * Email is the only outbound channel with a transport. "whatsapp" was the
- * other arm until 2026-10-20, when the Cloud API integration was removed.
+ * Email is the only outbound *notification* channel with a transport.
+ * "whatsapp" was the other arm until 2026-10-20, when the Cloud API
+ * integration was removed.
+ *
+ * ## 🛑 Phase 8 widened this to the RECONCILERS' reads — and only those
+ *
+ * `razorpay_read` and `shiprocket_read` name the one placement where "stop
+ * hammering a dead API" is the right behaviour. Two placements are **actively
+ * harmful** and must never be added:
+ *
+ * 1. **NOT the webhook ingest path.** An open breaker converts a transient
+ *    blip into a DROPPED money event — and dropping is precisely what a
+ *    breaker does. The ingest path's whole job is to persist first and ack
+ *    honestly so the gateway retries; a breaker there would ack a 5xx we never
+ *    recorded.
+ *
+ * 2. **NOT around `payment.refund()`.** A refund POST that timed out may have
+ *    SUCCEEDED, so retrying it issues two refunds — and the idempotency claim
+ *    does not help, because it is the same call with the same key making a
+ *    second network attempt. The two-phase reserve/settle exists so a human
+ *    can resolve that by reading the gateway, not so a breaker can guess.
+ *
+ * The names carry `_read` for exactly that reason: a reader is idempotent, so
+ * backing off costs only freshness. Anything that moves money is not a reader
+ * and does not belong in this union.
  */
-export type NotificationChannel = "email";
+export type NotificationChannel = "email" | "razorpay_read" | "shiprocket_read";
 
 interface ChannelHealthState {
   consecutiveFailures: number;

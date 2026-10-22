@@ -103,4 +103,9 @@ export {
   type HandleStoreWriteInput,
   type StoreDoc,
 } from "./onStoreWrite";
-export { handleJobCreated, type HandleJobCreatedInput } from "./onJobCreated";
+export {
+  handleJobCreated,
+  runDueJobRetries,
+  type HandleJobCreatedInput,
+} from "./onJobCreated";
+export { runJobOnce, type RunJobOnceInput } from "./runJobOnce";
