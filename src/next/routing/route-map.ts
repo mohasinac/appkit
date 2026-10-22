@@ -317,6 +317,15 @@ export const DEFAULT_ROUTE_MAP = {
     CLAIMED_COUPONS: "/user/coupons",
     /** Points balance + ledger. 1 point = ₹1, spendable at checkout. */
     POINTS: "/user/points",
+    /*
+     * 🛑 Both of these had a COMPLETE API and no page. `GET /api/user/sessions`
+     * + `DELETE [id]`, and `GET/POST /api/user/payment-methods` + `DELETE
+     * [id]`, were all live with zero consumers — and `BuyerAccountGuideView`
+     * already told buyers to "view all devices signed in at My Account →
+     * Sessions", pointing at a security control that did not exist.
+     */
+    SESSIONS: "/user/sessions",
+    PAYMENT_METHODS: "/user/payment-methods",
     BECOME_SELLER: "/user/become-seller",
     CART: "/cart",
     CHECKOUT: "/checkout",
