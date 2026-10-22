@@ -355,6 +355,28 @@ export function OwnerQuickActions({
    * 🛑 `inline-flex`, never `w-full`. In normal flow this must shrink to its
    * own content — a full-width bar would read as a section divider and would
    * stretch across a card body it is only a corner of.
+   *
+   * 🛑 `shrink-0` IS THE MOBILE FIX, and it is one word because the bug was
+   * one missing word.
+   *
+   * A flex item's default is `flex-shrink: 1`, so in the title/actions row
+   * this toolbar lives in — `<Row justify="between">` with an `<h1>` on the
+   * left — the heading and the toolbar compete for width, and at ~390px the
+   * toolbar LOSES. It compresses below its own content: the icons slide under
+   * each other, the padding collapses, and the 44px tap targets stop being
+   * 44px wide. That is the "works incorrectly on mobile" report.
+   *
+   * With `shrink-0` the toolbar keeps its intrinsic size and the HEADING gives
+   * way instead — which is right, because a heading wraps gracefully onto a
+   * second line and a row of hit targets does not.
+   *
+   * 🛑 Note what this is NOT: the desktop fix (`d94496c42`) gave the toolbar a
+   * container and added an audit whose two rules are about DOM ORDER — must
+   * come after the `<h1>`, must not share the heading's row unless that row is
+   * `justify="between"`. Both pass here. R2's exemption actively WHITELISTS
+   * the layout that breaks, so the surfaces that satisfy that audit are
+   * precisely the ones most likely to be wrong at phone width. A source-order
+   * rule cannot see a width problem.
    */
   const boxClass = onDark
     ? /*
@@ -363,12 +385,12 @@ export function OwnerQuickActions({
        * LIGHT background in every light theme, so a themed box on a dark hero
        * photo is a white rectangle over the artwork.
        */
-      "inline-flex rounded-[var(--appkit-radius-lg)] bg-black/55 backdrop-blur-sm p-[var(--appkit-space-1)] shadow-md"
+      "inline-flex shrink-0 rounded-[var(--appkit-radius-lg)] bg-black/55 backdrop-blur-sm p-[var(--appkit-space-1)] shadow-md"
     : /*
        * Off media: the real surface tokens, so it inverts with the theme
        * instead of being a fixed near-white that disappears in dark mode.
        */
-      "inline-flex rounded-[var(--appkit-radius-lg)] bg-[var(--appkit-color-surface-elevated)] border border-[var(--appkit-color-border)] p-[var(--appkit-space-1)] shadow-sm";
+      "inline-flex shrink-0 rounded-[var(--appkit-radius-lg)] bg-[var(--appkit-color-surface-elevated)] border border-[var(--appkit-color-border)] p-[var(--appkit-space-1)] shadow-sm";
 
   return (
     <>
