@@ -3,6 +3,7 @@
 import React from "react";
 import { Gift, MessageCircle, ShieldAlert, ShieldCheck, ShieldOff } from "lucide-react";
 import { Div, Row, Stack, Text } from "../../../ui";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { IconBox } from "../../../ui/components/IconBox";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
@@ -247,6 +248,29 @@ export function StoreAddonsPicker({
           </Text>
         </Row>
       )}
+
+      {/*
+        ── 🛑 Phase 12: the protection terms, BESIDE the checkbox ─────────────
+        *
+        * Rule 1 of the disclaimer registry: visible before the decision it
+        * qualifies. The decision here is ticking a box that charges money for
+        * cover, so the limits belong on this card — not on `/refund-policy`,
+        * which the buyer is not reading at checkout.
+        *
+        * 🛑 "**not insurance**" is the load-bearing phrase. There is no
+        * insurer; this is our own cover, funded by us, and calling it
+        * insurance would be a regulatory misstatement as well as a false one.
+        *
+        * Every limit in the text renders from the constant that ENFORCES it
+        * (`SALE_PROTECTION_MAX_VALUE`, the two claim windows) through Phase
+        * 9's token mechanism, so a constant change updates the published terms
+        * rather than contradicting them.
+        *
+        * Rendered only when a protection is actually on offer: terms for a
+        * product this seller does not sell is the noise that teaches people to
+        * skip disclaimers.
+      */}
+      {(shippingOffered || saleOffered) && <Disclaimer id="protection-cover" inline />}
     </Stack>
   );
 }

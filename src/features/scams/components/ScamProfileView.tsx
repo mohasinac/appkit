@@ -28,6 +28,7 @@ import {
   CardBody,
   CardHeader,
   Container,
+  Disclaimer,
   Div,
   EmptyState,
   Grid,
@@ -104,6 +105,26 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
   return (
     <Card variant="elevated" padding="lg">
       <Stack gap="md">
+        {/*
+          ── 🛑 Phase 12: FIRST, above the name ───────────────────────────────
+          *
+          * This page names a real person, with their payment handle and phone
+          * number, on a public URL — and it carried NO disclaimer of any kind.
+          * That is defamation exposure, and it is the highest-exposure surface
+          * in the product.
+          *
+          * 🛑 ABOVE the name, not below the incidents. Rule 1 of the registry
+          * is "visible before the decision it qualifies", and the decision a
+          * visitor makes here — believing this person is a scammer — is made
+          * the instant they read the heading. A disclaimer under the fold
+          * qualifies nothing; it only proves we wrote one.
+          *
+          * The text distinguishes an allegation from a verified finding,
+          * states the evidence standard, names the removal route, and refuses
+          * the shared-guilt reading of `relatedScammerIds` (which means SAME
+          * IDENTITY, never "similar pattern"). See the registry entry.
+        */}
+        <Disclaimer id="scam-registry" />
         <Row justify="between" gap="md" align="start" wrap>
           <Stack gap="xs">
             <Heading level={1} weight="bold" size="2xl">

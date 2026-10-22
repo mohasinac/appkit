@@ -120,6 +120,13 @@ export {
 
 export type { DivProps } from "./components/Div";
 export { Div } from "./components/Div";
+/*
+ * Phase 12 — the one way to render a disclaimer. `id` only: there is no `text`
+ * prop, because an escape hatch would make it a styled box and the legally
+ * material disclaimers would be written at their call sites again.
+ */
+export { Disclaimer } from "./components/Disclaimer";
+export type { DisclaimerProps } from "./components/Disclaimer";
 
 // --- Specification table ------------------------------------------------------
 export type { SpecTableProps, SpecTableRow } from "./components/SpecTable";

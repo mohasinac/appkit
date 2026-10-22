@@ -11,6 +11,7 @@ import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react"
 import {
   Button,
   Container,
+  Disclaimer,
   Div,
   Form,
   Heading,
@@ -169,9 +170,21 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                 <Heading level={1} weight="semibold" size="3xl">
                   Scam Registry
                 </Heading>
+                {/*
+                  🛑 This said "**Verified** scammers active in India's
+                  collectibles community" — an overclaim, and the sharpest kind.
+                  The list renders `pending_review` profiles alongside
+                  `verified` ones (see `statusVariant` in `ScamProfileView`), so
+                  the page's own subtitle asserted a standard of proof it does
+                  not apply to every row it shows.
+                  *
+                  * On a page that names real people, a blanket "verified" is
+                  * the single most damaging sentence available — it converts
+                  * every unverified allegation on screen into a stated finding.
+                */}
                 <Text variant="secondary" size="sm">
-                  Verified scammers active in India&apos;s collectibles community. Search by name,
-                  phone, or UPI.
+                  Reports of scams in India&apos;s collectibles community, submitted by buyers and
+                  sellers. Search by name, phone, or UPI.
                 </Text>
               </Stack>
               <Link
@@ -182,6 +195,13 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                 Report a Scammer
               </Link>
             </Row>
+
+            {/*
+              Phase 12 — above the list, for the same reason it is above the
+              name on a profile: a visitor forms the belief the moment they read
+              the rows, so a disclaimer below them qualifies nothing.
+            */}
+            <Disclaimer id="scam-registry" />
 
             {/* Search + sort + type filter form (GET — SSR-friendly) */}
             <Form method="GET">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Button, Card, Disclaimer, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { Icon } from "../../../ui/components/Icon";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -79,15 +79,20 @@ export function AdminInvoicingView() {
         <Stack gap="md">
           <Heading level={2}>GSTR-1 draft</Heading>
           {/*
-            🛑 Stated before the button, not after. This file is the INPUT to a
-            filing and nothing here submits anything — a user who assumes
-            otherwise would miss a return believing it had been filed.
+            🛑 Phase 12 — stated BEFORE the button, not after, and from the
+            registry rather than written here.
+            *
+            * This replaces a hand-written sentence that said the same thing:
+            * the registry entry is the one place the "management figures, not
+            * audited accounts / draft, not filed" wording lives, so the P&L,
+            * the trial balance and this page cannot drift into three different
+            * strengths of the same caveat — which is exactly how the refund
+            * timeline came to be published four ways (Phase 9).
+            *
+            * `warning` tone: a user who assumes this was filed would MISS A
+            * RETURN, which is a consequence they cannot undo.
           */}
-          <Text color="muted" size="sm">
-            This downloads a CSV. It is <strong>not</strong> a return and
-            nothing here files anything — LetItRip has no connection to the GST
-            portal. Check the figures against your own records before using it.
-          </Text>
+          <Disclaimer id="accounting-output" />
 
           <Row gap="sm" wrap>
             <Div className="w-40">

@@ -14,6 +14,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import {
   Container,
+  Disclaimer,
   Div,
   Heading,
   Main,
@@ -354,6 +355,20 @@ export async function PrizeDrawDetailPageView({
                   </Row>
                 </Div>
               )}
+
+              {/*
+                🛑 Phase 12 — gaming law in India is STATE-SPECIFIC, and this
+                is the surface where a visitor decides to pay to enter a draw.
+                The entry names the exclusions (void where prohibited, an
+                entry from a restricted state is refunded rather than drawn,
+                prizes are not exchangeable for cash) and states plainly that
+                this is not a government lottery — rather than asserting a
+                skill-versus-chance position we cannot defend in every state.
+                *
+                * In the sidebar, beside the entry CTA, for rule 1: the
+                * decision is made here, not on a terms page.
+              */}
+              <Disclaimer id="prize-draw" />
             </Stack>
           )}
           renderTabs={() => (
