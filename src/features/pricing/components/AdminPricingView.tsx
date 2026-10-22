@@ -117,11 +117,18 @@ function formatWhen(iso: string): string {
 }
 
 export interface AdminPricingViewProps {
-  /** Defaults to `/api/admin/pricing`; a consumer may mount it elsewhere. */
-  endpoint?: string;
+  /**
+   * The rate endpoint, supplied by the consumer.
+   *
+   * 🛑 REQUIRED, with no default. appkit cannot import `API_ROUTES` (that is
+   * consumer-side), so a default would be a path literal living in the
+   * library — a second place the route is written, and the one nobody updates
+   * when it moves. `audit-hardcoded-api-routes` blocks it, correctly.
+   */
+  endpoint: string;
 }
 
-export function AdminPricingView({ endpoint = "/api/admin/pricing" }: AdminPricingViewProps) {
+export function AdminPricingView({ endpoint }: AdminPricingViewProps) {
   const { showToast } = useToast();
   const [rates, setRates] = useState<RateRow[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -136,13 +143,20 @@ export function AdminPricingView({ endpoint = "/api/admin/pricing" }: AdminPrici
       const payload = await apiClient.get<{ rates?: RateRow[] }>(endpoint);
       setRates(payload?.rates ?? []);
     } catch (err) {
-      const normalized = normalizeError(err);
       /*
        * Surfaced, never swallowed into an empty table. An empty rate list and
        * a failed read look identical, and the first reads as "we charge
        * nothing" (Root Cause #59/#72 — undefined must never render as zero).
+       *
+       * 🛑 A FIXED string, never `normalized.message`. The server's own text
+       * is how a Node `MODULE_NOT_FOUND` with a require stack ended up inside
+       * "Place your bid" (Root Cause #86) — and `mapToHttpError` scrubs 5xx
+       * messages in production anyway, so the raw value is either useless or
+       * dangerous. `normalizeError` still runs: it is what keeps `unknown`
+       * out of the catch body.
        */
-      setLoadError(normalized.message || "Could not load the rate table.");
+      void normalizeError(err);
+      setLoadError("Could not load the rate table. Try again.");
       setRates([]);
     }
   }, [endpoint]);
@@ -183,18 +197,17 @@ export function AdminPricingView({ endpoint = "/api/admin/pricing" }: AdminPrici
         setEditing(null);
         await load();
       } catch (err) {
-        const normalized = normalizeError(err);
+        void normalizeError(err);
         /*
-         * 🛑 `toUserMessage`, never the server's own message. An unmapped code
-         * printing server text into a modal is literally how a Node
-         * MODULE_NOT_FOUND with a require stack was rendered inside "Place
-         * your bid" (Root Cause #86).
+         * 🛑 `toUserMessage`, never the server's own message — and no
+         * `?? normalized.message` fallback either. That fallback IS the bug:
+         * `toUserMessage` already terminates at `errors.codes.UNKNOWN`, so
+         * adding a raw-text branch for the unmapped case reintroduces exactly
+         * what Root Cause #86 describes — a require stack rendered inside a
+         * modal. The first draft of this file had it.
          */
         const code = (err as { code?: string } | null)?.code;
-        setFieldError(
-          "newValue",
-          code ? toUserMessage(code) : normalized.message || "Could not update the rate.",
-        );
+        setFieldError("newValue", toUserMessage(code ?? "UNKNOWN"));
       } finally {
         setSaving(false);
       }

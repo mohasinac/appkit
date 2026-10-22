@@ -36,7 +36,7 @@ import {
   type TicketStatus,
 } from "../schemas/firestore";
 import type { FirestoreDocument } from "@mohasinac/appkit";
-import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
+import { withHistory, type HistoryActor, type HistoryActorRole } from "../../../_internal/shared/history/index";
 
 /** Who/why for a write that lands in `statusHistory`. */
 export interface TicketWriteContext {
@@ -60,10 +60,24 @@ export interface TicketWriteContext {
  * ticket owner — would be a wage attributed to someone who did not do the
  * work, and it would look exactly like a real one.
  */
+const WAGE_EARNING_ACTOR_ROLES: ReadonlySet<HistoryActorRole> = new Set(["seller", "admin"]);
+
 function resolverUid(ctx?: TicketWriteContext): string | undefined {
   const actor = ctx?.actor;
   if (!actor?.uid) return undefined;
-  if (actor.role === "buyer") return undefined;
+  /*
+   * An ALLOW-LIST, not `role !== "buyer"`. A tenth actor role added later
+   * would silently start earning wages under a deny-list, which is the
+   * `Record<Union, T>`-over-`Set<string>` argument this codebase makes
+   * everywhere else — and the roles that can be credited is the shorter,
+   * more stable list.
+   *
+   * 🛑 `HistoryActorRole` has no `employee` member, and that is FINE: this
+   * field records WHO resolved it, and the payroll decides whether that
+   * person is on it. A seller resolving their own store's ticket is recorded
+   * here and appears on no payslip, because they are not an employee.
+   */
+  if (!WAGE_EARNING_ACTOR_ROLES.has(actor.role)) return undefined;
   return actor.uid;
 }
 
