@@ -70,9 +70,25 @@ const SORT_OPTIONS = [
  * clause is silently dropped and the chip returns the ENTIRE order list while
  * looking like a filter (Root Cause #62).
  */
+/*
+ * 🛑 MEASURED 2026-10-22 — this chip group was INERT, and the comment above it
+ * explained why it should not have been while describing the wrong half.
+ *
+ * `buildFilters` emits `paymentMethod==emi` inside `filters`, and
+ * `/api/user/orders` regex-extracts only `status==` and `orderType==` from
+ * that string. Every other clause is silently dropped — so all three chips
+ * returned the buyer's ENTIRE order list while looking exactly like a working
+ * filter. The note above was careful about the SIEVE allowlist (Root Cause
+ * #62) and the route's own parser was the break, one layer earlier.
+ *
+ * 🛑 And "EMI plans" could not be a `paymentMethod` value any more regardless:
+ * since 0f an instalment order's tender is `online` / `upi_manual` / `cash`,
+ * so the id is now `emiEnabled`, refined in memory by the route alongside the
+ * other two. `cod` and `online` stay real stored `paymentMethod` values.
+ */
 const PAYMENT_METHOD_TABS = [
   { id: "", label: "Any" },
-  { id: "emi", label: "EMI plans" },
+  { id: "emiEnabled", label: "EMI plans" },
   { id: "cod", label: "Cash on delivery" },
   { id: "online", label: "Paid online" },
 ] as const;
@@ -156,7 +172,17 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       [
         state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null,
         state.orderType ? sieveFilter("orderType", SIEVE_OP.EQ, state.orderType) : null,
-        state.paymentMethod ? sieveFilter("paymentMethod", SIEVE_OP.EQ, state.paymentMethod) : null,
+        /*
+         * 🛑 `emiEnabled` is NOT a `paymentMethod`, so it gets its own clause
+         * key — the route refines both in memory (see its note), and emitting
+         * `paymentMethod==emiEnabled` would be a filter for a value no order
+         * can hold.
+         */
+        state.paymentMethod
+          ? state.paymentMethod === "emiEnabled"
+            ? sieveFilter("emiEnabled", SIEVE_OP.EQ, "true")
+            : sieveFilter("paymentMethod", SIEVE_OP.EQ, state.paymentMethod)
+          : null,
       ]
         .filter(Boolean)
         .join(",") || undefined,
