@@ -167,7 +167,24 @@ export async function allocateSeriesNumber(
      * than failing — both callers want the same answer, and whoever wrote it
      * wrote the number this subject now permanently has.
      */
-    const after = await claimRef.get().catch(() => null);
+    /*
+     * Logged, not swallowed. `.catch(() => null)` alone made a Firestore
+     * failure indistinguishable from "the claim genuinely is not there" — and
+     * the two take opposite branches below: one must fall through to a fresh
+     * allocation, the other must NOT, because re-allocating over a claim that
+     * exists is how an invoice number gets issued twice. Root Cause #59's
+     * shape, in the one place in this codebase where a silent degrade would
+     * duplicate a filed document number.
+     */
+    const after = await claimRef.get().catch((readErr: unknown) => {
+      const e = normalizeError(readErr);
+      serverLogger.error("[invoicing] could not re-read the allocation claim after a race", {
+        collection: INVOICE_ALLOCATION_COLLECTION,
+        subjectId: input.subjectId,
+        error: e.message,
+      });
+      return null;
+    });
     if (after?.exists) {
       const existing = after.data() as InvoiceAllocationDocument;
       serverLogger.info("[invoicing] allocation race resolved to the existing number", {
