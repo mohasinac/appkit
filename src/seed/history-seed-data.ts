@@ -62,7 +62,7 @@ export const historySeedData: HistorySeedDocument[] = [
     { productId: "classified-beyblade-stadium-set", productType: "product", viewedAt: hoursAgo(12) },
     { productId: "product-beyblade-metal-storm-pegasus", productType: "product", viewedAt: hoursAgo(18) },
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", viewedAt: daysAgo(1) },
-    { productId: "digitalcode-beyblade-x-app-unlock", productType: "product", viewedAt: daysAgo(1) },
+    { productId: "digitalcode-beyblade-x-app-starter-pack", productType: "product", viewedAt: daysAgo(1) },
     { productId: "auction-beyblade-metal-lightning-l-drago", productType: "auction", viewedAt: daysAgo(2) },
     { productId: "prizedraw-beyblade-mystery-box", productType: "preorder", viewedAt: daysAgo(2) },
     { productId: "product-beyblade-burst-regalia-genesis", productType: "product", viewedAt: daysAgo(3) },
