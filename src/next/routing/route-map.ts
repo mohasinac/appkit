@@ -622,6 +622,7 @@ export const DEFAULT_ROUTE_MAP = {
     ANALYTICS: "/admin/analytics",
     PAYOUTS: "/admin/payouts",
     PAYOUT_DETAIL: (id: string) => `/admin/payouts/${id}/view`,
+    PRICING: "/admin/pricing",
     AUDIT_LOG: "/admin/audit-log",
     /*
      * 🛑 MONEY_CASES is deliberately NOT under `/admin/maintenance/`.

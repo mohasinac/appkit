@@ -70,6 +70,19 @@ export const AdminAuditActionValues = {
    * log of both would read as churn.
    */
   DISPUTE_REASON_RETIRE: "dispute_reason_retire",
+  /**
+   * An admin changed a platform rate through `/admin/pricing`.
+   *
+   * 🛑 Recorded here as well as in `siteSettings.rateChanges`, and the two are
+   * not redundant. The rate log answers "when did THIS rate last move" and is
+   * capped, so it can lose its oldest entries; this answers "what have admins
+   * done lately" across every privileged act, and is the one that has to
+   * survive. Same split as `points_adjust` against its ledger.
+   *
+   * Every rate here is money the platform charges or withholds, so this is the
+   * same class as `coupon_update` and `payout_mark_paid`.
+   */
+  PRICING_UPDATE: "pricing_update",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

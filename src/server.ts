@@ -2528,3 +2528,33 @@ export {
   type SharedPurchaseQuote,
   type SharedPurchaseQuoteInput,
 } from "./_internal/shared/features/shipping/shared-purchase";
+
+/*
+ * [SERVER-ONLY] The pricing registry and its one write path.
+ *
+ * 🛑 The REGISTRY is pure data with no Firestore and no `node:` import, so it
+ * could sit in the main barrel — and deliberately does not. Its only consumer
+ * outside appkit is `/api/admin/pricing`, and putting it in `index.ts` would
+ * add sixteen descriptors and four symbols to every client bundle that imports
+ * anything at all, to serve one route (Root Cause #18 — a re-export is a
+ * public API contract, not a convenience).
+ *
+ * `applyRateChange` belongs here regardless: it reaches firebase-admin.
+ */
+export {
+  RATE_REGISTRY,
+  RATE_TIER_ORDER,
+  rateByPath,
+  canEditRate,
+  rejectRateChange,
+  type RateDescriptor,
+  type RateTier,
+  type RateUnit,
+  type RateChange,
+} from "./_internal/shared/features/pricing/rate-registry";
+export {
+  applyRateChange,
+  RATE_CHANGE_LOG_MAX,
+  type ApplyRateChangeInput,
+  type ApplyRateChangeResult,
+} from "./_internal/server/features/pricing/actions";

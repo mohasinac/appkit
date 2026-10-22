@@ -1895,6 +1895,28 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
+    "update-pricing": {
+      iconKey: "save",
+      id: "admin.update-pricing",
+      label: "Save new rate",
+      ariaLabel: "Save the new rate",
+      description:
+        "Change one platform rate from now on. Orders, invoices and payouts already recorded keep the rate they were charged at — a rate change never restates history.",
+      kind: "primary",
+      permissions: ["admin"],
+      /*
+       * 🛑 A confirmation even though `kind` is "primary" rather than "danger".
+       * The registry requires one for destructive actions; this one is here
+       * because the act is IRREVERSIBLE IN A WAY THAT DOES NOT LOOK IT — the
+       * rate moves forward only, so "undo" means a second change with a second
+       * audit row, and nothing restores what was charged in between.
+       */
+      confirmation: {
+        title: "Change this rate?",
+        body: "Every checkout from now on uses the new value. Past orders, invoices and payouts are untouched and keep the rate they were charged at.",
+        confirmLabel: "Change the rate",
+      },
+    },
     "add-dispute-reason": {
       iconKey: "add",
       id: "admin.add-dispute-reason",

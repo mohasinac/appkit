@@ -51,6 +51,25 @@
 /** Who may change a rate, and what the change costs in ceremony. */
 export type RateTier = "statutory" | "policy" | "operational";
 
+/**
+ * Render order: most constrained first.
+ *
+ * 🛑 A runtime array with the type DERIVED from it would be the usual pattern
+ * here, but it is inverted on purpose — `RateTier` is the union the registry
+ * and `canEditRate` switch on, and this array is only a presentation order.
+ * Typing it `readonly RateTier[]` makes a missing tier a silent omission from
+ * the page rather than a compile error, so it is `Record`-checked below.
+ */
+export const RATE_TIER_ORDER = ["statutory", "policy", "operational"] as const satisfies readonly RateTier[];
+
+/** A tier absent from `RATE_TIER_ORDER` is a compile error, not a missing section. */
+const _TIER_ORDER_COVERS_UNION: Record<RateTier, true> = {
+  statutory: true,
+  policy: true,
+  operational: true,
+};
+void _TIER_ORDER_COVERS_UNION;
+
 /** How to read and render the number. */
 export type RateUnit = "percent" | "rupees" | "days" | "minutes" | "count";
 

@@ -5,6 +5,7 @@
 
 import type { AboutContentDocument } from "../../about/schemas/firestore";
 import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../../../_internal/shared/features/auctions/config";
+import type { RateChange } from "../../../_internal/shared/features/pricing/rate-registry";
 
 // Flag-key constants. Consumers MUST reference the bypass flag via this
 // constant so audit-checkout-bypass rule 1 (substring scan) only sees a
@@ -1047,6 +1048,25 @@ export interface SiteSettingsDocument extends BaseDocument {
    * opt-in and require the corresponding credentials to be set.
    */
   notificationChannels?: NotificationChannelConfig;
+  /**
+   * The rate-change log behind `/admin/pricing`. Append-only, newest FIRST,
+   * capped at `RATE_CHANGE_LOG_MAX`.
+   *
+   * 🛑 **An array on the singleton rather than a collection, deliberately.**
+   * The page's only query is "the recent history of these 16 rates", which is
+   * one document read — and the rates themselves already live here, so a
+   * separate collection would mean two reads to render one table and two
+   * writes to record one change. It is capped for the same reason
+   * `statusHistory` is: an uncapped array on a hot singleton eventually makes
+   * every settings read expensive.
+   *
+   * 🛑 **Not an audit trail, and not a substitute for one.** A `pricing_update`
+   * row also goes to `adminAuditLog`, which is queryable and answers "what
+   * have admins done lately". This answers the narrower question the pricing
+   * page asks — "when did THIS rate last move, and to what" — and it is the
+   * one a truncation can safely lose.
+   */
+  rateChanges?: RateChange[];
 }
 
 // `FeatureFlagKey` / `FeatureFlagMeta` / `FEATURE_FLAG_META` were deleted with
