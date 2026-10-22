@@ -2177,6 +2177,11 @@ export {
 export type { ActionIndexDocument } from "./features/search/action-index/repository";
 
 export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
+/*
+ * `wouldBeFullRefund` — from refundable-base, NOT return-reasons. It was
+ * never exported at all, so the admin refund route could not import it.
+ */
+export { wouldBeFullRefund } from "./_internal/shared/checkout/refundable-base";
 // Return / refund reasons — the closed enum the final-sale gate branches on.
 // See the module docstring for why the exempt set is "seller or carrier fault"
 // rather than "serious reasons".

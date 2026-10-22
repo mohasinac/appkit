@@ -139,6 +139,9 @@ export type {
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
 // S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
 export { EmptyState } from "./ui/components/EmptyState";
+/* FilterChipGroup — a client UI primitive that existed, was used by
+   `ProtectionClaimsClient`, and was never exported here. */
+export { FilterChipGroup } from "./ui/components/FilterChipGroup";
 export { Skeleton } from "./ui/components/Skeleton";
 // IconBox — square-icon container primitive; was exported from index.ts only,
 // missing here even though CLAUDE.md documents it as a client-usable pattern.

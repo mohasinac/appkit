@@ -1,5 +1,5 @@
 import type { Order } from "../../../../features/orders/types";
-import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
+import type { OrderPlain } from "../../../../features/orders/schemas/firestore";
 
 /**
  * 🛑 A date that is not a `Date` INSTANCE used to be silently dropped, and that
@@ -40,7 +40,25 @@ function toIsoOrUndefined(value: unknown): string | undefined {
   return undefined;
 }
 
-export function orderDocumentToOrder(doc: OrderDocument): Order {
+/**
+ * 🛑 `OrderPlain`, not `OrderDocument` — this builds the BUYER-FACING shape.
+ *
+ * `orderRepository.findById` is ciphertext-by-default, so a signature taking
+ * the raw document would invite a caller to hand over `enc:v1:` strings and
+ * have them copied straight into an API response. The one caller
+ * (`GET /api/user/orders/[id]`) already holds a revealed order; this makes the
+ * signature say so.
+ *
+ * It does not currently read any of `ORDER_PII_FIELDS` (`userName`,
+ * `userEmail`, `sellerEmail`), so nothing is leaking today — the point is that
+ * adding one of them later is correct by default rather than a new leak.
+ *
+ * Accepted residue, stated rather than hidden: `Encrypted<string>` is
+ * assignable to `string`, so a raw document still satisfies this structurally.
+ * The brand forces the choice at the REPOSITORY boundary, which is where it
+ * can actually be enforced; this parameter documents the expectation.
+ */
+export function orderDocumentToOrder(doc: OrderPlain): Order {
   const items: Order["items"] = doc.items?.length
     ? doc.items.map((item) => ({
         productId: item.productId,
