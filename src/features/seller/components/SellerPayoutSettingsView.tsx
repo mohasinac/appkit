@@ -197,6 +197,65 @@ const DEFAULT_DRAFT: PayoutDraft = {
   advancedListingTypesEnabled: false,
 };
 
+/**
+ * One radio group for a single-value field, with ONE error message.
+ *
+ * Extracted because the payout-method and account-type groups were the same
+ * eleven lines twice, and because adding the error handling to both tipped
+ * this view past `audit-code-quality`'s component-size threshold. The error
+ * placement is the part worth sharing: `aria-invalid` goes on every radio so
+ * assistive tech marks the whole group, but the message renders ONCE
+ * underneath — the field is one value, so an `error` per radio would print
+ * and announce the same sentence for every option.
+ */
+function RadioFieldGroup<V extends string>({
+  name,
+  value,
+  options,
+  error,
+  disabled,
+  onSelect,
+  renderOption,
+  layout: Layout,
+}: {
+  name: string;
+  value: V;
+  options: readonly V[];
+  error?: string;
+  disabled?: boolean;
+  onSelect: (value: V) => void;
+  renderOption: (value: V) => React.ReactNode;
+  layout: typeof Stack | typeof Row;
+}) {
+  return (
+    <>
+      <Layout gap="sm">
+        {options.map((option) => (
+          <Label layout="flex" gap="md" key={option} className="cursor-pointer">
+            <Checkbox
+              bare
+              type="radio"
+              name={name}
+              value={option}
+              checked={value === option}
+              onChange={() => onSelect(option)}
+              className="accent-[var(--appkit-color-primary)]"
+              disabled={disabled}
+              aria-invalid={error ? "true" : undefined}
+            />
+            {renderOption(option)}
+          </Label>
+        ))}
+      </Layout>
+      {error && (
+        <Text size="sm" variant="error" role="alert">
+          {error}
+        </Text>
+      )}
+    </>
+  );
+}
+
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
   const [draft, setDraft] = useState<PayoutDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<SafePayoutDetails | null>(null);
@@ -474,30 +533,18 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
                 />
                 <Div>
                   <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
-                  <Row gap="xs">
-                    {(["savings", "current"] as const).map((t) => (
-                      <Label layout="flex" gap="md" key={t} className="cursor-pointer">
-                        <Checkbox
-                          bare
-                          type="radio"
-                          name="accountType"
-                          value={t}
-                          checked={values.accountType === t}
-                          onChange={() => onChange({ accountType: t })}
-                          className="accent-[var(--appkit-color-primary)]"
-                          disabled={busy}
-                          // One field, one message — see the `method` group above.
-                          aria-invalid={errors.accountType ? "true" : undefined}
-                        />
-                        <Text size="sm" transform="capitalize">{t}</Text>
-                      </Label>
-                    ))}
-                  </Row>
-                  {errors.accountType && (
-                    <Text size="sm" variant="error" role="alert">
-                      {errors.accountType}
-                    </Text>
-                  )}
+                  <RadioFieldGroup
+                    name="accountType"
+                    value={values.accountType}
+                    options={["savings", "current"] as const}
+                    error={errors.accountType}
+                    disabled={busy}
+                    onSelect={(t) => onChange({ accountType: t })}
+                    layout={Row}
+                    renderOption={(t) => (
+                      <Text size="sm" transform="capitalize">{t}</Text>
+                    )}
+                  />
                 </Div>
               </FormGroup>
             </Stack>

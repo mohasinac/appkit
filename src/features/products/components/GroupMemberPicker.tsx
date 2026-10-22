@@ -211,7 +211,13 @@ export function GroupMemberPicker({
         onAuthRequired?.();
         return;
       }
-      const json = (await res.json()) as { success?: boolean; error?: string };
+      // `code` is the stable identifier the error envelope carries; `error` is
+      // the server's own sentence and is deliberately no longer read here.
+      const json = (await res.json()) as {
+        success?: boolean;
+        error?: string;
+        code?: string;
+      };
       if (!res.ok || json.success === false) {
         setError(toUserMessage(json.code, undefined, { fallback: "Couldn't add those items to your cart." }));
         return;
