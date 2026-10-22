@@ -528,6 +528,37 @@ export interface OrderDocument extends BaseDocument {
    * figure the order may since have changed.
    */
   pointsAwarded?: number;
+  /**
+   * Points SPENT on this order as part-payment, in points (1 point = ₹1).
+   *
+   * 🛑 Distinct from `pointsAwarded` directly above, which is what the buyer
+   * EARNED. Both can be non-zero on one order — a buyer can pay partly with
+   * points and still earn on the goods value — and conflating them would make
+   * the ledger unexplainable in exactly the place it matters most.
+   *
+   * Written at order creation from `resolvePointsTender`, never from a request
+   * body. The ledger's `redemption` entry is keyed on this order, so this field
+   * and that entry must agree; the order carries it so a payout deduction and a
+   * refund can both answer "how much of this was points" without re-deriving a
+   * percentage of a total that may since have changed.
+   */
+  pointsApplied?: number;
+  /**
+   * What the buyer actually pays: `totalPrice − pointsApplied`.
+   *
+   * ## 🛑 THE FIGURE THE GATEWAY CAPTURES, and the one the guard compares
+   *
+   * `totalPrice` stays the full value of the order — that is what the invoice
+   * declares and what GST is computed against, because points are a DISCOUNT
+   * and not a reduction in the value of the supply (decision 5). `amountDue` is
+   * the cash leg.
+   *
+   * Absent means "nothing was tendered", so every order written before this
+   * existed reads correctly as `amountDue === totalPrice`. 🛑 Readers must use
+   * `amountDue ?? totalPrice` rather than defaulting to 0 — treating absence as
+   * zero would say every historical order was fully paid in points.
+   */
+  amountDue?: number;
   cancellationDate?: Date;
   cancellationReason?: string;
   /**

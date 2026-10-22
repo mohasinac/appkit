@@ -46,7 +46,16 @@ function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
     method,
     transactionId: order.paymentTransactionId ?? order.paymentId,
     proofUrl: order.paymentProofUrl,
-    amount: order.totalPrice,
+    /*
+     * 🛑 D46/D47 — `amountDue`, falling back to `totalPrice`. This figure is
+     * what a MANUAL payer is told to transfer and what an admin verifies the
+     * proof against, so on a points-funded order `totalPrice` would ask the
+     * buyer for money the order does not owe — and then the admin would reject
+     * a correct ₹750 UTR for not matching ₹1,000.
+     *
+     * `?? totalPrice`, never `?? 0`: absent means no points were used.
+     */
+    amount: order.amountDue ?? order.totalPrice,
     verificationMethod:
       method === "cod" ? "cod_collection" : method === "manual" ? "manual_review" : "order_status",
   };

@@ -603,6 +603,11 @@ export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister,
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartGroupLineRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export { StoreAddonsPicker, hasAnyStoreAddon } from "./features/cart/index";
+// D46/D47 — the cart's single "pay with my points" control. One per CART, not
+// per store, unlike the add-ons picker above it: points are the buyer's balance
+// rather than something bought from a seller.
+export { PointsTenderPicker } from "./features/cart/index";
+export type { PointsTenderPickerProps } from "./features/cart/index";
 export { clientLineTotal } from "./features/cart/utils/line-total";
 export type { PricedCartLine } from "./features/cart/utils/line-total";
 export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";

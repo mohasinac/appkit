@@ -11,6 +11,8 @@ export type {
   StoreAddonsValue,
   StoreAddonsRates,
 } from "./StoreAddonsPicker";
+export { PointsTenderPicker } from "./PointsTenderPicker";
+export type { PointsTenderPickerProps } from "./PointsTenderPicker";
 export { CartPriceBreakdown } from "./CartPriceBreakdown";
 export type {
   CartPriceBreakdownProps,

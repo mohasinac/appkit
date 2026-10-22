@@ -293,6 +293,31 @@ export interface StoreDocument extends BaseDocument {
   supportsSaleProtection?: boolean;
 
   /**
+   * This store accepts buyer points as part-payment.
+   *
+   * ## 🛑 OPT-IN, because the accepting store ABSORBS the redemption
+   *
+   * Decision 3: a redeemed point reduces THAT store's payout for THAT order.
+   * Earning is mandatory (it costs the seller nothing at issue time); accepting
+   * is optional, because accepting is where the money actually moves. So this
+   * follows `supportsSaleProtection` above exactly — **absent means NOT
+   * accepted, never "unknown"** — and for the identical reason: defaulting it
+   * `true` would enrol every existing seller in funding discounts they never
+   * agreed to, and retrofitting consent later means switching a working feature
+   * off for them.
+   *
+   * 🛑 Live currently has ONE store, so this flag is inert today. It is still
+   * built now rather than later: the day a second seller exists, enabling
+   * redemption for them without asking is taking their money, and the cost of
+   * the field today is one boolean and one check.
+   *
+   * `store-letitrip-official` is always treated as accepting — the platform's
+   * own storefront cannot decline to fund its own programme. That is resolved
+   * in code rather than seeded, so it cannot be switched off by an edit.
+   */
+  acceptsPoints?: boolean;
+
+  /**
    * ── C5g: ADMIN-GRANTED trust. Routes even a protected claim to the seller ──
    *
    * A sale-protection claim normally ships to our warehouse, because we are the

@@ -18,6 +18,7 @@ import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping
 import {
   ordersTaxableValue,
   ordersShippingReimbursement,
+  ordersPointsBorneByStore,
   type PayableOrderLike,
   type ReimbursableOrderLike,
 } from "../../../shared/checkout/order-math";
@@ -113,6 +114,16 @@ export async function runWeeklyPayoutEligibility(
        * as undefined and silently reimburse zero.
        */
       ordersShippingReimbursement(orders.map((o) => o.data as ReimbursableOrderLike)),
+      /*
+       * D46/D47 — the store-funded points, both ends. Must match
+       * `autoPayoutEligibility` exactly, for the reason stated above
+       * `grossAmount`: the weekly run and the automatic one pay the same orders,
+       * and a term present in one and absent in the other is a seller paid two
+       * different amounts depending on which job got there first.
+       */
+      ordersPointsBorneByStore(
+        orders.map((o) => o.data as { pointsAwarded?: number; pointsApplied?: number }),
+      ),
     );
 
     /*

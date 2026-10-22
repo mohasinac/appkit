@@ -273,6 +273,22 @@ export interface Order {
   platformFee?: number;
   /** COD handling fee, charged only on cash-on-delivery orders. */
   codHandlingFee?: number;
+  /**
+   * D46/D47 — points spent on this order, in points (1 point = ₹1).
+   *
+   * Absent on every order placed before the tender existed, and absent on any
+   * order that used none.
+   */
+  pointsApplied?: number;
+  /**
+   * What was actually COLLECTED: `total − pointsApplied`.
+   *
+   * 🛑 Read it as **`amountDue ?? total`**, never `amountDue ?? 0`. Absent means
+   * "no points were used, so the whole total was collected"; zero would mean
+   * the order was free. The two are a long way apart on a receipt, and the
+   * wrong default turns every historical order into a ₹0 one.
+   */
+  amountDue?: number;
 
   trackingNumber?: string;
   shippingCarrier?: string;

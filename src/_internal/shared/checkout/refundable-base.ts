@@ -37,6 +37,21 @@ export interface RefundableOrderLike {
   platformFee?: number;
   platformFeeGst?: number;
   refunds?: ReadonlyArray<{ amount: number; status?: string }>;
+  /**
+   * D46/D47 — points applied at checkout, in points (1 point = ₹1).
+   *
+   * 🛑 Subtracted from the refundable base, because **a refund can only return
+   * money that was collected.** On a ₹1,000 order settled with 250 points the
+   * card was charged ₹750; refunding the full base would hand the buyer ₹1,000
+   * and then `reverseRedemptionForOrder` would hand back 250 points on top —
+   * ₹250 of real money created out of a discount.
+   *
+   * The points themselves come back as POINTS, never as cash. That is not a
+   * stylistic choice: `pointsLedger`'s header states it as a legal boundary,
+   * because paying a balance out in rupees is what makes it stored value, which
+   * in India is PPI territory with RBI authorisation attached.
+   */
+  pointsApplied?: number;
 }
 
 /**
@@ -89,13 +104,28 @@ export function platformFeeWithheld(
  * has to compare against THIS, or the largest possible refund is strictly less
  * than `totalPrice` and **an order can never reach `status: "refunded"`** —
  * which is what the old `amount >= totalPrice` test guaranteed.
+ *
+ * 🛑 And `pointsApplied` comes off too (D46/D47). A refund returns MONEY, and
+ * the money collected was `totalPrice − pointsApplied`; the points go back
+ * through `reverseRedemptionForOrder` as points. Leaving them in the base would
+ * refund them twice — once in rupees here and once in points there — which is
+ * the one way this feature could manufacture real money from a discount.
+ *
+ * Absent means zero, so every order written before the tender existed is
+ * unaffected, and `isFull` still reaches the exhausted state on them exactly as
+ * before.
  */
 export function refundableBase(
   order: RefundableOrderLike,
   legacyGstPercent?: number,
 ): number {
   return roundRupees(
-    Math.max(0, order.totalPrice - platformFeeWithheld(order, legacyGstPercent)),
+    Math.max(
+      0,
+      order.totalPrice -
+        platformFeeWithheld(order, legacyGstPercent) -
+        Math.max(0, order.pointsApplied ?? 0),
+    ),
   );
 }
 

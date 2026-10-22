@@ -7040,6 +7040,13 @@ export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
 // Shared fee calculator — platform/gateway/GST/COD handling/addon fee math (pure, client-safe).
 export {
   computeCheckoutFees,
+  // The per-group split of the ONE capped commission. Exported for the capture
+  // route's points tender: the tender is applied per order group against the
+  // same base the order path uses, and that base includes this share. Without
+  // it the route would have to re-derive the apportionment — and the allocator
+  // also carries the `minimumTransactionFee` floor (D41), which already spent
+  // a release being re-implemented by hand in that very file.
+  allocateCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,
   computeGiftWrapFee,

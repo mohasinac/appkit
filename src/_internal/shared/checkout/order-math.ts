@@ -8,6 +8,14 @@ import type { CartItemDocument, CartLineKind, CartLineMember } from "../../../fe
 import type { ProductDocument } from "../../../features/products/schemas/firestore";
 import { roundRupees } from "../../../utils/number.formatter";
 import { calculateGstInclusive, taxableFromInclusive } from "../fees/calculator";
+/*
+ * Points: the CAP arithmetic only. `maxRedeemablePoints` lives beside
+ * `POINTS_MAX_REDEMPTION_PERCENT`, which is the constant that defines it, so
+ * importing it here keeps one owner for the rule rather than a second copy of
+ * the percentage (Root Cause #75). This file stays pure — the points SCHEMA is
+ * plain data with no Firestore import.
+ */
+import { maxRedeemablePoints } from "../../../features/points/schemas/firestore";
 
 /**
  * Exactly the fields `unitPriceFor` reads.
@@ -720,11 +728,60 @@ export function orderPointsFunded(order: { pointsAwarded?: number }): number {
     : 0;
 }
 
+/**
+ * Points this order CONSUMED, which the accepting store also funds (D46/D47).
+ *
+ * Decision 3's other end. The earn above is borne by the originating store;
+ * the redemption is absorbed by the store that agreed to accept points
+ * (`StoreDocument.acceptsPoints`, defaulting to NOT accepted precisely so no
+ * seller is enrolled in funding discounts they never agreed to). The platform
+ * funds neither end.
+ *
+ * Reads `pointsApplied` off the order for the same reason the earn reads
+ * `pointsAwarded`: it must be what was actually spent. Recomputing the cap from
+ * today's total would deduct a figure the buyer never received the benefit of —
+ * and on a partially-cancelled order the total has moved.
+ */
+export function orderPointsRedeemed(order: { pointsApplied?: number }): number {
+  const applied = order.pointsApplied;
+  return typeof applied === "number" && Number.isFinite(applied)
+    ? roundRupees(Math.max(0, applied))
+    : 0;
+}
+
 /** Sum of `orderPointsFunded` across a batch. */
 export function ordersPointsFunded(
   orders: readonly { pointsAwarded?: number }[],
 ): number {
   return roundRupees(orders.reduce((sum, o) => sum + orderPointsFunded(o), 0));
+}
+
+/**
+ * Everything the store funds through the points programme, for one batch:
+ * points ISSUED on these orders plus points SPENT on them.
+ *
+ * ## 🛑 One figure, because they are one obligation
+ *
+ * Both ends are seller-funded (decisions 3 and 17) and both are deducted from
+ * the same payout at the same moment, so splitting them across two parameters
+ * of `computePayoutDeduction` would be two chances for a call site to pass one
+ * and forget the other — and a payout that deducts the earn but not the
+ * redemption is short by exactly the amount nobody noticed.
+ *
+ * 🛑 This helper exists because `ordersPointsFunded` had **ZERO consumers**
+ * from the day it was written — the earn deduction was built, documented at
+ * length, and never passed to the function it was built for, so every payout
+ * since has quietly been funded by the platform. That is the dead-field
+ * pattern (Rule: every declared field has both a writer and a reader) occurring
+ * inside the work that catalogues it. Wiring the combined figure at all four
+ * call sites is what closes it.
+ */
+export function ordersPointsBorneByStore(
+  orders: readonly { pointsAwarded?: number; pointsApplied?: number }[],
+): number {
+  return roundRupees(
+    orders.reduce((sum, o) => sum + orderPointsFunded(o) + orderPointsRedeemed(o), 0),
+  );
 }
 
 /** Sum of `orderShippingReimbursement` across a batch. */
@@ -734,6 +791,143 @@ export function ordersShippingReimbursement(
   return roundRupees(
     orders.reduce((sum, o) => sum + orderShippingReimbursement(o), 0),
   );
+}
+
+/**
+ * How many points may be spent on ONE order group, and what is left to charge.
+ *
+ * ## 🛑 A PIPELINE STAGE, after the final rounding — never a post-order debit
+ *
+ * This is the whole lesson of D46. The deleted code redeemed points AFTER the
+ * orders existed and the gateway had captured `orderTotal`, so a successful
+ * redemption took points from a buyer who had just paid full price: nothing in
+ * the pipeline knew about the spend, so nothing reduced the charge.
+ *
+ * So the tender is a STAGE. `amountDue = orderTotal − pointsApplied` is
+ * computed here, and `amountDue` is what the gateway captures and what the
+ * post-capture guard compares. A sixth way for the captured amount to diverge
+ * from the recorded total is the D37/D38/D40 family; this is how it is avoided.
+ *
+ * ## 🛑 Applied AFTER rounding, deliberately
+ *
+ * `orderTotal` is rounded ONCE at the end of its own nine-term sum (D42).
+ * Folding points in before that rounding would put a discount inside the sum
+ * being rounded, so the figure shown to the buyer and the figure captured could
+ * differ by a paisa. They must be provably equal, which is why `amountDue` is
+ * derived here and never recomputed at the gateway.
+ *
+ * ## Per order group, because the ACCEPTING STORE absorbs it
+ *
+ * Decision 3: a redeemed point reduces THAT store's payout for THAT order. A
+ * cart spanning an accepting and a non-accepting store must not pool the
+ * discount — each group gets its own cap and its own figure. That is the same
+ * granularity `splitCartIntoOrderGroups` and `allocateCheckoutFees` already
+ * use, and its absence is what caused Root Cause #65's per-store
+ * multiplication bug.
+ *
+ * ## All-or-nothing, and the remainder STAYS
+ *
+ * Owner's rule: *"if use point it is all and then the balance is returned if
+ * excess"*. There is no requested amount — the balance is spent down as far as
+ * the cap allows, and whatever will not fit is simply not spent. It stays in
+ * the ledger for a later order; nothing is forfeited, and no caller can ask for
+ * a partial spend.
+ *
+ * 🛑 The 50% cap is not optional, and removing it was explicitly declined.
+ * `POINTS_MAX_REDEMPTION_PERCENT` exists because a ₹0 order breaks the gateway
+ * (a ₹0 Razorpay order is not a thing) and because a balance that can settle a
+ * whole purchase behaves like the stored value the points schema is written to
+ * avoid.
+ */
+export function resolvePointsTender(input: {
+  /** The group's FINAL rounded total. */
+  orderTotal: number;
+  /** The buyer's live balance, in points (1 point = ₹1). */
+  balance: number;
+  /** Whether this group's store accepts points. */
+  accepted: boolean;
+  /** Whether the buyer ticked the cart's `useAllPoints`. */
+  optedIn: boolean;
+}): { pointsApplied: number; amountDue: number } {
+  const total = roundRupees(Math.max(0, input.orderTotal));
+  if (!input.optedIn || !input.accepted) return { pointsApplied: 0, amountDue: total };
+
+  const balance = Math.floor(Math.max(0, input.balance));
+  if (!Number.isFinite(balance) || balance <= 0) return { pointsApplied: 0, amountDue: total };
+
+  /*
+   * `maxRedeemablePoints` owns the cap arithmetic — it floors to whole points
+   * and applies `POINTS_MAX_REDEMPTION_PERCENT`. Re-deriving the percentage
+   * here would be a second copy of a money rule (Root Cause #75), and the one
+   * place it already lives sits beside the constant that defines it.
+   */
+  const pointsApplied = maxRedeemablePoints(total, balance);
+  return { pointsApplied, amountDue: roundRupees(total - pointsApplied) };
+}
+
+/**
+ * Draw one balance down across a checkout's order groups, in group order.
+ *
+ * ## Why this exists rather than each caller looping
+ *
+ * The tender is applied PER GROUP (decision 3 — the accepting store absorbs
+ * its own redemption), so "how many points does this checkout use" is a
+ * sequential draw-down, not a single `min`. Four surfaces need the same answer
+ * and must not each write the loop:
+ *
+ * | surface | why it needs the total |
+ * |---|---|
+ * | `previewCheckoutPricing` | the figure shown to the buyer |
+ * | `POST /api/payment/create-order` | the figure CAPTURED |
+ * | the post-capture guard | the figure compared |
+ * | the two order paths | the per-group figure recorded |
+ *
+ * D37 is the record of what happens when one of those four is left out: the
+ * coupon discount reached three of them and not the capture route, so the
+ * buyer was shown one number, charged another, and the order recorded the
+ * first — invisible in our own data because the guard was one-sided.
+ *
+ * 🛑 The order paths deliberately do NOT call this. They apply
+ * `resolvePointsTender` to their own group as they create it, drawing down a
+ * shared remainder — which is the same function applied in the same order, so
+ * the sum is identical by construction. Making them call this instead would
+ * mean computing every group's final total before creating any of them, which
+ * is a restructure of two 200-line functions for an answer they already have.
+ *
+ * ## The cap is per group, and the ORDER of the groups therefore matters
+ *
+ * A balance smaller than the whole checkout's 50% allowance is consumed by the
+ * earliest groups. That is arbitrary but it must be *consistently* arbitrary:
+ * every caller iterates `orderGroups` in the order `splitCartIntoOrderGroups`
+ * produced, so all four agree. Sorting differently anywhere would make the
+ * shown and charged figures diverge on exactly the carts where the balance is
+ * tight.
+ */
+export function allocatePointsAcrossGroups(
+  groups: readonly { total: number; accepted: boolean }[],
+  balance: number,
+  optedIn: boolean,
+): { perGroup: number[]; pointsApplied: number } {
+  const perGroup = groups.map(() => 0);
+  if (!optedIn) return { perGroup, pointsApplied: 0 };
+
+  let remaining = Math.floor(Math.max(0, balance));
+  if (!Number.isFinite(remaining) || remaining <= 0) return { perGroup, pointsApplied: 0 };
+
+  let applied = 0;
+  for (let i = 0; i < groups.length; i += 1) {
+    const g = groups[i];
+    const { pointsApplied } = resolvePointsTender({
+      orderTotal: g.total,
+      balance: g.accepted ? remaining : 0,
+      accepted: g.accepted,
+      optedIn: true,
+    });
+    perGroup[i] = pointsApplied;
+    remaining -= pointsApplied;
+    applied += pointsApplied;
+  }
+  return { perGroup, pointsApplied: applied };
 }
 
 /**

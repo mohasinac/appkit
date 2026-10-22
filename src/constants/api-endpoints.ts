@@ -357,6 +357,12 @@ export const CART_ENDPOINTS = {
   SELECTION: "/api/cart/selection",
   /** Per-store paid add-on selections — the source of truth for what's charged. */
   ADDONS: "/api/cart/addons",
+  /**
+   * Pay with points, on or off (D46/D47). A boolean and nothing else — the
+   * AMOUNT is derived server-side from the live balance and the 50% cap, which
+   * is why there is no `/api/cart/points/amount`.
+   */
+  POINTS: "/api/cart/points",
   COUPON: "/api/cart/coupon",
   /**
    * Add a buyer-assembled group selection as ONE line. Separate from `GET`'s

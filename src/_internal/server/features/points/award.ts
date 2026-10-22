@@ -108,8 +108,31 @@ export async function awardPurchasePoints(
     return { awarded: 0, skipped: "no-buyer" };
   }
 
+  /*
+   * ── The earn base, and why the points tender comes off it (D46/D47) ───────
+   *
+   * 🛑 **Points must not breed points.** Earning on an amount that was itself
+   * paid with points is a loop: spend 100 points, earn 5 on them, spend those,
+   * earn again. It converges rather than exploding, so nothing would ever
+   * error — it just leaks margin, and it is indefensible on a balance sheet
+   * because the issuance has no sale behind it.
+   *
+   * The base is therefore the GOODS VALUE ACTUALLY PAID FOR IN MONEY. `goods`
+   * already excludes shipping and every fee (`orderTaxableValue` reads
+   * `items[]` only — we should not issue points against postage handed to a
+   * courier); this subtracts the part of those goods the buyer settled with
+   * their balance.
+   *
+   * 🛑 Clamped at zero rather than assumed smaller. `pointsApplied` is capped
+   * at 50% of the ORDER TOTAL, which includes shipping and fees — so on an
+   * order that is mostly shipping it can legitimately exceed the goods value,
+   * and the subtraction can go negative. `roundPoints` of a negative is a
+   * DEBIT, so without the clamp a buyer completing such an order would have
+   * points taken away by the reward programme.
+   */
   const goods = orderTaxableValue(order as unknown as PayableOrderLike);
-  const amount = roundPoints((goods * POINTS_EARN_PERCENT) / 100);
+  const moneyPaidForGoods = Math.max(0, goods - Math.max(0, order.pointsApplied ?? 0));
+  const amount = roundPoints((moneyPaidForGoods * POINTS_EARN_PERCENT) / 100);
 
   if (amount <= 0) {
     /*
@@ -139,7 +162,14 @@ export async function awardPurchasePoints(
      * moment even if the order is edited afterwards.
      */
     description:
-      `${POINTS_EARN_PERCENT}% back on ${order.id}: ₹${goods.toFixed(2)} of items.`,
+      `${POINTS_EARN_PERCENT}% back on ${order.id}: ₹${moneyPaidForGoods.toFixed(2)} of items` +
+      // Named explicitly, because an unexplained gap between the order's item
+      // value and the earn base is exactly the kind of figure a buyer writes
+      // in to ask about — and the answer ("you paid part of it with points")
+      // is a fact about their own order that they can check.
+      ((order.pointsApplied ?? 0) > 0
+        ? ` (₹${goods.toFixed(2)} of items less ${order.pointsApplied} points).`
+        : "."),
     expiresAt: pointsExpiryFrom(now),
   });
 

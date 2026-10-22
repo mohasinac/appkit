@@ -1162,6 +1162,7 @@ export {
 // [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling/addon fee math.
 export {
   computeCheckoutFees,
+  allocateCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,
   computeGiftWrapFee,

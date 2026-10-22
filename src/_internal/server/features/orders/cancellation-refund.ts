@@ -59,15 +59,21 @@
  * — one reversal per order, checked by query before the write, because an
  * append-only ledger cannot net off a double reversal.
  *
- * 🛑 It is a NO-OP today and still correct to call. No order has ever consumed
- * points: the one code path that redeemed any was deleted on 2026-10-21
- * because it debited the buyer without reducing the charge (D46 — see the note
- * at its former site in `checkout/actions.ts`), and it had no caller, route
- * field or UI tender before that. So the query finds no redemption and returns
- * `{ reversed: 0 }`.
- * Wiring it now rather than later is the cheap half — the expensive half is the
- * ledger write, which is already keyed. When redemption becomes a real tender,
- * cancellation already gives the points back instead of needing to remember to.
+ * 🛑 **It stopped being a no-op on 2026-10-22.** This paragraph read "It is a
+ * NO-OP today and still correct to call … when redemption becomes a real
+ * tender, cancellation already gives the points back" — and the tender is now
+ * built (`resolvePointsTender` + `settlePointsTender` in `checkout/actions.ts`),
+ * so orders carry `pointsApplied` and this query finds real redemptions. The
+ * bet paid off: no cancellation path had to be remembered, because the reversal
+ * was already wired and keyed.
+ *
+ * 🛑 **The MONEY half had to change in the same commit, and it is the sharper
+ * of the two.** `refundableBase` now subtracts `pointsApplied`, because a
+ * refund can only return what was collected: on a ₹1,000 order settled with
+ * 250 points the card paid ₹750, so refunding the full base would return
+ * ₹1,000 in cash AND 250 points — ₹250 of real money conjured from a discount.
+ * Two halves of one refund, in two units, and only their sum is what the buyer
+ * gave up.
  *
  * **Cancel, then stock, then money.** The cancellation is the urgent half and
  * must not be held hostage to a gateway round trip; the restock is a local
@@ -445,7 +451,7 @@ export async function cancelOrderWithRefund(
    * still the rest of the base, so full is still the honest label.
    */
   const result = await processRefundAction({
-    orderId: order.id,
+    orderId: order.id,
     amount,
     /*
      * `changed_mind` is the honest default: a cancellation before dispatch is a

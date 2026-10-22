@@ -287,11 +287,20 @@ export {
 // GST entirely, so the buyer was shown the tax, charged without it, and the
 // order recorded none — with the verify-side mismatch guard omitting it too, so
 // the three were consistently wrong and the undercharge was undetectable.
+// `allocatePointsAcrossGroups` is the FOURTH symbol exported here for the same
+// reason as the three above it, and the pattern is now the point: every money
+// rule that `/api/payment/create-order` needs has had to be exported after that
+// route was found hand-rolling it or omitting it. The points tender is exported
+// BEFORE the route can get it wrong rather than after — which is the only
+// difference between this entry and the three defects recorded in the comment
+// above (D37, D38, C0c defect 1).
 export {
   unitPriceFor,
   lineTotalFor,
   sumGroupGst,
   computePreOrderDepositAmount,
+  allocatePointsAcrossGroups,
+  resolvePointsTender,
   type GroupGstSummary,
   type GstRateSlice,
 } from "./_internal/shared/checkout/order-math";

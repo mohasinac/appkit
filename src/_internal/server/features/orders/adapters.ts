@@ -215,6 +215,22 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     saleProtectionFee: doc.saleProtectionFee,
     platformFee: doc.platformFee,
     /*
+     * D46/D47 — the points tender, mapped for the same reason as everything
+     * above it and stated once more because this is the field most likely to
+     * be dropped: it is optional, it is absent on every historical order, and a
+     * surface that never receives it renders as though no points were used.
+     *
+     * That is Root Cause #57 exactly, and on this field it is not cosmetic —
+     * the order page would show a buyer "Total ₹1,000" and a card statement
+     * reading ₹750 with nothing on the page explaining the difference, which
+     * reads as an overcharge rather than as their own discount.
+     *
+     * Readers must use `amountDue ?? total`, never a `?? 0`: absent means "no
+     * points, the whole total was collected", and zero means free.
+     */
+    pointsApplied: doc.pointsApplied,
+    amountDue: doc.amountDue,
+    /*
      * 🛑 `gstAmount` -> `tax`, and codHandlingFee alongside it.
      *
      * The comment four lines up is about exactly this and the same block still

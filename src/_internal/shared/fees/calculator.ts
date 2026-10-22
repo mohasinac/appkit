@@ -150,6 +150,17 @@ export interface PayoutDeduction {
    * plus ₹80 postage" is a sentence; one net figure is not.
    */
   shippingReimbursement: number;
+  /**
+   * Rupee value of buyer points this order was settled with, deducted from
+   * `netAmount` (D46/D47, decisions 3 and 17 — the accepting store funds the
+   * redemption).
+   *
+   * Returned as its own figure rather than folded into `totalDeduction` for the
+   * same reason `shippingReimbursement` is: *"'₹900 less ₹30 commission plus
+   * ₹80 postage' is a sentence; one net figure is not."* A seller looking at a
+   * short payout needs to see which of the four terms shortened it.
+   */
+  pointsFunded: number;
 }
 
 /**
@@ -173,11 +184,33 @@ export interface PayoutDeduction {
  *
  * Defaulted to 0, so the three call sites that do not yet pass it keep their
  * current behaviour exactly rather than silently gaining a term.
+ *
+ * ## 🛑 `pointsFunded` is the mirror of that, and it is a DEDUCTION
+ *
+ * Decisions 3 and 17: the programme is seller-funded at both ends — the
+ * accepting store absorbs the redemption, the originating store bears the
+ * earn — and the platform funds neither. So points spent on an order reduce
+ * that order's payout by the rupee value spent.
+ *
+ * It sits in the SAME position as postage and for the inverse reason: outside
+ * the commission and gateway bases. The seller agreed to fund a discount, not
+ * to pay us a commission on the discount they funded, and a gateway percentage
+ * on money no gateway touched is not a card fee at all.
+ *
+ * 🛑 So `grossAmount` is untouched and the fee figures are IDENTICAL whether
+ * points were used or not. That is what keeps the commission the seller is
+ * charged a function of the sale rather than of how the buyer chose to settle
+ * it — and it is why this cannot be implemented by passing a smaller
+ * `grossAmount`, which is the obvious shortcut and silently reduces our own
+ * commission by 2% of every redemption.
+ *
+ * Also defaulted to 0, for the same reason.
  */
 export function computePayoutDeduction(
   grossAmount: number,
   commissions: FeeCommissionRates,
   shippingReimbursement = 0,
+  pointsFunded = 0,
 ): PayoutDeduction {
   const platformFee = roundRupees(grossAmount * (commissions.platformFeePercent / 100));
   const gatewayFee = roundRupees(grossAmount * ((commissions.gatewayFeePercent ?? 0) / 100));
@@ -186,7 +219,15 @@ export function computePayoutDeduction(
   const postage = Number.isFinite(shippingReimbursement)
     ? Math.max(0, shippingReimbursement)
     : 0;
-  const netAmount = Math.max(0, roundRupees(grossAmount - totalDeduction + postage));
+  const points = Number.isFinite(pointsFunded) ? Math.max(0, pointsFunded) : 0;
+  /*
+   * Clamped at zero, as it already was. A redemption cannot exceed 50% of the
+   * order total, so it cannot plausibly exceed the net — but a floor here means
+   * no caller can ever hand a seller a negative payout, which would be written
+   * to a `PayoutDocument.amount` that every downstream sum then treats as a
+   * credit against the platform.
+   */
+  const netAmount = Math.max(0, roundRupees(grossAmount - totalDeduction + postage - points));
   return {
     platformFee,
     gatewayFee,
@@ -194,6 +235,7 @@ export function computePayoutDeduction(
     totalDeduction,
     netAmount,
     shippingReimbursement: roundRupees(postage),
+    pointsFunded: roundRupees(points),
   };
 }
 

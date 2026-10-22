@@ -740,6 +740,37 @@ export class CartRepository extends BaseRepository<CartDocument> {
       );
   }
 
+  /**
+   * Opt the cart in or out of paying with points (D46/D47, decision 24).
+   *
+   * 🛑 A BOOLEAN, and the schema deliberately has no numeric sibling. Opt in
+   * and the server applies as many points as the 50% cap allows; whatever
+   * cannot be applied stays in the balance for a later order. A client-supplied
+   * amount is a client-supplied discount, which is the whole reason
+   * `storeAddons` is the source of truth for add-on fees rather than a request
+   * body.
+   *
+   * Written with the same `set(..., { merge: true })` as its neighbours so a
+   * concurrent add-on or selection write is not clobbered.
+   *
+   * 🛑 Opting OUT deletes the field rather than writing `false` — absent and
+   * `false` mean the same thing to every reader (`cart.useAllPoints === true`),
+   * and keeping both shapes invites a reader that handles only one. Same
+   * reasoning as `setStoreAddons` directly above.
+   */
+  async setUseAllPoints(userId: string, useAllPoints: boolean): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set(
+        {
+          useAllPoints: useAllPoints ? true : FieldValue.delete(),
+          updatedAt: new Date(),
+        },
+        { merge: true },
+      );
+  }
+
   /*
    * `pruneStoreAddons(userId, keepStoreIds)` used to live here. It had zero
    * callers from the day it was written, and `pruneForItems` now does the same

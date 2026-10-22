@@ -38,6 +38,9 @@ export interface CartPriceBreakdownStore {
   supportsShippingProtection: boolean;
   supportsSaleProtection: boolean;
   hasFinalSaleItem: boolean;
+  /** D46/D47 + decision 22 — whether this seller accepts points, and how many. */
+  acceptsPoints: boolean;
+  pointsApplied: number;
 }
 
 /** Mirrors `CheckoutPricingPreview` without importing server code. */
@@ -54,6 +57,12 @@ export interface CartPriceBreakdownData {
   platformFee: number;
   gstOnFee: number;
   total: number;
+  /** D46/D47 — points applied across every accepting store. */
+  pointsApplied: number;
+  /** What the buyer actually pays: `total − pointsApplied`. */
+  amountDue: number;
+  /** Their remaining balance, for the toggle's own label. */
+  pointsBalance: number;
   stores: CartPriceBreakdownStore[];
 }
 
@@ -219,8 +228,79 @@ export function CartPriceBreakdown({
       )}
 
       <Div border="top-subtle" paddingY="t-sm">
-        <Line label="Total" amount={money(preview.total)} tone="primary" strong />
+        <Line
+          label="Total"
+          amount={money(preview.total)}
+          tone="primary"
+          strong={preview.pointsApplied <= 0}
+        />
       </Div>
+
+      {/*
+        ── D46/D47 — the points tender, as TWO lines plus an amount due ────────
+
+        🛑 Three figures, never one. Collapsing them hides the discount from the
+        person who earned it: a buyer who ticked "pay with points" and sees only
+        a smaller number cannot tell whether their points were applied, how many
+        went in, or why the figure is not smaller still. `total` stays the order
+        value (it is what the invoice declares and what a refund measures
+        against), the discount is named, and `amountDue` is what the card will
+        be charged.
+
+        🛑 The emphasis MOVES to Amount due when points apply — `strong` above
+        is conditional for that reason. Two bold totals is worse than one, and
+        the one that matters is the figure being collected.
+
+        Points are named in points, not rupees, even though 1 point = ₹1: the
+        schema's opening line is that this is NOT a wallet, and that distinction
+        is legal rather than stylistic. Rendering "₹250" where the buyer spent
+        250 points is the framing the whole feature is written to avoid.
+      */}
+      {preview.pointsApplied > 0 && (
+        <>
+          <Line
+            label={`Points applied (${preview.pointsApplied.toLocaleString("en-IN")} pts)`}
+            amount={`−${money(preview.pointsApplied)}`}
+            tone="success"
+          />
+          <Div border="top-subtle" paddingY="t-sm">
+            <Line label="Amount due" amount={money(preview.amountDue)} tone="primary" strong />
+          </Div>
+        </>
+      )}
+
+      {/*
+        The cap is a real constraint a buyer will hit, so it is explained where
+        they hit it rather than in a FAQ. Shown only when the cap actually bit —
+        i.e. they still have points left over — so an unconstrained redemption
+        says nothing.
+      */}
+      {preview.pointsApplied > 0 && preview.pointsBalance > preview.pointsApplied && (
+        <Text size="xs" color="muted">
+          {(preview.pointsBalance - preview.pointsApplied).toLocaleString("en-IN")} points stay in
+          your balance — up to half of an order can be paid with points.
+        </Text>
+      )}
+
+      {/*
+        🛑 The silent case, and the reason it needs its own branch: the buyer
+        opted in and NOTHING was applied. With no note here the toggle appears
+        to do nothing at all, which reads as a broken control — the exact
+        failure mode of the dismissible chrome in Root Cause #41 and of the
+        ~39 search boxes whose endpoints never read `q`.
+
+        `pointsBalance` is only read when the buyer opted in, so a non-zero
+        balance with nothing applied IS that state — no extra prop needed.
+       */}
+      {preview.pointsApplied === 0 && preview.pointsBalance > 0 && (
+        <Text size="xs" color="muted">
+          {preview.stores.some((s) => s.acceptsPoints)
+            ? "Your points could not be applied to this order."
+            : storeCount > 1
+              ? "None of these sellers accepts points."
+              : "This seller does not accept points."}
+        </Text>
+      )}
 
       {/*
         Non-additive by construction: it is rendered AFTER the Total, never as

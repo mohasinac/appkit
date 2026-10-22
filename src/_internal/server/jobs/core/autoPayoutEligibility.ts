@@ -12,6 +12,7 @@ import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping
 import {
   ordersTaxableValue,
   ordersShippingReimbursement,
+  ordersPointsBorneByStore,
   type PayableOrderLike,
   type ReimbursableOrderLike,
 } from "../../../shared/checkout/order-math";
@@ -156,6 +157,15 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
        * as undefined and silently reimburse zero.
        */
       ordersShippingReimbursement(orders.map((o) => o.data as ReimbursableOrderLike)),
+      /*
+       * D46/D47 — the store-funded points, both ends (decisions 3 and 17).
+       * Same `.data` unwrap for the same reason, and the same position outside
+       * the fee bases: a commission on a discount the seller funded is not a
+       * commission on a sale.
+       */
+      ordersPointsBorneByStore(
+        orders.map((o) => o.data as { pointsAwarded?: number; pointsApplied?: number }),
+      ),
     );
 
     const payoutInput = {

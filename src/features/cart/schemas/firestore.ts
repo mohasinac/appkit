@@ -251,6 +251,28 @@ export interface CartDocument extends BaseDocument {
    * rather than a flag someone has to remember to check.
    */
   storeAddons?: Record<string, CartStoreAddons>;
+  /**
+   * The buyer has opted to spend points on this checkout.
+   *
+   * ## 🛑 A BOOLEAN, and the amount is never stored or sent
+   *
+   * Owner's rule: *"if use point it is all and then the balance is returned if
+   * excess"* — one opt-in, all-or-nothing. Ticked, the checkout applies as many
+   * points as the 50% cap allows; whatever cannot be applied stays in the
+   * balance. The buyer never types a number.
+   *
+   * So this is the ONLY thing the client may say about points. The amount is
+   * derived server-side from the live balance and
+   * `POINTS_MAX_REDEMPTION_PERCENT` at the moment the order is priced — the
+   * same rule that makes `storeAddons` above the source of truth rather than a
+   * request body, and for the same reason: a client-supplied money figure is a
+   * client-supplied discount.
+   *
+   * 🛑 This replaces a deleted `pointsToRedeem?: number` on the checkout input,
+   * whose handler debited the buyer AFTER the gateway had captured full price
+   * (D46). A number was the wrong shape as well as the wrong place.
+   */
+  useAllPoints?: boolean;
 }
 
 export const CART_COLLECTION = "carts" as const;

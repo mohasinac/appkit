@@ -31,12 +31,25 @@ import {
 import { calculateGst, isIntraStateSupply } from "../../../shared/fees/calculator";
 import { resolveStateKey, INDIA_STATES } from "../../../shared/fees/india-states";
 import {
+  allocatePointsAcrossGroups,
   computePreOrderDepositAmount,
   lineTotalFor,
+  resolvePointsTender,
   sumGroupGst,
   unitPriceFor,
   type GroupGstSummary,
 } from "../../../shared/checkout/order-math";
+/*
+ * D46/D47 — points as a checkout TENDER.
+ *
+ * `storeAcceptsPoints` resolves decision 22's per-store opt-in (and the
+ * platform store's always-accepts, which is decided in code); the repository
+ * supplies the balance and owns the ledger write. The ARITHMETIC lives in
+ * `resolvePointsTender` above, beside every other money rule, so the tender
+ * cannot become a sixth disagreeing total (D37/D38/D40).
+ */
+import { storeAcceptsPoints } from "../../../shared/features/points/accepts";
+import { pointsRepository } from "../../../../features/points/repository/points.repository";
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { COD_MAX_ORDER_VALUE_FALLBACK } from "../../../../features/admin/schemas/firestore";
 import { CHECKOUT_ERROR_CODES } from "../../../../errors/error-codes";
@@ -477,6 +490,19 @@ export async function resolveShippingCost(
    * `undefined` means on a liability flag.
    */
   storeProtections: { shipping: boolean; sale: boolean };
+  /**
+   * Decision 22 — does this seller accept buyer points as part-payment?
+   *
+   * Here for the same reason as `storeProtections` directly above: the store
+   * document is already in hand, and the accepting store ABSORBS the
+   * redemption against its own payout, so this is a liability flag and absence
+   * resolves to `false` exactly once, here.
+   *
+   * 🛑 Resolved through `storeAcceptsPoints()`, never a bare field read — the
+   * platform's own storefront always accepts and that is decided in code
+   * rather than by a seeded flag somebody can switch off.
+   */
+  acceptsPoints: boolean;
 }> {
   if (!storeId) {
     return {
@@ -487,6 +513,8 @@ export async function resolveShippingCost(
       shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
       shippingUnavailable: false,
       storeProtections: { shipping: false, sale: false },
+      // No store, so no seller to absorb a redemption.
+      acceptsPoints: false,
       // No store, so no seller registration — the caller falls back to the
       // platform's via resolveSupplierIdentity.
       storeTaxIdentity: undefined,
@@ -610,6 +638,7 @@ export async function resolveShippingCost(
       shipping: store?.supportsShippingProtection === true,
       sale: store?.supportsSaleProtection === true,
     },
+    acceptsPoints: storeAcceptsPoints(store, storeId),
     /*
      * The seller's own tax registration, returned from the store read this
      * function ALREADY does.
@@ -930,6 +959,29 @@ interface OrderGroupContext {
   /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
   siteContactUpiVpa?: string;
   /**
+   * D46/D47 — the buyer ticked "pay with my points" on the cart.
+   *
+   * A boolean and nothing more (decision 24): opt in and as many points as the
+   * 50% cap allows are applied, the remainder stays in the balance. The
+   * AMOUNT is never client input.
+   */
+  useAllPoints: boolean;
+  /**
+   * 🛑 The checkout's points budget — a SHARED MUTABLE REMAINDER, not a
+   * balance.
+   *
+   * Read once by the caller and drawn down by each accepting group, exactly as
+   * `couponUsageAccumulator` and `platformFeeByStore` are shared across
+   * groups. A per-group balance read would let two groups each believe they
+   * could spend the whole balance; the second `redeem` would then refuse
+   * inside its own transaction and leave an order recorded at a discount
+   * nothing funded — a silent under-collection, which is the family this whole
+   * pass exists to close.
+   *
+   * Zero when the buyer did not opt in, so no balance read happens at all.
+   */
+  pointsBudget: { remaining: number };
+  /**
    * Every product touched by this checkout, keyed by id — INCLUDING the members
    * of bundle and grouped lines.
    *
@@ -940,6 +992,117 @@ interface OrderGroupContext {
    * decrement already runs, so it costs no extra reads.
    */
   productById: Map<string, ProductDocument>;
+}
+
+/**
+ * The buyer's points balance, or **0** if it cannot be read.
+ *
+ * 🛑 Failing OPEN to zero is the safe direction and the only safe direction: a
+ * balance we could not read becomes "no discount applied", so the buyer is
+ * charged the full amount and their points are untouched. The inverse — guessing
+ * a balance — would reduce the charge against points that may not exist, which
+ * is the shape of the deleted D46 block (it debited points and reduced nothing;
+ * this is the same mistake with the signs swapped).
+ *
+ * A buyer who opted in and sees no discount can retry. There is no recoverable
+ * outcome on the other side.
+ */
+async function safePointsBalance(userId: string): Promise<number> {
+  try {
+    return await pointsRepository.getBalance(userId);
+  } catch (err: unknown) {
+    const normalized = normalizeError(err);
+    serverLogger.warn("[checkout] points balance unreadable — charging full amount", {
+      userId,
+      error: normalized.message,
+    });
+    return 0;
+  }
+}
+
+/**
+ * Debit the points an order was discounted by — the second half of the tender.
+ *
+ * 🛑 ONE implementation, called from BOTH order-creation paths. They are
+ * ~200-line twins that have already drifted once (add-on fees, Root Cause
+ * #65), and a money rule reachable by copy-paste gets copied (Root Cause #75).
+ *
+ * Runs AFTER the order exists and BEFORE the gateway is asked for anything.
+ * That ordering is the whole D46 fix: the deleted block ran after capture, so a
+ * redemption that succeeded took points from a buyer who had just paid full
+ * price while its own comment claimed "the balance intact".
+ *
+ * 🛑 A REFUSED REDEEM REVERTS THE DISCOUNT; it is never swallowed. `redeem`
+ * re-reads the balance inside its own transaction and refuses rather than going
+ * negative — so a refusal means the budget was wrong and the order is recording
+ * a discount nobody funded. Reverting is the only honest response: the buyer
+ * pays full price, which they can see and query, where an unfunded discount is
+ * a silent under-collection on every order that hits it.
+ *
+ * `orderId` is the natural idempotency key — this runs once per created order,
+ * and an order is created once.
+ */
+async function settlePointsTender(input: {
+  orderId: string;
+  userId: string;
+  pointsApplied: number;
+  pointsBudget: { remaining: number };
+}): Promise<void> {
+  if (input.pointsApplied <= 0) return;
+  try {
+    await pointsRepository.redeem({
+      userId: input.userId,
+      points: input.pointsApplied,
+      orderId: input.orderId,
+      description: `Points applied to order ${input.orderId}`,
+    });
+  } catch (err: unknown) {
+    const normalized = normalizeError(err);
+    serverLogger.error("[checkout] points redemption refused — reverting the discount", {
+      orderId: input.orderId,
+      userId: input.userId,
+      pointsApplied: input.pointsApplied,
+      error: normalized.message,
+    });
+    // Hand the budget back, so a later group in the same checkout is not
+    // charged for a spend that did not happen.
+    input.pointsBudget.remaining += input.pointsApplied;
+    await unitOfWork.orders
+      .update(input.orderId, { pointsApplied: undefined, amountDue: undefined })
+      .catch((e: unknown) => {
+        /*
+         * 🛑 The one genuinely bad outcome, so it is reported rather than
+         * logged: the order still says `amountDue`, the points were never
+         * taken, and the gateway is about to be asked for the discounted
+         * figure. A case names the amount and the order; `safeRead`'s silent
+         * degrade would be wrong here because nothing downstream can detect it.
+         */
+        const inner = normalizeError(e);
+        serverLogger.error("[checkout] points revert FAILED — order under-collects", {
+          orderId: input.orderId,
+          amountUnfunded: input.pointsApplied,
+          error: inner.message,
+        });
+        void paymentCasesRepository
+          .openOrObserve({
+            kind: "amount_mismatch",
+            // The problem is this order's unfunded discount, so the subject is
+            // the order — one case however many times it is observed.
+            subjectId: input.orderId,
+            severity: "error",
+            entityType: "order",
+            entityId: input.orderId,
+            orderIds: [input.orderId],
+            title: "Order carries a points discount that was never funded",
+            detail:
+              `Redemption of ${input.pointsApplied} points was refused and the ` +
+              `revert also failed, so this order will be captured at its ` +
+              `discounted amountDue with no matching ledger debit.`,
+            amountAtRisk: input.pointsApplied,
+          })
+          .catch(() => undefined);
+      });
+  }
 }
 
 /**
@@ -980,6 +1143,8 @@ async function createOrderForGroup(
     storeAddons,
     platformFeeByStore,
     selectedShippingQuote,
+    useAllPoints,
+    pointsBudget,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -1053,7 +1218,7 @@ async function createOrderForGroup(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
-  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity } =
+  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints } =
     await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
 
   /*
@@ -1339,6 +1504,44 @@ async function createOrderForGroup(
     ? await resolveDisplayedUpiId(firstItem.storeId, siteContactUpiVpa)
     : undefined;
 
+  /*
+   * ── POINTS TENDER (D46/D47) — a STAGE, after `orderTotal` is rounded ──────
+   *
+   * The deleted code redeemed points AFTER the orders existed and after the
+   * gateway had captured `orderTotal`, so a successful redemption took points
+   * from a buyer who had just paid full price — while its own comment claimed
+   * "the balance intact". This is the same feature done as a pipeline stage:
+   * `amountDue` is derived here, and `amountDue` is what the gateway captures
+   * and what the post-capture guard compares.
+   *
+   * 🛑 `useAllPoints` is the only client input and it is a BOOLEAN (decision
+   * 24). The amount comes from the live balance and the 50% cap; a
+   * client-supplied money figure is a client-supplied discount.
+   *
+   * 🛑 Per group, because the ACCEPTING store absorbs the redemption against
+   * its own payout (decision 3). A cart spanning an accepting and a
+   * non-accepting store must not pool the discount — so this reads
+   * `acceptsPoints`, which `resolveShippingCost` resolved from the store
+   * document it had already fetched.
+   *
+   * 🛑 `pointsBudget` is a SHARED MUTABLE REMAINDER, read once per checkout by
+   * the caller and decremented here — the same shape as
+   * `couponUsageAccumulator` and `platformFeeByStore`. Reading the balance
+   * per group would let two groups each spend the whole balance: `redeem`
+   * would then refuse the second one inside its transaction, leaving an order
+   * recorded at a discount that was never funded. One budget, drawn down in
+   * order, is what makes the sum of the groups equal what the buyer has.
+   */
+  const pointsOptedIn = useAllPoints === true;
+  const pointsAccepted = pointsOptedIn && acceptsPoints;
+  const { pointsApplied, amountDue } = resolvePointsTender({
+    orderTotal,
+    balance: pointsAccepted ? pointsBudget.remaining : 0,
+    accepted: pointsAccepted,
+    optedIn: pointsOptedIn,
+  });
+  if (pointsApplied > 0) pointsBudget.remaining -= pointsApplied;
+
   // Both creation paths call the SAME builder — two hand-written copies is the
   // create-vs-create axis of Root Cause #39, and these two functions have
   // already drifted once before (add-on fees, Root Cause #65).
@@ -1353,6 +1556,23 @@ async function createOrderForGroup(
     quantity: totalQuantity,
     unitPrice: unitPriceFor(firstItem, firstProduct),
     totalPrice: orderTotal,
+    /*
+     * D46/D47 — what the points paid for, and what is left to collect.
+     *
+     * 🛑 `totalPrice` stays the FULL order value and is not reduced. It is the
+     * value of the supply, it is what the GST breakdown above was computed on,
+     * and it is what `refundableBase` measures against — netting the points
+     * off it would silently shrink the refundable base and the taxable value
+     * at once. Points are a DISCOUNT settled against goods (decision 5), so
+     * they reduce the amount COLLECTED, not the amount supplied.
+     *
+     * 🛑 Both are written only when non-zero, so an order placed without
+     * points carries neither field and every reader's `amountDue ?? totalPrice`
+     * fallback resolves to the right number on the 100% of historical orders
+     * that predate this.
+     */
+    pointsApplied: pointsApplied > 0 ? pointsApplied : undefined,
+    amountDue: pointsApplied > 0 ? amountDue : undefined,
     currency: firstItem.currency ?? getDefaultCurrency(),
     storeId: firstItem.storeId || undefined,
     storeName: firstItem.storeName || undefined,
@@ -1480,6 +1700,10 @@ async function createOrderForGroup(
   });
 
   orderIds.push(order.id);
+
+  // The second half of the points tender — see `settlePointsTender`. Runs
+  // before the caller asks the gateway for anything.
+  await settlePointsTender({ orderId: order.id, userId: uid, pointsApplied, pointsBudget });
 
   // Close the loop on any locked line this order settled: flip the offer to
   // "paid" (its terminal status had NO server-side writer before 2026-08-21,
@@ -1942,6 +2166,25 @@ export async function createCheckoutOrderAction(
     computeCheckoutFees(cartSubtotal, commissions),
   );
 
+  /*
+   * ── The checkout's points budget, read ONCE (D46/D47) ─────────────────────
+   *
+   * 🛑 One read for the whole checkout, not one per order group. Rule #6
+   * budgets ~3 sequential Firestore round-trips per request, and a cart
+   * spanning four sellers would otherwise pay four reads to learn one number.
+   *
+   * 🛑 And ZERO when the buyer did not opt in, so an ordinary checkout performs
+   * no points read at all — the common case must not pay for a feature it is
+   * not using.
+   *
+   * 🛑 `adminBypass` is deliberately excluded: that path takes no payment, so
+   * there is nothing for points to reduce, and debiting a buyer's balance for
+   * an order the admin placed free would be a theft with an audit-log entry
+   * saying otherwise.
+   */
+  const useAllPoints = cart.useAllPoints === true && !adminBypass;
+  const pointsBudget = { remaining: useAllPoints ? await safePointsBalance(uid) : 0 };
+
   const groupCtx: OrderGroupContext = {
     paymentMethod,
     emiTenureMonths,
@@ -1969,6 +2212,8 @@ export async function createCheckoutOrderAction(
     platformFeeByStore,
     selectedShippingQuote: input.selectedShippingQuote,
     productById: checkoutProductById,
+    useAllPoints,
+    pointsBudget,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -2004,18 +2249,26 @@ export async function createCheckoutOrderAction(
    * Deleting it leaves a promise with no mechanism, which is a disappointment.
    * Keeping it left a mechanism that silently takes points, which is a theft.
    *
-   * ## What the real tender has to do instead
+   * ## ✅ The real tender was BUILT 2026-10-22 — and it is not here
    *
-   * Points are a TENDER, so they belong in the pricing pipeline, not after it:
-   * a stage in `computeCheckoutTotal` AFTER rounding — `amountDue = total −
-   * pointsApplied` — with the gateway capturing `amountDue` and the
-   * post-capture guard comparing against `amountDue`. Anything else makes
-   * points a sixth way the captured amount can diverge from the recorded order
-   * total, which is the D37/D38/D40 family this plan exists to close.
+   * 🛑 Do not look for it at this line. Points are a TENDER, so they are a
+   * STAGE inside each order-creation path, immediately after that path's single
+   * `roundRupees` and BEFORE anything is written or captured:
    *
-   * Everything that work needs now exists: `purchase_earn`, per-batch expiry,
-   * FIFO consumption, `redemption_reversal` and the seller-funded deduction.
-   * What is missing is the pipeline stage and the two document fields.
+   *   - `resolvePointsTender` (`_internal/shared/checkout/order-math.ts`) —
+   *     the arithmetic, beside every other money rule.
+   *   - the stage in `createOrderForGroup` and `createPhonePeGroupOrder`,
+   *     which write `pointsApplied` + `amountDue` onto the order.
+   *   - `settlePointsTender` — ONE debit implementation shared by both paths,
+   *     running after the order exists so the discount and the debit are two
+   *     halves of one recorded fact, and reverting the discount if `redeem`
+   *     refuses.
+   *
+   * This note stays because the mistake is worth keeping, but a comment saying
+   * a feature is "missing" while it sits 800 lines above is its own trap — it
+   * is how `assertReturnWindowOpen` got reported as absent when my own comment
+   * was shadowing the real answer. The accurate statement is: the tender is
+   * built, and this is the wrong place for it.
    */
 
   dispatchOrderConfirmationEmails(emailsToSend);
@@ -2119,6 +2372,18 @@ export interface CheckoutPricingPreviewStore {
   supportsSaleProtection: boolean;
   /** True when any of this store's priced lines is `finalSale`. */
   hasFinalSaleItem: boolean;
+  /**
+   * D46/D47 + decision 22 — does this seller accept points?
+   *
+   * Carried for the same reason as the two protection booleans directly above:
+   * the gate and the amount must be provably one decision rather than two that
+   * agree by discipline. A seller card can then say "points not accepted here"
+   * instead of the buyer wondering why their discount is smaller than their
+   * balance.
+   */
+  acceptsPoints: boolean;
+  /** Points applied to THIS store's order. Zero when it does not accept them. */
+  pointsApplied: number;
 }
 
 export interface CheckoutPricingPreview {
@@ -2137,6 +2402,31 @@ export interface CheckoutPricingPreview {
   /** GST on the (capped) platform commission. */
   gstOnFee: number;
   total: number;
+  /**
+   * D46/D47 — points applied across every accepting store in this checkout.
+   *
+   * 🛑 `total` stays the ORDER VALUE and is not reduced by this. `amountDue`
+   * below is what the buyer actually pays, and the two are deliberately both
+   * returned: the summary shows the full total, the discount line, and then the
+   * amount due, which is how a buyer can see what their points did. Collapsing
+   * them into one figure would hide the discount from the person who earned it.
+   */
+  pointsApplied: number;
+  /**
+   * What the gateway will be asked to capture: `total − pointsApplied`.
+   *
+   * 🛑 THIS is the parity figure. The capture route and the post-capture guard
+   * must both use it, or points become a sixth way the captured amount diverges
+   * from the recorded order (D37/D38/D40). Equal to `total` whenever no points
+   * are applied, so every existing reader of `total` stays correct.
+   */
+  amountDue: number;
+  /**
+   * The buyer's remaining points balance, for the cart's own copy ("you have
+   * N points"). Zero when they have not opted in — the preview does not read a
+   * balance it is not going to use.
+   */
+  pointsBalance: number;
   /**
    * Per-store breakdown, in group order. Every figure here was already being
    * computed inside the per-group loop and then discarded into an aggregate —
@@ -2160,6 +2450,9 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   platformFee: 0,
   gstOnFee: 0,
   total: 0,
+  pointsApplied: 0,
+  amountDue: 0,
+  pointsBalance: 0,
   stores: [],
 };
 
@@ -2263,7 +2556,7 @@ export async function previewCheckoutPricing(
      * and then the order path (equally unpassed) charged it. Preview and charge
      * agreed, and both were wrong in the same direction.
      */
-    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled } =
+    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled, acceptsPoints } =
       await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
     // Add-ons are per store, read off the cart document — the same entry
@@ -2431,6 +2724,11 @@ export async function previewCheckoutPricing(
       supportsShippingProtection: storeProtections.shipping,
       supportsSaleProtection: storeProtections.sale,
       hasFinalSaleItem: groupHasFinalSale,
+      acceptsPoints,
+      // Filled by the tender pass below — it needs each store's share of the
+      // one capped commission, which is only allocatable once every group is
+      // known.
+      pointsApplied: 0,
     });
   }
 
@@ -2448,7 +2746,14 @@ export async function previewCheckoutPricing(
 
   // One capped commission for the whole checkout, on every payment method —
   // deliberately not per store, so it is not added to the per-store rows above.
-  const { platformFee, gstOnFee } = computeCheckoutFees(cartSubtotal, commissions);
+  // The whole object is kept (not just the two fields) because the points
+  // tender below re-allocates it per store through `allocateCheckoutFees`,
+  // which takes a `CheckoutFees` — and `totalFee` carries the
+  // `minimumTransactionFee` floor, which is exactly the field D41 found had no
+  // consumer anywhere. Destructuring it away here would be how it loses its
+  // second one.
+  const checkoutFees = computeCheckoutFees(cartSubtotal, commissions);
+  const { platformFee, gstOnFee } = checkoutFees;
 
   /*
    * 🛑 `gstAmount` is NOT a term, and leaving it in was a shown-vs-charged
@@ -2486,6 +2791,55 @@ export async function previewCheckoutPricing(
     platformFee +
     gstOnFee;
 
+  /*
+   * ── THE POINTS TENDER, PREVIEWED (D46/D47) ────────────────────────────────
+   *
+   * 🛑 Applied PER STORE against the SAME base the order path uses, which is
+   * why this runs here and not inside the loop above: the base includes each
+   * store's share of the one capped commission, and that share is only
+   * allocatable once every group is known.
+   *
+   * 🛑 Per store is not a detail — it is the only shape that can agree with
+   * what gets charged. A cart-level application gives the same answer as the
+   * per-group one whenever every store accepts (the sum of per-group 50% caps
+   * equals 50% of the sum), and a DIFFERENT answer the moment one store does
+   * not: with ₹500 at an accepting store, ₹500 at a declining one and a 600
+   * balance, per-store applies ₹250 and cart-level would promise ₹500. The
+   * buyer would be shown a discount half of which could never be honoured.
+   *
+   * The iteration order matches `orderGroups`, and so does the order-creation
+   * loop, so the budget is drawn down in the same sequence in both — which is
+   * what makes the two sums identical rather than merely close.
+   */
+  const previewUseAllPoints = cart.useAllPoints === true;
+  const previewBalance = previewUseAllPoints ? await safePointsBalance(uid) : 0;
+  if (previewUseAllPoints && previewBalance > 0) {
+    const feeByStore = allocateCheckoutFees(
+      stores.map((s) => [s.storeId, s.subtotal] as const),
+      checkoutFees,
+    );
+    const { perGroup } = allocatePointsAcrossGroups(
+      stores.map((s) => {
+        const share = feeByStore.get(s.storeId);
+        return {
+          // The SAME base `createOrderForGroup` applies the tender to: the
+          // store's charged total plus its share of the one capped commission.
+          // `store.total` deliberately excludes that share (it is a checkout
+          // charge, not a per-store one), so it is added back here rather than
+          // by widening a published field.
+          total: roundRupees(s.total + (share?.platformFee ?? 0) + (share?.gstOnFee ?? 0)),
+          accepted: s.acceptsPoints,
+        };
+      }),
+      previewBalance,
+      true,
+    );
+    perGroup.forEach((applied, i) => {
+      stores[i].pointsApplied = applied;
+    });
+  }
+  const pointsApplied = sum((s) => s.pointsApplied);
+
   return {
     subtotal: cartSubtotal,
     shippingFee,
@@ -2499,6 +2853,11 @@ export async function previewCheckoutPricing(
     platformFee,
     gstOnFee,
     total,
+    pointsApplied,
+    // Equal to `total` when no points apply, so every existing reader of
+    // either figure keeps getting the right number.
+    amountDue: roundRupees(total - pointsApplied),
+    pointsBalance: previewBalance,
     stores,
   };
 }
@@ -2779,6 +3138,14 @@ async function createPhonePeGroupOrder(
      * no access to it, which is why product GST was omitted here entirely.
      */
     buyerState?: string;
+    /**
+     * D46/D47 — the points tender, threaded exactly as `storeAddons` is: a
+     * per-cart selection this path cannot re-derive. See `OrderGroupContext`
+     * for why the budget is one shared remainder rather than a per-group
+     * balance read.
+     */
+    useAllPoints: boolean;
+    pointsBudget: { remaining: number };
   },
 ): Promise<number> {
   const {
@@ -2802,6 +3169,8 @@ async function createPhonePeGroupOrder(
     couponUsageAccumulator,
     productById: phonepeProductById,
     buyerState,
+    useAllPoints,
+    pointsBudget,
   } = ctx;
 
   /*
@@ -2824,7 +3193,7 @@ async function createPhonePeGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
   /*
    * Same supplier-of-record rule as `createOrderForGroup`, through the same
@@ -2973,6 +3342,30 @@ async function createPhonePeGroupOrder(
     Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst,
   );
 
+  /*
+   * ── POINTS TENDER (D46/D47) — the same STAGE as the COD/manual path ───────
+   *
+   * Same four inputs, same function, same point in the sequence: immediately
+   * after `orderTotal`'s single `roundRupees` and before anything is written.
+   * Computing it here rather than in a shared builder is unavoidable — the two
+   * paths derive `orderTotal` separately — but the ARITHMETIC is
+   * `resolvePointsTender` in both, so they cannot disagree about the amount
+   * the way the add-on fees once did (Root Cause #65).
+   *
+   * 🛑 This is the path whose capture matters most: `amountDue` is what the
+   * Razorpay order is created for, so a divergence here is money taken that
+   * the order does not record.
+   */
+  const pointsOptedIn = useAllPoints === true;
+  const pointsAccepted = pointsOptedIn && acceptsPoints;
+  const { pointsApplied, amountDue } = resolvePointsTender({
+    orderTotal,
+    balance: pointsAccepted ? pointsBudget.remaining : 0,
+    accepted: pointsAccepted,
+    optedIn: pointsOptedIn,
+  });
+  if (pointsApplied > 0) pointsBudget.remaining -= pointsApplied;
+
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
   // the price rule (`isBundle ? item.price : product.price`) that — like the
@@ -3017,6 +3410,10 @@ async function createPhonePeGroupOrder(
     quantity: totalQuantity,
     unitPrice: group[0].product!.price,
     totalPrice: orderTotal,
+    // D46/D47 — see the identical pair in `createOrderForGroup`. `totalPrice`
+    // stays the full value of the supply; points reduce what is COLLECTED.
+    pointsApplied: pointsApplied > 0 ? pointsApplied : undefined,
+    amountDue: pointsApplied > 0 ? amountDue : undefined,
     currency: firstItem.currency ?? getDefaultCurrency(),
     storeId: firstItem.storeId || undefined,
     storeName: firstItem.storeName || undefined,
@@ -3048,7 +3445,15 @@ async function createPhonePeGroupOrder(
     paymentRecord: {
       method: gatewayName === "razorpay" ? "razorpay" : "phonepe",
       transactionId: transactionId ?? merchantOrderId,
-      amount: orderTotal,
+      /*
+       * 🛑 What the gateway actually CAPTURED, which is `amountDue` once points
+       * are applied — not the order's value. This record is the evidence a
+       * reconciler compares against the gateway's own figure (Phase 4 R2), so
+       * writing `orderTotal` here would open an `amount_mismatch` case on every
+       * points-funded order: the discount would read as money we failed to
+       * collect.
+       */
+      amount: amountDue,
       paidAt: new Date(),
       verifiedBy: `${gatewayName}-order-status`,
       verificationMethod: "order-status",
@@ -3106,6 +3511,10 @@ async function createPhonePeGroupOrder(
   } as never);
 
   orderIds.push(order.id);
+
+  // The second half of the points tender — one implementation, shared with the
+  // COD/manual path. See `settlePointsTender`.
+  await settlePointsTender({ orderId: order.id, userId: uid, pointsApplied, pointsBudget });
 
   // Close the loop on any locked line this order settled: flip the offer to
   // "paid" (its terminal status had NO server-side writer before 2026-08-21,
@@ -3523,8 +3932,12 @@ export async function verifyAndPlaceGatewayOrderAction(
     // percentages, so the moment the cap landed it would have expected more
     // than was actually collected and rejected every legitimate payment.
     const commissionRates = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
-    const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } =
-      computeCheckoutFees(cartSubtotalRs, commissionRates);
+    // The whole object is kept so the points tender below can re-allocate it
+    // per group — see the same note in `previewCheckoutPricing`. `totalFee`
+    // carries the `minimumTransactionFee` floor, and destructuring it away is
+    // how it lost every consumer once already (D41).
+    const expectedFees = computeCheckoutFees(cartSubtotalRs, commissionRates);
+    const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } = expectedFees;
     // Same per-seller-group shipping sum /api/payment/create-order charged
     // upfront (and the same resolveShippingCost createPhonePeGroupOrder
     // below will use to build each order's recorded totalPrice) — keeps this
@@ -3624,12 +4037,85 @@ export async function verifyAndPlaceGatewayOrderAction(
      * would make this guard demand ~₹580 more than the buyer owes on a
      * ₹5,547 cart — rejecting every correctly-charged order.
      */
-    const expectedPaymentAmountRs =
-      expectedDiscountedSubtotal +
-      expectedPlatformFee +
-      expectedGstOnFee +
-      expectedAddonFees +
-      expectedShippingFee;
+    /*
+     * ── D46/D47 — the guard must expect the amount NET OF POINTS ─────────────
+     *
+     * 🛑 Omitting this term would make the guard reject every correctly-charged
+     * points order, which is worse than the overcharge it exists to catch: the
+     * money is already captured by the time this runs, so a false rejection is
+     * a charged-with-no-order — the D64 class.
+     *
+     * The bases are rebuilt here from the same terms in the same order, and the
+     * draw-down is the same shared allocator, so the only way this can diverge
+     * from the capture route is a change made to one and not the other. That is
+     * precisely the drift the four-way export comment on
+     * `allocatePointsAcrossGroups` exists to make visible.
+     */
+    const guardUseAllPoints = cart.useAllPoints === true;
+    let expectedPointsApplied = 0;
+    if (guardUseAllPoints) {
+      const guardBalance = await safePointsBalance(uid);
+      if (guardBalance > 0) {
+        const guardSubtotals = expectedShippingGroups.map(
+          (g) =>
+            [
+              g.items[0].item.storeId,
+              g.items.reduce((gs, { item, product }) => gs + lineTotalFor(item, product), 0),
+            ] as const,
+        );
+        const guardFeeByGroup = allocateCheckoutFees(guardSubtotals, expectedFees);
+        const guardCouponByGroup = computeCartCouponDiscount(
+          cart.appliedCoupons ?? [],
+          expectedShippingGroups.map((g) => ({
+            storeId: g.items[0].item.storeId,
+            lines: g.items.map(({ item, product }) => ({
+              itemId: item.itemId,
+              lineTotal: lineTotalFor(item, product),
+            })),
+          })),
+        ).perGroup;
+        const guardBases = expectedShippingGroups.map((g, i) => {
+          const storeId = g.items[0].item.storeId;
+          const addons = cart.storeAddons?.[storeId] ?? {};
+          const goods = guardSubtotals[i][1];
+          const share = guardFeeByGroup.get(storeId);
+          const groupAddons =
+            computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates) +
+            computeShipmentProtectionFee(
+              goods,
+              addons.shipmentProtectionAddon ?? false,
+              commissionRates,
+            );
+          return {
+            total: roundRupees(
+              Math.max(0, goods - (guardCouponByGroup[i]?.couponDiscount ?? 0)) +
+                (expectedShippingFees[i]?.shippingFee ?? 0) +
+                groupAddons +
+                (share?.platformFee ?? 0) +
+                (share?.gstOnFee ?? 0),
+            ),
+            accepted: expectedShippingFees[i]?.acceptsPoints === true,
+          };
+        });
+        expectedPointsApplied = allocatePointsAcrossGroups(
+          guardBases,
+          guardBalance,
+          true,
+        ).pointsApplied;
+      }
+    }
+
+    const expectedPaymentAmountRs = roundRupees(
+      Math.max(
+        0,
+        expectedDiscountedSubtotal +
+          expectedPlatformFee +
+          expectedGstOnFee +
+          expectedAddonFees +
+          expectedShippingFee -
+          expectedPointsApplied,
+      ),
+    );
     // Reuses the order already fetched above to confirm COMPLETED — PhonePe's
     // own amount is in its wire-format smallest unit. // audit-money-units-ok: describes the PhonePe boundary conversion this line performs, not our storage convention
     const paidAmountRs = paiseToRupees(gatewayOrder.amount);
@@ -3743,6 +4229,20 @@ export async function verifyAndPlaceGatewayOrderAction(
     computeCheckoutFees(cartSubtotal, siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS),
   );
 
+  /*
+   * The points budget for this checkout — one read, zero when not opted in.
+   * See the identical pair in the COD/manual path for why it is a shared
+   * remainder rather than a per-group balance read.
+   *
+   * 🛑 On THIS path the money has already been captured by the time these
+   * orders are created, so the budget must match whatever the pre-payment
+   * amount was computed against. That is why `useAllPoints` is read off the
+   * cart here too and not re-decided: the figure quoted to the gateway and the
+   * figure recorded on the orders come from the same cart flag.
+   */
+  const useAllPoints = cart.useAllPoints === true;
+  const pointsBudget = { remaining: useAllPoints ? await safePointsBalance(uid) : 0 };
+
   for (const { items: group, orderType } of orderGroups) {
     total += await createPhonePeGroupOrder(group, orderType, {
       appliedCoupons,
@@ -3768,6 +4268,8 @@ export async function verifyAndPlaceGatewayOrderAction(
       emailsToSend,
       couponUsageAccumulator,
       productById: productByIdPaid,
+      useAllPoints,
+      pointsBudget,
     });
   }
 

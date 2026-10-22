@@ -42,6 +42,7 @@ import { computePayoutDeduction } from "../../../_internal/shared/fees/calculato
 import {
   ordersTaxableValue,
   ordersShippingReimbursement,
+  ordersPointsBorneByStore,
 } from "../../../_internal/shared/checkout/order-math";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -471,10 +472,23 @@ async function computeSellerEarnings(sellerId: string) {
    * alone.
    */
   const shippingReimbursement = ordersShippingReimbursement(eligibleOrders);
+  /*
+   * D46/D47 — the points programme, which the STORE funds at both ends
+   * (decisions 3 and 17): points issued on these orders plus points spent on
+   * them. Deducted outside the commission and gateway bases, for the inverse
+   * of postage's reason — the seller agreed to fund a discount, not to pay us a
+   * commission on the discount they funded.
+   *
+   * 🛑 Passed at all FOUR call sites, exactly like `shippingReimbursement`
+   * above. `ordersPointsFunded` existed with zero consumers before this, which
+   * meant the platform had silently been funding the earn.
+   */
+  const pointsFunded = ordersPointsBorneByStore(eligibleOrders);
   const deduction = computePayoutDeduction(
     grossAmount,
     siteSettings.commissions,
     shippingReimbursement,
+    pointsFunded,
   );
 
   return {
@@ -484,6 +498,22 @@ async function computeSellerEarnings(sellerId: string) {
     gatewayFee: deduction.gatewayFee,
     gstAmount: deduction.gstOnFee,
     netAmount: deduction.netAmount,
+    /*
+     * Surfaced so a seller can see WHY a payout is short of
+     * `gross − fees`. Two terms now move `netAmount` without appearing in
+     * `totalDeduction` — postage up, points down — and a net figure that
+     * cannot be reconstructed from the figures beside it reads as an error in
+     * our arithmetic rather than as the two things the seller agreed to.
+     *
+     * 🛑 Returned rather than written to `PayoutDocument`, matching
+     * `shippingReimbursement`, which is also not on that schema. One of these
+     * should probably be persisted eventually — a settled payout cannot be
+     * re-explained from a preview — but adding a document field with no reader
+     * is the pattern this very function just finished closing, so it waits for
+     * the admin surface that would read it.
+     */
+    shippingReimbursement: deduction.shippingReimbursement,
+    pointsFunded: deduction.pointsFunded,
     productCount: products.length,
     commissions: siteSettings.commissions,
   };
@@ -623,6 +653,8 @@ export async function bulkSellerOrder(
     grossAmount,
     bulkSiteSettings.commissions,
     ordersShippingReimbursement(eligible),
+    // The store-funded points, both ends — see the preview path above.
+    ordersPointsBorneByStore(eligible),
   );
 
   const payoutDoc = await payoutRepository.createPayout({

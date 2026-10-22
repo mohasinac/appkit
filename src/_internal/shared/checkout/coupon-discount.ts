@@ -40,6 +40,20 @@ export interface GroupCouponDiscountResult {
     scope?: "admin" | "seller";
     storeId?: string;
   }[];
+  /**
+   * The per-group discount, in the order the groups were passed.
+   *
+   * 🛑 Surfaced rather than aggregated-and-forgotten. It was already being
+   * computed inside the loop below and then summed away — the same shape as
+   * `CheckoutPricingPreviewStore`'s per-store fees, which existed only as an
+   * aggregate until a seller card needed them.
+   *
+   * The caller that needs it is the capture route's points tender: the
+   * per-group base includes that group's own discount, and re-deriving it
+   * there would be a second copy of the apportionment rule (Root Cause #75) on
+   * the one path D37 proves gets left behind.
+   */
+  perGroup: { storeId: string | undefined; couponDiscount: number }[];
 }
 
 /**
@@ -130,6 +144,7 @@ export function computeCartCouponDiscount(
   );
   let couponDiscount = 0;
   const appliedDiscounts: GroupCouponDiscountResult["appliedDiscounts"] = [];
+  const perGroup: GroupCouponDiscountResult["perGroup"] = [];
   for (const group of groups) {
     const groupTotal = group.lines.reduce((s, l) => s + l.lineTotal, 0);
     const res = computeGroupCouponDiscount(
@@ -141,6 +156,16 @@ export function computeCartCouponDiscount(
     );
     couponDiscount += res.couponDiscount;
     appliedDiscounts.push(...res.appliedDiscounts);
+    /*
+     * 🛑 NOT rounded here, and the aggregate below IS. Rounding each group
+     * then summing can differ from summing then rounding by a paisa per group,
+     * and the aggregate is what the gateway captures — so the group figures
+     * stay raw and the caller rounds its own composed base once, exactly as
+     * `createOrderForGroup` does with a single `roundRupees` on `orderTotal`
+     * (D42). A rounded-then-summed discount is how a total ends up a paisa
+     * short of its own lines.
+     */
+    perGroup.push({ storeId: group.storeId, couponDiscount: res.couponDiscount });
   }
-  return { couponDiscount: roundRupees(couponDiscount), appliedDiscounts };
+  return { couponDiscount: roundRupees(couponDiscount), appliedDiscounts, perGroup };
 }
