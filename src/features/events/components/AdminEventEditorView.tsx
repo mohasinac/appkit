@@ -428,190 +428,42 @@ function SpinPrizesEditor({
 
 // --- Component ---------------------------------------------------------------
 
-export function AdminEventEditorView({
-  eventId,
-  onSaved,
-  embedded,
+
+/**
+ * Context the sections close over.
+ *
+ * 🛑 The section `id`s inside match the schema's `section` annotations
+ * EXACTLY. That correspondence is what lets `<FormErrorSummary>` jump to
+ * the panel owning a failed field — rename one and the jump silently lands
+ * nowhere, which reads as the summary being broken rather than as a typo.
+ */
+interface EventSectionsContext {
+  /** Editing an existing event rather than creating one. */
+  isEdit: boolean;
+  /** Restricts the type dropdown; undefined means every type. */
+  allowedTypes?: EventType[];
+  /** The admin has typed a slug, so stop deriving it from the title. */
+  slugManual: boolean;
+  setSlugManual: (v: boolean) => void;
+  raffleEntryCount: number | null;
+  raffleWinnerName: string | null;
+  raffleGithubUrl: string | null;
+  triggerMessage: string | null;
+  triggerRaffleMutation: { mutate: () => void; isPending: boolean };
+}
+
+function buildEventSections({
+  isEdit,
   allowedTypes,
-  ...rest
-}: AdminEventEditorViewProps) {
-  const isEdit = Boolean(eventId);
-  const [draft, setDraft] = React.useState<EventDraft>(DEFAULT_DRAFT);
-  const [slugManual, setSlugManual] = React.useState(false);
-  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
-  const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
-  // Root translator (no namespace) — `toUserMessage` passes fully-qualified
-  // `errors.codes.*` keys and resolves them itself. Same precedent as
-  // `PlaceBidFormClient` and `SpinWheelView`.
-  const t = useTranslations();
-  const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
-  const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(null);
-  const [raffleGithubUrl, setRaffleGithubUrl] = React.useState("");
-  const { shellCtx, setFieldError, validate } = useFormShellState(eventDraftSchema);
-
-  useEffect(() => {
-    validate(draft);
-     
-  }, [draft, validate]);
-
-  const update = React.useCallback((partial: Partial<EventDraft>) => {
-    setDraft((prev) => ({ ...prev, ...partial }));
-    setSaveMessage(null);
-  }, []);
-
-  // --- load existing event ---
-  const eventQuery = useQuery<EventApiResponse>({
-    queryKey: ["admin-event-by-id", eventId],
-    queryFn: () => apiClient.get<EventApiResponse>(`${ADMIN_ENDPOINTS.EVENTS}/${eventId}`),
-    enabled: Boolean(eventId),
-    staleTime: 15_000,
-  });
-
-  React.useEffect(() => {
-    const event = (eventQuery.data as any)?.data ?? (eventQuery.data as any);
-    if (!event?.id) return;
-    setDraft({
-      type: event.type || "sale",
-      title: event.title || "",
-      slug: event.slug || "",
-      description: event.description || "",
-      startsAt: toLocalDatetime(event.startsAt),
-      endsAt: toLocalDatetime(event.endsAt),
-      coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
-      tags: Array.isArray(event.tags) ? event.tags : [],
-      status: event.status || "draft",
-      createdBy: event.createdBy || "",
-      allowGuestParticipation: Boolean(event.allowGuestParticipation),
-      // `Boolean()` so an ABSENT field (every event predating the pin) seeds
-      // the toggle as off rather than leaving it `undefined`, which React
-      // would read as an uncontrolled input.
-      isPinned: Boolean(event.isPinned),
-      discountPercent: String(event.saleConfig?.discountPercent ?? 10),
-      saleBannerText: event.saleConfig?.bannerText || "",
-      couponId: event.offerConfig?.couponId || "",
-      displayCode: event.offerConfig?.displayCode || "",
-      offerBannerText: event.offerConfig?.bannerText || "",
-      pollOptions: event.pollConfig?.options?.length
-        ? event.pollConfig.options
-        : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
-      allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
-      allowComment: Boolean(event.pollConfig?.allowComment),
-      resultsVisibility: event.pollConfig?.resultsVisibility || "always",
-      requireLogin: event.surveyConfig?.requireLogin !== false,
-      maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
-      hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
-      hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
-      pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
-      entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
-      surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
-      anonymous: Boolean(event.feedbackConfig?.anonymous),
-      feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
-      hasRaffle: Boolean(event.hasRaffle),
-      raffleType: (event.raffleType as RaffleType) || "open_raffle",
-      raffleTopN: String(event.raffleTopN ?? 10),
-      rafflePrize: event.rafflePrize || "",
-      rafflePrizeCouponId: event.rafflePrizeCouponId || "",
-      rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
-      spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
-      spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
-      spinWindowStart: toLocalDatetime(event.spinWindowStart),
-      spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
-    });
-    setSlugManual(true);
-    setRaffleWinnerName(event.raffleWinnerDisplayName || "");
-    setRaffleEntryCount(typeof event.raffleEntryCount === "number" ? event.raffleEntryCount : null);
-    setRaffleGithubUrl(event.raffleGithubFunctionUrl || "");
-  }, [eventQuery.data]);
-
-  // --- save ---
-  const saveMutation = useApiMutation({
-    mutationFn: async () => {
-      const payload: JsonObjectWithUndefined = {
-        type: draft.type,
-        title: draft.title,
-        slug: draft.slug || toEventSlug(draft.title),
-        description: draft.description,
-        tags: draft.tags,
-        startsAt: toISOString(draft.startsAt),
-        endsAt: toISOString(draft.endsAt),
-        coverImageUrl: draft.coverImageUrl || undefined,
-        allowGuestParticipation: draft.allowGuestParticipation,
-        isPinned: draft.isPinned,
-        ...buildEventTypeConfig(draft),
-        ...buildEventRaffleFields(draft),
-      };
-
-      if (eventId) {
-        payload.status = draft.status;
-        await apiClient.patch(`${ADMIN_ENDPOINTS.EVENTS}/${eventId}`, payload);
-        return eventId;
-      }
-      const created = await apiClient.post<{ data: { id: string }; id?: string }>(ADMIN_ENDPOINTS.EVENTS, payload);
-      return (created as any).data?.id ?? (created as any).id ?? "";
-    },
-    onSuccess: (savedId) => {
-      setSaveMessage("Saved successfully.");
-      if (savedId) onSaved?.(savedId);
-    },
-    onError: (error) => {
-      const issues = (error as ApiClientError)?.issues;
-      if (issues && issues.length > 0) {
-        applyZodIssues(
-          issues as { path: (string | number)[]; message: string }[],
-          setFieldError,
-        );
-      }
-      setSaveMessage(error instanceof Error ? error.message : "Save failed");
-    },
-  });
-
-  // --- raffle trigger ---
-  const triggerRaffleMutation = useApiMutation({
-    mutationFn: async () => {
-      if (!eventId) throw new Error("Save the event before triggering");
-      return apiClient.post<{ data: { raffleWinnerDisplayName?: string; raffleEntryCount?: number } }>(
-        ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE(eventId),
-        {},
-      );
-    },
-    onSuccess: (res) => {
-      const data = (res as any).data ?? res;
-      setTriggerMessage(data?.raffleWinnerDisplayName ? `Winner: ${data.raffleWinnerDisplayName}` : "Raffle triggered.");
-      if (data?.raffleWinnerDisplayName) setRaffleWinnerName(data.raffleWinnerDisplayName);
-      if (typeof data?.raffleEntryCount === "number") setRaffleEntryCount(data.raffleEntryCount);
-    },
-    onError: (err) => {
-      /*
-       * 🛑 `err.message` was printed straight into the panel — the shape Root
-       * Cause #86 is about, and the ternary was inverted besides: the authored
-       * sentence only showed when the value was NOT an Error, i.e. almost
-       * never, so the normal case rendered raw server text to an admin.
-       *
-       * The route now returns a stable `code` for every refusal, so the copy
-       * resolves through `errors.codes.*`. The one that matters is
-       * `RAFFLE_ALREADY_DRAWN` — "a winner has already been drawn" is a
-       * completely different instruction from the old generic failure, and it
-       * is what a second click gets now that the draw is transactional.
-       */
-      const e = normalizeError(err);
-      setTriggerMessage(
-        toUserMessage(e.code, t, { fallback: "Could not draw a winner." }),
-      );
-    },
-  });
-
-  const isLoading = saveMutation.isPending || eventQuery.isLoading;
-
-  // --- steps ---
-  /**
-   * Sections, not steps — every field reachable at once, one submit at the
-   * bottom. The old wizard gated Settings behind Details validating, so a
-   * missing end date made an event's poll options unreachable.
-   *
-   * Ids match the schema's `section` annotations exactly, which is what lets
-   * `<FormErrorSummary>` jump to the right panel.
-   */
-  const sections: SectionDef<EventDraft>[] = [
+  slugManual,
+  setSlugManual,
+  raffleEntryCount,
+  raffleWinnerName,
+  raffleGithubUrl,
+  triggerMessage,
+  triggerRaffleMutation,
+}: EventSectionsContext): SectionDef<EventDraft>[] {
+  return [
     {
       id: "details",
       required: true,
@@ -909,6 +761,214 @@ export function AdminEventEditorView({
       },
     },
   ];
+}
+
+export function AdminEventEditorView({
+  eventId,
+  onSaved,
+  embedded,
+  allowedTypes,
+  ...rest
+}: AdminEventEditorViewProps) {
+  const isEdit = Boolean(eventId);
+  const [draft, setDraft] = React.useState<EventDraft>(DEFAULT_DRAFT);
+  const [slugManual, setSlugManual] = React.useState(false);
+  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
+  // Root translator (no namespace) — `toUserMessage` passes fully-qualified
+  // `errors.codes.*` keys and resolves them itself. Same precedent as
+  // `PlaceBidFormClient` and `SpinWheelView`.
+  const t = useTranslations();
+  const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
+  const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(null);
+  const [raffleGithubUrl, setRaffleGithubUrl] = React.useState("");
+  const { shellCtx, setFieldError, validate } = useFormShellState(eventDraftSchema);
+
+  useEffect(() => {
+    validate(draft);
+     
+  }, [draft, validate]);
+
+  const update = React.useCallback((partial: Partial<EventDraft>) => {
+    setDraft((prev) => ({ ...prev, ...partial }));
+    setSaveMessage(null);
+  }, []);
+
+  // --- load existing event ---
+  const eventQuery = useQuery<EventApiResponse>({
+    queryKey: ["admin-event-by-id", eventId],
+    queryFn: () => apiClient.get<EventApiResponse>(`${ADMIN_ENDPOINTS.EVENTS}/${eventId}`),
+    enabled: Boolean(eventId),
+    staleTime: 15_000,
+  });
+
+  React.useEffect(() => {
+    const event = (eventQuery.data as any)?.data ?? (eventQuery.data as any);
+    if (!event?.id) return;
+    setDraft({
+      type: event.type || "sale",
+      title: event.title || "",
+      slug: event.slug || "",
+      description: event.description || "",
+      startsAt: toLocalDatetime(event.startsAt),
+      endsAt: toLocalDatetime(event.endsAt),
+      coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
+      tags: Array.isArray(event.tags) ? event.tags : [],
+      status: event.status || "draft",
+      createdBy: event.createdBy || "",
+      allowGuestParticipation: Boolean(event.allowGuestParticipation),
+      // `Boolean()` so an ABSENT field (every event predating the pin) seeds
+      // the toggle as off rather than leaving it `undefined`, which React
+      // would read as an uncontrolled input.
+      isPinned: Boolean(event.isPinned),
+      discountPercent: String(event.saleConfig?.discountPercent ?? 10),
+      saleBannerText: event.saleConfig?.bannerText || "",
+      couponId: event.offerConfig?.couponId || "",
+      displayCode: event.offerConfig?.displayCode || "",
+      offerBannerText: event.offerConfig?.bannerText || "",
+      pollOptions: event.pollConfig?.options?.length
+        ? event.pollConfig.options
+        : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
+      allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
+      allowComment: Boolean(event.pollConfig?.allowComment),
+      resultsVisibility: event.pollConfig?.resultsVisibility || "always",
+      requireLogin: event.surveyConfig?.requireLogin !== false,
+      maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
+      hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
+      hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
+      pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
+      entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
+      surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
+      anonymous: Boolean(event.feedbackConfig?.anonymous),
+      feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
+      hasRaffle: Boolean(event.hasRaffle),
+      raffleType: (event.raffleType as RaffleType) || "open_raffle",
+      raffleTopN: String(event.raffleTopN ?? 10),
+      rafflePrize: event.rafflePrize || "",
+      rafflePrizeCouponId: event.rafflePrizeCouponId || "",
+      rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
+      spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
+      spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
+      spinWindowStart: toLocalDatetime(event.spinWindowStart),
+      spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
+    });
+    setSlugManual(true);
+    setRaffleWinnerName(event.raffleWinnerDisplayName || "");
+    setRaffleEntryCount(typeof event.raffleEntryCount === "number" ? event.raffleEntryCount : null);
+    setRaffleGithubUrl(event.raffleGithubFunctionUrl || "");
+  }, [eventQuery.data]);
+
+  // --- save ---
+  const saveMutation = useApiMutation({
+    mutationFn: async () => {
+      const payload: JsonObjectWithUndefined = {
+        type: draft.type,
+        title: draft.title,
+        slug: draft.slug || toEventSlug(draft.title),
+        description: draft.description,
+        tags: draft.tags,
+        startsAt: toISOString(draft.startsAt),
+        endsAt: toISOString(draft.endsAt),
+        coverImageUrl: draft.coverImageUrl || undefined,
+        allowGuestParticipation: draft.allowGuestParticipation,
+        isPinned: draft.isPinned,
+        ...buildEventTypeConfig(draft),
+        ...buildEventRaffleFields(draft),
+      };
+
+      if (eventId) {
+        payload.status = draft.status;
+        await apiClient.patch(`${ADMIN_ENDPOINTS.EVENTS}/${eventId}`, payload);
+        return eventId;
+      }
+      const created = await apiClient.post<{ data: { id: string }; id?: string }>(ADMIN_ENDPOINTS.EVENTS, payload);
+      return (created as any).data?.id ?? (created as any).id ?? "";
+    },
+    onSuccess: (savedId) => {
+      setSaveMessage("Saved successfully.");
+      if (savedId) onSaved?.(savedId);
+    },
+    onError: (error) => {
+      const issues = (error as ApiClientError)?.issues;
+      if (issues && issues.length > 0) {
+        applyZodIssues(
+          issues as { path: (string | number)[]; message: string }[],
+          setFieldError,
+        );
+      }
+      setSaveMessage(error instanceof Error ? error.message : "Save failed");
+    },
+  });
+
+  // --- raffle trigger ---
+  const triggerRaffleMutation = useApiMutation({
+    mutationFn: async () => {
+      if (!eventId) throw new Error("Save the event before triggering");
+      return apiClient.post<{ data: { raffleWinnerDisplayName?: string; raffleEntryCount?: number } }>(
+        ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE(eventId),
+        {},
+      );
+    },
+    onSuccess: (res) => {
+      const data = (res as any).data ?? res;
+      setTriggerMessage(data?.raffleWinnerDisplayName ? `Winner: ${data.raffleWinnerDisplayName}` : "Raffle triggered.");
+      if (data?.raffleWinnerDisplayName) setRaffleWinnerName(data.raffleWinnerDisplayName);
+      if (typeof data?.raffleEntryCount === "number") setRaffleEntryCount(data.raffleEntryCount);
+    },
+    onError: (err) => {
+      /*
+       * 🛑 `err.message` was printed straight into the panel — the shape Root
+       * Cause #86 is about, and the ternary was inverted besides: the authored
+       * sentence only showed when the value was NOT an Error, i.e. almost
+       * never, so the normal case rendered raw server text to an admin.
+       *
+       * The route now returns a stable `code` for every refusal, so the copy
+       * resolves through `errors.codes.*`. The one that matters is
+       * `RAFFLE_ALREADY_DRAWN` — "a winner has already been drawn" is a
+       * completely different instruction from the old generic failure, and it
+       * is what a second click gets now that the draw is transactional.
+       */
+      const e = normalizeError(err);
+      setTriggerMessage(
+        toUserMessage(e.code, t, { fallback: "Could not draw a winner." }),
+      );
+    },
+  });
+
+  const isLoading = saveMutation.isPending || eventQuery.isLoading;
+
+  // --- steps ---
+  /**
+   * Sections, not steps — every field reachable at once, one submit at the
+   * bottom. The old wizard gated Settings behind Details validating, so a
+   * missing end date made an event's poll options unreachable.
+   *
+   * Ids match the schema's `section` annotations exactly, which is what lets
+   * `<FormErrorSummary>` jump to the right panel.
+   */
+  /*
+   * The four form sections, built by a module-scope factory.
+   *
+   * 🛑 Extracted for size (audit-code-quality caps a component at 150
+   * significant lines; this array was two thirds of 455) and deliberately
+   * kept IN THIS FILE. A sibling module would have to import `EventDraft`,
+   * `FormFieldBuilder`, `SpinPrizesEditor` and `toEventSlug` back out of
+   * here while this file imported the factory — a cycle, for no gain.
+   *
+   * Everything the sections close over is a PARAMETER, so the factory is pure
+   * and the component's state stays the single source of it.
+   */
+  const sections: SectionDef<EventDraft>[] = buildEventSections({
+    isEdit,
+    allowedTypes,
+    slugManual,
+    setSlugManual,
+    raffleEntryCount,
+    raffleWinnerName,
+    raffleGithubUrl,
+    triggerMessage,
+    triggerRaffleMutation,
+  });
 
   const alertSection = eventQuery.error ? (
     <Alert variant="error" title="Could not load event">

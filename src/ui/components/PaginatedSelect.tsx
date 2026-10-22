@@ -1,5 +1,6 @@
 "use client";
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { usePaginatedOptions } from "./use-paginated-options";
 import { Input } from "./Input";
 import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
@@ -182,32 +183,38 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const isMulti = props.multiple === true;
   const maxChipsVisible = isMulti ? (props as MultiProps<V>).maxChipsVisible ?? 3 : 0;
 
-  const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [opensUp, setOpensUp] = useState(false);
-  const [asyncOptions, setAsyncOptions] = useState<PaginatedSelectOption<V>[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(false);
-  /*
-   * 🛑 A failed load is NOT "no results".
-   *
-   * `load` below had `try`/`finally` with no `catch`, so a rejected
-   * `loadOptions` left `asyncOptions` untouched and the dropdown rendered
-   * "No results" — reporting a 500 as a measured zero. That is what made a
-   * missing Firestore composite index on the category picker look like an
-   * empty taxonomy: the route threw FAILED_PRECONDITION, ApiClient rejected,
-   * and the user saw a confident, wrong answer.
-   */
-  const [loadError, setLoadError] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const labelMap = useRef<Map<V, string>>(new Map());
-  // Monotonic counter guarding against out-of-order async responses: a
-  // slower earlier request (e.g. for an already-abandoned search query)
-  // must never overwrite state after a faster, more recent request resolved.
-  const requestIdRef = useRef(0);
-  const wasOpenRef = useRef(false);
+
+  const selectedValues: V[] = isMulti
+    ? (props as MultiProps<V>).value
+    : (props as SingleProps<V>).value == null
+      ? []
+      : [(props as SingleProps<V>).value as V];
+
+  /*
+   * The async option-loading machine — seven pieces of state, the
+   * out-of-order request guard, the typing debounce and the label-resolution
+   * pass. Extracted so this component is about RENDERING the control; see
+   * `use-paginated-options.ts` for the two invariants that are easy to lose
+   * (a failed load is not "no results"; the staleness guard applies on the
+   * failure path too).
+   */
+  const {
+    query,
+    setQuery,
+    asyncOptions,
+    setAsyncOptions,
+    page,
+    hasMore,
+    loading,
+    loadError,
+    labelMap,
+    setLabel,
+    load,
+  } = usePaginatedOptions<V>(loadOptions, open, selectedValues);
 
   const hasCreate = Boolean(
     createLabel && (renderCreateForm ?? (createFields && onCreateSubmit)),
@@ -256,97 +263,6 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
    * It seeds `labelMap` alone and never touches `asyncOptions`, so it cannot
    * race the dropdown's own list or its search.
    */
-  const [labelVersion, setLabelVersion] = useState(0);
-  const labelResolveRef = useRef(false);
-  const selectedValues: V[] = isMulti
-    ? (props as MultiProps<V>).value
-    : (props as SingleProps<V>).value == null
-      ? []
-      : [(props as SingleProps<V>).value as V];
-  const unresolvedKey = selectedValues
-    .filter((v) => !labelMap.current.has(v))
-    .map((v) => String(v))
-    .join(" ");
-
-  useEffect(() => {
-    if (!loadOptions || !unresolvedKey || labelResolveRef.current) return;
-    labelResolveRef.current = true;
-    let cancelled = false;
-    void (async () => {
-      try {
-        const response = await loadOptions("", 1);
-        if (cancelled) return;
-        response.items.forEach((o) => labelMap.current.set(o.value, o.label));
-        setLabelVersion((n) => n + 1);
-        // audit-silent-degrade-ok: this effect only ever UPGRADES the trigger from
-        // the raw id to a display name. On failure it keeps the id — the behaviour
-        // every caller had before it existed — and the control stays fully operable,
-        // since opening the dropdown re-loads options through `load`, which surfaces
-        // its own errors. There is nothing here a user or an operator could act on.
-      } catch (err) {
-        void normalizeError(err);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [loadOptions, unresolvedKey]);
-  void labelVersion; // re-render trigger only; the labels live in labelMap
-
-  const load = useCallback(
-    async (search: string, nextPage: number, reset = false) => {
-      if (!loadOptions) return;
-      const requestId = ++requestIdRef.current;
-      setLoading(true);
-      setLoadError(null);
-      try {
-        const response = await loadOptions(search, nextPage);
-        // A newer request (new search, or the dropdown reopened) was issued
-        // while this one was in flight — its response is stale, discard it
-        // rather than clobbering state a more recent request already set.
-        if (requestId !== requestIdRef.current) return;
-        setAsyncOptions((prev) => {
-          const merged = reset ? response.items : [...prev, ...response.items];
-          merged.forEach((o) => labelMap.current.set(o.value, o.label));
-          return merged;
-        });
-        setPage(nextPage);
-        setHasMore(response.hasMore);
-      } catch (err) {
-        const normalized = normalizeError(err);
-        // Same staleness rule as the success path: a superseded request must
-        // not paint its failure over a newer request's results.
-        if (requestId === requestIdRef.current) {
-          setLoadError(normalized.message || "Could not load options.");
-          if (reset) setAsyncOptions([]);
-        }
-      } finally {
-        if (requestId === requestIdRef.current) setLoading(false);
-      }
-    },
-    [loadOptions],
-  );
-
-  useEffect(() => {
-    if (!open || !loadOptions) {
-      wasOpenRef.current = false;
-      return;
-    }
-    // Load immediately the moment the dropdown opens; debounce subsequent
-    // reloads triggered by the user typing so every keystroke doesn't fire
-    // a new request.
-    const isFreshOpen = !wasOpenRef.current;
-    wasOpenRef.current = true;
-    if (isFreshOpen) {
-      void load(query, 1, true);
-      return;
-    }
-    const timer = setTimeout(() => {
-      void load(query, 1, true);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [open, query, load, loadOptions]);
-
   useEffect(() => {
     if (!open || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -457,8 +373,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
 
   function handleEdited(option: PaginatedSelectOption<V>) {
     setEditOpen(false);
-    labelMap.current.set(option.value, option.label);
-    setLabelVersion((v) => v + 1);
+    setLabel(option.value, option.label);
     const sp = props as SingleProps<V>;
     sp.onChange?.(option.value, option);
   }
