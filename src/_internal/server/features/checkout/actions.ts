@@ -70,6 +70,13 @@ import {
  */
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { computeProtectionFees } from "../../../shared/features/shipping/protections";
+/* S5a — one payer, N destinations. Pure: the rates come in snapshotted, and
+ * an UNPRICED arrangement is refused rather than quoted at ₹0 (D44's lesson). */
+import {
+  countDestinations,
+  quoteSharedPurchase,
+  type SharedPurchaseRates,
+} from "../../../shared/features/shipping/shared-purchase";
 import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
 import {
   assertCheckoutLane,
@@ -503,6 +510,20 @@ export async function resolveShippingCost(
    * rather than by a seeded flag somebody can switch off.
    */
   acceptsPoints: boolean;
+  /**
+   * S5a — the shared-purchase rates, from the store read this function already
+   * performs.
+   *
+   * Returned RAW rather than as a quote, for the same reason
+   * `storeTaxIdentity` is: the decision (how many destinations, and therefore
+   * what it costs) belongs to the caller that knows the lines. This function
+   * resolves per-store facts.
+   *
+   * 🛑 `undefined` on a fee is preserved and NOT defaulted to 0 — a seller who
+   * opted in without pricing it has not agreed to do it free. `quoteSharedPurchase`
+   * reports that as `unpriced` and the caller refuses.
+   */
+  sharedPurchaseRates: SharedPurchaseRates;
 }> {
   if (!storeId) {
     return {
@@ -515,6 +536,8 @@ export async function resolveShippingCost(
       storeProtections: { shipping: false, sale: false },
       // No store, so no seller to absorb a redemption.
       acceptsPoints: false,
+      // No store, so nobody to pack N parcels.
+      sharedPurchaseRates: { allowSharedPurchase: false },
       // No store, so no seller registration — the caller falls back to the
       // platform's via resolveSupplierIdentity.
       storeTaxIdentity: undefined,
@@ -639,6 +662,13 @@ export async function resolveShippingCost(
       sale: store?.supportsSaleProtection === true,
     },
     acceptsPoints: storeAcceptsPoints(store, storeId),
+    // S5a — raw, so the caller can tell "not configured" from ₹0.
+    sharedPurchaseRates: {
+      allowSharedPurchase: store?.allowSharedPurchase === true,
+      sharedPurchaseHandlingFee: store?.sharedPurchaseHandlingFee,
+      sharedPurchaseExtraShippingPerDestination:
+        store?.sharedPurchaseExtraShippingPerDestination,
+    },
     /*
      * The seller's own tax registration, returned from the store read this
      * function ALREADY does.
@@ -1218,7 +1248,7 @@ async function createOrderForGroup(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
-  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints } =
+  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates } =
     await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
 
   /*
@@ -1411,6 +1441,54 @@ async function createOrderForGroup(
     }
   }
 
+  /*
+   * ── S5a: a shared purchase — one payer, N destinations ────────────────────
+   *
+   * Computed BEFORE `orderTotal` because it is a term in it. The rates come
+   * off the store document and are SNAPSHOTTED onto the order below: a
+   * coordinator commits against a quoted total, and re-reading a rate at
+   * settle would let a seller raise it afterwards. That is D61's rule, and the
+   * precedent is the refund path reading `finalSale` from the order snapshot
+   * for exactly this reason.
+   *
+   * 🛑 `countDestinations` counts DISTINCT addresses and collapses every line
+   * with no `destinationAddressId` into one bucket — the order's own address.
+   * Counting items instead would charge an ordinary three-item order for two
+   * extra legs it never asked for.
+   */
+  const sharedQuote = quoteSharedPurchase({
+    destinationCount: countDestinations(group.map(({ item }) => item)),
+    rates: sharedPurchaseRates,
+  });
+  /*
+   * 🛑 An UNPRICED arrangement is refused, not given away. The seller opted in
+   * without setting a rate, which is not consent to do the extra packing for
+   * free — and quoting ₹0 is exactly D44: `shippingUnavailable` carried a
+   * docstring saying "the caller MUST act on this rather than trusting
+   * `shippingFee: 0`", had zero consumers, and every `estimate`-mode store
+   * shipped free on every path as a result.
+   */
+  if (sharedQuote.unpriced) {
+    throw new ValidationError(
+      "This seller has not set a price for splitting an order across addresses. " +
+        "Send everything to one address, or contact the seller.",
+    );
+  }
+  /*
+   * A multi-destination order from a store that has NOT opted in. The quote
+   * prices; it does not authorise — so the refusal is here, where the buyer
+   * can be told something true and specific.
+   */
+  if (
+    !sharedQuote.isShared &&
+    countDestinations(group.map(({ item }) => item)) > 1
+  ) {
+    throw new ValidationError(
+      "This seller ships one order to one address. Remove the extra delivery addresses, " +
+        "or order the items separately.",
+    );
+  }
+
   // The platform commission is now charged on EVERY payment method. It used to
   // be added only on the online-payment path, so COD / UPI-manual / cash / EMI
   // buyers silently never paid it.
@@ -1442,7 +1520,7 @@ async function createOrderForGroup(
      * drifts from the sum of the lines shown beside it.
      */
     roundRupees(
-      Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0),
+      Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + sharedQuote.total,
     );
 
   /*
@@ -1631,6 +1709,22 @@ async function createOrderForGroup(
     shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
     saleProtectionAddon: !adminBypass && saleProtectionFee > 0 ? true : undefined,
     saleProtectionFee: !adminBypass && saleProtectionFee > 0 ? saleProtectionFee : undefined,
+    /*
+     * S5a — the arrangement, snapshotted. Written only when it IS a shared
+     * purchase, so an ordinary order carries no field at all and every reader
+     * can test presence rather than compare a count to 1.
+     *
+     * 🛑 The FEES AS CHARGED, not the store's current rates. That is the whole
+     * point of a snapshot: an order refunded in six months must reverse what
+     * was collected, not what the seller charges by then.
+     */
+    sharedPurchase: sharedQuote.isShared
+      ? {
+          destinationCount: countDestinations(group.map(({ item }) => item)),
+          handlingFee: sharedQuote.handlingFee,
+          extraShippingFee: sharedQuote.extraShippingFee,
+        }
+      : undefined,
     taxableAmount: gstBreakdown?.taxableAmount,
     /* Exempt goods are a reportable nil-rated supply, kept OUT of
      * `taxableAmount` so the taxed base stays the base the tax was charged on,
@@ -2391,6 +2485,14 @@ export interface CheckoutPricingPreviewStore {
   acceptsPoints: boolean;
   /** Points applied to THIS store's order. Zero when it does not accept them. */
   pointsApplied: number;
+  /**
+   * S5a — the shared-purchase fee for this store's order (handling + extra
+   * shipping legs). Zero on an ordinary single-destination order.
+   *
+   * 🛑 Surfaced because a coordinator commits against the preview, and the
+   * plan is explicit that these fees must be shown BEFORE they commit.
+   */
+  sharedPurchaseFee: number;
 }
 
 export interface CheckoutPricingPreview {
@@ -2408,6 +2510,13 @@ export interface CheckoutPricingPreview {
   platformFee: number;
   /** GST on the (capped) platform commission. */
   gstOnFee: number;
+  /**
+   * S5a — handling plus extra shipping legs, across every store in the cart.
+   *
+   * 🛑 A real additive charge, unlike the tax-inclusive `gstAmount`, so it is
+   * a term in `total` and belongs in the fee column.
+   */
+  sharedPurchaseFee: number;
   total: number;
   /**
    * D46/D47 — points applied across every accepting store in this checkout.
@@ -2456,6 +2565,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   couponDiscount: 0,
   platformFee: 0,
   gstOnFee: 0,
+  sharedPurchaseFee: 0,
   total: 0,
   pointsApplied: 0,
   amountDue: 0,
@@ -2563,7 +2673,7 @@ export async function previewCheckoutPricing(
      * and then the order path (equally unpassed) charged it. Preview and charge
      * agreed, and both were wrong in the same direction.
      */
-    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled, acceptsPoints } =
+    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled, acceptsPoints, sharedPurchaseRates: previewSharedRates } =
       await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
     // Add-ons are per store, read off the cart document — the same entry
@@ -2623,6 +2733,28 @@ export async function previewCheckoutPricing(
      * seller cannot flip the switch after the sale).
      */
     const groupHasFinalSale = group.some(({ product }) => product?.finalSale === true);
+    /*
+     * ── S5a in the PREVIEW ───────────────────────────────────────────────────
+     *
+     * 🛑 Here because a coordinator commits against this figure. The plan is
+     * explicit that the fees "must be shown before the coordinator commits" —
+     * a handling fee plus N−1 shipping legs discovered afterwards is exactly
+     * the surprise the arrangement makes expensive.
+     *
+     * The same function and the same `countDestinations` as both order paths,
+     * so the shown figure and the charged one cannot diverge. D37 is the record
+     * of what ONE money term reaching three of four paths costs: the buyer was
+     * shown one number, charged another, and the order recorded the first.
+     *
+     * 🛑 A preview NEVER throws, so an unpriced arrangement contributes 0 here
+     * rather than raising — `quoteSharedPurchase` reports it on `unpriced` and
+     * the ORDER path is what refuses. A preview that threw would render the
+     * whole cart as an error page for a seller's missing config.
+     */
+    const groupSharedPurchaseFee = quoteSharedPurchase({
+      destinationCount: countDestinations(group.map(({ item }) => item)),
+      rates: previewSharedRates,
+    }).total;
     const {
       shippingProtectionFee: groupShipmentProtectionFee,
       saleProtectionFee: groupSaleProtectionFee,
@@ -2727,11 +2859,15 @@ export async function previewCheckoutPricing(
         groupEmiSurcharge +
         groupGiftWrapFee +
         groupShipmentProtectionFee +
-        groupSaleProtectionFee,
+        groupSaleProtectionFee +
+        // S5a — a term in the per-store total, so the seller card and the
+        // order it previews agree.
+        groupSharedPurchaseFee,
       supportsShippingProtection: storeProtections.shipping,
       supportsSaleProtection: storeProtections.sale,
       hasFinalSaleItem: groupHasFinalSale,
       acceptsPoints,
+      sharedPurchaseFee: groupSharedPurchaseFee,
       // Filled by the tender pass below — it needs each store's share of the
       // one capped commission, which is only allocatable once every group is
       // known.
@@ -2748,6 +2884,9 @@ export async function previewCheckoutPricing(
   const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
   const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
   const saleProtectionFeeTotal = sum((s) => s.saleProtectionFee);
+  // S5a — summed from the same per-store figures, so the aggregate cannot
+  // disagree with the seller cards it is built from.
+  const sharedPurchaseFeeTotal = sum((s) => s.sharedPurchaseFee);
   const gstAmount = sum((s) => s.gstAmount);
   const couponDiscount = sum((s) => s.couponDiscount);
 
@@ -2795,6 +2934,9 @@ export async function previewCheckoutPricing(
     giftWrapFeeTotal +
     shipmentProtectionFeeTotal +
     saleProtectionFeeTotal +
+    // S5a — a real additive charge, so it belongs in the column with the other
+    // fees rather than below the total like the tax-inclusive `gstAmount`.
+    sharedPurchaseFeeTotal +
     platformFee +
     gstOnFee;
 
@@ -2855,6 +2997,7 @@ export async function previewCheckoutPricing(
     giftWrapFee: giftWrapFeeTotal,
     shipmentProtectionFee: shipmentProtectionFeeTotal,
     saleProtectionFee: saleProtectionFeeTotal,
+    sharedPurchaseFee: sharedPurchaseFeeTotal,
     gstAmount,
     couponDiscount,
     platformFee,
@@ -3200,7 +3343,7 @@ async function createPhonePeGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
 
   /*
    * Same supplier-of-record rule as `createOrderForGroup`, through the same
@@ -3343,10 +3486,29 @@ async function createPhonePeGroupOrder(
   /* Product GST is not a term — prices are tax-inclusive, so it is already
    * inside `groupTotal`. Matches the COD/UPI path exactly; `platformFeeGst`
    * stays because that is GST on our fee, charged on top. */
+  /*
+   * ── S5a: the shared-purchase arrangement, matching the COD/manual path ────
+   *
+   * Same function, same inputs, same position — before `orderTotal`, because
+   * it is a term in it. See the fuller 🛑 at the COD/manual site for why the
+   * rates are snapshotted and why an unpriced arrangement is refused rather
+   * than quoted at ₹0.
+   *
+   * 🛑 On THIS path the money is already captured by the time this runs, so a
+   * refusal here means a charged-with-no-order — the D64 class. That is why
+   * `/api/payment/create-order` must apply the same term: the pre-payment
+   * amount and this total have to agree, which is the parity C0c defect 1 was
+   * about and the reason every addition here has to be made in three places.
+   */
+  const phonepeSharedQuote = quoteSharedPurchase({
+    destinationCount: countDestinations(group.map(({ item }) => item)),
+    rates: sharedPurchaseRates,
+  });
+
   // D42: rounded once on the sum — see the COD/UPI path's 🛑 for why a raw
   // float sum of seven 2dp terms reached Firestore as 1011.8000000000001.
   const orderTotal = roundRupees(
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst,
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + phonepeSharedQuote.total,
   );
 
   /*
@@ -3488,6 +3650,14 @@ async function createPhonePeGroupOrder(
     // Recorded as well as charged — an order that collects a protection fee
     // without a record of it cannot be reconciled against a later claim.
     saleProtectionFee: saleProtectionFee > 0 ? saleProtectionFee : undefined,
+    // S5a — snapshotted, matching the COD/manual path field for field.
+    sharedPurchase: phonepeSharedQuote.isShared
+      ? {
+          destinationCount: countDestinations(group.map(({ item }) => item)),
+          handlingFee: phonepeSharedQuote.handlingFee,
+          extraShippingFee: phonepeSharedQuote.extraShippingFee,
+        }
+      : undefined,
     /*
      * The tax breakdown, matching `createOrderForGroup` field for field.
      * This path recorded NONE of it before C0c defect 1 — so an online order

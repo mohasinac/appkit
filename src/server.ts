@@ -2483,3 +2483,18 @@ export {
   type Gstr1Export,
   type Gstr1Row,
 } from "./_internal/server/features/invoicing/gstr1";
+
+/*
+ * [SERVER-ONLY] S5a shared purchase — one payer, N destinations.
+ *
+ * Exported for the capture route, which is the FOURTH money path and the one
+ * D37 proves gets left behind. Pure arithmetic with no Firestore and no
+ * settings read; the rates are passed in snapshotted.
+ */
+export {
+  quoteSharedPurchase,
+  countDestinations,
+  type SharedPurchaseRates,
+  type SharedPurchaseQuote,
+  type SharedPurchaseQuoteInput,
+} from "./_internal/shared/features/shipping/shared-purchase";

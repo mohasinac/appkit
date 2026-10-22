@@ -57,6 +57,31 @@ export const PUBLIC_STORE_FIELDS = [
   // which is the one outcome the tri-state rule forbids.
   "supportsShippingProtection",
   "supportsSaleProtection",
+  /*
+   * ── D46/D47 + S5a — four more public store flags, same argument ───────────
+   *
+   * 🛑 `acceptsPoints` was ADDED to the schema without being triaged here,
+   * which `audit-public-projection-parity` is strict-zero on — an untriaged
+   * field fails the build, and rightly: the default for a new store field is
+   * PRIVATE, and a field nobody classified is a field nobody decided about
+   * (Root Cause #70, where five undeclared fields went out to anonymous
+   * callers precisely because no interface declared them).
+   *
+   * All four are PUBLIC and each for the tri-state reason the two protection
+   * flags above are: the cart has to show a buyer whether their points can be
+   * used HERE, and whether this seller will split an order across addresses,
+   * BEFORE they commit. Withholding either makes "has not opted in"
+   * indistinguishable from "we did not tell you".
+   *
+   * The two shared-purchase FEES are public for a stronger reason still: a
+   * coordinator commits to a quoted total, and a handling fee plus N−1
+   * shipping legs discovered after they committed is exactly the surprise the
+   * arrangement makes expensive.
+   */
+  "acceptsPoints",
+  "allowSharedPurchase",
+  "sharedPurchaseHandlingFee",
+  "sharedPurchaseExtraShippingPerDestination",
   "createdAt",
 ] as const;
 
@@ -193,6 +218,20 @@ export function toStoreListItem(
      */
     supportsShippingProtection: doc.supportsShippingProtection ?? false,
     supportsSaleProtection: doc.supportsSaleProtection ?? false,
+    /*
+     * Same `?? false` rule for the same reason — a definite "not offered"
+     * rather than an `undefined` a truthiness test reads as neither.
+     *
+     * 🛑 The two FEES are passed through as `undefined` when unset, and that
+     * asymmetry is deliberate: a flag's absence means "no", but a fee's
+     * absence means "not configured", which is NOT the same as ₹0. Defaulting
+     * them to zero would quote a coordinator a free arrangement from a store
+     * that simply has not set a price.
+     */
+    allowSharedPurchase: doc.allowSharedPurchase ?? false,
+    sharedPurchaseHandlingFee: doc.sharedPurchaseHandlingFee,
+    sharedPurchaseExtraShippingPerDestination:
+      doc.sharedPurchaseExtraShippingPerDestination,
     createdAt: toIsoString(doc.createdAt),
   };
 }

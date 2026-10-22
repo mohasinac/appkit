@@ -842,6 +842,30 @@ export interface OrderDocument extends BaseDocument {
    */
   invoiceStoragePath?: string;
 
+  // ── Shared purchase, S5a (one payer, N destinations) ───────────────────────
+  /**
+   * The arrangement's fees, SNAPSHOTTED at checkout.
+   *
+   * 🛑 Snapshotted, not re-read. A coordinator commits against a quoted total;
+   * if the rates were read again at settle a seller could raise them
+   * afterwards and the coordinator would absorb it. The precedent is exact —
+   * the refund path reads `finalSale` from this document rather than the live
+   * product, "because re-reading the live product would let a seller flip the
+   * switch afterwards" — and D61 generalises it to every agreement with a gap
+   * between terms-agreed and money-taken.
+   *
+   * Absent on every ordinary single-destination order, which is almost all of
+   * them.
+   */
+  sharedPurchase?: {
+    /** Distinct destinations, including the first. Always ≥ 2 when present. */
+    destinationCount: number;
+    /** Flat per-arrangement fee, as charged. */
+    handlingFee: number;
+    /** Extra shipping for destinations beyond the first, as charged. */
+    extraShippingFee: number;
+  };
+
   // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
   emiEnabled?: boolean;
   /** Number of monthly installments the buyer chose (2–6). */

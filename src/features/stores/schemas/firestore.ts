@@ -318,6 +318,54 @@ export interface StoreDocument extends BaseDocument {
   acceptsPoints?: boolean;
 
   /**
+   * ── S5a: this store allows a SHARED PURCHASE (one payer, N destinations) ──
+   *
+   * The coordinator buys everything and assigns a destination per item, so the
+   * seller packs one order into several parcels. That is real extra work —
+   * picking, packing and labelling N shipments instead of one — which is why
+   * it is an opt-in with its own fees rather than a free platform behaviour.
+   *
+   * 🛑 **Absent means NOT allowed**, matching `supportsSaleProtection` and
+   * `acceptsPoints` above, and for the same reason: the cost falls on the
+   * seller, so enrolling them without asking is taking their labour. Every
+   * existing store therefore starts with it off, which is the correct state
+   * rather than a migration problem.
+   *
+   * 🛑 This is S5a ONLY — one payer. It is NOT the N-party flow (S5b), which
+   * needs multi-party payment, a coordinator deposit, an approval cascade, a
+   * stock-reservation primitive that does not exist, and per-buyer invoicing
+   * and GST. A seller enabling this is agreeing to split one paid order across
+   * destinations, not to be paid by several people.
+   */
+  allowSharedPurchase?: boolean;
+  /**
+   * Flat fee per shared-purchase arrangement, in decimal rupees.
+   *
+   * Covers picking, packing and labelling one order into N parcels. Borne by
+   * the COORDINATOR — they chose the arrangement — which keeps each
+   * destination's own cost to goods plus that destination's shipping.
+   *
+   * 🛑 SNAPSHOTTED onto the order at checkout, never re-read later. The
+   * precedent is exact: the refund path reads `finalSale` from the ORDER
+   * snapshot rather than the live product, because "re-reading the live
+   * product would let a seller flip the switch afterwards" (D61). A fee read
+   * late is the same hole.
+   */
+  sharedPurchaseHandlingFee?: number;
+  /**
+   * Extra shipping per destination BEYOND THE FIRST, in decimal rupees.
+   *
+   * The first destination is the shipping the order would have paid anyway;
+   * this is the marginal cost of each additional parcel. Borne by the buyer at
+   * that destination in the full N-party flow — in S5a there is one payer, so
+   * the coordinator pays all of it, which is correct because they are the
+   * person who asked for the extra legs.
+   *
+   * Snapshotted with the handling fee, for the same reason.
+   */
+  sharedPurchaseExtraShippingPerDestination?: number;
+
+  /**
    * ── C5g: ADMIN-GRANTED trust. Routes even a protected claim to the seller ──
    *
    * A sale-protection claim normally ships to our warehouse, because we are the

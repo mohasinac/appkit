@@ -27,6 +27,25 @@ export interface StoreListItem {
    */
   supportsShippingProtection: boolean;
   supportsSaleProtection: boolean;
+  /**
+   * S5a — this seller will split one paid order across several destinations.
+   *
+   * Not optional, for the same reason as the two above: the projection
+   * resolves absence to `false`, so the client never decides what `undefined`
+   * means.
+   */
+  allowSharedPurchase: boolean;
+  /**
+   * The two shared-purchase fees, in decimal rupees.
+   *
+   * 🛑 OPTIONAL here where `allowSharedPurchase` is not, and the asymmetry is
+   * the point: a flag's absence means "no", but a fee's absence means "not
+   * configured" — which is not ₹0. A client that defaulted these to zero would
+   * quote a free arrangement from a store that has simply not priced one, and
+   * the coordinator commits against that quote.
+   */
+  sharedPurchaseHandlingFee?: number;
+  sharedPurchaseExtraShippingPerDestination?: number;
   createdAt?: string;
 }
 

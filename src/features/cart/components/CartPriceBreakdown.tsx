@@ -41,6 +41,8 @@ export interface CartPriceBreakdownStore {
   /** D46/D47 + decision 22 — whether this seller accepts points, and how many. */
   acceptsPoints: boolean;
   pointsApplied: number;
+  /** S5a — handling + extra shipping legs for this store's order. */
+  sharedPurchaseFee: number;
 }
 
 /** Mirrors `CheckoutPricingPreview` without importing server code. */
@@ -56,6 +58,8 @@ export interface CartPriceBreakdownData {
   couponDiscount: number;
   platformFee: number;
   gstOnFee: number;
+  /** S5a — handling + extra shipping legs across the cart. */
+  sharedPurchaseFee: number;
   total: number;
   /** D46/D47 — points applied across every accepting store. */
   pointsApplied: number;
@@ -201,6 +205,22 @@ export function CartPriceBreakdown({
       */}
       {preview.emiSurcharge > 0 && (
         <Line label="EMI surcharge" amount={money(preview.emiSurcharge)} />
+      )}
+      {/*
+        S5a — named for what the buyer asked for, not for the mechanism.
+        "Split delivery" is what they chose; "shared-purchase handling fee plus
+        N−1 extra shipping legs" is how we price it, and a fee line that
+        describes our pricing model rather than their decision is one they
+        cannot check.
+      */}
+      {preview.sharedPurchaseFee > 0 && (
+        <Line
+          label={withStoreCount(
+            "Split delivery",
+            countCharged((s) => s.sharedPurchaseFee),
+          )}
+          amount={money(preview.sharedPurchaseFee)}
+        />
       )}
       {/* One commission on one transaction — never multiplied per store. */}
       {preview.platformFee > 0 && <Line label="Platform fee" amount={money(preview.platformFee)} />}

@@ -195,6 +195,26 @@ export interface CartItemDocument {
   chosenShippingProviderId?: string;
   /** Fee in decimal rupees for the chosen provider, snapshotted at cart time. */
   chosenShippingFee?: number;
+  /**
+   * ── S5a: which address THIS line ships to ────────────────────────────────
+   *
+   * One payer, N destinations. Absent means "the order's own shipping
+   * address", which is every cart that predates this and every ordinary
+   * single-destination order — so nothing changes for them.
+   *
+   * 🛑 An `addresses/{id}` REFERENCE, never a copied address. Copying would
+   * put a name, a phone number and a street address onto the cart document,
+   * which is a PII store with no encryption, no `*_PII_FIELDS` entry and no
+   * retention story — and carts are swept by a TTL job that is not written to
+   * handle personal data. The id resolves server-side at checkout, where the
+   * address is already being read and decrypted.
+   *
+   * 🛑 It must belong to the BUYER. An arbitrary `addresses` id would let a
+   * caller address a parcel to any stored address on the platform, which is
+   * both a delivery hijack and a way to read whether an id exists. Checked
+   * server-side at the write, not trusted from the client.
+   */
+  destinationAddressId?: string;
   addedAt: Date;
   updatedAt: Date;
 }
