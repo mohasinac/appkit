@@ -236,6 +236,53 @@ function PaginatedSelectError({ id, error }: { id: string; error: ReactNode }) {
   );
 }
 
+/**
+ * The selected-values row, multi-select only.
+ *
+ * Its own component because `PaginatedSelect` sits against
+ * `audit-code-quality`'s size limit, and this block needs none of the
+ * control's twelve state variables — only what it is handed.
+ */
+function PaginatedSelectChips<V>({
+  chips,
+  labelFor,
+  overflowCount,
+  disabled,
+  onRemove,
+}: {
+  chips: readonly V[];
+  labelFor: (value: V) => string;
+  overflowCount: number;
+  disabled?: boolean;
+  onRemove: (value: V) => void;
+}) {
+  return (
+    <div className={C.chips}>
+      {chips.map((v) => (
+        <span key={String(v)} className={C.chip}>
+          <span className={C.chipLabel}>{labelFor(v)}</span>
+          {!disabled && (
+            <button
+              type="button"
+              aria-label="Remove"
+              className={C.chipRemove}
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(v);
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </span>
+      ))}
+      {overflowCount > 0 && (
+        <span className={C.overflowChip}>+{overflowCount} more</span>
+      )}
+    </div>
+  );
+}
+
 export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const {
     options,
@@ -567,33 +614,14 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         ref={containerRef}
         className={[C.root, className].filter(Boolean).join(" ")}
       >
-        {/* chips row (multi only) */}
         {isMulti && multiValue.length > 0 && (
-          <div className={C.chips}>
-            {visibleChips.map((v) => (
-              <span key={String(v)} className={C.chip}>
-                <span className={C.chipLabel}>
-                  {labelMap.current.get(v) ?? String(v)}
-                </span>
-                {!disabled && (
-                  <button
-                    type="button"
-                    aria-label="Remove"
-                    className={C.chipRemove}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeChip(v);
-                    }}
-                  >
-                    ✕
-                  </button>
-                )}
-              </span>
-            ))}
-            {overflowCount > 0 && (
-              <span className={C.overflowChip}>+{overflowCount} more</span>
-            )}
-          </div>
+          <PaginatedSelectChips
+            chips={visibleChips}
+            labelFor={(v) => labelMap.current.get(v) ?? String(v)}
+            overflowCount={overflowCount}
+            disabled={disabled}
+            onRemove={removeChip}
+          />
         )}
 
         {/* trigger */}
