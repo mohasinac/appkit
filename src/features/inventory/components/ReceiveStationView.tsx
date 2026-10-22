@@ -149,19 +149,6 @@ export function ReceiveStationView({
    */
   const rowsRef = useRef<Record<string, StagedRow>>({});
 
-  /**
-   * A copy of `rows` without one key.
-   *
-   * Named rather than inlined in the Remove button's `onClick`: inline it was
-   * a three-statement block five braces deep inside the table JSX, where the
-   * `delete` is easy to miss.
-   */
-  function withoutKey<T>(rows: Record<string, T>, key: string): Record<string, T> {
-    const next = { ...rows };
-    delete next[key];
-    return next;
-  }
-
   /** Mutates the authoritative table and schedules the render. */
   function applyRows(
     next: (current: Record<string, StagedRow>) => Record<string, StagedRow>,
@@ -170,6 +157,24 @@ export function ReceiveStationView({
     rowsRef.current = computed;
     setRows(computed);
   }
+
+  /**
+   * Drop one staged row. Named rather than inline in the table's Remove
+   * button, where the updater's block body sat a brace too deep.
+   */
+  function removeRow(key: string): void {
+    applyRows((c) => {
+      const next = { ...c };
+      delete next[key];
+      return next;
+    });
+  }
+
+  /** Set one staged row's quantity. Same reason as `removeRow`. */
+  function setRowQuantity(key: string, quantity: number): void {
+    applyRows((c) => ({ ...c, [key]: { ...c[key]!, quantity } }));
+  }
+
   const [scan, setScan] = useState("");
   const [committing, setCommitting] = useState(false);
   /** The in-flight guard. State renders the spinner; this prevents the second send. */
@@ -711,18 +716,13 @@ export function ReceiveStationView({
                           // Many steppers on one page, so a bare "Quantity"
                           // names none of them.
                           ariaLabel={`Quantity of ${r.productTitle} for ${r.boxCode}`}
-                          onChange={(n) =>
-                            applyRows((c) => ({
-                              ...c,
-                              [key]: { ...c[key]!, quantity: n },
-                            }))
-                          }
+                          onChange={(n) => setRowQuantity(key, n)}
                         />
                       </Td>
                       <Td>
                         <Button
                           variant="ghost"
-                          onClick={() => applyRows((c) => withoutKey(c, key))}
+                          onClick={() => removeRow(key)}
                         >
                           Remove
                         </Button>

@@ -62,55 +62,49 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
   const [location, setLocation] = React.useState("");
   const [busy, setBusy] = React.useState(false);
 
-  /**
-   * Create the box.
-   *
-   * Named rather than an inline `onClick`: inline, every statement in it
-   * sat five braces deep inside the JSX, including the `apiClient.post`
-   * payload and the error branch whose comment below is the whole reason
-   * this catch is worth reading.
+  /*
+   * Lifted out of the submit button's `onClick`, where it sat five braces deep
+   * inside the render-prop's JSX. The two `<Form>` helpers arrive as arguments
+   * rather than being captured, which is what lets this live in the component
+   * body beside the state it writes.
    */
-  async function handleRegisterBox(helpers: {
-    clearErrors: () => void;
-    setFieldError: (field: string, message: string) => void;
-  }) {
-    const { clearErrors, setFieldError } = helpers;
-      clearErrors();
-      if (!code.trim()) {
-        setFieldError("code", "A box needs a code");
-        return;
-      }
-      setBusy(true);
-      try {
-        // Built outside the call: inline, the payload literal sat
-        // five braces deep inside the JSX `onClick`.
-        const payload = {
-          code: code.trim(),
-          boxType,
-          ...(location.trim() ? { location: location.trim() } : {}),
-        };
-        await apiClient.post(ADMIN_ENDPOINTS.INVENTORY_BOXES, payload);
-        onCreated();
-      } catch (err) {
-        /*
-         * 🛑 `operatorMessage`, not a raw fallback. This read
-         * `toUserMessage(undefined, undefined, { fallback: e.message })`
-         * under a comment claiming it never showed server text —
-         * which is false twice over: `undefined` for the code means
-         * the map never runs, so the fallback is ALWAYS what shows.
-         * A comment asserting the fix while the code reintroduces the
-         * bug is how Root Cause #86 would come back, and how the seed
-         * `listingType` bug survived its own fix one field over.
-         *
-         * The split is on status: the 409 here ("Box AC60-03 already
-         * exists") is authored for this operator and must survive; a
-         * 5xx terminates in a constant.
-         */
-        setFieldError("code", operatorMessage(normalizeError(err)));
-      } finally {
-        setBusy(false);
-      }
-  }
+  const submitBox = async (
+    setFieldError: (field: string, message: string) => void,
+    clearErrors: () => void,
+  ) => {
+    clearErrors();
+    if (!code.trim()) {
+      setFieldError("code", "A box needs a code");
+      return;
+    }
+    setBusy(true);
+    try {
+      await apiClient.post(ADMIN_ENDPOINTS.INVENTORY_BOXES, {
+        code: code.trim(),
+        boxType,
+        ...(location.trim() ? { location: location.trim() } : {}),
+      });
+      onCreated();
+    } catch (err) {
+      /*
+       * 🛑 `operatorMessage`, not a raw fallback. This read
+       * `toUserMessage(undefined, undefined, { fallback: e.message })`
+       * under a comment claiming it never showed server text — which is
+       * false twice over: `undefined` for the code means the map never
+       * runs, so the fallback is ALWAYS what shows. A comment asserting
+       * the fix while the code reintroduces the bug is how Root Cause #86
+       * would come back, and how the seed `listingType` bug survived its
+       * own fix one field over.
+       *
+       * The split is on status: the 409 here ("Box AC60-03 already
+       * exists") is authored for this operator and must survive; a 5xx
+       * terminates in a constant.
+       */
+      setFieldError("code", operatorMessage(normalizeError(err)));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <Form onSubmit={(e) => e.preventDefault()} className="space-y-4">
@@ -148,7 +142,7 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
               type="submit"
               variant="primary"
               isLoading={busy}
-              onClick={() => handleRegisterBox({ clearErrors, setFieldError })}
+              onClick={() => submitBox(setFieldError, clearErrors)}
             >
               Register box
             </Button>
