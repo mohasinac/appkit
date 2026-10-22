@@ -58,19 +58,11 @@ export const PUBLIC_STORE_FIELDS = [
   "supportsShippingProtection",
   "supportsSaleProtection",
   /*
-   * ── D46/D47 + S5a — four more public store flags, same argument ───────────
+   * ── D46/D47 + S5a — three more public store flags, same argument ──────────
    *
-   * 🛑 `acceptsPoints` was ADDED to the schema without being triaged here,
-   * which `audit-public-projection-parity` is strict-zero on — an untriaged
-   * field fails the build, and rightly: the default for a new store field is
-   * PRIVATE, and a field nobody classified is a field nobody decided about
-   * (Root Cause #70, where five undeclared fields went out to anonymous
-   * callers precisely because no interface declared them).
-   *
-   * All four are PUBLIC and each for the tri-state reason the two protection
-   * flags above are: the cart has to show a buyer whether their points can be
-   * used HERE, and whether this seller will split an order across addresses,
-   * BEFORE they commit. Withholding either makes "has not opted in"
+   * PUBLIC for the tri-state reason the two protection flags above are: the
+   * buyer has to know whether this seller will split an order across
+   * addresses BEFORE they commit, and withholding it makes "has not opted in"
    * indistinguishable from "we did not tell you".
    *
    * The two shared-purchase FEES are public for a stronger reason still: a
@@ -78,7 +70,6 @@ export const PUBLIC_STORE_FIELDS = [
    * shipping legs discovered after they committed is exactly the surprise the
    * arrangement makes expensive.
    */
-  "acceptsPoints",
   "allowSharedPurchase",
   "sharedPurchaseHandlingFee",
   "sharedPurchaseExtraShippingPerDestination",
@@ -87,6 +78,28 @@ export const PUBLIC_STORE_FIELDS = [
 
 /** Everything else, with the reason it stays server-side. */
 export const PRIVATE_STORE_FIELDS = [
+  /*
+   * 🛑 PRIVATE, and it was briefly classified PUBLIC on a mistaken argument
+   * worth recording so nobody re-makes it.
+   *
+   * The argument was "the cart has to show a buyer whether their points can be
+   * used HERE before they commit" — which is true, and is NOT a reason for
+   * this projection to carry the field. Measured: the cart reads
+   * `pricingPreview.stores[].acceptsPoints`, produced by the checkout pricing
+   * preview (checkout/actions.ts:2980), and the only client readers are
+   * `CartPriceBreakdown.tsx:317` and `CartRouteClient.tsx:1282`, both off that
+   * preview. Neither touches `toStoreListItem` / `toStoreDetail`.
+   *
+   * So the store projection has no reader, and the rule for this file is
+   * explicit: a field moves to PUBLIC only once you can NAME the client that
+   * reads it from this payload. "A different payload needs it" is not that.
+   *
+   * A store page could legitimately advertise "accepts points" one day. When a
+   * reader exists, move it and add it to both builders — the omission is what
+   * `audit-public-projection-parity` caught here (declared PUBLIC, emitted by
+   * nothing), which is the half-migrated state that reads as done.
+   */
+  "acceptsPoints",
   // Internal search index, not content. It is a normalized re-encoding of
   // storeName/description/category — publishing it would leak nothing new, but
   // it has no client reader and would bloat every store payload with a few
