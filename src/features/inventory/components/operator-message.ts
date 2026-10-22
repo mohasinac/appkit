@@ -29,10 +29,20 @@
 
 import { toUserMessage } from "../../../errors/error-display-map";
 
+/*
+ * The three fields this reads, TYPED rather than `unknown`.
+ *
+ * They were `unknown`, which narrows the object and leaves every field
+ * unchecked — so `status >= 400` below compared against nothing, and
+ * audit-unknown-leakage reported all three. Each one has exactly one real
+ * shape: an HTTP status is a number, an error code and a message are strings.
+ * Both `ApiError` and the api/app branches of `NormalizedError` match this,
+ * which is what every caller now passes.
+ */
 interface MaybeApiError {
-  status?: unknown;
-  code?: unknown;
-  message?: unknown;
+  status?: number;
+  code?: string;
+  message?: string;
 }
 
 export function operatorMessage(

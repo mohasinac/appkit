@@ -40,7 +40,12 @@ import {
 } from "../../../../features/gateway-events/schemas/firestore";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { orderRepository } from "../../../../features/orders/repository/orders.repository";
-import { REFUND_CLAIMS_COLLECTION } from "../../../../features/orders/schemas/firestore";
+import {
+  REFUND_CLAIMS_COLLECTION,
+  REFUND_CLAIM_FIELDS,
+  ORDER_COLLECTION,
+} from "../../../../features/orders/schemas/firestore";
+import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { reconcileDisputes } from "../../features/payment-cases/disputes";
 import {
   refundableBase,
@@ -397,8 +402,8 @@ async function reconcileStaleRefundClaims(
   try {
     const snap = await ctx.db
       .collection(REFUND_CLAIMS_COLLECTION)
-      .where("state", "==", "claimed")
-      .where("claimedAt", "<", cutoff)
+      .where(REFUND_CLAIM_FIELDS.STATE, "==", "claimed")
+      .where(REFUND_CLAIM_FIELDS.CLAIMED_AT, "<", cutoff)
       .limit(50)
       .get();
 
@@ -489,9 +494,9 @@ async function reconcileUnpaidCancellations(
 
   try {
     const snap = await ctx.db
-      .collection("orders")
-      .where("status", "==", "cancelled")
-      .where("refundStatus", "==", "pending")
+      .collection(ORDER_COLLECTION)
+      .where(ORDER_FIELDS.STATUS, "==", "cancelled")
+      .where(ORDER_FIELDS.REFUND_STATUS, "==", "pending")
       .limit(100)
       .get();
 

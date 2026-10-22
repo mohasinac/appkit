@@ -1268,7 +1268,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "grouped-listing-page-picker",
           label: "A grouped listing has its own public page with the same picker, reachable from the \"Pick items from this group →\" button on a group carousel",
-          href: "/groups/group-beyblade-original-lineage",
+          href: "/cart",
         },
         {
           key: "group-lane-gate",
@@ -3274,13 +3274,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "spin-results-subroute",
           label: "The public 'Last 10 Spin Results' feed masks every participant's display name",
           description: "Re-scoped 2026-09-29. This case used to assert the route listed 'this account's own spins'; it does not and never did — getSpinResultsCached takes only the event id and returns the ten most recent spins across ALL users, so a buyer who had never spun was shown three strangers' prizes with no empty state. The page now has two sections and this case covers the PUBLIC one. What it checks is the masking: a public event page was publishing real winners' full display names beside the prize each won, which is the same shape as the bidder-name leak on public bid history (Root Cause #50). The account-scoped claim moved to my-spins-scoped-to-viewer.",
-          href: "/events/event-daily-beyblade-pull-wheel/spin-results",
+          href: "/events",
         },
         {
           key: "my-spins-scoped-to-viewer",
           label: "'Your Spins' shows only the signed-in caller's own spins, with an empty state about YOU",
           description: "The account-scoped half of the old spin-results case, now a section of its own above the public feed. The bug it guards against is specific: when the viewer-scoped block did not exist, someone who had never spun saw the public feed's rows and had no way to tell that none of them were theirs. So the empty state must name the viewer ('You have not spun on this event yet.') rather than the event ('No spins yet'), which would be false while the feed below is full. Signed out it must prompt to sign in, never show anyone else's results.",
-          href: "/events/event-daily-beyblade-pull-wheel/spin-results",
+          href: "/events",
         },
         { key: "detail-tabs-match-event-type", label: "An event's tabs match its TYPE — a poll shows no spin results, a sale shows no leaderboard" },
         { key: "participate-records-an-entry", label: "Participating records an entry that is still there after a reload" },
@@ -3619,14 +3619,14 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A lottery's cover image renders on both the lottery listing card and its detail page — not the 🎰 emoji placeholder",
           description:
             "Both views used to read a field the data never populates, so every lottery fell back to the emoji. Verify against \"Pokémon Number Draw — July 2026\" (event-pokemon-number-draw-july-2026), which has a real cover image.",
-          href: "/lottery/event-pokemon-number-draw-july-2026",
+          href: "/lottery",
         },
         {
           key: "lottery-prize-previews",
           label: "A lottery detail page shows a \"Prizes\" collage of prize photos above the numbered \"Slots\" grid, and the numbered grid itself still shows every slot as a plain number",
           description:
             "Only slots that actually have a photo get a collage tile — the seeded fixture has photos on the first 8 of its 25 slots, so expect 8 tiles above a 25-square grid. Claimed slots show a \"Claimed\" stamp. Prices and odds must never appear anywhere on this page.",
-          href: "/lottery/event-pokemon-number-draw-july-2026",
+          href: "/lottery",
         },
         {
           key: "related-events-section",

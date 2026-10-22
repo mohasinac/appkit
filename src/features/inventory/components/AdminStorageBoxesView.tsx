@@ -52,6 +52,10 @@ const TYPE_OPTIONS = BoxTypeValues.map((v) => ({ value: v, label: v }));
  * Exported because it is a PAGE now, not a drawer — see the note on
  * `primaryAction` below for why create could not share the row affordance.
  */
+// audit-form-sectionised-ok: a three-field quick create (code, type, location),
+// not a multi-section editor. <SectionForm> derives its sections from a schema
+// and pins a mobile action bar for a long scroll; neither has anything to do
+// here, and sections of one field each would be chrome around three inputs.
 export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
   const [code, setCode] = React.useState("");
   const [boxType, setBoxType] = React.useState<string>(BoxTypeValues[0]);

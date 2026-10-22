@@ -1,6 +1,7 @@
 import type { DocumentReference } from "firebase-admin/firestore";
 import { BaseRepository, prepareForFirestore } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring";
 import {
   OBLIGATIONS_COLLECTION,
   OBLIGATION_ACTIVE_STATES,
@@ -174,7 +175,15 @@ export class ObligationsRepository extends BaseRepository<ObligationDocument> {
           updatedAt: at,
         });
     } catch (err) {
-      void normalizeError(err);
+      /*
+       * Best effort, but RECORDED. `void normalizeError(err)` alone types the
+       * error and reports it nowhere — as silent as `catch {}` while looking
+       * handled, which is what audit-silent-degrade calls normalize theatre.
+       * Swallowing is still correct here (a warning marker is a derived hint; the next order write reconciles again); losing the reason is not.
+       */
+      serverLogger.warn("obligations.warn failed", {
+        error: normalizeError(err).message,
+      });
     }
   }
 

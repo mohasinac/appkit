@@ -268,7 +268,15 @@ export async function getMyProtectionClaimsAction(): Promise<
 export async function canClaimProtection(
   order: Parameters<typeof deadlinesFor>[0],
   kind: "shipping" | "sale",
-): Promise<{ can: boolean; reason?: string }> {
+): Promise<ActionResult<{ can: boolean; reason?: string }>> {
+  /*
+   * 🛑 Wrapped, because this file is `"use server"` — which makes EVERY export
+   * in it a client-callable RPC endpoint, read-only predicate included. So it
+   * owes the same uniform envelope as its sibling mutations: a caller cannot
+   * tell a thrown repository error from a `{can:false}` verdict otherwise, and
+   * "the claim window is closed" and "the lookup failed" are opposite answers.
+   */
+  return wrapAction(async () => {
   const feePaid = kind === "shipping" ? order.shipmentProtectionFee : order.saleProtectionFee;
   if (!feePaid || feePaid <= 0) return { can: false, reason: "not-covered" };
 
@@ -283,4 +291,5 @@ export async function canClaimProtection(
     return { can: false, reason: "window-closed" };
   }
   return { can: true };
+  });
 }
