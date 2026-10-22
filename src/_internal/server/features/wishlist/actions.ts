@@ -1,7 +1,18 @@
 "use server";
 import { normalizeError } from "../../../../errors/normalize";
 
-import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
+/*
+ * 🛑 From the DEFINING module, never "@mohasinac/appkit/server".
+ *
+ * appkit importing its own public server barrel is a self-reference that drags
+ * the whole server surface in behind it — `dist/server.js` reaches next/og,
+ * next/navigation, next/headers and driver.js. Twenty `actions.ts` files did
+ * this for two symbols, and because `obligationSweep` reaches one of them, the
+ * Firebase Functions tsup bundle (noExternal: appkit) had to resolve Next:
+ * it failed on two `react-server-dom-webpack/*` requires and two @vercel/og
+ * .wasm files, naming none of the responsible files. Root Cause #18.
+ */
+import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import {
   wishlistRepository,

@@ -19,11 +19,20 @@
 import {
   BaseRepository,
   parseSieveDateValue,
+  applySieveToFirestore,
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
 import { generateStorageBoxId } from "../../../utils/id-generators";
 import { buildStorageBoxSearchTxt } from "../../../utils/search-txt-builders";
+// The shared three — hand-writing them is how ten repositories each ended up
+// with two of the three, which reads as a working multi-word search and
+// silently cannot reach page 2.
+import {
+  planSearchTxt,
+  beginSearchWindow,
+  emptySearchResult,
+} from "../../../utils/search-txt-query";
 import {
   BoxStatusValues,
   BoxTypeValues,
@@ -138,12 +147,48 @@ export class StorageBoxesRepository extends BaseRepository<StorageBoxDocument> {
 
   async listForAdmin(
     model: SieveModel,
+    opts?: { search?: string },
   ): Promise<FirebaseSieveResult<StorageBoxDocument>> {
-    return this.sieveQuery<StorageBoxDocument>(
-      model,
-      StorageBoxesRepository.SIEVE_FIELDS,
-      { defaultPageSize: 25, maxPageSize: 50 },
-    );
+    /*
+     * 🛑 `searchTxt` HAD NO READER. `buildStorageBoxSearchTxt` wrote tokens on
+     * every create and update, `SIEVE_FIELDS` listed the field as filterable,
+     * and `AdminStorageBoxesView` rendered a search box promising "Search by
+     * code or location" — and this method ignored the term entirely. Typing in
+     * it returned the unfiltered list with a 200, which reads as "no box
+     * matches that" only if you already know the box exists.
+     *
+     * Same two-part shape as the other migrated collections: `plan.head` is
+     * one `array-contains` on the longest term, `plan.rest` is AND-refined in
+     * memory. Via `planSearchTxt` for the `empty` guard — a query that
+     * normalises to no usable token must return NOTHING, because emitting no
+     * clause returns the whole collection and calls it a search result.
+     */
+    const plan = planSearchTxt(opts?.search);
+    if (plan.empty) return emptySearchResult<StorageBoxDocument>();
+
+    if (!plan.head) {
+      return this.sieveQuery<StorageBoxDocument>(
+        model,
+        StorageBoxesRepository.SIEVE_FIELDS,
+        { defaultPageSize: 25, maxPageSize: 50 },
+      );
+    }
+
+    const baseQuery = this.getCollection().where(
+      STORAGE_BOX_FIELDS.SEARCH_TXT,
+      "array-contains",
+      plan.head,
+    ) as FirebaseFirestore.Query;
+
+    const win = beginSearchWindow(model, plan);
+    const result = await applySieveToFirestore<StorageBoxDocument>({
+      baseQuery,
+      model: win.model,
+      options: { maxPageSize: win.maxPageSize(100) },
+      fields: StorageBoxesRepository.SIEVE_FIELDS,
+      mapDoc: (snap) => this.mapDoc<StorageBoxDocument>(snap),
+    });
+    return win.finish(result);
   }
 
   /** Every Timestamp field carries `parseSieveDateValue` — Root Cause #47. */
