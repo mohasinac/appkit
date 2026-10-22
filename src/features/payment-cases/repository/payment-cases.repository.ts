@@ -1,3 +1,5 @@
+// One shared predicate — this file had its own copy; see firestore-codes.ts.
+import { isAlreadyExistsError } from "../../../errors/firestore-codes";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type {
   FirebaseSieveFields,
@@ -26,17 +28,6 @@ import {
 } from "../schemas/firestore";
 
 /** gRPC `ALREADY_EXISTS` — the one `.create()` failure meaning "we have it". */
-const GRPC_ALREADY_EXISTS = 6;
-
-function isAlreadyExists(err: unknown): boolean {
-  if (typeof err !== "object" || err === null) return false;
-  const code = (err as { code?: unknown }).code;
-  if (code === GRPC_ALREADY_EXISTS) return true;
-  if (code === "already-exists" || code === "ALREADY_EXISTS") return true;
-  const message = (err as { message?: unknown }).message;
-  return typeof message === "string" && message.includes("ALREADY_EXISTS");
-}
-
 export interface OpenCaseInput {
   kind: PaymentCaseKind;
   /** Identifies THE PROBLEM, not the observation — see `createPaymentCaseId`. */
@@ -162,7 +153,7 @@ export class PaymentCasesRepository extends BaseRepository<PaymentCaseDocument> 
       await ref.create(prepareForFirestore(doc));
       return { id, created: true };
     } catch (err) {
-      if (!isAlreadyExists(err)) {
+      if (!isAlreadyExistsError(err)) {
         void normalizeError(err);
         throw err;
       }

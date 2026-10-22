@@ -972,7 +972,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     await this.db.runTransaction(async (tx) => {
       const snap = (await tx.get(docRef as never)) as unknown as {
         exists?: boolean;
-        data?: () => Record<string, unknown> | undefined;
+        data?: () => FirestoreDocument | undefined;
       };
       const data = typeof snap?.data === "function" ? snap.data() : undefined;
       if (!data) throw new NotFoundError(`Order ${orderId} not found`);

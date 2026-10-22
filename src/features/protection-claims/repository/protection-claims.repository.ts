@@ -1,3 +1,5 @@
+// One shared predicate — this file had its own copy; see firestore-codes.ts.
+import { isAlreadyExistsError } from "../../../errors/firestore-codes";
 import { BaseRepository, prepareForFirestore } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
 import { buildHistoryEntry } from "../../../_internal/shared/history/history";
@@ -17,17 +19,6 @@ import type {
   ClaimOutcome,
   ProtectionKind,
 } from "../../../_internal/shared/features/shipping/protections";
-
-const GRPC_ALREADY_EXISTS = 6;
-
-function isAlreadyExists(err: unknown): boolean {
-  if (typeof err !== "object" || err === null) return false;
-  const code = (err as { code?: unknown }).code;
-  if (code === GRPC_ALREADY_EXISTS) return true;
-  if (code === "already-exists" || code === "ALREADY_EXISTS") return true;
-  const message = (err as { message?: unknown }).message;
-  return typeof message === "string" && message.includes("ALREADY_EXISTS");
-}
 
 export interface FileClaimInput {
   kind: ProtectionKind;
@@ -94,7 +85,7 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
       await this.getCollection().doc(id).create(prepareForFirestore(doc));
       return doc;
     } catch (err) {
-      if (isAlreadyExists(err)) {
+      if (isAlreadyExistsError(err)) {
         void normalizeError(err);
         throw new ConflictError(
           `A ${input.kind} protection claim is already open on this order. Add to that claim rather than filing a second one.`,

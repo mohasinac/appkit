@@ -516,7 +516,9 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
    */
   const rowEditLabel = React.useCallback(
     (row: TRow): string => {
-      const primary = (row as { primary?: unknown }).primary;
+      // `string | undefined`, not `unknown`: a row primary is a label or it
+      // is absent, and the `typeof` test below is a real narrowing either way.
+      const primary = (row as { primary?: string }).primary;
       const name =
         typeof primary === "string" && primary.trim() ? primary.trim() : row.id;
       return `${ROW_ACTION_META[ROW_ACTION_ID.EDIT].label} ${name}`;

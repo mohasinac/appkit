@@ -32,6 +32,7 @@
  * @tag sideEffects:firestore
  */
 
+import type { FirestoreDocument } from "../../../schemas/types";
 import type { Transaction } from "firebase-admin/firestore";
 import {
   BaseRepository,
@@ -425,7 +426,7 @@ export class InventoryPlacementsRepository extends BaseRepository<InventoryPlace
    */
   private appendMovement(
     tx: Transaction,
-    row: Record<string, unknown>,
+    row: FirestoreDocument,
   ): void {
     const ref = this.db.collection(INVENTORY_MOVEMENTS_COLLECTION).doc();
     tx.set(ref, { ...row, createdAt: new Date(), updatedAt: new Date() });
