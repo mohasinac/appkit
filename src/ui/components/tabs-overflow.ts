@@ -33,9 +33,16 @@ export interface TabsOverflowApi extends TabsOverflowState {
 }
 
 /**
- * Slack used by the hysteresis rule below, in px. Matches
- * 2 x --appkit-tabs-arrow-size (2rem) — the width the two in-flow arrows
- * reclaim from the list when they unmount.
+ * Slack used by the hysteresis rule below, in px. Nominally
+ * 2 x --appkit-tabs-arrow-size (2rem), the width of the two in-flow arrows.
+ *
+ * 🛑 It is a SAFETY MARGIN, not a measurement, and the distinction is what
+ * this file got wrong badly enough to crash production. The arrows are not
+ * the only thing `data-arrows="true"` changes — it also hides the list's
+ * scrollbar — so the real width reclaimed on unmount is this number minus the
+ * platform scrollbar, and on a machine with overlay scrollbars it is this
+ * number exactly. The rule below is written to be stable for every value in
+ * that range rather than assuming one of them.
  */
 const ARROW_SLACK_PX = 64;
 
@@ -73,19 +80,65 @@ export function useTabsOverflow(
     const previous = stateRef.current.hasArrows;
 
     /*
-     * 🛑 HYSTERESIS — do not collapse this to a single threshold.
+     * 🛑 HYSTERESIS — do not collapse this to a single threshold, and do not
+     * "tidy" the negative one below back to a positive number.
      *
      * The arrows are IN-FLOW, so mounting them shrinks the list's clientWidth
-     * by ~ARROW_SLACK_PX, which INCREASES the measured overflow. With one
-     * threshold a strip 10px wider than its container oscillates forever:
-     *   hidden -> overflow 10 -> show -> overflow 74 -> still overflowing
-     *   -> ... -> hide -> overflow -54 -> hide -> widen -> overflow 10 -> show
+     * and INCREASES the measured overflow. With one threshold a strip 10px
+     * wider than its container oscillates forever.
      *
-     * Once the arrows are up they may only come down if the content would
+     * ## 🛑 THE PREVIOUS RULE WAS `overflow > ARROW_SLACK_PX` AND IT CRASHED
+     * ## EVERY STORE PAGE IN PRODUCTION WITH React #185 (max update depth).
+     *
+     * Its stability proof — "they may only come down if the content would
      * STILL fit after reclaiming their width, which by construction leaves
-     * overflow <= 0 afterwards. That makes the rule provably stable.
+     * overflow <= 0" — rests on mounting the arrows changing the measured
+     * overflow by EXACTLY `ARROW_SLACK_PX`. That is true of the arrows alone
+     * and FALSE of the net effect, because of a rule 100 lines away in
+     * `Tabs.style.css`:
+     *
+     *     .appkit-tabs-shell[data-arrows="true"] .appkit-tabs-list {
+     *       scrollbar-width: none;
+     *     }
+     *     …__arrow is 2rem; …-list::-webkit-scrollbar { display: none }
+     *
+     * The same `data-arrows="true"` that mounts the arrows also HIDES the
+     * scrollbar, handing the list back ~15px of clientWidth. So the net
+     * reclaimed width is ~49px, not 64 — and for any strip overflowing by
+     * 2..15px the two thresholds each imply the other:
+     *
+     *   hidden, overflow 10  -> 10 > 1    -> SHOW
+     *   shown,  overflow 59  -> 59 > 64?  -> no -> HIDE
+     *   hidden, overflow 10  -> …forever
+     *
+     * `useLayoutEffect` below runs on every render by design, so the loop is
+     * unbounded and React tears the tree down. The `sameState` guard cannot
+     * help: the state genuinely differs each pass.
+     *
+     * ## The rule now, stable for ANY reclaimed width
+     *
+     * Let r = whatever mounting the arrows adds to `overflow` (unknown, and
+     * provably NOT a constant — it depends on CSS this file cannot see, the
+     * platform's scrollbar width, and whether the user has overlay
+     * scrollbars). All we know is 0 <= r.
+     *
+     *   show:  hidden AND overflow >  EPSILON
+     *   hide:  shown  AND overflow <= -ARROW_SLACK_PX
+     *
+     * After SHOWING:  overflow' = overflow + r > EPSILON >= -ARROW_SLACK_PX,
+     *                 so the hide test cannot fire. No loop.
+     * After HIDING:   overflow' = overflow - r <= -ARROW_SLACK_PX <= EPSILON,
+     *                 so the show test cannot fire. No loop.
+     *
+     * Stable for every r >= 0, which is the point: the previous rule was
+     * stable only for one exact value of r that nothing enforced.
+     *
+     * The cost is deliberate conservatism — once up, the arrows stay up until
+     * the strip has a full ARROW_SLACK_PX of genuine slack. An arrow that
+     * lingers on a strip that just fits is a cosmetic blemish; the thing it
+     * replaces is a white screen.
      */
-    const hasArrows = previous ? overflow > ARROW_SLACK_PX : overflow > EPSILON;
+    const hasArrows = previous ? overflow > -ARROW_SLACK_PX : overflow > EPSILON;
 
     const max = el.scrollWidth - el.clientWidth;
     // Math.abs: scrollLeft is negative (or inverted) in RTL depending on engine.
