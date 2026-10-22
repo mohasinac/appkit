@@ -984,13 +984,13 @@ export { NotFoundError } from "./errors/index";
 export { ValidationError } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // handleApiError - Model for handle api error.
-export { handleApiError } from "./errors/index";
+export { handleApiError } from "./errors/error-handler";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // isAppError - Model for is app error.
-export { isAppError } from "./errors/index";
+export { isAppError } from "./errors/error-handler";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // logError - Helper for log error.
-export { logError } from "./errors/index";
+export { logError } from "./errors/error-handler";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ErrorCode - Type contract for error code.
 export type { ErrorCode } from "./errors/index";

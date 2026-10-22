@@ -43,7 +43,17 @@ import {
   type ObligationKind,
 } from "../../../features/obligations/schemas/firestore";
 import type { OrderDocument } from "../../../features/orders/schemas/firestore";
-import { windowMinutes } from "../../../features/tester/seed-data/tester-window";
+/*
+ * 🛑 From _internal/shared/tester, NOT features/tester/seed-data.
+ *
+ * appkit/package.json excludes "!dist/features/tester/seed-data" from the
+ * published tarball, so this production module importing from there left the
+ * package with a DANGLING import: it resolved locally (the dir exists in a
+ * local build) and broke the consumer Turbopack build, which installs the
+ * tarball — "Module not found: tester-window.js". Nothing in appkit could see
+ * it; only a real deploy could.
+ */
+import { windowMinutes } from "../tester/window";
 
 /**
  * How much a test fixture's deadlines are compressed.

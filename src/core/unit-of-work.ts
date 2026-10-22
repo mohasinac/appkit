@@ -19,7 +19,21 @@ import type {
 // db-firebase reaches firebase-admin only through `import type` plus its own
 // bare-specifier runtime requires. See CLAUDE.md Root Cause #24.
 import { getAdminDb } from "../providers/db-firebase";
-import { DatabaseError } from "../errors";
+/*
+ * 🛑 From `errors/database-error`, NEVER the `../errors` barrel.
+ *
+ * That barrel re-exports `error-handler`, which does
+ * `import { NextResponse } from "next/server.js"` — and its own comment above
+ * that line says "only import in server/API-route contexts". This module is
+ * reachable from the Firebase Functions entry
+ * (`jobs.js → repositories → unit-of-work`), so the barrel dragged Next's
+ * whole server runtime into the tsup bundle. It failed with four errors that
+ * name neither this file nor the barrel: two unresolved
+ * `react-server-dom-webpack/*` requires and two `.wasm` files from
+ * `@vercel/og`. Nothing in appkit's own typecheck can see it; only
+ * `npm --prefix functions run build` can. Root Cause #18.
+ */
+import { DatabaseError } from "../errors/database-error";
 
 import {
   userRepository,
