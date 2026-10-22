@@ -22,6 +22,7 @@ import type { JobContext } from "../runtime/types";
 import type { JsonValue } from "@mohasinac/appkit";
 import { allocateShipmentCosts, type LotAllocationInput } from "../../../../features/shipments/utils/cost-allocation";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
+import { safeRead } from "../../../../errors/safe-read";
 
 type Doc = Record<string, JsonValue>;
 
@@ -126,10 +127,24 @@ async function recomputeShipmentAllocation(shipmentId: string, ctx: JobContext):
    * single shipment, not a sweep, so the read is bounded — and the
    * alternative (keep ignoring the admin control) is the defect.
    */
-  const laborSettings = await siteSettingsRepository
-    .getSingleton()
-    .then((s) => s.laborRate)
-    .catch(() => undefined);
+  /*
+   * `safeRead`, not `.catch(() => undefined)`.
+   *
+   * The fallback is unchanged — a settings read that fails must not stop the
+   * allocation, and `settingsMaxHours` being absent simply means "no admin
+   * ceiling". What changes is that the failure is now RECORDED: a bare catch
+   * returning `undefined` is indistinguishable from an admin who never set a
+   * ceiling, so the labour cap could silently stop being enforced with
+   * nothing anywhere to say so. `installDegradedReadReporter` persists it.
+   */
+  const laborSettings = await safeRead(
+    () => siteSettingsRepository.getSingleton().then((s) => s.laborRate),
+    {
+      route: "job:onShipmentAllocationSync",
+      key: "siteSettings:laborRate",
+      fallback: undefined,
+    },
+  );
   const settingsMaxHours = laborSettings?.maxHoursPerDay;
 
   const { perLot, totals } = allocateShipmentCosts({

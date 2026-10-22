@@ -119,6 +119,26 @@ export interface PriceObservationDocument {
 export const PRICE_OBSERVATION_COLLECTION = "priceObservations";
 
 /**
+ * Field names, so a query names them through a constant rather than a literal.
+ *
+ * `audit-route-nav-field-constants` R3 blocks a raw `where("categoryId", …)`,
+ * and the constants it suggested for this one were
+ * `MODEL_COMPOSITION_FIELDS.CATEGORY_ID | BEY_FIELDS.CATEGORY_ID` — two
+ * different documents that happen to share the field NAME. Borrowing either
+ * would make the query read as though it were about that document, which is
+ * worse than the literal it replaced. A price observation needs its own.
+ */
+export const PRICE_OBSERVATION_FIELDS = {
+  CATEGORY_ID: "categoryId",
+  AMOUNT: "amount",
+  CURRENCY: "currency",
+  KIND: "kind",
+  SEEN_AT: "seenAt",
+  SOLD_OUT: "soldOut",
+  SOURCE_KEY: "sourceKey",
+} as const;
+
+/**
  * Hard ceiling on one leaf's observation read.
  *
  * A leaf with more sightings than this has plenty for a stable band, so the cap
@@ -152,8 +172,8 @@ export class PriceObservationRepository extends BaseRepository<PriceObservationD
     limit: number = PRICE_OBSERVATION_SCAN_LIMIT,
   ): Promise<PriceObservationDocument[]> {
     const snap = await this.getCollection()
-      .where("categoryId", "==", categoryId)
-      .orderBy("seenAt", "desc")
+      .where(PRICE_OBSERVATION_FIELDS.CATEGORY_ID, "==", categoryId)
+      .orderBy(PRICE_OBSERVATION_FIELDS.SEEN_AT, "desc")
       .limit(limit)
       .get();
     return snap.docs.map((d) => this.mapDoc<PriceObservationDocument>(d));

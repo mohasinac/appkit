@@ -11,6 +11,7 @@ import {
   type ProtectionClaimReason,
   type ProtectionClaimStatus,
 } from "../schemas/firestore";
+import { serverLogger } from "../../../monitoring";
 import type {
   ClaimFinding,
   ClaimOutcome,
@@ -159,7 +160,15 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
     try {
       await this.getCollection().doc(id).update({ refundId, updatedAt: now });
     } catch (err) {
-      void normalizeError(err);
+      /*
+       * Best effort, but RECORDED. `void normalizeError(err)` alone types the
+       * error and reports it nowhere — as silent as `catch {}` while looking
+       * handled, which is what audit-silent-degrade calls normalize theatre.
+       * Swallowing is still correct here (the claim row is already durable; this is a best-effort annotation); losing the reason is not.
+       */
+      serverLogger.warn("protectionClaims.write failed", {
+        error: normalizeError(err).message,
+      });
     }
   }
 
@@ -188,7 +197,15 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
           ],
         });
     } catch (err) {
-      void normalizeError(err);
+      /*
+       * Best effort, but RECORDED. `void normalizeError(err)` alone types the
+       * error and reports it nowhere — as silent as `catch {}` while looking
+       * handled, which is what audit-silent-degrade calls normalize theatre.
+       * Swallowing is still correct here (the claim row is already durable; this is a best-effort annotation); losing the reason is not.
+       */
+      serverLogger.warn("protectionClaims.write failed", {
+        error: normalizeError(err).message,
+      });
     }
   }
 
