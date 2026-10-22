@@ -5,6 +5,9 @@ import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard
 import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
+// The defining module, not a barrel (Root Cause #18). Maps a server error CODE
+// to user-facing copy; it can never return server text, which is the point.
+import { toUserMessage } from "../../../errors/error-display-map";
 import type { JsonValue } from "@mohasinac/appkit/client";
 
 import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit/client";
@@ -411,8 +414,39 @@ export function SellerOrderDetailPanel({
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
-        throw new Error((d as { error?: string })?.error ?? "Failed to update order");
+        const d = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          code?: string;
+          issues?: { path: (string | number)[]; message: string }[];
+        };
+
+        /*
+         * 🛑 FIELD ERRORS GO ON THE FIELD. The server already sends them.
+         *
+         * `mapToHttpError` answers a rejected body with
+         * `{ status: 400, code: VALIDATION_FAILED, message: "Validation
+         * failed", issues }` — the per-field detail is ON THE WIRE. This
+         * handler used to throw `d.error` and render it in the banner below,
+         * so the seller saw a bare "Validation failed" with nothing marked and
+         * no way to tell WHICH field was wrong. Rule #9 §6.
+         *
+         * `applyZodIssues` keys by the full dotted path, so a nested field
+         * lands on itself rather than collapsing onto `issue.path[0]`.
+         */
+        if (Array.isArray(d.issues) && d.issues.length > 0) {
+          applyZodIssues(d.issues, form.setFieldError);
+          return;
+        }
+
+        /*
+         * 🛑 NEVER the server's own message, and this is not hypothetical.
+         * `d.error` is server text; rendering it is how a Node
+         * `MODULE_NOT_FOUND` with a `/var/task/.next/...` require stack was
+         * once shown inside a buyer's "Place your bid" modal (Root Cause #86).
+         * `toUserMessage` resolves through `errors.codes.*`, terminates at
+         * UNKNOWN, and cannot return server internals.
+         */
+        throw new Error(toUserMessage(d.code));
       }
       const updated = await res.json();
       const next = (updated?.data ?? updated) as OrderDetail;
@@ -429,8 +463,19 @@ export function SellerOrderDetailPanel({
         trackingUrl: next.trackingUrl ?? "",
       });
     } catch (err) {
-      void normalizeError(err);
-      setSaveError((err as Error).message);
+      /*
+       * `normalizeError`'s RESULT, not an `as Error` cast. The cast asserted a
+       * shape nothing checked, and the only reason it happened to work is that
+       * every throw above is one we construct — a rejected promise from `fetch`
+       * or a JSON parse failure is not an `Error` by that assertion's logic,
+       * it just happens to be one at runtime.
+       *
+       * What reaches the banner is now bounded: either `toUserMessage(code)`
+       * from the throw above (mapped copy, never server text) or a browser-level
+       * network message. Field-level problems never get here at all — they were
+       * routed to the fields by `applyZodIssues`.
+       */
+      setSaveError(normalizeError(err).message);
     } finally {
       setSaving(false);
     }
@@ -704,10 +749,24 @@ export function SellerOrderDetailPanel({
               )}
             </Stack>
           </Stack>
-          <Row border="top" paddingY="y-sm-tall" padding="x-md" align="center" justify="end" gap="3">
-            <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
-            <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
-          </Row>
+          {/*
+            🛑 THE SECOND Close/Save PAIR WAS HERE AND IS DELETED.
+            `SectionForm` above already renders a footer — `submitLabel="Save"`,
+            `cancelLabel="Close"`, `onCancel={onClose}` — so this panel showed
+            TWO identical pairs, one under the other, with the error banner
+            sandwiched between them.
+
+            They were not equivalent, which is what made it more than cosmetic:
+            SectionForm's Save runs the schema parse, scrolls to the first
+            erroring section and calls `applyZodIssues` before submitting,
+            while the pair here called `handleSave()` RAW — so whichever one
+            the seller happened to press decided whether the form validated at
+            all. The lower pair was also the visually obvious one, sitting at
+            the bottom of the panel.
+
+            Deleted rather than deduplicated: a form owns its own submit, and
+            a second one beside it is an invitation to drift (Rule #9 §5).
+          */}
         </Stack>
       )}
     </>
