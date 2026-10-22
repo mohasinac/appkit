@@ -193,6 +193,14 @@ export function RadioItem({
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
 
+  /*
+   * A caller's own `aria-invalid` wins. `{...props}` is spread first, so
+   * re-specifying the attribute afterwards overwrites an incoming "true"
+   * with `undefined` — the defect that left every Field*-built form in the
+   * app with no aria-invalid at all. See the full writeup in `Input.tsx`.
+   */
+  const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
   return (
     <div className="appkit-radio-item" data-section="radio-item-div">
       <Label
@@ -206,7 +214,7 @@ export function RadioItem({
             type="radio"
             checked={checked}
             disabled={disabled}
-            aria-invalid={error ? "true" : undefined}
+            aria-invalid={ariaInvalid}
             className={["appkit-radio-item__input", error ? "appkit-radio-item__input--error" : "", className].filter(Boolean).join(" ")}
           />
         </span>
