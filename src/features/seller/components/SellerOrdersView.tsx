@@ -18,6 +18,7 @@ import { Badge, Button, Div, FilterChipGroup, Heading, Input, Select, SideDrawer
 import type { BulkActionItem, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
+import { ORDER_LANE_TABS } from "../../orders/constants/order-lane-tabs";
 import { OrderStatusValues } from "../../orders/schemas/firestore";
 import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -890,7 +891,7 @@ export function SellerOrdersView({
       commit: "debounce",
     },
     emptyLabel: "No orders yet",
-    filterKeys: ["status"],
+    filterKeys: ["status", "orderType"],
     defaultSort: DEFAULT_SORT,
     queryKey: ["seller", "orders", "listing"],
     endpoint: SELLER_ENDPOINTS.ORDERS,
@@ -999,16 +1000,51 @@ export function SellerOrdersView({
     // The scope narrows; the status chip drills down inside it. Both are
     // emitted — an explicit status always wins, since picking "Delivered"
     // while sitting on Active should show delivered orders, not nothing.
-    buildFilters: (state) => (state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined),
+    /*
+     * Two independent axes, joined. The lane answers "how was this won", the
+     * status answers "where is it now" — a seller asking "which of my auction
+     * wins are still unshipped" should not have to choose between them.
+     *
+     * 🛑 `orderType` is a registered SELLER_SIEVE_FIELD as of this change. It
+     * was not, and the failure would have been invisible: `throwExceptions` is
+     * false, so an unallowlisted field drops its clause and the chip would have
+     * returned the seller's whole order list while looking like it filtered
+     * (Root Cause #62). `standard` is stripped from the query server-side and
+     * refined in memory — see `/api/store/orders`.
+     */
+    buildFilters: (state) =>
+      [
+        state.status && state.status !== "All"
+          ? sieveFilter("status", SIEVE_OP.EQ, state.status)
+          : null,
+        state.orderType ? sieveFilter("orderType", SIEVE_OP.EQ, state.orderType) : null,
+      ]
+        .filter(Boolean)
+        .join(",") || undefined,
     buildExtraParams: () => orderScope.extraParams,
     renderAboveContent: orderScope.renderAboveContent,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Status"
-        tabs={STATUS_OPTIONS}
-        value={pendingFilters.status ?? ""}
-        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-      />
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={STATUS_OPTIONS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+        {/*
+          Provenance — the same tabs the buyer has had, from the same shared
+          constant. A seller could see every order and could not ask "show me
+          the ones I accepted an offer on", which is exactly the split that
+          changes how one is handled: an auction win has a forfeit deadline, an
+          accepted offer has an agreed price that is not the listing price.
+        */}
+        <FilterChipGroup
+          label="Type"
+          tabs={ORDER_LANE_TABS}
+          value={pendingFilters.orderType ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, orderType: id }))}
+        />
+      </>
     ),
     buildBulkActions: (selection) => {
       const handlePrintPackingSlips = () => {

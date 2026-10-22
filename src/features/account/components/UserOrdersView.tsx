@@ -11,6 +11,7 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { OrderCard } from "../../orders/components/OrdersList";
 import type { Order } from "../../orders/types";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
+import { ORDER_LANE_TABS } from "../../orders/constants/order-lane-tabs";
 import { useSearchParams } from "next/navigation";
 
 const CANCELLABLE_STATUSES = new Set(["pending", "confirmed", "processing"]);
@@ -39,40 +40,20 @@ const SORT_OPTIONS = [
   { value: sortBy("totalPrice", "ASC"), label: "Lowest total" },
 ];
 
-/**
- * Lane tabs — the same auction > offer > standard split the cart and checkout
- * use, viewed after the fact. Every `id` is EXACTLY a stored
- * `OrderDocument.orderType` value (or "" for All): a tab id that doesn't
- * match a real stored value returns zero rows forever with no error anywhere
- * (CLAUDE.md Root Cause #33).
+/*
+ * Lane tabs now come from `features/orders/constants/order-lane-tabs`, shared
+ * with the seller's order list.
  *
- * "standard" is filtered in memory server-side, because orders written before
- * `orderType` existed have no such field and a Firestore `==` would exclude
- * every one of them.
+ * They were defined here as a local array literal, which meant the seller's
+ * list could not have them without a tenth hand-written copy of one union
+ * (Root Cause #61). The shared version derives from a
+ * `Record<OrderType, string>`, so a sixth lane is a compile error rather than
+ * a tab that silently never appears — which is the bug this array already had
+ * once, shipping four tabs for five lanes.
+ *
+ * Every id-correctness note that lived here (byte-exact stored values, the
+ * unhyphenated `preorder`, and the in-memory `standard` filter) moved with it.
  */
-const ORDER_LANE_TABS = [
-  { id: "", label: "All" },
-  { id: "standard", label: "Normal" },
-  { id: "auction", label: "Auction wins" },
-  { id: "offer", label: "Offer wins" },
-  /*
-   * 🛑 `"preorder"` WITHOUT A HYPHEN, and this is not a typo to tidy up.
-   *
-   * `OrderType` (`orders/utils/order-splitter.ts`) spells it `"preorder"`,
-   * while `ListingType` spells the same concept `"pre-order"` WITH a hyphen.
-   * Two unions, two spellings, and the tab must match the one actually stored
-   * on `OrderDocument.orderType` — a tab id matching no stored value returns
-   * zero rows forever with no error anywhere (Root Cause #33), which is
-   * exactly the failure this file's own comment above warns about.
-   *
-   * These two lanes existed in the union and had no tab, so pre-order and
-   * prize-draw orders were reachable only by landing on "All" and scrolling.
-   * Five lanes, four tabs — the eighth instance this session of a
-   * hand-written enumeration drifting from the union it filters.
-   */
-  { id: "preorder", label: "Pre-orders" },
-  { id: "prize-draw", label: "Prize draws" },
-] as const;
 
 /**
  * Payment-method tabs — a THIRD axis, independent of the lane tabs above and
@@ -188,7 +169,11 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
       <Stack gap="md">
         <FilterChipGroup
           label="Type"
-          tabs={ORDER_LANE_TABS as unknown as { id: string; label: string }[]}
+          // No cast: `FilterChipGroup.tabs` is `readonly FilterChipGroupTab[]`,
+          // which the shared constant already satisfies. The `as unknown as`
+          // here was working around the local `as const` literal, not a real
+          // mismatch.
+          tabs={ORDER_LANE_TABS}
           value={pendingFilters.orderType ?? ""}
           onChange={(id) => setPendingFilters((prev) => ({ ...prev, orderType: id }))}
         />

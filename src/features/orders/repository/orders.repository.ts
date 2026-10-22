@@ -741,6 +741,22 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     orderDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     contestable: { canFilter: true, canSort: false },
+    /*
+     * Lane segregation on the SELLER's order list — the same provenance axis
+     * `/user/orders` has had.
+     *
+     * 🛑 It was absent, and absence here is SILENT: `sieve.ts` sets
+     * `throwExceptions: false`, so an unallowlisted field does not raise —
+     * `findField` returns undefined and the clause is simply dropped. A lane
+     * chip emitting `orderType==auction` would therefore have returned the
+     * seller's ENTIRE order list while looking exactly like a working filter
+     * (Root Cause #62). Checked before wiring the chip, not after.
+     *
+     * 🛑 Never pushed as `orderType==standard`, for the same reason the admin
+     * set above carries that note: orders written before the field existed have
+     * no value to match. `/api/store/orders` refines that one case in memory.
+     */
+    orderType: { canFilter: true, canSort: false },
     // Fulfilment flags. Filterable so "which of my orders need gift wrap?" is a
     // query against the orders themselves — the whole point of recording the
     // add-on on the order rather than keeping a side list of who asked for what.
