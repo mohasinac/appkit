@@ -65,6 +65,33 @@ export interface CartLineMember {
   gstRate?: 0 | 5 | 12 | 18 | 28;
   hsnCode?: string;
   listingType?: ListingType;
+  /**
+   * How the coordinator expressed this member's share of the line.
+   *
+   * Absent means `"amount"` — every line written before splits existed, so no
+   * migration and no behaviour change until a coordinator picks percentages.
+   *
+   * 🛑 The PERCENTAGE is the stored fact, not the resolved rupees. Percentages
+   * apply to the LANDED cost (goods + shipping + fees), so a member's figure
+   * MOVES when shipping is re-quoted — storing the computed amount instead
+   * would freeze a number that no longer matches the agreed share. The
+   * computed figures are snapshotted at COMMIT, which is where the
+   * coordinator's agreement actually becomes binding (D61).
+   *
+   * `resolveSplit` (`_internal/shared/checkout/split.ts`) is the only thing
+   * that turns these into money.
+   */
+  splitMode?: "amount" | "percent";
+  /** 0–100, read only when `splitMode === "percent"`. */
+  percent?: number;
+  /**
+   * The member's agreed contribution in decimal rupees, when typed directly.
+   *
+   * 🛑 NOT the same as `unitPrice`. `unitPrice` is what the ITEM costs;
+   * this is what this PERSON agreed to put in, and the two differ by design
+   * the moment a split is uneven or the total exceeds the landed cost.
+   */
+  contribution?: number;
 }
 
 export interface CartItemDocument {
