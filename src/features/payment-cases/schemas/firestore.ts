@@ -119,7 +119,32 @@ export type PaymentCaseKind =
    * Keyed on the USER, so a persistently broken mirror is one case with a
    * rising `observedCount` rather than a new row every night.
    */
-  | "ledger_drift";
+  | "ledger_drift"
+  /**
+   * We could not book a courier, so one or more PAID orders cannot be
+   * dispatched by us.
+   *
+   * The commonest cause is our own prepaid courier wallet running dry —
+   * Shiprocket has no recharge API, so the top-up is irreducibly a human
+   * action, which is exactly what a case is for.
+   *
+   * 🛑 KEYED ON THE WALLET (the provider), NOT ON THE ORDER. Fifty blocked
+   * orders are ONE problem with one fix, and the daily email ceiling applies
+   * to staff mail too (`send-guard.ts:92`) — so a per-order case would open
+   * fifty rows and spend the whole 80/day budget telling an operator the same
+   * thing fifty times, leaving them blind to everything else. `openOrObserve`
+   * raises `observedCount` instead, which also makes "how many orders are
+   * stuck behind this" readable at a glance.
+   *
+   * 🛑 Its own kind rather than `shipping_unpriced`, which means we could not
+   * work out what shipping COSTS. Here the price is known and the money to pay
+   * it is not there. The kind chips are what an operator triages by, and this
+   * is the fourth time this file has had to say so — the shortcut is always
+   * attractive because a plausible kind already exists.
+   *
+   * `severity: "error"`: a buyer has paid and their parcel is not moving.
+   */
+  | "courier_unavailable";
 
 /**
  * Identical to `ReportStatus`, deliberately — see the header. `actioned` means

@@ -16,6 +16,8 @@
 import { Fragment } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { getAdminDb } from "../../../../providers/db-firebase";
+import { getProviders } from "../../../../contracts/registry";
+import { checkCourierWalletAndAlert } from "../../features/shipping/courier-block";
 import { sendEmail } from "../../../../features/contact/email";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import { ORDER_COLLECTION, OrderStatusValues } from "../../../../features/orders/schemas/firestore";
@@ -157,6 +159,28 @@ export interface DailyStatusDigestSummary {
   nearestCaseDueAt: Date | null;
   /** Gateway events that never reached a terminal status — the inbox backlog. */
   unprocessedGatewayEventCount: number;
+
+  /*
+   * ── COURIER WALLET ────────────────────────────────────────────────────────
+   *
+   * 🛑 The one thing in this digest that is OUR problem rather than a
+   * customer's or a seller's.
+   *
+   * Shiprocket is PREPAID and has no recharge API, so topping up is
+   * irreducibly a human action — which makes it exactly the kind of fact a
+   * pushed digest exists to carry. Reporting it BEFORE anything is blocked is
+   * the point: react only to failures and the first signal is always a buyer's
+   * order already stuck.
+   *
+   * `null` means "no wallet, or we could not read it" — never 0. An unreadable
+   * balance alerts nobody (see `checkCourierWalletAndAlert`), because paging
+   * an operator on every network hiccup is how they learn to ignore the one
+   * that mattered.
+   */
+  courierWalletBalance: number | null;
+  courierWalletLow: boolean;
+  /** Why the balance is null, when it is. Printed instead of a figure. */
+  courierWalletNote?: string;
 }
 
 function currency(amount: number): string {
@@ -322,6 +346,15 @@ export async function collectDailyStatusSummary(): Promise<DailyStatusDigestSumm
    * nearest-deadline query below swallows and returns null rather than
    * throwing.
    */
+  /*
+   * The courier wallet. Same spirit as `safeCount` above — it can never fail
+   * the digest, and it ALERTS at most once per unresolved episode rather than
+   * once per day (the case's `openOrObserve` is the dedupe). `getProviders()`
+   * always populates `shipping`, and the base class's `getWalletBalance`
+   * default answers "no wallet" for manual, so this needs no capability check.
+   */
+  const courierWallet = await checkCourierWalletAndAlert(getProviders().shipping);
+
   const [paymentCasesError, paymentCasesWarning, paymentCasesInfo, unprocessedGatewayEventCount] =
     await Promise.all([
       safeCount(
@@ -421,6 +454,9 @@ export async function collectDailyStatusSummary(): Promise<DailyStatusDigestSumm
     paymentCasesInfo,
     nearestCaseDueAt,
     unprocessedGatewayEventCount,
+    courierWalletBalance: courierWallet.balance,
+    courierWalletLow: courierWallet.low,
+    ...(courierWallet.reason ? { courierWalletNote: courierWallet.reason } : {}),
   };
 }
 
@@ -547,6 +583,19 @@ function renderDigestHtml(
             label="Unfinished gateway events"
             value={summary.unprocessedGatewayEventCount}
           />
+          {/*
+            🛑 The label SAYS when a figure is missing rather than printing 0.
+            An unreadable balance beside live numbers would read as "we have no
+            money", which is the one wrong conclusion an operator could act on.
+          */}
+          <StatLine
+            label="Courier wallet"
+            value={
+              summary.courierWalletBalance === null
+                ? `unknown (${summary.courierWalletNote ?? "not read"})`
+                : `${currency(summary.courierWalletBalance)}${summary.courierWalletLow ? " — LOW, top up" : ""}`
+            }
+          />
         </EmailRow>
         <EmailFooter
           copyright={`© ${new Date().getFullYear()}${siteName ? ` ${siteName}` : ""}. All rights reserved.`}
@@ -619,6 +668,11 @@ function renderDigestText(summary: DailyStatusDigestSummary, version?: string): 
       summary.nearestCaseDueAt ? summary.nearestCaseDueAt.toISOString() : "none"
     }`,
     `Unfinished gateway events: ${summary.unprocessedGatewayEventCount}`,
+    `Courier wallet: ${
+      summary.courierWalletBalance === null
+        ? `unknown (${summary.courierWalletNote ?? "not read"})`
+        : `${currency(summary.courierWalletBalance)}${summary.courierWalletLow ? " — LOW, top up" : ""}`
+    }`,
   );
 
   return lines.join("\n");
