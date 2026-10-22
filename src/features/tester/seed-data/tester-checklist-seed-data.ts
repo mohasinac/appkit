@@ -8425,8 +8425,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             label: "A reported tester issue links to the checklist case it is about",
             roles: ["admin"],
             startPage: "/admin/tester-feedback",
+            steps: [
+              "Expand a phase group that contains at least one reported issue.",
+              "Click the issue's title.",
+            ],
+            expectedBehaviour:
+              "The title is a link to /admin/tester-checklist/<checklistItemId>/edit — the case the report is about.",
+            expectedUiState:
+              "The checklist item editor opens showing that case's own label, description and steps.",
             endResult:
-              "BEFORE: Confirm-bug and Reopen were offered with no way to READ the case's own before → after. Every issue carried checklistItemId and it rendered as nothing.",
+              "BEFORE: Confirm-bug and Reopen were offered with no way to READ the case's own before → after, so the decision was made blind. Every issue carried checklistItemId and it rendered as nothing at all.",
           },
         ],
         // The cluster/tester/media pages are all admin-gated.
@@ -8556,8 +8564,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             label: "Recent bids and recent reviews on the profile open, like recent orders already did",
             roles: ["buyer"],
             startPage: "/user/profile",
+            steps: [
+              "Scroll to the activity panel and expand it.",
+              "Click a row under 'Recent bids'.",
+              "Go back, then click a row under 'Recent reviews'.",
+            ],
+            expectedBehaviour:
+              "The bid row opens that bid's detail page and the review row opens that review's editor — the same way a 'Recent orders' row already opened its order.",
+            expectedUiState:
+              "All three lists render as clickable rows with a hover state, not as inert blocks.",
             endResult:
-              "BEFORE: one component rendered its ORDERS rows as links and its bids and reviews rows as plain blocks — three lists of the same shape, one of which you could open.",
+              "BEFORE: one component rendered its ORDERS rows as <Link> and its bids and reviews rows as plain <Div> — three lists of the same shape, only one of which you could open, while BID_DETAIL and REVIEW_EDIT both already existed.",
           },
         ],
       },

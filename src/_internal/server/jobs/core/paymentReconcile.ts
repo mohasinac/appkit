@@ -44,7 +44,9 @@ import {
   REFUND_CLAIMS_COLLECTION,
   REFUND_CLAIM_FIELDS,
   ORDER_COLLECTION,
+  type OrderDocument,
 } from "../../../../features/orders/schemas/firestore";
+import type { GatewayPaymentRecord } from "../../../../contracts/payment";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { reconcileDisputes } from "../../features/payment-cases/disputes";
 import {
@@ -298,77 +300,9 @@ async function reconcileGatewayPayments(
       }
 
       for (const order of orders) {
-        /*
-         * Amount check. Compared against the order's own recorded total rather
-         * than recomputed from its lines — recomputing would re-derive the
-         * pricing pipeline here and disagree with it the day a rate changes,
-         * which is a sixth copy of the money rule (Root Cause #75).
-         */
-        const recorded = order.totalPrice ?? 0;
-        if (Math.abs(recorded - record.amount) > MONEY_EPSILON) {
-          amountMismatch += 1;
-          await paymentCasesRepository().openOrObserve({
-            kind: "amount_mismatch",
-            subjectId: `${record.id}:${order.id}`,
-            severity: "error",
-            title: `Captured ${record.amount} but recorded ${recorded} — ${order.id}`,
-            detail: [
-              `The gateway captured a different amount from the one the order records.`,
-              `Either the buyer was over-charged or the order under-states what was paid.`,
-              "",
-              `Gateway: ${record.gateway}`,
-              `Payment: ${record.id}`,
-              `Order: ${order.id}`,
-              `Captured: ${record.amount} ${record.currency}`,
-              `Order total: ${recorded}`,
-              `Difference: ${(record.amount - recorded).toFixed(2)}`,
-            ].join("\n"),
-            entityType: "order",
-            entityId: order.id,
-            amountAtRisk: Math.abs(record.amount - recorded),
-            orderIds: [order.id],
-            gatewayPaymentId: record.id,
-            now: ctx.now,
-          });
-        }
-
-        /*
-         * Refund check — the gateway's `amount_refunded` against our own
-         * non-failed refund events. `committedRefundTotal` is the same helper
-         * the refund cap uses, so "what we think we refunded" has ONE
-         * definition rather than a second one written here.
-         */
-        const ours = committedRefundTotal(order);
-        if (Math.abs(ours - record.amountRefunded) > MONEY_EPSILON) {
-          refundMismatch += 1;
-          await paymentCasesRepository().openOrObserve({
-            kind: "refund_mismatch",
-            subjectId: `${record.id}:refunds`,
-            severity: record.amountRefunded > ours ? "error" : "warning",
-            title: `Refund total disagrees with the gateway — ${order.id}`,
-            detail: [
-              record.amountRefunded > ours
-                ? `🛑 The gateway has refunded MORE than our records show. Money has left that we did not record.`
-                : `Our records show more refunded than the gateway did — a refund may have been reserved and never completed.`,
-              "",
-              `Gateway: ${record.gateway}`,
-              `Payment: ${record.id}`,
-              `Order: ${order.id}`,
-              `Gateway refunded: ${record.amountRefunded}`,
-              `Our committed refunds: ${ours}`,
-              `Refundable base: ${refundableBase(order)}`,
-              record.refundStatus ? `Gateway refund status: ${record.refundStatus}` : null,
-            ]
-              .filter((l): l is string => l !== null)
-              .join("\n"),
-            entityType: "order",
-            entityId: order.id,
-            amountAtRisk: Math.abs(record.amountRefunded - ours),
-            orderIds: [order.id],
-            gatewayPaymentId: record.id,
-            now: ctx.now,
-          });
-        }
+        const outcome = await reconcilePaymentAgainstOrder(record, order, ctx);
+        amountMismatch += outcome.amountMismatch;
+        refundMismatch += outcome.refundMismatch;
       }
     } catch (err) {
       void normalizeError(err);
@@ -381,6 +315,95 @@ async function reconcileGatewayPayments(
   return { examined, missing, amountMismatch, refundMismatch, reads };
 }
 
+
+/**
+ * The two per-order checks R2 runs against one gateway record.
+ *
+ * Extracted so each `openOrObserve` call is a statement in a function body
+ * rather than five braces deep inside `for record -> try -> for order -> if`.
+ * Returns the counts rather than mutating the caller's accumulators, so the
+ * loop above reads as a sum rather than as two side effects.
+ */
+async function reconcilePaymentAgainstOrder(
+  record: GatewayPaymentRecord,
+  order: OrderDocument,
+  ctx: JobContext,
+): Promise<{ amountMismatch: number; refundMismatch: number }> {
+  let amountMismatch = 0;
+  let refundMismatch = 0;
+      /*
+       * Amount check. Compared against the order's own recorded total rather
+       * than recomputed from its lines — recomputing would re-derive the
+       * pricing pipeline here and disagree with it the day a rate changes,
+       * which is a sixth copy of the money rule (Root Cause #75).
+       */
+      const recorded = order.totalPrice ?? 0;
+      if (Math.abs(recorded - record.amount) > MONEY_EPSILON) {
+        amountMismatch += 1;
+        await paymentCasesRepository().openOrObserve({
+          kind: "amount_mismatch",
+          subjectId: `${record.id}:${order.id}`,
+          severity: "error",
+          title: `Captured ${record.amount} but recorded ${recorded} — ${order.id}`,
+          detail: [
+            `The gateway captured a different amount from the one the order records.`,
+            `Either the buyer was over-charged or the order under-states what was paid.`,
+            "",
+            `Gateway: ${record.gateway}`,
+            `Payment: ${record.id}`,
+            `Order: ${order.id}`,
+            `Captured: ${record.amount} ${record.currency}`,
+            `Order total: ${recorded}`,
+            `Difference: ${(record.amount - recorded).toFixed(2)}`,
+          ].join("\n"),
+          entityType: "order",
+          entityId: order.id,
+          amountAtRisk: Math.abs(record.amount - recorded),
+          orderIds: [order.id],
+          gatewayPaymentId: record.id,
+          now: ctx.now,
+        });
+      }
+
+      /*
+       * Refund check — the gateway's `amount_refunded` against our own
+       * non-failed refund events. `committedRefundTotal` is the same helper
+       * the refund cap uses, so "what we think we refunded" has ONE
+       * definition rather than a second one written here.
+       */
+      const ours = committedRefundTotal(order);
+      if (Math.abs(ours - record.amountRefunded) > MONEY_EPSILON) {
+        refundMismatch += 1;
+        await paymentCasesRepository().openOrObserve({
+          kind: "refund_mismatch",
+          subjectId: `${record.id}:refunds`,
+          severity: record.amountRefunded > ours ? "error" : "warning",
+          title: `Refund total disagrees with the gateway — ${order.id}`,
+          detail: [
+            record.amountRefunded > ours
+              ? `🛑 The gateway has refunded MORE than our records show. Money has left that we did not record.`
+              : `Our records show more refunded than the gateway did — a refund may have been reserved and never completed.`,
+            "",
+            `Gateway: ${record.gateway}`,
+            `Payment: ${record.id}`,
+            `Order: ${order.id}`,
+            `Gateway refunded: ${record.amountRefunded}`,
+            `Our committed refunds: ${ours}`,
+            `Refundable base: ${refundableBase(order)}`,
+            record.refundStatus ? `Gateway refund status: ${record.refundStatus}` : null,
+          ]
+            .filter((l): l is string => l !== null)
+            .join("\n"),
+          entityType: "order",
+          entityId: order.id,
+          amountAtRisk: Math.abs(record.amountRefunded - ours),
+          orderIds: [order.id],
+          gatewayPaymentId: record.id,
+          now: ctx.now,
+        });
+      }
+  return { amountMismatch, refundMismatch };
+}
 /* ──────────────── R3: refund claimed, never settled ─────────────────────── */
 
 /**

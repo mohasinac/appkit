@@ -530,6 +530,24 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     void onSubmit();
   }, [shellCtx, onSubmit, erroringSectionIds, fieldErrors, openIds, setOpenIds, expandMode]);
 
+  /**
+   * Open a section if it is closed, then scroll to it.
+   *
+   * Named rather than inlined in the rail's `onClick`: inline it sat five
+   * braces deep inside the JSX, and it is the same open-then-scroll the
+   * submit handler above performs for the first erroring section — so the
+   * two now read as the same operation rather than two similar ones.
+   */
+  const openAndScrollTo = useCallback(
+    (id: string) => {
+      if (!openIds.includes(id)) {
+        setOpenIds(expandMode === "single" ? [id] : [...openIds, id]);
+      }
+      scrollToSection(id);
+    },
+    [openIds, setOpenIds, expandMode],
+  );
+
   useFormBottomActions({
     onSubmit: handleSubmit,
     onCancel,
@@ -663,16 +681,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
                  * where the active tint is subtle.
                  */
                 aria-current={isOpen ? "true" : undefined}
-                onClick={() => {
-                  if (!openIds.includes(section.id)) {
-                    setOpenIds(
-                      expandMode === "single"
-                        ? [section.id]
-                        : [...openIds, section.id],
-                    );
-                  }
-                  scrollToSection(section.id);
-                }}
+                onClick={() => openAndScrollTo(section.id)}
               >
                 {/*
                   🛑 NO REQUIRED ASTERISK HERE, and `audit-field-label-owner`
