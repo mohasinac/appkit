@@ -389,6 +389,19 @@ function renderField<T extends object>(
        * case that most needs searching.
        */
       if (options.length > PAGINATED_SELECT_THRESHOLD) {
+        /*
+         * 🛑 The error block here used to be hand-rolled, and was the only
+         * field in this generator whose error was not wired like the rest:
+         * a `<Text>` with no `id`, nothing pointing `aria-describedby` at it,
+         * no `aria-invalid` on the control, and — unlike every `Field*`
+         * branch below — the help text was still rendered underneath the
+         * error rather than replaced by it.
+         *
+         * `PaginatedSelect` now takes `name`/`error` and owns all of that,
+         * so hand it the error and delete the copy. This is the one branch
+         * that every schema-generated form shares, so the fix lands on all
+         * of them at once rather than per call site.
+         */
         return (
           <Stack key={name} gap="xs">
             <Text size="sm" weight="medium" color="muted">
@@ -396,15 +409,16 @@ function renderField<T extends object>(
               {required ? " *" : ""}
             </Text>
             <PaginatedSelect
+              name={name}
+              error={ctx.errors[name]}
               value={typeof value === "string" ? value : null}
               onChange={(v) => set(v ?? "")}
               options={options}
               ariaLabel={label}
               placeholder={`Select ${label.toLowerCase()}…`}
             />
-            {meta.help && <Text size="xs" color="muted">{meta.help}</Text>}
-            {ctx.errors[name] && (
-              <Text size="xs" color="error" role="alert">{ctx.errors[name]}</Text>
+            {meta.help && !ctx.errors[name] && (
+              <Text size="xs" color="muted">{meta.help}</Text>
             )}
           </Stack>
         );

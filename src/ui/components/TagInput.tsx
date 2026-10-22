@@ -10,6 +10,13 @@ export interface TagInputProps {
   placeholder?: string;
   className?: string;
   helperText?: string;
+  /**
+   * Validation message. This control had no error slot at all, so a schema
+   * failure on a tags field could only ever appear in the summary — the field
+   * itself showed nothing and was not announced as invalid. Mirrors the
+   * contract Input/Select/Textarea/Checkbox already have.
+   */
+  error?: React.ReactNode;
 }
 
 export function TagInput({
@@ -20,9 +27,11 @@ export function TagInput({
   placeholder = "Add a tag...",
   className = "",
   helperText = "Press Enter or comma to add a tag",
+  error,
 }: TagInputProps) {
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const errorId = React.useId();
 
   const normalizeTag = (raw: string) => raw.trim().replace(/,+$/, "").trim();
 
@@ -128,14 +137,25 @@ export function TagInput({
             .filter(Boolean)
             .join(" ")}
           aria-label={label ?? "Tag input"}
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? errorId : undefined}
         />
       </div>
 
-      {helperText && (
+      {error ? (
+        <Span
+          id={errorId}
+          size="xs"
+          className="appkit-tag-input__helper appkit-form-field__error"
+          role="alert"
+        >
+          {error}
+        </Span>
+      ) : helperText ? (
         <Span size="xs" className="appkit-tag-input__helper">
           {helperText}
         </Span>
-      )}
+      ) : null}
     </div>
   );
 }

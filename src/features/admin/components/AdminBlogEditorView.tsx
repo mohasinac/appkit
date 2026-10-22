@@ -264,11 +264,12 @@ export function AdminBlogEditorView({
       required: true,
       quick: true,
       fields: ["title", "slug", "excerpt", "content"],
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Content</Heading>
           <Input
             label="Title"
+            error={errors.title}
             value={values.title}
             onChange={(e) => {
               const v = e.target.value;
@@ -278,6 +279,7 @@ export function AdminBlogEditorView({
           />
           <Input
             label="Slug"
+            error={errors.slug}
             value={values.slug}
             onChange={(e) => {
               setSlugManual(true);
@@ -288,6 +290,7 @@ export function AdminBlogEditorView({
           />
           <Input
             label="Excerpt"
+            error={errors.excerpt}
             value={values.excerpt}
             onChange={(e) => onChange({ excerpt: e.target.value })}
             placeholder="Short summary shown in listings and cards"
@@ -314,7 +317,7 @@ export function AdminBlogEditorView({
       // its children, which would abort an in-flight upload.
       keepMounted: true,
       fields: ["coverImage", "youtubeId"],
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Media</Heading>
           <ImageUpload
@@ -331,6 +334,7 @@ export function AdminBlogEditorView({
           />
           <Input
             label="YouTube Video ID (optional)"
+            error={errors.youtubeId}
             value={values.youtubeId}
             onChange={(e) => onChange({ youtubeId: e.target.value })}
             placeholder="e.g. dQw4w9WgXcQ"
@@ -344,7 +348,7 @@ export function AdminBlogEditorView({
       label: "SEO & Tags",
       quick: true,
       fields: ["category", "tags", "metaTitle", "metaDescription"],
-      render: ({ values, onChange }) => {
+      render: ({ values, onChange, errors }) => {
         const readTime = Math.max(
           1,
           Math.round(
@@ -357,6 +361,7 @@ export function AdminBlogEditorView({
             <Div layout="grid" gap="4" className="grid-cols-2">
               <Select
                 label="Category"
+                error={errors.category}
                 options={CATEGORY_OPTIONS}
                 value={values.category}
                 onValueChange={(v) => onChange({ category: v as BlogPostCategory })}
@@ -370,18 +375,21 @@ export function AdminBlogEditorView({
             </Div>
             <TagInput
               label="Tags"
+              error={errors.tags}
               value={values.tags}
               onChange={(t) => onChange({ tags: t })}
               placeholder="e.g. pokemon, grading, tcg"
             />
             <Input
               label="Meta Title (optional)"
+              error={errors.metaTitle}
               value={values.metaTitle}
               onChange={(e) => onChange({ metaTitle: e.target.value })}
               placeholder="Defaults to post title"
             />
             <Input
               label="Meta Description (optional)"
+              error={errors.metaDescription}
               value={values.metaDescription}
               onChange={(e) => onChange({ metaDescription: e.target.value })}
               placeholder="SEO description — max 160 chars"
@@ -396,18 +404,20 @@ export function AdminBlogEditorView({
       label: "Publish",
       quick: true,
       fields: ["status", "publishedAt", "authorName", "isFeatured"],
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
           <Div layout="grid" gap="4" className="grid-cols-2">
             <Select
               label="Status"
+              error={errors.status}
               options={STATUS_OPTIONS}
               value={values.status}
               onValueChange={(v) => onChange({ status: v as BlogPostStatus })}
             />
             <Input
               label="Publish date (optional)"
+              error={errors.publishedAt}
               value={values.publishedAt}
               onChange={(e) => onChange({ publishedAt: e.target.value })}
               type="date"
@@ -416,6 +426,7 @@ export function AdminBlogEditorView({
           </Div>
           <Input
             label="Author Name"
+            error={errors.authorName}
             value={values.authorName}
             onChange={(e) => onChange({ authorName: e.target.value })}
             placeholder="Author display name"

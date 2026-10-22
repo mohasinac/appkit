@@ -143,11 +143,13 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
               helperText="Photos older than 30 days must be refreshed before this item can be listed."
             />
           ),
-          categorySlugs: ({ values, onChange }) => (
+          categorySlugs: ({ values, onChange, errors }) => (
             // Explicit `<string>`: with `multiple`, `value` is `V[]`, so an
             // inferred V reads the array itself as the option type.
             <PaginatedSelect<string>
               multiple
+              name="categorySlugs"
+              error={errors.categorySlugs}
               value={values.categorySlugs as string[]}
               onChange={(v) => onChange({ categorySlugs: (v as string[]) ?? [] })}
               loadOptions={loadCategoryOptions}
@@ -157,8 +159,10 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
               ariaLabel="Categories"
             />
           ),
-          brandSlug: ({ values, onChange }) => (
+          brandSlug: ({ values, onChange, errors }) => (
             <PaginatedSelect
+              name="brandSlug"
+              error={errors.brandSlug}
               value={(values.brandSlug as string) || null}
               onChange={(v) => onChange({ brandSlug: (v as string) ?? "" })}
               loadOptions={loadBrandOptions}

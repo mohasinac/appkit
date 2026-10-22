@@ -136,7 +136,7 @@ export function RefundRequestView({
         label: "Why are you returning this?",
         required: true,
         fields: ["reasonCode", "reasonNote"],
-        render: ({ values, onChange }) => (
+        render: ({ values, onChange, errors }) => (
           <Stack gap="md">
             <Text size="sm" color="muted">
               {REFUND_COPY.request.orderTotalLabel}{" "}
@@ -158,6 +158,8 @@ export function RefundRequestView({
                 {REFUND_COPY.request.reasonSelectLabel} <Span aria-hidden>*</Span>
               </Text>
               <PaginatedSelect<ReturnReason>
+                name="reasonCode"
+                error={errors.reasonCode}
                 value={values.reasonCode === "" ? null : values.reasonCode}
                 onChange={(v) => onChange({ reasonCode: v ?? "" })}
                 options={allowedReasons.map((r) => ({
@@ -186,7 +188,7 @@ export function RefundRequestView({
         label: REFUND_COPY.request.acknowledgeHeading,
         required: true,
         fields: ["acknowledged"],
-        render: ({ values, onChange }) => (
+        render: ({ values, onChange, errors }) => (
           <Stack gap="sm">
             {REFUND_COPY.request.acknowledgments.map((text, i) => (
               <Checkbox
@@ -201,8 +203,20 @@ export function RefundRequestView({
                 }
                 label={<Text size="sm" className="leading-snug">{text}</Text>}
                 aria-label={`Acknowledgment ${i + 1}`}
+                /*
+                 * `aria-invalid` on every box, but the MESSAGE only once,
+                 * below. `acknowledged` is a single array field — passing
+                 * `error` to each Checkbox would render the same sentence
+                 * once per acknowledgement and announce it N times.
+                 */
+                aria-invalid={errors.acknowledged ? "true" : undefined}
               />
             ))}
+            {errors.acknowledged && (
+              <Text size="sm" variant="error" role="alert">
+                {errors.acknowledged}
+              </Text>
+            )}
           </Stack>
         ),
       },
