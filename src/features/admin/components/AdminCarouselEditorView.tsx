@@ -507,7 +507,21 @@ export function AdminCarouselEditorView({
         <Stack gap="md">
           <FieldInput name="title" label="Title" value={title} onChange={(v) => setTitle(v)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
           <Toggle label="Active (visible on homepage)" checked={active} onChange={setActive} />
-          <Input label="Display order" type="number" value={order} onChange={(e) => setOrder(e.target.value)} min={0} placeholder="1" />
+          {/*
+            `order` is the ONE control in this section the schema actually
+            validates — `carouselSlideSchema` is { title, order, active }
+            with `.passthrough()`, so the height, autoplay and per-card
+            fields below it can never produce an error to show.
+          */}
+          <Input
+            label="Display order"
+            error={form.shellCtx.errors.order}
+            type="number"
+            value={order}
+            onChange={(e) => setOrder(e.target.value)}
+            min={0}
+            placeholder="1"
+          />
           <Select
             label="Slide height"
             value={height}

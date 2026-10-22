@@ -218,6 +218,17 @@ function SlotTable({
   showPrice: boolean;
   onSlotsChange: (next: LotterySlotRow[]) => void;
 }) {
+  /*
+   * Read the form context directly. `SlotTable` is its own component, so the
+   * `shellCtx` the parent destructures is out of scope here — but the parent
+   * mounts `FormShellContext.Provider` above this, so the errors are
+   * reachable. `useContext` rather than `useFormShell()`: this table is
+   * also usable outside a form and must not require a provider.
+   */
+  const formCtx = React.useContext(FormShellContext);
+  const slotError = (idx: number, field: string): string | undefined =>
+    formCtx?.errors[`slots.${idx}.${field}`];
+
   /**
    * Next number is max+1, not length+1.
    *
@@ -287,12 +298,20 @@ function SlotTable({
     {
       key: "name",
       header: "Prize name",
+      /*
+       * These inputs live in DataTable COLUMN renderers, which get no
+       * `errors` argument — a section render would. They read the context
+       * this component itself mounts, with the dotted INDEXED key
+       * `applyZodIssues` produces (`slots.2.price`), so a rejected slot marks
+       * its own row rather than the first one.
+       */
       render: (s) => (
         <Input
           type="text"
           className="w-full"
           placeholder={`Prize for slot ${s.slotNumber}`}
           value={s.name}
+          error={slotError(s._idx, "name")}
           onChange={(e) => updateSlot(s._idx, "name", e.target.value)}
           aria-label={`Slot ${s.slotNumber} prize name`}
         />
@@ -307,6 +326,7 @@ function SlotTable({
           className="w-full"
           placeholder="/media/… or https://…"
           value={s.image ?? ""}
+          error={slotError(s._idx, "image")}
           onChange={(e) => updateSlot(s._idx, "image", e.target.value)}
           aria-label={`Slot ${s.slotNumber} prize image URL`}
         />
@@ -323,6 +343,7 @@ function SlotTable({
                 className="w-24"
                 placeholder="0"
                 value={s.price}
+                error={slotError(s._idx, "price")}
                 onChange={(e) => updateSlot(s._idx, "price", e.target.value)}
                 aria-label={`Slot ${s.slotNumber} price`}
               />
