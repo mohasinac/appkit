@@ -275,6 +275,7 @@ const {
   groupedListingsSeedData,
   mediaAssetsSeedData, mediaAssetsEditorialSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
+  disputeReasonsSeedData,
   authenticityKnowledgeSeedData,
   partGlossarySeedData, modelCompositionSeedData,
   beysSeedData, beyProductsSeedData,
@@ -294,6 +295,7 @@ const {
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
   TAX_CODES_COLLECTION,
+  DISPUTE_REASON_COLLECTION,
   PART_GLOSSARY_COLLECTION,
   MODEL_COMPOSITION_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
@@ -390,6 +392,12 @@ const COLLECTION_MAP = {
   productFeatures: PRODUCT_FEATURES_COLLECTION,
   authenticityKnowledge: "authenticityKnowledge",
   taxCodes: TAX_CODES_COLLECTION,
+  /*
+   * Staff-creatable, but SEEDED — otherwise the first buyer to hit a problem
+   * gets a required dropdown with no options, which is a dead end they cannot
+   * work around and which reads as the form being broken.
+   */
+  disputeReasons: DISPUTE_REASON_COLLECTION,
   // E4/D12 — extracted from the local corpus, generated into the seed.
   partGlossary: PART_GLOSSARY_COLLECTION,
   /*
@@ -766,6 +774,7 @@ const SEED_DATA_MAP = {
   productFeatures: productFeaturesSeedData,
   authenticityKnowledge: authenticityKnowledgeSeedData,
   taxCodes: taxCodesSeedData,
+  disputeReasons: disputeReasonsSeedData,
   partGlossary: partGlossarySeedData,
   // 🛑 Both halves are mandatory: load() short-circuits on an empty array, so a
   // COLLECTION_MAP entry alone logs "no seed data, skipping" and exits 0.

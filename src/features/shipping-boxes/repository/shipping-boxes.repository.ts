@@ -1,6 +1,6 @@
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { BaseRepository } from "../../../providers/db-firebase";
-import { slugify } from "../../../utils/slug";
+import { slugify } from "../../../utils/string.formatter";
 import {
   SHIPPING_BOX_COLLECTION,
   SHIPPING_BOX_FIELDS,

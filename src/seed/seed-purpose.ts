@@ -145,6 +145,17 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * spin, grade, chase. Hand-curated from the crawl. */
   productFeatures: "permanent",
   /*
+   * The buyer-facing dispute reason list. Permanent because it ACCUMULATES
+   * from real cases — staff add rows as genuine gaps appear, and those
+   * additions exist nowhere else. Re-running the loader restores the eleven
+   * seeded rows and silently loses every reason an agent wrote since.
+   *
+   * It is also named on live disputes. The order snapshots the LABEL, so a
+   * buyer's record survives a wipe either way — but the list's own history
+   * (who added which wording, and when) does not.
+   */
+  disputeReasons: "permanent",
+  /*
    * ── the inventory triple is deliberately ABSENT ──────────────────────────
    *
    * I classified `storageBoxes` / `inventoryPlacements` / `inventoryMovements`
