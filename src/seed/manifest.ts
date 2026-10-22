@@ -65,8 +65,6 @@ import { taxCodesSeedData } from "./tax-codes-seed-data";
 import { offersSeedData } from "./offers-seed-data";
 import { couponUsageSeedData } from "./coupon-usage-seed-data";
 import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
-// Tester checklist seed data lives in ../features/tester/seed-data (isolated on purpose).
-import { testerChecklistSeedData } from "../features/tester/seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -325,10 +323,15 @@ export const SEED_MANIFEST: SeedManifest = {
   roleOverrides: [],
   customRoles: [],
   adminNotifications: [],
-  testerChecklistItems: pick(
-    asArr(testerChecklistSeedData).map((c) => ({
-      ...c,
-      name: c.label ?? c.id,
-    })),
-  ),
+  /*
+   * 🛑 EMPTY, and not an oversight — the corpus moved to `tester/cases/`.
+   *
+   * The manifest is a lightweight preview of what the seeder writes, and this
+   * loader no longer writes the checklist: `tester/scripts/seed-cases.mjs`
+   * does. Declaring the key with an empty array rather than deleting it keeps
+   * the collection visible in the preview (and keeps
+   * `audit-schema-registry-completeness` honest about every bucket existing),
+   * while stating plainly that nothing here fills it.
+   */
+  testerChecklistItems: [],
 };

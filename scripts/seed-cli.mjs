@@ -279,7 +279,6 @@ const {
   partGlossarySeedData, modelCompositionSeedData,
   beysSeedData, beyProductsSeedData,
   BEYS_COLLECTION, BEY_PRODUCTS_COLLECTION,
-  testerChecklistSeedData, testerResponsesSeedData,
   supportTicketsSeedData, catalogueSeedData,
   shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData,
   // collection constants
@@ -772,8 +771,19 @@ const SEED_DATA_MAP = {
   beys: beysSeedData,
   beyProducts: beyProductsSeedData,
   modelComposition: modelCompositionSeedData,
-  testerChecklistItems: testerChecklistSeedData,
-  testerChecklistResponses: testerResponsesSeedData,
+  /*
+   * 🛑 ABSENT ON PURPOSE — the checklist corpus moved to `tester/cases/`.
+   *
+   * `node tester/scripts/seed-cases.mjs` writes `testerChecklistItems` now.
+   * The cases are authoring data for that harness, and nothing in the app read
+   * them: the admin surfaces and the API route all read the COLLECTION through
+   * repositories that stay in appkit.
+   *
+   * Leaving the keys out of SEED_DATA_MAP is what makes `load` skip them —
+   * `status` will report them as `0 seed`, which is correct and not the
+   * "no seed data, skipping" trap of Root Cause #90, because the data is not
+   * missing, it is owned elsewhere.
+   */
 };
 
 const ALL_COLLECTIONS = Object.keys(COLLECTION_MAP);
