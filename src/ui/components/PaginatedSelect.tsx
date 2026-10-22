@@ -1,6 +1,7 @@
 "use client";
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "./Input";
+import { toUserMessage } from "../../errors/error-display-map";
 import { Text } from "./Typography";
 import { FormShellContext } from "../forms/FormShell";
 import { SideDrawer } from "./SideDrawer";
@@ -210,6 +211,31 @@ function isValueSelected<V>(
  * @example multi-select
  * <PaginatedSelect multiple value={tagIds} onChange={setTagIds} loadOptions={loadTags} />
  */
+/**
+ * Resolve this control's validation message and the id that labels it.
+ *
+ * A hook rather than four lines in the component body: `PaginatedSelect` is
+ * already at `audit-code-quality`'s size limit, and the error affordance is
+ * self-contained — explicit prop wins, else `FormShellContext` by `name`,
+ * exactly as the `Field*` primitives resolve theirs.
+ */
+function usePaginatedSelectError(name?: string, errorProp?: ReactNode) {
+  const ctx = React.useContext(FormShellContext);
+  const error = errorProp ?? (name ? ctx?.errors[name] : undefined);
+  const errorId = `${React.useId()}-error`;
+  return { error, errorId };
+}
+
+/** The message, under the trigger it describes. */
+function PaginatedSelectError({ id, error }: { id: string; error: ReactNode }) {
+  if (!error) return null;
+  return (
+    <Text id={id} size="sm" variant="error" className="appkit-form-field__error" role="alert">
+      {error}
+    </Text>
+  );
+}
+
 export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const {
     options,
@@ -240,12 +266,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   } = props;
   const isMulti = props.multiple === true;
 
-  // Explicit prop wins, else context by `name`. `useContext` not a throwing
-  // hook — this control is also used outside forms and must not need a provider.
-  const formCtx = React.useContext(FormShellContext);
-  const error = errorProp ?? (name ? formCtx?.errors[name] : undefined);
-  const generatedId = React.useId();
-  const errorId = `${generatedId}-error`;
+  const { error, errorId } = usePaginatedSelectError(name, errorProp);
   const maxChipsVisible = isMulti ? (props as MultiProps<V>).maxChipsVisible ?? 3 : 0;
 
   const [query, setQuery] = useState("");
@@ -383,7 +404,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         // Same staleness rule as the success path: a superseded request must
         // not paint its failure over a newer request's results.
         if (requestId === requestIdRef.current) {
-          setLoadError(normalized.message || "Could not load options.");
+          setLoadError(toUserMessage(normalized.code, undefined, { fallback: "Could not load options." }));
           if (reset) setAsyncOptions([]);
         }
       } finally {
@@ -709,11 +730,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
           </div>
         )}
 
-        {error ? (
-          <Text id={errorId} size="sm" variant="error" className="appkit-form-field__error" role="alert">
-            {error}
-          </Text>
-        ) : null}
+        <PaginatedSelectError id={errorId} error={error} />
       </div>
 
       {/* create drawer */}
