@@ -161,7 +161,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/user/offers",
     steps: [
-      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds the seeded accepted offer offer-kaiba-dranzer-s-accepted and the seeded expired one offer-kaiba-x-wizard-arrow-expired.",
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds the seeded accepted offer an accepted offer and the seeded expired one an expired offer.",
       "Open /user/offers and find an accepted offer past its checkout deadline.",
       "Read its status and any deadline shown.",
       "Open /cart and check the Accepted Offers tab for that line.",
@@ -580,7 +580,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["admin", "guest"],
     startPage: "/admin/stores",
     steps: [
-      "Open /stores in a private window and confirm store-blader-bazaar is NOT listed.",
+      "Open /stores in a private window and confirm a second store in the directory is NOT listed.",
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/stores, find that pending store, and approve it.",
       "RELOAD and read its status.",
@@ -588,7 +588,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open its own store page and check it renders.",
       "Set it back to pending and confirm it disappears from /stores.",
     ],
-    inputs: { storeId: "store-blader-bazaar" },
+    inputs: { storeId: "a second store in the directory" },
     expectedBehaviour:
       "Approval flips BOTH the store's own status and its public flag. Public visibility checks read the store's status, so flipping only the user's seller status leaves the seller with a working dashboard and a store nothing public can see.",
     expectedUiState:
@@ -600,13 +600,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/stores",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/stores and find store-vintage-vault-co, which is suspended.",
+      "Open /admin/stores and find a third store in the directory, which is suspended.",
       "Open its detail and read its status history.",
       "Check the suspension entry names who did it, when, and the reason.",
       "Suspend a different store with a reason, then reload and read its history.",
       "Restore that store's original status and check the history keeps BOTH transitions.",
     ],
-    inputs: { storeId: "store-vintage-vault-co" },
+    inputs: { storeId: "a third store in the directory" },
     expectedBehaviour:
       "Store status changes are recorded through the repository's own status writer, so who, when and why are all captured. Restoring the status appends a second entry rather than replacing the first — a history that only shows the current state is not a history.",
     expectedUiState:
@@ -981,7 +981,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/store/listing-templates",
     steps: [
       "Sign in as tyson@beybladearena.in / TempPass123! and create a template, copying its edit URL.",
-      "Sign out and sign in as meera.blader@gmail.com / TempPass123!, who owns store-blader-bazaar — a different store.",
+      "Sign out and sign in as meera.blader@gmail.com / TempPass123!, who owns a second store in the directory — a different store.",
       "Paste that edit URL and read what happens.",
       "Check whether the template's contents are shown at any point.",
       "Attempt to save from that page.",

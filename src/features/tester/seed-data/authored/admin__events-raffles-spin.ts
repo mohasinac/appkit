@@ -189,7 +189,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events/event-favourite-blader-poll/entries — an ACTIVE poll carrying 3 seeded entries, so the table is not empty — and read every column.",
+      "Open that event's entries page — an ACTIVE poll carrying 3 seeded entries, so the table is not empty — and read every column.",
       "Read every status filter offered and select each, noting any that returns nothing.",
       "For each empty filter, check the unfiltered list for rows of that status.",
       "Read the row actions offered and check at least one lets you VIEW an entry.",
@@ -209,7 +209,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events/event-favourite-blader-poll/entries. That is the poll, and it has 3 seeded entries; picking an event with none would leave nothing to read and is indistinguishable from a broken table.",
+      "Open that event's entries page. That is the poll, and it has 3 seeded entries; picking an event with none would leave nothing to read and is indistinguishable from a broken table.",
       "Find a row offering Confirm, Waitlist or Cancel.",
       "WITHOUT using any of those, look for a way to read the entry's actual content first.",
       "Open the entry and read the participant's response in full.",

@@ -97,13 +97,13 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Open /lottery.",
       "Count the lotteries listed and read the slot information on each.",
-      "Open event-pokemon-number-draw-july-2026 from the list.",
+      "Open a lottery event from the list.",
       "Read how many slots it has and how many are taken.",
-      "Go back and look for event-beyblade-slot-raffle-draft, which is a DRAFT.",
+      "Go back and look for a draft raffle event, which is a DRAFT.",
     ],
     inputs: {
-      activeLottery: "event-pokemon-number-draw-july-2026",
-      draftLottery: "event-beyblade-slot-raffle-draft",
+      activeLottery: "a lottery event",
+      draftLottery: "a draft raffle event",
     },
     expectedBehaviour:
       "The index lists ACTIVE lotteries. A draft is unfinished work and must not be public — and a slot count shown publicly must never expose a slot's price or weight, which are server-side fields.",

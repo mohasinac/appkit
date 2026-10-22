@@ -41,7 +41,7 @@
 import { at } from "../../../../../../tester/scripts/lib/fixtures.mjs";
 
 const ID = "auction-money-flows-closing";
-const STORE = "store-beyblade-arena";
+const STORE = "the first store in the directory";
 
 /**
  * Three minutes: long enough for the tester to sign in, read the page, place a

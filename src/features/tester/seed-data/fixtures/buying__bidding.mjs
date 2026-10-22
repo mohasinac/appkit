@@ -23,7 +23,7 @@
 
 import { at } from "../../../../../../tester/scripts/lib/fixtures.mjs";
 
-const STORE = "store-beyblade-arena";
+const STORE = "the first store in the directory";
 const SELLER = "user-tyson-blader";
 
 const auction = (suffix, overrides) => ({

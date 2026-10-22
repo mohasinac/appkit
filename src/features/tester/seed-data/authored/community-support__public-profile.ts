@@ -32,7 +32,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Read the tab bar and open each tab in turn.",
       "Open the browser's View Source and search the HTML for the words accessToken, adminNotes, suspensionReason and customCommissionRate.",
     ],
-    inputs: { storeId: "store-beyblade-arena" },
+    inputs: { storeId: "the first store in the directory" },
     expectedBehaviour:
       "The public store page is built from a projection that names every field it emits, rather than by spreading the store document and deleting a few keys. A deny-list is blind to fields nobody thought to delete — and to fields the TypeScript interface never declared at all.",
     expectedUiState:

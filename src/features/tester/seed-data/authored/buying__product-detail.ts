@@ -325,7 +325,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller", "guest"],
     startPage: "/store/products",
     steps: [
-      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of store-beyblade-arena.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of the first store in the directory.",
       "Open /store/products and edit product-beyblade-burst-valkyrie.",
       "In the group settings panel, make it a group parent titled 'QA Set valkyrie-lineage' and add product-beyblade-burst-regalia-genesis as a member, then save.",
       "Open /products/product-beyblade-burst-valkyrie and scroll to the 'Part of / Parts in this group' panel.",

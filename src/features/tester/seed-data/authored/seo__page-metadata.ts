@@ -91,7 +91,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /products and WAIT for the page to settle before counting anything — this app hydrates client-side and the homepage has been measured with NO h1 at 2.5 seconds and exactly one at 3. A count taken early reports zero and reads as a missing heading. Then use the element inspector to count top-level headings.",
       "Do the same on / — the page where the early-count trap was actually measured, so wait there especially.",
       "Do the same on /products/product-beyblade-burst-valkyrie.",
-      "Do the same on /stores/store-beyblade-arena and on /blog/selling-tips-letitrip.",
+      "Do the same on that store's page and on /blog/selling-tips-letitrip.",
       "Record the count for each.",
     ],
     expectedBehaviour:

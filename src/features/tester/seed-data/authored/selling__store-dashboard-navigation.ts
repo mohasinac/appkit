@@ -105,7 +105,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Click through to /user and read where it lands.",
       "From /user, find the way back to /store and click it.",
       "Check the sidebar changed with the portal each time.",
-      "Open the public store page from within the dashboard — it is /stores/store-beyblade-arena, under the PLURAL /stores — and confirm it opens the public view rather than the editor. The two differ by one character, which is exactly how such a link ends up pointing back into the dashboard.",
+      "Open the public store page from within the dashboard — it is that store's page, under the PLURAL /stores — and confirm it opens the public view rather than the editor. The two differ by one character, which is exactly how such a link ends up pointing back into the dashboard.",
     ],
     expectedBehaviour:
       "A seller is also a buyer, so both portals are reachable from each other and each renders its own navigation. The public-store link is a distinct destination from the store settings editor — conflating them is a live defect on the buyer side, where a 'My Profile' entry leads to the edit page rather than the public profile.",

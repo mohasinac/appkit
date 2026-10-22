@@ -22,7 +22,7 @@
  * Every member is now a real seeded id with its real price, so the undiscounted
  * total is arithmetic a tester can check rather than a number to trust.
  *
- * 🛑 EVERY STANDARD LISTING IN THE CATALOGUE BELONGS TO store-beyblade-arena.
+ * 🛑 EVERY STANDARD LISTING IN THE CATALOGUE BELONGS TO the first store in the directory.
  * The only other seller with stock is store-letitrip-official, whose six
  * listings are all prize draws — so the cross-store refusal is exercised with
  * one of those. The guard reads storeId and does not care about listing type.

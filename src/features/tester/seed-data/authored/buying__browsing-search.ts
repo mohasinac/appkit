@@ -107,7 +107,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /prize-draws and scan the prize-draw cards.",
     ],
     expectedBehaviour: "Every listing card on every page carries a 'by <store name>' line. The name is a readable store name, never a raw slug.",
-    expectedUiState: "Each card shows a line such as 'by Beyblade Arena' or 'by LetItRip Official'. No card shows a raw slug such as 'by store-beyblade-arena'.",
+    expectedUiState: "Each card shows a line such as 'by Beyblade Arena' or 'by LetItRip Official'. No card shows a raw slug such as 'by the first store in the directory'.",
     endResult: "Nothing is persisted. The store-name line is purely display data.",
   },
   "checklist-buying-browsing-search-compare-custom-fields": {

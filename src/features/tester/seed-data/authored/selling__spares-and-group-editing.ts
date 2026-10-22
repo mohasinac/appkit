@@ -18,7 +18,7 @@
 
 import type { AuthoredCase } from "./_types";
 
-const SELLER_SIGNIN = "Sign in as a seller account that owns store-beyblade-arena.";
+const SELLER_SIGNIN = "Sign in as a seller account that owns the first store in the directory.";
 
 export const authored: Record<string, AuthoredCase> = {
   "checklist-selling-spares-seller-and-group-editing-seller-can-list-a-spare": {

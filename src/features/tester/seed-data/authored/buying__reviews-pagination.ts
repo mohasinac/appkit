@@ -223,9 +223,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-auction-store-reviews-paginated": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window and open its reviews tab.",
+      "Open that store's page in a private window and open its reviews tab.",
       "Count the reviews shown and read the stated total.",
       "Check a pager is present and click to page 2.",
       "Write down the titles on both pages and compare.",
@@ -241,9 +241,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-pagination-store-reviews-tab-url-state": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window and read the URL.",
+      "Open that store's page in a private window and read the URL.",
       "Open the reviews tab and read the URL again.",
       "Click to page 2 and read the URL.",
       "Copy the URL, open it in a new tab, and read which tab and page load.",

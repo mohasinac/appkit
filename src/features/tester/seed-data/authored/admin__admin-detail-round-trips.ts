@@ -127,7 +127,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Reload the list.",
       "Read the Verified and Featured markers again.",
     ],
-    inputs: { store: "store-beyblade-arena", notesSuffix: "roundtrip" },
+    inputs: { store: "the first store in the directory", notesSuffix: "roundtrip" },
     expectedBehaviour:
       "Same failure mode as the tester flags, with a worse consequence: un-verifying a store is visible to shoppers. A store's capabilities can be reset to a two-item default by the same mechanism, which is invisible until a seller reports that a feature disappeared.",
     expectedUiState:

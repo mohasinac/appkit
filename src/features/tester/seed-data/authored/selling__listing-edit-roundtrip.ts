@@ -115,14 +115,14 @@ export const authored: Record<string, AuthoredCase> = {
        * exemption while claiming to test the gate — it would have reported a
        * working ownership check as broken.
        *
-       * 🛑 AND THE CONFOUND IS REAL: store-blader-bazaar is PENDING, because
+       * 🛑 AND THE CONFOUND IS REAL: a second store in the directory is PENDING, because
        * there is no second ACTIVE non-admin seller in the seed (Beyblade Arena
        * is the only one; Vintage Vault Co. is suspended). So a refusal here may
        * come from the store's status rather than from ownership, and the step
        * below says how to tell them apart rather than pretending the fixture is
        * cleaner than it is.
        */
-      "Sign in as meera.blader@gmail.com / TempPass123!, who owns store-blader-bazaar — a different store from Beyblade Arena.",
+      "Sign in as meera.blader@gmail.com / TempPass123!, who owns a second store in the directory — a different store from Beyblade Arena.",
       "Open /store/products first — if meera's own dashboard is itself blocked, her store's PENDING status is the cause and this case is a null with that reason, not a verdict about ownership.",
       "In a second tab open /products and copy the slug of any listing belonging to Beyblade Arena, e.g. product-beyblade-burst-valkyrie.",
       "Back in the first tab, navigate to /store/products/<that slug>/edit.",

@@ -30,9 +30,9 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-content-discovery-store-reviews-aggregate-reviews-tab-not-empty": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena — this store is known to have many approved reviews, which is the point of naming it.",
+      "Open that store's page — this store is known to have many approved reviews, which is the point of naming it.",
       "Open its Reviews tab.",
       "Wait for the content to finish loading before judging it.",
       "Read how many reviews are reported and count the cards on the first page.",
@@ -47,7 +47,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-store-reviews-aggregate-average-matches-the-rows": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open the store's Reviews tab and write down the average rating and the total.",
       "Read the star-distribution breakdown and write down the count beside each star level.",
@@ -65,7 +65,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-store-reviews-aggregate-reviewer-name-is-masked": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open the store's Reviews tab.",
       "Read the reviewer name shown on the first three cards.",
@@ -83,7 +83,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-store-reviews-aggregate-review-search-matches-body-text": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open the store's Reviews tab and read one review card in full.",
       "Pick a distinctive word that appears in that review's BODY text but not in its title and not in the product name.",

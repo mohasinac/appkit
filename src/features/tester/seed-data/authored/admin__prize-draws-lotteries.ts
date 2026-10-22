@@ -124,8 +124,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/lotteries",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/lotteries and find event-pokemon-number-draw-july-2026 — 25 total slots, of which FIVE are already booked in the seed.",
-      "Open its slot editor at /admin/lotteries/event-pokemon-number-draw-july-2026/edit.",
+      "Open /admin/lotteries and find a lottery event — 25 total slots, of which FIVE are already booked in the seed.",
+      "Open its slot editor at /admin/lotteries/a lottery event/edit.",
       "WRITE DOWN which slot numbers show as booked and the buyer named against each.",
       "Change something harmless and unrelated — rename ONE unbooked slot's prize — and save.",
       "RELOAD the editor and read the booked slots again.",
@@ -134,7 +134,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Restore the renamed slot and save again.",
     ],
     inputs: {
-      eventId: "event-pokemon-number-draw-july-2026",
+      eventId: "a lottery event",
       totalSlots: 25,
       bookedSlots: 5,
     },

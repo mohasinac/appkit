@@ -66,9 +66,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-reviews-view-seller-reviews": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window with no session.",
+      "Open that store's page in a private window with no session.",
       "Open the store's reviews tab and read the rows.",
       "Check each shows a rating, a title, a body and a date.",
       "Read how each reviewer is identified.",

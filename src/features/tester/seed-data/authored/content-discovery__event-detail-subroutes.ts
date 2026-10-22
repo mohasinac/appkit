@@ -27,17 +27,17 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events/event-favourite-blader-poll — a poll.",
+      "Open that event's page — a poll.",
       "Write down every tab shown.",
-      "Open /events/event-original-series-clearance — a sale.",
+      "Open that event's page — a sale.",
       "Write down its tabs.",
-      "Open /events/event-win-burst-regalia-genesis — a raffle.",
+      "Open that event's page — a raffle.",
       "Write down its tabs.",
     ],
     inputs: {
-      pollEvent: "event-favourite-blader-poll",
-      saleEvent: "event-original-series-clearance",
-      raffleEvent: "event-win-burst-regalia-genesis",
+      pollEvent: "a poll event",
+      saleEvent: "a sale event",
+      raffleEvent: "a raffle event",
     },
     expectedBehaviour:
       "The tab bar is derived from the event's type. A tab offered for a type that cannot have it leads to a page with nothing to render — and a blank panel reads as a loading failure rather than as a tab that should not exist.",
@@ -52,13 +52,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-favourite-blader-poll.",
+      "Open that event's page.",
       "Open its Participate tab.",
       "Submit the first available option.",
       "Reload the page.",
       "Read what the Participate tab shows now.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "Participation writes an entry and the page reflects it afterwards. A write that succeeds while the screen keeps offering the form is the classic split between behaviour and UI state — and it leads a user to submit repeatedly.",
     expectedUiState:
@@ -71,13 +71,13 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
-      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and open /events/event-favourite-blader-poll.",
+      "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and open that event's page.",
       "Participate once if you have not already.",
       "Reload, and try to participate a second time with a different option.",
       "Read what happens.",
-      "Open /events/event-favourite-blader-poll, then its Leaderboard tab, and read the total entry count. This case reads the state the previous one left behind, so run them in order — but it still has to start somewhere, and the index is not it.",
+      "Open that event's page, then its Leaderboard tab, and read the total entry count. This case reads the state the previous one left behind, so run them in order — but it still has to start somewhere, and the index is not it.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "A second entry from the same account is refused with a reason. Silently accepting it doubles that account's weight in the result, which is invisible until somebody reconciles the entry count against the participant count.",
     expectedUiState:
@@ -90,13 +90,13 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events/event-favourite-blader-poll and open its Leaderboard tab.",
+      "Open that event's page and open its Leaderboard tab.",
       "Read the number beside each of the first five rows — the vote or score the row is ranked on.",
       "Check that those numbers are in descending order.",
       "Read the total entry count the event reports.",
       "Count the rows the leaderboard lists, paging if needed.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "The leaderboard orders by a stored number and covers the same entries the event counts. A ranking that is merely insertion order looks correct whenever the data happens to arrive sorted, so the descending check has to be explicit.",
     expectedUiState:
@@ -109,11 +109,11 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events/event-win-burst-regalia-genesis — an ACTIVE raffle that has not been drawn.",
+      "Open that event's page — an ACTIVE raffle that has not been drawn.",
       "Open its Winner tab.",
       "Read the page.",
     ],
-    inputs: { eventId: "event-win-burst-regalia-genesis" },
+    inputs: { eventId: "a raffle event" },
     expectedBehaviour:
       "An undrawn raffle has no winner, and the page must say so. A blank panel is indistinguishable from a failed load, and any name shown here before a draw is fabricated — which on a prize event is the worst possible thing to render.",
     expectedUiState:
@@ -126,12 +126,12 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events/event-won-original-set-raffle — an ENDED raffle with a recorded winner.",
+      "Open that event's page — an ENDED raffle with a recorded winner.",
       "Open its Winner tab.",
       "Read the winner shown and the prize named.",
       "Open the event's Overview and compare the prize named there.",
     ],
-    inputs: { eventId: "event-won-original-set-raffle" },
+    inputs: { eventId: "a raffle event that has been drawn" },
     expectedBehaviour:
       "The winner page reads the winner recorded on the event. The displayed name is masked, as every other public surface masks a user's name.",
     expectedUiState:
@@ -145,12 +145,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-x-launch-raffle-cancelled — a CANCELLED raffle.",
+      "Open that event's page — a CANCELLED raffle.",
       "Read the event header for its status.",
       "Open the Participate tab.",
       "Try to take part.",
     ],
-    inputs: { eventId: "event-x-launch-raffle-cancelled" },
+    inputs: { eventId: "a cancelled raffle event" },
     expectedBehaviour:
       "A cancelled event accepts nothing. The status is checked server-side as well as hidden in the UI: a Participate tab that merely hides its button still has an endpoint behind it.",
     expectedUiState:
@@ -164,12 +164,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Open a private window with no session.",
-      "Open /events/event-favourite-blader-poll.",
+      "Open that event's page.",
       "Read the Overview — the title, the description and the dates.",
       "Open the Participate tab.",
       "Read what it offers.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "An event is public reading and gated taking-part. Being prompted to sign in IS the expected result — the failure to look for is a hard redirect off the page, which loses the visitor the content they came for, or a form that submits and fails.",
     expectedUiState:
@@ -197,14 +197,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-daily-beyblade-pull-wheel — a SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2.",
+      "Open that event's page — a SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2.",
       "Read which tabs the detail page offers and check a results tab is among them.",
-      "Open /events/event-daily-beyblade-pull-wheel/spin-results directly by URL.",
+      "Open that event's page/spin-results directly by URL.",
       "Find the 'Last 10 Spin Results' section — the PUBLIC feed of everyone's recent spins, which is a different section from 'Your Spins'.",
       "Read the participant name on each row.",
     ],
     inputs: {
-      eventId: "event-daily-beyblade-pull-wheel",
+      eventId: "a spin-wheel event",
     },
     expectedBehaviour:
       "The public feed lists recent spins by ANY participant, and every display name is masked. This is a public page on a public event, so a real winner's full name must not be published beside the prize they won — the same rule that applies to bidder names on public bid history.",
@@ -220,7 +220,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-daily-beyblade-pull-wheel/spin-results.",
+      "Open that event's page/spin-results.",
       "Find the 'Your Spins' section — it sits ABOVE the public 'Last 10 Spin Results' feed.",
       "Before spinning, read what it shows. It must name YOUR state, not the event's: 'You have not spun on this event yet.' Reading 'No spins yet' here would be the bug this case exists for, because the public feed below is not empty.",
       "Go back to the event, spin once, and read the prize awarded.",
@@ -228,7 +228,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Confirm no other participant's row appears inside 'Your Spins' — the strangers visible in the feed below must not be in your own section.",
     ],
     inputs: {
-      eventId: "event-daily-beyblade-pull-wheel",
+      eventId: "a spin-wheel event",
       spinMaxPerUser: 2,
     },
     expectedBehaviour:

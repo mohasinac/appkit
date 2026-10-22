@@ -369,7 +369,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as tyson@beybladearena.in / TempPass123!.",
       "Create an art listing titled 'QA Art Print seller-crud' at 650 with a size, material, finish and edition size.",
       "Save, RELOAD, and read all four print fields.",
-      "Open /stores/store-beyblade-arena/art in a private window and look for the listing.",
+      "Open that store's page/art in a private window and look for the listing.",
       "Read every other card in that tab and check none is an ordinary product.",
       "Create a sticker listing titled 'QA Sticker Sheet seller-crud' at 200 and check it appears in the same tab.",
       "Delete both listings.",

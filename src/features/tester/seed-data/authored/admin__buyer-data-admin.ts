@@ -188,12 +188,12 @@ export const authored: Record<string, AuthoredCase> = {
       "Read whether anything is listed before a search is run.",
       "Leave Owner type on 'user', enter user-admin-letitrip, and click Search.",
       "Read every field shown for each address returned, and record exactly how much of the name and phone number is displayed.",
-      "Switch Owner type to 'store', enter store-beyblade-arena, and Search.",
+      "Switch Owner type to 'store', enter the first store in the directory, and Search.",
       "Enter zzzznope as the Owner ID and Search.",
     ],
     inputs: {
       userOwner: "user-admin-letitrip",
-      storeOwner: "store-beyblade-arena",
+      storeOwner: "the first store in the directory",
       nonsenseOwner: "zzzznope",
     },
     expectedBehaviour:
@@ -208,13 +208,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/addresses",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/addresses, search Owner type 'store' with store-beyblade-arena, and read the card rendered for each address.",
+      "Open /admin/addresses, search Owner type 'store' with the first store in the directory, and read the card rendered for each address.",
       "Record which fields the card shows — label, full name, street, city, state, postal code, phone — and specifically whether the LANDMARK appears.",
       "Check whether the card is openable at all: a link, a click target or an edit affordance leading to /admin/addresses/{id}/edit.",
       "Search Owner type 'user' with user-admin-letitrip and read the same for a buyer-owned address.",
       "Open /admin/addresses/{one of those ids}/edit directly and compare the fields there against what the card showed.",
     ],
-    inputs: { storeOwner: "store-beyblade-arena", userOwner: "user-admin-letitrip" },
+    inputs: { storeOwner: "the first store in the directory", userOwner: "user-admin-letitrip" },
     expectedBehaviour:
       "An admin can read every stored field of an address, for both owner types. The landmark is the field worth naming: a form that cannot express it sends undefined and overwrites, so a surface that never shows it hides whether the value survived.",
     expectedUiState:
@@ -252,7 +252,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
       "Open /admin/stores and read every column and status chip.",
-      "Select each status chip in turn and read the rows returned — the seed carries store-blader-bazaar as pending and store-vintage-vault-co as suspended, so neither chip should be empty.",
+      "Select each status chip in turn and read the rows returned — the seed carries a second store in the directory as pending and a third store in the directory as suspended, so neither chip should be empty.",
       "Open store-letitrip-official — verified and featured — for editing and write down its verified flag, its featured flag, its capabilities and its admin notes.",
       "Change ONLY its description and save.",
       "RELOAD and read all four of those back.",
@@ -260,8 +260,8 @@ export const authored: Record<string, AuthoredCase> = {
     ],
     inputs: {
       store: "store-letitrip-official",
-      pendingStore: "store-blader-bazaar",
-      suspendedStore: "store-vintage-vault-co",
+      pendingStore: "a second store in the directory",
+      suspendedStore: "a third store in the directory",
     },
     expectedBehaviour:
       "🛑 This is the highest-severity case on the page. The list serializer once omitted the verified, featured, capabilities and notes fields, so the editor seeded them as undefined and the save handler sent those defaults back unconditionally — saving ANY unrelated field silently un-verified the store and reset its capabilities. The seed carries a pending and a suspended store precisely so those chips are not permanently empty.",
@@ -276,14 +276,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/stores",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/stores and open store-beyblade-arena's detail panel from the list.",
+      "Open /admin/stores and open the first store in the directory's detail panel from the list.",
       "Write down every field label it shows, then close the panel.",
-      "Open /admin/stores/store-beyblade-arena/view directly.",
+      "Open that store's admin detail page directly.",
       "Write down every field label there and compare the two lists.",
       "Reload that page and confirm it loads the same store rather than 404ing or resetting.",
       "Search both surfaces, and the page source of the standalone one, for a WhatsApp access token.",
     ],
-    inputs: { store: "store-beyblade-arena", standalonePage: "/admin/stores/{id}/view" },
+    inputs: { store: "the first store in the directory", standalonePage: "/admin/stores/{id}/view" },
     expectedBehaviour:
       "The panel and the page render from one shared content component, so their fields match by construction. The store document's WhatsApp token is decrypted on every read, so any surface that does not deliberately project it is handling plaintext — an admin page is allowed to show more than a public one, but not the raw credential.",
     expectedUiState:

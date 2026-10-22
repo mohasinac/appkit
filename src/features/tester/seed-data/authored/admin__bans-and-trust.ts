@@ -279,14 +279,14 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["admin", "seller"],
     startPage: "/admin/users",
     steps: [
-      "Open /stores/store-beyblade-arena as a signed-out visitor and note that its listings are visible.",
+      "Open that store's page as a signed-out visitor and note that its listings are visible.",
       SIGN_IN_ADMIN,
       "Soft-ban the seller account tyson@beybladearena.in with the reason 'QA seller-ban content probe — checklist case.'",
-      "As a signed-out visitor, reload /stores/store-beyblade-arena and read what is shown.",
+      "As a signed-out visitor, reload that store's page and read what is shown.",
       "Open /products and check whether that store's listings still appear.",
       "Lift the ban and reload both.",
     ],
-    inputs: { storeId: "store-beyblade-arena", reason: "QA seller-ban content probe — checklist case." },
+    inputs: { storeId: "the first store in the directory", reason: "QA seller-ban content probe — checklist case." },
     expectedBehaviour:
       "Banning a seller takes their storefront and listings out of public view, and lifting it restores them. Public visibility is gated on the store's own status rather than the user's, so flipping only the user record leaves a banned seller's catalogue fully purchasable.",
     expectedUiState:

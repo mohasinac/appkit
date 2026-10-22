@@ -86,7 +86,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["seller"],
     startPage: "/store",
     steps: [
-      "Sign in as tyson@beybladearena.in / TempPass123!, whose store-beyblade-arena is approved and public.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, whose the first store in the directory is approved and public.",
       "Open /store and read the dashboard.",
       "Open the store's own settings and read its name, description, logo and banner.",
       "Change the description to 'QA Store store-setup description' and save.",

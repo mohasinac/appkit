@@ -41,14 +41,14 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["admin", "guest"],
     startPage: "/admin/lotteries",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123! and open /lottery/event-pokemon-number-draw-july-2026.",
+      "Sign in as admin@letitrip.in / TempPass123! and open that lottery's page.",
       "Read the slot grid and write down slots 1 to 5 — all five are booked in the seed — recording each slot number, the buyer name shown against it and its lottery number.",
       "Open /admin/lotteries and open the editor for that lottery.",
       "Rename slot number 7 to 'QA Slot lottery-edit-preserves-bookings'. Slot 7 is 'Alakazam Base Set Holo' and is NOT booked — renaming an unbooked slot is the whole point.",
       "Save.",
       "Reload the editor and read slots 1 to 5 against what was written down, then read slot 7.",
       "Read the price on each of slots 1 to 5 as well — slot 1 is 5000, slot 3 is 2500 — and confirm none has become 0.",
-      "Sign out and open /lottery/event-pokemon-number-draw-july-2026 to read the same five slots as a visitor sees them.",
+      "Sign out and open that lottery's page to read the same five slots as a visitor sees them.",
     ],
     inputs: {
       bookedSlots: "1, 2, 3, 4, 5",
@@ -70,7 +70,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/lotteries",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/lotteries and open the editor for event-pokemon-number-draw-july-2026.",
+      "Open /admin/lotteries and open the editor for a lottery event.",
       "Find slot number 3, which the seed ships already booked by 'Arjun M' — no earlier case has to run for this to be true.",
       "Remove that slot from the list.",
       "Save.",
@@ -91,8 +91,8 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/grouped-listings",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/grouped-listings, find group-beyblade-original-lineage, and write down its exact title.",
-      "Open /admin/grouped-listings/group-beyblade-original-lineage/edit.",
+      "Open /admin/grouped-listings, find a grouped listing, and write down its exact title.",
+      "Open /admin/grouped-listings/a grouped listing/edit.",
       "Replace the title with 'QA Group admin-grouped-listing-title-actually-saves'.",
       "Save and read the confirmation.",
       "RELOAD the page.",
@@ -100,7 +100,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Set the title back to what it was and save.",
     ],
     inputs: {
-      group: "group-beyblade-original-lineage",
+      group: "a grouped listing",
       newTitle: "QA Group admin-grouped-listing-title-actually-saves",
     },
     expectedBehaviour:

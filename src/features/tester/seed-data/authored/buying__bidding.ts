@@ -6,7 +6,7 @@
  * generator: the authoring scripts were deleted once it was clear they were
  * scaffolding around work that is simply writing.
  *
- * 🛑 EVERY SEEDED AUCTION BELONGS TO store-beyblade-arena, WHOSE OWNER IS
+ * 🛑 EVERY SEEDED AUCTION BELONGS TO the first store in the directory, WHOSE OWNER IS
  * user-tyson-blader. A seller-side step therefore signs in as
  * tyson@beybladearena.in. Signing in as admin@letitrip.in reaches the admin
  * surfaces but NOT the seller editor for someone else's store, and the 403 that
@@ -239,7 +239,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer", "seller"],
     startPage: "/auctions/auction-beyblade-original-seaborg",
     steps: [
-      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of store-beyblade-arena, which owns every seeded auction.",
+      "Sign in as tyson@beybladearena.in / TempPass123!, the owner of the first store in the directory, which owns every seeded auction.",
       "Open the seller editor for auction-beyblade-original-seaborg and set 'Minimum Bid Increment' to 1, then save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /auctions/auction-beyblade-original-seaborg — seeded current bid ₹2,200.00 — click 'Place a bid', select 'Custom', type 2300, and click 'Place Bid'.",
@@ -256,7 +256,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Both refusals are inline errors on the amount field naming the effective minimum — ₹200 in the first half, ₹2,000 in the second. Both accepted bids close the modal and raise the current bid.",
     expectedData: { effectiveIncrementFirstHalf: 200, effectiveIncrementSecondHalf: 2000 },
     endResult:
-      "The current bid reflects only the two accepted bids, ending at ₹4,400.00. Set the increment back to empty afterwards — this auction is seeded with no override. Every seeded auction lives in store-beyblade-arena and its owner is tyson@beybladearena.in; signing in as any other seller gives a 403 that reads like a permissions bug and is not one.",
+      "The current bid reflects only the two accepted bids, ending at ₹4,400.00. Set the increment back to empty afterwards — this auction is seeded with no override. Every seeded auction lives in the first store in the directory and its owner is tyson@beybladearena.in; signing in as any other seller gives a 403 that reads like a permissions bug and is not one.",
   },
   "checklist-buying-bidding-bid-increment-tiered": {
     roles: ["buyer"],

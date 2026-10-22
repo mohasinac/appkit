@@ -44,12 +44,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Open /events in a private window with no session.",
-      "Click event-favourite-blader-poll.",
+      "Click a poll event.",
       "Read the title, dates, status and description.",
       "Read the tab bar and open each tab in turn.",
       "Read the address bar as each tab opens.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "An event detail page is split into routed child tabs — Overview, Participate and Leaderboard — so each is a real URL rather than local state. The description renders as HTML, which is where an event's extra images live since the document has no gallery field.",
     expectedUiState:
@@ -76,13 +76,13 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open /events in a private window and find event-pokemon-number-draw-july-2026.",
+      "Open /events in a private window and find a lottery event.",
       "Look at its card image.",
-      "Open /lottery/event-pokemon-number-draw-july-2026 — the lottery detail route is /lottery/{id}, not /events/{id}.",
+      "Open that lottery's page — the lottery detail route is /lottery/{id}, not /events/{id}.",
       "Look at the image at the top of that page.",
       "Note whether either shows an emoji instead of a photograph.",
     ],
-    inputs: { eventId: "event-pokemon-number-draw-july-2026" },
+    inputs: { eventId: "a lottery event" },
     expectedBehaviour:
       "A lottery renders its stored cover image on both the card and the detail page. The 🎰 emoji is the fallback for an event with no image, and seeing it where one is set means the field is not reaching the renderer.",
     expectedUiState:
@@ -93,7 +93,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open event-pokemon-number-draw-july-2026's detail page in a private window.",
+      "Open a lottery event's detail page in a private window.",
       "Find the 'Prizes' collage above the numbered slot grid.",
       "Count the tiles in the collage.",
       "Count the slots in the numbered grid below it.",
@@ -130,14 +130,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-favourite-blader-poll and click the Participate tab.",
+      "Open a poll event and click the Participate tab.",
       "Read the options offered.",
       "Select the first option and submit the vote.",
       "Read what the page shows immediately afterwards, without reloading.",
       "Reload the page and read the Participate tab again.",
       "Try to vote a second time.",
     ],
-    inputs: { eventId: "event-favourite-blader-poll" },
+    inputs: { eventId: "a poll event" },
     expectedBehaviour:
       "A vote is recorded as an entry against this user and the tally updates in place. One vote per user is enforced server-side, so a second attempt is refused rather than silently counted again.",
     expectedUiState:
@@ -149,7 +149,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open event-favourite-blader-poll in a private window.",
+      "Open a poll event in a private window.",
       "Click the Leaderboard tab.",
       "Read every row — what it names and what number it carries.",
       "Check whether the rows are option labels or people's names.",
@@ -167,7 +167,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events and open the entries page for event-favourite-blader-poll.",
+      "Open /admin/events and open the entries page for a poll event.",
       "Read the entries listed and expand one to read its response inline.",
       "Click 'Download Report'.",
       "Open the downloaded file and read it.",
@@ -185,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-metal-fight-era-feedback and click the Participate tab.",
+      "Open a feedback event and click the Participate tab.",
       "Submit the form with every field empty and read where the errors appear.",
       "Type 'QA Feedback survey-feedback-submit' into the free-text field and answer any other required fields.",
       "Submit the form.",
@@ -203,13 +203,13 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-buy-3-get-1-beyblades and read the coupon code displayed.",
+      "Open an offer event and read the coupon code displayed.",
       "Click the copy control beside it.",
       "Read any confirmation shown.",
       "Open /checkout with an item in the cart and paste into the coupon field.",
       "Read what was pasted and click 'Apply'.",
     ],
-    inputs: { eventId: "event-buy-3-get-1-beyblades" },
+    inputs: { eventId: "an offer event" },
     expectedBehaviour:
       "The code is shown in full and the copy control puts exactly that string on the clipboard. A copy control that copies a truncated or differently-cased value produces a rejection the buyer cannot explain.",
     expectedUiState:
@@ -222,7 +222,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-win-burst-regalia-genesis and click the Participate tab.",
+      "Open a raffle event and click the Participate tab.",
       "Read the entry conditions stated.",
       "Enter the raffle.",
       "Read what the page shows immediately, without reloading.",
@@ -231,14 +231,14 @@ export const authored: Record<string, AuthoredCase> = {
     ],
     /*
      * 🛑 The fixture changed, 2026-10-19 — it pointed at
-     * `event-won-original-set-raffle`, which is seeded `status: ENDED` with a
+     * `a raffle event that has been drawn`, which is seeded `status: ENDED` with a
      * winner ALREADY DRAWN. `enterEvent` refuses any event that is not active,
      * so every step after "Enter the raffle" was unreachable: the case could
      * only ever record the generic closed-entries refusal, which looks like a
      * correct result and proves nothing about one-entry-per-user.
-     * `event-win-burst-regalia-genesis` is the active open_raffle.
+     * `a raffle event` is the active open_raffle.
      */
-    inputs: { eventId: "event-win-burst-regalia-genesis" },
+    inputs: { eventId: "a raffle event" },
     expectedBehaviour:
       "An open raffle records one entry per user, enforced SERVER-side. The entry is what makes the user eligible for the draw, so a duplicate would literally double their odds against everyone else. A limit held in the browser is no limit: the form's counter starts at zero on every page load.",
     expectedUiState:
@@ -265,16 +265,16 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events, open event-win-burst-regalia-genesis for editing, and write down its current raffle type.",
+      "Open /admin/events, open a raffle event for editing, and write down its current raffle type.",
       "Set the raffle type to 'Top N scorers', set the N to 3, and save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-win-burst-regalia-genesis and read the Overview tab's description of how winners are chosen.",
+      "Open that event's page and read the Overview tab's description of how winners are chosen.",
       "Click the Participate tab and enter.",
       "Click the Leaderboard tab and read how entries are ranked.",
       "Read whether the ranking is by score and whether the eligible cut-off of 3 is stated.",
       "Sign back in as admin@letitrip.in and restore the raffle type written down in step 2.",
     ],
-    inputs: { eventId: "event-win-burst-regalia-genesis", raffleTopN: 3 },
+    inputs: { eventId: "a raffle event", raffleTopN: 3 },
     expectedBehaviour:
       "A top-N-scorers raffle draws from the highest-scoring entries, so the leaderboard must rank by score and the page must say how many qualify. Ranking by entry time instead would silently change who can win. The saved raffle type must also reach the public page — an admin field that saves and never renders is the commonest shape of this bug.",
     expectedUiState:
@@ -286,16 +286,16 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events, open event-win-burst-regalia-genesis for editing, and write down its current raffle type.",
+      "Open /admin/events, open a raffle event for editing, and write down its current raffle type.",
       "Set the raffle type to 'Top N earliest participants' — the dropdown carries the word 'earliest' and the stored value is top_n_participants — set the N to 3, and save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-win-burst-regalia-genesis and read the Overview tab's description of how winners are chosen.",
+      "Open that event's page and read the Overview tab's description of how winners are chosen.",
       "Click the Participate tab and enter.",
       "Click the Leaderboard tab and read how entries are ranked.",
       "Compare the stated rule with the top-N-scorers rule from the previous case.",
       "Sign back in as admin@letitrip.in and restore the raffle type written down in step 2.",
     ],
-    inputs: { eventId: "event-win-burst-regalia-genesis", raffleTopN: 3 },
+    inputs: { eventId: "a raffle event", raffleTopN: 3 },
     expectedBehaviour:
       "A top-N-participants raffle draws from the earliest or most active participants rather than the highest scorers — a different rule from the scorers variant. Running both against the same event is what makes the difference checkable now that there is no fixture per type.",
     expectedUiState:
@@ -314,7 +314,7 @@ export const authored: Record<string, AuthoredCase> = {
       "If anything is refused, open the network panel and record the spin request's STATUS CODE and the `code` field in its response body.",
       "Reload the page and read the Participate tab.",
     ],
-    inputs: { eventId: "event-daily-beyblade-pull-wheel" },
+    inputs: { eventId: "a spin-wheel event" },
     expectedBehaviour:
       "The very first spin succeeds and names a prize. The spin is a plain POST to /api/events/{id}/spin and its response carries the prize — there is no realtime channel involved, so a failure is the request itself failing, not a subscription timing problem.",
     expectedUiState:
@@ -342,7 +342,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open event-daily-beyblade-pull-wheel and read the stated maximum spins per user.",
+      "Open a spin-wheel event and read the stated maximum spins per user.",
       "Spin until that maximum is reached, reading the remaining count each time.",
       "Attempt one more spin.",
       "Read the refusal.",
@@ -369,14 +369,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/admin/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123!.",
-      "Open /admin/events, open event-daily-beyblade-pull-wheel for editing, and write down its current spin window start and end.",
+      "Open /admin/events, open a spin-wheel event for editing, and write down its current spin window start and end.",
       "Set the spin window end to yesterday's date so the window is closed, and save.",
       "Sign out and sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /events/event-daily-beyblade-pull-wheel, read the stated spin window, and attempt a spin.",
+      "Open that event's page, read the stated spin window, and attempt a spin.",
       "Read the refusal and check it names the window rather than a generic failure.",
       "Sign back in as admin@letitrip.in and restore the two dates written down in step 2.",
     ],
-    inputs: { eventId: "event-daily-beyblade-pull-wheel" },
+    inputs: { eventId: "a spin-wheel event" },
     expectedBehaviour:
       "Spins outside the configured window are refused with a reason naming the window, and the check runs server-side — a window enforced only by hiding the button is no window at all.",
     expectedUiState:
@@ -388,7 +388,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/events",
     steps: [
-      "Open event-daily-beyblade-pull-wheel in a private window with no session.",
+      "Open a spin-wheel event in a private window with no session.",
       "Find the 'Last 10 Spin Results' tab and open it.",
       "Read every row — the name shown and the prize.",
       "Count the rows.",
@@ -427,7 +427,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/events",
     steps: [
-      "In window A, open event-favourite-blader-poll's Leaderboard tab signed out, and read the tallies.",
+      "In window A, open a poll event's Leaderboard tab signed out, and read the tallies.",
       "Leave window A on that tab without reloading it.",
       "In window B, sign in as vivaan.kapoor@gmail.com / TempPass123!.",
       "In window B, open the same event's Participate tab and vote for an option.",

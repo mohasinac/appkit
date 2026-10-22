@@ -358,7 +358,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "card-shows-seller-name",
           label: "Every listing card shows a \"by <seller>\" line",
           description:
-            "BEFORE: only the standard product card rendered a seller, and it read the value off the product document — which no seller-facing create path ever populated, so it was blank on every real listing while seeded demo products looked correct. Auction, pre-order and prize-draw cards had no seller line at all. AFTER: check /products in BOTH grid and list view, then /auctions, /pre-orders and /prize-draws — every card must carry a \"by …\" line naming the store. The name must be a readable store name (e.g. \"Beyblade Arena\"), never a raw slug like \"store-beyblade-arena\".",
+            "BEFORE: only the standard product card rendered a seller, and it read the value off the product document — which no seller-facing create path ever populated, so it was blank on every real listing while seeded demo products looked correct. Auction, pre-order and prize-draw cards had no seller line at all. AFTER: check /products in BOTH grid and list view, then /auctions, /pre-orders and /prize-draws — every card must carry a \"by …\" line naming the store. The name must be a readable store name (e.g. \"Beyblade Arena\"), never a raw slug like \"the first store in the directory\".",
           href: "/products",
         },
         {
@@ -1207,7 +1207,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "group-picker-cross-store",
           label: "A group whose members belong to DIFFERENT sellers renders read-only — no Qty column, no \"Add selected\" button — with an explanation, rather than a button that always fails",
           description:
-            "🛑 A cross-store group cannot be seeded — the guard refuses one at SAVE time, so the banned shape never reaches the database. Attempt it instead: as admin@letitrip.in / TempPass123!, try to group product-beyblade-burst-valkyrie (store-beyblade-arena) with prizedraw-beyblade-mystery-box (store-letitrip-official). If the save is refused, that IS the pass and the picker half cannot be reached — record the refusal's wording. If the save SUCCEEDS, the guard is gone: then open the picker and it must render read-only, with no Qty column and no \"Add selected\" button, rather than a button that always fails.",
+            "🛑 A cross-store group cannot be seeded — the guard refuses one at SAVE time, so the banned shape never reaches the database. Attempt it instead: as admin@letitrip.in / TempPass123!, try to group product-beyblade-burst-valkyrie (the first store in the directory) with prizedraw-beyblade-mystery-box (store-letitrip-official). If the save is refused, that IS the pass and the picker half cannot be reached — record the refusal's wording. If the save SUCCEEDS, the guard is gone: then open the picker and it must render read-only, with no Qty column and no \"Add selected\" button, rather than a button that always fails.",
           href: "/products/product-beyblade-burst-valkyrie",
         },
         {
@@ -1571,7 +1571,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "coupon-help-visible-listing",
           label: "The public coupons listing shows the same \"How coupons work\" panel above the coupon grid",
           href: "/promotions",
-          description: "Also check a store-scoped listing at /stores/store-beyblade-arena/coupons. Wording must be identical on all three surfaces (cart, checkout, listing) — any difference is a bug.",
+          description: "Also check a store-scoped listing at that store's coupons tab. Wording must be identical on all three surfaces (cart, checkout, listing) — any difference is a bug.",
         },
         {
           key: "coupon-stack-two-stores-plus-global",
@@ -1798,7 +1798,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "store-approval-makes-it-public",
           label: "Approving a pending store actually makes it visible on /stores",
-          description: "`status` and `isPublic` are two distinct fields and public visibility gates on `isPublic`. The admin PATCH wrote `status` directly and never touched `isPublic`, so an approved store was active AND invisible with no error anywhere. Approve `store-blader-bazaar`, then open /stores and confirm it appears.",
+          description: "`status` and `isPublic` are two distinct fields and public visibility gates on `isPublic`. The admin PATCH wrote `status` directly and never touched `isPublic`, so an approved store was active AND invisible with no error anywhere. Approve `a second store in the directory`, then open /stores and confirm it appears.",
           href: "/admin/stores",
         },
         {
@@ -2153,7 +2153,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "store-reviews-tab-url-state",
           label: "On the store's own Reviews tab (a full page, not a tab inside a product), the page number and sort DO appear in the URL and survive a browser refresh / can be shared as a link",
           description: "Open the store below and click its Reviews tab. The opposite of the product-page behaviour above, and intentional: this is a page in its own right, so its state belongs in the URL. Go to page 2, refresh, and confirm you are still on page 2.",
-          href: "/stores/store-beyblade-arena",
+          href: "/stores",
         },
         {
           key: "reviews-index-unchanged",
@@ -2819,13 +2819,13 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "seller-coupon-second-for-same-store-rejected",
           label: "Applying a second seller coupon for the SAME store replaces or refuses — you can never have two coupons from one store active at once",
           href: "/cart",
-          description: "The rule is one seller coupon per store, plus at most one admin coupon overall. Try applying two of store-beyblade-arena's codes back to back.",
+          description: "The rule is one seller coupon per store, plus at most one admin coupon overall. Try applying two of the first store in the directory's codes back to back.",
         },
         {
           key: "seller-coupon-stacks-with-admin-coupon",
           label: "One seller coupon and one admin (site-wide) coupon apply together, and the order total reflects both",
           href: "/cart",
-          description: "Try ARENA25 (store-beyblade-arena) together with a platform coupon such as FREESHIP499. Both should stay applied and the breakdown should list both.",
+          description: "Try ARENA25 (the first store in the directory) together with a platform coupon such as FREESHIP499. Both should stay applied and the breakdown should list both.",
         },
         { key: "seller-bundles-crud", label: "Seller can create, edit, and list bundles/grouped listings", href: "/store/bundles" },
         { key: "seller-classified-crud", label: "Seller can create, edit, and list classified listings", href: "/store/classified" },
@@ -3618,7 +3618,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "lottery-cover-image",
           label: "A lottery's cover image renders on both the lottery listing card and its detail page — not the 🎰 emoji placeholder",
           description:
-            "Both views used to read a field the data never populates, so every lottery fell back to the emoji. Verify against \"Pokémon Number Draw — July 2026\" (event-pokemon-number-draw-july-2026), which has a real cover image.",
+            "Both views used to read a field the data never populates, so every lottery fell back to the emoji. Verify against \"Pokémon Number Draw — July 2026\" (a lottery event), which has a real cover image.",
           href: "/lottery",
         },
         {
@@ -3631,7 +3631,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         {
           key: "related-events-section",
           label: "An event's Overview tab shows a \"Related Events\" carousel of other active events sharing at least one tag, with real events (not empty)",
-          description: "Verify against \"Beyblade Original Series Clearance Sale\" (event-original-series-clearance) — it shares the \"original-series\" tag with the favourite-blader poll event and the \"singles\" tag with the buy-3-get-1 offer event, so Related Events should show both.",
+          description: "Verify against \"Beyblade Original Series Clearance Sale\" (a sale event) — it shares the \"original-series\" tag with the favourite-blader poll event and the \"singles\" tag with the buy-3-get-1 offer event, so Related Events should show both.",
           href: "/events",
         },
         { key: "poll-vote-inline", label: "Voting in a poll event from the Overview tab works, shows a confirmation, and a repeat visit shows the already-voted state" },
@@ -5345,7 +5345,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
        */
       pageKey: "store-tabs",
       pageLabel: "Store page tabs — products, reviews, and the per-type tabs",
-      href: "/stores/store-beyblade-arena",
+      href: "/stores",
       cases: [
         { key: "default-tab-lists-products", label: "Opening a store lands on Products and lists that store's listings" },
         { key: "each-tab-lists-only-its-type", label: "Each per-type tab lists only that listing type" },
@@ -5451,36 +5451,36 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           key: "store-art-stickers-tab-shows-items",
           label: "A store's \"Art & Stickers\" tab opens a real page with art and sticker items on it — not an empty grid or a page full of ordinary products",
           description: "Fixed 2026-08-21 — the tab showed a genuine non-zero count but linked to the store's Products tab, which filters to standard products only, so it always landed on a page containing none of the items it had just counted. It now has its own /stores/{slug}/art page.",
-          href: "/stores/store-beyblade-arena/art",
+          href: "/stores",
         },
         {
           key: "store-tab-counts-match-contents",
           label: "Every store tab's count badge matches what the tab actually contains — open each of Products, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items, Art & Stickers and Bundles in turn",
           description: "A tab showing \"5\" and then rendering an empty grid (or somebody else's items) is the bug class this checks for. Any mismatch is a failure.",
-          href: "/stores/store-beyblade-arena",
+          href: "/stores",
         },
         {
           key: "store-tab-sort-survives-reload",
           label: "Changing the sort on a store tab and reloading the page keeps that sort applied — the first paint matches what the Sort dropdown shows",
           description: "Fixed 2026-08-21 — store tab pages ignored the URL when rendering server-side, so a reload always painted page 1 in the default order while the toolbar still displayed the sort you had picked. Set a non-default sort, reload, and confirm the item order matches the dropdown.",
-          href: "/stores/store-beyblade-arena/auctions",
+          href: "/stores",
         },
         {
           key: "store-preorders-tab-default-sort",
           label: "A store's Pre-Orders tab opens in the same default order as the public /pre-orders page (earliest delivery first)",
           description: "Fixed 2026-08-21 — the store tab had its own drifted copy of the sort list and opened Newest-first while /pre-orders opened Earliest-Delivery-first for the same items. Compare the two side by side; the first item should match.",
-          href: "/stores/store-beyblade-arena/pre-orders",
+          href: "/stores",
         },
         {
           key: "store-classified-live-facets-filter",
           label: "The type-specific filters on a store's Classifieds and Live Items tabs actually narrow the results (city / negotiable / accepts shipping, and species / sex / jurisdiction)",
           description: "Fixed 2026-08-21 — these were rendered and counted toward the Filters badge but never sent to the server, so they changed nothing. Apply one and confirm the grid genuinely shrinks.",
-          href: "/stores/store-beyblade-arena/classified",
+          href: "/stores",
         },
         {
           key: "store-tab-empty-state-not-error",
           label: "A store tab with genuinely no items shows a friendly empty state — never a blank white area, a spinner that never stops, or an error toast about a missing index",
-          href: "/stores/store-beyblade-arena",
+          href: "/stores",
         },
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
@@ -5802,7 +5802,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           label: "A store's tab pages all share ONE canonical — the store's own URL — rather than four competing ones",
           description:
             "Tabs are views of one page. Four per-tab canonicals split the section into four addresses, none of which is the one in the sitemap. Per-tab titles and descriptions SHOULD still differ; only the canonical is shared.",
-          href: "/stores/store-beyblade-arena",
+          href: "/stores",
         },
         {
           key: "redirect-only-page-no-canonical",
@@ -6636,7 +6636,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "pageviews-tracks-all-listing-types",
             label: "Visiting a blog post, event, pre-order, prize draw, classified, digital-code, live item, or bundle detail page records a page view that shows up in Admin Analytics → Page Views, filtered to that entity type",
-            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), /events/event-original-series-clearance (event), /pre-orders/preorder-beyblade-x-bx-08-wave (pre-order), /prize-draws/prizedraw-beyblade-mystery-box (prize-draw), /classified/classified-beyblade-stadium-set (classified), /digital-codes/digitalcode-beyblade-x-app-starter-pack (digital-code), /live/live-golden-retriever-puppy (live), /bundles/bundle-x-starter-duo (bundle).",
+            description: "Added 2026-08-21 — these 8 detail-page types previously recorded nothing at all (only products/auctions/categories/homepage/stores/reviews/profiles were tracked). Visit a few of the following, then filter the Page Views report to the matching entity type and confirm a row appears: /blog/spot-genuine-takara-tomy-beyblade (blog), that event's page (event), /pre-orders/preorder-beyblade-x-bx-08-wave (pre-order), /prize-draws/prizedraw-beyblade-mystery-box (prize-draw), /classified/classified-beyblade-stadium-set (classified), /digital-codes/digitalcode-beyblade-x-app-starter-pack (digital-code), /live/live-golden-retriever-puppy (live), /bundles/bundle-x-starter-duo (bundle).",
             href: "/blog/spot-genuine-takara-tomy-beyblade",
           },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
@@ -6747,7 +6747,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           {
             key: "admin-store-detail-page",
             label: "Every admin store row's row menu has a \"View full page\" action landing on a real dedicated /admin/stores/[id]/view page — logo, status/verified/featured badges, an owner link to that owner's (now-enriched) user page, stats (products/items sold/reviews/rating), capabilities, and a \"Manage\" button opening the existing edit drawer",
-            description: "Added 2026-08-21 — admin previously had no dedicated store detail page at all, only the edit drawer (no logo, no owner link, no stats). From /admin/stores, open the seeded \"Tester Sandbox Store\" (store-beyblade-arena) and confirm every section renders real data, and the owner link lands on that seller's admin user page.",
+            description: "Added 2026-08-21 — admin previously had no dedicated store detail page at all, only the edit drawer (no logo, no owner link, no stats). From /admin/stores, open the seeded \"Tester Sandbox Store\" (the first store in the directory) and confirm every section renders real data, and the owner link lands on that seller's admin user page.",
             href: "/admin/stores",
           },
         ],
@@ -7745,7 +7745,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             roles: ["seller"],
             startPage: "/store/spares/new",
             steps: [
-              "Sign in as the seller who owns store-beyblade-arena.",
+              "Sign in as the seller who owns the first store in the directory.",
               "Open /store/spares/new and fill in a title, a price and a stock quantity.",
               "Save as draft, then publish.",
               "Open /spares and look for the listing.",
@@ -7940,7 +7940,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
             roles: ["seller"],
             startPage: "/products",
             steps: [
-              "Sign in as the seller who owns store-beyblade-arena.",
+              "Sign in as the seller who owns the first store in the directory.",
               "Open one of that store's product detail pages.",
               "Read the owner controls.",
             ],

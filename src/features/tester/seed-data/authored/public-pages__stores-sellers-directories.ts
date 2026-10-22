@@ -42,14 +42,14 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-detail-tabs": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window with no session.",
+      "Open that store's page in a private window with no session.",
       "Read the store header and the tab bar.",
       "Click each tab in turn and read the URL and the content.",
       "Open the browser's View Source and search for accessToken, wabaId, catalogId, adminNotes and customCommissionRate.",
     ],
-    inputs: { storeId: "store-beyblade-arena" },
+    inputs: { storeId: "the first store in the directory" },
     expectedBehaviour:
       "Each tab is a real route whose URL segment is stable and bookmarkable. The page is built from a store projection, not from the raw document — four pages once passed the whole document into a client component behind a cast that has no runtime effect, publishing a decrypted WhatsApp token into the page HTML.",
     expectedUiState:
@@ -109,9 +109,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-empty-tabs-hidden": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window and write down every tab offered.",
+      "Open that store's page in a private window and write down every tab offered.",
       "Open each tab and note which are empty.",
       "Open /stores/store-letitrip-official — a store whose whole catalogue is prize draws — and write down its tabs.",
       "Compare the two stores' tab lists.",
@@ -124,9 +124,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-art-stickers-tab-shows-items": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena/art",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena/art in a private window with no session.",
+      "Open that store's page/art in a private window with no session.",
       "Read the grid and every card title.",
       "Check whether the items are art prints and sticker sheets rather than ordinary products.",
       "Read the availability tabs and click the middle one.",
@@ -141,9 +141,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-tab-counts-match-contents": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window.",
+      "Open that store's page in a private window.",
       "Write down the count badge on each of Products, Auctions, Pre-Orders, Prize Draws, Classifieds, Digital Codes, Live Items and Art & Stickers.",
       "Open each of those tabs and count the items, paging to the end of each.",
       "Compare each pair and note any mismatch.",
@@ -157,9 +157,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-tab-sort-survives-reload": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena/auctions",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena/auctions in a private window.",
+      "Open that store's page/auctions in a private window.",
       "Read the sort dropdown's selection and the order of the cards.",
       "Change the sort to a different option.",
       "Read the new card order and the URL.",
@@ -174,10 +174,10 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-preorders-tab-default-sort": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena/pre-orders",
+    startPage: "/stores",
     steps: [
       "Open /pre-orders in a private window and read the sort dropdown's default selection.",
-      "Open /stores/store-beyblade-arena/pre-orders and read its sort dropdown's default selection.",
+      "Open that store's page/pre-orders and read its sort dropdown's default selection.",
       "Compare the two.",
       "Read the delivery dates on the store tab's cards from the top down.",
     ],
@@ -189,9 +189,9 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-store-classified-live-facets-filter": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena/classified",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena/classified in a private window and read the result count.",
+      "Open that store's page/classified in a private window and read the result count.",
       "Open the filters and select the city Mumbai, then apply.",
       "Read the result count and each card's city.",
       "Clear that, tick 'negotiable', apply, and read the count.",
@@ -210,7 +210,7 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/stores/store-letitrip-official",
     steps: [
-      "Open /stores/store-letitrip-official in a private window with no session. 🛑 NOT store-vintage-vault-co, which this case used to name: that store is SUSPENDED with isPublic false, and getStoreBySlug returns null unless status is ACTIVE and isPublic is true — so its public page calls notFound(). A tester would meet a 404 and have to judge an empty state on a page that does not exist.",
+      "Open /stores/store-letitrip-official in a private window with no session. 🛑 NOT a third store in the directory, which this case used to name: that store is SUSPENDED with isPublic false, and getStoreBySlug returns null unless status is ACTIVE and isPublic is true — so its public page calls notFound(). A tester would meet a 404 and have to judge an empty state on a page that does not exist.",
       "Open every tab offered and find one that is genuinely empty. This store carries SIX listings, all prize draws, so eleven of its twelve tabs are empty and one is not — which gives both halves of the comparison.",
       "Read exactly what is shown in that empty tab.",
       "Wait 10 seconds and read it again.",
@@ -240,14 +240,14 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-public-pages-stores-sellers-directories-seller-detail-page": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
-      "Open /stores/store-beyblade-arena in a private window.",
+      "Open that store's page in a private window.",
       "Read the header, the tabs and the listings.",
       "Open the store's own listing-type dropdown, if it offers one, and select each option in turn.",
       "Note any option that returns nothing.",
     ],
-    inputs: { storeId: "store-beyblade-arena" },
+    inputs: { storeId: "the first store in the directory" },
     expectedBehaviour:
       "This store carries standard products, auctions, pre-orders, classifieds, digital codes, live items, art and stickers — every type except prize draws, which all belong to store-letitrip-official. So the dropdown must offer the eight it has and not the one it does not: an option for an absent type silently returns nothing, which reads as a broken query rather than an empty catalogue.",
     expectedUiState:

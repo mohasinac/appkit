@@ -66,7 +66,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Open /products/product-beyblade-burst-valkyrie.",
           "Confirm the signed-in account is ash@pokemonpalace.in and NOT rehan.sheikh@gmail.com. The seeded pending 780 on this product belongs to rehan, who is also the harness default buyer, so running this case as rehan trips the guard that allows only one active offer per listing and Make Offer is refused — which reads as a broken control rather than as the wrong identity.",
           "Click 'Make Offer'.",
-          "Enter 815 as the offer amount. NOT 780: the seed already ships offer-yugi-burst-valkyrie-pending, a pending 780 from a different buyer on this same product, and two pending rows at the same amount on the same listing are tellable apart only by buyer name.",
+          "Enter 815 as the offer amount. NOT 780: the seed already ships a pending offer, a pending 780 from a different buyer on this same product, and two pending rows at the same amount on the same listing are tellable apart only by buyer name.",
           /*
            * Named `QA note buyer-makes-offer`, not `QA offer offer-to-purchase-…`.
            * R7 reads `offer-…` as a FIXTURE CITATION wherever it appears in a
@@ -111,9 +111,9 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["seller"],
         startPage: "/store/offers",
         steps: [
-          "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.",
+          "Sign in as tyson@beybladearena.in / TempPass123!, who owns the first store in the directory.",
           "Open /store/offers.",
-          "Find the row for offer-yugi-burst-valkyrie-pending — product-beyblade-burst-valkyrie, offered ₹780 against a listed ₹999, from buyer Mock User 3. If the previous cases ran there is also an ₹815 row from a different buyer on the same product; accept the ₹780 one.",
+          "Find the row for a pending offer — product-beyblade-burst-valkyrie, offered ₹780 against a listed ₹999, from buyer Mock User 3. If the previous cases ran there is also an ₹815 row from a different buyer on the same product; accept the ₹780 one.",
           "Open the row actions menu.",
           "Click 'Accept'.",
           "Confirm in the dialog.",
@@ -133,7 +133,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/user/offers",
         steps: [
-          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds offer-kaiba-dranzer-s-accepted on product-beyblade-original-dranzer-s (listed ₹1499, agreed ₹1250).",
+          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds an accepted offer on product-beyblade-original-dranzer-s (listed ₹1499, agreed ₹1250).",
           "Open /user/offers.",
           "Click through to checkout from the accepted offer.",
           "Read the line item price in the checkout summary.",
@@ -154,7 +154,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["seller"],
         startPage: "/products/product-beyblade-burst-valkyrie",
         steps: [
-          "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.",
+          "Sign in as tyson@beybladearena.in / TempPass123!, who owns the first store in the directory.",
           "Open /products/product-beyblade-burst-valkyrie, a listing owned by that store.",
           "Read the action controls on the listing.",
         ],
@@ -172,7 +172,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         roles: ["buyer"],
         startPage: "/cart",
         steps: [
-          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds offer-kaiba-dranzer-s-accepted.",
+          "Sign in as vivaan.kapoor@gmail.com / TempPass123!, who holds an accepted offer.",
           "Open /user/offers and start checkout from that accepted offer so its locked line enters the cart, then return to /products.",
           "Open /products/product-beyblade-burst-valkyrie and click 'Add to cart'.",
           "Open /cart.",
@@ -194,7 +194,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         startPage: "/user/offers",
         steps: [
           "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
-          "Open /user/offers and find offer-kaiba-x-wizard-arrow-expired (product-beyblade-x-wizard-arrow, ₹700), whose window closed two days ago.",
+          "Open /user/offers and find an expired offer (product-beyblade-x-wizard-arrow, ₹700), whose window closed two days ago.",
           "Read the row's status badge and the date it names.",
           "Read every control the row offers.",
           "Attempt to start checkout from that offer.",
@@ -401,7 +401,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
         startPage: "/checkout",
         steps: [
           STEP_SIGNIN_BUYER,
-          "Add product-beyblade-burst-valkyrie (store-beyblade-arena) to the cart.",
+          "Add product-beyblade-burst-valkyrie (the first store in the directory) to the cart.",
           "Add prizedraw-beyblade-mystery-box (store-letitrip-official) to the cart, so the cart spans two sellers.",
           "Open /checkout and reach the payment step.",
           "Write down the exact total and every fee line.",
@@ -649,7 +649,7 @@ export const moneyFlowsPages: MoneyFlowPage[] = [
           "Sign in as admin@letitrip.in / TempPass123!.",
           "Open /admin/bundles and start a new bundle.",
           "Name it 'QA cross-store bundle'.",
-          "Add THREE members, because the form refuses fewer: product-beyblade-burst-valkyrie and product-beyblade-x-wizard-arrow (both store-beyblade-arena), plus prizedraw-beyblade-mystery-box (store-letitrip-official) — a different store.",
+          "Add THREE members, because the form refuses fewer: product-beyblade-burst-valkyrie and product-beyblade-x-wizard-arrow (both the first store in the directory), plus prizedraw-beyblade-mystery-box (store-letitrip-official) — a different store.",
           "🛑 Two members is not enough to reach the cross-store check at all. BUNDLE_MIN_ITEMS is 3, and a two-member save is refused with 'Select at least 3 products (currently 2).' — a refusal for the wrong reason, which reads as a pass if the message is not read.",
           "Set the bundle price to 1000 and click Save.",
         ],

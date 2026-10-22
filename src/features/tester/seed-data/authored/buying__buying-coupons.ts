@@ -168,7 +168,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /promotions and click the 'Coupons' tab.",
       "Click the 'How coupons work' disclosure above the coupon grid.",
       "Read all three sections and note their exact wording.",
-      "Open /stores/store-beyblade-arena and go to its coupons tab.",
+      "Open that store's page and go to its coupons tab.",
       "Click the 'How coupons work' disclosure there.",
       "Read all three sections and compare them word for word with what was noted.",
     ],

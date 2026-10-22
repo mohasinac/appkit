@@ -120,7 +120,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open /store/products/new and publish a listing titled 'QA Product belongs-to-store' at 300, with Category 'Beyblade Burst' and a Product Image — the quick form requires title, category, price AND image, so a publish naming only two of them cannot succeed.",
       "Open its public page at /products/{its slug} and read the seller line at the bottom of the info panel.",
       "Click the 'Visit Store' link and read where it lands.",
-      "Open /stores/store-beyblade-arena and find the listing in the Products tab.",
+      "Open that store's page and find the listing in the Products tab.",
       "Sign out and sign in as admin@letitrip.in / TempPass123!, a different seller who owns store-letitrip-official.",
       "Open /store/products — that seller's own products list — and check the listing is NOT there.",
       "Sign back in as tyson and delete the listing.",

@@ -158,7 +158,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-beyblade-burst-valkyrie and click 'Add to Cart' (store-beyblade-arena).",
+      "Open /products/product-beyblade-burst-valkyrie and click 'Add to Cart' (the first store in the directory).",
       "Open /prize-draws/prizedraw-beyblade-mystery-box and enter it once at ₹99 (store-letitrip-official) — this is the only second seller in the catalogue.",
       "Open /cart and confirm the Cart tab groups the two lines under two named sellers, Beyblade Arena and LetItRip Official.",
       "Click 'Proceed to checkout'.",
@@ -172,7 +172,7 @@ export const authored: Record<string, AuthoredCase> = {
     expectedBehaviour:
       "The checkout splits items from different sellers into separate orders, because storeId is the order-splitting key and per-store shipping, add-ons and payouts hang off it. The buyer receives one order per seller rather than a single combined order.",
     expectedUiState:
-      "On the order confirmation page, two separate order entries are shown — one for store-beyblade-arena (Beyblade Burst B-01 Valkyrie, ₹999) and one for store-letitrip-official (Beyblade Mystery Box, ₹99 entry). Each subtotal matches only that seller's items. A single combined order, or two orders both attributed to the same seller, is the failure.",
+      "On the order confirmation page, two separate order entries are shown — one for the first store in the directory (Beyblade Burst B-01 Valkyrie, ₹999) and one for store-letitrip-official (Beyblade Mystery Box, ₹99 entry). Each subtotal matches only that seller's items. A single combined order, or two orders both attributed to the same seller, is the failure.",
     expectedData: { orderCount: 2 },
     endResult:
       "Two separate orders exist in /user/orders — one per seller — and both survive a reload.",
@@ -239,9 +239,9 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["buyer"],
     startPage: "/checkout",
     steps: [
-      "Sign in as admin@letitrip.in / TempPass123!, open /admin/site, switch to the Shipping tab and confirm the 'PhonePe (online card/UPI) enabled' toggle is ON, and confirm the seller store-beyblade-arena has a configured shipping fee.",
+      "Sign in as admin@letitrip.in / TempPass123!, open /admin/site, switch to the Shipping tab and confirm the 'PhonePe (online card/UPI) enabled' toggle is ON, and confirm the seller the first store in the directory has a configured shipping fee.",
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
-      "Open /products/product-beyblade-burst-valkyrie (price ₹999, store-beyblade-arena) and click 'Add to Cart'.",
+      "Open /products/product-beyblade-burst-valkyrie (price ₹999, the first store in the directory) and click 'Add to Cart'.",
       "Complete Steps 1 and 2 of checkout.",
       "On Step 3, select 'Pay Online (PhonePe)'.",
       "Read the amount shown in the Order Summary before clicking the button.",

@@ -30,7 +30,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-favourite-blader-poll — an ACTIVE poll with 3 seeded entries. 🛑 THE NEXT FOUR CASES READ THE ENTRY THIS ONE CREATES, so they must all use this same event; picking a different active event each time breaks the chain and each case then tests a state nobody set up.",
+      "Open that event's page — an ACTIVE poll with 3 seeded entries. 🛑 THE NEXT FOUR CASES READ THE ENTRY THIS ONE CREATES, so they must all use this same event; picking a different active event each time breaks the chain and each case then tests a state nobody set up.",
       "Open it and find the control for joining.",
       "Use it.",
       "Read the outcome shown.",
@@ -67,7 +67,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Join an active event and note the entry's status.",
       "Reload the event page and read the entry again.",
       "Sign out and sign back in as the same account.",
-      "Open /events/event-favourite-blader-poll and read the entry this account created.",
+      "Open that event's page and read the entry this account created.",
       "Open the event in a different browser signed in as the same account.",
     ],
     expectedBehaviour:
@@ -84,7 +84,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Join an active event.",
       "Attempt to join the same event again from the page.",
       "Read what happens.",
-      "Open /events/event-favourite-blader-poll in a second tab and attempt to join from there as well.",
+      "Open that event's page in a second tab and attempt to join from there as well.",
       "Check the account has exactly one entry.",
     ],
     expectedBehaviour:
@@ -100,7 +100,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
-      "On /events/event-favourite-blader-poll, find the control for withdrawing and use it.",
+      "On that event's page, find the control for withdrawing and use it.",
       "Read the confirmation, if one is shown.",
       "Read the entry's state afterwards.",
       "Reload and read it again.",
@@ -117,7 +117,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-won-original-set-raffle — an ENDED raffle, which is the seed's only ended event.",
+      "Open that event's page — an ENDED raffle, which is the seed's only ended event.",
       "Open it and read whether a join control is offered.",
       "If one is offered, use it and read what happens.",
       "Repeat with an event whose status is cancelled.",
@@ -134,7 +134,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-favourite-blader-poll and open its Leaderboard tab — it carries 3 seeded entries, so the board is not empty.",
+      "Open that event's page and open its Leaderboard tab — it carries 3 seeded entries, so the board is not empty.",
       "Read the rows — the names and the scores.",
       "Check the names are masked rather than showing full identities.",
       "Check the scores are real numbers rather than zeros or placeholders.",
@@ -152,7 +152,7 @@ export const authored: Record<string, AuthoredCase> = {
     steps: [
       SIGN_IN_BUYER,
       "Join an event that has a leaderboard and take part enough to appear on it.",
-      "Open /events/event-favourite-blader-poll and its Leaderboard tab.",
+      "Open that event's page and its Leaderboard tab.",
       "Look for the participant's own row without scrolling the whole list.",
       "Check it is highlighted, pinned, or otherwise findable.",
       "Read the position shown for it.",
@@ -168,7 +168,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-favourite-blader-poll and its Leaderboard tab, and write down every row in order with its score — the seed has 3 entries, so read all of them rather than expecting ten.",
+      "Open that event's page and its Leaderboard tab, and write down every row in order with its score — the seed has 3 entries, so read all of them rather than expecting ten.",
       "Check each score is not greater than the one above it.",
       "Find two rows with equal scores and note their order.",
       "Reload the page and read the first ten again.",
@@ -185,7 +185,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-beyblade-slot-raffle-draft — a DRAFT raffle with no seeded entries, which is what makes the empty state reachable.",
+      "Open that event's page — a DRAFT raffle with no seeded entries, which is what makes the empty state reachable.",
       "Open its leaderboard.",
       "Read what is shown.",
       "Check it states there are no entries rather than showing a blank panel.",
@@ -204,7 +204,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Sign in as admin@letitrip.in / TempPass123! and open an event with a raffle configured.",
       "Draw the raffle and note who won.",
       "Sign in as the winning participant.",
-      "Open /events/event-won-original-set-raffle — ENDED and carrying a recorded raffleWinnerUserId — and read whether the result is announced.",
+      "Open that event's page — ENDED and carrying a recorded raffleWinnerUserId — and read whether the result is announced.",
       "Open the account's notifications and look for one about the win.",
       "Sign in as a non-winning participant and check the result is visible to them too.",
     ],
@@ -219,7 +219,7 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
-      "Open /events/event-daily-beyblade-pull-wheel — the seed's only SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2. Note the cap is TWO, not one: a case asserting a single use would fail on a correct system.",
+      "Open that event's page — the seed's only SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2. Note the cap is TWO, not one: a case asserting a single use would fail on a correct system.",
       "Take a spin and read the result.",
       "Spin a SECOND time — this one is allowed, because spinMaxPerUser is 2.",
       "Attempt a THIRD spin and read what happens.",

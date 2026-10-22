@@ -26,12 +26,12 @@ export const authored: Record<string, AuthoredCase> = {
     roles: ["guest"],
     startPage: "/stores",
     steps: [
-      "Open /stores and click through to Beyblade Arena. The store URL /stores/store-beyblade-arena redirects to /stores/store-beyblade-arena/products — that redirect IS the default-tab behaviour this case is checking, so landing on a /products URL is the pass condition rather than a surprise.",
+      "Open /stores and click through to Beyblade Arena. The store URL that store's page redirects to that store's products tab — that redirect IS the default-tab behaviour this case is checking, so landing on a /products URL is the pass condition rather than a surprise.",
       "Note which tab is selected on arrival.",
       "Count the listings shown and read the total the pager reports.",
       "Open two of the cards and read which store each says it belongs to.",
     ],
-    inputs: { store: "store-beyblade-arena" },
+    inputs: { store: "the first store in the directory" },
     expectedBehaviour:
       "A store opens on its Products tab with that store's listings. A listing carries its store as a denormalised field, so a card showing no seller — or the wrong one — means the listing was written without a store rather than that the tab filtered wrongly.",
     expectedUiState:
@@ -42,7 +42,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-public-pages-store-tabs-each-tab-lists-only-its-type": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open Beyblade Arena and open the Auctions tab.",
       "Read the badge on each card shown.",
@@ -50,7 +50,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Open the Digital Codes tab and read its badges.",
       "Open the Art tab and read its badges.",
     ],
-    inputs: { store: "store-beyblade-arena" },
+    inputs: { store: "the first store in the directory" },
     expectedBehaviour:
       "Each tab is a type filter over that one store. Tabs key on a slug that is a DIFFERENT id space from the listing type, so conflating the two either breaks the URL or silently returns nothing — and nothing looks exactly like an empty tab.",
     expectedUiState:
@@ -68,7 +68,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Wait for it to finish loading before judging it.",
       "Read what it shows.",
     ],
-    inputs: { store: "store-beyblade-arena" },
+    inputs: { store: "the first store in the directory" },
     expectedBehaviour:
       "An empty tab says it is empty. A spinner that never resolves and a blank panel both read as a failure, and an empty state is also how a genuinely broken query presents — so the wording should say what is absent rather than merely showing nothing.",
     expectedUiState:
@@ -79,7 +79,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-public-pages-store-tabs-tab-survives-a-reload": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open Beyblade Arena and switch to the Auctions tab.",
       "Copy the URL from the address bar.",
@@ -87,7 +87,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Note which tab is selected.",
       "Open the copied URL in a new tab and note which is selected there.",
     ],
-    inputs: { store: "store-beyblade-arena" },
+    inputs: { store: "the first store in the directory" },
     expectedBehaviour:
       "The tab is in the URL, so a reload and a shared link both land on it. A tab held only in component state bounces to the default on reload, which makes the URL unshareable without any visible error.",
     expectedUiState:
@@ -116,7 +116,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-public-pages-store-tabs-coupons-tab-shows-this-stores-coupons": {
     roles: ["guest"],
-    startPage: "/stores/store-beyblade-arena",
+    startPage: "/stores",
     steps: [
       "Open Beyblade Arena and open its Coupons tab.",
       "Write down every coupon code shown.",

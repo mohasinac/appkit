@@ -92,6 +92,6 @@ export const authored: Record<string, AuthoredCase> = {
       "The modal and the page show the same labels in the same order. A Bidder row is present and names the bidder. If it is absent, the seller cannot tell who is bidding on their own auction — and if the buyer view gained one, that is the leak the case above tests.",
     expectedData: { bidderRowShown: true },
     endResult:
-      "Read-only; nothing persists. Every bid on this auction belongs to store-beyblade-arena, which is tyson's store, so the seller is entitled to see it.",
+      "Read-only; nothing persists. Every bid on this auction belongs to the first store in the directory, which is tyson's store, so the seller is entitled to see it.",
   },
 };

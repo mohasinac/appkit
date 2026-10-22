@@ -30,7 +30,7 @@
  *      negative control the plan names explicitly.
  *
  * 🛑 TWO ACCOUNTS ARE REQUIRED and both are seeded: admin@letitrip.in (admin)
- * and the owner of store-beyblade-arena, user-tyson-blader. A conversation is
+ * and the owner of the first store in the directory, user-tyson-blader. A conversation is
  * between two DIFFERENT users and the server refuses a self-conversation, so a
  * single-account run cannot exercise anything past case 2.
  *
@@ -99,7 +99,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Compare the URL to the one you noted.",
     ],
     expectedBehaviour:
-      "The first click resolves store-beyblade-arena's storeId to its owner's uid SERVER-SIDE (a product page knows the store slug, never the owner's Auth UID) and creates one conversation. The second click finds the existing thread and does NOT create a second one — the thread is between two USERS, not per listing, so a buyer with three questions about three items gets one thread.",
+      "The first click resolves the first store in the directory's storeId to its owner's uid SERVER-SIDE (a product page knows the store slug, never the owner's Auth UID) and creates one conversation. The second click finds the existing thread and does NOT create a second one — the thread is between two USERS, not per listing, so a buyer with three questions about three items gets one thread.",
     expectedUiState:
       "Both clicks land on /messages/{sameId} showing an empty thread with a composer and a 'Block' control in the header.",
     expectedData: { "conversations: documents between this pair": 1 },
@@ -114,7 +114,7 @@ export const authored: Record<string, AuthoredCase> = {
       "Signed in as admin@letitrip.in, open the conversation created in the previous case.",
       "Type 'Does this come with the original launcher?' and press Enter.",
       "Watch the bubble while it sends.",
-      "Sign out, sign in as the owner of store-beyblade-arena (user-tyson-blader), and open /messages.",
+      "Sign out, sign in as the owner of the first store in the directory (user-tyson-blader), and open /messages.",
       "Open the conversation and read the message.",
     ],
     inputs: { body: "Does this come with the original launcher?" },

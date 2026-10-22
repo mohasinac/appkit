@@ -59,7 +59,7 @@ interface HappyPathPage {
 
 /* Reused verbatim so the wording cannot drift between cases. */
 const SIGNIN_BUYER = "Sign in as rehan.sheikh@gmail.com / TempPass123!.";
-const SIGNIN_SELLER = "Sign in as tyson@beybladearena.in / TempPass123!, who owns store-beyblade-arena.";
+const SIGNIN_SELLER = "Sign in as tyson@beybladearena.in / TempPass123!, who owns the first store in the directory.";
 const SIGNIN_ADMIN = "Sign in as admin@letitrip.in / TempPass123!.";
 
 export const happyPathPages: HappyPathPage[] = [
@@ -138,9 +138,9 @@ export const happyPathPages: HappyPathPage[] = [
         key: "store-detail-lists-products",
         label: "A store page lists that store's listings",
         roles: ["guest"],
-        startPage: "/stores/store-beyblade-arena",
+        startPage: "/stores",
         steps: [
-          "Open /stores/store-beyblade-arena signed out.",
+          "Open that store's page signed out.",
           "Wait for the page to render.",
           "Read the store name in the header and count the listing cards.",
         ],
@@ -534,7 +534,7 @@ export const happyPathPages: HappyPathPage[] = [
           condition: "New",
         },
         expectedBehaviour:
-          "A product is written against store-beyblade-arena with listingType standard and status published. The repository derives the full ancestor chain onto categorySlugs from the chosen leaf, which is what makes the listing reachable from its category later.",
+          "A product is written against the first store in the directory with listingType standard and status published. The repository derives the full ancestor chain onto categorySlugs from the chosen leaf, which is what makes the listing reachable from its category later.",
         expectedUiState:
           "The form leaves the create screen and lands on /store/products, where a row reads 'QA Listing seller-listing' with 'standard' and 'new · published'. Once the image is attached no validation error is displayed.",
         endResult: "After reloading /store/products the listing is present with status Published.",
