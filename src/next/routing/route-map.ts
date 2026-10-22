@@ -491,6 +491,15 @@ export const DEFAULT_ROUTE_MAP = {
     USER_DETAIL: (id: string) => `/admin/users/${id}`,
     USER_EDIT: (id: string) => `/admin/users/${id}/edit`,
     SITE: "/admin/site",
+    /*
+     * The integration kill switches — its OWN page, not a Site Settings tab.
+     *
+     * A switch that stops money has to be findable without hunting a tab
+     * strip, and this is the one surface where all four are visible together
+     * (which matters, because their off-states are not comparable: three stop
+     * something and one selects a working alternative).
+     */
+    INTEGRATIONS: "/admin/integrations",
     CAROUSEL: "/admin/carousel",
     CAROUSEL_NEW: "/admin/carousel/new",
     CAROUSEL_EDIT: (id: string) => `/admin/carousel/${id}/edit`,

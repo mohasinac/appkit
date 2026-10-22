@@ -179,6 +179,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Children and aria-label props override the action defaults when explicitly provided.
    */
   action?: ActionDef;
+  /**
+   * Replace the confirmation dialog's BODY for this one render.
+   *
+   * Does not create a dialog: ignored unless `action.confirmation` exists, so
+   * the registry still decides whether an action is confirmed at all. This
+   * only substitutes the sentence, for the case where the consequence is data
+   * the registry should not hold a copy of. See the note at `confirmBody`.
+   */
+  confirmationBody?: React.ReactNode;
 }
 
 /**
@@ -204,9 +213,19 @@ const ACTION_ICON_SIZE: Record<"sm" | "md" | "lg", IconSizeKey> = {
 
 function ActionIcon({
   action,
+  confirmationBody,
   size,
 }: {
   action?: ActionDef;
+  /**
+   * Replace the confirmation dialog's BODY for this one render.
+   *
+   * Does not create a dialog: ignored unless `action.confirmation` exists, so
+   * the registry still decides whether an action is confirmed at all. This
+   * only substitutes the sentence, for the case where the consequence is data
+   * the registry should not hold a copy of. See the note at `confirmBody`.
+   */
+  confirmationBody?: React.ReactNode;
   size: "sm" | "md" | "lg";
 }) {
   const Glyph = resolveIcon(action?.iconKey);
@@ -248,6 +267,7 @@ export function Button({
   justify,
   asChild = false,
   action,
+  confirmationBody,
   ...props
 }: ButtonProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -371,6 +391,28 @@ export function Button({
   const confirmVariant = confirmDef?.confirmKind
     ? (ACTION_KIND_VARIANT[confirmDef.confirmKind] ?? "primary")
     : "primary";
+  /*
+   * The body a caller supplied, when the consequence is DATA rather than copy.
+   *
+   * 🛑 It cannot CREATE a dialog — `confirmPortal` still gates on
+   * `action.confirmation` existing. So the registry keeps every decision that
+   * matters: whether this action is confirmed at all, its title, its confirm
+   * label, and its destructive kind. Only the sentence in the middle can be
+   * substituted, and only when the ActionDef has already declared that there
+   * IS one.
+   *
+   * Why the seam is needed: `/admin/integrations` renders one row per
+   * integration, and "what switching this off does" genuinely differs per row
+   * — payments abandons in-flight payments, support hides a contact route,
+   * shipping selects a working manual path and stops nothing. That text already
+   * lives on `INTEGRATIONS[id].offConsequence`, which is also what the row
+   * itself renders. The alternatives were worse in both directions: four
+   * near-duplicate ActionDefs with the consequence copied into the registry (a
+   * second place for one sentence to drift from — Root Cause #42), or a generic
+   * "are you sure?" that flattens exactly the distinction the model exists to
+   * preserve.
+   */
+  const confirmBody = confirmationBody ?? confirmDef?.body;
 
   // Built once and rendered alongside EITHER the asChild clone or the plain
   // <button> below — this must never live inside an early return for only
@@ -405,7 +447,7 @@ export function Button({
               {confirmDef.title}
             </p>
             <p style={{ fontSize: "0.875rem", color: "var(--appkit-color-text-muted)", marginBottom: "1.25rem" }}>
-              {confirmDef.body}
+              {confirmBody}
             </p>
             <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
               <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>

@@ -1868,6 +1868,78 @@ export const ACTIONS: ActionTree = {
     },
   },
   ADMIN: {
+    /*
+     * ── Integration switches (12b) ──────────────────────────────────
+     *
+     * 🛑 The confirmation BODY is deliberately empty on `disable-integration`,
+     * and that is not an omission.
+     *
+     * `INTEGRATIONS[id].offConsequence` is the real body, and it differs per
+     * integration by design — "payments off" abandons in-flight payments,
+     * "support off" hides a contact route, "shipping off" selects a working
+     * manual path and stops nothing. A generic "are you sure?" here would
+     * flatten exactly the distinction that file exists to preserve, and a COPY
+     * of each consequence string would be a second place for it to drift from
+     * (Root Cause #42). `AdminIntegrationsView` composes the dialog body from
+     * the descriptor at render time.
+     *
+     * The registry still owns the label, the aria-label, the kind, and the fact
+     * that a confirmation is REQUIRED — which is what Rule #7 is about.
+     */
+    "enable-integration": {
+      iconKey: "approve",
+      id: "admin.enable-integration",
+      label: "Enable",
+      ariaLabel: "Enable this integration",
+      description: "Turn an integration on. Writes the authoritative settings field for it.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "disable-integration": {
+      iconKey: "reject",
+      id: "admin.disable-integration",
+      label: "Disable",
+      ariaLabel: "Disable this integration",
+      description:
+        "Turn an integration off. The consequence differs per integration and is stated on the row.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Switch this integration off?",
+        body: "",
+        confirmLabel: "Switch it off",
+        confirmKind: "danger",
+      },
+    },
+    "enable-all-integrations": {
+      iconKey: "approve",
+      id: "admin.enable-all-integrations",
+      label: "Enable all",
+      ariaLabel: "Enable every integration",
+      description: "Turn every integration on in a single write.",
+      kind: "secondary",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Enable every integration?",
+        body: "Online payments, customer email, courier booking and the support surface will all be switched on. One write, one audit-log entry.",
+        confirmLabel: "Enable everything",
+      },
+    },
+    "disable-all-integrations": {
+      iconKey: "reject",
+      id: "admin.disable-all-integrations",
+      label: "Disable all",
+      ariaLabel: "Disable every integration",
+      description: "Turn every integration off in a single write.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Disable every integration?",
+        body: "This stops online payments, customer email and courier booking, and hides the buyer support surface. 🛑 Payments already in progress are abandoned — a buyer part-way through the gateway may be charged with no order placed. Staff email and open tickets stay workable. One write, one audit-log entry.",
+        confirmLabel: "Disable everything",
+        confirmKind: "danger",
+      },
+    },
     // ── Product moderation ─────────────────────────────────────────────────
     "approve-product": {
       iconKey: "approve",

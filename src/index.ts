@@ -1875,6 +1875,16 @@ export {
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer â€" uses firebase-admin; server-only.
+/*
+ * AdminIntegrationsView (12b) — /admin/integrations.
+ *
+ * The caller `INTEGRATIONS` / `integrationPatch` / `allIntegrationsPatch` were
+ * missing: the model landed with every route guard resolving through it and
+ * nothing in the UI reading it, which made those three exports speculative
+ * infra. This is what reads them.
+ */
+export { AdminIntegrationsView } from "./features/admin/components/AdminIntegrationsView";
+export type { AdminIntegrationsViewProps } from "./features/admin/components/AdminIntegrationsView";
 // AdminTaxCodesView / AdminTaxCodeEditorView (B3) — /admin/tax-codes.
 export { AdminTaxCodesView } from "./features/admin/components/AdminTaxCodesView";
 export type { AdminTaxCodesViewProps } from "./features/admin/components/AdminTaxCodesView";
