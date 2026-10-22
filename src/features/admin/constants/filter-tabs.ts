@@ -277,6 +277,11 @@ export const ADMIN_COUPON_TYPE_TABS = [
   { id: "fixed", label: "Fixed" },
   { id: "free_shipping", label: "Free Shipping" },
   { id: "buy_x_get_y", label: "Buy X Get Y" },
+  // D51. `audit-filter-tab-enums`' COVERAGE rule fails on a real union value
+  // with no chip — which is what it was extended to catch after ten such gaps
+  // were found at once (Root Cause #72), including sellers being unable to
+  // filter their own `in_review` listings.
+  { id: "points_earn", label: "Points Back" },
 ] as const satisfies readonly AdminFilterTab[];
 
 // ---------------------------------------------------------------------------

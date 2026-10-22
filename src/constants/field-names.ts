@@ -1097,6 +1097,11 @@ export const COUPON_FIELDS = {
     FIXED: "fixed",
     FREE_SHIPPING: "free_shipping",
     BUY_X_GET_Y: "buy_x_get_y",
+    // D51. 🛑 This file calls itself canonical and has been stale twice
+    // (EVENT_FIELDS invented a "published" status, SCAMMER_FIELDS lost
+    // "removed") — Root Cause #34. The authority is `CouponType` in
+    // features/promotions/types; this mirror has to follow it.
+    POINTS_EARN: "points_earn",
   },
 
   SCOPE_VALUES: {

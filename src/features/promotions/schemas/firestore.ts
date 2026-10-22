@@ -67,6 +67,29 @@ export interface CouponDocument extends BaseDocument {
   discount: DiscountConfig;
   bxgy?: BXGYConfig;
   tiers?: TieredDiscount[];
+  /**
+   * D51 — percentage of the amount PAID that a `points_earn` coupon awards as
+   * points. Meaningless, and ignored, on every other type.
+   *
+   * ## 🛑 Why this is not `discount.value`
+   *
+   * `discount` is read by `computeGroupCouponDiscount` to reduce the order.
+   * Overloading its `value` to mean "percent awarded as points" would make a
+   * points coupon discount the order by the same number it was supposed to
+   * credit — the exact overloading that `bxgy` and `tiers` are separate fields
+   * to avoid.
+   *
+   * `discount` stays REQUIRED on the interface because every existing coupon
+   * has one and widening it to optional would ripple through ~30 readers; a
+   * points coupon carries `{ value: 0 }`. The protection that matters is in
+   * the discount loop, which skips on TYPE rather than trusting that zero
+   * (`coupon-discount.ts`) — bad data cannot bypass a type check.
+   *
+   * The base is the post-discount amount actually paid in money, which is
+   * `POINTS_EARN_PERCENT`'s existing rule; this field exists so a campaign can
+   * raise it (the festival double event) without editing a constant.
+   */
+  pointsPercent?: number;
   usage: UsageConfig;
   validity: ValidityConfig;
   restrictions: RestrictionsConfig;
@@ -175,6 +198,7 @@ export const COUPON_FIELDS = {
     FIXED: "fixed" as CouponType,
     FREE_SHIPPING: "free_shipping" as CouponType,
     BUY_X_GET_Y: "buy_x_get_y" as CouponType,
+    POINTS_EARN: "points_earn" as CouponType,
   },
   SCOPE_VALUES: {
     ADMIN: "admin" as const,
@@ -187,6 +211,9 @@ export const COUPON_TYPE_LABELS: Record<CouponType, string> = {
   fixed: "Fixed Amount Discount",
   free_shipping: "Free Shipping",
   buy_x_get_y: "Buy X Get Y",
+  // Named for what the buyer gets, not for the mechanism. "Points earn" is
+  // our word for it; "Points back" is what appears on their balance.
+  points_earn: "Points Back",
 };
 
 export const DEFAULT_COUPON_DATA: Partial<CouponDocument> = {

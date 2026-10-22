@@ -123,11 +123,28 @@ interface CouponPayload {
   tiers?: CouponTier[];
 }
 
+/*
+ * 🛑 Not derived from `COUPON_TYPE_LABELS` on purpose, and the reason is the
+ * opposite of what the duplication framework usually says.
+ *
+ * `points_earn` is OFFERED here, so an admin can create a points offer — but
+ * the editor's discount fields (`discount.value`, `maxDiscount`,
+ * `minPurchase`) are meaningless for it, and it carries `pointsPercent`
+ * instead. Deriving the list would silently add the option the moment the
+ * union grew, which is how `AdminEventsView` ended up offering `contest`,
+ * `giveaway` and `flash-sale` — three values `EventType` never had, each
+ * matching zero rows forever (Root Cause #72).
+ *
+ * So the list is explicit and the entry is deliberate.
+ * `audit-filter-tab-enums` covers the chip row, which is the surface where
+ * coverage actually matters.
+ */
 const TYPE_OPTIONS = [
   { label: "Percentage Discount", value: "percentage" as CouponType },
   { label: "Fixed Amount Discount", value: "fixed" as CouponType },
   { label: "Free Shipping", value: "free_shipping" as CouponType },
   { label: "Buy X Get Y", value: "buy_x_get_y" as CouponType },
+  { label: "Points Back (awards points, no discount)", value: "points_earn" as CouponType },
 ];
 
 // --- Helpers -----------------------------------------------------------------

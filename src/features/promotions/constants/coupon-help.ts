@@ -20,7 +20,11 @@ export const COUPON_HELP = {
   stackingRules: [
     "One store coupon per store. If your cart has items from three stores, you can apply each of those stores' coupons at the same time.",
     "Plus one platform-wide LetItRip coupon, on top of any store coupons.",
-    "A second coupon for the same store, or a second platform-wide coupon, will be declined — remove the first one to swap it.",
+    // D51's third bucket, stated for the buyer. Without this line the rule
+    // above reads as "one platform coupon" and a buyer with a points offer
+    // applied would reasonably think it was using up that slot.
+    "Plus one points offer, which stacks with everything else — it earns you points rather than discounting, so it never takes the place of a discount coupon.",
+    "A second coupon for the same store, a second platform-wide coupon, or a second points offer will be declined — remove the first one to swap it.",
   ],
 
   /** How the discount is actually distributed. */
@@ -29,6 +33,10 @@ export const COUPON_HELP = {
     "A store coupon only discounts that store's items.",
     "A platform-wide coupon is spread proportionally across every store in your cart.",
     "Orders are placed per store, so each store's order shows its own share of the discount.",
+    // Stated because the ORDER of operations is what a buyer would otherwise
+    // guess wrong — points are earned on what you actually paid, so a discount
+    // reduces the points as well as the price.
+    "A points offer earns points on what you pay after any discounts, so the two interact rather than ignoring each other.",
   ],
 
   /** Reuses the failure reasons already written for the buyer shopping guide. */

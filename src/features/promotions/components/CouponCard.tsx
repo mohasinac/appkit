@@ -17,6 +17,19 @@ const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
   fixed:        { card: "bg-success-surface border-success dark:bg-success-surface dark:border-success",   code: "bg-success-surface dark:bg-success-surface text-success dark:text-success border-success dark:border-success" },
   free_shipping:{ card: "bg-info-surface border-info dark:bg-info-surface dark:border-info",      code: "bg-info-surface dark:bg-info-surface text-info dark:text-info border-info dark:border-info" },
   buy_x_get_y:  { card: "bg-warning-surface border-warning dark:bg-warning-surface dark:border-warning", code: "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border-warning dark:border-warning" },
+  /*
+   * D51. A `Record<CouponType, …>`, so this entry is a COMPILE requirement
+   * rather than a nicety — which is the reason the union was widened first.
+   *
+   * 🛑 `-surface` + the matching status ink, never a literal `text-white`.
+   * A past sweep paired `bg-{status}-surface` with `text-white` on 26
+   * surfaces, and since `-surface` is a near-white tint in light themes and a
+   * dark tint in dark ones, every one of them was invisible in exactly one
+   * theme (Root Cause #67). `primary` rather than a status colour because
+   * earning points is neither a warning nor an error — it is the brand's own
+   * offer.
+   */
+  points_earn:  { card: "bg-primary-surface border-primary dark:bg-primary-surface dark:border-primary", code: "bg-primary-surface dark:bg-primary-surface text-primary dark:text-primary border-primary dark:border-primary" },
 };
 
 /**

@@ -8,6 +8,9 @@
 // -- Cart Document ------------------------------------------------------------
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ListingType } from "../../products/types/index";
+/* D51 — `CartAppliedCoupon.type`, which is what `detectCouponConflict` buckets
+ * on. A type-only import, so it adds no runtime edge to the cart's graph. */
+import type { CouponType } from "../../promotions/types/index";
 
 /**
  * What KIND of thing one cart line represents.
@@ -206,6 +209,28 @@ export interface CartAppliedCoupon {
   storeId?: string;
   /** Item IDs (CartItemDocument.itemId) this coupon was calculated against */
   applicableItemIds?: string[];
+  /**
+   * The coupon's type, snapshotted at apply time (D51).
+   *
+   * 🛑 Needed because `detectCouponConflict` buckets on TYPE, not scope: a
+   * `points_earn` coupon is admin-scoped like every platform coupon but
+   * competes for its own slot, so without this field on the stored entry the
+   * detector could not tell a points coupon already in the cart from an
+   * ordinary platform one, and `RIPLI05` would block every other admin coupon
+   * — the exact defect the third bucket exists to prevent.
+   *
+   * Absent means "a discount coupon", which is what every cart written before
+   * this field holds, and is the reading that preserves the previous
+   * behaviour exactly.
+   *
+   * 🛑 Snapshotted deliberately, unlike the restrictions: a coupon's TYPE
+   * decides which slot it occupies, so re-reading it live would mean an admin
+   * editing a coupon's type could retroactively make a live cart's
+   * combination illegal. The money is still re-validated against the live
+   * coupon at placement (`revalidateAppliedCoupons`), which is where a changed
+   * discount has to be caught.
+   */
+  type?: CouponType;
 }
 
 /**

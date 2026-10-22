@@ -35,6 +35,18 @@ export interface GroupCouponDiscountResult {
   appliedDiscounts: {
     code: string;
     couponId?: string;
+    /**
+     * 🛑 This is NOT `CouponType`, and the two are easy to confuse now that
+     * both live in this file. This one records WHERE the discount came from —
+     * a coupon the buyer typed, a deal, or an automatic rule — and it is what
+     * the order document stores in `appliedDiscounts[]`.
+     *
+     * `CartAppliedCoupon.type` is the coupon's own kind (`percentage`,
+     * `points_earn`, …) and is what the loop below skips on. Reading one where
+     * the other is meant would compile cleanly and be wrong: every value of
+     * this union is absent from that one, so the `points_earn` skip would
+     * never fire and a points coupon would discount the order.
+     */
     type: "coupon" | "deal" | "auto";
     discountAmount: number;
     scope?: "admin" | "seller";
@@ -78,6 +90,20 @@ export function computeGroupCouponDiscount(
   const appliedDiscounts: GroupCouponDiscountResult["appliedDiscounts"] = [];
 
   for (const coupon of appliedCoupons) {
+    /*
+     * 🛑 D51 — a `points_earn` coupon DISCOUNTS NOTHING. It awards points on
+     * the post-discount amount paid, and it carries `pointsPercent` rather than
+     * a discount value.
+     *
+     * Skipped here rather than relied on to carry `discountAmount: 0`. The
+     * apply route writes whatever `validateCouponForCart` returned, and a
+     * points coupon that ever came back with a non-zero `discountAmount` —
+     * through a mis-seeded `discount.value`, or an admin editing a coupon's
+     * type after creation — would silently discount the order AND award points.
+     * A type check cannot be bypassed by bad data; a zero cannot be relied on.
+     */
+    if (coupon.type === "points_earn") continue;
+
     let couponGroupDiscount = 0;
     const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
     if (isSellerScoped) {
