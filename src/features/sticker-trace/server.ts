@@ -70,3 +70,35 @@ export {
  * page id eventually gets through. Exporting the union lets the compiler do it.
  */
 export type { PrintPageSizeId } from "../../_internal/shared/features/sticker-trace/export/page-sizes";
+
+/*
+ * The CODEC SEAM's types — the contract `functions/sticker-trace/sharp-codec.ts`
+ * implements.
+ *
+ * 🛑 These were only reachable through `@mohasinac/appkit/server`, so the one
+ * file this entry exists to serve still imported the wide barrel — and that is
+ * the exact failure described at the top of this file, still live. It did not
+ * matter that the import was `import type`: `./server` → `dist/server.js`
+ * reaches `next/og` (67 `next/*` imports over 1,249 modules), tsup has
+ * `noExternal: ["@mohasinac/appkit"]`, and the build died on two unresolved
+ * `react-server-dom-webpack/*` requires and two `@vercel/og` .wasm files —
+ * naming neither appkit nor the importer.
+ *
+ * Type-only re-exports are erased, so this widens the TYPE surface and adds
+ * nothing to the bundle — which is what keeps the "keep it NARROW" rule above
+ * satisfied.
+ *
+ * `Rect` keeps its alias: it is a plain rectangle in a module full of
+ * sticker-trace geometry, and `StickerRect` is what every consumer calls it.
+ */
+export type {
+  DecodeOptions,
+  ImageCodec,
+  PreviewOptions,
+  ProbeResult,
+} from "../../_internal/shared/features/sticker-trace/codec";
+export type {
+  DecodedRaster,
+  EncodedImage,
+  Rect as StickerRect,
+} from "../../_internal/shared/features/sticker-trace/types";
