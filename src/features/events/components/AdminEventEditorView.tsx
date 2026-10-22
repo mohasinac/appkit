@@ -229,6 +229,8 @@ interface EventDraft {
   // Guest participation — one uniform admin toggle applied across every
   // event type (poll/survey/feedback/raffle/spin_wheel), not a per-type rule.
   allowGuestParticipation: boolean;
+  // Pin — lifts this event to the top of /events and the homepage rail.
+  isPinned: boolean;
   // Sale
   discountPercent: string;
   saleBannerText: string;
@@ -311,6 +313,7 @@ const DEFAULT_DRAFT: EventDraft = {
   status: "draft",
   createdBy: "",
   allowGuestParticipation: false,
+  isPinned: false,
   discountPercent: "10",
   saleBannerText: "",
   couponId: "",
@@ -479,6 +482,10 @@ export function AdminEventEditorView({
       status: event.status || "draft",
       createdBy: event.createdBy || "",
       allowGuestParticipation: Boolean(event.allowGuestParticipation),
+      // `Boolean()` so an ABSENT field (every event predating the pin) seeds
+      // the toggle as off rather than leaving it `undefined`, which React
+      // would read as an uncontrolled input.
+      isPinned: Boolean(event.isPinned),
       discountPercent: String(event.saleConfig?.discountPercent ?? 10),
       saleBannerText: event.saleConfig?.bannerText || "",
       couponId: event.offerConfig?.couponId || "",
@@ -529,6 +536,7 @@ export function AdminEventEditorView({
         endsAt: toISOString(draft.endsAt),
         coverImageUrl: draft.coverImageUrl || undefined,
         allowGuestParticipation: draft.allowGuestParticipation,
+        isPinned: draft.isPinned,
         ...buildEventTypeConfig(draft),
         ...buildEventRaffleFields(draft),
       };
@@ -676,7 +684,7 @@ export function AdminEventEditorView({
     {
       id: "settings",
       label: "Settings",
-      fields: ["status", "allowGuestParticipation", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
+      fields: ["status", "allowGuestParticipation", "isPinned", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
       // Same: the offer-coupon, offer-display-code and poll-minimum-options
       // rules are all stated in eventDraftSchema's superRefine, which now
       // surfaces them inline on the field instead of as a step-blocking banner.
@@ -701,6 +709,17 @@ export function AdminEventEditorView({
             />
             <Text size="xs" color="muted">
               When enabled, unauthenticated visitors can participate in this event (poll vote, survey/feedback response, raffle entry, or wheel spin), identified by a hashed IP address instead of an account. Applies uniformly to whatever entry mechanism this event type uses.
+            </Text>
+          </Stack>
+
+          <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+            <Toggle
+              checked={values.isPinned}
+              onChange={(v) => onChange({ isPinned: v })}
+              label="Pin to the top of Events"
+            />
+            <Text size="xs" color="muted">
+              Pinned events are listed first on the Events page and in the homepage strip, ahead of the usual soonest-first order. A pinned event still has to be Active to appear at all — pinning does not publish it.
             </Text>
           </Stack>
 

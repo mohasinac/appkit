@@ -22,6 +22,23 @@
 import type { AuthoredCase } from "./_types";
 
 export const authored: Record<string, AuthoredCase> = {
+  "checklist-content-discovery-events-event-pinned-first": {
+    roles: ["guest"],
+    startPage: "/events",
+    steps: [
+      "Open /events in a private window with no session.",
+      "Read the FIRST card in the list and note its title.",
+      "Read every card's start date. The list's normal order is soonest start date first.",
+      "WAIT for the page to settle for a few seconds — the list refetches from /api/events after first paint — then read the first card AGAIN.",
+      "Open the homepage and read the first card in the Events & Offers strip.",
+    ],
+    expectedBehaviour:
+      "event-festive-cashback-10 (\"Diwali to New Year: Four Offers, Three Months\") is seeded isPinned, so it comes first on /events and in the homepage strip regardless of whether its start date is the soonest. Pinning is applied in memory by sortPinnedFirst rather than by a Firestore orderBy — ordering on a field that every other event lacks would return only the pinned row and empty the page, which is the failure to look for here: a one-card events list is NOT a successful pin.",
+    expectedUiState:
+      "The pinned event is the first card both before and after the refetch, and first in the homepage strip. Every other active event is still listed below it — if the other events disappear, the ordering was pushed into the query. If the pinned event is first on load and drops to its date position a few seconds later, the API route is not applying the same ordering the server render did.",
+    expectedData: { firstSlug: "festive-cashback-10" },
+    endResult: "Nothing changed — this case only reads.",
+  },
   "checklist-content-discovery-events-view-event": {
     roles: ["guest"],
     startPage: "/events",

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { COUPON_CODE_PATTERN } from "./config";
+import { bxgyConfigSchema } from "../../../../features/promotions/schemas";
 
 export const applyCouponSchema = z.object({
   code: z.string().regex(COUPON_CODE_PATTERN, "Invalid coupon code format").toUpperCase(),
@@ -19,6 +20,12 @@ export const createCouponSchema = z.object({
     maxDiscount: z.number().min(0).optional(),
     minPurchase: z.number().min(0).default(0),
   }),
+  /*
+   * 🛑 Without this, `z.object()` strips the config the `buy_x_get_y` member
+   * of the enum above depends on — see the fuller note on `bxgyConfigSchema`.
+   * Imported rather than restated so all five write paths move together.
+   */
+  bxgy: bxgyConfigSchema.optional(),
   usage: z.object({
     totalLimit: z.number().int().min(1).optional(),
     perUserLimit: z.number().int().min(1).default(1),

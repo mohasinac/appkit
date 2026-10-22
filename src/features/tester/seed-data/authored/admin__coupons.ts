@@ -64,6 +64,45 @@ export const authored: Record<string, AuthoredCase> = {
       "The fixed coupon reduces the subtotal by ₹100. The free-shipping one zeroes the SHIPPING line rather than the subtotal — a free-shipping coupon that takes its value off the subtotal is the failure worth naming. Buy-X-get-Y changes the total by quantity.",
     endResult: "All three coupons are deleted by the final step.",
   },
+  "checklist-admin-coupons-coupon-bxgy-config-persists": {
+    roles: ["admin"],
+    startPage: "/admin/coupons",
+    steps: [
+      "Sign in as admin@letitrip.in / TempPass123!.",
+      "Open /admin/coupons/new and choose the Buy X Get Y type.",
+      "Read the fields that appear. There should be THREE: Buy quantity, Get quantity, and Max item price (₹).",
+      "Create a coupon coded QABXGYCFG with buy quantity 3, get quantity 1, and max item price 2000. Save it.",
+      "RELOAD the coupon's edit page and read all three numbers back.",
+      "Delete the coupon.",
+    ],
+    inputs: { code: "QABXGYCFG", buyQuantity: 3, getQuantity: 1, maxItemPrice: 2000 },
+    expectedBehaviour:
+      "BEFORE (the bug this case exists for): all four admin coupon write paths validated with a `z.object()` that never declared `bxgy`, and z.object() STRIPS undeclared keys — so the editor sent the buy/get pair, the route answered 200, and nothing was written. Reopening showed the defaults. AFTER: all three numbers are stored and read back exactly as entered. A save that reports success and then shows 1 / 1 / blank on reload is the failure, and it looks identical to a successful save until you reload — which is why the reload step is not optional.",
+    expectedUiState:
+      "After the reload: Buy quantity 3, Get quantity 1, Max item price 2000. Buy quantity showing 1, or the Max item price box being empty, means the field was stripped in transit rather than rejected — there will have been no error message either time.",
+    expectedData: { buyQuantity: 3, getQuantity: 1, maxItemPrice: 2000 },
+    endResult: "QABXGYCFG is deleted by the final step.",
+  },
+  "checklist-admin-coupons-coupon-bxgy-max-item-price": {
+    roles: ["buyer"],
+    startPage: "/products",
+    steps: [
+      "Sign in as vivaan.kapoor@gmail.com / TempPass123!.",
+      "Empty the cart first — leftover lines from an earlier case change the unit count this case depends on.",
+      "Add THREE items each priced ₹2,000 or under. Apply BUY3GET1 at checkout and read the discount.",
+      "Add a FOURTH item also priced ₹2,000 or under, so there are four qualifying units. Read the discount again.",
+      "Note the price of the cheapest of those four items.",
+      "Now empty the cart and add FOUR items each priced ABOVE ₹2,000. Apply BUY3GET1 and read the discount.",
+      "Empty the cart.",
+    ],
+    inputs: { code: "BUY3GET1", ceiling: 2000 },
+    expectedBehaviour:
+      "Buy-3-get-1 forms blocks of buy+get = FOUR units and frees the cheapest unit in each complete block; an incomplete block earns nothing. So three qualifying items earn ₹0 and four earn the price of the cheapest. The ₹2,000 ceiling filters units BEFORE blocks are formed, so four items above the ceiling form no block at all — if they earned a free item, the ceiling is being applied only to which unit is given away rather than to which units qualify, and the offer is paying out a ₹5,000 top on an 'items under ₹2,000' promotion.",
+    expectedUiState:
+      "Three qualifying items: discount ₹0.00, and the code is still accepted rather than erroring — this is correct and is the single most likely thing to be misread as a bug. Four qualifying items: the discount equals the cheapest of the four exactly. Four over-ceiling items: discount ₹0.00.",
+    expectedData: { threeQualifying: 0, fourOverCeiling: 0 },
+    endResult: "Cart emptied. BUY3GET1 is a seeded season coupon — do not delete it.",
+  },
   "checklist-admin-coupons-coupon-per-user-limit-enforced": {
     roles: ["admin", "buyer"],
     startPage: "/admin/coupons",

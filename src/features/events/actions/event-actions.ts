@@ -37,6 +37,7 @@ import type {
 } from "../schemas";
 import type { EventStatus } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { sortPinnedFirst } from "../utils/sort-pinned";
 import { maskName } from "../../../security/pii-mask";
 import type {
   FirebaseSieveResult,
@@ -280,7 +281,9 @@ export async function listPublicEvents(
     pageSize,
   });
   // PUBLIC by name — it backs the homepage strip and /events.
-  return { ...result, items: hidePublicTestData(result.items) };
+  // `sortPinnedFirst` AFTER the test-data filter, so a pinned sandbox event
+  // cannot occupy the rail's first slot for a visitor who cannot see it.
+  return { ...result, items: sortPinnedFirst(hidePublicTestData(result.items)) };
 }
 
 /**

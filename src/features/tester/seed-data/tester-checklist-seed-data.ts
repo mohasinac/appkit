@@ -3612,6 +3612,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       href: "/events",
       cases: [
         { key: "view-event", label: "Viewing an event detail page works", href: "/user/events" },
+        { key: "event-pinned-first", label: "A pinned event is listed first on /events and stays first after the page refetches", href: "/events" },
         { key: "events-listing-cards-images", label: "The events listing page shows each event's real cover image (not a generic icon placeholder) when one is set, and all cards in a row are the same height", href: "/events" },
         {
           key: "lottery-cover-image",
@@ -6052,6 +6053,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         cases: [
           { key: "coupon-create-percentage", label: "Admin can create a percentage-type coupon", href: "/admin/coupons/new" },
           { key: "coupon-create-fixed-freeship-bxgy", label: "Admin can create fixed, free_shipping, and buy_x_get_y coupon types" },
+          { key: "coupon-bxgy-config-persists", label: "A buy_x_get_y coupon's buy/get counts and price ceiling survive a save and reload" },
+          { key: "coupon-bxgy-max-item-price", label: "BUY3GET1 ignores items above its ₹2,000 ceiling and frees the cheapest of four" },
           { key: "coupon-per-user-limit-enforced", label: "A coupon's perUserLimit is correctly enforced at checkout after being set by admin" },
           { key: "coupon-min-max-discount", label: "Admin-set minPurchase and maxDiscount are correctly enforced at checkout" },
           { key: "coupon-scope-admin-vs-seller", label: "Admin-scope and seller-scope coupons both apply correctly, respecting scope rules" },

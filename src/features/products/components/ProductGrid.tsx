@@ -500,7 +500,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
    * `pt-0` because the card body's own bottom padding is the gap.
    */
   return (
-    <Div className="flex h-full flex-col">
+    <Div layout="flex-col" className="h-full">
       {wrapped}
       {/*
        * No `pt-0`: with no `pt-*` class the padding-top is already 0, so the
@@ -510,7 +510,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
        * `--appkit-space-3`, which is the sanctioned form when no all-sides
        * preset fits (there is no `paddingX`/`paddingY` prop).
        */}
-      <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">
+      <Div layout="flex" justify="end" className="px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">
         {ownerActions}
       </Div>
     </Div>

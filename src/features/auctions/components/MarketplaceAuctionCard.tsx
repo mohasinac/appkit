@@ -548,7 +548,7 @@ export function MarketplaceAuctionCard({
    * clears this card's own overlays, which all sit at `z-10`.
    */
   return (
-    <Div className="flex h-full flex-col">
+    <Div layout="flex-col" className="h-full">
       {card}
     {/*
       🛑 NORMAL FLOW AT THE FOOT, not an absolute corner.
@@ -565,7 +565,7 @@ export function MarketplaceAuctionCard({
       a SIBLING of the card body because that body is wrapped in a `<Link>`
       and a button inside an anchor is invalid HTML.
     */}
-    <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">{ownerActions}</Div>
+    <Div layout="flex" justify="end" className="px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">{ownerActions}</Div>
     </Div>
   );
 }

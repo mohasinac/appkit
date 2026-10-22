@@ -21,6 +21,23 @@ export interface EventDocument extends BaseDocument {
   description: string;
   status: EventStatus;
 
+  /**
+   * Lift this event to the top of `/events` and the homepage rail, ahead of
+   * the `startsAt` ASC default.
+   *
+   * 🛑 DELIBERATELY NOT IN `EVENT_INDEXED_FIELDS` AND NOT SORTABLE IN SIEVE.
+   * A Firestore `orderBy` EXCLUDES every document that lacks the ordering
+   * field (Root Cause #100), and `isPinned` is absent from all 1 live event
+   * and every seeded row that is not pinned — so ordering by it would empty
+   * the events page entirely while answering HTTP 200. The ordering is
+   * applied in memory by `sortPinnedFirst`; see the bound stated there.
+   *
+   * Absent means not pinned. Do not default it to `false` on write — a
+   * written `false` and an absent field must stay interchangeable, because
+   * every event that predates this field has the latter.
+   */
+  isPinned?: boolean;
+
   /** Test-data flag — set on the shared admin-seeded test event; swept by testDataCleanup. */
   isTestData?: boolean;
   /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
@@ -167,6 +184,7 @@ export const EVENT_FIELDS = {
   WINNER_IMAGES: "winnerImages",
   ADDITIONAL_IMAGES: "additionalImages",
   TAGS: "tags",
+  IS_PINNED: "isPinned",
   ALLOW_GUEST_PARTICIPATION: "allowGuestParticipation",
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",

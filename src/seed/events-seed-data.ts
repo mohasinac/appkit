@@ -1,6 +1,14 @@
 /*
- * WHY: Seeds the ONE live event — the Diwali cashback offer.
- * WHAT: 1 active `offer` event, published ahead of its own start date.
+ * WHY: Seeds the ONE live event — the Diwali → New Year season offers.
+ * WHAT: 1 active, PINNED `offer` event spanning 6 Nov 2026 → 5 Feb 2027,
+ *       advertising the four codes a community poll chose plus the
+ *       festival-only CASHBACK10.
+ *
+ * 🛑 Its id and slug still say `festive-cashback-10`, which is now narrower
+ * than what the event covers. They are KEPT: the slug is the live public URL
+ * (/events/festive-cashback-10), `coupon-cashback10` is not the code it
+ * features any more but other seed rows and any saved link resolve by this
+ * slug, and renaming it would 404 every share of it to buy a tidier string.
  *
  * ## 🛑 PRUNED TO MATCH LIVE, 2026-10-21
  *
@@ -47,9 +55,14 @@ import type {
 import { withEventSearchTxt } from "./_helpers/search-txt-wrappers";
 import { EVENT_FIELDS } from "../features/events/schemas";
 import { editorialImage } from "./_helpers/editorial-media";
+/*
+ * `DIWALI_CASHBACK_END` is deliberately NOT imported here. The 16 November
+ * date appears in this event's prose, but the event's own window is the full
+ * season — only `coupons-seed-data.ts` has a field that date belongs in.
+ */
+import { SEASON_START, SEASON_END } from "./_helpers/festive-window";
 
 const NOW = new Date();
-const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const _raweventsSeedData: EventDocument[] = [
   // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
@@ -65,40 +78,71 @@ const _raweventsSeedData: EventDocument[] = [
    * would be invisible on `/events` AND on the homepage strip, which is the
    * opposite of what an announcement is for.
    *
-   * 🛑 `startsAt` MUST match `coupon-cashback10`'s `validity.startDate`
-   * (both `daysAhead(7)`). The code is deliberately readable before it is
-   * spendable; two independently-typed dates would silently break that in one
-   * direction or the other.
+   * 🛑 `startsAt` and every coupon's `validity.startDate` are now the SAME
+   * IMPORTED CONSTANT. This comment used to say they must match and that both
+   * were `daysAhead(7)`; the coupon file said the same thing about
+   * `daysAhead(16)`. They were nine days apart, so the event advertised a code
+   * that `isCouponValid` refused — see `_helpers/festive-window.ts`.
+   *
+   * 🛑 `isPinned` keeps this at the top of /events and the homepage strip for
+   * the whole season. It is applied in memory by `sortPinnedFirst`, NOT by a
+   * Firestore `orderBy` — ordering on a field that every other event lacks
+   * would return only this row and empty the page (Root Cause #100).
    */
   {
     id: "event-festive-cashback-10",
     slug: "festive-cashback-10",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Diwali Cashback: 10% Back on Every Order",
+    title: "Diwali to New Year: Four Offers, Three Months",
     description:
-      `<p><strong>Our Diwali sale opens on Dhanteras — Friday 6 November — and runs through the festival.</strong></p>` +
-      `<p>Spend ₹999 or more and get <strong>10% of your order value back</strong>, up to ₹1,000. It applies right across the catalogue — Beyblade X tops, spares, sticker sheets and bundles alike.</p>` +
+      `<p><strong>Our festive season opens on Dhanteras — Friday 6 November 2026 — and the offers below run right through to 5 February 2027.</strong></p>` +
+      `<p>You picked these. We ran a community poll asking which offers to run from Diwali to New Year, and <strong>Buy 3, Get 1 Free</strong> won with 28 of the 33 votes. We are running the other three as well.</p>` +
       `<img src="${editorialImage("event-content-diwali-fireworks")}" alt="Fireworks over a city skyline at night" />` +
+      `<h2>The offers</h2>` +
+      `<ul>` +
+      `<li><strong>BUY3GET1</strong> — Buy 3, get 1 free on items priced ₹2,000 or under. <strong>Add four qualifying items and the cheapest of the four comes off.</strong> Items above ₹2,000 do not count towards it.</li>` +
+      `<li><strong>CASHBACK500</strong> — 10% of your order value back, up to ₹500, on any order.</li>` +
+      `<li><strong>CASHBACK5</strong> — 5% back with no upper limit. Worth more than CASHBACK500 once your order passes ₹10,000.</li>` +
+      `<li><strong>FREESHIP2000</strong> — free delivery on any order above ₹2,000.</li>` +
+      `</ul>` +
+      `<h2>Diwali fortnight only</h2>` +
+      `<p><strong>CASHBACK10</strong> gives 10% back up to ₹1,000 on orders above ₹999. It is the festival code rather than a season one, so it runs from Dhanteras only until <strong>16 November</strong>. Over the Diwali fortnight it is the best code on the list for any order between ₹999 and ₹10,000.</p>` +
       `<h2>How it works</h2>` +
-      `<ol><li>Copy the code <strong>CASHBACK10</strong> below.</li>` +
+      `<ol><li>Copy the code you want from the card below, or from the list above.</li>` +
       `<li>Paste it at checkout from Dhanteras onwards.</li>` +
       `<li>Cashback is credited to your wallet within 24 hours of delivery.</li></ol>` +
-      `<h2>Dates</h2>` +
-      `<p>Dhanteras falls on Friday 6 November 2026 and Diwali itself on Sunday 8 November. The code stays live until 16 November, so there is a week after Bhai Dooj to use it.</p>` +
-      `<p><em>The code is published now so you can save it ahead of time. It becomes spendable when the sale opens — one use per account, up to ₹1,000 back.</em></p>`,
+      `<h2>The rules, plainly</h2>` +
+      `<p><strong>One code per order.</strong> These are all store-wide codes and they do not stack with each other, so pick whichever is worth most on your basket. Each is one use per account.</p>` +
+      `<p><em>The codes are published now so you can save them. They become spendable when the sale opens on 6 November.</em></p>`,
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAhead(7),
-    endsAt: daysAhead(26),
+    /*
+     * 🛑 The event's OWN window is the season, so it stays visible and
+     * readable for the full three months. `endsAt` here is not what gates a
+     * code — each coupon carries its own `validity`, which is why CASHBACK10
+     * can expire on 16 November inside an event that runs to February.
+     */
+    startsAt: SEASON_START,
+    endsAt: SEASON_END,
+    isPinned: true,
     coverImage: {
       type: "image",
       url: editorialImage("event-cover-diwali-fireworks"),
       alt: "Fireworks over a city skyline at night",
     },
-    tags: ["offer", "cashback", "diwali", "festive", "coming-soon"],
+    tags: ["offer", "cashback", "diwali", "festive", "new-year", "bogo", "free-shipping"],
+    /*
+     * 🛑 `offerConfig` holds exactly ONE code — it drives the single
+     * copy-to-clipboard card, and the type has no array form. BUY3GET1 is
+     * featured because it is what the poll actually voted for; the other four
+     * are listed in the description above, which is the only place they can
+     * be. Do not "fix" this by inventing a second couponId field: the card
+     * component reads this shape, and a field nothing renders is worse than
+     * the prose that currently works.
+     */
     offerConfig: {
-      couponId: "coupon-cashback10",
-      displayCode: "CASHBACK10",
-      bannerText: "Diwali: 10% back on orders above ₹999, up to ₹1,000. One use per account.",
+      couponId: "coupon-buy3get1",
+      displayCode: "BUY3GET1",
+      bannerText: "Buy 3, get 1 free on items under ₹2,000 — add 4 and the cheapest comes off. Plus 3 more codes inside.",
     },
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",

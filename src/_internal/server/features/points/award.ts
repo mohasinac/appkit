@@ -109,7 +109,15 @@ export async function awardPurchasePoints(
   }
 
   const goods = orderTaxableValue(order as unknown as PayableOrderLike);
-  const amount = roundPoints((goods * POINTS_EARN_PERCENT) / 100);
+  /*
+   * `goods * (PERCENT / 100)`, not `(goods * PERCENT) / 100` — the same value,
+   * written the way every fee in `fees/calculator.ts` is
+   * (`subtotal * (commissions.platformFeePercent / 100)`). The division
+   * belongs to the PERCENT, and grouping it that way is what distinguishes a
+   * percentage from the subunit-conversion `/100` that `audit-money-units`
+   * exists to catch — which read the old grouping as exactly that.
+   */
+  const amount = roundPoints(goods * (POINTS_EARN_PERCENT / 100));
 
   if (amount <= 0) {
     /*

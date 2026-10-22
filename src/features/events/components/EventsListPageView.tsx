@@ -8,6 +8,7 @@ import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/si
 import { sortBy } from "../../../constants/sort";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { sortPinnedFirst } from "../utils/sort-pinned";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -77,7 +78,7 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
    * refetch threads the real viewer, so a signed-in tester still sees them.
    */
   const publicResult = result
-    ? { ...result, items: hidePublicTestData(result.items) }
+    ? { ...result, items: sortPinnedFirst(hidePublicTestData(result.items)) }
     : result;
 
   return (

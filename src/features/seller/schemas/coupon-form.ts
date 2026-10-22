@@ -289,6 +289,25 @@ export const adminCouponFormSchema = couponFormBase
     }),
 
     /*
+     * The per-ITEM price ceiling — "buy 3 get 1 free on items under ₹2,000".
+     *
+     * 🛑 Genuinely optional, unlike the buy/get pair: `superRefine` below does
+     * NOT demand it when the type is buy_x_get_y, because a BOGO with no
+     * ceiling is a perfectly ordinary offer and every one written before
+     * 2026-10-22 is exactly that. Leaving it blank means no ceiling.
+     *
+     * 🛑 Not to be confused with `minPurchase`, which is the ORDER total. This
+     * is one unit's price, so a line of three ₹1,500 tops qualifies on all
+     * three units rather than failing a ₹4,500 test.
+     */
+    maxItemPrice: annotate(numericString("Maximum item price").optional(), {
+      section: "basics", order: 8, row: "pair", kind: "number",
+      when: (v) => v.type === "buy_x_get_y",
+      label: "Max item price (₹)",
+      help: "Only items at or below this price qualify. Leave blank for no limit.",
+    }),
+
+    /*
      * Written by orders, never by this form. `t3-mirror` renders it read-only
      * instead of as a box an admin could set to whatever they liked — which is
      * what "Current usage" was, `disabled` by an attribute a programmatic
