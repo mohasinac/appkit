@@ -1663,6 +1663,7 @@ export {
 export type {
   IntegrationId,
   IntegrationDescriptor,
+  IntegrationPatch,
   IntegrationState,
 } from "./_internal/shared/features/admin/integrations";
 

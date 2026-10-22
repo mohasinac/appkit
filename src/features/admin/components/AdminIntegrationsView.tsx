@@ -21,6 +21,7 @@ import {
   integrationPatch,
   readIntegrationStates,
   type IntegrationId,
+  type IntegrationPatch,
 } from "../../../_internal/shared/features/admin/integrations";
 import type { SiteSettingsDocument } from "../../schemas/firestore";
 
@@ -74,7 +75,7 @@ export interface AdminIntegrationsViewProps {
    * carries no endpoint and no fetch — `PUT /api/admin/site`, which already
    * records one `recordAdminAction` per write.
    */
-  onSave: (patch: Record<string, unknown>) => Promise<void>;
+  onSave: (patch: IntegrationPatch) => Promise<void>;
 }
 
 /** What the switch currently is, in the admin's vocabulary rather than a boolean. */
@@ -107,7 +108,7 @@ export function AdminIntegrationsView({ settings, onSave }: AdminIntegrationsVie
   const states = useMemo(() => readIntegrationStates(settings), [settings]);
 
   const apply = useCallback(
-    async (key: IntegrationId | "all", patch: Record<string, unknown>, label: string) => {
+    async (key: IntegrationId | "all", patch: IntegrationPatch, label: string) => {
       setPending(key);
       try {
         await onSave(patch);
@@ -147,9 +148,9 @@ export function AdminIntegrationsView({ settings, onSave }: AdminIntegrationsVie
         docstring, because an admin cannot read the docstring.
 
         `withOnlinePaymentEnabled` guards six routes INCLUDING
-        `/api/payment/verify` and the Razorpay webhook, and Razorpay does not
-        retry a 404 — so flipping payments off mid-checkout abandons that
-        payment: captured, with no order. Ungating those two does not help,
+        the verify route and the Razorpay webhook, and Razorpay does not retry
+        a 404 — so flipping payments off mid-checkout abandons that payment:
+        captured, with no order. Ungating those two does not help,
         because `providers.config.ts` only registers the gateway while the flag
         is on, so a completion path would reach `ManualPaymentProvider` and fail
         differently. Until that larger change exists, this is a warning

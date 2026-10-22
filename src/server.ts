@@ -2226,6 +2226,7 @@ export type {
   IntegrationId,
   IntegrationDescriptor,
   IntegrationState,
+  IntegrationPatch,
 } from "./_internal/shared/features/admin/integrations";
 
 // Seller listing form draft <-> product write payload. The flat form keys and

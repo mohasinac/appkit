@@ -337,12 +337,15 @@ export function allIntegrationsPatch(enabled: boolean): IntegrationPatch {
   for (const id of INTEGRATION_ORDER) {
     const patch = integrationPatch(id, enabled);
     /*
-     * Merged group by group rather than through `Object.entries`, which could
-     * only be typed with the two `as object` casts this replaces. Listing the
-     * groups also means a fifth integration writing a NEW group does not
-     * silently vanish from the bulk switch — it fails to merge until someone
-     * adds the line, which is the same forcing function as the exhaustive
-     * `never` in `integrationPatch` above.
+     * Merged per GROUP, so two integrations writing different fields of the
+     * same group (none do today, but `payment` already carries two flags)
+     * cannot clobber each other.
+     *
+     * Spelled out per key rather than via `Object.entries`, which erased the
+     * types this patch now carries — and listing the groups is also a forcing
+     * function: a fifth integration writing a NEW group does not silently
+     * vanish from the bulk switch, it fails to merge until someone adds the
+     * line. Same argument as the exhaustive `never` in `integrationPatch`.
      */
     if (patch.payment) merged.payment = { ...merged.payment, ...patch.payment };
     if (patch.messaging) merged.messaging = { ...merged.messaging, ...patch.messaging };
