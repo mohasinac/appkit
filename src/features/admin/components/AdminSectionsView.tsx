@@ -2816,10 +2816,24 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   }, [sections]);
 
   const invalidateSections = React.useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
-    // Public-facing useHomepageSections() reads under a separate key.
-    await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
-  }, [queryClient]);
+    try {
+      await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
+      // Public-facing useHomepageSections() reads under a separate key.
+      await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
+    } catch (err) {
+      /*
+       * A refetch that fails after a SUCCESSFUL write is not a failed write,
+       * so this must not raise — doing so would report "Failed to delete
+       * section" for a section that is gone. The list is stale rather than
+       * wrong, and says so.
+       */
+      const normalized = normalizeError(err);
+      toast.showToast(
+        normalized.message || "Saved, but the list could not refresh. Reload to see it.",
+        "warning",
+      );
+    }
+  }, [queryClient, toast]);
 
   const deleteSection = useApiMutation({
     errorMessage: "Failed to delete section.",

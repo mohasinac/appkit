@@ -5,7 +5,7 @@ import type { JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text, TextLink, StickyToolbar, Toggle } from "../../../ui";
+import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text, TextLink, StickyToolbar, Toggle, useToast } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useBottomActions } from "../../layout";
 import { MediaImage } from "../../media/MediaImage";
@@ -23,6 +23,7 @@ import { DataTable } from "./DataTable";
 
 import { RowActionMenu } from "../../../ui/components/RowActionMenu";
 import { apiClient } from "../../../http";
+import { normalizeError } from "../../../errors/normalize";
 import type { AdminTableColumn } from "../types";
 
 const PAGE_SIZE = 50;
@@ -65,6 +66,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
   const [localRows, setLocalRows] = useState<CarouselRow[]>([]);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { showToast } = useToast();
 
   const {
     view, setView, table, searchInput, setSearchInput, commitSearch,
@@ -182,14 +184,26 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
    */
   const handleBulkDelete = useCallback(async () => {
     const ids = selection.selectedIds;
-    if (onBulkDelete) {
-      await onBulkDelete(ids);
-    } else {
-      await Promise.all(ids.map((id) => apiClient.delete(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(id))));
-      await queryClient.invalidateQueries({ queryKey: ["admin", "carousel", "listing"] });
+    try {
+      if (onBulkDelete) {
+        await onBulkDelete(ids);
+      } else {
+        await Promise.all(ids.map((id) => apiClient.delete(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(id))));
+        await queryClient.invalidateQueries({ queryKey: ["admin", "carousel", "listing"] });
+      }
+      selection.clearSelection();
+      showToast(`${ids.length} slide${ids.length === 1 ? "" : "s"} deleted.`, "success");
+    } catch (err) {
+      const normalized = normalizeError(err);
+      /*
+       * The selection is deliberately NOT cleared on failure. `Promise.all`
+       * rejects on the first error, so some of these ids may be gone and
+       * some may not — clearing would hide which rows are still there and
+       * leave the admin no way to retry the remainder.
+       */
+      showToast(normalized.message || "Could not delete the selected slides.", "error");
     }
-    selection.clearSelection();
-  }, [onBulkDelete, selection, queryClient]);
+  }, [onBulkDelete, selection, queryClient, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     buildBulkAction(ACTIONS.ADMIN["delete-carousel"], handleBulkDelete),

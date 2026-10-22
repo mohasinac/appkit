@@ -133,6 +133,14 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
     },
   });
 
+  /** Named so the row-action array stays a flat list of declarations. */
+  const saveOverride = React.useCallback(
+    async (entryId: string, values: FormValues) => {
+      await overrideMutation.mutateAsync({ entryId, values });
+    },
+    [overrideMutation],
+  );
+
   const clearMutation = useApiMutation({
     errorMessage: "Could not reset that entry.",
     mutationFn: async (entryId: string) =>
@@ -304,9 +312,7 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
                     keywords: row.keywords,
                     weight: row.weight,
                   },
-                  onSubmit: async (values) => {
-                    await overrideMutation.mutateAsync({ entryId: row.id, values });
-                  },
+                  onSubmit: (values) => saveOverride(row.id, values),
                   submitLabel: "Save entry",
                 },
                 {

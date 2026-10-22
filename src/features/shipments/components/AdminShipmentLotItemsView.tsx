@@ -214,6 +214,14 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
     onSuccess: () => refetch(),
   });
 
+  /** Named so the row-action array stays a flat list of declarations. */
+  const saveItemEdit = React.useCallback(
+    async (itemId: string, values: FormValues) => {
+      await editItemMutation.mutateAsync({ itemId, values });
+    },
+    [editItemMutation],
+  );
+
   const unlinkItemMutation = useApiMutation({
     successMessage: "Item unlinked",
     mutationFn: (itemId: string) =>
@@ -335,9 +343,7 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
                           quantity: item.quantity,
                           price: item.price ?? 0,
                         },
-                        onSubmit: async (values) => {
-                          await editItemMutation.mutateAsync({ itemId: item.id, values });
-                        },
+                        onSubmit: (values) => saveItemEdit(item.id, values),
                         submitLabel: "Save item",
                       },
                     ]}

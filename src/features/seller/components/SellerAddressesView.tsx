@@ -292,8 +292,11 @@ export function SellerAddressesView({
    */
   const handleSetDefault = async (addr: AddressDoc) => {
     try {
+      // Same request shape as `handleSave` below, rather than a second
+      // hand-rolled fetch beside it.
+      const method = "PUT";
       const res = await fetch(`${apiBase}/${addr.id}`, {
-        method: "PUT",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isDefault: true }),
       });
