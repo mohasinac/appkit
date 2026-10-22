@@ -14,6 +14,7 @@ import {
   useMediaCleanup,
   useMediaUpload,
 } from "../../media";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -99,7 +100,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
       toast.showToast("File deleted.", "success");
     } catch (err) {
       const normalized = normalizeError(err);
-      toast.showToast(normalized.message || "Failed to delete file.", "error");
+      toast.showToast(toUserMessage(normalized.code, undefined, { fallback: "Failed to delete file." }), "error");
     } finally {
       setIsDeleting(false);
       setDeleteTarget(null);

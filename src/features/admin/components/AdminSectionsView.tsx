@@ -78,6 +78,7 @@ import {
 } from "./sections/adminSectionsTypes";
 import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, PrizeDrawsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
 import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -2829,7 +2830,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
        */
       const normalized = normalizeError(err);
       toast.showToast(
-        normalized.message || "Saved, but the list could not refresh. Reload to see it.",
+        toUserMessage(normalized.code, undefined, { fallback: "Saved, but the list could not refresh. Reload to see it." }),
         "warning",
       );
     }

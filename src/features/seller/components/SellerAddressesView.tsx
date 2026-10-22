@@ -305,7 +305,7 @@ export function SellerAddressesView({
       await load();
     } catch (err) {
       const normalized = normalizeError(err);
-      setSaveError(normalized.message || "Failed to set default address");
+      setSaveError(toUserMessage(normalized.code, undefined, { fallback: "Failed to set default address" }));
     }
   };
 

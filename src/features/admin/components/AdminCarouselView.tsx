@@ -25,6 +25,7 @@ import { RowActionMenu } from "../../../ui/components/RowActionMenu";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
 import type { AdminTableColumn } from "../types";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const PAGE_SIZE = 50;
 const FILTER_KEYS = ["active"];
@@ -201,7 +202,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
        * some may not — clearing would hide which rows are still there and
        * leave the admin no way to retry the remainder.
        */
-      showToast(normalized.message || "Could not delete the selected slides.", "error");
+      showToast(toUserMessage(normalized.code, undefined, { fallback: "Could not delete the selected slides." }), "error");
     }
   }, [onBulkDelete, selection, queryClient, showToast]);
 

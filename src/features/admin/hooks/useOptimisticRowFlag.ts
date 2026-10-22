@@ -50,6 +50,7 @@ import React from "react";
 import { useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 export interface UseOptimisticRowFlagOptions<T> {
   /**
@@ -119,7 +120,7 @@ export function useOptimisticRowFlag<T>({
       } catch (err) {
         const normalized = normalizeError(err);
         clear(id);
-        showToast(normalized.message || errorMessage, "error");
+        showToast(toUserMessage(normalized.code, undefined, { fallback: errorMessage }), "error");
       } finally {
         setPendingId(null);
       }
