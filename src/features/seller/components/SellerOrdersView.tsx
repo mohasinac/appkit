@@ -2,6 +2,7 @@
 import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { OrderAddonBadges } from "../../orders/components/OrderAddonBadges";
 import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard";
+import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit/client";
@@ -142,6 +143,21 @@ interface OrderDetail {
     totalPrice?: number;
     title?: string;
     price?: number;
+    /*
+     * The collapse keys. A bundle or buyer-assembled group fans out into N
+     * item rows sharing a `groupSlug` so each can carry its own HSN/GST and be
+     * cancelled independently — correct for tax and refunds, and wrong to show
+     * raw to the person packing the parcel, who sees four unrelated-looking
+     * lines for one thing the buyer agreed as a unit.
+     *
+     * They arrive already: the route's allow-list filters TOP-LEVEL order keys
+     * and passes `items` through whole, so everything inside each element
+     * comes with it.
+     */
+    groupSlug?: string;
+    groupTitle?: string;
+    bundleCategorySlug?: string;
+    bundleProductIds?: string[];
   }>;
   /*
    * How the buyer earned this price. Both of these are already in
@@ -190,6 +206,52 @@ interface OrderDetail {
   emiRemainingBalance?: number;
   emiComplete?: boolean;
   emiInstallments?: EmiInstallmentView[];
+}
+
+type SellerOrderItem = NonNullable<OrderDetail["items"]>[number];
+
+/**
+ * One item row. Extracted verbatim when grouping landed so the single and
+ * grouped paths cannot render differently — two copies of this markup is how
+ * the field-name bug below would come back on one path only.
+ */
+function sellerOrderItemRow(item: SellerOrderItem, key: string) {
+  return (
+    <Row key={key} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
+      <Row align="center" gap="sm" className="min-w-0">
+        <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
+          <MediaImage src={item.image} alt={item.title ?? "Order item"} size="thumbnail" />
+        </Div>
+        <Div className="min-w-0">
+          {/*
+            🛑 `productTitle` and `totalPrice` — NOT `title` and `price`, which
+            are not fields of `OrderDocumentItem`.
+
+            It read `item.title ?? item.productId` and `item.price ?? 0`, so
+            every line in this drawer showed the buyer a product SLUG priced at
+            ₹0.00 — "product-beyblade-original-dranzer-s · Qty: 1 · ₹0.00". The
+            data was there the whole time: the same response carries
+            `productTitle: "Beyblade Original — Dranzer S"` and
+            `totalPrice: 977.92`. Both wrong names came from a loosely-typed
+            `order`, so tsc could not see them (Root Cause #45).
+
+            `totalPrice` is the LINE total, which is what a single figure at the
+            end of the row means; `unitPrice` here would understate any line
+            with quantity > 1.
+          */}
+          <Text size="sm" className="truncate" weight="medium">
+            {item.productTitle ?? item.title ?? item.productId ?? "Item"}
+          </Text>
+          <Text size="xs" className="text-[var(--appkit-color-text-muted)]">
+            Qty: {item.quantity ?? 1}
+          </Text>
+        </Div>
+      </Row>
+      <Text size="sm" className="shrink-0" weight="medium">
+        {toCurrency(item.totalPrice ?? item.unitPrice ?? item.price ?? 0)}
+      </Text>
+    </Row>
+  );
 }
 
 /**
@@ -441,38 +503,41 @@ export function SellerOrderDetailPanel({
               <Div>
                 <Text size="sm" className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
-                  {(order.items ?? []).map((item, i) => (
-                    <Row key={i} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
-                      <Row align="center" gap="sm" className="min-w-0">
-                        <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
-                          <MediaImage src={item.image} alt={item.title ?? "Order item"} size="thumbnail" />
+                  {/*
+                    Collapsed by `groupOrderItemsByLine` — the SAME helper the
+                    buyer's receipt uses. It had exactly one caller
+                    (user/orders/[id]/page.tsx) while the seller and admin saw
+                    the raw per-member fan-out, so one grouped purchase read as
+                    N unrelated lines to the only people who have to pick and
+                    pack it.
+                  */}
+                  {groupOrderItemsByLine(order.items ?? []).map((group, gi) =>
+                    group.kind === "single" ? (
+                      sellerOrderItemRow(group.item, `s-${group.index}`)
+                    ) : (
+                      <Div key={`g-${gi}`}>
+                        <Row
+                          paddingY="y-xs"
+                          padding="x-sm"
+                          align="center"
+                          gap="sm"
+                          surface="muted"
+                        >
+                          <Text size="xs" weight="semibold">
+                            {group.groupTitle ?? "Grouped purchase"}
+                          </Text>
+                          <Text size="xs" className="text-[var(--appkit-color-text-muted)]">
+                            {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
+                          </Text>
+                        </Row>
+                        <Div className="pl-4">
+                          {group.items.map(({ item, index }) =>
+                            sellerOrderItemRow(item, `m-${index}`),
+                          )}
                         </Div>
-                        <Div className="min-w-0">
-                          {/*
-                            🛑 `productTitle` and `totalPrice` — NOT `title` and
-                            `price`, which are not fields of `OrderDocumentItem`.
-
-                            It read `item.title ?? item.productId` and
-                            `item.price ?? 0`, so every line in this drawer showed
-                            the buyer a product SLUG priced at ₹0.00 —
-                            "product-beyblade-original-dranzer-s · Qty: 1 · ₹0.00".
-                            The data was there the whole time: the same response
-                            carries `productTitle: "Beyblade Original — Dranzer S"`
-                            and `totalPrice: 977.92`. Both wrong names came from a
-                            loosely-typed `order`, so tsc could not see them
-                            (Root Cause #45).
-
-                            `totalPrice` is the LINE total, which is what a
-                            single figure at the end of the row means; `unitPrice`
-                            here would understate any line with quantity > 1.
-                          */}
-                          <Text size="sm" className="truncate" weight="medium">{item.productTitle ?? item.title ?? item.productId ?? "Item"}</Text>
-                          <Text size="xs" className="text-[var(--appkit-color-text-muted)]">Qty: {item.quantity ?? 1}</Text>
-                        </Div>
-                      </Row>
-                      <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.totalPrice ?? item.unitPrice ?? item.price ?? 0)}</Text>
-                    </Row>
-                  ))}
+                      </Div>
+                    ),
+                  )}
                 </Div>
               </Div>
             )}
@@ -747,10 +812,20 @@ export function SellerOrdersView({
             <MediaImage src={row.itemImage} alt={row.itemTitle ?? "Order item"} size="thumbnail" />
           </Div>
           <Stack gap="none" className="min-w-0">
+            {/*
+              🛑 One owner for this label. This used to re-derive it here —
+              `row.itemTitle` plus its own `+${itemCount - 1} more` — and
+              PREFERRED that over `row.primary`, so `primary` was dead on every
+              row that had a title. Two derivations of one string in one file is
+              how a grouped order would have kept reading as an arbitrary
+              member here while reading correctly everywhere else.
+
+              `primary` is now the single grouped-aware label (see `mapRows`);
+              `itemCount` stays below because a member count is a genuinely
+              different fact from a line count.
+            */}
             <Text className="truncate" size="sm" weight="semibold">
-              {row.itemTitle
-                ? `${row.itemTitle}${row.itemCount > 1 ? ` +${row.itemCount - 1} more` : ""}`
-                : row.primary}
+              {row.primary}
             </Text>
             <Text size="xs" color="muted">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
           </Stack>
@@ -850,10 +925,51 @@ export function SellerOrdersView({
            * below as `itemTitle`.
            */
           primary: (() => {
+            /*
+             * Counted in LINES, not item rows, and a grouped line is named by
+             * its own title.
+             *
+             * This was `items[0].productTitle` + `itemsArr.length - 1`, so a
+             * four-member bundle read "Dranzer S +3 more" — an arbitrary
+             * member, implying four separate purchases. Grouping through the
+             * same helper the drawer now uses makes it "Starter Bundle", and a
+             * bundle beside one standalone item "+1 more".
+             */
+            const groups = groupOrderItemsByLine(
+              itemsArr
+                .filter(
+                  (entry): entry is Record<string, unknown> =>
+                    Boolean(entry) && typeof entry === "object",
+                )
+                /*
+                 * Narrowed, not cast: `Record<string, unknown>` does NOT
+                 * satisfy `OrderItemForLineGrouping` — its `groupSlug` is
+                 * `unknown`, which is not assignable to `string | undefined`.
+                 * A cast would compile and then group on whatever junk a bad
+                 * document carried.
+                 */
+                .map((e) => ({
+                  productTitle: typeof e.productTitle === "string" ? e.productTitle : undefined,
+                  groupSlug: typeof e.groupSlug === "string" ? e.groupSlug : undefined,
+                  groupTitle: typeof e.groupTitle === "string" ? e.groupTitle : undefined,
+                  bundleCategorySlug:
+                    typeof e.bundleCategorySlug === "string" ? e.bundleCategorySlug : undefined,
+                  bundleProductIds: Array.isArray(e.bundleProductIds)
+                    ? e.bundleProductIds.filter((v): v is string => typeof v === "string")
+                    : undefined,
+                })),
+            );
+            const head = groups[0];
+            const extra = Math.max(0, groups.length - 1);
             const title =
-              typeof firstItem.productTitle === "string" ? firstItem.productTitle : "";
+              head === undefined
+                ? typeof firstItem.productTitle === "string"
+                  ? firstItem.productTitle
+                  : ""
+                : head.kind === "bundle"
+                  ? (head.groupTitle ?? "Grouped purchase")
+                  : (head.item.productTitle ?? "");
             if (!title) return `Order ${toStringValue(item.id, "-")}`;
-            const extra = itemsArr.length - 1;
             return extra > 0 ? `${title} +${extra} more` : title;
           })(),
           /*

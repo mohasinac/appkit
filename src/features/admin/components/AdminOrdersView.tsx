@@ -78,15 +78,45 @@ function toOrderItemRows(item: ListingItemRecord): AdminOrderItemRow[] {
       quantity: typeof entry.quantity === "number" ? entry.quantity : 1,
       unitPrice: typeof entry.unitPrice === "number" ? entry.unitPrice : 0,
       totalPrice: typeof entry.totalPrice === "number" ? entry.totalPrice : 0,
+      /*
+       * The collapse keys, carried so the editor can group a bundle or
+       * buyer-assembled group back into one line the way the buyer's receipt
+       * does. Narrowed by `typeof` like every field above rather than cast —
+       * this function's whole job is turning a loose record into a typed row,
+       * and a cast here is how `title`/`price` once slipped through (RC#45).
+       */
+      groupSlug: typeof entry.groupSlug === "string" ? entry.groupSlug : undefined,
+      groupTitle: typeof entry.groupTitle === "string" ? entry.groupTitle : undefined,
+      bundleCategorySlug:
+        typeof entry.bundleCategorySlug === "string" ? entry.bundleCategorySlug : undefined,
+      bundleProductIds: Array.isArray(entry.bundleProductIds)
+        ? entry.bundleProductIds.filter((v): v is string => typeof v === "string")
+        : undefined,
     }));
 }
 
+/*
+ * The row's headline, counted in LINES rather than item rows.
+ *
+ * 🛑 `extraCount` deliberately changed meaning when grouping landed: it was
+ * `items.length - 1`, so a bundle of four read "Dranzer S +3 more" — naming an
+ * arbitrary member and implying four separate things were bought. It is now
+ * `groups.length - 1`, so the same order reads "Starter Bundle +0" and a
+ * bundle plus one standalone reads "+1 more". The number a buyer or admin
+ * reads on a row should match the number of lines they will see inside it.
+ */
 function firstOrderItem(item: ListingItemRecord): { image?: string; title?: string; extraCount: number } {
-  const items = toOrderItemRows(item);
+  const groups = groupOrderItemsByLine(toOrderItemRows(item));
+  const first = groups[0];
+  const extraCount = Math.max(0, groups.length - 1);
+  if (!first) return { extraCount: 0 };
+  if (first.kind === "single") {
+    return { image: first.item.image, title: first.item.title, extraCount };
+  }
   return {
-    image: items[0]?.image,
-    title: items[0]?.title,
-    extraCount: Math.max(0, items.length - 1),
+    image: first.items[0]?.item.image,
+    title: first.groupTitle ?? "Grouped purchase",
+    extraCount,
   };
 }
 

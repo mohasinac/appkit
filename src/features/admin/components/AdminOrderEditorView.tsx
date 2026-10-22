@@ -2,6 +2,7 @@
 
 import { OrderAddonBadges, type OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
 import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard";
+import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
@@ -38,6 +39,19 @@ export interface AdminOrderItemRow {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  /*
+   * Collapse keys — optional, so every existing caller still compiles and a
+   * row without them renders exactly as before.
+   *
+   * A bundle or buyer-assembled group is stored as N rows sharing a
+   * `groupSlug` (own HSN/GST, independently cancellable). Correct for tax and
+   * refunds; misleading raw, because an admin investigating a dispute sees
+   * four lines for one thing the buyer agreed as a unit.
+   */
+  groupSlug?: string;
+  groupTitle?: string;
+  bundleCategorySlug?: string;
+  bundleProductIds?: string[];
 }
 
 export interface AdminOrderEditorViewProps {
@@ -80,6 +94,25 @@ export interface AdminOrderEditorViewProps {
   sourceContext?: OrderSourceContext;
   /** For the provenance card's money formatting; falls back to the default. */
   currency?: string;
+}
+
+/**
+ * One item row. Extracted so the single and grouped render paths share exactly
+ * one piece of markup rather than two that can drift.
+ */
+function adminOrderItemRow(item: AdminOrderItemRow, key: string) {
+  return (
+    <Div key={key} layout="flex" align="center" gap="3" padding="sm">
+      <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
+        <MediaImage src={item.image} alt={item.title} size="thumbnail" />
+      </Div>
+      <Div className="min-w-0 flex-1">
+        <Text size="sm" className="truncate" weight="medium">{item.title}</Text>
+        <Text size="xs" color="muted">Qty: {item.quantity} × {toCurrency(item.unitPrice)}</Text>
+      </Div>
+      <Text size="sm" className="shrink-0" weight="semibold">{toCurrency(item.totalPrice)}</Text>
+    </Div>
+  );
 }
 
 const STATUS_OPTIONS = [
@@ -315,18 +348,33 @@ export function AdminOrderEditorView({
               Items ({items.length})
             </Label>
             <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
-              {items.map((item, i) => (
-                <Div key={item.productId || i} layout="flex" align="center" gap="3" padding="sm">
-                  <Div className="h-10 w-10 shrink-0" rounded="md" overflow="hidden">
-                    <MediaImage src={item.image} alt={item.title} size="thumbnail" />
+              {/*
+                Grouped through the same helper the buyer's receipt and the
+                seller's drawer use. An admin triaging a dispute over a bundle
+                otherwise reads N separate lines and cannot tell they were one
+                agreed purchase.
+              */}
+              {groupOrderItemsByLine(items).map((group, gi) =>
+                group.kind === "single" ? (
+                  adminOrderItemRow(group.item, `s-${group.index}`)
+                ) : (
+                  <Div key={`g-${gi}`}>
+                    <Div layout="flex" align="center" gap="sm" padding="x-sm" surface="muted">
+                      <Text size="xs" weight="semibold">
+                        {group.groupTitle ?? "Grouped purchase"}
+                      </Text>
+                      <Text size="xs" color="muted">
+                        {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
+                      </Text>
+                    </Div>
+                    <Div className="pl-4">
+                      {group.items.map(({ item, index }) =>
+                        adminOrderItemRow(item, `m-${index}`),
+                      )}
+                    </Div>
                   </Div>
-                  <Div className="min-w-0 flex-1">
-                    <Text size="sm" className="truncate" weight="medium">{item.title}</Text>
-                    <Text size="xs" color="muted">Qty: {item.quantity} × {toCurrency(item.unitPrice)}</Text>
-                  </Div>
-                  <Text size="sm" className="shrink-0" weight="semibold">{toCurrency(item.totalPrice)}</Text>
-                </Div>
-              ))}
+                ),
+              )}
             </Div>
           </Stack>
         )}
