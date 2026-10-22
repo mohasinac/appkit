@@ -1,6 +1,8 @@
 "use client";
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "./Input";
+import { Text } from "./Typography";
+import { FormShellContext } from "../forms/FormShell";
 import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
 import { QuickFormDrawer } from "../../features/shell/QuickFormDrawer";
@@ -32,6 +34,14 @@ interface BaseProps<V> {
   disabled?: boolean;
   className?: string;
   ariaLabel?: string;
+  /** Field name — resolves this control's error from `FormShellContext`, as `Field*` do. */
+  name?: string;
+  /**
+   * Validation message. Explicit prop wins; else read from context by `name`.
+   * Without these two this control had no error affordance at all: a required
+   * taxonomy pick could fail and the control showed nothing.
+   */
+  error?: React.ReactNode;
   /** "+ Create new …" button. Provide `renderCreateForm` OR (`createFields` + `onCreateSubmit`). */
   createLabel?: string;
   drawerTitle?: string;
@@ -210,6 +220,8 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     disabled,
     className = "",
     ariaLabel,
+    name,
+    error: errorProp,
     createLabel,
     drawerTitle,
     renderCreateForm,
@@ -227,6 +239,13 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     editSubmitLabel,
   } = props;
   const isMulti = props.multiple === true;
+
+  // Explicit prop wins, else context by `name`. `useContext` not a throwing
+  // hook — this control is also used outside forms and must not need a provider.
+  const formCtx = React.useContext(FormShellContext);
+  const error = errorProp ?? (name ? formCtx?.errors[name] : undefined);
+  const generatedId = React.useId();
+  const errorId = `${generatedId}-error`;
   const maxChipsVisible = isMulti ? (props as MultiProps<V>).maxChipsVisible ?? 3 : 0;
 
   const [query, setQuery] = useState("");
@@ -526,7 +545,6 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
       <div
         ref={containerRef}
         className={[C.root, className].filter(Boolean).join(" ")}
-        aria-label={ariaLabel}
       >
         {/* chips row (multi only) */}
         {isMulti && multiValue.length > 0 && (
@@ -565,8 +583,11 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
           className={[C.trigger, disabled ? C.triggerDisabled : ""]
             .filter(Boolean)
             .join(" ")}
+          aria-label={ariaLabel}
           aria-expanded={open}
           aria-haspopup="listbox"
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? errorId : undefined}
         >
           <span className={C.triggerLeft}>
             <span className={triggerEmpty ? C.placeholder : ""}>
@@ -687,6 +708,12 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
             </ul>
           </div>
         )}
+
+        {error ? (
+          <Text id={errorId} size="sm" variant="error" className="appkit-form-field__error" role="alert">
+            {error}
+          </Text>
+        ) : null}
       </div>
 
       {/* create drawer */}
