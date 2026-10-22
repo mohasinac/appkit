@@ -1112,6 +1112,69 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   /**
+   * Stamp a credit-note number onto one settled refund event (Phase 7, 7c).
+   *
+   * ## 🛑 Why this is a repository method and not an inline update
+   *
+   * `refunds[]` is written by re-mapping the whole array, exactly as
+   * `settleRefund` directly above does — because a read-modify-write of
+   * `[...existing, event]` LOSES a concurrent event (D6), and that defect is
+   * just as reachable from a credit-note stamp as from a refund append.
+   * Letting the invoicing feature touch the array directly would reintroduce
+   * it one caller away from the fix.
+   *
+   * It goes through `updateWithHistory` for the same reason every other
+   * mutator here does: the transition guard and the status-history entry live
+   * there, and this is a real recorded event on the order.
+   *
+   * 🛑 A missing refund event is a NO-OP, not a throw. The caller is the
+   * refund settle path, where money has already moved; raising here would turn
+   * a successful refund into a reported failure. See
+   * `issueCreditNoteForRefund`'s own 🛑.
+   */
+  async setRefundCreditNote(
+    orderId: string,
+    refundId: string,
+    note: {
+      creditNoteNumber: string;
+      creditNoteIssuedAt: Date;
+      creditNoteStoragePath?: string;
+    },
+    ctx?: OrderWriteContext,
+  ): Promise<OrderDocument | null> {
+    const order = await this.findById(orderId);
+    if (!order) return null;
+    const existing = order.refunds ?? [];
+    const target = existing.find((r) => r.refundId === refundId);
+    if (!target) return null;
+    // Already numbered — never overwrite. A credit-note number is issued once,
+    // and a second number for one reversal is a permanent gap in the series.
+    if (target.creditNoteNumber) return order;
+
+    const stamped = existing.map((r) =>
+      r.refundId === refundId ? { ...r, ...note } : r,
+    );
+
+    return this.updateWithHistory(
+      orderId,
+      { refunds: stamped as OrderRefundEvent[], updatedAt: new Date() },
+      {
+        ...ctx,
+        extraChanges: {
+          creditNote: {
+            from: null,
+            to: { refundId, creditNoteNumber: note.creditNoteNumber },
+          },
+        },
+        actor: ctx?.actor ?? { uid: "system:invoicing", role: "system" },
+        reason: ctx?.reason ?? `Credit note ${note.creditNoteNumber} issued`,
+      },
+      "orderRepository.setRefundCreditNote",
+      order,
+    );
+  }
+
+  /**
    * 🛑 LEGACY — prefer `reserveRefund` + `settleRefund`.
    *
    * Kept because several non-gateway paths (manual refunds with no provider
@@ -1227,6 +1290,69 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    * `paymentProofUrl != null` filter would silently exclude every doc where
    * the field isn't set at all — the opposite of what's needed here.
    */
+  /**
+   * Orders invoiced within a window — the GSTR-1 export's only query
+   * (Phase 7d).
+   *
+   * ## 🛑 Windowed on `invoiceIssuedAt`, not on the order date
+   *
+   * A COD order placed on 30 March and paid on 2 April is invoiced in the NEW
+   * financial year, and that is the period its tax belongs to. Numbering
+   * happens at the payment transition for exactly this reason, so the invoice
+   * date is the only correct axis — windowing on `orderDate` would file that
+   * order's tax in the year before it was invoiced.
+   *
+   * ## 🛑 It also returns PAID orders with no invoice number, deliberately
+   *
+   * Those are the ones the export must warn about rather than omit — a paid
+   * order silently absent from a tax return is the single error this whole
+   * feature exists to prevent. Firestore cannot OR across two fields, so the
+   * second query is a separate one and the caller merges; the alternative
+   * (one query on `paymentStatus`, filtered in memory) would scan every paid
+   * order ever placed.
+   *
+   * Unbounded `.limit(2000)`: a quarter's orders at this volume is a few
+   * hundred, and an export that silently truncated would understate a tax
+   * return. If this ever saturates, the fix is pagination with an explicit
+   * "more rows exist" signal in the CSV — never a higher cap.
+   */
+  async listInvoicedBetween(from: Date, to: Date): Promise<OrderDocument[]> {
+    const [invoiced, paidUnnumbered] = await Promise.all([
+      this.db
+        .collection(this.collection)
+        .where("invoiceIssuedAt", ">=", from)
+        .where("invoiceIssuedAt", "<=", to)
+        .limit(2000)
+        .get(),
+      /*
+       * The exceptions. Bounded on `orderDate` because an un-invoiced order
+       * has no invoice date to window on — which is the whole problem with it
+       * — and because `paymentStatus == paid` alone would match every paid
+       * order in the collection's history.
+       */
+      this.db
+        .collection(this.collection)
+        .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "paid")
+        .where(ORDER_FIELDS.ORDER_DATE, ">=", from)
+        .where(ORDER_FIELDS.ORDER_DATE, "<=", to)
+        .limit(2000)
+        .get(),
+    ]);
+
+    const byId = new Map<string, OrderDocument>();
+    for (const d of invoiced.docs) {
+      byId.set(d.id, { id: d.id, ...d.data() } as OrderDocument);
+    }
+    for (const d of paidUnnumbered.docs) {
+      const data = { id: d.id, ...d.data() } as OrderDocument;
+      // Only the genuinely un-numbered ones — a paid, numbered order is
+      // already in the first set, and adding it again would double every one
+      // of its rows in the return.
+      if (!data.invoiceNumber && !byId.has(d.id)) byId.set(d.id, data);
+    }
+    return [...byId.values()];
+  }
+
   async getExpiredPaymentDeadlines(): Promise<
     Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
   > {

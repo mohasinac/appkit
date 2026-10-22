@@ -1636,6 +1636,13 @@ async function createOrderForGroup(
      * `taxableAmount` so the taxed base stays the base the tax was charged on,
      * and recorded here so the invoice's columns can reconcile. */
     exemptAmount: gstBreakdown?.exemptAmount || undefined,
+    /*
+     * Phase 7 — the place of supply, which is the INPUT the CGST/SGST-vs-IGST
+     * split above was computed from. Only the split's RESULT was recorded
+     * before, so an order could not state why it was taxed the way it was, and
+     * GSTR-1's mandatory place-of-supply column had nothing to read.
+     */
+    placeOfSupply: buyerState || undefined,
     /* The supplier of record AS IT STANDS NOW. A tax invoice without the
      * supplier's GSTIN is not a tax invoice, and the invoice page cannot read
      * it from site settings — `gst` is in PRIVATE_SITE_FIELDS. See the schema.
@@ -3491,6 +3498,10 @@ async function createPhonePeGroupOrder(
      */
     taxableAmount: phonepeGst?.taxableAmount,
     exemptAmount: phonepeGst?.exemptAmount || undefined,
+    // Phase 7 — the place of supply, matching `createOrderForGroup` field for
+    // field. This path recorded NONE of the tax breakdown until C0c defect 1,
+    // which is precisely why every addition here has to be made twice.
+    placeOfSupply: buyerState || undefined,
     // Our registration at the moment of supply — see the schema. Mirrors the
     // COD/UPI path so both produce an invoiceable order.
     supplierGstin: supplier.gstin,

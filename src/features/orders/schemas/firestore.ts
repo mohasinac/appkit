@@ -396,6 +396,25 @@ export interface OrderRefundEvent {
   proofDocumentMimeType?: string;
   /** Required for Razorpay-override path ("failed auto-refund, settled manually"). */
   overrideReason?: string;
+  /**
+   * The credit note that documents this refund, e.g. `LIRCN/26-27/0001`
+   * (Phase 7, D12).
+   *
+   * 🛑 Per REFUND EVENT, not per order — an order can legitimately be refunded
+   * several times, and each reversal of tax needs its own numbered document
+   * referencing the original invoice. That is why the allocation claim for a
+   * credit note is keyed `${orderId}_${refundId}` while an invoice's is keyed
+   * on the order alone: keying a credit note on the order would refuse the
+   * second one.
+   *
+   * Only ever set on a refund that actually SETTLED. A `reserved` entry that
+   * failed is not a reversal of anything, and numbering it would leave a
+   * credit note in the series for money that never moved.
+   */
+  creditNoteNumber?: string;
+  creditNoteIssuedAt?: Date;
+  /** Private storage path — same no-public-URL rule as `invoiceStoragePath`. */
+  creditNoteStoragePath?: string;
 }
 
 /** One applied discount/coupon saved on the order for accounting and display */
@@ -751,6 +770,25 @@ export interface OrderDocument extends BaseDocument {
     gstAmount: number;
   }>;
   /**
+   * The buyer's state — the PLACE OF SUPPLY (Phase 7).
+   *
+   * 🛑 This is the input the CGST/SGST-vs-IGST decision was made FROM, and it
+   * was not recorded anywhere. `isIntraStateSupply(buyerState, storeState)`
+   * runs at checkout and only its *result* survived, in the shape of which tax
+   * fields got populated — so an order could not state why it split the way it
+   * did, and GSTR-1 has a mandatory place-of-supply column that nothing could
+   * fill.
+   *
+   * `shippingAddress` is a flat STRING on this document and contains the state
+   * somewhere inside it; parsing a state back out of free text to file a tax
+   * return is not a thing to do. The value is in scope at order creation, so
+   * it is written there.
+   *
+   * Absent on orders placed before this, which the export reports rather than
+   * silently blanks.
+   */
+  placeOfSupply?: string;
+  /**
    * OUR GST registration as it stood at the moment of supply — LetItRip is the
    * seller of record and invoices under its own GSTIN.
    *
@@ -771,6 +809,38 @@ export interface OrderDocument extends BaseDocument {
   supplierGstin?: string;
   supplierLegalName?: string;
   supplierAddress?: string;
+
+  // ── Invoicing (Phase 7, D12) ───────────────────────────────────────────────
+  /**
+   * The invoice number from the gapless FY series, e.g. `LIR/26-27/0001`.
+   *
+   * 🛑 Allocated on `paymentStatus → paid`, never at order creation — a number
+   * burned on an abandoned COD order is a gap nobody can explain. Written once
+   * and never rewritten: a GST invoice is issued once, and an adjustment is a
+   * CREDIT NOTE, not a re-issue.
+   *
+   * Absence means "not yet invoiced", which is the correct state for a pending
+   * order and for every order placed before this phase.
+   */
+  invoiceNumber?: string;
+  /** When the number was allocated — the invoice's own date. */
+  invoiceIssuedAt?: Date;
+  /**
+   * Where the rendered PDF lives.
+   *
+   * 🛑 **`private/invoices/{orderId}/{uuid}.pdf`, with NO `mediaAssets` row and
+   * a RANDOM object name.** An invoice carries the buyer's full name, address
+   * and phone. `/api/media/[...slug]` applies **no authentication** over a
+   * bucket whose storage rule is `allow read: if true`, and the slug resolves
+   * through `mediaAssets` — so no row means no public URL exists at all.
+   *
+   * The random name is deliberately AGAINST the content-derived SEO-slug
+   * convention used everywhere else in this codebase, because guessable is the
+   * one property this must not have. `generateInvoiceFilename` is
+   * content-derived and is therefore the wrong tool here. Same reasoning as the
+   * digital-content decision (D103).
+   */
+  invoiceStoragePath?: string;
 
   // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
   emiEnabled?: boolean;

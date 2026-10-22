@@ -95,6 +95,18 @@ export const orderRefundEventSchema = z.object({
   proofDocumentUrl: z.string().optional(),
   proofDocumentMimeType: z.string().optional(),
   overrideReason: z.string().optional(),
+  /*
+   * Phase 7 credit note. Added HERE in the same change as the interface, per
+   * the 🛑 above: `z.object()` STRIPS unknown keys, so a field present on the
+   * interface and absent here is REMOVED on parse — it does not error, it
+   * vanishes. That is exactly how this schema silently discarded
+   * `razorpayRefundId`, and a credit-note number discarded on parse is a
+   * numbered document with nothing pointing at it: the number is consumed, the
+   * series has no gap, and no refund claims it.
+   */
+  creditNoteNumber: z.string().optional(),
+  creditNoteIssuedAt: firestoreDateSchema.optional(),
+  creditNoteStoragePath: z.string().optional(),
 });
 
 export const appliedOrderDiscountSchema = z.object({

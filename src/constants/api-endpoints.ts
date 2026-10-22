@@ -209,6 +209,14 @@ export const ADMIN_ENDPOINTS = {
   PAYOUTS_EXPORT: "/api/admin/payouts/export",
   AUDIT_LOG: "/api/admin/audit-log",
   AUDIT_LOG_BY_ID: (id: string) => `/api/admin/audit-log/${id}`,
+  /**
+   * Phase 7 — the GSTR-1 DRAFT export. Takes `?from=&to=` as YYYY-MM-DD and
+   * returns a CSV.
+   *
+   * 🛑 "draft" is in the filename for a reason: nothing in this codebase talks
+   * to the GST portal, and the file is the input to a human filing.
+   */
+  INVOICING_GSTR1: "/api/admin/invoicing/gstr1",
   /*
    * Payment protection. `payment-cases` is NOT under `maintenance/` — see the
    * route-map entry for why: maintenance means "something broke, look when you

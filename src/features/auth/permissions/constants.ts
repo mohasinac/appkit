@@ -678,6 +678,19 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   // Payment protection — admin-only, see the permission union's own 🛑 note.
   "/admin/money-cases": "admin:payment-cases:read",
   "/admin/protection-claims": "admin:protection-claims:read",
+  /*
+   * Phase 7 invoicing — the GSTR-1 draft export.
+   *
+   * 🛑 `settings:write` rather than a new permission, and that is a judgement
+   * worth stating. The page exports the company's tax position for a quarter
+   * plus every buyer's place of supply; the set of people who should see that
+   * is the set who can already change the GSTIN and the fee schedule, which is
+   * exactly what `settings:write` names. Minting
+   * `admin:invoicing:read` would add a permission with one route and one
+   * holder — a distinction with no decision behind it, which is how a
+   * permission union becomes unreadable.
+   */
+  "/admin/invoicing": "settings:write",
 };
 
 // ============================================================================

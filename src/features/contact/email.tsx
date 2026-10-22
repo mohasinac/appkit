@@ -260,6 +260,25 @@ export interface OrderConfirmationEmailParams {
     unitPrice: number;
     totalPrice: number;
   }>;
+  /**
+   * Phase 7 — the invoice PDF to attach, as STORED bytes.
+   *
+   * 🛑 Bytes, never a path and never a renderer. Two renders can disagree — a
+   * changed template, a different library version — and the buyer's copy must
+   * be byte-identical to ours. Letting this function render would be a second
+   * render by definition.
+   *
+   * 🛑 Optional, and absence must stay silent. The invoice is numbered on the
+   * PAID transition and its bytes are produced on first request, so a COD
+   * order confirmed before payment legitimately has none — and this email has
+   * always sent without an attachment. Failing or warning here would turn the
+   * normal case into a noisy one.
+   *
+   * Resend supports attachments already (`email-resend/provider.ts`), so this
+   * needs no new send, no new credential and no change to the 80/day ceiling.
+   * Only the payload is bigger.
+   */
+  invoicePdf?: { filename: string; content: Buffer };
 }
 
 function renderOrderItems(
@@ -374,6 +393,22 @@ export async function sendOrderConfirmationEmail(
         to,
         subject: `Order Confirmed — ${orderId}`,
         html,
+        /*
+         * Phase 7 — the invoice, when there is one. The STORED bytes, handed
+         * in by the caller: see `invoicePdf` on the params type for why this
+         * function must not render its own.
+         */
+        ...(params.invoicePdf
+          ? {
+              attachments: [
+                {
+                  filename: params.invoicePdf.filename,
+                  content: params.invoicePdf.content,
+                  contentType: "application/pdf",
+                },
+              ],
+            }
+          : {}),
         text: `Hi ${userName},\n\nYour order ${orderId} has been confirmed!\n\n${itemsText}\nTotal: ${formattedTotal}\nPayment: ${paymentLabel}\nShip to: ${shippingAddress ?? "-"}\n\nView your order: ${orderUrl}\n\n© ${currentYear()} ${siteName}`,
       },
       {

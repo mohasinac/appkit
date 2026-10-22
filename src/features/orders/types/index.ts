@@ -289,6 +289,16 @@ export interface Order {
    * wrong default turns every historical order into a ₹0 one.
    */
   amountDue?: number;
+  /**
+   * The invoice number from the gapless FY series, e.g. `LIR/26-27/0001`
+   * (Phase 7).
+   *
+   * Absent until the order is paid, and absent on every order placed before
+   * the series existed — so the invoice page must render its own fallback
+   * rather than printing "undefined" where a statutory field belongs.
+   */
+  invoiceNumber?: string;
+  invoiceIssuedAt?: string;
 
   trackingNumber?: string;
   shippingCarrier?: string;

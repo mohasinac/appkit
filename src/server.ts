@@ -2432,3 +2432,54 @@ export type {
   RateableOrderItem,
   RateOrderItemInput,
 } from "./_internal/server/features/order-completion";
+
+/*
+ * [SERVER-ONLY] Phase 7 invoicing (D12) — the two gapless FY series.
+ *
+ * Exported here because `_internal/*` is NOT a published subpath (appkit has 46
+ * export keys and none of them is `./_internal/*`), so a consumer route cannot
+ * deep-import these. That is the same wall `cancelOrderWithRefund` and
+ * `adjustUserPoints` hit; `server.ts` is the sanctioned door.
+ *
+ * 🛑 `allocateSeriesNumber` is exported deliberately and should be reached for
+ * rarely: it CONSUMES a number from a gapless series, and a number cannot be
+ * withdrawn without leaving a gap an auditor will ask about. The two callers
+ * that should exist are the paid-transition trigger and the refund settle path,
+ * both already wired. A backfill is the only other legitimate use.
+ */
+export {
+  allocateSeriesNumber,
+  type AllocateSeriesNumberInput,
+  type AllocateSeriesNumberResult,
+} from "./_internal/server/features/invoicing/allocate";
+export {
+  issueInvoiceForOrder,
+  readStoredInvoice,
+  storeRenderedInvoice,
+  INVOICE_PREFIX_PATH,
+  type InvoiceRenderer,
+  type IssueInvoiceResult,
+} from "./_internal/server/features/invoicing/issue";
+export {
+  issueCreditNoteForRefund,
+  CREDIT_NOTE_PREFIX_PATH,
+  type CreditNoteRenderer,
+  type IssueCreditNoteResult,
+} from "./_internal/server/features/invoicing/credit-note";
+export {
+  financialYearLabel,
+  formatSeriesNumber,
+  INVOICE_PREFIX,
+  CREDIT_NOTE_PREFIX,
+} from "./features/invoicing/utils/financial-year";
+export type {
+  InvoiceCounterDocument,
+  InvoiceAllocationDocument,
+  InvoiceSeriesKind,
+} from "./features/invoicing/schemas/firestore";
+export {
+  buildGstr1Export,
+  gstr1ToCsv,
+  type Gstr1Export,
+  type Gstr1Row,
+} from "./_internal/server/features/invoicing/gstr1";

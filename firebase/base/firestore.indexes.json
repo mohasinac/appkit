@@ -4209,6 +4209,20 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "paymentStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "orderDate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "paymentMethod",
           "order": "ASCENDING"
         },

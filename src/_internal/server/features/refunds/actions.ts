@@ -45,6 +45,8 @@ import {
 } from "../../../shared/features/orders/return-reasons";
 import { REFUND_COPY } from "../../../shared/features/orders/refund-copy";
 import { applyRefundDeductionAction } from "../payouts/actions";
+/* Phase 7c — the credit note. Swallows its own failures by design: see its 🛑. */
+import { issueCreditNoteForRefund } from "../invoicing/credit-note";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import {
   PRODUCT_COLLECTION,
@@ -470,6 +472,31 @@ export async function processRefundAction(
           // the reconciler will look at it once and find it already done.
           serverLogger.warn("refund: claim not marked settled", { refundId });
         });
+
+      /*
+       * ── PHASE 7c: the credit note that documents this reversal ────────────
+       *
+       * 🛑 HERE, at settlement, and not at reservation. A credit note numbered
+       * when the entry was reserved would leave a numbered reversal in the
+       * series on every provider failure — for money that never moved, with a
+       * number that cannot be withdrawn.
+       *
+       * 🛑 AWAITED but never allowed to throw (the issuer swallows its own
+       * failures and says so). The money has already left the gateway by this
+       * line; raising here would report a successful refund as failed, and an
+       * operator would retry a refund that already happened. A missing credit
+       * note is a reporting gap a backfill can close; a double refund is not.
+       *
+       * No renderer is passed, so this NUMBERS the reversal without producing
+       * a PDF. That is what the GSTR-1 export needs — it reconciles numbers
+       * and amounts. The buyer's PDF follows the invoice's own lazy pattern
+       * when a surface asks for it.
+       */
+      const settledOrder = await orderRepository.findById(input.orderId);
+      const settledEvent = settledOrder?.refunds?.find((r) => r.refundId === refundId);
+      if (settledOrder && settledEvent) {
+        await issueCreditNoteForRefund(settledOrder, settledEvent);
+      }
 
 
       // SB-UNI-N — revoke any available (unclaimed) digital codes linked to this order.

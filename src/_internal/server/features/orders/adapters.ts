@@ -231,6 +231,23 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     pointsApplied: doc.pointsApplied,
     amountDue: doc.amountDue,
     /*
+     * Phase 7 — the invoice number, mapped for the same Root Cause #57 reason
+     * as everything above. Unmapped, the buyer's invoice page would render a
+     * statutory document with no number on it while the database held one, and
+     * the only symptom would be a blank line where an auditor looks first.
+     *
+     * 🛑 `invoiceStoragePath` is deliberately NOT mapped. It is a raw Storage
+     * path, and the client has no use for one — the bytes are served by an
+     * authenticated route. Publishing the path into an RSC payload would hand
+     * every buyer a string pointing at a private object, which is the shape of
+     * Root Cause #70's leak even though the `private/` prefix is refused by
+     * the proxy.
+     */
+    invoiceNumber: doc.invoiceNumber,
+    invoiceIssuedAt: doc.invoiceIssuedAt
+      ? new Date(doc.invoiceIssuedAt).toISOString()
+      : undefined,
+    /*
      * 🛑 `gstAmount` -> `tax`, and codHandlingFee alongside it.
      *
      * The comment four lines up is about exactly this and the same block still

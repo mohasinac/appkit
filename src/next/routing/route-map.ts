@@ -585,6 +585,16 @@ export const DEFAULT_ROUTE_MAP = {
      */
     MONEY_CASES: "/admin/money-cases",
     MONEY_CASE_DETAIL: (id: string) => `/admin/money-cases/${id}`,
+    /**
+     * Phase 7 — the GSTR-1 draft export.
+     *
+     * 🛑 Under Finance for the same reason `MONEY_CASES` is, and the reason is
+     * stronger here: the export contains the company's tax position for a
+     * quarter plus every buyer's place of supply. That is not a maintenance
+     * diagnostic, and it is admin-only — deliberately not granted to
+     * `maintenance_employee`.
+     */
+    INVOICING: "/admin/invoicing",
     PROTECTION_CLAIMS: "/admin/protection-claims",
     MAINTENANCE_GATEWAY_EVENTS: "/admin/maintenance/gateway-events",
     MAINTENANCE_OBLIGATIONS: "/admin/maintenance/obligations",
