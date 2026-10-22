@@ -17,7 +17,8 @@ import type { OrderPlain } from "../../orders/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { BarcodeField } from "./BarcodeField";
 import { normalizeError } from "../../../errors/normalize";
-import { useToast } from "../../../ui";
+import { useToast, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 
 export interface FulfillmentViewProps {
   currentUserId?: string;
@@ -267,7 +268,15 @@ export function FulfillmentView({
           {visibleOrders.map((order) => (
             <Stack key={order.id} surface="card" padding="sm" rounded="md" gap="xs">
               <Row align="center" gap="xs" wrap>
-                <Text size="sm" weight="medium">#{order.id}</Text>
+                {/*
+                  The order id was inert text on a card whose only actions
+                  were Mark Picked and Mark Packed — acting on a record the
+                  picker could not open. SELLER_ENDPOINTS.ORDERS_BY_ID was
+                  already imported and used in this very file.
+                */}
+                <TextLink href={String(ROUTES.STORE.ORDER_DETAIL(order.id))} size="sm" weight="medium">
+                  #{order.id}
+                </TextLink>
                 <Badge variant={statusBadgeVariant(order.status)}>
                   {order.status}
                 </Badge>
