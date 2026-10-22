@@ -94,6 +94,40 @@ export const pendingOrderTimeout = defineFunction({
  *
  * Whoever takes the retirement: pick a different host for the retry sweep
  * first, or keep `paymentWindowTimeout` and retire only the other two.
+ *
+ * ── 🛑 MEASURED 2026-10-23: RETIRE NEITHER OF THE OTHER TWO EITHER ─────────
+ *
+ * The paragraph above asks for a measurement rather than an inference —
+ * *"whether [`obligationSweep`'s act tier] covers these three is a
+ * measurement"* — so here it is. **It does not cover either of them, and the
+ * answer is a single predicate.**
+ *
+ * `OBLIGATION_POLICIES["seller-accept"]` is the only candidate for
+ * `pendingOrderTimeout`, and its precondition opens with:
+ *
+ *     precondition: (o) => isPaid(o) && notTerminal(o) && !o.acceptedAt && …
+ *     duration: { value: 3, unit: "days" }
+ *
+ * with `const isPaid = (o) => o.paymentStatus === "paid"`. A pending COD order
+ * is **not paid** — that is the entire point of COD — so the policy EXCLUDES
+ * exactly the orders this sweep exists for, and waits three days where the
+ * sweep acts at 24 hours. Pairwise disjoint, which is the same failure shape
+ * the obligations collection was built to end (Root Cause #27: three sweeps,
+ * pairwise disjoint, an order holding stock forever).
+ *
+ * `paymentReviewAutoApprove` has no candidate at all. The ONLY policy
+ * mentioning `paymentReviewOutcome` is `proof-reupload`, keyed on
+ * `=== "reupload_requested"` — the BUYER re-uploading, not staff failing to
+ * review. Nothing in the twelve kinds means "a proof nobody looked at".
+ *
+ * **Retiring them would therefore**: leave unpaid COD orders holding real
+ * stock forever, and leave an uploaded proof nobody reviewed in limbo forever.
+ * Both silent — an order that is never cancelled raises nothing.
+ *
+ * So the correct state is THREE sweeps kept, not one. The plan's "retire the
+ * other two" was an inference from a coverage claim that measurement does not
+ * support, and this note exists so the next reader does not re-derive it from
+ * the same plan line.
  */
 export const paymentWindowTimeout = defineFunction({
   name: "paymentWindowTimeout",
