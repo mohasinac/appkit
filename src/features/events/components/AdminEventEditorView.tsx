@@ -428,6 +428,73 @@ function SpinPrizesEditor({
 
 // --- Component ---------------------------------------------------------------
 
+/**
+ * The API's event shape -> the editor's draft shape.
+ *
+ * A pure adapter at module scope. The extraction is not cosmetic: this was
+ * 45 lines of field mapping inside a `useEffect` inside a 455-line
+ * component, which is exactly where a wrong default hides.
+ *
+ * Every `|| ""` and `Boolean()` is load-bearing. An ABSENT field — any event
+ * predating the one that added it — must still seed a CONTROLLED input;
+ * `undefined` makes React treat it as uncontrolled and the field stops
+ * accepting edits.
+ *
+ * 🛑 `requireLogin: event.surveyConfig?.requireLogin !== false` is the one
+ * default deliberately INVERTED — absent means true, because a survey that
+ * silently stopped requiring a login would collect anonymous entries nobody
+ * asked for. Do not "tidy" it into `Boolean(...)`.
+ */
+function eventToDraft(event: Record<string, any>): EventDraft {
+  return {
+        type: event.type || "sale",
+        title: event.title || "",
+        slug: event.slug || "",
+        description: event.description || "",
+        startsAt: toLocalDatetime(event.startsAt),
+        endsAt: toLocalDatetime(event.endsAt),
+        coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
+        tags: Array.isArray(event.tags) ? event.tags : [],
+        status: event.status || "draft",
+        createdBy: event.createdBy || "",
+        allowGuestParticipation: Boolean(event.allowGuestParticipation),
+        // `Boolean()` so an ABSENT field (every event predating the pin) seeds
+        // the toggle as off rather than leaving it `undefined`, which React
+        // would read as an uncontrolled input.
+        isPinned: Boolean(event.isPinned),
+        discountPercent: String(event.saleConfig?.discountPercent ?? 10),
+        saleBannerText: event.saleConfig?.bannerText || "",
+        couponId: event.offerConfig?.couponId || "",
+        displayCode: event.offerConfig?.displayCode || "",
+        offerBannerText: event.offerConfig?.bannerText || "",
+        pollOptions: event.pollConfig?.options?.length
+          ? event.pollConfig.options
+          : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
+        allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
+        allowComment: Boolean(event.pollConfig?.allowComment),
+        resultsVisibility: event.pollConfig?.resultsVisibility || "always",
+        requireLogin: event.surveyConfig?.requireLogin !== false,
+        maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
+        hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
+        hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
+        pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
+        entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
+        surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
+        anonymous: Boolean(event.feedbackConfig?.anonymous),
+        feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
+        hasRaffle: Boolean(event.hasRaffle),
+        raffleType: (event.raffleType as RaffleType) || "open_raffle",
+        raffleTopN: String(event.raffleTopN ?? 10),
+        rafflePrize: event.rafflePrize || "",
+        rafflePrizeCouponId: event.rafflePrizeCouponId || "",
+        rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
+        spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
+        spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
+        spinWindowStart: toLocalDatetime(event.spinWindowStart),
+        spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
+  };
+}
+
 export function AdminEventEditorView({
   eventId,
   onSaved,
@@ -470,53 +537,8 @@ export function AdminEventEditorView({
   React.useEffect(() => {
     const event = (eventQuery.data as any)?.data ?? (eventQuery.data as any);
     if (!event?.id) return;
-    setDraft({
-      type: event.type || "sale",
-      title: event.title || "",
-      slug: event.slug || "",
-      description: event.description || "",
-      startsAt: toLocalDatetime(event.startsAt),
-      endsAt: toLocalDatetime(event.endsAt),
-      coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
-      tags: Array.isArray(event.tags) ? event.tags : [],
-      status: event.status || "draft",
-      createdBy: event.createdBy || "",
-      allowGuestParticipation: Boolean(event.allowGuestParticipation),
-      // `Boolean()` so an ABSENT field (every event predating the pin) seeds
-      // the toggle as off rather than leaving it `undefined`, which React
-      // would read as an uncontrolled input.
-      isPinned: Boolean(event.isPinned),
-      discountPercent: String(event.saleConfig?.discountPercent ?? 10),
-      saleBannerText: event.saleConfig?.bannerText || "",
-      couponId: event.offerConfig?.couponId || "",
-      displayCode: event.offerConfig?.displayCode || "",
-      offerBannerText: event.offerConfig?.bannerText || "",
-      pollOptions: event.pollConfig?.options?.length
-        ? event.pollConfig.options
-        : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
-      allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
-      allowComment: Boolean(event.pollConfig?.allowComment),
-      resultsVisibility: event.pollConfig?.resultsVisibility || "always",
-      requireLogin: event.surveyConfig?.requireLogin !== false,
-      maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
-      hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
-      hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
-      pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
-      entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
-      surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
-      anonymous: Boolean(event.feedbackConfig?.anonymous),
-      feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
-      hasRaffle: Boolean(event.hasRaffle),
-      raffleType: (event.raffleType as RaffleType) || "open_raffle",
-      raffleTopN: String(event.raffleTopN ?? 10),
-      rafflePrize: event.rafflePrize || "",
-      rafflePrizeCouponId: event.rafflePrizeCouponId || "",
-      rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
-      spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
-      spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
-      spinWindowStart: toLocalDatetime(event.spinWindowStart),
-      spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
-    });
+    // The 45-line field mapping lives in `eventToDraft` at module scope.
+    setDraft(eventToDraft(event));
     setSlugManual(true);
     setRaffleWinnerName(event.raffleWinnerDisplayName || "");
     setRaffleEntryCount(typeof event.raffleEntryCount === "number" ? event.raffleEntryCount : null);

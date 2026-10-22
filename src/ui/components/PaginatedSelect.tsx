@@ -135,6 +135,53 @@ const C = {
 const CREATE_SENTINEL = "__paginated_select_create__";
 
 /**
+ * Selected VALUES paired back with their options, for `onChange`.
+ *
+ * `handleSelect` and `removeChip` carried these identical four lines, and the
+ * fallback chain is load-bearing rather than defensive: a value chosen on page
+ * 3 is no longer in `resolvedOptions` once the search box is retyped, so
+ * resolving from that list alone would hand the caller a chip labelled with its
+ * own raw value. `labels` is the cache that survives a list change; `String(v)`
+ * is the last resort, not the first.
+ *
+ * At module scope, taking its three inputs explicitly, so it costs the
+ * component no lines — `audit-code-quality` measures significant lines INSIDE
+ * a function, and this file's component is a long one.
+ */
+function pairValuesWithOptions<V>(
+  values: readonly V[],
+  resolved: readonly PaginatedSelectOption<V>[],
+  labels: Map<V, string>,
+): PaginatedSelectOption<V>[] {
+  return values.map(
+    (v) =>
+      resolved.find((o) => o.value === v) ?? {
+        value: v,
+        label: labels.get(v) ?? String(v),
+      },
+  );
+}
+
+/**
+ * Is this value currently selected?
+ *
+ * Module scope for the same reason as `pairValuesWithOptions` above — it needs
+ * nothing from the render closure, so it costs the component no lines against
+ * the significant-line limit.
+ *
+ * The cast pair is how the discriminated props union is read: `isMulti` IS the
+ * discriminant, so each branch narrows to exactly one of the two shapes.
+ */
+function isValueSelected<V>(
+  value: V,
+  props: PaginatedSelectProps<V>,
+  isMulti: boolean,
+): boolean {
+  if (isMulti) return (props as MultiProps<V>).value.includes(value);
+  return (props as SingleProps<V>).value === value;
+}
+
+/**
  * PaginatedSelect — searchable, async-paginated select with optional multi-mode
  * and optional inline create-new drawer.
  *
@@ -375,23 +422,16 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
       )
     : resolvedOptions;
 
-  function isSelected(value: V): boolean {
-    if (isMulti) return (props as MultiProps<V>).value.includes(value);
-    return (props as SingleProps<V>).value === value;
-  }
+  const pairWithOptions = (values: readonly V[]) =>
+    pairValuesWithOptions(values, resolvedOptions, labelMap.current);
 
   function handleSelect(opt: PaginatedSelectOption<V>) {
     if (isMulti) {
       const mp = props as MultiProps<V>;
-      const selected = mp.value.includes(opt.value);
-      const nextValues = selected
+      const nextValues = mp.value.includes(opt.value)
         ? mp.value.filter((v) => v !== opt.value)
         : [...mp.value, opt.value];
-      const nextOptions = nextValues.map((v) => {
-        const found = resolvedOptions.find((o) => o.value === v);
-        return found ?? { value: v, label: labelMap.current.get(v) ?? String(v) };
-      });
-      mp.onChange(nextValues, nextOptions);
+      mp.onChange(nextValues, pairWithOptions(nextValues));
     } else {
       const sp = props as SingleProps<V>;
       sp.onChange?.(opt.value, opt);
@@ -403,11 +443,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     if (!isMulti) return;
     const mp = props as MultiProps<V>;
     const nextValues = mp.value.filter((x) => x !== v);
-    const nextOptions = nextValues.map((x) => {
-      const found = resolvedOptions.find((o) => o.value === x);
-      return found ?? { value: x, label: labelMap.current.get(x) ?? String(x) };
-    });
-    mp.onChange(nextValues, nextOptions);
+    mp.onChange(nextValues, pairWithOptions(nextValues));
   }
 
   function handleCreated(option: PaginatedSelectOption<V>) {
@@ -577,7 +613,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
             />
             <ul className={C.list}>
               {filtered.map((opt, idx) => {
-                const selected = isSelected(opt.value);
+                const selected = isValueSelected(opt.value, props, isMulti);
                 return (
                   <li key={`${String(opt.value)}-${idx}`}>
                     <button
