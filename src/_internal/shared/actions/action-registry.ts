@@ -1895,6 +1895,48 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
+    "add-dispute-reason": {
+      iconKey: "add",
+      id: "admin.add-dispute-reason",
+      label: "Add reason",
+      ariaLabel: "Add a dispute reason",
+      description:
+        "Add a reason buyers can pick when reporting a problem. The reason's KIND decides which gate it is subject to; the wording is yours.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "retire-dispute-reason": {
+      iconKey: "reject",
+      id: "admin.retire-dispute-reason",
+      label: "Retire",
+      ariaLabel: "Retire this dispute reason",
+      description:
+        "Take a reason out of the buyer's picker. Never a delete — past disputes name it, and the order snapshots its label so history survives either way.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Retire this reason?",
+        /*
+         * Names what retiring does NOT do, because that is the part an agent
+         * is most likely to be unsure about and the reason this is not a
+         * delete. A vague "are you sure" would invite exactly the hesitation
+         * the schema's soft-retire design exists to remove.
+         */
+        body:
+          "Buyers will stop seeing it on the dispute form. Disputes already raised under it keep their wording, and you can put it back at any time.",
+        confirmLabel: "Retire it",
+        confirmKind: "danger",
+      },
+    },
+    "reactivate-dispute-reason": {
+      iconKey: "approve",
+      id: "admin.reactivate-dispute-reason",
+      label: "Reactivate",
+      ariaLabel: "Put this dispute reason back in the picker",
+      description: "Offer a retired reason to buyers again. The original author is kept.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
     "disable-integration": {
       iconKey: "reject",
       id: "admin.disable-integration",

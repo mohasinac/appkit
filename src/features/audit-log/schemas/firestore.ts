@@ -62,6 +62,14 @@ export const AdminAuditActionValues = {
    * returns the existing row, which is not an act worth logging.
    */
   DISPUTE_REASON_CREATE: "dispute_reason_create",
+  /*
+   * Retiring is recorded and reactivating is not, which is deliberate rather
+   * than an omission. Retiring REMOVES an option buyers could pick, so "who
+   * narrowed the list, and when" is the question an audit of a dispute trend
+   * needs answered. Putting a row back restores the documented default, and a
+   * log of both would read as churn.
+   */
+  DISPUTE_REASON_RETIRE: "dispute_reason_retire",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

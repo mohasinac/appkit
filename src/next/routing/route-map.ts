@@ -322,6 +322,17 @@ export const DEFAULT_ROUTE_MAP = {
     ORDER_CLAIM: (id: string) => `/user/orders/${id}/claim`,
     ORDER_INVOICE: (id: string) => `/user/orders/${id}/invoice`,
     ORDER_PAYMENT: (id: string) => `/user/orders/${id}/payment`,
+    /**
+     * Raise a dispute on one order.
+     *
+     * Deep-linkable on purpose: a notification `actionUrl` points here, and
+     * `/user/orders/view/{id}` carries a "Report a problem" button to the same
+     * place. One surface, two ways in — an email link that works only while
+     * the buyer still has the email is the shape Root Cause #57 records,
+     * where `ORDER_PAYMENT` had exactly ONE caller and a buyer who navigated
+     * away could not get back.
+     */
+    ORDER_DISPUTE: (id: string) => `/user/orders/${id}/dispute`,
     NOTIFICATIONS: "/user/notifications",
     /** Plan §10 — claimed-coupons wallet (Active / Expired / Used tabs). */
     CLAIMED_COUPONS: "/user/coupons",
@@ -692,6 +703,8 @@ export const DEFAULT_ROUTE_MAP = {
     TEAM_NEW: "/admin/team/new",
     TEAM_EDIT: (id: string) => `/admin/team/${id}/edit`,
     SUPPORT_TICKETS: "/admin/support-tickets",
+    /** Staff curation of the reasons a buyer can pick when disputing. */
+    DISPUTE_REASONS: "/admin/dispute-reasons",
     SUPPORT_TICKET_BY_ID: (id: string) => `/admin/support-tickets/${id}`,
     SCAMMERS: "/admin/scammers",
     SCAMMER_BY_ID: (id: string) => `/admin/scammers/${id}`,

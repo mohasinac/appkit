@@ -100,9 +100,43 @@ export class DisputeReasonsRepository extends BaseRepository<DisputeReasonDocume
     return { reason, created: true };
   }
 
+  /**
+   * Every row, retired included — the staff management list.
+   *
+   * 🛑 Deliberately NOT `listActiveByKind` with the `isActive` clause dropped.
+   * That method also pins `kind`, and a management view must span both kinds:
+   * a reason retired for the wrong gate is exactly the row staff need to find.
+   *
+   * No `isActive` filter is applied here at all, so the caller's own Sieve
+   * filters decide — which is what lets the view offer Active / Retired / All
+   * chips without this method growing a parameter per chip.
+   */
+  async listAll(model: SieveModel): Promise<FirebaseSieveResult<DisputeReasonDocument>> {
+    return this.sieveQuery<DisputeReasonDocument>(
+      model,
+      DisputeReasonsRepository.SIEVE_FIELDS,
+      { baseQuery: this.getCollection(), defaultPageSize: 20, maxPageSize: 50 },
+    );
+  }
+
   /** Soft-retire. See the schema for why this is never a delete. */
   async retire(id: string): Promise<void> {
     await this.update(id, { isActive: false, updatedAt: new Date() });
+  }
+
+  /**
+   * Put a retired reason back in the picker.
+   *
+   * `createReason` already reactivates on a colliding re-add, which covers the
+   * agent who types the wording again. This covers the different case the
+   * management view creates: a row you can SEE and want back, where re-typing
+   * its exact label to resurrect it would be a trick rather than a control.
+   *
+   * The original `createdByName` is kept — they wrote the wording, and a
+   * reactivation is not authorship.
+   */
+  async reactivate(id: string): Promise<void> {
+    await this.update(id, { isActive: true, updatedAt: new Date() });
   }
 }
 
