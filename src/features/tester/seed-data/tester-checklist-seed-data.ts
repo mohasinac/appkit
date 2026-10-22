@@ -8185,6 +8185,384 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       },
     ],
   ),
+  /*
+   * ── Row affordances ────────────────────────────────────────────────────
+   *
+   * 🛑 Every case here is written as an explicit BEFORE → AFTER, because
+   * every defect in this group returned HTTP 200 with a plausible screen. A
+   * case reading "check you can edit a section" PASSES against the bug: the
+   * modal opens, the fields are there, and nothing says the row you clicked
+   * had no part in choosing the record.
+   */
+  ...group(
+    "row-affordances",
+    "Row affordances (edit / enable / delete)",
+    [
+      {
+        pageKey: "admin-sections",
+        pageLabel: "Admin · Homepage sections",
+        href: "/admin/sections",
+        cases: [
+          {
+            key: "row-pencil-opens-that-row",
+            label: "Clicking a section row's pencil opens THAT section — not a dropdown asking which one",
+            roles: ["admin"],
+            steps: [
+              "Note the name and Order number of the third row.",
+              "Click that row's edit pencil.",
+            ],
+            expectedUiState:
+              "The drawer opens titled 'Edit Homepage Section'. Its Section type matches the row you clicked and is DISABLED. There is no 'Mode' dropdown and no 'Section' dropdown anywhere in the form.",
+            expectedBehaviour: "The URL gains ?panel=edit&id=<that section's id>.",
+            endResult:
+              "BEFORE: the only edit path was a 'Manage Sections' toolbar button, then flipping a 'Mode' dropdown from Create to Edit, then finding the row AGAIN in a second dropdown by 'type (#order)'. The row you clicked played no part.",
+          },
+          {
+            key: "pencil-to-pencil-switches-record",
+            label: "Opening row B's pencil while row A's drawer is open loads B's values, not A's",
+            description:
+              "The failure this guards is silent cross-record corruption: the drawer does not unmount between rows, so a stale hydration guard would show A's config under B's title and SAVE it onto B.",
+            roles: ["admin"],
+            steps: [
+              "Click row A's pencil and change one field in the Content panel.",
+              "WITHOUT closing the drawer, click row B's pencil.",
+              "Compare the drawer's Section type and Order against row B.",
+            ],
+            expectedUiState:
+              "The drawer now shows B's type and B's Order. None of the edit made to A is present.",
+            endResult:
+              "Then click 'Add Section' while B is still open: the form must show defaults with no trace of B.",
+          },
+          {
+            key: "edit-survives-tab-switch",
+            label: "An in-progress edit survives switching browser tabs and coming back",
+            roles: ["admin"],
+            steps: [
+              "Open a section's editor and change its title field in the Content panel.",
+              "Switch to another browser tab, wait 40 seconds, switch back.",
+            ],
+            expectedUiState: "The changed title is still in the field.",
+            endResult:
+              "BEFORE: the list refetches on window focus, and the hydrate effect re-ran on the new data and silently reverted every builder change. No prompt, no error — the work was just gone.",
+          },
+          {
+            key: "row-toggle-enables-disables",
+            label: "A section row's switch enables and disables it without opening the editor",
+            roles: ["admin"],
+            steps: [
+              "Find an Enabled section and click its row switch off.",
+              "Open the public homepage in a second tab.",
+            ],
+            expectedUiState:
+              "The row's Status badge changes to 'Disabled' immediately and a toast says 'Section disabled.'",
+            expectedBehaviour: "That section no longer renders on the homepage.",
+            endResult:
+              "BEFORE: enabled/disabled was a <Select> buried inside the editor modal, reachable only through the Mode + Section dropdowns.",
+          },
+          {
+            key: "failed-toggle-rolls-back-correctly",
+            label: "A FAILED enable/disable returns the switch to what the server still holds — not to off",
+            description:
+              "The bug this guards: rolling back by restoring a captured override writes `undefined` on a row's first toggle, which renders as false. A failed toggle of an ENABLED section then leaves the UI claiming it is disabled — the opposite of the truth.",
+            roles: ["admin"],
+            steps: [
+              "In DevTools, block requests matching /api/admin/sections/*.",
+              "Toggle an ENABLED section off.",
+            ],
+            expectedUiState:
+              "An error toast appears and the switch returns to ENABLED (on). It must not settle on disabled.",
+          },
+          {
+            key: "filter-actually-filters",
+            label: "The Enabled/Disabled filter partitions the list — Enabled count + Disabled count equals All",
+            description:
+              "A filter that silently does nothing still returns plausible rows. Only the arithmetic separates 'filtering' from 'returning everything'.",
+            roles: ["admin"],
+            steps: [
+              "Note the total row count with no filter.",
+              "Apply Status → Disabled and note the count.",
+              "Apply Status → Enabled and note the count.",
+            ],
+            expectedBehaviour: "Enabled + Disabled equals the unfiltered total.",
+            endResult:
+              "With Disabled still applied, toggle a visible row ON: it must disappear from the list after the refresh.",
+          },
+          {
+            key: "nonsense-filter-shows-everything",
+            label: "A garbage ?enabled= value shows EVERY row, not zero",
+            description:
+              "Zero rows would mean a garbage value reached Firestore as a clause matching nothing — which renders as a confident, wrong answer. No clause is the correct response to an unparseable value.",
+            roles: ["admin"],
+            startPage: "/admin/sections?enabled=banana",
+            expectedUiState: "The full, unfiltered list of sections.",
+          },
+          {
+            key: "delete-offers-the-reversible-alternative",
+            label: "Deleting a section warns that order is positional AND points at disabling instead",
+            roles: ["admin"],
+            steps: ["Open a row's ⋯ menu and choose Delete Section."],
+            expectedUiState:
+              "The dialog says the sections after it keep their numbers and a gap is left, that Reorder sections → Reindex 1..N closes it, and that disabling keeps the config instead.",
+            endResult:
+              "BEFORE: delete was unreachable from the UI entirely, though DELETE /api/admin/sections/[id] had always been live.",
+          },
+          {
+            key: "reorder-after-delete",
+            label: "After a delete, Reorder sections opens with Save order ALREADY enabled, and Reset to server restores the GAPPED order",
+            description:
+              "A delete leaves a real gap in the server's numbering. Save-order lit on open is the honest signal that the draft differs from the server; Reset must go back to the gap, not to 1..N.",
+            roles: ["admin"],
+            steps: [
+              "Delete a section from the middle of the list.",
+              "Open 'Reorder sections' from the toolbar.",
+              "Click Reindex 1..N, then Save order.",
+            ],
+            expectedUiState:
+              "On open, Save order is enabled without touching anything. After Reindex and Save, the Order column has no gap.",
+          },
+          {
+            key: "card-view-switch-does-not-navigate",
+            label: "In card view, clicking a row's switch toggles it WITHOUT opening the editor",
+            roles: ["admin"],
+            steps: [
+              "Switch the toolbar's view control to the list/card view.",
+              "Click a row's enable switch.",
+            ],
+            expectedUiState:
+              "The switch flips and a toast appears. The edit drawer does NOT open.",
+          },
+        ],
+      },
+      {
+        pageKey: "admin-carousel",
+        pageLabel: "Admin · Carousel slides",
+        href: "/admin/carousel",
+        cases: [
+          {
+            key: "new-slide-button-exists",
+            label: "There is a 'New slide' button on the carousel list",
+            roles: ["admin"],
+            expectedUiState:
+              "A 'New slide' control in the toolbar, and the same control inside the empty state when there are no slides.",
+            endResult:
+              "BEFORE: the empty state read \"No carousel slides — use 'New slide' to add one\" and no such button existed anywhere on the page. /admin/carousel/new was a real route nothing linked to.",
+          },
+          {
+            key: "bulk-delete-reachable",
+            label: "Carousel slides can be selected and bulk-deleted",
+            roles: ["admin"],
+            steps: ["Tick two slides' checkboxes.", "Use the bulk Delete action and confirm."],
+            expectedUiState: "A checkbox column exists, and a bulk action bar appears once anything is ticked.",
+            endResult:
+              "BEFORE: there was no checkbox column at all, so nothing could be selected — the bulk action was gated on a prop the page never passed.",
+          },
+          {
+            key: "active-toggle-does-not-navigate",
+            label: "A slide's Active switch flips it WITHOUT opening the slide editor",
+            description:
+              "The whole row is a link to the editor, so a switch that only stops propagation would flip and then navigate — reading as 'clicking the switch opens the editor'.",
+            roles: ["admin"],
+            steps: ["Click a slide row's Active switch."],
+            expectedUiState: "The Status badge changes and the page does NOT navigate.",
+            endResult:
+              "BEFORE: active state was displayed three times per row and could only be changed by opening the full editor.",
+          },
+        ],
+      },
+      {
+        pageKey: "admin-misc-links",
+        pageLabel: "Admin · Rows that could not be opened",
+        cases: [
+          {
+            key: "action-index-row-edit",
+            label: "The action index can edit an entry's label, description, keywords and weight",
+            roles: ["admin"],
+            startPage: "/admin/action-index",
+            steps: ["Open a row's ⋯ menu, choose 'Edit entry', change the label, save."],
+            expectedUiState: "The row's label updates; the sidebar and header search show the new label.",
+            endResult:
+              "BEFORE: this page's own footer said 'Labels, descriptions and keywords can be edited here' and the only control on the row was a Shown toggle. The PATCH route had accepted all four fields the whole time.",
+          },
+          {
+            key: "action-index-goes-to-link",
+            label: "The action index's 'Goes to' column is a working link",
+            roles: ["admin"],
+            startPage: "/admin/action-index",
+            endResult: "BEFORE: it was mono TEXT, on a screen whose purpose is answering 'where is it'.",
+          },
+          {
+            key: "media-delete-and-open",
+            label: "A media file can be opened and deleted from the library",
+            roles: ["admin"],
+            startPage: "/admin/media",
+            steps: ["Click a file's name.", "Then use that tile's Delete and confirm."],
+            expectedUiState: "The filename opens the file; after confirming, the tile disappears from the grid.",
+            expectedBehaviour:
+              "The storage object AND its mediaAssets row are both removed, so /media/<shortId> stops resolving rather than becoming a row pointing at nothing.",
+            endResult:
+              "BEFORE: Copy URL was the ONLY action — no delete, no rename, and for a PDF or video no way to see what you were copying a URL for.",
+          },
+          {
+            key: "fulfillment-order-link",
+            label: "A fulfilment queue card's order number opens that order",
+            roles: ["admin"],
+            startPage: "/admin/fulfillment",
+            endResult:
+              "BEFORE: the id was inert text on a card offering only Mark Picked / Mark Packed — and the order's items were fetched, joined into a string, and discarded.",
+          },
+          {
+            key: "cluster-flag-is-two-way",
+            label: "'Flag Suspicious' can be undone, and the owner is a link",
+            roles: ["admin"],
+            startPage: "/admin/address-clusters",
+            steps: ["Flag an address as suspicious.", "Then use 'Clear flag' on the same row."],
+            expectedUiState: "The row's owner is a link to that user or store. After clearing, the suspicious badge is gone.",
+            endResult:
+              "BEFORE: the flag was ONE-WAY with no unflag anywhere, and the owner id was plain text — an admin was asked to judge an account they could not open, with no way back from a wrong call.",
+          },
+          {
+            key: "tester-issue-links-to-case",
+            label: "A reported tester issue links to the checklist case it is about",
+            roles: ["admin"],
+            startPage: "/admin/tester-feedback",
+            endResult:
+              "BEFORE: Confirm-bug and Reopen were offered with no way to READ the case's own before → after. Every issue carried checklistItemId and it rendered as nothing.",
+          },
+        ],
+        // The cluster/tester/media pages are all admin-gated.
+      },
+      {
+        pageKey: "store-listings",
+        pageLabel: "Store · Publish and activate from the row",
+        cases: [
+          {
+            key: "publish-unpublish-from-row",
+            label: "A listing can be published or unpublished from its row menu",
+            roles: ["seller"],
+            startPage: "/store/art",
+            steps: ["Open a listing's ⋯ menu and choose Unpublish.", "Reopen the menu."],
+            expectedUiState:
+              "The Status badge changes immediately, and the menu entry now reads Publish.",
+            expectedBehaviour: "The same control exists on art, classified, digital codes, live, spares and stickers.",
+            endResult:
+              "BEFORE: status was a read-only badge on all six pages, so changing one listing meant opening the full editor.",
+          },
+          {
+            key: "bundle-activate-from-row",
+            label: "A bundle can be activated or deactivated from its row",
+            roles: ["seller"],
+            startPage: "/store/bundles",
+            expectedUiState: "A switch on each row; the Status badge agrees with it immediately.",
+            endResult:
+              "BEFORE: this list had no row actions at all — the only per-row affordance was the link to the editor.",
+          },
+          {
+            key: "shipping-config-activate-from-row",
+            label: "A shipping option can be activated or deactivated from its row menu",
+            roles: ["seller"],
+            startPage: "/store/shipping-configs",
+            endResult:
+              "BEFORE: isActive was a read-only badge — and that schema's own comment says 'a PATCH may legitimately carry only isActive'. Nothing in the client had ever sent one.",
+          },
+          {
+            key: "support-ticket-opens",
+            label: "A support ticket raised about the store can be opened and its thread read",
+            roles: ["seller"],
+            startPage: "/store/support",
+            steps: ["Click a ticket row."],
+            expectedUiState:
+              "A detail modal with the full description and the message thread. Each message is labelled 'Support team' or 'Buyer' — never a buyer's name.",
+            endResult:
+              "BEFORE: the row showed a 140-character slice of the description and nothing else, under a footer saying replies happen in a thread it linked nowhere. There was no [id] route at all.",
+          },
+          {
+            key: "analytics-alert-edit",
+            label: "An analytics alert's threshold can be changed without deleting the alert",
+            roles: ["seller"],
+            startPage: "/store/analytics/alerts",
+            steps: ["Open an alert's ⋯ menu, choose 'Edit alert', change the threshold, save."],
+            expectedUiState: "The alert's summary line shows the new threshold; its firing history is unchanged.",
+            endResult:
+              "BEFORE: the create form was never reused for editing, so retuning a threshold meant deleting the alert and rebuilding it — losing its firing history.",
+          },
+        ],
+      },
+      {
+        pageKey: "buyer-records",
+        pageLabel: "Buyer · Their own records",
+        cases: [
+          {
+            key: "review-edit-from-list",
+            label: "A buyer can edit a review from their own review list",
+            roles: ["buyer"],
+            startPage: "/user/reviews",
+            expectedUiState: "Each review row has an Edit link that opens that review's editor.",
+            endResult:
+              "BEFORE: the ONE link per row went to the PRODUCT. ROUTES.USER.REVIEW_EDIT and the edit page both existed and the buyer's own list was the one place that never used them.",
+          },
+          {
+            key: "offer-links-to-product",
+            label: "An offer card's product title opens that product",
+            roles: ["buyer"],
+            startPage: "/user/offers",
+            endResult:
+              "BEFORE: inert text. A buyer could accept a counter or withdraw an offer and never get back to the listing it was about.",
+          },
+          {
+            key: "sessions-page-exists",
+            label: "The Signed-in devices page listed in the buyer help guide actually exists",
+            roles: ["buyer"],
+            startPage: "/user/sessions",
+            expectedUiState:
+              "A list of devices with browser, OS, country, when each started and was last used. Each active one has a sign-out control.",
+            endResult:
+              "BEFORE: the page did not exist. GET /api/user/sessions and DELETE [id] were both live with zero consumers, while the buyer guide told people to 'view all devices signed in at My Account → Sessions'.",
+          },
+          {
+            key: "session-revoke-warns-about-own-device",
+            label: "Signing a device out warns that it may be the device you are on",
+            roles: ["buyer"],
+            startPage: "/user/sessions",
+            steps: ["Click sign-out on one session."],
+            expectedUiState:
+              "The dialog says the device will be signed out and needs the password to return, and that if it is the device you are on you will be signed out too.",
+          },
+          {
+            key: "payment-methods-page-exists",
+            label: "Saved payment methods can be seen and removed",
+            roles: ["buyer"],
+            startPage: "/user/payment-methods",
+            expectedUiState:
+              "Each row shows the MASKED label and the type. No full card number or UPI ID appears anywhere.",
+            endResult:
+              "BEFORE: the page did not exist. The GET/POST/DELETE routes were live with zero consumers, so buyers had saved methods they could neither see nor remove.",
+          },
+          {
+            key: "notification-mark-unread",
+            label: "A notification marked read can be marked UNREAD again",
+            roles: ["buyer"],
+            startPage: "/user/notifications",
+            steps: [
+              "Mark a notification read.",
+              "Click the same button, which now reads 'Mark unread'.",
+              "Switch the filter to Unread.",
+            ],
+            expectedUiState: "The notification appears under the Unread filter again.",
+            endResult:
+              "BEFORE: the button only rendered while unread, and the route hard-coded markAsRead with no body — so a notification opened by accident left the unread list for good.",
+          },
+          {
+            key: "profile-activity-rows-open",
+            label: "Recent bids and recent reviews on the profile open, like recent orders already did",
+            roles: ["buyer"],
+            startPage: "/user/profile",
+            endResult:
+              "BEFORE: one component rendered its ORDERS rows as links and its bids and reviews rows as plain blocks — three lists of the same shape, one of which you could open.",
+          },
+        ],
+      },
+    ],
+  ),
 ];
 
 const defaultPhases = assignDefaultPhases(
