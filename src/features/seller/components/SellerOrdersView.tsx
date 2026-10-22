@@ -1,6 +1,8 @@
 "use client";
 import { formatPhysicalLocation } from "../../../utils/physical-location";
 import { OrderAddonBadges } from "../../orders/components/OrderAddonBadges";
+import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard";
+import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit/client";
 
@@ -141,6 +143,22 @@ interface OrderDetail {
     title?: string;
     price?: number;
   }>;
+  /*
+   * How the buyer earned this price. Both of these are already in
+   * `SELLER_ORDER_FIELDS` on `GET /api/store/orders/[id]` (route.ts:108,111),
+   * so the data has always arrived — it was the local type and the render that
+   * were missing, which is why the seller could not see an agreed offer price
+   * on an order they had themselves accepted.
+   *
+   * 🛑 Dates inside it arrive as ISO STRINGS, not Dates: the allow-list
+   * serialiser passes the value through `JSON`, so `acceptedAt` is a string
+   * here while `OrderSourceOfferAccepted` declares a `Date`. The card's own
+   * `dateText` normalises string | number | Date | Timestamp for exactly this
+   * reason, so the declared type stays honest about intent and the renderer
+   * copes with the wire shape.
+   */
+  sourceContext?: OrderSourceContext;
+  currency?: string;
   trackingNumber?: string;
   /*
    * 🛑 `shippingCarrier` is the field `OrderDocument` declares and the one the
@@ -407,6 +425,17 @@ export function SellerOrderDetailPanel({
                 {toRelativeDate(order.createdAt)}
               </Text>
             </Row>
+
+            {/*
+              Above the items on purpose: the seller needs to know this was an
+              accepted offer or a won auction BEFORE reading what is in the
+              parcel, because it is the thing that explains a price that does
+              not match the listing. Renders nothing on an ordinary order.
+            */}
+            <OrderProvenanceCard
+              sourceContext={order.sourceContext}
+              currency={order.currency}
+            />
 
             {(order.items ?? []).length > 0 && (
               <Div>

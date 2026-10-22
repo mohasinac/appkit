@@ -1,6 +1,8 @@
 "use client";
 
 import { OrderAddonBadges, type OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
+import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard";
+import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
@@ -66,6 +68,18 @@ export interface AdminOrderEditorViewProps {
    * coupon is what an admin needs when reconciling a discounted order.
    */
   addons?: OrderAddonBadgesOrder;
+  /**
+   * How the buyer earned this price — a won auction, a buyout, an agreed
+   * offer, a pre-order deposit, prize-draw entries.
+   *
+   * Support is the surface that needs this most: a buyer disputing "I agreed
+   * ₹X" is otherwise unanswerable from the admin side, because the negotiated
+   * amount lives only in `sourceContext` and nothing rendered it anywhere.
+   * `GET /api/admin/orders/[id]` already returns it via `maskedOrder`.
+   */
+  sourceContext?: OrderSourceContext;
+  /** For the provenance card's money formatting; falls back to the default. */
+  currency?: string;
 }
 
 const STATUS_OPTIONS = [
@@ -97,6 +111,8 @@ export function AdminOrderEditorView({
   orderLabel,
   currentStatus,
   items,
+  sourceContext,
+  currency,
   paymentProofUrl,
   paymentTransactionId,
   paymentMethod,
@@ -292,6 +308,7 @@ export function AdminOrderEditorView({
       <Stack gap="md" padding="md">
       <FormErrorSummary />
         {addons && <OrderAddonBadges order={addons} variant="detail" />}
+        <OrderProvenanceCard sourceContext={sourceContext} currency={currency} />
         {items && items.length > 0 && (
           <Stack gap="xs">
             <Label size="sm" weight="medium" color="primary">

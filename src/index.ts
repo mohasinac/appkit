@@ -6314,6 +6314,10 @@ export type { OrderSiblingPaymentsProps } from "./features/orders/index";
 export { OrderPaymentSummary } from "./features/orders/index";
 export type { OrderPaymentSummaryProps } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/index";
+// OrderProvenanceCard — renders sourceContext, the record of HOW the buyer
+// earned this price. Mounted on the buyer, seller AND admin order detail.
+export { OrderProvenanceCard } from "./features/orders/index";
+export type { OrderProvenanceCardProps } from "./features/orders/index";
 // OrderCompletionPanel - Per-line ratings + Mark complete, the buyer's fast path.
 export { OrderCompletionPanel } from "./features/orders/index";
 // [CLIENT] StatusTimeline — the ONE rail both orders and offers render.
@@ -6413,6 +6417,10 @@ export type { OrderCreateInput } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OrderDocument - Type contract for order document.
 export type { OrderDocument } from "./features/orders/index";
+// OrderSourceContext — the provenance union. Public because
+// `OrderProvenanceCardProps` takes it, so a consumer passing that prop needs
+// to be able to name the type.
+export type { OrderSourceContext } from "./features/orders/index";
 export type { OrderRefundEvent, RefundType } from "./features/orders/schemas/firestore";
 // Manual-payment (cash / UPI / EMI) shared constants + the payment-review
 // queue discriminator. Pure data + predicates — no firebase-admin in the

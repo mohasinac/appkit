@@ -812,6 +812,11 @@ export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewP
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
+export { OrderProvenanceCard } from "./features/orders/components/OrderProvenanceCard";
+export type { OrderProvenanceCardProps } from "./features/orders/components/OrderProvenanceCard";
+// The provenance union itself — a consumer passing `sourceContext` has to be
+// able to name its type.
+export type { OrderSourceContext } from "./features/orders/schemas/firestore";
 /*
  * The buyer's completion surface. Client entry only — it fetches and posts.
  */

@@ -1,6 +1,7 @@
 "use client";
 
 import type { OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
+import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
@@ -127,6 +128,18 @@ interface OrderRow {
   paymentReviewOutcome?: string;
   /** Paid add-ons + coupon, surfaced as icon chips in the editor. */
   addons?: OrderAddonBadgesOrder;
+  /*
+   * Provenance, carried to the drawer. 🛑 It has to travel on the ROW: the
+   * drawer is fed entirely from `selectedRow` and never fetches the order
+   * itself, so a field missing here is `undefined` in the editor no matter
+   * what the single-order endpoint returns — Root Cause #38 exactly.
+   *
+   * Safe to read straight off the list item because this route returns
+   * `maskedOrders`, i.e. whole documents rather than a hand-picked serializer
+   * (the same reason `addons` below needs no serializer entry).
+   */
+  sourceContext?: OrderSourceContext;
+  currency?: string;
 }
 
 export type AdminOrdersViewProps = ListingLayoutProps;
@@ -259,6 +272,14 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             couponCode: toStringValue(item.couponCode) || undefined,
             couponDiscount: Number(item.couponDiscount ?? 0) || undefined,
           },
+          /*
+           * Same reasoning as `addons` — raw doc in, so no serializer entry.
+           * Cast rather than re-validated: `path` is the discriminator the
+           * card switches on, and narrowing it here would duplicate that
+           * switch in a second place for no gain.
+           */
+          sourceContext: item.sourceContext as OrderSourceContext | undefined,
+          currency: toStringValue(item.currency, "") || undefined,
         };
       }),
     getTotal: (response, mappedRows) =>
@@ -383,6 +404,8 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         buyerFraudAgreementAccepted={selectedRow?.buyerFraudAgreementAccepted}
         paymentReviewOutcome={selectedRow?.paymentReviewOutcome}
         addons={selectedRow?.addons}
+        sourceContext={selectedRow?.sourceContext}
+        currency={selectedRow?.currency}
       />
     </>
   );
