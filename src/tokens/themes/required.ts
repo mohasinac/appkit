@@ -49,6 +49,7 @@ export const REQUIRED_THEME_TOKENS = [
   "appkit-color-text-muted",
   "appkit-color-text-faint",
   "appkit-color-text-on-primary",
+  "appkit-color-link",
   // Status
   "appkit-color-success",
   "appkit-color-success-surface",

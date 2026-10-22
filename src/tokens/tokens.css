@@ -302,6 +302,15 @@
   --appkit-color-text-on-primary:  #ffffff;
   --appkit-color-text-on-dark:     #ffffff;
 
+  /* Link ink for long-form prose. A SEPARATE token because the right link
+   * colour is not the same ramp in every theme: default-light wants primary
+   * (teal), default-dark wants secondary (cyan) because its primary is a RED
+   * that reads as danger, and cobalt-night's primary IS blue. Binding prose
+   * links to `primary-600` instead would be #dc2626 on the dark theme.
+   * primary-700, not -600: #0d9488 is only 3.59:1 on --appkit-color-bg and
+   * fails AA for normal text; #0f766e is 5.24:1. */
+  --appkit-color-link:             #0f766e;    /* primary-700 — 5.24:1 on --appkit-color-bg */
+
   --appkit-color-success:          #15803d;    /* green-700 — 4.5:1 AA against success-surface, distinct from the new teal primary */
   --appkit-color-success-surface:  #f0fdf4;    /* green-50 */
   --appkit-color-warning:          #b45309;    /* amber-700 — 4.5:1 AA against warning-surface */
@@ -500,6 +509,8 @@
   --appkit-color-text-muted:       #b4b4bd;    /* lightened from zinc-400 #a1a1aa — ~9:1 on the dark page */
   --appkit-color-text-faint:       #8b8b94;    /* lightened from zinc-500 #71717a, which was ~3:1 and read as barely present */
 
+  --appkit-color-link:             #22d3ee;    /* secondary-400 — 11.16:1 on --appkit-color-bg. NOT primary: this theme's primary is crimson */
+
   --appkit-color-success:          #34d399;    /* emerald-400 */
   --appkit-color-success-surface:  rgba(6, 78, 59, 0.25);
   --appkit-color-warning:          #fbbf24;    /* amber-400 */
@@ -620,6 +631,8 @@
   --appkit-color-text-muted:       #bcd4ff;    /* primary-200 */
   --appkit-color-text-faint:       #8eb9ff;    /* primary-300 */
 
+  --appkit-color-link:             #5992ff;    /* primary-500 — 5.17:1 on --appkit-color-bg */
+
   --appkit-color-success:          #4ade80;
   --appkit-color-success-surface:  rgba(20, 83, 45, 0.3);
   --appkit-color-warning:          #fbbf24;
@@ -651,6 +664,8 @@
   --appkit-color-surface:          #ffffff;
   --appkit-color-surface-elevated: #ffffff;
   --appkit-color-surface-input:    #fffbeb;    /* amber-50 */
+
+  --appkit-color-link:             #b45309;    /* amber-700 — 4.73:1 on --appkit-color-bg; primary-600 #d97706 is only 3.0:1 */
 
   /* --- Interactive surfaces ------------------------------------------------
    * `-hover` is the neutral chrome hover fill; `-raised` is a resting panel one

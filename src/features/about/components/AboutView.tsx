@@ -54,7 +54,13 @@ export function AboutView({
         </Div>
       </Section>
 
-      <Div paddingX="x-page" className="max-w-5xl mx-auto" padding="y-4xl">
+      {/* A Stack, not a Div: these `<Section>`s carry no vertical rhythm of
+          their own, so stacking them in a plain block ran "How It Works" flush
+          into the mission paragraph and let "Our Values" collide with the
+          bottom of the cards above it. One `gap` here spaces every section
+          instead of each one hand-rolling a margin that drifts from its
+          neighbours. */}
+      <Stack gap="section" paddingX="x-page" className="max-w-5xl mx-auto" padding="y-4xl">
         <Section className="text-center max-w-3xl mx-auto">
           <Heading level={2} className="mb-4">{labels.missionTitle}</Heading>
           <Text size="lg" variant="secondary" className="leading-relaxed">
@@ -71,8 +77,16 @@ export function AboutView({
                 variant={`gradient-${tone ?? "indigo"}`}
                 padding="md" spacing="sm">
                 <Div><Span size="4xl">{icon}</Span></Div>
-                <Heading level={3}>{title}</Heading>
-                <Text size="sm" variant="secondary" className="leading-relaxed">
+                {/* 🛑 Inverse ink is REQUIRED on a gradient card, not a
+                    preference. `.appkit-card--gradient-*` sets `color: white`,
+                    but that only INHERITS — and both of these children declare
+                    a colour of their own, so inheritance never reaches them.
+                    `variant="secondary"` resolves to `--appkit-color-text-muted`,
+                    which is a grey chosen for the page background: it rendered
+                    as unreadable muted-grey-on-indigo. `variant="none"` is what
+                    stops the variant re-applying its own colour over `color`. */}
+                <Heading level={3} color="inverse" variant="none">{title}</Heading>
+                <Text size="sm" color="inverse-muted" variant="none" className="leading-relaxed">
                   {text}
                 </Text>
               </Card>
@@ -190,7 +204,7 @@ export function AboutView({
             </Row>
           )}
         </Section>
-      </Div>
+      </Stack>
     </Div>
   );
 }

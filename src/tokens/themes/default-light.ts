@@ -62,6 +62,7 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-text-muted": "#5b5b63",
     "appkit-color-text-faint": "#6f6f78",
     "appkit-color-text-on-primary": "#ffffff",
+    "appkit-color-link": "#0f766e",
 
     "appkit-color-success": "#15803d",
     "appkit-color-success-surface": "#f0fdf4",
