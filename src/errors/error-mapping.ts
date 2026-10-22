@@ -92,6 +92,30 @@ function isZodLikeError(err: unknown): err is ZodLikeError {
   );
 }
 
+/**
+ * The issues carried by a `ValidationError`, whichever of the two shapes the
+ * thrower used.
+ *
+ * 🛑 `new ValidationError(msg, parsed.error.issues)` silently lost everything.
+ * `ValidationError` forwards its second argument to `AppError.data`, and the
+ * old test was `isZodLikeError(err.data)` — which requires `"issues" in data`.
+ * An ARRAY has no `.issues` property (`"issues" in [] === false`), so passing
+ * `parsed.error.issues` (the obvious thing to pass, and what four routes do)
+ * produced a 400 with no field information at all. Only passing the whole
+ * `ZodError` worked.
+ *
+ * `media/finalize/route.ts` even carried a comment asserting the opposite —
+ * "carries `issues` through to the client, so the caller learns WHICH field it
+ * got wrong". It did not.
+ *
+ * Accept both, so the next caller cannot get it wrong either way.
+ */
+function issuesFromErrorData(data: unknown): unknown[] | undefined {
+  if (Array.isArray(data)) return data.length > 0 ? data : undefined;
+  if (isZodLikeError(data)) return data.issues;
+  return undefined;
+}
+
 interface FirestoreLikeError {
   code: number | string;
   message?: string;
@@ -173,7 +197,7 @@ function classifyError(
       status: 400,
       code: HTTP_ERROR_CODES.VALIDATION_FAILED,
       message: err.message,
-      issues: isZodLikeError(err.data) ? err.data.issues : undefined,
+      issues: issuesFromErrorData(err.data),
     };
   }
   if (err instanceof AuthenticationError) {

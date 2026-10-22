@@ -22,7 +22,16 @@
  *
  * Root-level `.refine()` issues (empty `path: []`, no owning field) are still
  * skipped — there is no field to attach them to, so the caller must surface
- * those some other way (they fall through to a toast in `surfaceError`).
+ * those some other way.
+ *
+ * 🛑 That last sentence used to end "(they fall through to a toast in
+ * `surfaceError`)", which was only true when EVERY issue was root-level.
+ * In the mixed case — one field error plus one cross-field `.refine()`, which
+ * is the common shape for "passwords must match" or "end date must be after
+ * start date" — `hasAttachableIssue` returned true, this function skipped the
+ * root issue, and `surfaceError` returned without a toast. The cross-field
+ * rule was enforced, the save was refused, and the user was told nothing
+ * about why. `rootLevelMessages` below is how a caller surfaces them.
  */
 export function applyZodIssues(
   issues: ReadonlyArray<{ path?: ReadonlyArray<PropertyKey>; message: string }>,
@@ -40,4 +49,19 @@ export function hasAttachableIssue(
   issues: ReadonlyArray<{ path?: ReadonlyArray<PropertyKey> }> | undefined,
 ): boolean {
   return Boolean(issues?.some((i) => i.path && i.path.length > 0));
+}
+
+/**
+ * The messages `applyZodIssues` cannot attach — the root-level `.refine()`
+ * ones with no owning field. A caller that has just run `applyZodIssues`
+ * should surface these separately, or they are silently discarded.
+ */
+export function rootLevelMessages(
+  issues: ReadonlyArray<{ path?: ReadonlyArray<PropertyKey>; message: string }> | undefined,
+): string[] {
+  if (!issues) return [];
+  return issues
+    .filter((i) => !i.path || i.path.length === 0)
+    .map((i) => i.message)
+    .filter((m): m is string => typeof m === "string" && m.length > 0);
 }

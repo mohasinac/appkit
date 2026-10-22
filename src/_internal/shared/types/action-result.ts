@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { mapToHttpError } from "../../../errors/error-mapping";
+import { toApiIssues } from "../../../errors/error-envelope";
 import { describeCauseChain } from "../../../errors/describe-cause";
 import { reportActionError } from "./action-error-reporter";
 // Deliberately NO serverLogger import here. This module also exports isOk /
@@ -87,7 +88,20 @@ export async function wrapAction<T>(
       ok: false,
       code: mapped.code,
       error: mapped.message,
-      ...(mapped.issues ? { issues: mapped.issues } : {}),
+      /*
+       * 🛑 `toApiIssues`, not the raw issues — this was the ONE producer in
+       * the codebase that skipped the scrubber, and it is the one with 221
+       * call sites.
+       *
+       * A raw `ZodIssue` carries `received`: the value the user actually
+       * submitted. On a failed signup, address save or payout-details save
+       * that is an email, a phone number or a bank account, echoed straight
+       * back into the client payload. `toApiIssues` narrows each issue to
+       * `{ message, path?, code? }`, which is exactly why it exists — every
+       * other producer (`routeHandler`, `createApiHandler`, the offer
+       * actions) already routes through it.
+       */
+      ...(mapped.issues ? { issues: toApiIssues(mapped.issues) } : {}),
     } as ActionResult<T>;
   }
 }
