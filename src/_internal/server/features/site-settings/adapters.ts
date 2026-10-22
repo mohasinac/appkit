@@ -44,6 +44,18 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
   "notificationChannels", // NotificationPreferencesPanel reads the per-channel toggles
   "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
+  /*
+   * `support.enabled` — a REAL client reader, which is the bar this list sets:
+   * `getUserNavGroups` filters the buyer's support nav entry on it, and
+   * `UserLayoutClient` is a client component.
+   *
+   * 🛑 Publishing it is also harmless by inspection, and that is worth stating
+   * rather than assuming: the group holds exactly one boolean, and "is support
+   * reachable" is a fact a buyer discovers by looking at the page anyway. If a
+   * second field is ever added here, triage it separately — the group being
+   * public does not make its future members public.
+   */
+  "support",
   "navConfig", // NavbarWithSettings, DashboardLayoutClient
   "actionConfig", // useAuthGate
   "background", // DashboardLayoutClient (background.light / .dark)
@@ -163,6 +175,9 @@ export function toPublicSiteSettings(
     },
     notificationChannels: doc.notificationChannels,
     announcementBar: doc.announcementBar,
+    // Narrowed to the one boolean a client reads, not the group by reference —
+    // so a field added to `support` later is not published by accident.
+    support: doc.support ? { enabled: doc.support.enabled !== false } : undefined,
     navConfig: doc.navConfig,
     actionConfig: doc.actionConfig,
     background: doc.background,
