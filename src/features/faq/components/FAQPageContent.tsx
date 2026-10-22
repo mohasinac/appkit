@@ -151,7 +151,37 @@ export function FAQPageContent({
         })}
       </Div>
 
-      <Div layout="grid" gap="8" className="grid-cols-1 lg:grid-cols-12">
+      {/*
+        ── 0b: the sidebar used to stack ABOVE the list at every width ────────
+        🛑 MEASURED against production 2026-10-22, and it was NEITHER of the two
+        hypotheses on the plan. `lg:` applies fine — `lg:hidden` hid the strip
+        and `lg:block` showed the sidebar, both confirmed by computed style at
+        1280px. The one variant that did NOT apply was `lg:grid-cols-12`, and
+        the class it lost to was the `grid-cols-1` that used to sit right here.
+
+        Both are `!important` utilities in `@layer utilities` with equal
+        specificity, so neither layer order nor specificity decides between
+        them — EMISSION ORDER does. And the page loads TWO stylesheet chunks:
+        `.lg\:grid-cols-12` is emitted in the first one only, while
+        `.grid-cols-1` is emitted in BOTH — so the copy in the second chunk is
+        later in document order and won at every viewport width. Exactly the
+        cross-chunk non-determinism `src/app/globals.css` warns about; Root
+        Cause #79 is the same mechanism between two hover classes in one file.
+
+        The symptom was a grid computing `984px 0px ×8` — NINE tracks, because
+        the children's `span 3` / `span 9` created eight implicit columns in a
+        one-track grid. Removing `grid-cols-1` took it to twelve equal 74px
+        tracks, verified in the live DOM at 1280px; at 800px it stays one
+        track with the sidebar hidden and the strip shown.
+
+        🛑 The fix is to DELETE the competitor, never to add a third rule —
+        Root Cause #79's conclusion verbatim. `grid-cols-1` was redundant
+        anyway: a grid with no `grid-template-columns` already lays out in a
+        single implicit column, which is precisely what it was asserting. Same
+        for the list's `col-span-1` below. Do not "restore" either; a second
+        `grid-template-columns` here is the bug.
+      */}
+      <Div layout="grid" gap="8" className="lg:grid-cols-12">
         <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
           <FAQCategorySidebar
             selectedCategory={selectedCategory}
@@ -170,7 +200,7 @@ export function FAQPageContent({
           />
         </Div>
 
-        <Div className="col-span-1 lg:col-span-8 xl:col-span-9">
+        <Div className="lg:col-span-8 xl:col-span-9">
           <SlottedListingView
             portal="public"
             inlineToolbar
