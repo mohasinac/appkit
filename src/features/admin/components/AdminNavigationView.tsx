@@ -9,6 +9,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { AdminNavEditorView, type NavItemData } from "./AdminNavEditorView";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -54,7 +55,20 @@ function NavItemRow({
         </Text>
         <Text className="truncate" color="muted" size="xs">{item.href}</Text>
       </Div>
-      <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
+      {/*
+        `label=""` named nothing — a page of these all announced "Toggle".
+        The ActionDefs carry the two states so the control says which record
+        it belongs to and which way it will go.
+      */}
+      <Toggle
+        checked={item.isVisible ?? true}
+        onChange={(val) => onVisibilityChange(item.id!, val)}
+        ariaLabel={
+          (item.isVisible ?? true)
+            ? `${ACTIONS.ADMIN["hide-nav-item"].ariaLabel}: ${item.label}`
+            : `${ACTIONS.ADMIN["show-nav-item"].ariaLabel}: ${item.label}`
+        }
+      />
       <RowActionMenu actions={[
         { label: ROW_ACTION_META[ROW_ACTION_ID.EDIT].label, onClick: () => onEdit(item) },
         { label: ROW_ACTION_META[ROW_ACTION_ID.DELETE].label, destructive: true, onClick: () => onDelete(item) },

@@ -2,6 +2,7 @@
 
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
+import { z } from "zod";
 import { alertMetricsForScope } from "../../store-extensions/constants/alert-metrics";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
@@ -18,6 +19,9 @@ import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { QuickEditMenu } from "../../admin/components/QuickEditMenu";
+import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
+import type { FormValues } from "../../../schemas/types";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -96,14 +100,48 @@ const OPERATOR_BADGE: Record<string, "success" | "warning" | "danger" | "info" |
 // Sub-components
 // ---------------------------------------------------------------------------
 
+/**
+ * The three values a seller actually tunes once an alert is live.
+ *
+ * Deliberately not `metric` or `operator`: changing either turns the alert
+ * into a different alert while keeping its firing history, so
+ * `lastTriggeredAt`/`lastObservedValue` on the card would then describe a rule
+ * that no longer exists. Those stay a delete-and-recreate.
+ */
+const alertQuickEditSchema = z.object({
+  label: z.string().trim().min(1, "A name is required."),
+  threshold: z.coerce.number().min(0, "Threshold cannot be negative."),
+  windowHours: z.coerce.number().int().min(1),
+});
+
+const ALERT_QUICK_FIELDS: QuickFieldDef[] = [
+  { name: "label", label: "Name", type: "text", required: true },
+  {
+    name: "threshold",
+    label: "Threshold",
+    type: "number",
+    required: true,
+    helperText: "The value the metric is compared against.",
+  },
+  {
+    name: "windowHours",
+    label: "Window",
+    type: "select",
+    required: true,
+    options: WINDOW_OPTIONS,
+  },
+];
+
 function AlertCard({
   alert,
   onToggle,
   onDelete,
+  onEdit,
 }: {
   alert: AnalyticsAlertDocument;
   onToggle: (id: string, isActive: boolean) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string, values: FormValues) => Promise<void>;
 }) {
   const metricLabel = METRIC_OPTIONS.find((m) => m.value === alert.metric)?.label ?? alert.metric;
   const opLabel = OPERATOR_OPTIONS.find((o) => o.value === alert.operator)?.label ?? alert.operator;
@@ -155,10 +193,39 @@ function AlertCard({
         )}
       </Div>
       <Row className="shrink-0" align="center" gap="sm">
+        {/*
+          Was a bare <Toggle> with neither a `label` nor an `ariaLabel`, so a
+          column of these announced nothing but "Toggle".
+        */}
         <Toggle
           checked={alert.isActive}
           onChange={(v) => onToggle(alert.id, v)}
           size="sm"
+          ariaLabel={`${alert.isActive ? "Pause" : "Resume"} ${alert.label}`}
+        />
+        {/*
+          🛑 EDIT. There was none — the create form is inline and was never
+          reused for editing, so changing a THRESHOLD (the one value a seller
+          retunes as their volume changes) meant deleting the alert and
+          rebuilding it, which also loses its firing history. The PATCH route
+          has always taken a partial body.
+        */}
+        <QuickEditMenu
+          actions={[
+            {
+              label: "Edit alert",
+              formTitle: `Edit "${alert.label}"`,
+              schema: alertQuickEditSchema,
+              fields: ALERT_QUICK_FIELDS,
+              defaultValues: {
+                label: alert.label,
+                threshold: alert.threshold,
+                windowHours: String(alert.windowHours),
+              },
+              onSubmit: (values) => onEdit(alert.id, values),
+              submitLabel: "Save alert",
+            },
+          ]}
         />
         {/*
           Via the registry, so the confirmation is not optional — this was a
@@ -293,6 +360,18 @@ export function SellerAnalyticsAlertsView({
     },
   });
 
+  const editMutation = useApiMutation({
+    errorMessage: "Failed to update alert",
+    mutationFn: async ({ id, values }: { id: string; values: FormValues }) => {
+      const parsed = alertQuickEditSchema.parse(values);
+      return apiClient.patch(SELLER_ENDPOINTS.ANALYTICS_ALERT_BY_ID(id), parsed);
+    },
+    onSuccess: () => {
+      showToast("Alert updated", "success");
+      void queryClient.invalidateQueries({ queryKey: ["seller", "analytics-alerts"] });
+    },
+  });
+
   const toggleChannel = useCallback((ch: string) => {
     setDraft((d) => ({
       ...d,
@@ -418,6 +497,9 @@ export function SellerAnalyticsAlertsView({
               alert={alert}
               onToggle={(id, isActive) => toggleMutation.mutate({ id, isActive })}
               onDelete={(id) => deleteMutation.mutate(id)}
+              onEdit={async (id, values) => {
+                await editMutation.mutateAsync({ id, values });
+              }}
             />
           ))}
         </Stack>

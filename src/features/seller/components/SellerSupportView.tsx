@@ -25,7 +25,9 @@
  */
 
 import React from "react";
-import { Badge, Span, Stack, Text } from "../../../ui";
+import { useQuery } from "@tanstack/react-query";
+import { Badge, RecordDetailModal, Span, Stack, Text } from "../../../ui";
+import { apiClient } from "../../../http";
 import type { StackedViewShellProps } from "../../../ui";
 import { DataListingView } from "../../admin/components/DataListingView";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -63,7 +65,93 @@ export interface SellerSupportViewProps
   labels?: { title?: string };
 }
 
+interface TicketMessageLike {
+  authorRole?: string;
+  authorName?: string;
+  body?: string;
+  createdAt?: JsonValue;
+}
+
+/**
+ * One ticket, read-only, in the shared detail modal.
+ *
+ * Its own component so the query only runs once a row has actually been
+ * opened — the list is the common case and nobody should pay a per-ticket
+ * fetch to scroll it.
+ */
+function SellerSupportTicketModal({
+  ticketId,
+  onClose,
+}: {
+  ticketId: string;
+  onClose: () => void;
+}) {
+  const { data, isLoading } = useQuery({
+    queryKey: ["store", "support-ticket", ticketId],
+    queryFn: () =>
+      apiClient.get<{ ticket?: Record<string, JsonValue> }>(
+        SELLER_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId),
+      ),
+    staleTime: 30_000,
+  });
+
+  const ticket = data?.ticket;
+  const messages = Array.isArray(ticket?.messages)
+    ? (ticket.messages as unknown as TicketMessageLike[])
+    : [];
+
+  return (
+    <RecordDetailModal
+      isOpen
+      onClose={onClose}
+      title={toStringValue(ticket?.subject, isLoading ? "Loading…" : "Ticket")}
+      badges={
+        ticket
+          ? [
+              {
+                label: toStringValue(ticket.status).replace(/_/g, " "),
+                variant: STATUS_VARIANT[toStringValue(ticket.status)] ?? "default",
+              },
+              { label: toStringValue(ticket.category).replace(/_/g, " "), variant: "default" },
+            ]
+          : undefined
+      }
+      description={toStringValue(ticket?.description)}
+      fields={
+        ticket
+          ? [
+              { label: "Ticket", value: toStringValue(ticket.id) },
+              { label: "Raised", value: toRelativeDate(ticket.createdAt) },
+              { label: "Last update", value: toRelativeDate(ticket.updatedAt ?? ticket.createdAt) },
+              { label: "Priority", value: toStringValue(ticket.priority, "—") },
+            ]
+          : undefined
+      }
+      items={
+        messages.length > 0
+          ? {
+              heading: `Thread (${messages.length})`,
+              entries: messages.map((m) => ({
+                /*
+                 * The author's ROLE, not their name. A seller reading a
+                 * complaint made against them does not need the buyer's
+                 * identity to follow the thread, and those fields are
+                 * PII-encrypted at rest precisely so they are not handed out
+                 * by default.
+                 */
+                title: m.authorRole === "admin" ? "Support team" : "Buyer",
+                subtitle: toStringValue(m.body as JsonValue),
+                trailing: toRelativeDate((m.createdAt ?? null) as JsonValue),
+              })),
+            }
+          : undefined
+      }
+    />
+  );
+}
+
 export function SellerSupportView({ labels = {} }: SellerSupportViewProps) {
+  const [detailId, setDetailId] = React.useState<string | null>(null);
   const mapRows = React.useCallback((response: TicketsResponse): TicketRow[] => {
     const items = Array.isArray(response?.items) ? response.items : [];
     return items.map((raw) => {
@@ -134,8 +222,25 @@ export function SellerSupportView({ labels = {} }: SellerSupportViewProps) {
             },
             { key: "updated", header: "Updated" },
           ],
+          /*
+           * 🛑 This list was a DEAD END, and unlike most of the ones fixed
+           * alongside it that was not a pure UI gap: a seller could read a
+           * subject and a 140-character slice of the description and never
+           * open the thread, under the footer below promising the thread is
+           * where replies happen. `/api/store/support` was GET-list-only with
+           * no `[id]` sibling at all, so the route had to be built first.
+           *
+           * A modal rather than a page: the seller cannot act on these — a
+           * ticket raised ABOUT a store is not one its owner can reply to or
+           * close — so there is nothing here a route would add, and this is
+           * the same `RecordDetailModal` the other dead ends were fixed with.
+           */
+          onRowClick: (row) => setDetailId(row.id),
         }}
       />
+      {detailId && (
+        <SellerSupportTicketModal ticketId={detailId} onClose={() => setDetailId(null)} />
+      )}
       <Text size="xs" color="muted">
         Replies and status changes happen in the ticket thread with our support
         team — a ticket raised about your store is not one you can close.

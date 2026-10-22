@@ -3,7 +3,8 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, Button, Div, Heading, Row, Span, Stack, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, Heading, Row, Span, Stack, Text, TextLink, useToast } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
@@ -60,6 +61,25 @@ export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) 
     },
   });
 
+  /*
+   * 🛑 "Flag Suspicious" was ONE-WAY: there was no unflag, so a wrong call —
+   * or a cluster that turned out to be a family sharing an address — left a
+   * permanent mark with no way back from this screen.
+   *
+   * `clear_ban` has existed on the route the whole time and calls
+   * `clearBanById`; only the control was missing.
+   */
+  const clearFlagMutation = useApiMutation({
+    errorMessage: "Failed to clear that flag.",
+    mutationFn: async (id: string) => {
+      await apiClient.patch(ADMIN_ENDPOINTS.ADDRESS_BY_ID(id), { action: "clear_ban" });
+    },
+    onSuccess: () => {
+      showToast("Flag cleared.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "address-clusters"] });
+    },
+  });
+
   const clusters = data?.clusters ?? [];
 
   return (
@@ -103,9 +123,21 @@ export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) 
             {cluster.addresses.map((addr) => (
               <Row key={addr.id} justify="between" align="center" gap="sm" surface="muted" padding="inlineSm" rounded="lg">
                 <Stack gap="none" className="min-w-0">
-                  <Text size="sm" weight="medium" color="primary" className="truncate">
+                  {/*
+                    The owner is a LINK now. This screen asks an admin to
+                    judge whether several accounts sharing one address are
+                    the same person, and offered a one-way "Flag Suspicious"
+                    against an owner id printed as text — a decision to make
+                    about an account with no way to go look at it.
+                  */}
+                  <TextLink
+                    href={addr.ownerType === "user" ? String(ROUTES.ADMIN.USER_DETAIL(addr.ownerId)) : String(ROUTES.ADMIN.STORE_DETAIL(addr.ownerId))}
+                    size="sm"
+                    weight="medium"
+                    truncate
+                  >
                     {addr.ownerType === "user" ? "User" : "Store"}: {addr.ownerId}
-                  </Text>
+                  </TextLink>
                   {addr.city && (
                     <Text size="xs" color="muted">
                       {[addr.city, addr.state, addr.postalCode].filter(Boolean).join(", ")}
@@ -118,7 +150,16 @@ export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) 
                       {addr.banStatus.replace(/_/g, " ")}
                     </Badge>
                   )}
-                  {addr.banStatus !== "suspicious" && (
+                  {addr.banStatus === "suspicious" ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => clearFlagMutation.mutate(addr.id)}
+                      disabled={clearFlagMutation.isPending}
+                    >
+                      Clear flag
+                    </Button>
+                  ) : (
                     <Button
                       size="sm"
                       variant="ghost"

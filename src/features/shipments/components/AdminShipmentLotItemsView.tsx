@@ -1,15 +1,13 @@
 "use client";
 
 import React from "react";
+import { z } from "zod";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import {
   Alert,
   Badge,
   Button,
   Div,
-  FieldCheckbox,
-  FieldInput,
-  Grid,
   Heading,
   Modal,
   Pagination,
@@ -41,6 +39,9 @@ import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { ValidationError } from "../../../errors/validation-error";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { QuickEditMenu } from "../../admin/components/QuickEditMenu";
+import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
+import type { FormValues } from "../../../schemas/types";
 import { useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import type { BulkShipmentItemsInput } from "../schemas/validation";
@@ -77,6 +78,32 @@ function parseBulkText(text: string): ParsedBulkRow[] {
     .filter((row) => row.title.length > 0);
 }
 
+
+/**
+ * The three fields a lot item can be corrected on after import.
+ *
+ * Deliberately NOT the whole of `shipmentItemBaseSchema`: `isForSelfUse`
+ * decides whether `price` is required at all and flipping it from a
+ * three-field drawer would silently change what the row means to the
+ * projections, and `categorySlugs`/`brandSlug` belong to the link flow that
+ * already owns them.
+ */
+const shipmentItemQuickEditSchema = z.object({
+  title: z.string().trim().min(1, "Item title is required"),
+  quantity: z.coerce.number().int().min(1, "Quantity must be at least 1."),
+  price: z.coerce.number().min(0, "Price cannot be negative."),
+});
+
+const SHIPMENT_ITEM_QUICK_FIELDS: QuickFieldDef[] = [
+  { name: "title", label: "Title", type: "text", required: true },
+  { name: "quantity", label: "Quantity", type: "number", required: true },
+  {
+    name: "price",
+    label: "Projected sale price",
+    type: "number",
+    helperText: "Feeds this lot's projected revenue, and every profit figure on the projections screen.",
+  },
+];
 export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLotItemsViewProps) {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(50);
@@ -173,6 +200,27 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
     mutationFn: (itemId: string) => apiClient.delete(ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEM_BY_ID(shipmentId, lotId, itemId)),
     onSuccess: () => refetch(),
   });
+
+  const editItemMutation = useApiMutation({
+    successMessage: "Item updated",
+    errorMessage: "Could not update that item.",
+    mutationFn: ({ itemId, values }: { itemId: string; values: FormValues }) => {
+      const parsed = shipmentItemQuickEditSchema.parse(values);
+      return apiClient.patch(
+        ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEM_BY_ID(shipmentId, lotId, itemId),
+        parsed,
+      );
+    },
+    onSuccess: () => refetch(),
+  });
+
+  /** Named so the row-action array stays a flat list of declarations. */
+  const saveItemEdit = React.useCallback(
+    async (itemId: string, values: FormValues) => {
+      await editItemMutation.mutateAsync({ itemId, values });
+    },
+    [editItemMutation],
+  );
 
   const unlinkItemMutation = useApiMutation({
     successMessage: "Item unlinked",
@@ -273,6 +321,33 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
                   )}
                 </Td>
                 <Td className="flex gap-[var(--appkit-space-2)]">
+                  {/*
+                    🛑 EDIT. The only form on this page is create-only
+                    (`itemDraft`), so after the bulk paste-import that creates
+                    these rows there was no way to correct a title, a quantity
+                    or a projected price — and those three feed the lot's
+                    projected revenue and therefore every profit figure on the
+                    projections screen. The PATCH route has accepted them all
+                    along: `updateShipmentItemSchema` is
+                    `shipmentItemBaseSchema.partial()`.
+                  */}
+                  <QuickEditMenu
+                    actions={[
+                      {
+                        label: "Edit item",
+                        formTitle: `Edit "${item.title}"`,
+                        schema: shipmentItemQuickEditSchema,
+                        fields: SHIPMENT_ITEM_QUICK_FIELDS,
+                        defaultValues: {
+                          title: item.title,
+                          quantity: item.quantity,
+                          price: item.price ?? 0,
+                        },
+                        onSubmit: (values) => saveItemEdit(item.id, values),
+                        submitLabel: "Save item",
+                      },
+                    ]}
+                  />
                   {!item.isForSelfUse &&
                     (item.linkedProductId ? (
                       <Button size="sm" variant="ghost" isLoading={unlinkItemMutation.isPending} onClick={() => unlinkItemMutation.mutate(item.id)}>

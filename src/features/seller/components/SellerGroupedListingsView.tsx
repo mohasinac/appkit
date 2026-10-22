@@ -2,7 +2,7 @@
 
 import { Row, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
-import { Badge, Button, Span } from "../../../ui";
+import { Badge, Button, Span, Toggle } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -12,6 +12,8 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
+import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -98,6 +100,23 @@ export function SellerGroupedListingsView({
   onEditClick,
   onDeleteClick,
 }: SellerGroupedListingsViewProps) {
+  /*
+   * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
+   * to take it on its own — shipping-config's even says so in a comment: "a
+   * PATCH may legitimately carry only `isActive`". Nothing in the client had
+   * ever sent one, so flipping one boolean meant a full-editor round trip.
+   *
+   * The optimistic/rollback logic lives in the hook because eight listings
+   * grew this control at once; see its header for why rollback must DELETE
+   * the override key rather than write back a captured value.
+   */
+  const activeFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.patch(SELLER_ENDPOINTS.GROUPED_LISTING_BY_ID(id), { isActive: next }),
+    invalidate: [["seller", "grouped-listings"], ["grouped-listings"]],
+    successMessage: (next) => (next ? "Group activated." : "Group deactivated."),
+    errorMessage: "Could not change that group's status.",
+  });
+
   const config: ListingViewConfig<GroupedListingsResponse, GroupedRow> = {
     portal: "seller",
     title: "Grouped Listings",
@@ -120,7 +139,9 @@ export function SellerGroupedListingsView({
         title: toStringValue(item.title, "Untitled group"),
         groupTheme: toStringValue(item.groupTheme, "generic"),
         productCount: Array.isArray(item.productIds) ? item.productIds.length : 0,
-        isActive: item.isActive === true,
+        // Resolved through the pending override so the Status badge and the
+        // row toggle cannot disagree between the click and the refetch.
+        isActive: activeFlag.resolve(toStringValue(item.id, `group-${index}`), item.isActive === true),
         visibilityStatus: toStringValue(item.visibilityStatus, "hidden"),
         createdAt: toRelativeDate(item.createdAt),
       })),
@@ -141,7 +162,20 @@ export function SellerGroupedListingsView({
     // Mirrors the "Edit" row action below so table rows and cards both navigate on click.
     onRowClick: onEditClick ? (row) => onEditClick(row.id) : undefined,
     renderRowActions: (row) => (
-      <Row gap="xs" >
+      <Row gap="xs" align="center">
+      {/*
+        In renderRowActions rather than a column: DataListingView suppresses
+        the table below `md` and defaults to the card view, so a column-only
+        control is invisible on a phone and to anyone whose saved preference
+        is cards. This slot is already click-stopped in all three renderers.
+      */}
+      <Toggle
+        size="sm"
+        checked={row.isActive}
+        disabled={activeFlag.pendingId === row.id}
+        ariaLabel={`${row.isActive ? "Deactivate" : "Activate"} ${row.title}`}
+        onChange={(next) => { void activeFlag.set(row.id, next); }}
+      />
         <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>
           {ACTIONS.STORE["edit-listing"].label}
         </Button>
