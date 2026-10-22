@@ -537,6 +537,11 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    * braces deep inside the JSX, and it is the same open-then-scroll the
    * submit handler above performs for the first erroring section — so the
    * two now read as the same operation rather than two similar ones.
+   *
+   * 🛑 Opening is CONDITIONAL on purpose. In `single` mode an unconditional
+   * `setOpenIds([id])` would COLLAPSE the section you are already in when you
+   * click its own rail entry, so the rail would read as having closed the
+   * form.
    */
   const openAndScrollTo = useCallback(
     (id: string) => {
@@ -619,22 +624,6 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    * sections").
    */
   const showRail = ordered.length >= 3;
-
-  /**
-   * One rail click: open the section if it is not already, then scroll to it.
-   * Named rather than inline in the button's `onClick`, where the `if` body
-   * sat a brace too deep inside the mapped JSX.
-   *
-   * Opening is conditional on purpose — in `single` mode an unconditional
-   * `setOpenIds([id])` would COLLAPSE the section you are already in when you
-   * click its own rail entry, so the rail would look like it closed the form.
-   */
-  const openAndScrollTo = (id: string): void => {
-    if (!openIds.includes(id)) {
-      setOpenIds(expandMode === "single" ? [id] : [...openIds, id]);
-    }
-    scrollToSection(id);
-  };
 
   /*
    * `sticky` under the measured header, and it publishes NO height: per the
