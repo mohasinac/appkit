@@ -43,6 +43,16 @@ import {
  */
 
 export interface AdminDisputeReasonsViewProps {
+  /**
+   * The staff list endpoint, supplied by the consumer.
+   *
+   * 🛑 A PROP rather than a literal in here, for the same reason
+   * `RaiseDisputeForm` takes `reasonsEndpoint`: appkit holds no consumer
+   * routes. The path belongs in `API_ROUTES`, which is the one registry, and a
+   * literal here would be a second place it is written — exactly what
+   * `audit-hardcoded-api-routes` blocks.
+   */
+  endpoint: string;
   /** `PATCH /api/admin/dispute-reasons/{id}` with `{ isActive }`. */
   onSetActive: (id: string, isActive: boolean) => Promise<void>;
   /** `POST /api/dispute-reasons` — the same endpoint the triage drawer uses. */
@@ -174,6 +184,7 @@ function CreateReasonForm({
 }
 
 export function AdminDisputeReasonsView({
+  endpoint,
   onSetActive,
   onCreate,
 }: AdminDisputeReasonsViewProps) {
@@ -233,7 +244,7 @@ export function AdminDisputeReasonsView({
         portal="admin"
         title="Dispute reasons"
         subtitle="What buyers can pick when reporting a problem. A reason's kind decides which gate it inherits — the wording is yours."
-        endpoint="/api/admin/dispute-reasons"
+        endpoint={endpoint}
         queryKey={["admin", "dispute-reasons"]}
         defaultSort="label"
         filterKeys={["scope"]}

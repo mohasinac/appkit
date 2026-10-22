@@ -90,6 +90,64 @@ export class ShippingBoxesRepository extends BaseRepository<ShippingBoxDocument>
     await this.createWithId(id, box);
     return { box, created: true };
   }
+
+  /**
+   * Every preset, retired included — the staff management list.
+   *
+   * Separate from `listActive` for the same reason the dispute reasons are: the
+   * picker must never offer a retired row, and a management view must be able
+   * to find one in order to put it back.
+   */
+  async listAll(model: SieveModel): Promise<FirebaseSieveResult<ShippingBoxDocument>> {
+    return this.sieveQuery<ShippingBoxDocument>(model, ShippingBoxesRepository.SIEVE_FIELDS, {
+      baseQuery: this.getCollection(),
+      defaultPageSize: 20,
+      maxPageSize: 50,
+    });
+  }
+
+  /**
+   * Correct a preset's dimensions. **Staff only** — enforced at the route.
+   *
+   * ## 🛑 This does NOT change any dispatched parcel, by construction
+   *
+   * The dimensions are COPIED onto the shipment at use time (the schema's own
+   * header: *"a preset is a DEFAULT, never a lock"*), so there is no stored
+   * reference for this to reach through. That is precisely why staff editing is
+   * safe to offer at all: a seller's past declaration is a snapshot, and the
+   * courier billed against the figures at dispatch.
+   *
+   * It is staff-only for the mirror reason — these numbers are what the NEXT
+   * seller's dispatch form defaults to, so a wrong edit misdeclares other
+   * people's parcels. A seller who finds a preset wrong adds a new one; staff
+   * decide whether the shared row changes.
+   *
+   * 🛑 The NAME is deliberately not editable. The id is `box-<slug of name>`,
+   * so renaming would either leave the id disagreeing with the name (the
+   * mirror-drift trap) or require a new document, which is just a create. Add
+   * the correctly-named preset and retire this one.
+   */
+  async updatePreset(
+    id: string,
+    input: { length?: number; width?: number; height?: number; tareWeight?: number },
+  ): Promise<void> {
+    const patch: Partial<ShippingBoxDocument> = { updatedAt: new Date() };
+    if (input.length !== undefined) patch.length = clampCm(input.length);
+    if (input.width !== undefined) patch.width = clampCm(input.width);
+    if (input.height !== undefined) patch.height = clampCm(input.height);
+    if (input.tareWeight !== undefined) patch.tareWeight = clampKg(input.tareWeight);
+    await this.update(id, patch);
+  }
+
+  /** Soft-retire. See the schema for why this is never a delete. */
+  async retire(id: string): Promise<void> {
+    await this.update(id, { isActive: false, updatedAt: new Date() });
+  }
+
+  /** Put a retired preset back in the picker. */
+  async reactivate(id: string): Promise<void> {
+    await this.update(id, { isActive: true, updatedAt: new Date() });
+  }
 }
 
 /*

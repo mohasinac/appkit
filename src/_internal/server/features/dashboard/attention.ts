@@ -71,7 +71,7 @@
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { normalizeError } from "../../../../errors/normalize";
 import { ORDER_COLLECTION, OrderStatusValues } from "../../../../features/orders/schemas/firestore";
-import { ORDER_FIELDS } from "../../../../constants/field-names";
+import { NOTIFICATION_FIELDS, ORDER_FIELDS } from "../../../../constants/field-names";
 import { PAYOUT_COLLECTION, PAYOUT_FIELDS } from "../../../../features/payments/schemas/firestore";
 import {
   SUPPORT_TICKET_COLLECTION,
@@ -162,7 +162,16 @@ export const ATTENTION_SOURCES: Record<string, AttentionSource> = {
         .where(SUPPORT_TICKET_FIELDS.STATUS, "==", TicketStatusValues.OPEN),
   },
   "nav-admin-admin-notifications": {
-    query: (db) => db.collection(ADMIN_NOTIFICATIONS_COLLECTION).where("isRead", "==", false),
+    /*
+     * 🛑 `NOTIFICATION_FIELDS.IS_READ`, not the literal `"isRead"`.
+     * `dailyStatusDigest` writes the bare string with an
+     * `audit-field-name-ok` marker and a long justification — that `isRead` is
+     * a `BaseDocument` field rather than a per-feature name — but the marker
+     * is not needed here because a real constant for it exists, and a
+     * constant that exists is always better than a waiver for not using it.
+     */
+    query: (db) =>
+      db.collection(ADMIN_NOTIFICATIONS_COLLECTION).where(NOTIFICATION_FIELDS.IS_READ, "==", false),
   },
   "nav-admin-admin-catalogue-approvals": {
     query: (db) =>
