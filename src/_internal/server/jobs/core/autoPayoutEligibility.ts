@@ -169,6 +169,8 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
     );
 
     const payoutInput = {
+      /* Every row this job writes settles a SELLER liability. */
+      payeeType: "store" as const,
       storeId,
       // `displayName` is plaintext by D1; the email fallback must be revealed.
       sellerName: (seller.displayName ?? sellerPlain.email ?? sellerId) as string,

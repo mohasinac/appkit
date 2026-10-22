@@ -268,6 +268,23 @@ export interface SupportTicketDocument extends BaseDocument {
    * `Date` field and split the collection into two shapes.
    */
   resolvedAt?: Date;
+  /**
+   * The uid of whoever moved the ticket to `resolved`.
+   *
+   * 🛑 **Not `assignedTo`.** That is the CURRENT assignee and moves on
+   * reassignment, so paying from it credits whoever holds the ticket at period
+   * end rather than whoever did the work. Employee pay is computed from this
+   * field; see `resolvedTicketsForPeriod`.
+   *
+   * Server-stamped, never client-sent, and **cleared on reopen** — pay counts
+   * tickets still resolved at period end, so a reopened ticket must stop
+   * counting or closing it twice pays twice.
+   *
+   * Absent on a system transition and on a buyer-driven one: both are real
+   * resolutions that earn nobody wages, and a fallback to the assignee would
+   * be a wage attributed to someone who did nothing.
+   */
+  resolvedBy?: string;
   closedAt?: Date;
 
   /*

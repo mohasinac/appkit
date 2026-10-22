@@ -11,6 +11,7 @@ import type {
   DocumentData,
   DocumentReference,
   Query,
+  WhereFilterOp,
   WriteBatch,
 } from "firebase-admin/firestore";
 /*
@@ -1557,7 +1558,21 @@ class OrderRepository extends BaseRepository<OrderDocument> {
    */
   async getEligibleAutomatic(
     cutoff: Date,
-    opts?: { onWarn?: (msg: string, meta?: Record<string, JsonValue>) => void },
+    opts?: {
+      onWarn?: (msg: string, meta?: Record<string, JsonValue>) => void;
+      /**
+       * Stores paid at SHIPPING rather than at delivery.
+       *
+       * 🛑 A faster path through the SAME query, not a second one. A `shipped`
+       * row is admitted only for a store in this set, and then skips the hold
+       * anchor — being paid before delivery is the entire grant, so applying a
+       * post-delivery hold to it would make the flag do nothing.
+       *
+       * Omitted or empty means nobody is trusted, which is the correct default
+       * and reproduces the pre-existing behaviour exactly.
+       */
+      trustedStoreIds?: ReadonlySet<string>;
+    },
   ): Promise<
     Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
   > {
@@ -1585,10 +1600,27 @@ class OrderRepository extends BaseRepository<OrderDocument> {
      * and the anchor test is a per-row predicate below. One query, no new
      * composite index, and no way to silently return nothing.
      */
+    const trusted = opts?.trustedStoreIds ?? new Set<string>();
+
     const snap = await this.db
       .collection(this.collection)
       .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
-      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
+      /*
+       * 🛑 Widened to an `in` ONLY when some store is trusted.
+       *
+       * Firestore's `in` is an OR of equalities, so the existing
+       * `(payoutStatus, status)` composite serves both forms and no new index
+       * is needed. Keeping the plain equality when the set is empty matters
+       * anyway: a deployment with no trusted sellers then runs byte-identically
+       * to before, so the flag cannot change behaviour for anyone who has not
+       * been granted it.
+       */
+      .where(
+        ORDER_FIELDS.STATUS,
+        ...((trusted.size > 0
+          ? ["in", [OrderStatusValues.DELIVERED, OrderStatusValues.SHIPPED]]
+          : ["==", OrderStatusValues.DELIVERED]) as [WhereFilterOp, unknown]),
+      )
       .limit(500)
       .get();
 
@@ -1600,6 +1632,26 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
       .filter((o) => !o.data.emiEnabled || o.data.emiComplete)
+      .filter((o) => {
+        /*
+         * 🛑 A SHIPPED row is admitted only for a TRUSTED store, and then
+         * bypasses the hold entirely — paying at shipping is the grant.
+         *
+         * Tested before the anchor rather than inside it, because a shipped
+         * order has no `deliveryDate` and would fall through to the
+         * `updatedAt` fallback — which is always LATER than delivery would
+         * have been. A trusted seller would be paid more SLOWLY than an
+         * untrusted one: the flag would read as working and do the opposite.
+         *
+         * The `in` above cannot express "shipped, but only for these stores",
+         * so the store test has to live here — otherwise one trusted seller
+         * anywhere would widen the sweep for every seller.
+         */
+        if (o.data.status === OrderStatusValues.SHIPPED) {
+          return typeof o.data.storeId === "string" && trusted.has(o.data.storeId);
+        }
+        return true;
+      })
       .filter((o) => {
         /*
          * The anchor, with a conservative fallback. `deliveryDate` is the

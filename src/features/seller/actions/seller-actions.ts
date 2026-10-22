@@ -539,6 +539,8 @@ export async function requestPayout(
     throw new ValidationError("No eligible earnings available for payout.");
 
   const payout = await payoutRepository.createPayout({
+    /* A seller requesting their own earnings — a liability settlement. */
+    payeeType: "store",
     storeId: userId,
     sellerName: userName,
     sellerEmail: userEmail,
@@ -658,6 +660,8 @@ export async function bulkSellerOrder(
   );
 
   const payoutDoc = await payoutRepository.createPayout({
+    /* A seller requesting their own earnings — a liability settlement. */
+    payeeType: "store",
     storeId: userId,
     sellerName: userDisplayName,
     sellerEmail: userEmail,

@@ -9,6 +9,7 @@ import {
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
+import type { PayCadence } from "../../../_internal/shared/features/payouts/pay-period";
 
 export interface PayoutBankAccount {
   accountHolderName: string;
@@ -56,7 +57,29 @@ export type PayoutPaymentMethod = "bank_transfer" | "upi";
  */
 export type PayoutPlain = Plaintext<PayoutDocument>;
 
-export interface PayoutDocument extends BaseDocument {
+/**
+ * 🛑 **A seller payout settles a LIABILITY. An employee payout is an EXPENSE.**
+ *
+ * One undiscriminated shape misstates both statements at once — wages vanish
+ * from the P&L and reappear as settled seller liabilities — so `payeeType` is
+ * a discriminated union rather than an optional field.
+ *
+ * ## Why `PayoutDocument` still names the STORE variant
+ *
+ * Every one of the ~30 existing readers means a seller payout, and every one
+ * of them is correct. Renaming the type they import would turn a safety change
+ * into a mechanical sweep, and the sweep is where the real mistakes go in.
+ * `PayoutDocument = StorePayoutDocument` keeps them compiling and correct;
+ * anything that must handle BOTH takes `AnyPayoutDocument` and is forced by
+ * `tsc` to narrow.
+ *
+ * 🛑 `payeeType` is REQUIRED here, not optional-with-a-default. That breaks
+ * the five sites that CONSTRUCT a payout, which is the entire point — a row
+ * written without it is a row the books cannot classify, and an optional
+ * discriminant defers that discovery to a reader rather than a writer.
+ */
+export interface StorePayoutDocument extends BaseDocument {
+  payeeType: "store";
   storeId: string;
   sellerName: string;
   sellerEmail: Encrypted<string>;
@@ -106,6 +129,83 @@ export interface PayoutDocument extends BaseDocument {
 }
 
 /**
+ * Wages for a period, earned by resolving support tickets.
+ *
+ * ## 🛑 `platformFee` is ABSENT, not zero
+ *
+ * A `0` would read as "we took no commission on these wages", which is a
+ * statement about a transaction that did not happen. Commission is not a
+ * concept between a platform and its own staff, and the books must be able to
+ * tell "not applicable" from "nil" — a nil commission is a seller payout where
+ * the rate happened to resolve to zero, and those post differently.
+ *
+ * The same argument removes `storeId`, `sellerName`, `sellerEmail`,
+ * `grossAmount`, `platformFeeRate`, `gatewayFee*`, `orderIds` and
+ * `refundDeductions`. A field that cannot apply is omitted so `tsc` refuses
+ * the read, rather than present-and-empty so a reader quietly gets a falsy
+ * value.
+ */
+export interface EmployeePayoutDocument extends BaseDocument {
+  payeeType: "employee";
+  employeeUid: string;
+  employeeName: string;
+  /** PII, same treatment as a seller's. */
+  employeeEmail: Encrypted<string>;
+  amount: number;
+  currency: string;
+  status: PayoutStatus;
+  paymentMethod: PayoutPaymentMethod;
+  bankAccount?: PayoutBankAccount;
+  upiId?: Encrypted<string>;
+  /**
+   * The tickets this payslip is for.
+   *
+   * 🛑 Tickets **still resolved at period end**, not tickets closed during it.
+   * Paying per ticket closed rewards closing rather than resolving, so a
+   * reopened ticket does not count — see `resolvedTicketsForPeriod`.
+   */
+  ticketIds: string[];
+  /** Resolved by `payPeriodFor`, never computed at a call site. */
+  periodStart: Date;
+  periodEnd: Date;
+  payCadence: PayCadence;
+  notes?: string;
+  adminNote?: string;
+  requestedAt: Date;
+  processedAt?: Date;
+  transactionId?: string;
+  statusHistory?: StatusChangeEntry[];
+  statusHistoryTruncated?: number;
+}
+
+/**
+ * What ~30 existing readers mean, and what they should keep meaning.
+ *
+ * Deliberately an alias rather than a rename: see the header on
+ * `StorePayoutDocument`.
+ */
+export type PayoutDocument = StorePayoutDocument;
+
+/** Use this ONLY where both kinds genuinely arrive together. */
+export type AnyPayoutDocument = StorePayoutDocument | EmployeePayoutDocument;
+
+/**
+ * 🛑 Narrow on the DISCRIMINANT, never on the presence of `storeId`.
+ *
+ * A `"storeId" in payout` test reads as equivalent and is not: it answers a
+ * question about the object in hand rather than about what the row IS, so a
+ * partially-populated or hand-built object answers it wrongly, silently, and
+ * in the direction that posts wages as a settled seller liability.
+ */
+export function isStorePayout(p: AnyPayoutDocument): p is StorePayoutDocument {
+  return p.payeeType === "store";
+}
+
+export function isEmployeePayout(p: AnyPayoutDocument): p is EmployeePayoutDocument {
+  return p.payeeType === "employee";
+}
+
+/**
  * The fields whose changes earn a timeline entry.
  *
  * `netAmount`/`refundDeductions` are excluded — a refund deduction is money
@@ -137,6 +237,15 @@ export const PAYOUT_INDEXED_FIELDS = [
 export const DEFAULT_PLATFORM_FEE_RATE = 0.05 as const;
 
 export const DEFAULT_PAYOUT_DATA: Partial<PayoutDocument> = {
+  /*
+   * 🛑 Here as a BACKSTOP, not as the reason the field is set. Every caller
+   * passes `payeeType` explicitly and must keep doing so — a default that is
+   * the only writer makes the discriminant optional in practice, which is the
+   * exact failure the required field exists to prevent. This catches a row
+   * built by some path nobody enumerated and lands it on the correct side of
+   * the books rather than on neither.
+   */
+  payeeType: "store",
   status: "pending",
   platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
   orderIds: [],

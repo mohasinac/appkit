@@ -129,6 +129,27 @@ export interface StoreDocument extends BaseDocument {
   adminNotes?: string;
   /** Admin "verified store" badge — distinct from `status`/`isPublic`. */
   isVerified?: boolean;
+  /**
+   * Paid at SHIPPING rather than at delivery.
+   *
+   * 🛑 **A risk transfer, not a courtesy or a badge.** Paying before delivery
+   * means the platform carries a lost parcel and a non-delivery dispute with
+   * the money already gone. Admin-granted only, `recordAdminAction`-logged,
+   * revocable — and **PRIVATE in the public projection**, because it describes
+   * our risk posture rather than anything a buyer should weigh. A store does
+   * not get to display that we trust it.
+   *
+   * 🛑 A faster path through the SAME machinery, never a second one. The
+   * eligibility sweep moves the delivered-status test, not the payout, the
+   * hold, the deductions or the dispatch.
+   *
+   * 🛑 **A refund after a trusted payout has no money left to net against.**
+   * The ordinary path deducts from a still-`pending` payout; once paid there
+   * is nothing to deduct from, so it becomes a `manual_refund_due` case —
+   * which already exists and already means exactly this. Never a negative
+   * payout.
+   */
+  trustedSeller?: boolean;
   /** Reason recorded when `status` is set to "suspended". */
   suspensionReason?: string;
 
@@ -468,6 +489,7 @@ export const STORE_FIELDS = {
   ADMIN_NOTES: "adminNotes",
   IS_FEATURED: "isFeatured",
   IS_VERIFIED: "isVerified",
+  TRUSTED_SELLER: "trustedSeller",
   SUSPENSION_REASON: "suspensionReason",
   CAPABILITIES: "capabilities",
 

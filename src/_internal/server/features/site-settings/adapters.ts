@@ -102,6 +102,20 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
 
 /** Everything else, with the reason it stays server-side. */
 export const PRIVATE_SITE_SETTINGS_FIELDS = [
+  /*
+   * 🛑 `rateChanges` — the rate-change log behind /admin/pricing.
+   *
+   * Every entry names an internal rate, who moved it and why. The WHY is the
+   * worst of it: a reason reads "undercutting X" or "margin too thin on
+   * bundles", which is commercial strategy typed by an admin who was told it
+   * was an internal note.
+   *
+   * Half the rates are already private (`gatewayFeePercent`,
+   * `payoutHoldDays`, `minPayoutAmount`), so publishing their history would
+   * also publish the values themselves — the current figure is the newest
+   * entry's `newValue`.
+   */
+  "rateChanges",
   "id", // singleton bookkeeping
   "createdAt", // bookkeeping
   "updatedAt", // bookkeeping

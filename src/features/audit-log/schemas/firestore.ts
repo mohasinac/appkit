@@ -83,6 +83,20 @@ export const AdminAuditActionValues = {
    * same class as `coupon_update` and `payout_mark_paid`.
    */
   PRICING_UPDATE: "pricing_update",
+  /**
+   * An admin granted or revoked `trustedSeller` on a store.
+   *
+   * 🛑 Its OWN action rather than folded into `store_status_change`, because
+   * "what changed about this store" and "who accepted this risk" are
+   * different questions. Trusting a seller means paying before delivery, so
+   * the platform carries a lost parcel and a non-delivery dispute — and when
+   * one of those lands, the question is who decided and when.
+   *
+   * Recorded on a real change only. Re-saving an unrelated field on an
+   * already-trusted store writes nothing; a log of non-events stops being
+   * read.
+   */
+  STORE_TRUST_CHANGE: "store_trust_change",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

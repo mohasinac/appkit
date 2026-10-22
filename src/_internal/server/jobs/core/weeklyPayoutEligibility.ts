@@ -64,8 +64,25 @@ export async function runWeeklyPayoutEligibility(
     cutoff: cutoff.toISOString(),
   });
 
+  /*
+   * 🛑 Resolved BEFORE the sweep, not per group.
+   *
+   * The widened query needs the whole set up front — the grouping by store
+   * happens after the rows come back, so a per-group lookup would arrive too
+   * late to have admitted the shipped rows in the first place. One bounded
+   * read against a hand-granted flag.
+   */
+  const trustedStoreIds = await storeRepository.findTrustedStoreIds();
+  if (trustedStoreIds.size > 0) {
+    ctx.logger.info(
+      `${trustedStoreIds.size} trusted store(s) — their SHIPPED orders are eligible without waiting for delivery`,
+      { trustedStoreCount: trustedStoreIds.size },
+    );
+  }
+
   const eligible = await orderRepository.getEligibleAutomatic(cutoff, {
     onWarn: (m, meta) => ctx.logger.warn(m, meta),
+    trustedStoreIds,
   });
   if (eligible.length === 0) {
     ctx.logger.info("No eligible delivered orders found");
@@ -136,6 +153,8 @@ export async function runWeeklyPayoutEligibility(
     const sellerPlain = userRepository.revealUser(seller);
 
     const payoutInput = {
+      /* Every row this job writes settles a SELLER liability. */
+      payeeType: "store" as const,
       storeId,
       // `displayName` is plaintext by D1; the email fallback must be revealed.
       sellerName: (seller.displayName ?? sellerPlain.email ?? store.ownerId) as string,

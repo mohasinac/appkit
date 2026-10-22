@@ -104,6 +104,33 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   }
 
   /**
+   * The slugs of every store paid at shipping rather than at delivery.
+   *
+   * 🛑 A `Set` of IDS, not the documents. The payout sweep needs only
+   * membership, and loading full store documents for a question answered by a
+   * string would spend the ~3-round-trip budget (Rule #6) on data it discards.
+   *
+   * 🛑 An EQUALITY on `trustedSeller == true`, never `!= false`. A Firestore
+   * inequality excludes every document that LACKS the field — which is every
+   * store, since the flag is new and optional — so `!=` would return the
+   * trusted set and nothing else, or everything, depending on which way you
+   * wrote it. Both are wrong and neither raises.
+   *
+   * Bounded at 500: trust is granted by hand, one store at a time, on risk
+   * grounds. If this ever saturates, the grant has stopped being deliberate
+   * and that is the thing to fix rather than the limit.
+   */
+  async findTrustedStoreIds(): Promise<Set<string>> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(STORE_FIELDS.TRUSTED_SELLER, "==", true)
+      .select()
+      .limit(500)
+      .get();
+    return new Set(snap.docs.map((d) => d.id));
+  }
+
+  /**
    * Find the store owned by a specific user UID.
    */
   async findByOwnerId(ownerId: string): Promise<StoreDocument | null> {

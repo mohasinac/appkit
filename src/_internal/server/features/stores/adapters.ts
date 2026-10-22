@@ -79,6 +79,20 @@ export const PUBLIC_STORE_FIELDS = [
 /** Everything else, with the reason it stays server-side. */
 export const PRIVATE_STORE_FIELDS = [
   /*
+   * 🛑 `trustedSeller` — OUR RISK POSTURE, not a badge.
+   *
+   * It means we pay this store before the parcel is delivered, so the platform
+   * carries a lost parcel and a non-delivery dispute. That is a statement
+   * about what we are willing to lose, and a buyer has no use for it: it says
+   * nothing about the goods, the seller's rating or their dispatch record.
+   *
+   * Published, it would read as an endorsement — "LetItRip trusts this store"
+   * — which is both a claim we never made and an incentive for sellers to
+   * compete for the flag. It is admin-granted on risk grounds and revocable;
+   * neither survives being visible.
+   */
+  "trustedSeller",
+  /*
    * 🛑 PRIVATE, and it was briefly classified PUBLIC on a mistaken argument
    * worth recording so nobody re-makes it.
    *

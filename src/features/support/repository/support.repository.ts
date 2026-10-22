@@ -46,6 +46,27 @@ export interface TicketWriteContext {
   note?: string;
 }
 
+/**
+ * Who, if anyone, gets credited with resolving this ticket.
+ *
+ * 🛑 **A BUYER is never the resolver**, even though a buyer can drive the
+ * transition — replying "that's sorted, thanks" is a legitimate way for a
+ * ticket to reach `resolved`, and crediting it would put a customer's uid in
+ * a field a payslip is computed from. `system` has no uid at all, which is
+ * the other case that must not be paid.
+ *
+ * Returning `undefined` is correct and expected: the ticket is still resolved,
+ * it simply earns nobody wages. A fabricated fallback — the assignee, the
+ * ticket owner — would be a wage attributed to someone who did not do the
+ * work, and it would look exactly like a real one.
+ */
+function resolverUid(ctx?: TicketWriteContext): string | undefined {
+  const actor = ctx?.actor;
+  if (!actor?.uid) return undefined;
+  if (actor.role === "buyer") return undefined;
+  return actor.uid;
+}
+
 export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     userId:     { canFilter: true,  canSort: false },
@@ -321,7 +342,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     // `piiFields`, which is what encrypts `assignedToName` on the way down.
     const patch: Partial<SupportTicketPlain> = {
       ...update,
-      ...this.resolutionStamps(current, update.status),
+      ...this.resolutionStamps(current, update.status, resolverUid(ctx)),
       updatedAt: new Date(),
     };
     return this.update(
@@ -351,11 +372,44 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   private resolutionStamps(
     current: SupportTicketDocument | null | undefined,
     next: TicketStatus | undefined,
+    actorUid?: string,
   ): Partial<SupportTicketPlain> {
     if (!next || next === current?.status) return {};
     const now = new Date();
-    if (next === TicketStatusValues.RESOLVED && !current?.resolvedAt) return { resolvedAt: now };
+    if (next === TicketStatusValues.RESOLVED && !current?.resolvedAt) {
+      /*
+       * 🛑 `resolvedBy` is stamped HERE and is not the same thing as
+       * `assignedTo`.
+       *
+       * `assignedTo` is the CURRENT assignee: reassign a resolved ticket for
+       * follow-up and it moves, so paying from it credits whoever happens to
+       * hold the ticket at month end rather than whoever did the work. That is
+       * the whole reason this field exists.
+       *
+       * Absent when the caller supplied no actor — a system transition has no
+       * person to pay, and a fabricated uid would be a wage attributed to
+       * somebody who did nothing.
+       */
+      return actorUid ? { resolvedAt: now, resolvedBy: actorUid } : { resolvedAt: now };
+    }
     if (next === TicketStatusValues.CLOSED && !current?.closedAt) return { closedAt: now };
+    /*
+     * 🛑 A REOPEN clears both, and clearing `resolvedBy` is load-bearing.
+     *
+     * Pay is computed from tickets STILL RESOLVED at period end, so a ticket
+     * that goes back to open must stop counting — otherwise close-it,
+     * let-it-reopen, close-it-again pays twice for one problem.
+     *
+     * Cleared rather than left in place with the status as the only signal,
+     * because `resolvedTicketsForPeriod` filters on all three and a stale
+     * `resolvedAt` surviving a reopen is a row that looks payable to anything
+     * that checks fewer of them.
+     */
+    const reopened =
+      current?.resolvedAt != null &&
+      next !== TicketStatusValues.RESOLVED &&
+      next !== TicketStatusValues.CLOSED;
+    if (reopened) return { resolvedAt: undefined, resolvedBy: undefined };
     return {};
   }
 
@@ -424,7 +478,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
           updateData,
           this.withTicketHistory(
             current,
-            { status: newStatus, ...this.resolutionStamps(current, newStatus) },
+            { status: newStatus, ...this.resolutionStamps(current, newStatus, resolverUid(ctx)) },
             ctx,
             "addMessage",
           ),
