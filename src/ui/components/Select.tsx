@@ -58,6 +58,15 @@ export function Select<V extends string = string>({
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
 
+  /*
+   * A caller's own `aria-invalid` wins. `{...props}` is spread first, so
+   * re-specifying the attribute afterwards used to overwrite an incoming
+   * `"true"` with `undefined` — and `FieldSelect` sets it itself while
+   * withholding `error` (to avoid a double message). See the full writeup in
+   * `Input.tsx`; the same bug existed here.
+   */
+  const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     onChange?.(event);
     onValueChange?.(event.target.value as V);
@@ -109,7 +118,7 @@ export function Select<V extends string = string>({
         value={value}
         onChange={handleChange}
         disabled={disabled}
-        aria-invalid={error ? "true" : undefined}
+        aria-invalid={ariaInvalid}
         className={selectClassName}
       >
         {optionsMarkup}
@@ -136,7 +145,7 @@ export function Select<V extends string = string>({
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={ariaInvalid}
           className={selectClassName}
         >
           {optionsMarkup}

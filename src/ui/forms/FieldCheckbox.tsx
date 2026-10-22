@@ -76,6 +76,13 @@ export function FieldCheckbox({
         // the role="alert" announcement) — FieldInput/FieldTextarea/
         // FieldSelect all withhold `error` from their underlying primitive
         // for exactly this reason.
+        //
+        // But withholding `error` also means Checkbox cannot derive
+        // `aria-invalid` for itself, so it must be set here — this component
+        // was the only one of the four that never set it at all, leaving an
+        // invalid checkbox indistinguishable from a valid one to assistive
+        // tech and to `SectionForm`'s focus-first-invalid jump.
+        aria-invalid={showError || undefined}
         aria-describedby={showError ? errorId : undefined}
       />
       {!showError && hint && (

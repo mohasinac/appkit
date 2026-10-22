@@ -704,8 +704,17 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
                   eight-section form a failed save used to scroll you to the
                   first bad section with no indication that three others were
                   also wrong.
+
+                  🛑 GATED ON `submitAttempted`, like the panel badge at the
+                  bottom of this file — it was not, and that reproduced in the
+                  rail the exact defect the badge gate was added to fix: a form
+                  nobody had typed into opened showing red counts against every
+                  required section (Root Cause #74 — the summary and its
+                  satellites must not accuse the user before they have tried).
+                  It bit every form with three or more sections, which is the
+                  only condition under which the rail renders at all.
                 */}
-                {errorCount > 0 && (
+                {submitAttempted && errorCount > 0 && (
                   <Span size="xs" color="error" weight="semibold">
                     {errorCount}
                   </Span>

@@ -50,6 +50,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ? "border-transparent bg-transparent shadow-none"
           : "";
 
+    /*
+     * A caller's own `aria-invalid` wins. `{...props}` is spread first, so
+     * re-specifying the attribute afterwards used to overwrite an incoming
+     * `"true"` with `undefined` — and `FieldTextarea` sets it itself while
+     * withholding `error` (to avoid a double message). See the full writeup in
+     * `Input.tsx`; the same bug existed here.
+     */
+    const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
     const textareaClassName = ["appkit-textarea", variantClass, className]
       .filter(Boolean)
       .join(" ");
@@ -63,7 +72,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           defaultValue={defaultValue}
           maxLength={maxLength}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={ariaInvalid}
           className={textareaClassName}
         />
       );
@@ -84,7 +93,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           defaultValue={defaultValue}
           maxLength={maxLength}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={ariaInvalid}
           className={textareaClassName}
         />
 

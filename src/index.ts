@@ -150,6 +150,18 @@ export type { FieldSelectProps } from "./ui/index";
 export { FieldSelect } from "./ui/index";
 export type { FieldCheckboxProps } from "./ui/index";
 export { FieldCheckbox } from "./ui/index";
+/*
+ * FieldTextarea and FormErrorSummary were exported from `client.ts` and
+ * `ui/index.ts` but NOT from here, so consumer code importing from the bare
+ * `@mohasinac/appkit` entry could reach three of the four Field* primitives
+ * and not the error summary at all. That gap is a reason, not an excuse, for
+ * hand-rolled textareas and missing summaries in `src/` — make the two entries
+ * agree.
+ */
+export type { FieldTextareaProps } from "./ui/index";
+export { FieldTextarea } from "./ui/index";
+export type { FormErrorSummaryProps } from "./ui/index";
+export { FormErrorSummary } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // GRID_MAP - Constant used across modules.
 export { GRID_MAP } from "./ui/index";

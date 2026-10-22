@@ -2,6 +2,7 @@
 import { useContext, useMemo } from "react";
 import { FormShellContext, type FormShellContextValue } from "../../../ui/forms/FormShell";
 import { FormErrorList } from "../../../ui/forms/FormErrorList";
+import { Div } from "../../../ui/components/Div";
 import { useIsInsideOverlay } from "../../../ui/components/overlay-context";
 import { useBottomActions } from "./useBottomActions";
 import type { BottomAction } from "../BottomActionsContext";
@@ -147,7 +148,30 @@ export function useFormBottomActions({
     infoLabel: showErrors
       ? `Fix ${errorCount} ${errorCount === 1 ? "issue" : "issues"}`
       : undefined,
-    infoPanel: showErrors && ctx ? <FormErrorList ctx={ctx} /> : undefined,
+    /*
+     * 🛑 The alert region lives HERE, not in `FormErrorList`.
+     *
+     * Without it a failed submit on a phone announced nothing at all: the
+     * list has no role, `InfoPanel` has no role, and the only signal was the
+     * disclosure button's text changing — which a screen reader does not read
+     * out unprompted. This is the whole error surface on mobile, since
+     * `useBottomActions` defaults to `desktop: "hidden"`.
+     *
+     * It cannot go on `FormErrorList` itself: the list's other consumer is
+     * `<FormErrorSummary>`, whose wrapper is already `role="alert"`, and
+     * nesting one alert region inside another makes the announcement
+     * ambiguous and duplicated.
+     *
+     * `aria-live="polite"` rather than `role="alert"`'s implicit assertive —
+     * the user has just pressed Save and is expecting a response, so there is
+     * nothing to interrupt. Same choice `FormErrorSummary` makes.
+     */
+    infoPanel:
+      showErrors && ctx ? (
+        <Div role="alert" aria-live="polite">
+          <FormErrorList ctx={ctx} />
+        </Div>
+      ) : undefined,
     // Bumped by every submit attempt, so a second failed Save re-opens a
     // sheet the user collapsed — while an ordinary re-render does not.
     infoOpenSignal: showErrors ? ctx?.submitAttemptCount : undefined,

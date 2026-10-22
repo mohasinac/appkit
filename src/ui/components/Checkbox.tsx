@@ -62,6 +62,15 @@ export function Checkbox({
   const inputId = id ?? generatedId;
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  /*
+   * A caller's own `aria-invalid` wins. `{...props}` is spread first, so
+   * re-specifying the attribute afterwards used to overwrite an incoming
+   * `"true"` with `undefined` — and `FieldCheckbox` sets it itself while
+   * withholding `error` (to avoid a double message). See the full writeup in
+   * `Input.tsx`; the same bug existed here.
+   */
+  const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
   React.useEffect(() => {
     if (inputRef.current) {
       inputRef.current.indeterminate = indeterminate;
@@ -77,7 +86,7 @@ export function Checkbox({
         type={type}
         checked={checked}
         disabled={disabled}
-        aria-invalid={error ? "true" : undefined}
+        aria-invalid={ariaInvalid}
         className={className}
       />
     );
@@ -117,7 +126,7 @@ export function Checkbox({
             type={type}
             checked={checked}
             disabled={disabled}
-            aria-invalid={error ? "true" : undefined}
+            aria-invalid={ariaInvalid}
             className={[
               UI_CHECKBOX.input,
               error ? UI_CHECKBOX.inputError : "",
