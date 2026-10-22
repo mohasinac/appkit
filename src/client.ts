@@ -1080,6 +1080,7 @@ export {
   maxBytesFor,
   getConversionHint,
   PRODUCT_MAX_IMAGES,
+  REVIEW_MAX_IMAGES,
   PRODUCT_MAX_VIDEOS,
   PRODUCT_IMAGE_INDEX_MAX,
 } from "./_internal/shared/media/limits";

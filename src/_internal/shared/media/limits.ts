@@ -50,6 +50,17 @@ export const PRODUCT_MAX_IMAGES = 24;
 export const PRODUCT_MAX_VIDEOS = 1;
 
 /**
+ * Photos a buyer may attach to one review.
+ *
+ * 🛑 Deliberately NOT `PRODUCT_MAX_IMAGES`, which is 24 and is a SELLER's
+ * ceiling for a whole listing. `audit-media-limit-literals` suggests that
+ * constant for any `images: z.array(…).max(n)`, and taking the suggestion
+ * here would have quadrupled what a review accepts — the right shape, the
+ * wrong number. A review is a few photos of one thing.
+ */
+export const REVIEW_MAX_IMAGES = 6;
+
+/**
  * Highest legal `index` in a product media filename.
  *
  * NOT the same number as `PRODUCT_MAX_IMAGES`, and conflating them is a live
