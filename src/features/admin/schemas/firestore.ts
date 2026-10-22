@@ -903,6 +903,36 @@ export interface SiteSettingsDocument extends BaseDocument {
   returns: {
     windowDays: number;
   };
+  /**
+   * The support integration's on/off switch.
+   *
+   * 🛑 The ONLY new integration flag. The other three the admin page switches
+   * already have an authoritative field — `payment.razorpayEnabled`,
+   * `messaging.emailEnabled` (which `guardSend` reads), and
+   * `shipping.provider`. Adding a parallel `integrationSwitches.*` beside
+   * those would be a denormalised mirror that drifts the first time one path
+   * writes only one of a pair (Root Cause #42), and the page would then
+   * disagree with the code that enforces it. The page is a VIEW over the real
+   * fields; this is the one field that did not exist.
+   *
+   * 🛑 Also not under `siteSettings.integrations` — that key is live and holds
+   * analytics/tag IDs (GA, FB Pixel, GTM).
+   *
+   * OFF hides the WHOLE support surface from BUYERS: no nav entry, no ticket
+   * list, no contact form. Staff keep full access, so an open ticket is still
+   * workable and the employee pay-per-ticket basis survives.
+   *
+   * 🛑 A buyer mid-conversation loses sight of their thread. That is the
+   * owner's decision, accepted knowingly — and the admin row must SAY it
+   * rather than implying the switch only stops new tickets.
+   *
+   * Defaults to `true`: support being reachable is the safe state, and a
+   * settings document written before this field existed must not read as
+   * "support is off".
+   */
+  support: {
+    enabled: boolean;
+  };
   faq: {
     variables: {
       shippingDays: number;
@@ -1193,6 +1223,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   },
   returns: {
     windowDays: 7,
+  },
+  // Reachable is the safe default, and an older settings document with no
+  // `support` group must not read as "support is off".
+  support: {
+    enabled: true,
   },
   announcementBar: {
     enabled: true,
