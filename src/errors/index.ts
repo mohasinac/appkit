@@ -15,8 +15,18 @@ export { NotFoundError } from "./not-found-error";
 export { ConflictError } from "./conflict-error";
 export { DatabaseError } from "./database-error";
 export { PaymentProviderUnreachableError } from "./payment-provider-unreachable";
-// error-handler uses `next/server` — only import in server/API-route contexts
-export { handleApiError, logError, isAppError } from "./error-handler";
+/*
+ * 🛑 `error-handler` is deliberately NOT re-exported here. Import it from
+ * "./error-handler" directly.
+ *
+ * It does `import { NextResponse } from "next/server.js"`, and 83 files
+ * import THIS barrel — including repositories reachable from the Firebase
+ * Functions entry. So the barrel dragged Next's server runtime into the tsup
+ * bundle, which died on two unresolved `react-server-dom-webpack/*` requires
+ * and two `@vercel/og` .wasm files, naming none of the files responsible.
+ * The old line carried a comment saying "only import in server/API-route
+ * contexts" — a convention nothing could enforce. Root Cause #18.
+ */
 // Code→HTTP mapper (server) — and the i18n / inline-field map (client-safe)
 export {
   mapToHttpError,

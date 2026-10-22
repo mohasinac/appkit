@@ -12,6 +12,7 @@ import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { normalizeError } from "../../../errors/normalize";
 import { TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants/index";
+import { toUserMessage } from "../../../errors/error-display-map";
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -95,10 +96,12 @@ function AddressCard({
   address,
   onEdit,
   onDelete,
+  onSetDefault,
 }: {
   address: AddressDoc;
   onEdit: () => void;
   onDelete: () => void;
+  onSetDefault: () => void;
 }) {
   const isBanned = address.banStatus === "banned";
   return (
@@ -120,6 +123,29 @@ function AddressCard({
             <Span size="xs" color="muted" title="Contact support to resolve address ban">Contact support</Span>
           ) : (
             <>
+              {/*
+                🛑 `isDefault` was a read-only pill. A seller could SEE which
+                pickup address was the default and had no way to change it
+                from this screen — the only route was the editor, where the
+                field sits among ten others. The PUT already accepts it:
+                `addressUpdateSchema` is the form schema `.partial()`.
+                Note the asymmetry with the buyer side, which has a dedicated
+                `set-default` route; store addresses do not, so this is a
+                partial PUT.
+              */}
+              {!address.isDefault && (
+                <IconButton
+                  type="button"
+                  onClick={onSetDefault}
+                  title="Set as default pickup address"
+                  aria-label={`Set ${address.label} as the default pickup address`}
+                  variant="ghost"
+                  rounded="lg"
+                  className="text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)]"
+                >
+                  <Star className="h-4 w-4" />
+                </IconButton>
+              )}
               <IconButton
                 type="button"
                 onClick={onEdit}
@@ -243,7 +269,7 @@ export function SellerAddressesView({
       await load();
     } catch (err) {
       void normalizeError(err);
-      setSaveError(err instanceof Error ? err.message : "Failed to save address");
+      setSaveError(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Failed to save address" }));
     } finally {
       setSaving(false);
     }
@@ -256,6 +282,32 @@ export function SellerAddressesView({
   });
 
   const handleDelete = (addr: AddressDoc) => setDeleteTargetAddr(addr);
+
+  /**
+   * Promote one pickup address to the default.
+   *
+   * A partial PUT rather than a dedicated endpoint: unlike buyer addresses,
+   * which have `/api/user/addresses/[id]/set-default`, the store side has no
+   * such route — but `addressUpdateSchema` is the form schema `.partial()`,
+   * so `{ isDefault: true }` on its own is a valid body.
+   */
+  const handleSetDefault = async (addr: AddressDoc) => {
+    try {
+      // Same request shape as `handleSave` below, rather than a second
+      // hand-rolled fetch beside it.
+      const method = "PUT";
+      const res = await fetch(`${apiBase}/${addr.id}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isDefault: true }),
+      });
+      if (!res.ok) throw new Error("Failed to set default address");
+      await load();
+    } catch (err) {
+      const normalized = normalizeError(err);
+      setSaveError(toUserMessage(normalized.code, undefined, { fallback: "Failed to set default address" }));
+    }
+  };
 
   const set = (key: keyof AddressDraft, value: string | boolean) =>
     setDraft((p) => ({ ...p, [key]: value }));
@@ -333,6 +385,7 @@ export function SellerAddressesView({
                       address={addr}
                       onEdit={() => openEdit(addr)}
                       onDelete={() => handleDelete(addr)}
+                      onSetDefault={() => void handleSetDefault(addr)}
                     />
                   </Div>
                 ))}

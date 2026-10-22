@@ -6,8 +6,10 @@ import {
   AuthenticationError,
   AuthorizationError,
   ERROR_MESSAGES,
-  handleApiError,
 } from "../errors";
+// Next-coupled, so it comes from the defining module — see errors/index.ts.
+// This file is an API-route handler, so `next/server` here is correct.
+import { handleApiError } from "../errors/error-handler";
 import type { AuthPayload } from "../contracts";
 import { errorResponse } from "../next/api/api-response";
 import { serverLogger } from "../monitoring";

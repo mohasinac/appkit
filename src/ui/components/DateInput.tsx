@@ -15,6 +15,14 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
     const generatedId = React.useId();
     const inputId = id ?? generatedId;
 
+    /*
+     * A caller's own `aria-invalid` wins. `{...props}` is spread first, so
+     * re-specifying the attribute afterwards overwrites an incoming "true"
+     * with `undefined` — the defect that left every Field*-built form in the
+     * app with no aria-invalid at all. See the full writeup in `Input.tsx`.
+     */
+    const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
     return (
       <div className="w-full">
         {label && (
@@ -30,7 +38,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
           value={value}
           disabled={disabled}
           required={required}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={ariaInvalid}
           onChange={(e) => onChange?.(e.target.value)}
           className={["appkit-input", error ? "appkit-input--error" : "", className].filter(Boolean).join(" ")}
         />

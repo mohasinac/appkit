@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Details, Div, Row, Stack, Summary, Text } from "../../../ui";
+import { Button, Card, Details, Div, Row, Stack, Summary, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "../../../client/api/useApiMutation";
@@ -91,7 +92,20 @@ export function AdminTesterFeedbackIssuesView() {
                 {phaseIssues.map((issue) => (
                   <Card key={issue.id} padding="md" variant="default">
                     <Stack gap="xs">
-                      <Text weight="semibold">{issue.label}</Text>
+                      {/*
+                        A LINK to the checklist case. This screen asks an
+                        admin to decide whether a reported failure is a real
+                        bug — and that decision needs the case's own
+                        before → after, which lives on the checklist item and
+                        was reachable from nowhere here. `checklistItemId` was
+                        on every issue and rendered as nothing at all.
+                      */}
+                      <TextLink
+                        href={String(ROUTES.ADMIN.TESTER_CHECKLIST_EDIT(issue.checklistItemId))}
+                        weight="semibold"
+                      >
+                        {issue.label}
+                      </TextLink>
                       <Text size="sm" color="muted">
                         {issue.groupLabel} › {issue.pageLabel}
                       </Text>

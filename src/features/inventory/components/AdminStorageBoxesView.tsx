@@ -52,11 +52,59 @@ const TYPE_OPTIONS = BoxTypeValues.map((v) => ({ value: v, label: v }));
  * Exported because it is a PAGE now, not a drawer — see the note on
  * `primaryAction` below for why create could not share the row affordance.
  */
+// audit-form-sectionised-ok: a three-field quick create (code, type, location),
+// not a multi-section editor. <SectionForm> derives its sections from a schema
+// and pins a mobile action bar for a long scroll; neither has anything to do
+// here, and sections of one field each would be chrome around three inputs.
 export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
   const [code, setCode] = React.useState("");
   const [boxType, setBoxType] = React.useState<string>(BoxTypeValues[0]);
   const [location, setLocation] = React.useState("");
   const [busy, setBusy] = React.useState(false);
+
+  /*
+   * Lifted out of the submit button's `onClick`, where it sat five braces deep
+   * inside the render-prop's JSX. The two `<Form>` helpers arrive as arguments
+   * rather than being captured, which is what lets this live in the component
+   * body beside the state it writes.
+   */
+  const submitBox = async (
+    setFieldError: (field: string, message: string) => void,
+    clearErrors: () => void,
+  ) => {
+    clearErrors();
+    if (!code.trim()) {
+      setFieldError("code", "A box needs a code");
+      return;
+    }
+    setBusy(true);
+    try {
+      await apiClient.post(ADMIN_ENDPOINTS.INVENTORY_BOXES, {
+        code: code.trim(),
+        boxType,
+        ...(location.trim() ? { location: location.trim() } : {}),
+      });
+      onCreated();
+    } catch (err) {
+      /*
+       * 🛑 `operatorMessage`, not a raw fallback. This read
+       * `toUserMessage(undefined, undefined, { fallback: e.message })`
+       * under a comment claiming it never showed server text — which is
+       * false twice over: `undefined` for the code means the map never
+       * runs, so the fallback is ALWAYS what shows. A comment asserting
+       * the fix while the code reintroduces the bug is how Root Cause #86
+       * would come back, and how the seed `listingType` bug survived its
+       * own fix one field over.
+       *
+       * The split is on status: the 409 here ("Box AC60-03 already
+       * exists") is authored for this operator and must survive; a 5xx
+       * terminates in a constant.
+       */
+      setFieldError("code", operatorMessage(normalizeError(err)));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <Form onSubmit={(e) => e.preventDefault()} className="space-y-4">
@@ -94,40 +142,7 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
               type="submit"
               variant="primary"
               isLoading={busy}
-              onClick={async () => {
-                clearErrors();
-                if (!code.trim()) {
-                  setFieldError("code", "A box needs a code");
-                  return;
-                }
-                setBusy(true);
-                try {
-                  await apiClient.post(ADMIN_ENDPOINTS.INVENTORY_BOXES, {
-                    code: code.trim(),
-                    boxType,
-                    ...(location.trim() ? { location: location.trim() } : {}),
-                  });
-                  onCreated();
-                } catch (err) {
-                  /*
-                   * 🛑 `operatorMessage`, not a raw fallback. This read
-                   * `toUserMessage(undefined, undefined, { fallback: e.message })`
-                   * under a comment claiming it never showed server text —
-                   * which is false twice over: `undefined` for the code means
-                   * the map never runs, so the fallback is ALWAYS what shows.
-                   * A comment asserting the fix while the code reintroduces the
-                   * bug is how Root Cause #86 would come back, and how the seed
-                   * `listingType` bug survived its own fix one field over.
-                   *
-                   * The split is on status: the 409 here ("Box AC60-03 already
-                   * exists") is authored for this operator and must survive; a
-                   * 5xx terminates in a constant.
-                   */
-                  setFieldError("code", operatorMessage(normalizeError(err)));
-                } finally {
-                  setBusy(false);
-                }
-              }}
+              onClick={() => submitBox(setFieldError, clearErrors)}
             >
               Register box
             </Button>

@@ -214,17 +214,25 @@ export {
 } from "./_helpers/franchise-rows";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
-// Tester checklist/response seed data lives in ../features/tester/seed-data (isolated from
-// this folder on purpose) — re-exported here so every other seed consumer keeps one import
-// surface.
-export {
-  testerChecklistSeedData,
-  // 🛑 Adding a tester seed export means FOUR hops, not one: the tester barrel,
-  // THIS re-export, appkit/src/index.ts, and seed-cli's own import. Missing the
-  // middle two is silent — seed-cli logs "no seed data, skipping" and the run
-  // continues, which is exactly what happened on the first attempt here.
-  testerResponsesSeedData,
-} from "../features/tester/seed-data";
+/*
+ * 🛑 The tester checklist corpus is NO LONGER SEEDED FROM HERE.
+ *
+ * It moved to the `tester/` repository (`tester/cases/`, 146 files) and is
+ * written by `node tester/scripts/seed-cases.mjs`. The cases are authoring
+ * data for that harness, not application code: nothing in the app read them,
+ * because `/admin/tester-checklist`, `/admin/tester-feedback` and
+ * `GET/PUT /api/user/tester-checklist` all read the `testerChecklistItems`
+ * COLLECTION through two repositories that stay in appkit. So the collection
+ * is the contract, and whoever authors the cases owns writing it.
+ *
+ * What that removes from every consumer build: 145 files and ~3.1 MB of case
+ * prose that shipped inside the component library and had no reader.
+ *
+ * `npx appkit-seed load` therefore no longer populates `testerChecklistItems`.
+ * Seed it with the tester script instead — and note the old four-hop warning
+ * that used to live here (tester barrel -> this re-export -> appkit/src/index
+ * -> seed-cli) is gone with it, which was the point.
+ */
 export { productFeaturesSeedData } from "./product-features-seed-data";
 export {
   authenticityKnowledgeSeedData,

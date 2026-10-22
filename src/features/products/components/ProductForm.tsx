@@ -10,6 +10,7 @@ import {
   FormGroup,
   Heading,
   Label,
+  Span,
   RichTextEditor,
   Stack,
   TagInput,
@@ -1344,7 +1345,7 @@ export function ProductForm({
         </Heading>
         {existingLocation ? (
           <Text className="mb-3" color="muted" size="xs">
-            Legacy location on this listing: <strong>{existingLocation}</strong>.
+            Legacy location on this listing: <Span weight="semibold">{existingLocation}</Span>.
             It is still printed on labels, but it is free text with no box
             behind it — place this item in a storage box to replace it.
           </Text>

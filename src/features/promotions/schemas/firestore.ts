@@ -16,6 +16,21 @@ export interface DiscountConfig {
 export interface BXGYConfig {
   buyQuantity: number;
   getQuantity: number;
+  /**
+   * Per-UNIT price ceiling, in decimal rupees. A unit priced above this does
+   * not qualify: it neither counts toward a block nor can be given free.
+   *
+   * 🛑 This is a UNIT price, not a line total and not the order total — the
+   * promotion it exists for is "buy 3 get 1 free on items under ₹2,000", and
+   * `discount.minPurchase` already covers the order-total reading. A line of
+   * quantity 3 at ₹1,500 contributes three qualifying units, not one ₹4,500
+   * item that fails the ceiling.
+   *
+   * Omitted means no ceiling, which is what every BOGO coupon written before
+   * 2026-10-22 means. Do not default it to a number — a ceiling nobody asked
+   * for would silently shrink an existing coupon's discount.
+   */
+  maxItemPrice?: number;
   applicableProducts?: string[];
   applicableCategories?: string[];
 }
@@ -366,6 +381,13 @@ export interface DiscountableLine {
  *
  * 🛑 An INCOMPLETE block earns nothing. "Buy 2 get 1" on 2 units is a block of
  * 2 against a required 3, so the discount is 0 — not a partial credit.
+ *
+ * 🛑 `bxgy.maxItemPrice` filters the UNIT POOL before blocks are formed, so an
+ * over-ceiling unit neither counts toward a block nor can be free. Filtering
+ * only the free-unit selection instead would let four ₹5,000 tops earn a free
+ * one under an "items under ₹2,000" promotion, because the cheapest of four
+ * dear units is still dear. The ceiling defines what the promotion is ABOUT,
+ * not merely what it pays out.
  */
 export function calculateBxgyDiscount(
   bxgy: BXGYConfig | undefined,
@@ -378,6 +400,18 @@ export function calculateBxgyDiscount(
   // unit free, which is a misconfiguration, not a promotion.
   if (!Number.isFinite(buy) || !Number.isFinite(get) || buy <= 0 || get <= 0) return 0;
 
+  /*
+   * A non-finite or non-positive ceiling is a misconfiguration, and treating
+   * it as "0" would disqualify every unit and silently zero the coupon. Treat
+   * it as absent — the same thing an omitted ceiling means.
+   */
+  const ceiling =
+    typeof bxgy.maxItemPrice === "number" &&
+    Number.isFinite(bxgy.maxItemPrice) &&
+    bxgy.maxItemPrice > 0
+      ? bxgy.maxItemPrice
+      : undefined;
+
   // Expand to one entry per UNIT — a line of quantity 3 contributes 3 prices,
   // because the free units are counted in units, not in lines.
   const unitPrices: number[] = [];
@@ -385,6 +419,10 @@ export function calculateBxgyDiscount(
     const qty = Math.floor(line.quantity);
     if (!Number.isFinite(qty) || qty <= 0) continue;
     if (!Number.isFinite(line.price) || line.price < 0) continue;
+    // Inclusive: "under ₹2,000" is authored as maxItemPrice 1999 when the
+    // boundary matters. An exclusive test here would make a ₹2,000 ceiling
+    // reject a ₹2,000 item, which is not how a price cap reads to an admin.
+    if (ceiling !== undefined && line.price > ceiling) continue;
     for (let i = 0; i < qty; i++) unitPrices.push(line.price);
   }
 

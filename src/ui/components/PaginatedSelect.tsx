@@ -1,6 +1,9 @@
 "use client";
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "./Input";
+import { toUserMessage } from "../../errors/error-display-map";
+import { Text } from "./Typography";
+import { FormShellContext } from "../forms/FormShell";
 import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
 import { QuickFormDrawer } from "../../features/shell/QuickFormDrawer";
@@ -32,6 +35,14 @@ interface BaseProps<V> {
   disabled?: boolean;
   className?: string;
   ariaLabel?: string;
+  /** Field name — resolves this control's error from `FormShellContext`, as `Field*` do. */
+  name?: string;
+  /**
+   * Validation message. Explicit prop wins; else read from context by `name`.
+   * Without these two this control had no error affordance at all: a required
+   * taxonomy pick could fail and the control showed nothing.
+   */
+  error?: React.ReactNode;
   /** "+ Create new …" button. Provide `renderCreateForm` OR (`createFields` + `onCreateSubmit`). */
   createLabel?: string;
   drawerTitle?: string;
@@ -135,6 +146,53 @@ const C = {
 const CREATE_SENTINEL = "__paginated_select_create__";
 
 /**
+ * Selected VALUES paired back with their options, for `onChange`.
+ *
+ * `handleSelect` and `removeChip` carried these identical four lines, and the
+ * fallback chain is load-bearing rather than defensive: a value chosen on page
+ * 3 is no longer in `resolvedOptions` once the search box is retyped, so
+ * resolving from that list alone would hand the caller a chip labelled with its
+ * own raw value. `labels` is the cache that survives a list change; `String(v)`
+ * is the last resort, not the first.
+ *
+ * At module scope, taking its three inputs explicitly, so it costs the
+ * component no lines — `audit-code-quality` measures significant lines INSIDE
+ * a function, and this file's component is a long one.
+ */
+function pairValuesWithOptions<V>(
+  values: readonly V[],
+  resolved: readonly PaginatedSelectOption<V>[],
+  labels: Map<V, string>,
+): PaginatedSelectOption<V>[] {
+  return values.map(
+    (v) =>
+      resolved.find((o) => o.value === v) ?? {
+        value: v,
+        label: labels.get(v) ?? String(v),
+      },
+  );
+}
+
+/**
+ * Is this value currently selected?
+ *
+ * Module scope for the same reason as `pairValuesWithOptions` above — it needs
+ * nothing from the render closure, so it costs the component no lines against
+ * the significant-line limit.
+ *
+ * The cast pair is how the discriminated props union is read: `isMulti` IS the
+ * discriminant, so each branch narrows to exactly one of the two shapes.
+ */
+function isValueSelected<V>(
+  value: V,
+  props: PaginatedSelectProps<V>,
+  isMulti: boolean,
+): boolean {
+  if (isMulti) return (props as MultiProps<V>).value.includes(value);
+  return (props as SingleProps<V>).value === value;
+}
+
+/**
  * PaginatedSelect — searchable, async-paginated select with optional multi-mode
  * and optional inline create-new drawer.
  *
@@ -153,6 +211,78 @@ const CREATE_SENTINEL = "__paginated_select_create__";
  * @example multi-select
  * <PaginatedSelect multiple value={tagIds} onChange={setTagIds} loadOptions={loadTags} />
  */
+/**
+ * Resolve this control's validation message and the id that labels it.
+ *
+ * A hook rather than four lines in the component body: `PaginatedSelect` is
+ * already at `audit-code-quality`'s size limit, and the error affordance is
+ * self-contained — explicit prop wins, else `FormShellContext` by `name`,
+ * exactly as the `Field*` primitives resolve theirs.
+ */
+function usePaginatedSelectError(name?: string, errorProp?: ReactNode) {
+  const ctx = React.useContext(FormShellContext);
+  const error = errorProp ?? (name ? ctx?.errors[name] : undefined);
+  const errorId = `${React.useId()}-error`;
+  return { error, errorId };
+}
+
+/** The message, under the trigger it describes. */
+function PaginatedSelectError({ id, error }: { id: string; error: ReactNode }) {
+  if (!error) return null;
+  return (
+    <Text id={id} size="sm" variant="error" className="appkit-form-field__error" role="alert">
+      {error}
+    </Text>
+  );
+}
+
+/**
+ * The selected-values row, multi-select only.
+ *
+ * Its own component because `PaginatedSelect` sits against
+ * `audit-code-quality`'s size limit, and this block needs none of the
+ * control's twelve state variables — only what it is handed.
+ */
+function PaginatedSelectChips<V>({
+  chips,
+  labelFor,
+  overflowCount,
+  disabled,
+  onRemove,
+}: {
+  chips: readonly V[];
+  labelFor: (value: V) => string;
+  overflowCount: number;
+  disabled?: boolean;
+  onRemove: (value: V) => void;
+}) {
+  return (
+    <div className={C.chips}>
+      {chips.map((v) => (
+        <span key={String(v)} className={C.chip}>
+          <span className={C.chipLabel}>{labelFor(v)}</span>
+          {!disabled && (
+            <button
+              type="button"
+              aria-label="Remove"
+              className={C.chipRemove}
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(v);
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </span>
+      ))}
+      {overflowCount > 0 && (
+        <span className={C.overflowChip}>+{overflowCount} more</span>
+      )}
+    </div>
+  );
+}
+
 export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const {
     options,
@@ -163,6 +293,8 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     disabled,
     className = "",
     ariaLabel,
+    name,
+    error: errorProp,
     createLabel,
     drawerTitle,
     renderCreateForm,
@@ -180,6 +312,8 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     editSubmitLabel,
   } = props;
   const isMulti = props.multiple === true;
+
+  const { error, errorId } = usePaginatedSelectError(name, errorProp);
   const maxChipsVisible = isMulti ? (props as MultiProps<V>).maxChipsVisible ?? 3 : 0;
 
   const [query, setQuery] = useState("");
@@ -266,7 +400,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const unresolvedKey = selectedValues
     .filter((v) => !labelMap.current.has(v))
     .map((v) => String(v))
-    .join(" ");
+    .join("\u0000");
 
   useEffect(() => {
     if (!loadOptions || !unresolvedKey || labelResolveRef.current) return;
@@ -317,7 +451,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         // Same staleness rule as the success path: a superseded request must
         // not paint its failure over a newer request's results.
         if (requestId === requestIdRef.current) {
-          setLoadError(normalized.message || "Could not load options.");
+          setLoadError(toUserMessage(normalized.code, undefined, { fallback: "Could not load options." }));
           if (reset) setAsyncOptions([]);
         }
       } finally {
@@ -375,23 +509,16 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
       )
     : resolvedOptions;
 
-  function isSelected(value: V): boolean {
-    if (isMulti) return (props as MultiProps<V>).value.includes(value);
-    return (props as SingleProps<V>).value === value;
-  }
+  const pairWithOptions = (values: readonly V[]) =>
+    pairValuesWithOptions(values, resolvedOptions, labelMap.current);
 
   function handleSelect(opt: PaginatedSelectOption<V>) {
     if (isMulti) {
       const mp = props as MultiProps<V>;
-      const selected = mp.value.includes(opt.value);
-      const nextValues = selected
+      const nextValues = mp.value.includes(opt.value)
         ? mp.value.filter((v) => v !== opt.value)
         : [...mp.value, opt.value];
-      const nextOptions = nextValues.map((v) => {
-        const found = resolvedOptions.find((o) => o.value === v);
-        return found ?? { value: v, label: labelMap.current.get(v) ?? String(v) };
-      });
-      mp.onChange(nextValues, nextOptions);
+      mp.onChange(nextValues, pairWithOptions(nextValues));
     } else {
       const sp = props as SingleProps<V>;
       sp.onChange?.(opt.value, opt);
@@ -403,11 +530,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     if (!isMulti) return;
     const mp = props as MultiProps<V>;
     const nextValues = mp.value.filter((x) => x !== v);
-    const nextOptions = nextValues.map((x) => {
-      const found = resolvedOptions.find((o) => o.value === x);
-      return found ?? { value: x, label: labelMap.current.get(x) ?? String(x) };
-    });
-    mp.onChange(nextValues, nextOptions);
+    mp.onChange(nextValues, pairWithOptions(nextValues));
   }
 
   function handleCreated(option: PaginatedSelectOption<V>) {
@@ -490,35 +613,15 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
       <div
         ref={containerRef}
         className={[C.root, className].filter(Boolean).join(" ")}
-        aria-label={ariaLabel}
       >
-        {/* chips row (multi only) */}
         {isMulti && multiValue.length > 0 && (
-          <div className={C.chips}>
-            {visibleChips.map((v) => (
-              <span key={String(v)} className={C.chip}>
-                <span className={C.chipLabel}>
-                  {labelMap.current.get(v) ?? String(v)}
-                </span>
-                {!disabled && (
-                  <button
-                    type="button"
-                    aria-label="Remove"
-                    className={C.chipRemove}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeChip(v);
-                    }}
-                  >
-                    ✕
-                  </button>
-                )}
-              </span>
-            ))}
-            {overflowCount > 0 && (
-              <span className={C.overflowChip}>+{overflowCount} more</span>
-            )}
-          </div>
+          <PaginatedSelectChips
+            chips={visibleChips}
+            labelFor={(v) => labelMap.current.get(v) ?? String(v)}
+            overflowCount={overflowCount}
+            disabled={disabled}
+            onRemove={removeChip}
+          />
         )}
 
         {/* trigger */}
@@ -529,8 +632,11 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
           className={[C.trigger, disabled ? C.triggerDisabled : ""]
             .filter(Boolean)
             .join(" ")}
+          aria-label={ariaLabel}
           aria-expanded={open}
           aria-haspopup="listbox"
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? errorId : undefined}
         >
           <span className={C.triggerLeft}>
             <span className={triggerEmpty ? C.placeholder : ""}>
@@ -577,7 +683,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
             />
             <ul className={C.list}>
               {filtered.map((opt, idx) => {
-                const selected = isSelected(opt.value);
+                const selected = isValueSelected(opt.value, props, isMulti);
                 return (
                   <li key={`${String(opt.value)}-${idx}`}>
                     <button
@@ -651,6 +757,8 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
             </ul>
           </div>
         )}
+
+        <PaginatedSelectError id={errorId} error={error} />
       </div>
 
       {/* create drawer */}

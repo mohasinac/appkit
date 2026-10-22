@@ -66,6 +66,7 @@ import {
   RecordDetailModal,
   Row,
   RowActionMenu,
+  Span,
   Stack,
   Text,
   Button,
@@ -325,14 +326,14 @@ export function AdminGatewayEventsView({ children, ...props }: AdminGatewayEvent
         <Stack gap="md">
           <Text size="sm">
             This clears the terminal flag and the attempt count so the inbox
-            will <strong>accept</strong> the next delivery of this event instead
+            will <Span weight="semibold">accept</Span> the next delivery of this event instead
             of refusing it as a duplicate.
           </Text>
           <Row surface="warning-surface" padding="sm" rounded="default">
             <Text size="sm" color="warning">
               It does not reprocess anything by itself. Nothing outside the
               webhook route knows how to handle an event, so after this you
-              still need to press <strong>Resend</strong> on this delivery in
+              still need to press <Span weight="semibold">Resend</Span> on this delivery in
               the gateway dashboard — or wait for the gateway&rsquo;s own retry.
             </Text>
           </Row>

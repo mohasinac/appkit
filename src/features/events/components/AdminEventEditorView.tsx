@@ -229,6 +229,8 @@ interface EventDraft {
   // Guest participation — one uniform admin toggle applied across every
   // event type (poll/survey/feedback/raffle/spin_wheel), not a per-type rule.
   allowGuestParticipation: boolean;
+  // Pin — lifts this event to the top of /events and the homepage rail.
+  isPinned: boolean;
   // Sale
   discountPercent: string;
   saleBannerText: string;
@@ -311,6 +313,7 @@ const DEFAULT_DRAFT: EventDraft = {
   status: "draft",
   createdBy: "",
   allowGuestParticipation: false,
+  isPinned: false,
   discountPercent: "10",
   saleBannerText: "",
   couponId: "",
@@ -425,6 +428,73 @@ function SpinPrizesEditor({
 
 // --- Component ---------------------------------------------------------------
 
+/**
+ * The API's event shape -> the editor's draft shape.
+ *
+ * A pure adapter at module scope. The extraction is not cosmetic: this was
+ * 45 lines of field mapping inside a `useEffect` inside a 455-line
+ * component, which is exactly where a wrong default hides.
+ *
+ * Every `|| ""` and `Boolean()` is load-bearing. An ABSENT field — any event
+ * predating the one that added it — must still seed a CONTROLLED input;
+ * `undefined` makes React treat it as uncontrolled and the field stops
+ * accepting edits.
+ *
+ * 🛑 `requireLogin: event.surveyConfig?.requireLogin !== false` is the one
+ * default deliberately INVERTED — absent means true, because a survey that
+ * silently stopped requiring a login would collect anonymous entries nobody
+ * asked for. Do not "tidy" it into `Boolean(...)`.
+ */
+function eventToDraft(event: Record<string, any>): EventDraft {
+  return {
+        type: event.type || "sale",
+        title: event.title || "",
+        slug: event.slug || "",
+        description: event.description || "",
+        startsAt: toLocalDatetime(event.startsAt),
+        endsAt: toLocalDatetime(event.endsAt),
+        coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
+        tags: Array.isArray(event.tags) ? event.tags : [],
+        status: event.status || "draft",
+        createdBy: event.createdBy || "",
+        allowGuestParticipation: Boolean(event.allowGuestParticipation),
+        // `Boolean()` so an ABSENT field (every event predating the pin) seeds
+        // the toggle as off rather than leaving it `undefined`, which React
+        // would read as an uncontrolled input.
+        isPinned: Boolean(event.isPinned),
+        discountPercent: String(event.saleConfig?.discountPercent ?? 10),
+        saleBannerText: event.saleConfig?.bannerText || "",
+        couponId: event.offerConfig?.couponId || "",
+        displayCode: event.offerConfig?.displayCode || "",
+        offerBannerText: event.offerConfig?.bannerText || "",
+        pollOptions: event.pollConfig?.options?.length
+          ? event.pollConfig.options
+          : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
+        allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
+        allowComment: Boolean(event.pollConfig?.allowComment),
+        resultsVisibility: event.pollConfig?.resultsVisibility || "always",
+        requireLogin: event.surveyConfig?.requireLogin !== false,
+        maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
+        hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
+        hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
+        pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
+        entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
+        surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
+        anonymous: Boolean(event.feedbackConfig?.anonymous),
+        feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
+        hasRaffle: Boolean(event.hasRaffle),
+        raffleType: (event.raffleType as RaffleType) || "open_raffle",
+        raffleTopN: String(event.raffleTopN ?? 10),
+        rafflePrize: event.rafflePrize || "",
+        rafflePrizeCouponId: event.rafflePrizeCouponId || "",
+        rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
+        spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
+        spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
+        spinWindowStart: toLocalDatetime(event.spinWindowStart),
+        spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
+  };
+}
+
 export function AdminEventEditorView({
   eventId,
   onSaved,
@@ -467,49 +537,8 @@ export function AdminEventEditorView({
   React.useEffect(() => {
     const event = (eventQuery.data as any)?.data ?? (eventQuery.data as any);
     if (!event?.id) return;
-    setDraft({
-      type: event.type || "sale",
-      title: event.title || "",
-      slug: event.slug || "",
-      description: event.description || "",
-      startsAt: toLocalDatetime(event.startsAt),
-      endsAt: toLocalDatetime(event.endsAt),
-      coverImageUrl: event.coverImageUrl || event.coverImage?.url || "",
-      tags: Array.isArray(event.tags) ? event.tags : [],
-      status: event.status || "draft",
-      createdBy: event.createdBy || "",
-      allowGuestParticipation: Boolean(event.allowGuestParticipation),
-      discountPercent: String(event.saleConfig?.discountPercent ?? 10),
-      saleBannerText: event.saleConfig?.bannerText || "",
-      couponId: event.offerConfig?.couponId || "",
-      displayCode: event.offerConfig?.displayCode || "",
-      offerBannerText: event.offerConfig?.bannerText || "",
-      pollOptions: event.pollConfig?.options?.length
-        ? event.pollConfig.options
-        : [{ id: "opt1", label: "" }, { id: "opt2", label: "" }],
-      allowMultiSelect: Boolean(event.pollConfig?.allowMultiSelect),
-      allowComment: Boolean(event.pollConfig?.allowComment),
-      resultsVisibility: event.pollConfig?.resultsVisibility || "always",
-      requireLogin: event.surveyConfig?.requireLogin !== false,
-      maxEntriesPerUser: String(event.surveyConfig?.maxEntriesPerUser ?? 1),
-      hasLeaderboard: Boolean(event.surveyConfig?.hasLeaderboard),
-      hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
-      pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
-      entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
-      surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
-      anonymous: Boolean(event.feedbackConfig?.anonymous),
-      feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
-      hasRaffle: Boolean(event.hasRaffle),
-      raffleType: (event.raffleType as RaffleType) || "open_raffle",
-      raffleTopN: String(event.raffleTopN ?? 10),
-      rafflePrize: event.rafflePrize || "",
-      rafflePrizeCouponId: event.rafflePrizeCouponId || "",
-      rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
-      spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
-      spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
-      spinWindowStart: toLocalDatetime(event.spinWindowStart),
-      spinWindowEnd: toLocalDatetime(event.spinWindowEnd),
-    });
+    // The 45-line field mapping lives in `eventToDraft` at module scope.
+    setDraft(eventToDraft(event));
     setSlugManual(true);
     setRaffleWinnerName(event.raffleWinnerDisplayName || "");
     setRaffleEntryCount(typeof event.raffleEntryCount === "number" ? event.raffleEntryCount : null);
@@ -529,6 +558,7 @@ export function AdminEventEditorView({
         endsAt: toISOString(draft.endsAt),
         coverImageUrl: draft.coverImageUrl || undefined,
         allowGuestParticipation: draft.allowGuestParticipation,
+        isPinned: draft.isPinned,
         ...buildEventTypeConfig(draft),
         ...buildEventRaffleFields(draft),
       };
@@ -613,12 +643,13 @@ export function AdminEventEditorView({
       // The per-step `validate` is gone: every rule it stated is already in
       // eventDraftSchema (title/startsAt/endsAt are .min(1)), and it only ever
       // acted as a gate to the next step.
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Event Details</Heading>
           {!isEdit && (
             <Select
               label="Event type"
+              error={errors.type}
               value={values.type}
               options={allowedTypes ? EVENT_TYPE_OPTIONS.filter((o) => allowedTypes.includes(o.value as EventType)) : EVENT_TYPE_OPTIONS}
               onChange={(e) => onChange({ type: e.target.value as EventType })}
@@ -626,6 +657,7 @@ export function AdminEventEditorView({
           )}
           <Input
             label="Title"
+            error={errors.title}
             value={values.title}
             onChange={(e) => {
               const v = e.target.value;
@@ -636,6 +668,7 @@ export function AdminEventEditorView({
           />
           <Input
             label="Slug"
+            error={errors.slug}
             value={values.slug}
             onChange={(e) => { setSlugManual(true); onChange({ slug: e.target.value }); }}
             placeholder="event-charizard-flash-sale-2026"
@@ -646,8 +679,10 @@ export function AdminEventEditorView({
             <RichTextEditor value={values.description} onChange={(v) => onChange({ description: v })} minHeightClassName="min-h-[120px]" placeholder="Describe this event…" />
           </Stack>
           <Grid cols={2} gap="sm">
-            <Input label="Starts at" type="datetime-local" value={values.startsAt} onChange={(e) => onChange({ startsAt: e.target.value })} required />
-            <Input label="Ends at" type="datetime-local" value={values.endsAt} onChange={(e) => onChange({ endsAt: e.target.value })} required />
+            <Input label="Starts at"
+            error={errors.startsAt} type="datetime-local" value={values.startsAt} onChange={(e) => onChange({ startsAt: e.target.value })} required />
+            <Input label="Ends at"
+            error={errors.endsAt} type="datetime-local" value={values.endsAt} onChange={(e) => onChange({ endsAt: e.target.value })} required />
           </Grid>
           <TagInput label="Tags" value={values.tags} onChange={(t) => onChange({ tags: t })} placeholder="e.g. pokemon, sale, 2026" />
         </Stack>
@@ -660,11 +695,12 @@ export function AdminEventEditorView({
       // section mid-upload discards the transfer.
       keepMounted: true,
       fields: ["coverImageUrl"],
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Media</Heading>
           <Input
             label="Cover Image URL (optional)"
+            error={errors.coverImageUrl}
             value={values.coverImageUrl}
             onChange={(e) => onChange({ coverImageUrl: e.target.value })}
             placeholder="https://…"
@@ -676,15 +712,16 @@ export function AdminEventEditorView({
     {
       id: "settings",
       label: "Settings",
-      fields: ["status", "allowGuestParticipation", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
+      fields: ["status", "allowGuestParticipation", "isPinned", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
       // Same: the offer-coupon, offer-display-code and poll-minimum-options
       // rules are all stated in eventDraftSchema's superRefine, which now
       // surfaces them inline on the field instead of as a step-blocking banner.
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Event Settings</Heading>
           {isEdit && (
-            <Select label="Status" value={values.status} options={EVENT_STATUS_OPTIONS} onChange={(e) => onChange({ status: e.target.value as EventStatus })} />
+            <Select label="Status"
+            error={errors.status} value={values.status} options={EVENT_STATUS_OPTIONS} onChange={(e) => onChange({ status: e.target.value as EventStatus })} />
           )}
           {values.createdBy && (
             <Stack gap="none">
@@ -704,13 +741,26 @@ export function AdminEventEditorView({
             </Text>
           </Stack>
 
+          <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+            <Toggle
+              checked={values.isPinned}
+              onChange={(v) => onChange({ isPinned: v })}
+              label="Pin to the top of Events"
+            />
+            <Text size="xs" color="muted">
+              Pinned events are listed first on the Events page and in the homepage strip, ahead of the usual soonest-first order. A pinned event still has to be Active to appear at all — pinning does not publish it.
+            </Text>
+          </Stack>
+
           {/* Sale config */}
           {values.type === "sale" && (
             <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
               <Text size="sm" weight="semibold" color="muted">Sale configuration</Text>
               <Grid cols={2} gap="sm">
-                <Input label="Discount %" type="number" value={values.discountPercent} onChange={(e) => onChange({ discountPercent: e.target.value })} placeholder="10" />
-                <Input label="Banner text (optional)" value={values.saleBannerText} onChange={(e) => onChange({ saleBannerText: e.target.value })} placeholder="Limited time — ends Sunday!" />
+                <Input label="Discount %"
+                error={errors.discountPercent} type="number" value={values.discountPercent} onChange={(e) => onChange({ discountPercent: e.target.value })} placeholder="10" />
+                <Input label="Banner text (optional)" value={values.saleBannerText}
+                error={errors.saleBannerText} onChange={(e) => onChange({ saleBannerText: e.target.value })} placeholder="Limited time — ends Sunday!" />
               </Grid>
             </Stack>
           )}
@@ -730,9 +780,11 @@ export function AdminEventEditorView({
                     allowCreate={false}
                   />
                 </Div>
-                <Input label="Display code" value={values.displayCode} onChange={(e) => onChange({ displayCode: e.target.value })} placeholder="CHARIZARD25" required />
+                <Input label="Display code"
+                error={errors.displayCode} value={values.displayCode} onChange={(e) => onChange({ displayCode: e.target.value })} placeholder="CHARIZARD25" required />
               </Grid>
-              <Input label="Banner text (optional)" value={values.offerBannerText} onChange={(e) => onChange({ offerBannerText: e.target.value })} placeholder="Use CHARIZARD25 at checkout" />
+              <Input label="Banner text (optional)" value={values.offerBannerText}
+              error={errors.offerBannerText} onChange={(e) => onChange({ offerBannerText: e.target.value })} placeholder="Use CHARIZARD25 at checkout" />
             </Stack>
           )}
 
@@ -747,6 +799,8 @@ export function AdminEventEditorView({
                     <Div className="flex-1">
                       <Input
                         value={opt.label}
+                        /* Indexed: a failure on option 2 arrives as `pollOptions.1.label`. */
+                        error={errors[`pollOptions.${idx}.label`]}
                         onChange={(e) => onChange({ pollOptions: values.pollOptions.map((o) => o.id === opt.id ? { ...o, label: e.target.value } : o) })}
                         placeholder={`Option ${idx + 1}`}
                       />
@@ -758,7 +812,8 @@ export function AdminEventEditorView({
                 ))}
                 <Button type="button" variant="outline" size="sm" onClick={() => onChange({ pollOptions: [...values.pollOptions, { id: `opt${Date.now()}`, label: "" }] })}>+ Add option</Button>
               </Stack>
-              <Select label="Results visibility" value={values.resultsVisibility} options={POLL_VISIBILITY_OPTIONS} onChange={(e) => onChange({ resultsVisibility: e.target.value as "always" | "after_vote" | "after_end" })} />
+              <Select label="Results visibility"
+              error={errors.resultsVisibility} value={values.resultsVisibility} options={POLL_VISIBILITY_OPTIONS} onChange={(e) => onChange({ resultsVisibility: e.target.value as "always" | "after_vote" | "after_end" })} />
               <Stack gap="sm">
                 <Toggle checked={values.allowMultiSelect} onChange={(v) => onChange({ allowMultiSelect: v })} label="Allow multi-select" />
                 <Toggle checked={values.allowComment} onChange={(v) => onChange({ allowComment: v })} label="Allow comment with vote" />
@@ -771,9 +826,11 @@ export function AdminEventEditorView({
             <Stack gap="md" rounded="xl" border="default" padding="md">
               <Text size="sm" weight="semibold" color="muted">Survey configuration</Text>
               <Grid cols={2} gap="sm">
-                <Input label="Max entries per user" type="number" value={values.maxEntriesPerUser} onChange={(e) => onChange({ maxEntriesPerUser: e.target.value })} placeholder="1" />
+                <Input label="Max entries per user"
+                error={errors.maxEntriesPerUser} type="number" value={values.maxEntriesPerUser} onChange={(e) => onChange({ maxEntriesPerUser: e.target.value })} placeholder="1" />
                 {values.hasPointSystem && (
-                  <Input label="Points label" value={values.pointsLabel} onChange={(e) => onChange({ pointsLabel: e.target.value })} placeholder="Points" />
+                  <Input label="Points label"
+                  error={errors.pointsLabel} value={values.pointsLabel} onChange={(e) => onChange({ pointsLabel: e.target.value })} placeholder="Points" />
                 )}
               </Grid>
               <Stack gap="xs">
@@ -801,7 +858,7 @@ export function AdminEventEditorView({
       id: "raffle",
       label: "Raffle / Spin",
       fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponId", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
-      render: ({ values, onChange }) => {
+      render: ({ values, onChange, errors }) => {
         const isRaffleType = values.type === "raffle" || values.type === "spin_wheel";
         const showRaffleConfig = isRaffleType || values.hasRaffle;
         const isSpinMode = values.type === "spin_wheel" || values.raffleType === "spin_wheel";
@@ -819,10 +876,13 @@ export function AdminEventEditorView({
             {showRaffleConfig && (
               <Stack gap="md" rounded="xl" border="default" padding="md">
                 <Grid cols={2} gap="sm">
-                  <Select label="Raffle type" value={values.type === "spin_wheel" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "spin_wheel"} />
-                  <Input label="Top N (for top-N raffle types)" type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
+                  <Select label="Raffle type"
+                  error={errors.raffleType} value={values.type === "spin_wheel" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "spin_wheel"} />
+                  <Input label="Top N (for top-N raffle types)"
+                  error={errors.raffleTopN} type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
                 </Grid>
-                <Input label="Prize description" value={values.rafflePrize} onChange={(e) => onChange({ rafflePrize: e.target.value })} placeholder="₹2,000 store credit + exclusive Pikachu sticker" />
+                <Input label="Prize description"
+                error={errors.rafflePrize} value={values.rafflePrize} onChange={(e) => onChange({ rafflePrize: e.target.value })} placeholder="₹2,000 store credit + exclusive Pikachu sticker" />
                 <Div>
                   <Text size="sm" weight="medium" className="mb-1">Coupon for winner (optional)</Text>
                   <CouponInlineSelect

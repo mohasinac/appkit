@@ -1,3 +1,4 @@
+import type { FirestoreDocument, FirestoreValue } from "../../../schemas/types";
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
 
@@ -51,11 +52,18 @@ import { decryptSecret, encryptSecret, maskSecret } from "../../../security";
  *   anything whose prototype is not `Object.prototype`, which also covers
  *   `FieldValue` sentinels and `Timestamp` itself.
  */
+/*
+ * `FirestoreDocument`, not `Record<string, unknown>` — its own docstring says
+ * "use as the document shape for Firestore-backed repositories and mapDoc
+ * helpers". `unknown` values made every branch below unchecked, which is what
+ * audit-unknown-leakage reports; `FirestoreValue` admits exactly what Firestore
+ * round-trips (JSON + Date + undefined) and nothing else.
+ */
 export function toDottedPaths(
-  input: Record<string, unknown>,
+  input: FirestoreDocument,
   prefix = "",
-): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
+): FirestoreDocument {
+  const out: Record<string, FirestoreValue> = {};
   for (const [key, value] of Object.entries(input)) {
     const path = prefix ? `${prefix}.${key}` : key;
     const isPlainObject =
@@ -65,7 +73,7 @@ export function toDottedPaths(
       Object.getPrototypeOf(value) === Object.prototype;
 
     if (isPlainObject) {
-      const nested = toDottedPaths(value as Record<string, unknown>, path);
+      const nested = toDottedPaths(value as FirestoreDocument, path);
       /*
        * An EMPTY object is written at its own path rather than vanishing.
        * `{ watermark: {} }` is a caller saying "clear this group"; dropping it
@@ -245,7 +253,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       await this.db
         .collection(this.collection)
         .doc(this.SINGLETON_ID)
-        .update(toDottedPaths(updateData as Record<string, unknown>));
+        .update(toDottedPaths(updateData as FirestoreDocument));
 
       const latest = await this.getSingleton();
       cacheManager.set(this.cacheKey(), latest, {

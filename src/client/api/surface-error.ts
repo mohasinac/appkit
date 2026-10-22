@@ -1,6 +1,6 @@
 import { isApiError, type ApiIssue } from "./ApiError";
 import { ApiClientError } from "../../http/ApiClient";
-import { applyZodIssues, hasAttachableIssue } from "../../ui/forms/apply-zod-issues";
+import { applyZodIssues, hasAttachableIssue, rootLevelMessages } from "../../ui/forms/apply-zod-issues";
 import { normalizeError } from "../../errors/normalize";
 import { getErrorDisplay, toUserMessage } from "../../errors/error-display-map";
 import { HTTP_ERROR_CODES } from "../../errors/error-mapping";
@@ -78,7 +78,21 @@ export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
   const issues = issuesOf(err);
   if (setFieldError && hasAttachableIssue(issues)) {
     applyZodIssues(issues!, (name, message) => setFieldError(name, message ?? ""));
-    return; // inline errors only — no toast
+    /*
+     * 🛑 Root-level issues are NOT covered by the line above and must still be
+     * surfaced, or a cross-field rule fails silently.
+     *
+     * `applyZodIssues` skips any issue with an empty `path` — there is no
+     * field to put it on. For a mixed response (one field error plus one
+     * cross-field `.refine()`, the shape of "passwords must match" or "end
+     * date must be after start date") `hasAttachableIssue` is true, so we used
+     * to take this branch and `return` with the refine message discarded: the
+     * save was refused and nothing on screen said why.
+     */
+    for (const message of rootLevelMessages(issues)) {
+      showToast(message, "error");
+    }
+    return; // field errors inline; only the unattachable ones toast
   }
 
   if (hasStableErrorCode(err)) {

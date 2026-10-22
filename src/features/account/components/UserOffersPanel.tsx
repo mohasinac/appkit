@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Stack, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Stack, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { OfferDocument } from "../../seller/schemas";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const CLS_COUNTER_AMOUNT = "text-[length:var(--appkit-text-sm)] font-semibold text-info dark:text-info";
 
@@ -83,9 +85,25 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
     <Stack surface="card" padding="sm" gap="3">
       <Row align="start" justify="between" gap="sm" wrap>
         <Div className="min-w-0">
-          <Text className="truncate" color="primary" size="sm" weight="semibold">
+          {/*
+            🛑 The product title was inert <Text>. A buyer could see an offer
+            they had made, accept a counter or withdraw it, and never get back
+            to the listing it was about.
+
+            It links to the PRODUCT, not to an offer detail page — there is no
+            such page and no `ROUTES.USER.OFFER_DETAIL`, and inventing one
+            here would be a dead link. `OfferDocument` carries no
+            `listingType` either, so `pluginFor()` cannot resolve a per-type
+            route; the standard product route is what the data supports.
+          */}
+          <TextLink
+            href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(offer.productSlug ?? offer.productId))}
+            size="sm"
+            weight="semibold"
+            truncate
+          >
             {offer.productTitle ?? "Unknown Product"}
-          </Text>
+          </TextLink>
           <Text className="mt-0.5" color="muted" size="xs">
             {relativeTime(offer.createdAt)}
           </Text>
@@ -218,7 +236,7 @@ export function UserOffersPanel({
       setOffers(items);
     } catch (err) {
       void normalizeError(err);
-      setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
+      setFetchError(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Failed to load offers." }));
     } finally {
       setLoading(false);
     }

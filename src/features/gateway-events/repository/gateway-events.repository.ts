@@ -1,3 +1,5 @@
+// One shared predicate — this file had its own copy; see firestore-codes.ts.
+import { isAlreadyExistsError } from "../../../errors/firestore-codes";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type {
   FirebaseSieveFields,
@@ -24,44 +26,6 @@ import {
 } from "../schemas/firestore";
 
 /** gRPC `ALREADY_EXISTS`. The one failure of `.create()` that means "duplicate". */
-const GRPC_ALREADY_EXISTS = 6;
-
-/**
- * Is this the specific "a document with that id already exists" failure, as
- * opposed to any other write failure?
- *
- * 🛑 THIS DISTINCTION IS THE WHOLE POINT, and it is where the inbox differs
- * from every other `.create()` claim in the codebase.
- *
- * `refunds/actions.ts` catches *every* error from its claim and treats it as a
- * duplicate — and that is correct THERE, because the cost of being wrong is
- * issuing a second real refund, so it must fail CLOSED.
- *
- * Here the cost of being wrong is inverted: treating a permissions error or a
- * Firestore outage as "already have it" would make the route ack 200 and the
- * event would be **silently lost** — which is the exact failure this collection
- * exists to prevent. So the inbox fails OPEN: anything that is not
- * ALREADY_EXISTS propagates, the route answers 503, and the gateway sends it
- * again.
- *
- * Same primitive, opposite failure direction, because the asymmetry of harm is
- * opposite. Do not "unify" these two call sites.
- */
-function isAlreadyExists(err: unknown): boolean {
-  if (typeof err !== "object" || err === null) return false;
-  const code = (err as { code?: unknown }).code;
-  if (code === GRPC_ALREADY_EXISTS) return true;
-  /*
-   * The Admin SDK has also surfaced this as a string code and as a plain
-   * message depending on version and transport. Checked in addition to, never
-   * instead of, the numeric code — a message test alone is the kind of
-   * stringly-typed guard that breaks silently on an SDK bump.
-   */
-  if (code === "already-exists" || code === "ALREADY_EXISTS") return true;
-  const message = (err as { message?: unknown }).message;
-  return typeof message === "string" && message.includes("ALREADY_EXISTS");
-}
-
 function truncate(value: string | undefined, maxBytes: number): string | undefined {
   if (!value) return undefined;
   return value.length <= maxBytes ? value : value.slice(0, maxBytes);
@@ -162,7 +126,7 @@ export class GatewayEventsRepository extends BaseRepository<GatewayEventDocument
       await this.getCollection().doc(id).create(prepareForFirestore(doc));
       return { claimed: true, id, doc };
     } catch (err) {
-      if (isAlreadyExists(err)) {
+      if (isAlreadyExistsError(err)) {
         void normalizeError(err);
         return { claimed: false, id };
       }

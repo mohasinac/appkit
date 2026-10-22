@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Alert, Button, Div, Grid, Input, Row, Select, Stack, StackedViewShell, Text, useToast } from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, Grid, Input, Row, Select, Stack, StackedViewShell, Text, TextLink, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -14,6 +14,7 @@ import {
   useMediaCleanup,
   useMediaUpload,
 } from "../../media";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -47,6 +48,9 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
   const [nextPageToken, setNextPageToken] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = React.useState<BrowsedFile | null>(null);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const toast = useToast();
 
   const load = React.useCallback(
     async (token: string | null) => {
@@ -74,6 +78,34 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
     },
     [prefix],
   );
+
+  const onDelete = React.useCallback((file: BrowsedFile) => setDeleteTarget(file), []);
+
+  const confirmDelete = React.useCallback(async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(
+        `${ADMIN_ENDPOINTS.MEDIA_LIST}?path=${encodeURIComponent(deleteTarget.name)}`,
+        { method: "DELETE", credentials: "include" },
+      );
+      if (!res.ok) throw new Error("Failed to delete file");
+      /*
+       * Drop it from local state rather than refetching: this list is
+       * token-paginated and accumulates pages, so a reload would discard
+       * every page past the first and silently scroll the admin back to the
+       * top of a library they were partway through.
+       */
+      setFiles((prev) => prev.filter((f) => f.name !== deleteTarget.name));
+      toast.showToast("File deleted.", "success");
+    } catch (err) {
+      const normalized = normalizeError(err);
+      toast.showToast(toUserMessage(normalized.code, undefined, { fallback: "Failed to delete file." }), "error");
+    } finally {
+      setIsDeleting(false);
+      setDeleteTarget(null);
+    }
+  }, [deleteTarget, toast]);
 
   React.useEffect(() => {
     void load(null);
@@ -134,18 +166,43 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                 )}
               </Row>
               <Div className="p-[0.375rem]">
-                <Text className="truncate text-[10px] font-mono" color="muted">
-                  {f.name.split("/").pop()}
-                </Text>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  textSize="xs"
-                  className="mt-1 w-full"
-                  onClick={() => onCopy(f.downloadURL)}
+                {/*
+                  The filename is a LINK to the file itself. The tile shows a
+                  thumbnail for an image and the bare content-type for
+                  everything else, so for a PDF, a video or a zip the library
+                  offered no way to look at what you were about to copy a URL
+                  for — the only action was Copy URL.
+                */}
+                <TextLink
+                  href={f.downloadURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={f.name}
                 >
-                  {ACTIONS.MEDIA["copy-url"].label}
-                </Button>
+                  <Text className="truncate text-[10px] font-mono" color="muted">
+                    {f.name.split("/").pop()}
+                  </Text>
+                </TextLink>
+                <Row gap="xs" className="mt-1">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    textSize="xs"
+                    className="flex-1"
+                    onClick={() => onCopy(f.downloadURL)}
+                  >
+                    {ACTIONS.MEDIA["copy-url"].label}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    textSize="xs"
+                    aria-label={`${ACTIONS.MEDIA["delete-media"].ariaLabel}: ${f.name}`}
+                    onClick={() => onDelete(f)}
+                  >
+                    {ACTIONS.MEDIA["delete-media"].label}
+                  </Button>
+                </Row>
               </Div>
             </Div>
           );
@@ -156,6 +213,18 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           </Text>
         )}
       </Grid>
+      {deleteTarget && (
+        <ConfirmDeleteModal
+          isOpen
+          /* Rule #7: the copy lives on the ActionDef, not here. */
+          title={ACTIONS.MEDIA["delete-media"].confirmation?.title}
+          message={`${deleteTarget.name}\n\n${ACTIONS.MEDIA["delete-media"].confirmation?.body ?? ""}`}
+          confirmText={ACTIONS.MEDIA["delete-media"].confirmation?.confirmLabel}
+          isDeleting={isDeleting}
+          onConfirm={() => void confirmDelete()}
+          onClose={() => setDeleteTarget(null)}
+        />
+      )}
       <Row align="center" justify="between">
         <Text size="xs" color="muted">
           {filtered.length} file(s){nextPageToken ? " · more available" : ""}

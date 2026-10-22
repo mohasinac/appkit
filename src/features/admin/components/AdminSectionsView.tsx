@@ -1,13 +1,13 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit/client";
+import { useApiMutation, sortBy, sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
+import type { JsonArray, JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
-import { Button, Checkbox, Div, Form, FormActions, Input, Modal, PaginatedSelect, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
+import { Badge, Button, Checkbox, ConfirmDeleteModal, Div, FilterChipGroup, Input, PaginatedSelect, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { ICON_KEY_OPTIONS } from "./sections/icon-options";
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import {
@@ -31,7 +31,14 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
-import { DataTable } from "./DataTable";
+import { toRecordArray, toRelativeDate } from "../hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../hooks/useOptimisticRowFlag";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
+import { QuickEditMenu } from "./QuickEditMenu";
+import { ALL_TAB } from "../constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import type { HomepageSectionDocument } from "../../homepage/schemas";
 import {
   type SectionTemplate,
   templatesForType,
@@ -71,6 +78,7 @@ import {
 } from "./sections/adminSectionsTypes";
 import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, PrizeDrawsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
 import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -93,12 +101,47 @@ export interface AdminSectionsViewProps {
   children?: React.ReactNode;
 }
 
-export function AdminSectionsView({ children }: AdminSectionsViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
+interface SectionEditorPanelProps {
+  /** The record being edited, or undefined when creating. */
+  sectionId?: string;
+  /** The raw document for `sectionId`, resolved by the parent. */
+  section?: HomepageSectionDocument;
+  /** Every section, for the create-mode duplicate-type warning. */
+  siblingSections: HomepageSectionDocument[];
+  /** The parent's full-set query is still in flight. */
+  isSectionsLoading: boolean;
+  /** Close the drawer — `ListingEditorContext.closePanel`. */
+  onDone: () => void;
+}
+
+/**
+ * The homepage-section editor: the envelope, 25 typed builders and the raw
+ * JSON fallback.
+ *
+ * 🛑 THIS IS A SEPARATE COMPONENT FOR A MECHANICAL REASON, NOT FOR TIDINESS.
+ * `usePanelUrlSync` lives inside `useAdminListing` inside `DataListingView`,
+ * so the id of the row whose pencil was clicked is only readable inside the
+ * `renderEditor(ctx)` callback. The hydrate effect below must run in a
+ * component body, so the editor has to BE a component.
+ *
+ * 🛑 The caller MUST pass `key={ctx.editId ?? "create"}`. `isCreateOpen ||
+ * isEditOpen` is a single boolean, so clicking row B's pencil while row A's
+ * drawer is open does NOT unmount this component — `editId` simply changes.
+ * Without the key, `hydratedRef` below sees "already hydrated" and the admin
+ * edits B's record with A's values, then saves it. Silent cross-record
+ * corruption, no error anywhere. The remount the key forces is also what
+ * resets the 24 non-matching builders and `selectedTemplateId`, which the old
+ * single-component version had to do by hand and did not.
+ */
+function SectionEditorPanel({
+  sectionId,
+  section,
+  siblingSections,
+  isSectionsLoading,
+  onDone,
+}: SectionEditorPanelProps) {
+  const isCreate = !sectionId;
   const queryClient = useQueryClient();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [mode, setMode] = React.useState<"create" | "edit">("create");
-  const [selectedSectionId, setSelectedSectionId] = React.useState("");
   const [sectionType, setSectionType] = React.useState<SectionType>("products");
   /*
    * D1 — which template the admin picked, or "" for the type's defaults.
@@ -109,7 +152,19 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [selectedTemplateId, setSelectedTemplateId] = React.useState("");
   const [enabled, setEnabled] = React.useState(true);
   const [order, setOrder] = React.useState("");
-  const [configJson, setConfigJson] = React.useState("{}");
+  /*
+   * The RAW textarea contents — meaningful only for a section type with no
+   * typed builder. For a typed builder `configJson` below is DERIVED from
+   * `typedConfig`, because the textarea is `readOnly` in that case and was
+   * therefore never an input: it is a preview.
+   *
+   * 🛑 This used to be plain state written by an effect on `typedConfig`,
+   * which ran AFTER the hydrate effect and overwrote the stored document with
+   * a builder-generated config on every open. Deriving removes the race by
+   * construction rather than by ordering, and removes a second render per
+   * builder keystroke.
+   */
+  const [rawConfigJson, setRawConfigJson] = React.useState("{}");
   const [productsBuilder, setProductsBuilder] = React.useState<ProductsBuilderState>(DEFAULT_PRODUCTS_BUILDER);
   const [auctionsBuilder, setAuctionsBuilder] = React.useState<AuctionsBuilderState>(DEFAULT_AUCTIONS_BUILDER);
   const [statsBuilder, setStatsBuilder] = React.useState<StatsBuilderState>(DEFAULT_STATS_BUILDER);
@@ -135,18 +190,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [prizeDrawsBuilder, setPrizeDrawsBuilder] = React.useState<PrizeDrawsBuilderState>(DEFAULT_PRIZE_DRAWS_BUILDER);
   const [eventRafflesBuilder, setEventRafflesBuilder] = React.useState<EventRafflesBuilderState>(DEFAULT_EVENT_RAFFLES_BUILDER);
   const [collectionCardsBuilder, setCollectionCardsBuilder] = React.useState<CollectionCardsBuilderState>(DEFAULT_COLLECTION_CARDS_BUILDER);
-  const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
-  const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
-  const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
-  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const toast = useToast();
 
   const isTypedBuilder = SUPPORTED_TYPED_BUILDERS.includes(sectionType);
 
-  const { sections, isLoading, errorMessage } = useAdminSectionsListing({
-    page: 1,
-    pageSize: 50,
-  });
+  const duplicateOfType = React.useMemo(
+    () => (isCreate ? siblingSections.find((s) => s.type === sectionType) : undefined),
+    [isCreate, siblingSections, sectionType],
+  );
 
   const categoriesQuery = useQuery<{ items?: JsonValue[] }>({
     queryKey: ["admin", "sections", "categories", "options"],
@@ -232,26 +283,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     collectionCardsBuilder,
   ]);
 
-  React.useEffect(() => {
-    if (!typedConfig) {
-      return;
-    }
-    setConfigJson(JSON.stringify(typedConfig, null, 2));
-  }, [typedConfig]);
-
-  React.useEffect(() => {
-    const sorted = [...sections]
-      .sort((a, b) => a.order - b.order)
-      .map((section) => ({
-        id: section.id,
-        type: section.type,
-        order: section.order,
-      }));
-    const normalized = normalizeOrder(sorted);
-    setReorderDraft(normalized);
-    setReorderServerSnapshot(normalized);
-    setReorderUndoStack([]);
-  }, [sections]);
+  /**
+   * What the Generated-config preview shows and what the save sends.
+   *
+   * Derived for a typed builder, raw state otherwise. `typedConfig` is null
+   * for the three types with no builder (`how-it-works`, `testimonials`,
+   * `promo-grid`), which is the same set `isTypedBuilder` is false for — so
+   * the two branches agree and neither can strand the other.
+   */
+  const configJson = React.useMemo(
+    () => (isTypedBuilder && typedConfig ? JSON.stringify(typedConfig, null, 2) : rawConfigJson),
+    [isTypedBuilder, typedConfig, rawConfigJson],
+  );
 
   const saveSection = useApiMutation({
     errorMessage: "Failed to save section.",
@@ -264,7 +307,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         throw new Error("Config must be valid JSON.");
       }
 
-      if (mode === "create") {
+      if (isCreate) {
         await apiClient.post(ADMIN_ENDPOINTS.SECTIONS, {
           type: sectionType,
           enabled,
@@ -274,10 +317,17 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         return;
       }
 
-      if (!selectedSectionId) {
-        throw new Error("Select a section to update.");
-      }
-
+      /*
+       * `config` is sent unconditionally and that is deliberate. The
+       * repository MERGES it (`{...existing.config, ...data.config}`), which
+       * costs one extra read — the price of a guaranteed-correct write. A
+       * "diff and skip" would save that read and silently drop an admin's
+       * edit whenever the comparison was wrong, which is the worse failure.
+       *
+       * The reads worth saving are the per-ROW ones, and those already omit
+       * `config`: the enable/disable toggle and the reorder save both send a
+       * single scalar and short-circuit the merge.
+       */
       const payload: SectionPatchPayload = {
         enabled,
         config: parsedConfig,
@@ -286,50 +336,41 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         payload.order = Number(order);
       }
 
-      await apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${selectedSectionId}`, payload);
+      await apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${sectionId}`, payload);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
       // Public-facing useHomepageSections() reads under a separate key.
       await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
-      toast.showToast(mode === "create" ? "Section created." : "Section updated.", "success");
-      setIsModalOpen(false);
+      toast.showToast(isCreate ? "Section created." : "Section updated.", "success");
+      onDone();
     },
   });
 
-  const reorderSections = useApiMutation({
-    errorMessage: "Failed to reorder sections.",
-    mutationFn: async () => {
-      await Promise.all(
-        reorderDraft.map((item) =>
-          apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${item.id}`, {
-            order: item.order,
-          }),
-        ),
-      );
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
-      // Public-facing useHomepageSections() reads under a separate key.
-      await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
-      setReorderServerSnapshot(cloneReorderItems(reorderDraft));
-      setReorderUndoStack([]);
-      toast.showToast("Section order updated.", "success");
-    },
-  });
-
+  /**
+   * Hydrate the builders from the stored document — ONCE per mounted record.
+   *
+   * 🛑 `hydratedRef` is not an optimisation. The old deps included the whole
+   * `sections` array, which is a fresh identity after every refetch — and with
+   * `refetchOnWindowFocus` plus a 30s `staleTime`, alt-tabbing away mid-edit
+   * and coming back re-ran this and silently reverted every builder change the
+   * admin had made. No error, no prompt, just their work gone.
+   *
+   * The ref is only correct because the caller remounts on `editId` (see the
+   * 🛑 on this component). Ref and key are a pair; neither works alone.
+   */
+  const hydratedRef = React.useRef(false);
   React.useEffect(() => {
-    if (mode !== "edit" || !selectedSectionId) return;
-    const selected = sections.find((section) => section.id === selectedSectionId);
-    if (!selected) return;
+    if (!section || hydratedRef.current) return;
+    hydratedRef.current = true;
 
-    setSectionType(selected.type as SectionType);
-    setEnabled(Boolean(selected.enabled));
-    setOrder(String(selected.order ?? ""));
-    const selectedConfig = (selected.config ?? {}) as JsonObjectWithUndefined;
-    setConfigJson(JSON.stringify(selectedConfig, null, 2));
+    setSectionType(section.type as SectionType);
+    setEnabled(Boolean(section.enabled));
+    setOrder(String(section.order ?? ""));
+    const selectedConfig = (section.config ?? {}) as JsonObjectWithUndefined;
+    setRawConfigJson(JSON.stringify(selectedConfig, null, 2));
 
-    switch (selected.type) {
+    switch (section.type) {
       case "products": setProductsBuilder(parseProductsBuilder(selectedConfig)); break;
       case "auctions": setAuctionsBuilder(parseAuctionsBuilder(selectedConfig)); break;
       case "stats": setStatsBuilder(parseStatsBuilder(selectedConfig)); break;
@@ -356,7 +397,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "event-raffles": setEventRafflesBuilder(parseEventRafflesBuilder(selectedConfig)); break;
       case "collection-cards": setCollectionCardsBuilder(parseCollectionCardsBuilder(selectedConfig)); break;
     }
-  }, [mode, sections, selectedSectionId]);
+  }, [section]);
 
   /**
    * D1 — set the builder for one section type, from a TEMPLATE or from the
@@ -420,10 +461,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
    * template rather than its own 25-arm switch.
    */
   React.useEffect(() => {
-    if (!isModalOpen || mode !== "create") return;
+    if (!isCreate) return;
     applyBuilderFor(sectionType);
     setSelectedTemplateId("");
-  }, [isModalOpen, mode, sectionType, applyBuilderFor]);
+  }, [isCreate, sectionType, applyBuilderFor]);
 
   function toggleCategorySelection(
     ids: string[],
@@ -437,105 +478,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       return [...ids, categoryId];
     }
     return ids.filter((id) => id !== categoryId);
-  }
-
-  function normalizeOrder(items: Array<{ id: string; type: string; order: number }>) {
-    return items.map((item, index) => ({ ...item, order: index + 1 }));
-  }
-
-  function cloneReorderItems(items: ReorderItem[]): ReorderItem[] {
-    return items.map((item) => ({ ...item }));
-  }
-
-  function isSameReorder(a: ReorderItem[], b: ReorderItem[]): boolean {
-    if (a.length !== b.length) {
-      return false;
-    }
-    return a.every((item, index) => {
-      const other = b[index];
-      return Boolean(other) && item.id === other.id && item.order === other.order;
-    });
-  }
-
-  function pushUndoSnapshot(snapshot: ReorderItem[]) {
-    setReorderUndoStack((history) => [cloneReorderItems(snapshot), ...history].slice(0, 30));
-  }
-
-  function applyReorderChange(transform: (previous: ReorderItem[]) => ReorderItem[]) {
-    setReorderDraft((prev) => {
-      const next = transform(prev);
-      if (isSameReorder(prev, next)) {
-        return prev;
-      }
-      pushUndoSnapshot(prev);
-      return next;
-    });
-  }
-
-  function moveReorderItem(index: number, direction: -1 | 1) {
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= reorderDraft.length) {
-      return;
-    }
-
-    applyReorderChange((prev) => {
-      const next = [...prev];
-      const [item] = next.splice(index, 1);
-      next.splice(targetIndex, 0, item);
-      return normalizeOrder(next);
-    });
-  }
-
-  function updateReorderItemOrder(index: number, nextOrder: number) {
-    applyReorderChange((prev) => {
-      const clamped = Math.min(Math.max(1, nextOrder), prev.length);
-      const currentIndex = index;
-      const sorted = [...prev];
-      const [item] = sorted.splice(currentIndex, 1);
-      sorted.splice(clamped - 1, 0, item);
-      return normalizeOrder(sorted);
-    });
-  }
-
-  function moveItemToIndex(fromIndex: number, toIndex: number) {
-    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) {
-      return;
-    }
-
-    applyReorderChange((prev) => {
-      if (fromIndex >= prev.length || toIndex >= prev.length) {
-        return prev;
-      }
-      const next = [...prev];
-      const [item] = next.splice(fromIndex, 1);
-      next.splice(toIndex, 0, item);
-      return normalizeOrder(next);
-    });
-  }
-
-  function handleReorderDrop(targetIndex: number) {
-    if (dragIndex !== null) {
-      moveItemToIndex(dragIndex, targetIndex);
-    }
-    setDragIndex(null);
-  }
-
-  function reindexDraft() {
-    applyReorderChange((prev) => normalizeOrder(prev));
-  }
-
-  function resetToServerOrder() {
-    applyReorderChange(() => cloneReorderItems(reorderServerSnapshot));
-  }
-
-  function undoReorderChange() {
-    if (reorderUndoStack.length === 0) {
-      return;
-    }
-
-    const [latest, ...rest] = reorderUndoStack;
-    setReorderUndoStack(rest);
-    setReorderDraft(cloneReorderItems(latest));
   }
 
   function renderProductsCategorySelectors(): React.ReactNode {
@@ -2500,28 +2442,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
   }
 
-  // React.useMemo must run unconditionally on every render — it was
-  // previously declared after the `hasChildren` early return below, which
-  // skips the hook call in passthrough mode, violating the Rules of Hooks.
-  const sectionOrderMap = React.useMemo(() => {
-    return new Map(sections.map((section) => [section.id, section.order]));
-  }, [sections]);
-
-
-  // Map sections data to listing rows
-  const rows = sections.map((section) => ({
-    id: section.id,
-    primary: section.type.charAt(0).toUpperCase() + section.type.slice(1).replace(/-/g, " "),
-    secondary: `Order: ${section.order} • ${section.enabled ? "Enabled" : "Disabled"}`,
-    status: section.enabled ? "Active" : "Inactive",
-    updatedAt: new Date(section.updatedAt).toLocaleDateString(),
-  }));
-
-  const hasReorderChanges = reorderDraft.some(
-    (item) => sectionOrderMap.get(item.id) !== item.order,
-  );
-  const canUndoReorderChanges = reorderUndoStack.length > 0;
-
   /**
    * The modal's fields, as three hand-written sections.
    *
@@ -2544,42 +2464,50 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       fields: ["sectionType", "order", "enabled"],
       render: () => (
         <Stack gap="md">
-          <Select
-            label="Mode"
-            value={mode}
-            onValueChange={(value) => setMode(value as "create" | "edit")}
-            options={[
-              { label: "Create new section", value: "create" },
-              { label: "Edit existing section", value: "edit" },
-            ]}
-          />
-          {mode === "edit" ? (
-            <Select
-              label="Section"
-              value={selectedSectionId}
-              onValueChange={setSelectedSectionId}
-              placeholder="Select section"
-              options={sections.map((section) => ({
-                label: `${section.type} (#${section.order})`,
-                value: section.id,
-              }))}
-            />
-          ) : null}
+          {/*
+            * 🛑 There is deliberately NO "Mode" select and NO "Section"
+            * select here any more.
+            *
+            * They were how this editor used to choose its record: open the
+            * modal from a toolbar button, switch Mode from Create to Edit,
+            * then find the section again in a dropdown by `type (#order)` —
+            * while the row you had just clicked past played no part. Deleting
+            * them IS the fix. The row chose the record; a control to re-choose
+            * it is a second, contradictable source of truth sitting directly
+            * above the fields it would silently repoint.
+            */}
           <Select
             label="Section type"
             value={sectionType}
-            onValueChange={(value) => {
-              setSectionType(value as SectionType);
-              if (mode === "create") {
-                setSelectedSectionId("");
-              }
-            }}
+            onValueChange={(value) => setSectionType(value as SectionType)}
             options={SECTION_TYPE_OPTIONS.map((type) => ({
               label: type,
               value: type,
             }))}
-            disabled={mode === "edit"}
+            disabled={!isCreate}
+            helperText={
+              isCreate
+                ? undefined
+                : "A section's type is fixed — its config has a different shape per type."
+            }
           />
+          {/*
+            * A WARNING, never a block.
+            *
+            * `createHomepageSectionId` suffixes a timestamp, so creating a
+            * second section of a type succeeds and the surface renders BOTH.
+            * Sometimes that is what the admin wants — two `custom-cards`
+            * strips in different places is a real layout. A second
+            * `newsletter` is not. The schema expresses no uniqueness rule, so
+            * enforcing one here would be policy with nothing behind it; the
+            * honest move is to say what will happen and let them decide.
+            */}
+          {isCreate && duplicateOfType && (
+            <Text size="xs" color="warning">
+              A {sectionType} section already exists on this surface (#{duplicateOfType.order}).
+              Every enabled section is rendered, so a second one shows this type twice.
+            </Text>
+          )}
           {/*
             * D1 — START FROM A TEMPLATE.
             *
@@ -2593,7 +2521,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             * result — a template is `create-with-preset`, not a second
             * rendering path.
             */}
-          {mode === "create" && templatesForType(sectionType).length > 0 && (
+          {isCreate && templatesForType(sectionType).length > 0 && (
             <>
               <Select
                 label="Start from a template"
@@ -2628,12 +2556,23 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               })()}
             </>
           )}
+          {/*
+            * The placeholder differs by mode because the empty value MEANS
+            * something different in each. On create it is "auto-place after
+            * the last section"; on edit it is "leave the order as it is" —
+            * the create wording read as an instruction to re-auto-place.
+            */}
           <Input
             label="Order"
             type="number"
             value={order}
             onChange={(event) => setOrder(event.target.value)}
-            placeholder="Leave empty to auto-place"
+            placeholder={isCreate ? "Leave empty to auto-place" : "Leave empty to keep the current order"}
+            helperText={
+              isCreate
+                ? undefined
+                : "Reorder sections in the toolbar is the easier way to move several at once."
+            }
           />
           <Select
             label="Enabled"
@@ -2661,20 +2600,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Textarea
           label={isTypedBuilder ? "Generated config (JSON preview)" : "Section config (JSON)"}
           value={configJson}
-          onChange={(event) => setConfigJson(event.target.value)}
+          onChange={(event) => setRawConfigJson(event.target.value)}
           rows={10}
           readOnly={isTypedBuilder}
           helperText={
             isTypedBuilder
-              ? "This JSON is generated from typed controls above."
+              ? "Generated from the typed controls above. It shows only the keys those controls know about — any other key already stored on this section is preserved on save and simply isn't shown here."
               : "Provide section config JSON for this section type."
           }
         />
       ),
     },
+  /*
+   * `selectedTemplateId` and `applyBuilderFor` are read by the template
+   * picker and were both missing from this list. The notes panel under the
+   * picker refreshed anyway — but only by ACCIDENT, because picking a
+   * template also mutates builder state, which changes `configJson`, which
+   * is in the list. Naming them makes the panel's correctness depend on the
+   * thing it actually reads.
+   */
   ], [
-    mode, selectedSectionId, sections, sectionType, order, enabled,
-    isTypedBuilder, configJson, renderTypedBuilder,
+    isCreate, sectionType, order, enabled, duplicateOfType, selectedTemplateId,
+    applyBuilderFor, isTypedBuilder, configJson, renderTypedBuilder,
   ]);
 
   /** What the nav and the error summary key on. */
@@ -2689,23 +2636,508 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     fieldToSectionIndex: nav.fieldToSectionIndex,
   });
 
+
+  /*
+   * A deep link (`?panel=edit&id=…`) can name a section that no longer
+   * exists — the delete confirm may have been accepted in another tab while
+   * this URL sat in history. Say so, rather than rendering a form bound to
+   * nothing and letting Save create a section the admin meant to edit.
+   */
+  if (sectionId && !section && !isSectionsLoading) {
+    return (
+      <Stack gap="md" padding="md">
+        <Text size="sm" color="muted">
+          This section no longer exists — it may have been deleted.
+        </Text>
+        <Row>
+          <Button type="button" variant="outline" size="sm" onClick={onDone}>
+            Close
+          </Button>
+        </Row>
+      </Stack>
+    );
+  }
+
+  return (
+    <FormShellContext.Provider value={form.shellCtx}>
+      <FormErrorSummary />
+      <SectionForm<SectionModalDraft>
+        sections={modalSections}
+        values={draft}
+        /*
+         * Each control writes through its own setter — `setSectionType`,
+         * `setOrder`, `setEnabled` — and several do more than store a value.
+         * So this routes nothing generically.
+         */
+        onChange={() => undefined}
+        onSubmit={() => {
+          form.clearErrors();
+          const parsed = homepageSectionFormSchema.safeParse(draft);
+          if (!parsed.success) {
+            applyZodIssues(parsed.error.issues, form.setFieldError);
+            return;
+          }
+          saveSection.mutate();
+        }}
+        onValidationChange={() => form.validate(draft)}
+        schema={homepageSectionFormSchema}
+        openIds={nav.openIds}
+        onOpenChange={nav.setOpenIds}
+        submitLabel={
+          saveSection.isPending
+            ? "Saving..."
+            : isCreate
+              ? "Create section"
+              : "Update section"
+        }
+        cancelLabel="Cancel"
+        onCancel={onDone}
+        isLoading={saveSection.isPending}
+      />
+    </FormShellContext.Provider>
+  );
+}
+
+// ─── Listing ─────────────────────────────────────────────────────────────────
+
+interface AdminSectionsResponse {
+  items?: JsonArray;
+  total?: number;
+}
+
+interface SectionRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  /** Read by the Status column and the toggle, so badge and switch share a source. */
+  enabled: boolean;
+  order: number;
+}
+
+/*
+ * 🛑 Not registered in `filter-tabs.ts`. `audit-filter-tab-enums` cross-checks
+ * chip ids against a backing STRING enum, and `enabled` is a boolean — the
+ * same out-of-scope category as ADMIN_CART_OWNERSHIP_TABS.
+ */
+const SECTION_ENABLED_TABS = [
+  ALL_TAB,
+  { id: "true", label: "Enabled" },
+  { id: "false", label: "Disabled" },
+] as const;
+
+/** Reorder renumbers 1..N GLOBALLY — see the full-set query in the component. */
+function normalizeOrder(items: Array<{ id: string; type: string; order: number }>) {
+  return items.map((item, index) => ({ ...item, order: index + 1 }));
+}
+
+function cloneReorderItems(items: ReorderItem[]): ReorderItem[] {
+  return items.map((item) => ({ ...item }));
+}
+
+function isSameReorder(a: ReorderItem[], b: ReorderItem[]): boolean {
+  if (a.length !== b.length) return false;
+  return a.every((item, index) => {
+    const other = b[index];
+    return Boolean(other) && item.id === other.id && item.order === other.order;
+  });
+}
+
+/**
+ * The homepage/surface sections listing.
+ *
+ * Was a bare `<DataTable rows>` with no `columns`, no `renderRowActions`, no
+ * `onRowClick` and no `rowHrefTemplate` — so `isInteractive` was false and
+ * every row was inert, including the blank avatar circles that come from
+ * `buildDefaultColumns(undefined)`. The only way to edit a section was a
+ * toolbar button, a "Mode" dropdown, and a second dropdown to re-find the row
+ * you had just clicked past.
+ */
+export function AdminSectionsView({ children }: AdminSectionsViewProps) {
+  const hasChildren = React.Children.count(children) > 0;
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const [reorderOpen, setReorderOpen] = React.useState(false);
+  const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
+  const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
+  const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
+  const [dragIndex, setDragIndex] = React.useState<number | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = React.useState<string | null>(null);
+
+  /*
+   * 🛑 `config` is deliberately omitted from the PATCH:
+   * `HomepageSectionsRepository.update` short-circuits its merge READ when
+   * `data.config` is absent, so an enable/disable costs one write and no read.
+   *
+   * The optimistic/rollback logic lives in the shared hook — see its header
+   * for why a rollback must DELETE the override key rather than write back a
+   * captured value, and why the key is cleared on success too.
+   */
+  const enabledFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${id}`, { enabled: next }),
+    // The public homepage reads under a key of its own; both must be busted.
+    invalidate: [["admin", "sections", "listing"], ["homepage-sections"]],
+    successMessage: (next) => (next ? "Section enabled." : "Section disabled."),
+    errorMessage: "Failed to update section.",
+  });
+
+  /*
+   * The reorder panel needs EVERY section, not the current page.
+   * `normalizeOrder` assigns `index + 1` globally, so feeding it the
+   * DataListingView rows — which are paginated, filtered and sortable — would
+   * renumber a partial set 1..N and PATCH wrong orders onto real rows.
+   */
+  const { sections, total, isLoading } = useAdminSectionsListing({ page: 1, pageSize: 50 });
+  const isReorderTruncated = total > sections.length;
+
+  const sectionOrderMap = React.useMemo(
+    () => new Map(sections.map((section) => [section.id, section.order])),
+    [sections],
+  );
+
+  React.useEffect(() => {
+    const sorted = [...sections]
+      .sort((a, b) => a.order - b.order)
+      .map((section) => ({ id: section.id, type: section.type, order: section.order }));
+    setReorderDraft(normalizeOrder(sorted));
+    /*
+     * 🛑 The RAW server orders, not the normalized ones.
+     *
+     * Orders can legitimately have a gap — a delete leaves one — and
+     * snapshotting the normalized list claims the server holds 1..N when it
+     * does not. "Reset to server" would then reset to an order the server
+     * never had, and `hasReorderChanges` (which compares against the real
+     * `sectionOrderMap`) could not agree with it. Unreachable while every row
+     * was 1..N; reachable the moment delete shipped.
+     */
+    setReorderServerSnapshot(sorted);
+    setReorderUndoStack([]);
+  }, [sections]);
+
+  const invalidateSections = React.useCallback(async () => {
+    try {
+      await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
+      // Public-facing useHomepageSections() reads under a separate key.
+      await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
+    } catch (err) {
+      /*
+       * A refetch that fails after a SUCCESSFUL write is not a failed write,
+       * so this must not raise — doing so would report "Failed to delete
+       * section" for a section that is gone. The list is stale rather than
+       * wrong, and says so.
+       */
+      const normalized = normalizeError(err);
+      toast.showToast(
+        toUserMessage(normalized.code, undefined, { fallback: "Saved, but the list could not refresh. Reload to see it." }),
+        "warning",
+      );
+    }
+  }, [queryClient, toast]);
+
+  const deleteSection = useApiMutation({
+    errorMessage: "Failed to delete section.",
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`${ADMIN_ENDPOINTS.SECTIONS}/${id}`);
+    },
+    onSuccess: async () => {
+      await invalidateSections();
+      toast.showToast("Section deleted.", "success");
+    },
+  });
+
+  const reorderSections = useApiMutation({
+    errorMessage: "Failed to reorder sections.",
+    mutationFn: async () => {
+      await Promise.all(
+        reorderDraft.map((item) =>
+          apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${item.id}`, { order: item.order }),
+        ),
+      );
+    },
+    onSuccess: async () => {
+      await invalidateSections();
+      setReorderServerSnapshot(cloneReorderItems(reorderDraft));
+      setReorderUndoStack([]);
+      toast.showToast("Section order updated.", "success");
+    },
+  });
+
+  const pushUndoSnapshot = React.useCallback((snapshot: ReorderItem[]) => {
+    setReorderUndoStack((history) => [cloneReorderItems(snapshot), ...history].slice(0, 30));
+  }, []);
+
+  const applyReorderChange = React.useCallback(
+    (transform: (previous: ReorderItem[]) => ReorderItem[]) => {
+      setReorderDraft((prev) => {
+        const next = transform(prev);
+        if (isSameReorder(prev, next)) return prev;
+        pushUndoSnapshot(prev);
+        return next;
+      });
+    },
+    [pushUndoSnapshot],
+  );
+
+  function moveReorderItem(index: number, direction: -1 | 1) {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= reorderDraft.length) return;
+    applyReorderChange((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(index, 1);
+      next.splice(targetIndex, 0, item);
+      return normalizeOrder(next);
+    });
+  }
+
+  function updateReorderItemOrder(index: number, nextOrder: number) {
+    applyReorderChange((prev) => {
+      const clamped = Math.min(Math.max(1, nextOrder), prev.length);
+      const sorted = [...prev];
+      const [item] = sorted.splice(index, 1);
+      sorted.splice(clamped - 1, 0, item);
+      return normalizeOrder(sorted);
+    });
+  }
+
+  function moveItemToIndex(fromIndex: number, toIndex: number) {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    applyReorderChange((prev) => {
+      if (fromIndex >= prev.length || toIndex >= prev.length) return prev;
+      const next = [...prev];
+      const [item] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, item);
+      return normalizeOrder(next);
+    });
+  }
+
+  function handleReorderDrop(targetIndex: number) {
+    if (dragIndex !== null) moveItemToIndex(dragIndex, targetIndex);
+    setDragIndex(null);
+  }
+
+  function reindexDraft() {
+    applyReorderChange((prev) => normalizeOrder(prev));
+  }
+
+  function resetToServerOrder() {
+    applyReorderChange(() => cloneReorderItems(reorderServerSnapshot));
+  }
+
+  function undoReorderChange() {
+    if (reorderUndoStack.length === 0) return;
+    const [latest, ...rest] = reorderUndoStack;
+    setReorderUndoStack(rest);
+    setReorderDraft(cloneReorderItems(latest));
+  }
+
+  const hasReorderChanges = reorderDraft.some(
+    (item) => sectionOrderMap.get(item.id) !== item.order,
+  );
+  const canUndoReorderChanges = reorderUndoStack.length > 0;
+
+  const config: ListingViewConfig<AdminSectionsResponse, SectionRow> = {
+    portal: "admin",
+    title: "Homepage Sections",
+    subtitle: "The blocks that make up the homepage, in order.",
+    // Search intentionally absent: this endpoint does not read `q`, and the
+    // repository's sieveQuery has no text-search concept at all, so the box
+    // would accept typing and change nothing — audit-listing-search-capability
+    // tracks it.
+    emptyLabel: "No sections yet",
+    queryKey: ["admin", "sections", "listing"],
+    endpoint: ADMIN_ENDPOINTS.SECTIONS,
+    pageSize: 50,
+    initialView: "table",
+    filterKeys: ["enabled"],
+    defaultSort: sortBy("order", "ASC"),
+    /*
+     * 🛑 TWO options, and the omissions are measured rather than lazy.
+     *
+     * The ONLY composite index on `homepageSections` is (enabled ASC, order
+     * ASC). `canFilter`/`canSort` in SIEVE_FIELDS govern whether sievejs
+     * BUILDS a clause; the index governs whether Firestore SERVES it:
+     *
+     *   • "Type A–Z" — `type` is canSort:false and sieve runs with
+     *     throwExceptions:false, so the clause is dropped SILENTLY. The
+     *     dropdown would change and the list would not (Root Cause #62).
+     *   • "-updatedAt" / "-createdAt" — these ARE canSort:true, so they look
+     *     safe. They work alone and FAILED_PRECONDITION the moment the
+     *     Enabled filter is also active, because no (enabled, updatedAt)
+     *     index exists. A sort that breaks only in combination is worse than
+     *     one that is absent. Add the index first if either is wanted.
+     */
+    sortOptions: [
+      { value: sortBy("order", "ASC"), label: "Display order" },
+      { value: sortBy("order"), label: "Display order (last first)" },
+    ],
+    mapRows: (response) =>
+      toRecordArray(response.items).map((item, index) => {
+        const id = toStringValue(item.id, `section-${index}`);
+        const type = toStringValue(item.type, "unknown");
+        const surface = toStringValue(item.surface, "homepage");
+        const enabled = enabledFlag.resolve(id, Boolean(item.enabled));
+        return {
+          id,
+          primary: type.charAt(0).toUpperCase() + type.slice(1).replace(/-/g, " "),
+          /*
+           * The ID, not "Order: N • Enabled" — both of those are their own
+           * columns now, and the id is the only thing that distinguishes two
+           * sections of the SAME type, a state the id generator's timestamp
+           * suffix makes reachable. `surface` shows only when it is not the
+           * default, so a homepage row carries no redundant word.
+           */
+          secondary: surface === "homepage" ? id : `${id} · ${surface}`,
+          status: enabled ? "Active" : "Inactive",
+          // Not `new Date(...).toLocaleDateString()`: that yields "Invalid
+          // Date" on a Firestore {toDate()} shape.
+          updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+          enabled,
+          order: typeof item.order === "number" ? item.order : 0,
+        };
+      }),
+    getTotal: (response, mappedRows) =>
+      typeof response.total === "number" ? response.total : mappedRows.length,
+    /*
+     * The explicit "true"/"false" test is load-bearing. Anything else yields
+     * NO clause, so a hand-typed `?enabled=banana` shows every row — rather
+     * than a clause that matches nothing and renders as a confident empty
+     * list, which is the shape that reads as an answer.
+     */
+    buildFilters: (state) =>
+      state.enabled === "true" || state.enabled === "false"
+        ? sieveFilter("enabled", SIEVE_OP.EQ, state.enabled === "true")
+        : undefined,
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Status"
+        tabs={SECTION_ENABLED_TABS}
+        value={pendingFilters.enabled ?? ""}
+        onChange={(id) => setPendingFilters((prev) => ({ ...prev, enabled: id }))}
+      />
+    ),
+    columns: [
+      {
+        key: "primary",
+        header: "Section",
+        render: (row) => (
+          <Stack gap="none" className="min-w-0">
+            <Text weight="medium" color="primary" className="truncate">{row.primary}</Text>
+            <Text size="xs" color="muted" family="mono" className="truncate">{row.secondary}</Text>
+          </Stack>
+        ),
+      },
+      {
+        key: "order",
+        header: "Order",
+        className: "w-20",
+        render: (row) => <Span size="sm" color="muted" numeric>{String(row.order)}</Span>,
+      },
+      {
+        key: "status",
+        header: "Status",
+        className: "w-28",
+        render: (row) => (
+          <Badge variant={row.enabled ? "active" : "inactive"} size="xs">
+            {row.enabled ? "Enabled" : "Disabled"}
+          </Badge>
+        ),
+      },
+      {
+        key: "updatedAt",
+        header: "Updated",
+        className: "w-32",
+        render: (row) => <Span size="sm" color="muted">{row.updatedAt}</Span>,
+      },
+    ],
+    /*
+     * 🛑 The toggle lives HERE and not in a column, on purpose.
+     *
+     * `initialView` only applies to an admin with no saved view preference,
+     * and DataListingView suppresses the table entirely below `md` — so a
+     * column-only control is invisible to anyone on a phone and to anyone
+     * whose stored preference is the card view. `renderRowActions` renders
+     * inside an already-click-stopped container in all three renderers (table
+     * cell, list card, grid card), so unlike a normal column cell it needs no
+     * stopPropagation wrapper of its own.
+     *
+     * `ariaLabel` carries the record name because a page of 28 switches that
+     * all announce "Toggle" names nothing.
+     */
+    renderRowActions: (row) => (
+      <>
+        <Toggle
+          size="sm"
+          checked={row.enabled}
+          ariaLabel={
+            row.enabled
+              ? `${ACTIONS.ADMIN["disable-section"].label} ${row.primary}`
+              : `${ACTIONS.ADMIN["enable-section"].label} ${row.primary}`
+          }
+          onChange={(next) => {
+            void enabledFlag.set(row.id, next);
+          }}
+        />
+        <QuickEditMenu
+          actions={[
+            {
+              label: ACTIONS.ADMIN["delete-section"].label,
+              destructive: true,
+              onClick: () => setDeleteTargetId(row.id),
+            },
+          ]}
+        />
+      </>
+    ),
+    primaryAction: {
+      label: "Add Section",
+      onClick: ({ openCreatePanel }) => openCreatePanel(),
+    },
+    toolbarExtra: (
+      <Button type="button" variant="outline" size="sm" onClick={() => setReorderOpen(true)}>
+        Reorder sections
+      </Button>
+    ),
+    /*
+     * 🛑 `key` is REQUIRED — see the comment on SectionEditorPanel. Without it,
+     * clicking row B's pencil while row A's drawer is open edits B's record
+     * with A's values.
+     *
+     * No `onRowClick`: declaring one would OVERRIDE DataListingView's default,
+     * which already opens this editor. `renderEditor` alone is what makes the
+     * rows clickable and injects the per-row pencil.
+     */
+    renderEditor: ({ editId, closePanel }) => (
+      <SectionEditorPanel
+        key={editId ?? "create"}
+        sectionId={editId ?? undefined}
+        /*
+         * From the parent's own full-set query, NOT from the mapped listing
+         * rows: a `?panel=edit&id=…` deep link to a row that is filtered out
+         * or on another page must still resolve, and the row shape has
+         * already dropped `config`.
+         */
+        section={editId ? sections.find((s) => s.id === editId) : undefined}
+        siblingSections={sections}
+        isSectionsLoading={isLoading}
+        onDone={closePanel}
+      />
+    ),
+    resolveEditorTitle: ({ isCreate }) =>
+      isCreate ? "Add Homepage Section" : "Edit Homepage Section",
+  };
+
   /*
    * Passthrough mode (detail view).
    *
-   * 🛑 The short-circuit sits HERE, after every hook, rather than ~170 lines
-   * up where it used to. Four hooks had accumulated below it — `modalSections`,
-   * `draft`, `nav`, `form` — so passing children skipped all four and the hook
-   * ORDER changed between the two render paths, which is how React ends up
-   * reading one hook's state out of another's slot. The comment on
-   * `sectionOrderMap` above is the record of this same bug being fixed once
-   * already, one hook at a time.
-   *
-   * Moving the RETURN rather than the hooks is deliberate and costs nothing:
-   * a hook must run on every render either way, so hoisting four declarations
-   * past 170 lines of dependent state would do identical work with far more
-   * room to reorder something by accident. `useFormShellState` claims no
-   * bottom bar — `useFormBottomActions` lives in `SectionForm` — so running it
-   * here has no side effect on the detail view below.
+   * 🛑 Still below every hook. The list it guards shrank a lot when the editor
+   * moved into its own component — `modalSections`, `draft`, `nav` and `form`
+   * all left — but the reason the return sits here is unchanged, and the
+   * remaining hooks are no less order-sensitive: a short-circuit above them
+   * skips their calls in passthrough mode, so the hook ORDER differs between
+   * the two render paths and React reads one hook's state out of another's
+   * slot. That bug has now been fixed here twice.
    */
   if (hasChildren) {
     return <>{children}</>;
@@ -2713,32 +3145,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   return (
     <>
-      <Div paddingX="x-sm-md" padding="y-md">
-        <Row className="mb-4" align="center" justify="between" gap="3">
-          <Div>
-            <Text size="base" weight="semibold" color="primary">Homepage Sections</Text>
-            <Text size="sm" color="muted">Manage homepage sections and their display order</Text>
-          </Div>
-          <Row align="center" gap="sm">
-            <Button type="button" variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
-              Manage Sections
-            </Button>
-          </Row>
-        </Row>
-        {errorMessage && (
-          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
-            {errorMessage}
-          </Div>
-        )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
-      </Div>
+      <DataListingView<AdminSectionsResponse, SectionRow> config={config} />
 
-      <Stack className={`mt-4 ${__P.p4}`} gap="3" rounded="xl" surface="default" border="default">
-        <Row align="center" justify="between" gap="3">
-          <Text size="sm" weight="semibold" color="primary">
-            Reorder Sections
-          </Text>
-          <Row align="center" gap="sm">
+      {/*
+        The reorder panel is a drawer rather than a `renderAboveContent` slot.
+        That slot renders between the toolbar and the table, always — and this
+        panel shows the FULL set in global order while the table beneath it is
+        paginated, filtered and possibly sorted last-first. Two adjacent lists
+        of the same records in different sequences, one of them the
+        authoritative control for the other's Order column, is an ambiguity
+        that does not exist today and that the slot would create.
+
+        🛑 The drawer is a SIBLING of DataListingView, not part of
+        `toolbarExtra`: ListingToolbar wraps its extra slot in StickyToolbar,
+        whose backdrop-blur establishes a containing block for position:fixed,
+        which would trap the drawer under the toolbar's z-index.
+      */}
+      <SideDrawer
+        isOpen={reorderOpen}
+        onClose={() => setReorderOpen(false)}
+        title="Reorder sections"
+        footer={
+          <Row align="center" justify="end" gap="sm" wrap>
             <Button
               type="button"
               variant="outline"
@@ -2771,18 +3199,30 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               variant="primary"
               size="sm"
               onClick={() => reorderSections.mutate()}
-              disabled={!hasReorderChanges || reorderSections.isPending}
+              disabled={!hasReorderChanges || reorderSections.isPending || isReorderTruncated}
             >
               {reorderSections.isPending ? "Saving order..." : "Save order"}
             </Button>
           </Row>
-        </Row>
-
-        {reorderDraft.length === 0 ? (
-          <Text size="sm" color="muted">No sections to reorder.</Text>
-        ) : (
-          <Stack gap="sm">
-            {reorderDraft.map((item, index) => (
+        }
+      >
+        <Stack gap="sm">
+          {/*
+            Saving a TRUNCATED set would renumber it 1..N and PATCH those
+            orders onto real rows — the panel reads one page while the orders
+            it writes are global. Unreachable at 28 section types; reachable
+            via duplicates, which the id generator permits.
+          */}
+          {isReorderTruncated && (
+            <Div textSize="sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
+              Showing {sections.length} of {total} sections. Saving a partial set would renumber
+              the rest, so Save order is disabled.
+            </Div>
+          )}
+          {reorderDraft.length === 0 ? (
+            <Text size="sm" color="muted">No sections to reorder.</Text>
+          ) : (
+            reorderDraft.map((item, index) => (
               <Div layout="grid" gap="2" align="center"
                 key={`reorder-${item.id}`}
                 className="grid-cols-[auto_1fr_auto_auto_auto]" rounded="md" padding="xs" border="default"
@@ -2801,6 +3241,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                   min={1}
                   max={reorderDraft.length}
                   value={String(item.order)}
+                  aria-label={`Order for ${item.type}`}
                   onChange={(event) =>
                     updateReorderItemOrder(index, Number(event.target.value) || 1)
                   }
@@ -2825,55 +3266,32 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                   Down
                 </Button>
               </Div>
-            ))}
-          </Stack>
-        )}
-      </Stack>
+            ))
+          )}
+        </Stack>
+      </SideDrawer>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Manage Homepage Section" size="lg">
-        {/*
-          The route already validates order/enabled/config; this form did not,
-          so a bad order or malformed config came back as a 400 banner instead
-          of an error on the field that caused it.
-        */}
-        <FormShellContext.Provider value={form.shellCtx}>
-          <FormErrorSummary />
-          <SectionForm<SectionModalDraft>
-            sections={modalSections}
-            values={draft}
-            /*
-             * Each control writes through its own setter — `setMode`,
-             * `setSectionType`, `setOrder` — and several of them do more than
-             * store a value (choosing a type in create mode also clears the
-             * selected section). So this routes nothing generically.
-             */
-            onChange={() => undefined}
-            onSubmit={() => {
-              form.clearErrors();
-              const parsed = homepageSectionFormSchema.safeParse(draft);
-              if (!parsed.success) {
-                applyZodIssues(parsed.error.issues, form.setFieldError);
-                return;
-              }
-              saveSection.mutate();
-            }}
-            onValidationChange={() => form.validate(draft)}
-            schema={homepageSectionFormSchema}
-            openIds={nav.openIds}
-            onOpenChange={nav.setOpenIds}
-            submitLabel={
-              saveSection.isPending
-                ? "Saving..."
-                : mode === "create"
-                  ? "Create section"
-                  : "Update section"
-            }
-            cancelLabel="Cancel"
-            onCancel={() => setIsModalOpen(false)}
-            isLoading={saveSection.isPending}
-          />
-        </FormShellContext.Provider>
-      </Modal>
+      {/*
+        Rule #7: every confirmation string comes from the ActionDef, not from
+        this view. QuickEditMenu calls `onClick` directly and has no
+        confirmation path of its own, so the dialog is rendered here and fed
+        from the registry rather than hard-coded the way AdminCarouselView
+        does it.
+      */}
+      {deleteTargetId && (
+        <ConfirmDeleteModal
+          isOpen
+          title={ACTIONS.ADMIN["delete-section"].confirmation?.title}
+          message={ACTIONS.ADMIN["delete-section"].confirmation?.body}
+          confirmText={ACTIONS.ADMIN["delete-section"].confirmation?.confirmLabel}
+          isDeleting={deleteSection.isPending}
+          onConfirm={() => {
+            deleteSection.mutate(deleteTargetId);
+            setDeleteTargetId(null);
+          }}
+          onClose={() => setDeleteTargetId(null)}
+        />
+      )}
     </>
   );
 }

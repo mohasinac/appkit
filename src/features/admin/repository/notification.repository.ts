@@ -121,6 +121,41 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
   }
 
   /**
+   * Mark a single notification UNREAD again.
+   *
+   * 🛑 `readAt` is cleared, not left behind. It is the timestamp of a read
+   * that the caller is now saying did not happen, and a row that is
+   * `isRead: false` with a `readAt` set is a contradiction the next reader has
+   * to resolve — the digest and the unread badge key on `isRead`, so they
+   * would disagree with anything that looked at `readAt`.
+   *
+   * There was no way to do this at all: the buyer's notifications page offered
+   * only Mark-read, and the PATCH route hard-coded `markAsRead(id)` without
+   * reading a body — so a notification clicked by accident was gone from the
+   * unread list for good.
+   */
+  async markAsUnread(id: string): Promise<NotificationDocument | null> {
+    try {
+      const now = new Date();
+      await this.getCollection()
+        .doc(id)
+        .update(
+          prepareForFirestore({
+            [NOTIFICATION_FIELDS.IS_READ]: false,
+            [NOTIFICATION_FIELDS.READ_AT]: null,
+            [NOTIFICATION_FIELDS.UPDATED_AT]: now,
+          }),
+        );
+
+      return this.findById(id);
+    } catch (error) {
+      void normalizeError(error);
+      serverLogger.error("Failed to mark notification unread", { id, error });
+      throw error;
+    }
+  }
+
+  /**
    * Mark a single notification as read.
    */
   async markAsRead(id: string): Promise<NotificationDocument | null> {

@@ -1568,6 +1568,40 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    /*
+     * 🛑 The confirmation names the consequence rather than the mechanism.
+     * "Revoke session" means nothing to a buyer; "that device is signed out"
+     * is the fact they need to weigh, and the warning about their own device
+     * is the one mistake this control makes easy to make.
+     */
+    "revoke-session": {
+      iconKey: "lock",
+      id: "user.revoke-session",
+      label: "Sign out device",
+      ariaLabel: "Sign out this device",
+      description: "End an active session so that device has to sign in again.",
+      kind: "danger",
+      confirmation: {
+        title: "Sign out this device?",
+        body: "Whoever is using it will be signed out and will need your password to get back in. If this is the device you are on right now, you will be signed out too.",
+        confirmLabel: "Sign out device",
+        confirmKind: "danger",
+      },
+    },
+    "delete-payment-method": {
+      iconKey: "delete",
+      id: "user.delete-payment-method",
+      label: "Remove card",
+      ariaLabel: "Remove this saved payment method",
+      description: "Remove a saved payment method from the account.",
+      kind: "danger",
+      confirmation: {
+        title: "Remove this payment method?",
+        body: "It will no longer appear at checkout. Any order already placed with it is unaffected.",
+        confirmLabel: "Remove",
+        confirmKind: "danger",
+      },
+    },
     "set-default-address": {
       iconKey: "confirm",
       id: "user.set-default-address",
@@ -2541,17 +2575,44 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
       permissions: ["admin"],
     },
+    "activate-carousel": {
+      iconKey: "resume",
+      id: "admin.activate-carousel",
+      label: "Activate",
+      ariaLabel: "Show this slide in the carousel",
+      description: "Set a carousel slide to active so the hero carousel renders it.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "deactivate-carousel": {
+      iconKey: "hide",
+      id: "admin.deactivate-carousel",
+      label: "Deactivate",
+      ariaLabel: "Hide this slide from the carousel",
+      description: "Set a carousel slide to inactive without deleting it.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
     /*
-     * Homepage sections have no bucket of their own, so their edit leaf lives
-     * here beside the carousel pair for the same reason — both are homepage
-     * chrome an admin edits from a list rather than from a detail page.
+     * Homepage sections have no bucket of their own, so their leaves live here
+     * beside the carousel ones for the same reason — both are homepage chrome
+     * an admin edits from a list rather than from a detail page.
      *
-     * 🛑 There is deliberately NO `delete-section` counterpart. Section `order`
-     * is POSITIONAL, so removing one silently renumbers its neighbours — not
-     * something to offer from the public homepage, where the only confirmation
-     * a person gets is a dialog. `OwnerQuickActions` enforces the absence by
-     * omitting `remove` from the SECTION mapping, so no call site can pass a
-     * delete handler and have it render.
+     * 🛑 `delete-section` exists but is NOT reachable from the public homepage.
+     * Section `order` is POSITIONAL, so removing one leaves a gap in its
+     * neighbours' numbering — not something to offer from a public page, where
+     * the only confirmation a person gets is a dialog.
+     *
+     * That prohibition is enforced INDEPENDENTLY of this registry, which is
+     * why the leaf can exist: `RESOURCE_LEAVES.SECTION` in `OwnerQuickActions`
+     * omits `remove`, and `showDelete` gates on `leaves.remove` rather than on
+     * what a call site passes — so the pencil strip renders no bin regardless.
+     * This comment read "there is deliberately NO delete-section counterpart"
+     * until 2026-10-22, when the admin sections listing gained a real one.
+     *
+     * The listing is the right home for it: it owns these records, it shows
+     * the `order` column the gap appears in, and its Reorder panel has a
+     * Reindex 1..N button beside it to close one.
      */
     "edit-section": {
       iconKey: "edit",
@@ -2560,6 +2621,64 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this homepage section",
       description: "Open the homepage sections list, which owns this section's config.",
       kind: "ghost",
+      permissions: ["admin"],
+    },
+    "enable-section": {
+      iconKey: "resume",
+      id: "admin.enable-section",
+      label: "Enable",
+      ariaLabel: "Enable this homepage section",
+      description: "Render this section on its surface again.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "disable-section": {
+      iconKey: "hide",
+      id: "admin.disable-section",
+      label: "Disable",
+      ariaLabel: "Disable this homepage section",
+      description:
+        "Stop rendering this section without deleting it or its saved config.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    "delete-section": {
+      iconKey: "delete",
+      id: "admin.delete-section",
+      label: "Delete Section",
+      ariaLabel: "Delete this homepage section",
+      description: "Permanently remove this homepage section and its saved config.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this section?",
+        /*
+         * The last sentence is load-bearing: it names the reversible
+         * alternative at the moment of the irreversible choice, and that
+         * alternative is one click away in the same row.
+         */
+        body:
+          "The section and its saved config are removed permanently. Display order is positional, so the sections after it keep their current numbers and a gap is left — Reorder sections → Reindex 1..N closes it. To hide the section from the homepage while keeping its config, disable it instead.",
+        confirmLabel: "Delete section",
+        confirmKind: "danger",
+      },
+    },
+    "show-nav-item": {
+      iconKey: "view",
+      id: "admin.show-nav-item",
+      label: "Show",
+      ariaLabel: "Show this navigation item",
+      description: "Make a navigation item visible in the sidebar and menus.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "hide-nav-item": {
+      iconKey: "hide",
+      id: "admin.hide-nav-item",
+      label: "Hide",
+      ariaLabel: "Hide this navigation item",
+      description: "Hide a navigation item without deleting it.",
+      kind: "secondary",
       permissions: ["admin"],
     },
     "delete-carousel": {
@@ -3231,6 +3350,29 @@ export const ACTIONS: ActionTree = {
         title: "Discard staged uploads?",
         body: "All uploaded files not yet saved to a record will be deleted from storage.",
         confirmLabel: "Discard",
+        confirmKind: "danger",
+      },
+    },
+    /*
+     * 🛑 Distinct from `clear-previews` and `discard-staged`, which are
+     * SESSION/STAGING operations over files no record points at yet. This one
+     * removes a FINALISED asset, so the confirmation has to say what nothing
+     * else in this bucket has to: the bytes are referenced by whatever already
+     * embedded them, and the proxy resolves `/media/<shortId>` through the
+     * `mediaAssets` row — so deleting is how a live page gets a broken image.
+     */
+    "delete-media": {
+      iconKey: "delete",
+      id: "media.delete-media",
+      label: "Delete file",
+      ariaLabel: "Delete this media file",
+      description: "Permanently delete a media file and the asset row that resolves it.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this file?",
+        body: "The file is removed from storage and stops resolving. Any product, blog post or section still embedding it will show a broken image — this cannot be undone.",
+        confirmLabel: "Delete file",
         confirmKind: "danger",
       },
     },

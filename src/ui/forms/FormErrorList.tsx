@@ -30,6 +30,40 @@ export interface FormErrorListProps {
  * `submitAttempted` — that is the *summary's* decision, not the list's, and
  * the sheet needs to keep rendering while open.
  */
+/*
+ * 🛑 The two sides of this lookup use DIFFERENT key shapes, so an exact match
+ * silently loses every nested error.
+ *
+ * `errors` is keyed by the full dotted Zod path — `applyZodIssues` does
+ * `issue.path.map(String).join(".")`, giving `"address.line1"`. But
+ * `fieldToStepIndex` is built by `buildFieldToSectionIndex` from
+ * `SectionDef.fields`, which lists BARE field names — `"address"`. So
+ * `fieldToStepIndex["address.line1"]` was always `undefined`, the entry fell
+ * through to the plain `<Span>`, and the error that a section demonstrably
+ * owned rendered with no jump link.
+ *
+ * `SectionForm` already solved this for its own badge counts
+ * (`erroringSectionIds`, `errorCountFor`) with a prefix match. This is the same
+ * rule, so the list and the badges can no longer disagree about which section
+ * an error belongs to.
+ *
+ * Exact match is tried first: a field genuinely named `"address.line1"` must
+ * beat a prefix match on `"address"`.
+ */
+function resolveStepIndex(
+  ctx: FormShellContextValue,
+  key: string,
+): number | undefined {
+  const map = ctx.fieldToStepIndex;
+  if (!map) return undefined;
+  const exact = map[key];
+  if (exact != null) return exact;
+  for (const [field, index] of Object.entries(map)) {
+    if (key.startsWith(`${field}.`)) return index;
+  }
+  return undefined;
+}
+
 export function FormErrorList({ ctx: ctxProp, className }: FormErrorListProps) {
   const ambient = useContext(FormShellContext);
   const ctx = ctxProp ?? ambient;
@@ -41,7 +75,7 @@ export function FormErrorList({ ctx: ctxProp, className }: FormErrorListProps) {
   return (
     <ul className={["appkit-formshell__error-summary__list", className].filter(Boolean).join(" ")}>
       {entries.map(([key, message]) => {
-        const stepIndex = ctx.fieldToStepIndex?.[key];
+        const stepIndex = resolveStepIndex(ctx, key);
         const stepLabel = stepIndex != null ? ctx.steps[stepIndex]?.label : undefined;
         return (
           <li key={key}>

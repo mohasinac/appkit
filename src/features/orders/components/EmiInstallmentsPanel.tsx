@@ -5,6 +5,7 @@ import { Badge, Button, Div, Form, Row, Stack, Text, useToast } from "../../../u
 import { FieldInput } from "../../../ui/forms";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { EmiInstallment } from "../schemas/firestore";
+import { toUserMessage } from "../../../errors/error-display-map";
 import { normalizeError } from "../../../errors/normalize";
 
 /**
@@ -73,18 +74,40 @@ export function EmiInstallmentsPanel({
   const ordered = [...installments].sort((a, b) => a.index - b.index);
   const outstanding = ordered.filter((i) => i.status !== "paid").length;
 
-  const submit = async (index: number) => {
+  /*
+   * Takes `setFieldError` from the <Form> render prop rather than closing
+   * over state, because the failure belongs ON the reference field.
+   *
+   * This panel used to be toast-only AND gate submission by disabling the
+   * button on an empty reference — so an incomplete form could not be sent
+   * and said nothing about why, and a rejected reference produced a toast
+   * that was gone before the buyer looked back at the input. Both are money
+   * surfaces on somebody's order.
+   */
+  const submit = async (
+    index: number,
+    fieldName: string,
+    setFieldError: (name: string, error: string | null) => void,
+  ) => {
+    const trimmed = reference.trim();
+    if (trimmed.length === 0) {
+      setFieldError(fieldName, "Enter the UTR or reference number from your transfer.");
+      return;
+    }
     setIsSubmitting(true);
     try {
-      await onSubmit({ installmentIndex: index, transactionId: reference.trim() });
+      await onSubmit({ installmentIndex: index, transactionId: trimmed });
       showToast("Payment reference submitted — the seller will confirm it.", "success");
       setOpenIndex(null);
       setReference("");
     } catch (err) {
-      void normalizeError(err);
-      // The action's own message is surfaced by the caller's error mapping;
-      // this only has to stop the panel pretending the submission landed.
-      showToast("Couldn't submit that payment. Please try again.", "error");
+      const normalized = normalizeError(err);
+      setFieldError(
+        fieldName,
+        toUserMessage(normalized.code, undefined, {
+          fallback: "Couldn't submit that payment reference. Please try again.",
+        }),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -112,6 +135,8 @@ export function EmiInstallmentsPanel({
           {ordered.map((inst) => {
             const state = stateOf(inst);
             const due = inst.dueDate ? new Date(inst.dueDate) : null;
+            // Per-installment, so each open row's error is keyed to its own field.
+            const fieldName = `emi-reference-${orderId}-${inst.index}`;
             return (
               <Div key={inst.index} border="default" rounded="md" padding="sm">
                 <Row align="center" justify="between" gap="sm" className="min-w-0">
@@ -143,28 +168,38 @@ export function EmiInstallmentsPanel({
                   </Row>
                 </Row>
 
+                {/*
+                  `fieldName` is computed HERE rather than inside the render
+                  prop: a `const` in there put the JSX one brace deeper and
+                  tripped audit-code-quality's nesting threshold.
+                */}
                 {openIndex === inst.index && (
                   <Div className="mt-3">
                     <Form onSubmit={(e: React.FormEvent) => e.preventDefault()}>
-                      {() => (
+                      {({ setFieldError, clearErrors }) => (
                         <Stack gap="sm">
                           <Text size="xs" color="muted">
                             Transfer {money(inst.amount)} to the seller, then enter the
                             UTR or reference number so they can confirm it.
                           </Text>
                           <FieldInput
-                            name={`emi-reference-${orderId}-${inst.index}`}
+                            name={fieldName}
                             label="UTR / reference number"
                             required
                             value={reference}
-                            onChange={setReference}
+                            onChange={(v) => { clearErrors(); setReference(v); }}
                           />
+                          {/*
+                            Enabled on an empty reference on purpose: pressing
+                            it now explains what is missing, where a disabled
+                            button explained nothing.
+                          */}
                           <Button
                             type="submit"
                             size="sm"
                             isLoading={isSubmitting}
-                            disabled={reference.trim().length === 0 || isSubmitting}
-                            onClick={() => { void submit(inst.index); }}
+                            disabled={isSubmitting}
+                            onClick={() => { void submit(inst.index, fieldName, setFieldError); }}
                           >
                             Submit payment reference
                           </Button>

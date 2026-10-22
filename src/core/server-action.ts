@@ -1,6 +1,6 @@
 import { normalizeError } from "../errors/normalize";
 import { toApiIssues } from "../errors/error-envelope";
-import { HTTP_ERROR_CODES } from "../errors/error-mapping";
+import { HTTP_ERROR_CODES, mapToHttpError } from "../errors/error-mapping";
 /**
  * createServerAction — @mohasinac/appkit/core
  *
@@ -184,12 +184,27 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       result = { ok: true, data };
     } catch (err) {
       void normalizeError(err);
-      const message =
-        err instanceof Error ? err.message : "An unexpected error occurred";
+      /*
+       * 🛑 This never got the Rule #9 fix its sibling `wrapAction` did.
+       *
+       * It took `err.message` verbatim — unscrubbed for 5xx, so a thrown
+       * Node/bundler error's internals reached the client — and emitted NO
+       * `code`, so `toUserMessage(result.code)` downstream could only ever
+       * resolve to the generic sentence.
+       *
+       * It has no in-repo callers, but it is exported from the public barrel,
+       * so it is a trap for the next consumer rather than a live bug. Route it
+       * through the same mapper `wrapAction` uses: `mapToHttpError` scrubs 5xx
+       * messages in production and carries the real one in `internalMessage`
+       * for recorders only.
+       */
+      const mapped = mapToHttpError(err, {
+        isProduction: process.env.NODE_ENV === "production",
+      });
       logger.error(`[createServerAction] handler error in "${actionName}"`, {
         err,
       });
-      result = { ok: false, error: message };
+      result = { ok: false, code: mapped.code, error: mapped.message };
     }
 
     // -- 4. After hooks (per-action → global) ------------------------------

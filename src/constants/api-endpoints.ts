@@ -795,6 +795,7 @@ export const SELLER_ENDPOINTS = {
   BUNDLES: "/api/store/bundles",
   /** Tickets raised ABOUT this store (W11). */
   SUPPORT: "/api/store/support",
+  SUPPORT_TICKET_BY_ID: (id: string) => `/api/store/support/${id}`,
   BUNDLE_BY_ID: (id: string) => `/api/store/bundles/${id}`,
   ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,
   PRODUCT_BY_ID: (id: string) => `/api/store/products/${id}`,

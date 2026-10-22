@@ -11,6 +11,30 @@ import {
 } from "../../../shared/features/orders/config";
 import type { OrderDocument } from "../../../../features/orders/schemas";
 
+/**
+ * The three shapes `updatedAt` really arrives in, resolved to a `Date`.
+ *
+ * A Firestore `Timestamp` is duck-typed on `toDate` rather than imported, so
+ * this file stays free of a firebase-admin import — the same trade
+ * `orders/adapters.ts` makes and for the same reason.
+ *
+ * Falls back to NOW rather than to an invalid date: the caller measures a
+ * return window against it, and `new Date(undefined)` is `NaN`, which makes
+ * every comparison false and would silently hold the window open forever.
+ */
+function toDateOrNow(value: Date | { toDate(): Date } | string | undefined): Date {
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? new Date() : value;
+  if (typeof value === "object" && value !== null && typeof value.toDate === "function") {
+    const d = value.toDate();
+    return d instanceof Date && !Number.isNaN(d.getTime()) ? d : new Date();
+  }
+  if (typeof value === "string") {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? new Date() : d;
+  }
+  return new Date();
+}
+
 export async function assertOrderOwnership(orderId: string, userId: string): Promise<OrderDocument> {
   const order = await orderRepository.findById(orderId);
   if (!order) throw new OrderNotFoundError(orderId);
@@ -142,7 +166,13 @@ export async function assertReturnWindowOpen(orderId: string, userId: string): P
    */
   const deliveredAt = order.deliveryDate instanceof Date
     ? order.deliveryDate
-    : new Date((order as { updatedAt?: unknown }).updatedAt as never ?? Date.now());
+    /*
+     * Typed, and the `as never` is gone with it. That cast existed only to
+     * feed an `unknown` into `new Date()` — it suppressed the one check that
+     * would have caught a wrong shape. A Firestore Timestamp is duck-typed on
+     * `toDate` rather than imported, the same way `toIsoOrUndefined` does it.
+     */
+    : toDateOrNow((order as { updatedAt?: Date | { toDate(): Date } | string }).updatedAt);
   if (Date.now() - deliveredAt.getTime() > ORDER_RETURN_WINDOW_MS) throw new OrderReturnWindowError();
   return order;
 }

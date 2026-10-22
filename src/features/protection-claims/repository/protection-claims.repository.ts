@@ -1,3 +1,5 @@
+// One shared predicate — this file had its own copy; see firestore-codes.ts.
+import { isAlreadyExistsError } from "../../../errors/firestore-codes";
 import { BaseRepository, prepareForFirestore } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
 import { buildHistoryEntry } from "../../../_internal/shared/history/history";
@@ -11,22 +13,12 @@ import {
   type ProtectionClaimReason,
   type ProtectionClaimStatus,
 } from "../schemas/firestore";
+import { serverLogger } from "../../../monitoring";
 import type {
   ClaimFinding,
   ClaimOutcome,
   ProtectionKind,
 } from "../../../_internal/shared/features/shipping/protections";
-
-const GRPC_ALREADY_EXISTS = 6;
-
-function isAlreadyExists(err: unknown): boolean {
-  if (typeof err !== "object" || err === null) return false;
-  const code = (err as { code?: unknown }).code;
-  if (code === GRPC_ALREADY_EXISTS) return true;
-  if (code === "already-exists" || code === "ALREADY_EXISTS") return true;
-  const message = (err as { message?: unknown }).message;
-  return typeof message === "string" && message.includes("ALREADY_EXISTS");
-}
 
 export interface FileClaimInput {
   kind: ProtectionKind;
@@ -93,7 +85,7 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
       await this.getCollection().doc(id).create(prepareForFirestore(doc));
       return doc;
     } catch (err) {
-      if (isAlreadyExists(err)) {
+      if (isAlreadyExistsError(err)) {
         void normalizeError(err);
         throw new ConflictError(
           `A ${input.kind} protection claim is already open on this order. Add to that claim rather than filing a second one.`,
@@ -159,7 +151,15 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
     try {
       await this.getCollection().doc(id).update({ refundId, updatedAt: now });
     } catch (err) {
-      void normalizeError(err);
+      /*
+       * Best effort, but RECORDED. `void normalizeError(err)` alone types the
+       * error and reports it nowhere — as silent as `catch {}` while looking
+       * handled, which is what audit-silent-degrade calls normalize theatre.
+       * Swallowing is still correct here (the claim row is already durable; this is a best-effort annotation); losing the reason is not.
+       */
+      serverLogger.warn("protectionClaims.write failed", {
+        error: normalizeError(err).message,
+      });
     }
   }
 
@@ -188,7 +188,15 @@ export class ProtectionClaimsRepository extends BaseRepository<ProtectionClaimDo
           ],
         });
     } catch (err) {
-      void normalizeError(err);
+      /*
+       * Best effort, but RECORDED. `void normalizeError(err)` alone types the
+       * error and reports it nowhere — as silent as `catch {}` while looking
+       * handled, which is what audit-silent-degrade calls normalize theatre.
+       * Swallowing is still correct here (the claim row is already durable; this is a best-effort annotation); losing the reason is not.
+       */
+      serverLogger.warn("protectionClaims.write failed", {
+        error: normalizeError(err).message,
+      });
     }
   }
 

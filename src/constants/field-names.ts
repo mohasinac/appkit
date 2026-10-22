@@ -1288,6 +1288,33 @@ export const COMMON_FIELDS = {
 } as const;
 
 // ============================================================================
+// REFUND CLAIMS
+// ============================================================================
+
+/**
+ * The idempotency rows behind a refund.
+ *
+ * 🛑 `STATE` is the claim's own lifecycle ("claimed" → settled), NOT a
+ * postal state. `audit-route-nav-field-constants` matches a raw field
+ * string against every constant that happens to share its VALUE, so it
+ * suggested `ADDRESS_FIELDS.STATE` here — right string, wrong concept, and
+ * taking the suggestion would have made the query read as address filtering.
+ */
+export const REFUND_CLAIM_FIELDS = {
+  STATE: "state",
+  CLAIMED_AT: "claimedAt",
+} as const;
+
+// ============================================================================
+// PRICE OBSERVATIONS
+// ============================================================================
+
+/** Observed market prices, keyed by the taxonomy node they were seen under. */
+export const PRICE_OBSERVATION_FIELDS = {
+  CATEGORY_ID: "categoryId",
+} as const;
+
+// ============================================================================
 // OAUTH STATE VALUES
 // ============================================================================
 

@@ -11,6 +11,7 @@ import {
   prepareForFirestore,
 } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring";
 import { CLAIMED_COUPONS_COLLECTION, type ClaimedCouponDocument, type ClaimedCouponSource, type ClaimedCouponSnapshot, createClaimedCouponId } from "../schemas";
 import { DatabaseError } from "../../../errors";
 import { COUPON_USAGE_FIELDS } from "../../../constants/field-names";
@@ -151,10 +152,39 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
       if (snap.empty) return 0;
 
       const writer = this.db.bulkWriter();
+      /*
+       * 🛑 `onWriteError` FIRST, before any write is queued.
+       *
+       * `BulkWriter.update()` returns a promise per write and the contract is
+       * not to await them individually — `close()` is what flushes. But an
+       * un-awaited promise that rejects is an unhandled rejection, which is
+       * what `@typescript-eslint/no-floating-promises` was reporting, and
+       * `void`-ing it would silence the lint while keeping the hazard.
+       *
+       * Registering the handler is the real fix: a failed row is RECORDED and
+       * the batch continues, which is the right behaviour for a denormalised
+       * snapshot refresh — one stale coupon card is not worth abandoning the
+       * other 499, and the method's docstring already says it must not throw.
+       */
+      let failed = 0;
+      writer.onWriteError((err) => {
+        failed++;
+        serverLogger.warn("claimedCoupons: snapshot refresh failed for one row", {
+          documentPath: err.documentRef.path,
+          error: err.message,
+        });
+        return false; // do not retry — the next refresh picks it up
+      });
       for (const doc of snap.docs) {
-        writer.update(doc.ref, { couponSnapshot: snapshot, updatedAt: new Date() });
+        void writer.update(doc.ref, { couponSnapshot: snapshot, updatedAt: new Date() });
       }
       await writer.close();
+      if (failed > 0) {
+        serverLogger.warn("claimedCoupons: snapshot refresh partially failed", {
+          failed,
+          total: snap.size,
+        });
+      }
       return snap.size;
     } catch (error) {
       void normalizeError(error);

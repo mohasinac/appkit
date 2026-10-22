@@ -150,6 +150,18 @@ export type { FieldSelectProps } from "./ui/index";
 export { FieldSelect } from "./ui/index";
 export type { FieldCheckboxProps } from "./ui/index";
 export { FieldCheckbox } from "./ui/index";
+/*
+ * FieldTextarea and FormErrorSummary were exported from `client.ts` and
+ * `ui/index.ts` but NOT from here, so consumer code importing from the bare
+ * `@mohasinac/appkit` entry could reach three of the four Field* primitives
+ * and not the error summary at all. That gap is a reason, not an excuse, for
+ * hand-rolled textareas and missing summaries in `src/` — make the two entries
+ * agree.
+ */
+export type { FieldTextareaProps } from "./ui/index";
+export { FieldTextarea } from "./ui/index";
+export type { FormErrorSummaryProps } from "./ui/index";
+export { FormErrorSummary } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // GRID_MAP - Constant used across modules.
 export { GRID_MAP } from "./ui/index";
@@ -984,13 +996,13 @@ export { NotFoundError } from "./errors/index";
 export { ValidationError } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // handleApiError - Model for handle api error.
-export { handleApiError } from "./errors/index";
+export { handleApiError } from "./errors/error-handler";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // isAppError - Model for is app error.
-export { isAppError } from "./errors/index";
+export { isAppError } from "./errors/error-handler";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // logError - Helper for log error.
-export { logError } from "./errors/index";
+export { logError } from "./errors/error-handler";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ErrorCode - Type contract for error code.
 export type { ErrorCode } from "./errors/index";
@@ -9504,6 +9516,7 @@ export {
   maxBytesFor,
   getConversionHint,
   PRODUCT_MAX_IMAGES,
+  REVIEW_MAX_IMAGES,
   PRODUCT_MAX_VIDEOS,
   PRODUCT_IMAGE_INDEX_MAX,
 } from "./_internal/shared/media/limits";

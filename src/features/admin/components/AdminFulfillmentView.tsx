@@ -16,7 +16,8 @@ import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoi
  */
 import type { OrderPlain } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
-import { useToast } from "../../../ui";
+import { useToast, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 
 export interface AdminFulfillmentViewProps {
   /** Pre-selected store ID — skips the store picker when provided. */
@@ -181,7 +182,16 @@ export function AdminFulfillmentView({
           {orders.map((order) => (
             <Stack key={order.id} surface="card" padding="sm" rounded="md" gap="xs">
               <Row align="center" gap="xs" wrap>
-                <Text size="sm" weight="medium">#{order.id}</Text>
+                {/*
+                  The order id was inert text on a card offering only Mark
+                  Picked / Mark Packed — acting on a record nobody could open.
+                  Worse, `order.items` is fetched and joined into a string
+                  below and then discarded, so the one place a picker could
+                  check WHAT to pick had no way through to it.
+                */}
+                <TextLink href={String(ROUTES.ADMIN.ORDER_DETAIL(order.id))} size="sm" weight="medium">
+                  #{order.id}
+                </TextLink>
                 <Badge variant={statusBadgeVariant(order.status)}>{order.status}</Badge>
                 {order.pickedAt && <Badge variant="success">Picked</Badge>}
                 {order.packedAt && <Badge variant="success">Packed</Badge>}

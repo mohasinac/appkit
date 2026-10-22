@@ -28,11 +28,19 @@
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
-import { Alert, Badge, Row, Span, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Badge, Row, Span, Stack, Text, TextLink, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import type { FormValues } from "../../../schemas/types";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { DataListingView } from "./DataListingView";
+import { QuickEditMenu } from "./QuickEditMenu";
+import {
+  actionIndexOverrideSchema,
+  splitKeywords,
+  joinKeywords,
+  ACTION_INDEX_OVERRIDE_FIELDS,
+} from "../schemas/action-index-form";
 import type { ActionIndexControl, ActionIndexEntry } from "../../search/action-index/types";
 
 const ENDPOINT = ADMIN_ENDPOINTS.ACTION_INDEX;
@@ -55,6 +63,8 @@ interface Row {
   href: string;
   permission: string;
   enabled: boolean;
+  keywords: string;
+  weight: number;
 }
 
 export interface AdminActionIndexViewProps
@@ -73,7 +83,15 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
   });
 
   const payload = query.data?.data;
-  const overrides = payload?.control?.entries ?? {};
+  /*
+   * Memoised because the `?? {}` fallback is a fresh object every render,
+   * which makes the `rows` memo below rebuild on every render — it reads
+   * `overrides` for each entry's effective `enabled`.
+   */
+  const overrides = React.useMemo(
+    () => payload?.control?.entries ?? {},
+    [payload?.control?.entries],
+  );
 
   const toggleMutation = useApiMutation({
     errorMessage: "Could not update that entry.",
@@ -84,6 +102,51 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
       } as unknown as JsonValue),
     onSuccess: () => {
       showToast("Saved.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "action-index"] });
+    },
+  });
+
+  /*
+   * Spread the EXISTING override first, exactly as the toggle does. The
+   * endpoint's `setOverride` replaces the whole override object, so sending
+   * only the edited fields would silently clear this entry's `enabled` —
+   * re-showing something an admin had deliberately hidden.
+   */
+  const overrideMutation = useApiMutation({
+    errorMessage: "Could not save that entry.",
+    mutationFn: async (vars: { entryId: string; values: FormValues }) => {
+      const parsed = actionIndexOverrideSchema.parse(vars.values);
+      return apiClient.patch(ENDPOINT, {
+        entryId: vars.entryId,
+        override: {
+          ...overrides[vars.entryId],
+          label: parsed.label,
+          description: parsed.description,
+          keywords: splitKeywords(parsed.keywords),
+          weight: parsed.weight,
+        },
+      } as unknown as JsonValue);
+    },
+    onSuccess: () => {
+      showToast("Entry saved.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "action-index"] });
+    },
+  });
+
+  /** Named so the row-action array stays a flat list of declarations. */
+  const saveOverride = React.useCallback(
+    async (entryId: string, values: FormValues) => {
+      await overrideMutation.mutateAsync({ entryId, values });
+    },
+    [overrideMutation],
+  );
+
+  const clearMutation = useApiMutation({
+    errorMessage: "Could not reset that entry.",
+    mutationFn: async (entryId: string) =>
+      apiClient.patch(ENDPOINT, { entryId, clear: true } as unknown as JsonValue),
+    onSuccess: () => {
+      showToast("Entry reset to its code default.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "action-index"] });
     },
   });
@@ -109,6 +172,10 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
         href: `${entry.href}${entry.deepLink ?? ""}`,
         permission: entry.requiredPermission ?? "—",
         enabled: overrides[entry.id]?.enabled !== false,
+        // Seeds the edit drawer. `entry.*` is already override-merged by
+        // `mergeActionIndex`, so these are the effective values an admin sees.
+        keywords: joinKeywords(entry.keywords),
+        weight: entry.weight ?? 0,
       })),
     [payload?.entries, overrides],
   );
@@ -173,12 +240,22 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
             },
             { key: "portal", header: "Portal" },
             {
+              /*
+               * A LINK, not mono text.
+               *
+               * This row IS a destination — "where is it" is half of what
+               * this screen exists to answer, and the answer was printed as
+               * inert text beside a toggle. The link is also what makes the
+               * row reachable at all: every other column is metadata about
+               * the entry, so without it there is no way to go look at the
+               * thing being enabled or disabled.
+               */
               key: "href",
               header: "Goes to",
               render: (row) => (
-                <Span size="xs" family="mono" color="muted">
-                  {row.href}
-                </Span>
+                <TextLink href={row.href} size="xs" onClick={(e) => e.stopPropagation()}>
+                  <Span size="xs" family="mono">{row.href}</Span>
+                </TextLink>
               ),
             },
             {
@@ -198,7 +275,7 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
                   <Toggle
                     checked={row.enabled}
                     size="sm"
-                    aria-label={`Show ${row.primary}`}
+                    ariaLabel={`Show ${row.primary} in navigation and search`}
                     onChange={(next) =>
                       toggleMutation.mutate({ entryId: row.id, enabled: next })
                     }
@@ -207,13 +284,54 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
               ),
             },
           ],
+          /*
+           * 🛑 This exists because the footer below already PROMISED it:
+           * "Labels, descriptions and keywords can be edited here." They
+           * could not. `PATCH /api/admin/action-index` has always accepted
+           * `label` / `description` / `keywords` / `weight` in an override
+           * (see `ActionIndexOverride`), and the only control on this screen
+           * was the Shown toggle — so the sentence described a capability the
+           * server had and the UI had never grown. Root Cause #51's shape: a
+           * label describing something other than what the surface does.
+           *
+           * `href`, `kind` and every permission field stay out, per the
+           * component docstring: repointing a built-in route is routing, and
+           * relaxing a permission is access control.
+           */
+          renderRowActions: (row) => (
+            <QuickEditMenu
+              actions={[
+                {
+                  label: "Edit entry",
+                  formTitle: `Edit "${row.primary}"`,
+                  schema: actionIndexOverrideSchema,
+                  fields: ACTION_INDEX_OVERRIDE_FIELDS,
+                  defaultValues: {
+                    label: row.primary,
+                    description: row.secondary,
+                    keywords: row.keywords,
+                    weight: row.weight,
+                  },
+                  onSubmit: (values) => saveOverride(row.id, values),
+                  submitLabel: "Save entry",
+                },
+                {
+                  label: "Reset to code default",
+                  separator: true,
+                  destructive: true,
+                  onClick: () => clearMutation.mutate(row.id),
+                },
+              ]}
+            />
+          ),
         }}
       />
 
       <Text size="xs" color="muted">
         Hiding an entry removes it from the sidebar, the header search and the
-        command palette at once. Labels, descriptions and keywords can be edited
-        here; a route and its required permission belong to the code.
+        command palette at once. Use the row menu to edit an entry&rsquo;s label,
+        description, keywords and search weight, or to reset it to its code
+        default; a route and its required permission belong to the code.
       </Text>
     </Stack>
   );

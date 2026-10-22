@@ -45,6 +45,7 @@ import { PARAM_HELP, TIER_HELP } from "../constants/help-content";
 import { useLiveTrace } from "../hooks/useLiveTrace";
 import { canvasCodec } from "../../../_internal/client/features/sticker-trace/canvas-codec";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 /*
  * Only `draft` is offered. The hook runs on the main thread and draft's
@@ -148,7 +149,7 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
         // the operator is the one who needs to know the commit is blocked.
         if (live) {
           setNatural(null);
-          setProbeError(n.message);
+          setProbeError(toUserMessage(n.code, undefined, { fallback: "That probe could not be run." }));
         }
       });
     return () => {

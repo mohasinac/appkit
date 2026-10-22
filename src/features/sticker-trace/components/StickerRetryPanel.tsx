@@ -23,10 +23,17 @@
  * belongs to which stage.
  *
  * 🛑 Built on `<SectionForm>`, not a hand-rolled `<Form>`. Three controls is
- * where a form stops being trivial, and sectionising is what buys the error
- * summary, the jump-to-field link and the pinned mobile action bar for free —
+ * where a form stops being trivial, and sectionising is what buys the
+ * jump-to-field link and the pinned mobile action bar —
  * audit-form-sectionised is strict-zero on exactly this, and its grandfather
  * list is empty and closed.
+ *
+ * 🛑 The error summary is NOT free, and this comment used to claim it was.
+ * `SectionForm` deliberately does not own a `FormShellContext` — it consumes
+ * whichever one the owning view mounts, and tolerates none. So a view that
+ * only renders `<SectionForm schema={…}>` gets section badges and no readable
+ * message at all. The view must mount the context and render
+ * `<FormErrorSummary>` itself, which is what the bottom of this file now does.
  *
  * EXPORTS: StickerRetryPanel
  *
@@ -44,6 +51,8 @@ import { normalizeError } from "../../../errors/normalize";
 import { Alert, Card, Stack, Text } from "../../../ui/index";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { SectionForm, type SectionDef } from "../../shell/SectionForm";
 import { TRACE_STAGES } from "../../../_internal/shared/features/sticker-trace/types";
 import type {
@@ -57,6 +66,7 @@ import {
 } from "../../../_internal/shared/features/sticker-trace/resume";
 import { paramsForTier } from "../../../_internal/shared/features/sticker-trace/config";
 import { TIER_HELP } from "../constants/help-content";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const TIERS: PrecisionTier[] = ["draft", "standard", "precise", "max"];
 
@@ -149,7 +159,7 @@ export function StickerRetryPanel({
        * operator looking at a form that did nothing — and the likeliest causes,
        * a lapsed session or a rejected name, are both named by the message.
        */
-      setError(n.message);
+      setError(toUserMessage(n.code, undefined, { fallback: "We couldn't retry that run. Please try again." }));
     } finally {
       setPending(false);
     }
@@ -242,22 +252,36 @@ export function StickerRetryPanel({
     [source.name, source.params, notice, artifactsPruned],
   );
 
+  /*
+   * 🛑 `SectionForm` does NOT provide a FormShellContext — it reads whichever
+   * one the owning view mounts, and may legitimately get none. The header of
+   * this file says sectionising buys "the error summary … for free", and that
+   * was wrong: nothing here mounted a context or rendered a summary, so a
+   * schema rejection set the section badge and produced no readable message
+   * anywhere. The file passed `audit-form-error-summary` only because a bare
+   * `<SectionForm schema=>` was not a recognised call site.
+   */
+  const { shellCtx } = useFormShellState(retrySchema);
+
   return (
     <Card variant="default">
-      <Stack gap="comfortable">
-        {error ? <Alert variant="error">{error}</Alert> : null}
-        <SectionForm<RetryValues>
-          sections={sections}
-          values={values}
-          onChange={onChange}
-          onSubmit={submit}
-          schema={retrySchema}
-          submitLabel="Start retry"
-          isLoading={pending}
-          onCancel={onCancel}
-          cancelLabel="Cancel"
-        />
-      </Stack>
+      <FormShellContext.Provider value={shellCtx}>
+        <Stack gap="comfortable">
+          {error ? <Alert variant="error">{error}</Alert> : null}
+          <FormErrorSummary />
+          <SectionForm<RetryValues>
+            sections={sections}
+            values={values}
+            onChange={onChange}
+            onSubmit={submit}
+            schema={retrySchema}
+            submitLabel="Start retry"
+            isLoading={pending}
+            onCancel={onCancel}
+            cancelLabel="Cancel"
+          />
+        </Stack>
+      </FormShellContext.Provider>
     </Card>
   );
 }

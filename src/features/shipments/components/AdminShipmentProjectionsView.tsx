@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -65,7 +66,17 @@ export function AdminShipmentProjectionsView() {
           <Tbody>
             {lots.map((lot) => (
               <Tr key={lot.id}>
-                <Td>{lot.lotName}</Td>
+                {/*
+                  The lot name was inert text, though the lot's own item list
+                  is a real page that `ReceiveStationView` already links to —
+                  so the projection table could tell you a lot was losing
+                  money and offer no way to go look at what was in it.
+                */}
+                <Td>
+                  <TextLink href={String(ROUTES.ADMIN.SHIPMENT_LOT_ITEMS(lot.shipmentId, lot.id))}>
+                    {lot.lotName}
+                  </TextLink>
+                </Td>
                 <Td>{lot.itemCount}</Td>
                 <Td>{formatCurrency(lot.totalLandedCost)}</Td>
                 <Td>{formatCurrency(lot.projectedRevenue)}</Td>

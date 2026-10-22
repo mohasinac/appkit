@@ -46,6 +46,27 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ? "border-transparent bg-transparent shadow-none"
           : "";
 
+    /*
+     * 🛑 A CALLER'S OWN `aria-invalid` MUST WIN — it did not, and that broke
+     * every form in the app.
+     *
+     * `{...props}` is spread FIRST on both `<input>` elements below, so
+     * re-specifying `aria-invalid={error ? "true" : undefined}` afterwards
+     * OVERWROTE an incoming `"true"` with `undefined` (JSX: later wins).
+     *
+     * That is not hypothetical. `FieldInput` sets `aria-invalid` itself and
+     * deliberately WITHHOLDS `error` from this component, so the message is not
+     * rendered twice — which means `error` here is `undefined` exactly when the
+     * field is invalid. Net effect: no `Field*`-built form ever emitted
+     * `aria-invalid`, and `SectionForm`'s jump-to-error
+     * (`querySelector("[aria-invalid='true']")?.focus()`) silently focused
+     * nothing, every time.
+     *
+     * Same precedence rule as `bareAriaLabel` below: fill the gap, never
+     * override an explicit choice.
+     */
+    const ariaInvalid = props["aria-invalid"] ?? (error ? "true" : undefined);
+
     const inputClassName = [
       "appkit-input",
       icon ? "pl-10" : "",
@@ -87,7 +108,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           disabled={disabled}
           aria-label={bareAriaLabel}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={ariaInvalid}
           className={inputClassName}
         />
       );
@@ -130,7 +151,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             disabled={disabled}
-            aria-invalid={error ? "true" : undefined}
+            aria-invalid={ariaInvalid}
             className={inputClassName}
           />
 

@@ -132,7 +132,27 @@ export async function awardPurchasePoints(
    */
   const goods = orderTaxableValue(order as unknown as PayableOrderLike);
   const moneyPaidForGoods = Math.max(0, goods - Math.max(0, order.pointsApplied ?? 0));
-  const amount = roundPoints((moneyPaidForGoods * POINTS_EARN_PERCENT) / 100);
+  /*
+   * `x * (PERCENT / 100)`, not `(x * PERCENT) / 100` — the same value, written
+   * the way every fee in `fees/calculator.ts` is
+   * (`subtotal * (commissions.platformFeePercent / 100)`). The division
+   * belongs to the PERCENT, and grouping it that way is what distinguishes a
+   * percentage from the subunit-conversion `/100` that `audit-money-units`
+   * exists to catch — which read the old grouping as exactly that.
+   *
+   * 🛑 Merge resolution, 2026-10-22: both sides of this conflict were real and
+   * independent, so the answer is BOTH, not either.
+   *
+   *   - the BASE is `moneyPaidForGoods`, not `goods` — points must not be
+   *     issued against the part of the order the buyer settled with points,
+   *     which is what the whole docstring above this line exists to explain.
+   *     Taking only the other side would have silently restored
+   *     points-on-points issuance AND left that docstring describing a
+   *     variable that no longer existed.
+   *   - the GROUPING is the other side's, because the audit reasoning is
+   *     correct and applies to this expression whatever its base.
+   */
+  const amount = roundPoints(moneyPaidForGoods * (POINTS_EARN_PERCENT / 100));
 
   if (amount <= 0) {
     /*

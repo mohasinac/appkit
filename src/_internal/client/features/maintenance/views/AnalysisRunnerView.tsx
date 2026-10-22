@@ -28,7 +28,7 @@ export function AnalysisRunnerView(): React.JSX.Element {
         | { ok: true; data: AnalyzeReport }
         | { ok: false; code: string; error: string };
       if (!res.ok || !body.ok) {
-        setError(("error" in body && body.error) || `HTTP ${res.status}`);
+        setError(toUserMessage("code" in body ? String(body.code) : undefined, undefined, { fallback: `The analysis run failed (HTTP ${res.status}).` }));
         setRunning(false);
         return;
       }

@@ -51,6 +51,7 @@ interface Values {
   minPurchase: string;
   buyQuantity: string;
   getQuantity: string;
+  maxItemPrice: string;
   totalLimit: string;
   perUserLimit: string;
   currentUsage: number;
@@ -88,7 +89,7 @@ interface CouponRecord {
   description?: string;
   type?: CouponType;
   discount?: { value?: number; maxDiscount?: number; minPurchase?: number };
-  bxgy?: { buyQuantity?: number; getQuantity?: number };
+  bxgy?: { buyQuantity?: number; getQuantity?: number; maxItemPrice?: number };
   usage?: { totalLimit?: number; perUserLimit?: number; currentUsage?: number };
   validity?: { startDate?: string | Date; endDate?: string | Date; isActive?: boolean };
   restrictions?: {
@@ -106,7 +107,7 @@ interface CouponPayload {
   description?: string;
   type: CouponType;
   discount: { value: number; maxDiscount?: number; minPurchase?: number };
-  bxgy?: { buyQuantity: number; getQuantity: number };
+  bxgy?: { buyQuantity: number; getQuantity: number; maxItemPrice?: number };
   usage: { totalLimit?: number; perUserLimit?: number; currentUsage: number };
   validity: { startDate: string; endDate?: string; isActive: boolean };
   restrictions: {
@@ -185,6 +186,9 @@ export function AdminCouponEditorView({
     minPurchase: "",
     buyQuantity: "1",
     getQuantity: "1",
+    // Blank, not a number — the ceiling is optional and a default here would
+    // silently cap a new BOGO coupon the admin never meant to cap.
+    maxItemPrice: "",
     totalLimit: "",
     perUserLimit: "",
     currentUsage: 0,
@@ -233,6 +237,7 @@ export function AdminCouponEditorView({
       minPurchase: c.discount?.minPurchase !== undefined ? String(c.discount.minPurchase) : "",
       buyQuantity: c.bxgy?.buyQuantity !== undefined ? String(c.bxgy.buyQuantity) : "1",
       getQuantity: c.bxgy?.getQuantity !== undefined ? String(c.bxgy.getQuantity) : "1",
+      maxItemPrice: c.bxgy?.maxItemPrice !== undefined ? String(c.bxgy.maxItemPrice) : "",
       totalLimit: c.usage?.totalLimit !== undefined ? String(c.usage.totalLimit) : "",
       perUserLimit: c.usage?.perUserLimit !== undefined ? String(c.usage.perUserLimit) : "",
       currentUsage: c.usage?.currentUsage ?? 0,
@@ -282,6 +287,10 @@ export function AdminCouponEditorView({
           bxgy: {
             buyQuantity: num(draft.buyQuantity) ?? 1,
             getQuantity: num(draft.getQuantity) ?? 1,
+            // `num("")` is undefined, and an undefined ceiling is "no limit" —
+            // which is what a blank box should mean. Do not `?? 0` it: zero
+            // would disqualify every unit and silently zero the coupon.
+            maxItemPrice: num(draft.maxItemPrice),
           },
         }),
         usage: {

@@ -210,6 +210,14 @@ const SOURCES = {
   products: (d) => [
     d.title, d.description, d.brand, d.brandSlug,
     d.categoryNames, d.tags, d.features, d.condition,
+    /*
+     * 🛑 `sku` — the human stock key. `buildProductSearchTxt` indexes it and
+     * this list did not, which is the asymmetry this file's own note about
+     * card/grading warns against, one field over: a product saved through the
+     * app matched its SKU, the identical product rebuilt by this backfill did
+     * not, and nothing distinguishes the two rows to a searcher.
+     */
+    d.sku,
     // card.*/grading.* match zero documents in the current Beyblade-only
     // catalogue, but buildProductSearchTxt indexes them: omitting them here
     // would make the first graded or carded listing findable by set name only

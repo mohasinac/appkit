@@ -16,6 +16,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 export interface ProductDetailActionsProps {
   productId: string;
   productTitle: string;
@@ -69,7 +70,7 @@ export function ProductDetailActions({
   // richer toast, not just this one.
   const addCart = useAddToCart({
     onError: (err) =>
-      showToast(err?.message ?? "Could not add to cart", "error"),
+      showToast(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Could not add to cart" }), "error"),
   });
 
   async function handleAddToCart(then?: () => void) {

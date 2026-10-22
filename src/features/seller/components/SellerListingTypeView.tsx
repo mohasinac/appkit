@@ -38,6 +38,7 @@
 
 import React, { useCallback, useState } from "react";
 import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
+import { apiClient } from "../../../http";
 import type { BulkActionItem } from "../../../ui";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -54,6 +55,7 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -348,6 +350,19 @@ export function SellerListingTypeView({
     [performDelete],
   );
 
+  /*
+   * Optimistic status, via the shared hook — see its header for why a
+   * rollback must DELETE the override key rather than write back a captured
+   * value, and why the key is cleared on success too.
+   */
+  const statusFlag = useOptimisticRowFlag<string>({
+    mutate: (id, next) => apiClient.patch(SELLER_ENDPOINTS.PRODUCT_BY_ID(id), { status: next }),
+    invalidate: [["seller", plugin.tabSlug]],
+    successMessage: (next) =>
+      next === "published" ? "Listing published." : "Listing unpublished.",
+    errorMessage: "Could not change that listing's status.",
+  });
+
   const handleEdit = useCallback(
     (id: string) => {
       if (onEditClick) onEditClick(id);
@@ -387,11 +402,19 @@ export function SellerListingTypeView({
     {
       key: "status",
       header: "Status",
-      render: (row) => (
-        <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
-          {row.status}
-        </Badge>
-      ),
+      /*
+       * Reads the optimistic override so the badge and the row action agree
+       * the instant one is used — otherwise the menu would say "Unpublish"
+       * while the badge beside it still said published, until the refetch.
+       */
+      render: (row) => {
+        const status = statusFlag.resolve(row.id, row.status);
+        return (
+          <Badge variant={status === "active" || status === "published" ? "active" : "inactive"} size="xs" className="capitalize">
+            {status}
+          </Badge>
+        );
+      },
     },
     textCell("createdAt", spec.createdHeader ?? "Created"),
   ];
@@ -452,19 +475,44 @@ export function SellerListingTypeView({
             },
           }))
       : undefined,
-    renderRowActions: (row) => (
-      <RowActionMenu
-        actions={[
-          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
-          {
-            label: ACTIONS.STORE["delete-listing"].label,
-            destructive: true,
-            onClick: () => setDeleteTargetId(row.id),
-            disabled: deletingId === row.id,
-          },
-        ]}
-      />
-    ),
+    renderRowActions: (row) => {
+      const isPublished = statusFlag.resolve(row.id, row.status) === "published";
+      return (
+        <RowActionMenu
+          actions={[
+            { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
+            /*
+             * 🛑 This one entry lights up SIX seller pages — art, classified,
+             * digital codes, live, spares and stickers are each a ~25-line
+             * wrapper around this component.
+             *
+             * `status` was a read-only Badge on all of them, so changing one
+             * listing from published to draft meant opening the full editor,
+             * even though `PATCH /api/store/products/[id]` has always taken
+             * `status` and SellerProductsView already drives that exact call.
+             *
+             * `ACTIONS.STORE["publish-listing"]` / `["unpublish-listing"]`
+             * were defined with ZERO call sites — this is what finally wires
+             * them, rather than reinventing the labels inline.
+             */
+            {
+              label: isPublished
+                ? ACTIONS.STORE["unpublish-listing"].label
+                : ACTIONS.STORE["publish-listing"].label,
+              separator: true,
+              disabled: statusFlag.pendingId === row.id,
+              onClick: () => { void statusFlag.set(row.id, isPublished ? "draft" : "published"); },
+            },
+            {
+              label: ACTIONS.STORE["delete-listing"].label,
+              destructive: true,
+              onClick: () => setDeleteTargetId(row.id),
+              disabled: deletingId === row.id,
+            },
+          ]}
+        />
+      );
+    },
   };
 
   return (

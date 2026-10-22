@@ -9,6 +9,8 @@ import { Badge, ConfirmDeleteModal, Div, Row, RowActionMenu, Span, Text, useToas
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../constants/index";
 import { toRecordArray, toStringValue } from "../hooks/useSellerListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
+import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -99,6 +101,23 @@ export function SellerPayoutMethodsView({
   onDelete,
   onSetDefault,
 }: SellerPayoutMethodsViewProps) {
+  /*
+   * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
+   * to take it on its own — shipping-config's even says so in a comment: "a
+   * PATCH may legitimately carry only `isActive`". Nothing in the client had
+   * ever sent one, so flipping one boolean meant a full-editor round trip.
+   *
+   * The optimistic/rollback logic lives in the hook because eight listings
+   * grew this control at once; see its header for why rollback must DELETE
+   * the override key rather than write back a captured value.
+   */
+  const activeFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.patch(SELLER_ENDPOINTS.PAYOUT_METHOD_BY_ID(id), { isActive: next }),
+    invalidate: [["seller", "payout-methods", "listing"]],
+    successMessage: (next) => (next ? "Payout method activated." : "Payout method deactivated."),
+    errorMessage: "Could not change that payout method's status.",
+  });
+
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PAYOUT_METHOD_BY_ID,
@@ -169,7 +188,9 @@ export function SellerPayoutMethodsView({
         label: String(item.label ?? ""),
         type: String(item.type ?? ""),
         isDefault: Boolean(item.isDefault),
-        isActive: Boolean(item.isActive),
+        // Resolved through the pending override so the Status badge and the
+        // row toggle cannot disagree between the click and the refetch.
+        isActive: activeFlag.resolve(toStringValue(item.id, `pm-${index}`), Boolean(item.isActive)),
         maskedIdentifier: getMaskedIdentifier(item),
       })),
     getTotal: (response, mappedRows) => (typeof response.total === "number" ? response.total : mappedRows.length),
@@ -178,6 +199,18 @@ export function SellerPayoutMethodsView({
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
+          /*
+           * 🛑 `isActive` was a read-only badge and the update schema was
+           * built to accept it alone. A menu entry rather than a switch here,
+           * to match the other actions in this menu — the menu is already
+           * click-stopped in all three renderers.
+           */
+          {
+            label: row.isActive ? "Deactivate" : "Activate",
+            separator: true,
+            disabled: activeFlag.pendingId === row.id,
+            onClick: () => { void activeFlag.set(row.id, !row.isActive); },
+          },
           ...(!row.isDefault
             ? [{ label: "Set as Default", disabled: settingDefaultId === row.id, onClick: () => handleSetDefault(row.id) }]
             : []),

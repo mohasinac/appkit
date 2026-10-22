@@ -3,7 +3,8 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, Button, Div, Heading, Row, Span, Stack, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, Heading, Row, Span, Stack, Text, TextLink, useToast } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
@@ -57,6 +58,23 @@ export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) 
     },
   });
 
+  /*
+   * 🛑 "Flag Suspicious" was ONE-WAY here too: no unflag, so a wrong call
+   * left a permanent mark on a real buyer with no way back from this
+   * screen. `clear_ban` is already in the route's action enum and calls
+   * `clearBanById`; only the control was missing.
+   */
+  const clearFlagMutation = useApiMutation({
+    errorMessage: "Failed to clear that flag.",
+    mutationFn: async (id: string) => {
+      await apiClient.patch(ADMIN_ENDPOINTS.PAYMENT_METHOD_BY_ID(id), { action: "clear_ban" });
+    },
+    onSuccess: () => {
+      showToast("Flag cleared.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "payment-clusters"] });
+    },
+  });
+
   const clusters = data?.clusters ?? [];
 
   return (
@@ -103,7 +121,14 @@ export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) 
                   <Text size="sm" weight="medium" color="primary" className="truncate">
                     {m.type.toUpperCase()} · {m.displayLabel}
                   </Text>
-                  <Text size="xs" color="muted">User: {m.userId}</Text>
+                  {/*
+                    A LINK. This screen asks an admin to judge whether several
+                    accounts share one payment identifier, and offered a
+                    one-way flag against a user id printed as text.
+                  */}
+                  <TextLink href={String(ROUTES.ADMIN.USER_DETAIL(m.userId))} size="xs">
+                    User: {m.userId}
+                  </TextLink>
                 </Stack>
                 <Row gap="xs" align="center">
                   {m.banStatus && (
@@ -111,7 +136,16 @@ export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) 
                       {m.banStatus.replace(/_/g, " ")}
                     </Badge>
                   )}
-                  {m.banStatus !== "suspicious" && (
+                  {m.banStatus === "suspicious" ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => clearFlagMutation.mutate(m.id)}
+                      disabled={clearFlagMutation.isPending}
+                    >
+                      Clear flag
+                    </Button>
+                  ) : (
                     <Button
                       size="sm"
                       variant="ghost"

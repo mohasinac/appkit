@@ -13,6 +13,8 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { ROUTES } from "../../../next/routing/route-map";
 import { toRecordArray, toStringValue } from "../hooks/useSellerListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
+import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -83,6 +85,23 @@ export function SellerStoreCategoriesView({
   onBulkActivate,
   onBulkDeactivate,
 }: SellerStoreCategoriesViewProps) {
+  /*
+   * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
+   * to take it on its own — shipping-config's even says so in a comment: "a
+   * PATCH may legitimately carry only `isActive`". Nothing in the client had
+   * ever sent one, so flipping one boolean meant a full-editor round trip.
+   *
+   * The optimistic/rollback logic lives in the hook because eight listings
+   * grew this control at once; see its header for why rollback must DELETE
+   * the override key rather than write back a captured value.
+   */
+  const activeFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.patch(SELLER_ENDPOINTS.STORE_CATEGORY_BY_ID(id), { isActive: next }),
+    invalidate: [["seller", "store-categories", "listing"]],
+    successMessage: (next) => (next ? "Category activated." : "Category deactivated."),
+    errorMessage: "Could not change that category's status.",
+  });
+
   const { showToast } = useToast();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
@@ -127,7 +146,9 @@ export function SellerStoreCategoriesView({
         label: String(item.label ?? ""),
         slug: String(item.slug ?? ""),
         productCount: Number((item.productIds as unknown[])?.length ?? 0),
-        isActive: Boolean(item.isActive),
+        // Resolved through the pending override so the Status badge and the
+        // row toggle cannot disagree between the click and the refetch.
+        isActive: activeFlag.resolve(toStringValue(item.id, `cat-${index}`), Boolean(item.isActive)),
       })),
     getTotal: (response, rows) => (typeof response.total === "number" ? response.total : rows.length),
     buildFilters: () => undefined,
@@ -143,6 +164,18 @@ export function SellerStoreCategoriesView({
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
+          /*
+           * 🛑 `isActive` was a read-only badge and the update schema was
+           * built to accept it alone. A menu entry rather than a switch here,
+           * to match the other actions in this menu — the menu is already
+           * click-stopped in all three renderers.
+           */
+          {
+            label: row.isActive ? "Deactivate" : "Activate",
+            separator: true,
+            disabled: activeFlag.pendingId === row.id,
+            onClick: () => { void activeFlag.set(row.id, !row.isActive); },
+          },
           {
             label: ACTIONS.STORE["edit-listing"].label,
             onClick: () => onEditClick

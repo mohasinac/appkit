@@ -20,6 +20,7 @@ import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 export interface PrizeDrawEntryActionsProps {
   productId: string;
@@ -113,7 +114,7 @@ export function PrizeDrawEntryActions({
        * a correct refusal look like the same silent nothing this flow did
        * before it was repaired.
        */
-      showToast(n.message, "error");
+      showToast(toUserMessage(n.code, undefined, { fallback: "We couldn't enter you into that draw. Please try again." }), "error");
       return;
     }
     router.push(String(ROUTES.USER.CART));

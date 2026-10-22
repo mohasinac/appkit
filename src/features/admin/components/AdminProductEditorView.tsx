@@ -353,7 +353,14 @@ export function AdminProductEditorView({
                   <Text size="sm" weight="medium" color="primary">
                     Store
                   </Text>
+                  {/*
+                    `name` rather than an explicit `error`: PaginatedSelect
+                    resolves its own message from FormShellContext by name,
+                    exactly as the Field* primitives do, so these need no
+                    `errors` argument threaded through the render slots.
+                  */}
                   <PaginatedSelect
+                    name="storeId"
                     value={product.storeId ?? null}
                     onChange={handleStoreSelect}
                     loadOptions={loadStoreOptions}
@@ -425,6 +432,7 @@ export function AdminProductEditorView({
                         {label}
                       </Text>
                       <PaginatedSelect
+                        name="categorySlug"
                         value={value || null}
                         onChange={(v) => onChange(v ?? "")}
                         loadOptions={loadCategoryOptions}
@@ -449,6 +457,7 @@ export function AdminProductEditorView({
                         {args.label}
                       </Text>
                       <PaginatedSelect
+                        name="brandSlug"
                         value={args.multi ? null : (args.value || null)}
                         onChange={(v) => args.onValueChange(v ?? "")}
                         loadOptions={loadBrandOptions}

@@ -1359,6 +1359,26 @@ export const ORDER_COLLECTION = "orders" as const;
  */
 export const REFUND_CLAIMS_COLLECTION = "refundClaims" as const;
 
+/**
+ * Field names on a refund-claim row.
+ *
+ * 🛑 `STATE`, and it is NOT `ADDRESS_FIELDS.STATE`.
+ * `audit-route-nav-field-constants` R3 suggested exactly that for the raw
+ * `where("state", …)` in `paymentReconcile` — a POSTAL state, on an address.
+ * Borrowing it would have made a refund-claim sweep read as though it filtered
+ * addresses. The field names here are the claim's own lifecycle.
+ *
+ * The collection has no document interface (it is written ad hoc by
+ * `processRefundAction` as an idempotency record), so this is the only place
+ * its field names are stated.
+ */
+export const REFUND_CLAIM_FIELDS = {
+  /** `"claimed"` while a refund is in flight — the idempotency latch. */
+  STATE: "state",
+  CLAIMED_AT: "claimedAt",
+  ORDER_ID: "orderId",
+} as const;
+
 export const ORDER_INDEXED_FIELDS = [
   "searchTxt",
   "userId",

@@ -8,6 +8,7 @@ import { SectionDef, SectionForm, useSectionFormNav, annotate } from "../../shel
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
@@ -196,6 +197,65 @@ const DEFAULT_DRAFT: PayoutDraft = {
   advancedListingTypesEnabled: false,
 };
 
+/**
+ * One radio group for a single-value field, with ONE error message.
+ *
+ * Extracted because the payout-method and account-type groups were the same
+ * eleven lines twice, and because adding the error handling to both tipped
+ * this view past `audit-code-quality`'s component-size threshold. The error
+ * placement is the part worth sharing: `aria-invalid` goes on every radio so
+ * assistive tech marks the whole group, but the message renders ONCE
+ * underneath — the field is one value, so an `error` per radio would print
+ * and announce the same sentence for every option.
+ */
+function RadioFieldGroup<V extends string>({
+  name,
+  value,
+  options,
+  error,
+  disabled,
+  onSelect,
+  renderOption,
+  layout: Layout,
+}: {
+  name: string;
+  value: V;
+  options: readonly V[];
+  error?: string;
+  disabled?: boolean;
+  onSelect: (value: V) => void;
+  renderOption: (value: V) => React.ReactNode;
+  layout: typeof Stack | typeof Row;
+}) {
+  return (
+    <>
+      <Layout gap="sm">
+        {options.map((option) => (
+          <Label layout="flex" gap="md" key={option} className="cursor-pointer">
+            <Checkbox
+              bare
+              type="radio"
+              name={name}
+              value={option}
+              checked={value === option}
+              onChange={() => onSelect(option)}
+              className="accent-[var(--appkit-color-primary)]"
+              disabled={disabled}
+              aria-invalid={error ? "true" : undefined}
+            />
+            {renderOption(option)}
+          </Label>
+        ))}
+      </Layout>
+      {error && (
+        <Text size="sm" variant="error" role="alert">
+          {error}
+        </Text>
+      )}
+    </>
+  );
+}
+
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
   const [draft, setDraft] = useState<PayoutDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<SafePayoutDetails | null>(null);
@@ -305,7 +365,25 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             setFieldError,
           );
         }
-        setError(json?.error ?? "Failed to save");
+        /*
+         * `json.error` is the SERVER's sentence — never shown to a user
+         * (Rule #9.6). Resolve the stable `code` instead; `toUserMessage`
+         * terminates in this fallback and can never return server text.
+         *
+         * Only a banner when the issues above attached nothing: if they did,
+         * the fields now carry the detail and a banner repeating a vaguer
+         * version of it is noise.
+         */
+        const attached =
+          Array.isArray(json?.issues) &&
+          json.issues.some((i: { path?: unknown[] }) => i?.path?.length);
+        if (!attached) {
+          setError(
+            toUserMessage(json?.code, undefined, {
+              fallback: "We couldn't save your payout settings.",
+            }),
+          );
+        }
         return;
       }
       clearErrors();
@@ -314,8 +392,19 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       setCurrent(updated);
       setDraft((prev) => ({ ...prev, accountNumber: "" }));
     } catch (err) {
-      void normalizeError(err);
-      setError((err as Error).message);
+      /*
+       * `normalizeError` was already being called and its result DISCARDED,
+       * then the raw `.message` shown anyway — a thrown value's message is
+       * written for a developer, and this is the path a network failure or a
+       * bundler fault takes (Root Cause #86 rendered a require stack this
+       * way). Use the normalized code; the sentence is ours.
+       */
+      const normalized = normalizeError(err);
+      setError(
+        toUserMessage(normalized.code, undefined, {
+          fallback: "We couldn't save your payout settings. Please try again.",
+        }),
+      );
     } finally {
       setSaving(false);
     }
@@ -335,7 +424,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       required: true,
       quick: true,
       fields: ["method", "upiId", "accountHolderName", "accountNumber", "ifscCode", "bankName", "accountType"],
-      render: ({ values, onChange }) => (
+      render: ({ values, onChange, errors }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Method</Heading>
           {current && (
@@ -370,6 +459,13 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
                   onChange={() => onChange({ method: value })}
                   className="accent-[var(--appkit-color-primary)]"
                   disabled={busy}
+                  /*
+                   * Marked invalid on each radio, but the message is rendered
+                   * ONCE under the group — `method` is one field, so an
+                   * `error` per radio would print and announce the same
+                   * sentence for every option.
+                   */
+                  aria-invalid={errors.method ? "true" : undefined}
                 />
                 <Div>
                   <Text weight="medium">{label}</Text>
@@ -377,6 +473,9 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
                 </Div>
               </label>
             ))}
+            {errors.method && (
+              <Text size="sm" variant="error" role="alert">{errors.method}</Text>
+            )}
           </Stack>
           {values.method === "upi" && (
             <FormField
@@ -434,23 +533,18 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
                 />
                 <Div>
                   <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
-                  <Row gap="xs">
-                    {(["savings", "current"] as const).map((t) => (
-                      <Label layout="flex" gap="md" key={t} className="cursor-pointer">
-                        <Checkbox
-                          bare
-                          type="radio"
-                          name="accountType"
-                          value={t}
-                          checked={values.accountType === t}
-                          onChange={() => onChange({ accountType: t })}
-                          className="accent-[var(--appkit-color-primary)]"
-                          disabled={busy}
-                        />
-                        <Text size="sm" transform="capitalize">{t}</Text>
-                      </Label>
-                    ))}
-                  </Row>
+                  <RadioFieldGroup
+                    name="accountType"
+                    value={values.accountType}
+                    options={["savings", "current"] as const}
+                    error={errors.accountType}
+                    disabled={busy}
+                    onSelect={(t) => onChange({ accountType: t })}
+                    layout={Row}
+                    renderOption={(t) => (
+                      <Text size="sm" transform="capitalize">{t}</Text>
+                    )}
+                  />
                 </Div>
               </FormGroup>
             </Stack>

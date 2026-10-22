@@ -157,6 +157,24 @@ export function ReceiveStationView({
     rowsRef.current = computed;
     setRows(computed);
   }
+
+  /**
+   * Drop one staged row. Named rather than inline in the table's Remove
+   * button, where the updater's block body sat a brace too deep.
+   */
+  function removeRow(key: string): void {
+    applyRows((c) => {
+      const next = { ...c };
+      delete next[key];
+      return next;
+    });
+  }
+
+  /** Set one staged row's quantity. Same reason as `removeRow`. */
+  function setRowQuantity(key: string, quantity: number): void {
+    applyRows((c) => ({ ...c, [key]: { ...c[key]!, quantity } }));
+  }
+
   const [scan, setScan] = useState("");
   const [committing, setCommitting] = useState(false);
   /** The in-flight guard. State renders the spinner; this prevents the second send. */
@@ -698,24 +716,13 @@ export function ReceiveStationView({
                           // Many steppers on one page, so a bare "Quantity"
                           // names none of them.
                           ariaLabel={`Quantity of ${r.productTitle} for ${r.boxCode}`}
-                          onChange={(n) =>
-                            applyRows((c) => ({
-                              ...c,
-                              [key]: { ...c[key]!, quantity: n },
-                            }))
-                          }
+                          onChange={(n) => setRowQuantity(key, n)}
                         />
                       </Td>
                       <Td>
                         <Button
                           variant="ghost"
-                          onClick={() =>
-                            applyRows((c) => {
-                              const next = { ...c };
-                              delete next[key];
-                              return next;
-                            })
-                          }
+                          onClick={() => removeRow(key)}
                         >
                           Remove
                         </Button>
