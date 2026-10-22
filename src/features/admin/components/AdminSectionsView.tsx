@@ -32,6 +32,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
 import { toRecordArray, toRelativeDate } from "../hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../hooks/useOptimisticRowFlag";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { QuickEditMenu } from "./QuickEditMenu";
@@ -2763,17 +2764,23 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
   const [dragIndex, setDragIndex] = React.useState<number | null>(null);
   const [deleteTargetId, setDeleteTargetId] = React.useState<string | null>(null);
-  /**
-   * Optimistic `enabled` per row, keyed by id.
+
+  /*
+   * 🛑 `config` is deliberately omitted from the PATCH:
+   * `HomepageSectionsRepository.update` short-circuits its merge READ when
+   * `data.config` is absent, so an enable/disable costs one write and no read.
    *
-   * 🛑 Rollback DELETES the key; it never writes back a captured previous
-   * value. Capturing `overrides[id]` yields `undefined` on the first toggle of
-   * a row, and writing that back renders as `false` — so a failed toggle of a
-   * row the server holds as `true` would leave the UI asserting the opposite.
-   * The key is also deleted on SUCCESS, after the refetch settles, or a stale
-   * override pins the row and masks every later server-side change to it.
+   * The optimistic/rollback logic lives in the shared hook — see its header
+   * for why a rollback must DELETE the override key rather than write back a
+   * captured value, and why the key is cleared on success too.
    */
-  const [enabledOverrides, setEnabledOverrides] = React.useState<Record<string, boolean>>({});
+  const enabledFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${id}`, { enabled: next }),
+    // The public homepage reads under a key of its own; both must be busted.
+    invalidate: [["admin", "sections", "listing"], ["homepage-sections"]],
+    successMessage: (next) => (next ? "Section enabled." : "Section disabled."),
+    errorMessage: "Failed to update section.",
+  });
 
   /*
    * The reorder panel needs EVERY section, not the current page.
@@ -2808,42 +2815,11 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     setReorderUndoStack([]);
   }, [sections]);
 
-  const clearOverride = React.useCallback((id: string) => {
-    setEnabledOverrides((prev) => {
-      if (!(id in prev)) return prev;
-      const next = { ...prev };
-      delete next[id];
-      return next;
-    });
-  }, []);
-
   const invalidateSections = React.useCallback(async () => {
     await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
     // Public-facing useHomepageSections() reads under a separate key.
     await queryClient.invalidateQueries({ queryKey: ["homepage-sections"] });
   }, [queryClient]);
-
-  const toggleEnabled = React.useCallback(
-    async (id: string, next: boolean) => {
-      setEnabledOverrides((prev) => ({ ...prev, [id]: next }));
-      try {
-        /*
-         * `config` is deliberately omitted: HomepageSectionsRepository.update
-         * short-circuits its merge READ when `data.config` is absent, so an
-         * enable/disable costs one write and no read.
-         */
-        await apiClient.patch(`${ADMIN_ENDPOINTS.SECTIONS}/${id}`, { enabled: next });
-        await invalidateSections();
-        clearOverride(id);
-        toast.showToast(next ? "Section enabled." : "Section disabled.", "success");
-      } catch (err) {
-        const normalized = normalizeError(err);
-        clearOverride(id);
-        toast.showToast(normalized.message || "Failed to update section.", "error");
-      }
-    },
-    [clearOverride, invalidateSections, toast],
-  );
 
   const deleteSection = useApiMutation({
     errorMessage: "Failed to delete section.",
@@ -2986,7 +2962,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         const id = toStringValue(item.id, `section-${index}`);
         const type = toStringValue(item.type, "unknown");
         const surface = toStringValue(item.surface, "homepage");
-        const enabled = enabledOverrides[id] ?? Boolean(item.enabled);
+        const enabled = enabledFlag.resolve(id, Boolean(item.enabled));
         return {
           id,
           primary: type.charAt(0).toUpperCase() + type.slice(1).replace(/-/g, " "),
@@ -3085,7 +3061,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               : `${ACTIONS.ADMIN["enable-section"].label} ${row.primary}`
           }
           onChange={(next) => {
-            void toggleEnabled(row.id, next);
+            void enabledFlag.set(row.id, next);
           }}
         />
         <QuickEditMenu

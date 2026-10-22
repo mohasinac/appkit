@@ -2,7 +2,7 @@
 
 import { SIEVE_OP, sieveFilter, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
-import { Badge, Button, FilterChipGroup, Stack, Text, TextLink } from "../../../ui";
+import { Badge, Button, FilterChipGroup, Stack, Text, TextLink, Toggle } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
@@ -16,6 +16,8 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
+import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -89,6 +91,23 @@ export interface SellerBundlesViewProps {
 }
 
 export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesViewProps) {
+  /*
+   * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
+   * to take it on its own — shipping-config's even says so in a comment: "a
+   * PATCH may legitimately carry only `isActive`". Nothing in the client had
+   * ever sent one, so flipping one boolean meant a full-editor round trip.
+   *
+   * The optimistic/rollback logic lives in the hook because eight listings
+   * grew this control at once; see its header for why rollback must DELETE
+   * the override key rather than write back a captured value.
+   */
+  const activeFlag = useOptimisticRowFlag<boolean>({
+    mutate: (id, next) => apiClient.put(SELLER_ENDPOINTS.BUNDLE_BY_ID(id), { isActive: next }),
+    invalidate: [["seller", "bundles", "listing"], ["bundles"]],
+    successMessage: (next) => (next ? "Bundle activated." : "Bundle deactivated."),
+    errorMessage: "Could not change that bundle's status.",
+  });
+
   const config: ListingViewConfig<BundlesResponse, BundleRow> = {
     portal: "seller",
     title: "Bundles",
@@ -112,20 +131,29 @@ export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesVi
     ],
     columns: COLUMNS,
     mapRows: (response) =>
-      toRecordArray(response.items).map((item, index) => ({
-        id: toStringValue(item.id, `bundle-${index}`),
-        primary: toStringValue(item.name, "Untitled bundle"),
-        secondary: toStringValue(item.slug, "no-slug"),
-        price: formatPrice(item.bundlePrice),
-        members: String(Array.isArray(item.bundleProductIds) ? item.bundleProductIds.length : 0),
-        stockStatus: toStringValue(item.bundleStockStatus, "in_stock"),
-        isActive: item.isActive === true,
-        status:
-          item.isActive === true
+      toRecordArray(response.items).map((item, index) => {
+        const id = toStringValue(item.id, `bundle-${index}`);
+        /*
+         * Resolved ONCE, through the pending override, and then used for both
+         * `isActive` and the `status` LABEL below. Deriving the label from the
+         * raw value while the flag read the override is how the badge ends up
+         * saying "Inactive" beside a switch that is on.
+         */
+        const isActive = activeFlag.resolve(id, item.isActive === true);
+        return {
+          id,
+          primary: toStringValue(item.name, "Untitled bundle"),
+          secondary: toStringValue(item.slug, "no-slug"),
+          price: formatPrice(item.bundlePrice),
+          members: String(Array.isArray(item.bundleProductIds) ? item.bundleProductIds.length : 0),
+          stockStatus: toStringValue(item.bundleStockStatus, "in_stock"),
+          isActive,
+          status: isActive
             ? BUNDLE_COPY.adminList.activeBadge
             : BUNDLE_COPY.adminList.inactiveBadge,
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-      })),
+          updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        };
+      }),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (filterState) => {
@@ -136,6 +164,25 @@ export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesVi
       return parts.join(",") || undefined;
     },
     rowHrefTemplate: editHrefTemplate,
+    /*
+     * 🛑 This view had NO renderRowActions at all — the only per-row
+     * affordance was the row link to the editor, so a bundle could only be
+     * activated or deactivated by opening it.
+     *
+     * The toggle lives here rather than in a column because `rowHrefTemplate`
+     * makes the row an anchor: a normal column cell does not stop
+     * propagation, so a switch there would flip AND navigate. This slot is
+     * already click-stopped in all three renderers.
+     */
+    renderRowActions: (row) => (
+      <Toggle
+        size="sm"
+        checked={row.isActive}
+        disabled={activeFlag.pendingId === row.id}
+        ariaLabel={`${row.isActive ? "Deactivate" : "Activate"} ${row.primary}`}
+        onChange={(next) => { void activeFlag.set(row.id, next); }}
+      />
+    ),
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
         <TextLink href={newHref} layout="flex" align="center" gap="xs">

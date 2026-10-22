@@ -37,10 +37,8 @@
  */
 
 import React, { useCallback, useState } from "react";
-import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text, useToast } from "../../../ui";
-import { useQueryClient } from "@tanstack/react-query";
+import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
 import { apiClient } from "../../../http";
-import { normalizeError } from "../../../errors/normalize";
 import type { BulkActionItem } from "../../../ui";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -57,6 +55,7 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
+import { useOptimisticRowFlag } from "../../admin/hooks/useOptimisticRowFlag";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
@@ -334,8 +333,6 @@ export function SellerListingTypeView({
 }: SellerListingTypeViewProps & { type: SellerListingTypeKey }) {
   const spec = SELLER_LISTING_TYPE_SPECS[type];
   const plugin = pluginFor(type as ListingType);
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
 
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
@@ -354,49 +351,17 @@ export function SellerListingTypeView({
   );
 
   /*
-   * Optimistic status, keyed by row id.
-   *
-   * 🛑 Rollback DELETES the key rather than writing back a captured value:
-   * `overrides[id]` is `undefined` before a row's first toggle, and writing
-   * that back renders as the row's server value being unknown. Cleared on
-   * success too, once the refetch has settled, or a stale override pins the
-   * row and masks every later change to it.
+   * Optimistic status, via the shared hook — see its header for why a
+   * rollback must DELETE the override key rather than write back a captured
+   * value, and why the key is cleared on success too.
    */
-  const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
-  const [publishingId, setPublishingId] = useState<string | null>(null);
-
-  const clearStatusOverride = useCallback((id: string) => {
-    setStatusOverrides((prev) => {
-      if (!(id in prev)) return prev;
-      const next = { ...prev };
-      delete next[id];
-      return next;
-    });
-  }, []);
-
-  const handleTogglePublish = useCallback(
-    async (id: string, isPublished: boolean) => {
-      const nextStatus = isPublished ? "draft" : "published";
-      setStatusOverrides((prev) => ({ ...prev, [id]: nextStatus }));
-      setPublishingId(id);
-      try {
-        await apiClient.patch(SELLER_ENDPOINTS.PRODUCT_BY_ID(id), { status: nextStatus });
-        await queryClient.invalidateQueries({ queryKey: ["seller", plugin.tabSlug] });
-        clearStatusOverride(id);
-        showToast(
-          nextStatus === "published" ? "Listing published." : "Listing unpublished.",
-          "success",
-        );
-      } catch (err) {
-        const normalized = normalizeError(err);
-        clearStatusOverride(id);
-        showToast(normalized.message || "Could not change that listing's status.", "error");
-      } finally {
-        setPublishingId(null);
-      }
-    },
-    [clearStatusOverride, queryClient, showToast, plugin.tabSlug],
-  );
+  const statusFlag = useOptimisticRowFlag<string>({
+    mutate: (id, next) => apiClient.patch(SELLER_ENDPOINTS.PRODUCT_BY_ID(id), { status: next }),
+    invalidate: [["seller", plugin.tabSlug]],
+    successMessage: (next) =>
+      next === "published" ? "Listing published." : "Listing unpublished.",
+    errorMessage: "Could not change that listing's status.",
+  });
 
   const handleEdit = useCallback(
     (id: string) => {
@@ -443,7 +408,7 @@ export function SellerListingTypeView({
        * while the badge beside it still said published, until the refetch.
        */
       render: (row) => {
-        const status = statusOverrides[row.id] ?? row.status;
+        const status = statusFlag.resolve(row.id, row.status);
         return (
           <Badge variant={status === "active" || status === "published" ? "active" : "inactive"} size="xs" className="capitalize">
             {status}
@@ -511,7 +476,7 @@ export function SellerListingTypeView({
           }))
       : undefined,
     renderRowActions: (row) => {
-      const isPublished = (statusOverrides[row.id] ?? row.status) === "published";
+      const isPublished = statusFlag.resolve(row.id, row.status) === "published";
       return (
         <RowActionMenu
           actions={[
@@ -535,8 +500,8 @@ export function SellerListingTypeView({
                 ? ACTIONS.STORE["unpublish-listing"].label
                 : ACTIONS.STORE["publish-listing"].label,
               separator: true,
-              disabled: publishingId === row.id,
-              onClick: () => void handleTogglePublish(row.id, isPublished),
+              disabled: statusFlag.pendingId === row.id,
+              onClick: () => { void statusFlag.set(row.id, isPublished ? "draft" : "published"); },
             },
             {
               label: ACTIONS.STORE["delete-listing"].label,
