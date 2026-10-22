@@ -893,8 +893,21 @@ export function SellerProductsView({
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); void handleTogglePublish(row); }}
-            aria-label={isPublished ? "Unpublish" : "Publish"}
-            title={isPublished ? "Unpublish" : "Publish"}
+            /*
+             * Rule #7: from the registry, not hand-written here.
+             * `store.publish-listing` / `unpublish-listing` were defined with
+             * zero call sites while this view reinvented their labels inline.
+             */
+            aria-label={
+              isPublished
+                ? ACTIONS.STORE["unpublish-listing"].label
+                : ACTIONS.STORE["publish-listing"].label
+            }
+            title={
+              isPublished
+                ? ACTIONS.STORE["unpublish-listing"].description
+                : ACTIONS.STORE["publish-listing"].description
+            }
             disabled={publishingId === row.id}
           >
             {isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

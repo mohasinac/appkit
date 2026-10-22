@@ -37,7 +37,10 @@
  */
 
 import React, { useCallback, useState } from "react";
-import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
+import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text, useToast } from "../../../ui";
+import { useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../../../http";
+import { normalizeError } from "../../../errors/normalize";
 import type { BulkActionItem } from "../../../ui";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -331,6 +334,8 @@ export function SellerListingTypeView({
 }: SellerListingTypeViewProps & { type: SellerListingTypeKey }) {
   const spec = SELLER_LISTING_TYPE_SPECS[type];
   const plugin = pluginFor(type as ListingType);
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
@@ -346,6 +351,51 @@ export function SellerListingTypeView({
       setDeleteTargetId(null);
     },
     [performDelete],
+  );
+
+  /*
+   * Optimistic status, keyed by row id.
+   *
+   * 🛑 Rollback DELETES the key rather than writing back a captured value:
+   * `overrides[id]` is `undefined` before a row's first toggle, and writing
+   * that back renders as the row's server value being unknown. Cleared on
+   * success too, once the refetch has settled, or a stale override pins the
+   * row and masks every later change to it.
+   */
+  const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
+  const [publishingId, setPublishingId] = useState<string | null>(null);
+
+  const clearStatusOverride = useCallback((id: string) => {
+    setStatusOverrides((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }, []);
+
+  const handleTogglePublish = useCallback(
+    async (id: string, isPublished: boolean) => {
+      const nextStatus = isPublished ? "draft" : "published";
+      setStatusOverrides((prev) => ({ ...prev, [id]: nextStatus }));
+      setPublishingId(id);
+      try {
+        await apiClient.patch(SELLER_ENDPOINTS.PRODUCT_BY_ID(id), { status: nextStatus });
+        await queryClient.invalidateQueries({ queryKey: ["seller", plugin.tabSlug] });
+        clearStatusOverride(id);
+        showToast(
+          nextStatus === "published" ? "Listing published." : "Listing unpublished.",
+          "success",
+        );
+      } catch (err) {
+        const normalized = normalizeError(err);
+        clearStatusOverride(id);
+        showToast(normalized.message || "Could not change that listing's status.", "error");
+      } finally {
+        setPublishingId(null);
+      }
+    },
+    [clearStatusOverride, queryClient, showToast, plugin.tabSlug],
   );
 
   const handleEdit = useCallback(
@@ -387,11 +437,19 @@ export function SellerListingTypeView({
     {
       key: "status",
       header: "Status",
-      render: (row) => (
-        <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
-          {row.status}
-        </Badge>
-      ),
+      /*
+       * Reads the optimistic override so the badge and the row action agree
+       * the instant one is used — otherwise the menu would say "Unpublish"
+       * while the badge beside it still said published, until the refetch.
+       */
+      render: (row) => {
+        const status = statusOverrides[row.id] ?? row.status;
+        return (
+          <Badge variant={status === "active" || status === "published" ? "active" : "inactive"} size="xs" className="capitalize">
+            {status}
+          </Badge>
+        );
+      },
     },
     textCell("createdAt", spec.createdHeader ?? "Created"),
   ];
@@ -452,19 +510,44 @@ export function SellerListingTypeView({
             },
           }))
       : undefined,
-    renderRowActions: (row) => (
-      <RowActionMenu
-        actions={[
-          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
-          {
-            label: ACTIONS.STORE["delete-listing"].label,
-            destructive: true,
-            onClick: () => setDeleteTargetId(row.id),
-            disabled: deletingId === row.id,
-          },
-        ]}
-      />
-    ),
+    renderRowActions: (row) => {
+      const isPublished = (statusOverrides[row.id] ?? row.status) === "published";
+      return (
+        <RowActionMenu
+          actions={[
+            { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
+            /*
+             * 🛑 This one entry lights up SIX seller pages — art, classified,
+             * digital codes, live, spares and stickers are each a ~25-line
+             * wrapper around this component.
+             *
+             * `status` was a read-only Badge on all of them, so changing one
+             * listing from published to draft meant opening the full editor,
+             * even though `PATCH /api/store/products/[id]` has always taken
+             * `status` and SellerProductsView already drives that exact call.
+             *
+             * `ACTIONS.STORE["publish-listing"]` / `["unpublish-listing"]`
+             * were defined with ZERO call sites — this is what finally wires
+             * them, rather than reinventing the labels inline.
+             */
+            {
+              label: isPublished
+                ? ACTIONS.STORE["unpublish-listing"].label
+                : ACTIONS.STORE["publish-listing"].label,
+              separator: true,
+              disabled: publishingId === row.id,
+              onClick: () => void handleTogglePublish(row.id, isPublished),
+            },
+            {
+              label: ACTIONS.STORE["delete-listing"].label,
+              destructive: true,
+              onClick: () => setDeleteTargetId(row.id),
+              disabled: deletingId === row.id,
+            },
+          ]}
+        />
+      );
+    },
   };
 
   return (
