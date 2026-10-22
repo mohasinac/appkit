@@ -954,6 +954,38 @@ export interface OrderDocument extends BaseDocument {
    */
   platformBookedShipment?: boolean;
   /**
+   * We tried to book a courier for this order and could not.
+   *
+   * ## 🛑 ITS WHOLE PURPOSE IS TO STOP AN AUTO-CANCELLATION
+   *
+   * `seller-dispatch` is an `onDue: "act"` obligation on a 2-business-day
+   * clock. Without this field, an order sitting on OUR empty courier wallet is
+   * auto-cancelled and the buyer refunded — with the seller recorded as having
+   * failed to dispatch. The buyer paid, the seller did nothing wrong, and the
+   * platform's own funding state caused the cancellation.
+   *
+   * So every `onDue: "act"` policy anchored at or after dispatch gates its
+   * `precondition` on `!hasOpenCourierBlock(order)`. The obligation engine
+   * re-evaluates `precondition` at fire time and closes `superseded` when it
+   * returns false, so the clock pauses and resumes with no new mechanism.
+   *
+   * Absent means no block — which is every order ever written, so this needs
+   * no migration and changes nothing until something sets it.
+   *
+   * `reason` is the operator's word, not the seller's: the seller is told only
+   * that we could not book a courier right now, because our balance is our
+   * problem and not theirs.
+   */
+  courierBlock?: {
+    reason: "insufficient_funds" | "provider_error" | "unserviceable";
+    at: Date;
+    lastAttemptAt?: Date;
+    /** Attempts so far, so the digest can distinguish stuck from transient. */
+    attempts: number;
+    /** Upstream detail, for the admin surface only. Never shown to a seller. */
+    detail?: string;
+  };
+  /**
    * The self-shipped reimbursement workflow: evidence in, approved amount out.
    *
    * ## 🛑 `declaredAmount` is an ESTIMATE; `approvedAmount` is the entitlement

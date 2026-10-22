@@ -74,6 +74,7 @@ import type {
   ShippingAddress,
   TrackingInfo,
   ServiceabilityResult,
+  WalletBalance,
 } from "../../contracts";
 import { ApiError } from "../../errors";
 import { normalizeError } from "../../errors/normalize";
@@ -145,6 +146,46 @@ const serviceabilityResponse = z.object({
       .nullish(),
   }),
 });
+
+/*
+ * Measured against the live API 2026-10-22 (read-only probe, one auth + GETs):
+ *
+ *   GET /account/details/wallet-balance -> 200 { data: { balance_amount: string } }
+ *   GET /account/details                -> 404
+ *
+ * 🛑 `balance_amount` is a STRING, and there is NO credit-limit field — so
+ * postpaid headroom is not readable from this API at all. See `WalletBalance`
+ * in contracts/shipping.ts for why no such field is declared.
+ */
+const walletBalanceResponse = z.object({
+  data: z.object({
+    balance_amount: z.union([z.number(), z.string()]).nullish(),
+  }),
+});
+
+/**
+ * Does this upstream error body look like "your wallet is empty"?
+ *
+ * 🛑 The substring list is UNVERIFIED and that is acceptable, because of where
+ * it sits in the design: a funding failure and any other booking failure take
+ * the SAME path — the order gets a `courierBlock`, the admin is alerted, the
+ * seller is offered retry-or-self-ship. Classifying only changes the WORDING
+ * of the operator's alert. So a false negative costs a less specific message
+ * and never a wrong action, which is why this is allowed to be a heuristic
+ * rather than something this plan pretended to have confirmed.
+ *
+ * Triggering the real error would mean deliberately booking a shipment against
+ * a drained wallet, which is not a probe anyone should run on a live account.
+ */
+export function looksLikeInsufficientFunds(body: string): boolean {
+  const s = body.toLowerCase();
+  return (
+    s.includes("insufficient") ||
+    s.includes("low balance") ||
+    s.includes("recharge") ||
+    (s.includes("wallet") && s.includes("balance"))
+  );
+}
 
 function num(v: unknown, fallback = 0): number {
   const n = typeof v === "string" ? Number.parseFloat(v) : v;
@@ -271,7 +312,28 @@ export class ShiprocketShippingProvider extends IShippingProvider {
       res = await attempt(true);
     }
     if (!res.ok) {
-      throw new ApiError(502, `Shiprocket ${path} failed (${res.status}).`, { code: "SHIPROCKET_REQUEST_FAILED" });
+      /*
+       * The body is read and carried, not discarded.
+       *
+       * It used to throw on `res.status` alone, which meant a funding failure
+       * and a malformed-address failure were indistinguishable to every
+       * caller — and the first of those is the one an operator can actually
+       * fix, by topping up.
+       *
+       * Truncated, because an upstream error page can be a whole HTML
+       * document and this string ends up in a log line.
+       */
+      const body = await res.text().catch(() => "");
+      const insufficient = looksLikeInsufficientFunds(body);
+      throw new ApiError(
+        502,
+        `Shiprocket ${path} failed (${res.status}).`,
+        {
+          code: insufficient ? "SHIPROCKET_INSUFFICIENT_FUNDS" : "SHIPROCKET_REQUEST_FAILED",
+          upstreamStatus: res.status,
+          upstreamBody: body.slice(0, 500),
+        },
+      );
     }
 
     const json: unknown = await res.json();
@@ -386,6 +448,40 @@ export class ShiprocketShippingProvider extends IShippingProvider {
         description: e.activity ?? undefined,
       })),
     };
+  }
+
+  /**
+   * The prepaid wallet balance. Read-only; never charges anything.
+   *
+   * 🛑 Returns `{ known: false, supported: true }` on ANY failure rather than
+   * `0`. Shiprocket HAS a wallet, so `supported` is true regardless — the
+   * caller must treat "unreadable" as "attempt the booking anyway and let the
+   * attempt's own failure decide", because refusing on an unreadable balance
+   * would block every order on a transient network blip. A `0` here is a real
+   * decision to skip; an unreadable balance is not.
+   */
+  async getWalletBalance(): Promise<WalletBalance> {
+    try {
+      const out = await this.call(
+        "/account/details/wallet-balance",
+        { method: "GET" },
+        walletBalanceResponse,
+      );
+      const raw = out.data.balance_amount;
+      /*
+       * `num()` would silently fold an unparseable string into its fallback,
+       * which is exactly the 0-means-unknown conflation this type exists to
+       * prevent. Parsed explicitly so a bad payload reports `known: false`.
+       */
+      const parsed = typeof raw === "string" ? Number.parseFloat(raw) : raw;
+      if (typeof parsed !== "number" || !Number.isFinite(parsed)) {
+        return { known: false, supported: true, reason: "unparseable balance_amount" };
+      }
+      return { known: true, amount: parsed, currency: "INR" };
+    } catch (err) {
+      const normalized = normalizeError(err);
+      return { known: false, supported: true, reason: normalized.message };
+    }
   }
 
   async cancelShipment(shipmentId: string): Promise<void> {

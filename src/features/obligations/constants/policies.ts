@@ -41,6 +41,7 @@ import {
 } from "../../../_internal/shared/features/orders/config";
 import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../_internal/shared/features/shipping/protections";
 import { PAYMENT_WINDOW_MINUTES } from "../../orders/constants/payment-window";
+import { hasOpenCourierBlock } from "../../orders/utils/courier-block";
 import type { OrderDocument } from "../../orders/schemas/firestore";
 import type { ObligationDueAction, ObligationKind } from "../schemas/firestore";
 
@@ -144,7 +145,30 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
     anchor: (o) => o.acceptedAt,
     duration: { value: 2, unit: "days", calendar: "business" },
     warnAt: [{ value: 8, unit: "hours", calendar: "calendar" }],
-    precondition: (o) => isPaid(o) && notTerminal(o) && !hasDispatched(o),
+    /*
+     * 🛑 `!hasOpenCourierBlock(o)` — DO NOT REMOVE, and do not "simplify" it
+     * into the stored field.
+     *
+     * This is `onDue: "act"`, so firing cancels the order and refunds the
+     * buyer with the seller recorded as having failed to dispatch. When the
+     * platform's own courier wallet is empty, nothing the seller can do makes
+     * the booking succeed — so without this guard our funding state cancels a
+     * paid order and blames them for it.
+     *
+     * The engine re-evaluates `precondition` at fire time and closes
+     * `superseded` when it returns false, so the clock PAUSES while blocked and
+     * resumes when the block clears. No new mechanism, no stored timer.
+     *
+     * 🛑 This is the ONLY `onDue: "act"` policy that needs the guard, and the
+     * others were checked rather than assumed: `hasDispatched` is
+     * `Boolean(o.shippingDate)`, so `delivery-confirm` (which REQUIRES
+     * `hasDispatched`) and everything post-delivery can never fire on an order
+     * that was never booked. `seller-accept` requires `!o.acceptedAt`, and a
+     * booking is only attempted after acceptance. Adding the guard there too
+     * would be redundant and would imply nobody traced it.
+     */
+    precondition: (o) =>
+      isPaid(o) && notTerminal(o) && !hasDispatched(o) && !hasOpenCourierBlock(o),
     blockedBy: ["seller-accept"],
     onDue: "act",
     publishedCopyKey: "obligations.sellerDispatch",
