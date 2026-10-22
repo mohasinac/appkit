@@ -27,7 +27,7 @@ const SIGN_IN_BUYER = "Sign in as rehan.sheikh@gmail.com / TempPass123!.";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-content-discovery-event-participation-join-event-as-participant": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-favourite-blader-poll — an ACTIVE poll with 3 seeded entries. 🛑 THE NEXT FOUR CASES READ THE ENTRY THIS ONE CREATES, so they must all use this same event; picking a different active event each time breaks the chain and each case then tests a state nobody set up.",
@@ -44,7 +44,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-own-entry-visible-after-join": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
@@ -61,7 +61,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-entry-survives-reload-and-relogin": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event and note the entry's status.",
@@ -78,7 +78,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-cannot-join-twice": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
@@ -96,7 +96,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leave-or-cancel-entry": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Join an active event.",
@@ -114,7 +114,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-closed-event-cannot-be-joined": {
     roles: ["buyer"],
-    startPage: "/events/event-won-original-set-raffle",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-won-original-set-raffle — an ENDED raffle, which is the seed's only ended event.",
@@ -131,7 +131,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-shows-real-participants": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll/leaderboard",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-favourite-blader-poll and open its Leaderboard tab — it carries 3 seeded entries, so the board is not empty.",
@@ -148,7 +148,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-own-row-findable": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll/leaderboard",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Join an event that has a leaderboard and take part enough to appear on it.",
@@ -165,7 +165,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-ordering-correct": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll/leaderboard",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-favourite-blader-poll and its Leaderboard tab, and write down every row in order with its score — the seed has 3 entries, so read all of them rather than expecting ten.",
@@ -182,7 +182,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-leaderboard-empty-state": {
     roles: ["buyer"],
-    startPage: "/events/event-beyblade-slot-raffle-draft",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-beyblade-slot-raffle-draft — a DRAFT raffle with no seeded entries, which is what makes the empty state reachable.",
@@ -199,7 +199,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-raffle-winner-announced-to-participants": {
     roles: ["admin", "buyer"],
-    startPage: "/events/event-won-original-set-raffle",
+    startPage: "/events",
     steps: [
       "Sign in as admin@letitrip.in / TempPass123! and open an event with a raffle configured.",
       "Draw the raffle and note who won.",
@@ -216,7 +216,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-content-discovery-event-participation-spin-wheel-one-use-enforced": {
     roles: ["buyer"],
-    startPage: "/events/event-daily-beyblade-pull-wheel",
+    startPage: "/events",
     steps: [
       SIGN_IN_BUYER,
       "Open /events/event-daily-beyblade-pull-wheel — the seed's only SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2. Note the cap is TWO, not one: a case asserting a single use would fail on a correct system.",

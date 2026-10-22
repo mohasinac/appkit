@@ -369,7 +369,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-opens": {
     roles: ["guest"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Open /groups/group-beyblade-original-lineage in a private window with no session — the seeded grouped listing 'Original Series Lineage', whose members are product-beyblade-original-dranzer-s and product-beyblade-original-driger-v.",
       "Read what the page names and what controls it offers.",
@@ -385,7 +385,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-running-total": {
     roles: ["buyer"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /groups/group-beyblade-original-lineage and open the member picker.",
@@ -403,7 +403,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-stock-cap": {
     roles: ["buyer"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /groups/group-beyblade-original-lineage and open the member picker.",
@@ -420,7 +420,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-blocked-member": {
     roles: ["buyer"],
-    startPage: "/groups/group-beyblade-local-meetup-picks",
+    startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /groups/group-beyblade-local-meetup-picks \u2014 'Local Meetup Picks', whose three members are all classified listings and therefore cannot be added to a cart at all.",
@@ -439,7 +439,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-one-line": {
     roles: ["buyer"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123!.",
       "Open /groups/group-beyblade-original-lineage and select BOTH members — Dranzer S at quantity 1 and Driger V at quantity 2.",
@@ -457,7 +457,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-single-member-plain-line": {
     roles: ["buyer"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123! and empty the cart first.",
       "Open /groups/group-beyblade-original-lineage and select exactly ONE member — product-beyblade-original-driger-v — at quantity 2.",
@@ -522,7 +522,7 @@ export const authored: Record<string, AuthoredCase> = {
   },
   "checklist-buying-cart-group-picker-guest": {
     roles: ["guest"],
-    startPage: "/groups/group-beyblade-original-lineage",
+    startPage: "/cart",
     steps: [
       "Open /groups/group-beyblade-original-lineage in a private window with no session.",
       "Open the member picker.",

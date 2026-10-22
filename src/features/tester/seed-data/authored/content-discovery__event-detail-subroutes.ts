@@ -25,7 +25,7 @@ import type { AuthoredCase } from "./_types";
 export const authored: Record<string, AuthoredCase> = {
   "checklist-content-discovery-event-detail-subroutes-detail-tabs-match-event-type": {
     roles: ["guest"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       "Open /events/event-favourite-blader-poll — a poll.",
       "Write down every tab shown.",
@@ -49,7 +49,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-participate-records-an-entry": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-favourite-blader-poll.",
@@ -69,7 +69,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-participate-twice-is-refused": {
     roles: ["buyer"],
-    startPage: "/events/event-favourite-blader-poll",
+    startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123! and open /events/event-favourite-blader-poll.",
       "Participate once if you have not already.",
@@ -88,7 +88,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-leaderboard-ranks-by-a-real-number": {
     roles: ["guest"],
-    startPage: "/events/event-favourite-blader-poll/leaderboard",
+    startPage: "/events",
     steps: [
       "Open /events/event-favourite-blader-poll and open its Leaderboard tab.",
       "Read the number beside each of the first five rows — the vote or score the row is ranked on.",
@@ -107,7 +107,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-winner-page-before-draw": {
     roles: ["guest"],
-    startPage: "/events/event-win-burst-regalia-genesis/winner",
+    startPage: "/events",
     steps: [
       "Open /events/event-win-burst-regalia-genesis — an ACTIVE raffle that has not been drawn.",
       "Open its Winner tab.",
@@ -124,7 +124,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-winner-page-after-draw": {
     roles: ["guest"],
-    startPage: "/events/event-won-original-set-raffle/winner",
+    startPage: "/events",
     steps: [
       "Open /events/event-won-original-set-raffle — an ENDED raffle with a recorded winner.",
       "Open its Winner tab.",
@@ -142,7 +142,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-cancelled-event-refuses-participation": {
     roles: ["buyer"],
-    startPage: "/events/event-x-launch-raffle-cancelled",
+    startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-x-launch-raffle-cancelled — a CANCELLED raffle.",
@@ -194,7 +194,7 @@ export const authored: Record<string, AuthoredCase> = {
    */
   "checklist-content-discovery-event-detail-subroutes-spin-results-subroute": {
     roles: ["buyer"],
-    startPage: "/events/event-daily-beyblade-pull-wheel/spin-results",
+    startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-daily-beyblade-pull-wheel — a SPIN_WHEEL event, active, with real spinPrizes and spinMaxPerUser of 2.",
@@ -217,7 +217,7 @@ export const authored: Record<string, AuthoredCase> = {
 
   "checklist-content-discovery-event-detail-subroutes-my-spins-scoped-to-viewer": {
     roles: ["buyer"],
-    startPage: "/events/event-daily-beyblade-pull-wheel/spin-results",
+    startPage: "/events",
     steps: [
       "Sign in as the buyer rehan.sheikh@gmail.com / TempPass123!.",
       "Open /events/event-daily-beyblade-pull-wheel/spin-results.",

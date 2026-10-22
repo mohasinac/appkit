@@ -49,12 +49,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
-      "Navigate directly to /api/user/orders/order-1-20251107-11joon/invoice — a seeded order belonging to a different persona.",
+      "Navigate directly to /api/user/orders/order-1-20251107-1spbqn/invoice — a seeded order belonging to a different persona.",
       "Read the response.",
-      "Now navigate to /user/orders/order-1-20251107-11joon.",
+      "Now navigate to /user/orders/order-1-20251107-1spbqn.",
       "Read that page.",
     ],
-    inputs: { foreignOrderId: "order-1-20251107-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-1spbqn" },
     expectedBehaviour:
       "An order id is short and guessable, so ownership is checked on every hit rather than relied upon to be secret. Answering 403 instead of 404 would confirm that an order with that id exists, which is a membership oracle over the id space.",
     expectedUiState:
@@ -91,25 +91,25 @@ export const authored: Record<string, AuthoredCase> = {
        * 🛑 rehan, NOT vivaan — and the order changed with it.
        *
        * This said vivaan.kapoor@gmail.com (user-seto-kaiba), who does own
-       * order-1-20251107-11joon. But TWO other cases in this same batch use
+       * order-1-20251107-1spbqn. But TWO other cases in this same batch use
        * that order as a FOREIGN one, and a batch browses as exactly one
        * identity — so the page could not be worked as authored: the same
        * order had to be both owned and not-owned by the signed-in user.
        *
        * rehan.sheikh@gmail.com (user-yugi-muto) is the harness's `main`
-       * identity, and order-1-20260818-stdctx is one of its delivered orders.
+       * identity, and order-2-20251202-1aytbc is one of its delivered orders.
        * That makes the whole batch coherent under one session and leaves the
        * access-control cases genuinely foreign.
        */
       "Sign in as rehan.sheikh@gmail.com / TempPass123! — this persona owns the order below, and a return can only be requested on a delivered one.",
-      "Open /user/orders and open order-1-20260818-stdctx, which is delivered.",
+      "Open /user/orders and open order-2-20251202-1aytbc, which is delivered.",
       "Use the Return action.",
       "Give the reason: item not as described.",
       "Submit the request.",
       "Reload the order.",
       "Open /user/returns and look for it.",
     ],
-    inputs: { orderId: "order-1-20260818-stdctx", reason: "item not as described" },
+    inputs: { orderId: "order-2-20251202-1aytbc", reason: "item not as described" },
     expectedBehaviour:
       "A return request moves the order into Return Requested and appears on the returns surface. That status is deliberately an ACTIVE one — it is the seller's next action item, not a closed state — so the order must not disappear from the active list.",
     expectedUiState:
@@ -124,12 +124,12 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as rehan.sheikh@gmail.com / TempPass123! — this persona owns the seeded SHIPPED order.",
-      "Open /user/orders and open order-1-20251122-481j4x.",
+      "Open /user/orders and open order-1-20251122-mip2kw.",
       "Use the Track action.",
       "Read every step on the timeline and note which carry a date and which do not.",
       "Compare the dates shown against the order's own placed and shipped dates.",
     ],
-    inputs: { orderId: "order-1-20251122-481j4x" },
+    inputs: { orderId: "order-1-20251122-mip2kw" },
     expectedBehaviour:
       "Each timeline step shows the date actually recorded for it. A step with no recorded date renders an em-dash rather than a guess — an invented or estimated date is worse than a blank, because it cannot be told apart from a real one.",
     expectedUiState:
@@ -143,14 +143,14 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Sign in as karthik.new@gmail.com / TempPass123!, a seeded buyer who owns no seeded orders.",
-      "Navigate to /user/orders/order-1-20251107-11joon/track.",
-      "Navigate to /user/orders/order-1-20251107-11joon/invoice.",
-      "Navigate to /user/orders/order-1-20251107-11joon/return.",
-      "Navigate to /user/orders/order-1-20251107-11joon/cancel.",
-      "Navigate to /user/orders/order-1-20251107-11joon/payment.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/track.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/invoice.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/return.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/cancel.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/payment.",
       "Read each page in turn.",
     ],
-    inputs: { foreignOrderId: "order-1-20251107-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-1spbqn" },
     expectedBehaviour:
       "Ownership is enforced on EVERY subroute, not only on the order page that links to them. A subroute that checks nothing is reachable by typing a URL, and these five carry the address, the amounts and the payment details.",
     expectedUiState:
@@ -164,11 +164,11 @@ export const authored: Record<string, AuthoredCase> = {
     startPage: "/user/orders",
     steps: [
       "Open a private window with no session.",
-      "Navigate to /user/orders/order-1-20251107-11joon/track.",
+      "Navigate to /user/orders/order-1-20251107-1spbqn/track.",
       "Read the page.",
       "Navigate to /user/orders and read that page too.",
     ],
-    inputs: { foreignOrderId: "order-1-20251107-11joon" },
+    inputs: { foreignOrderId: "order-1-20251107-1spbqn" },
     expectedBehaviour:
       "A signed-out visitor is sent to sign in. Being blocked IS the expected result here — the failure to look for is the page rendering its content for a moment before redirecting, which is enough to read and enough for a crawler to capture.",
     expectedUiState:
