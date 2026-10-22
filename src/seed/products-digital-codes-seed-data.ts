@@ -49,7 +49,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,
@@ -93,7 +93,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,
@@ -143,7 +143,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,
@@ -190,7 +190,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "manual-email" as const,
@@ -235,7 +235,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,
@@ -279,7 +279,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,
@@ -326,7 +326,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "manual-email" as const,
@@ -381,7 +381,7 @@ const _rawproductsDigitalCodesSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "digital-code" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     digitalCode: {
       codeDeliveryMethod: "auto-claim" as const,

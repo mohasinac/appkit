@@ -410,7 +410,7 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     prizeDrawMode: "reveal" as const,
     prizeRevealMode: "instant" as const,

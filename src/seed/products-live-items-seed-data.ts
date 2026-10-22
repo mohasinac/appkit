@@ -83,7 +83,7 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     liveItem: {
       species: "Dog (Golden Retriever)",
@@ -136,7 +136,7 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     liveItem: {
       species: "Bearded Dragon (Pogona vitticeps)",
@@ -193,7 +193,7 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     liveItem: {
       species: "Juniper (Juniperus procumbens)",
@@ -252,7 +252,7 @@ const _rawproductsLiveItemsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "live" as const,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     storeName: "Beyblade Arena",
     liveItem: {
       species: "Juniperus chinensis Shimpaku",

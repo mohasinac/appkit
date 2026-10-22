@@ -32,7 +32,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
     id: "preorder-beyblade-x-bx-08-wave",
     isLot: true,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X BX-08 Booster — Next Wave",
     slug: "preorder-beyblade-x-bx-08-wave",
@@ -75,7 +75,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-x-bx-09-glide-ring",
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X UnicornSting 5-60GP — Coming Soon",
     slug: "preorder-beyblade-x-bx-09-glide-ring",
@@ -111,7 +111,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-burst-b-210-union",
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-beyblade",
     title: "Beyblade Burst B-210 Union Achilles — Ready to Ship",
     slug: "preorder-beyblade-burst-b-210-union",
@@ -151,7 +151,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
     id: "preorder-beyblade-x-bx-11-sold-out",
     isLot: true,
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X BX-11 Limited Wave (Sold Out)",
     slug: "preorder-beyblade-x-bx-11-sold-out",
@@ -190,7 +190,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-burst-b-215-hells-scythe",
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-beyblade",
     title: "Beyblade Burst Dark Deathscyther Force Jaggy — Deposit Locked",
     slug: "preorder-beyblade-burst-b-215-hells-scythe",
@@ -229,7 +229,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-original-remaster",
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-beyblade",
     title: "Beyblade Original Remaster Set — Announced",
     isLot: true,
@@ -272,7 +272,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   },
   {
     id: "preorder-beyblade-x-bx-12-closed",
-    storeId: "store-beyblade-arena",
+    storeId: "store-letitrip-official",
     brandSlug: "brand-takara-tomy",
     title: "Beyblade X TyrannoBeat 4-70Q — Allocation Closed",
     slug: "preorder-beyblade-x-bx-12-closed",
