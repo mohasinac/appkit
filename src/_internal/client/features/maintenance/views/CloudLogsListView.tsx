@@ -57,7 +57,7 @@ export function CloudLogsListView({
         | { ok: true; data: { entries: CloudLogEntry[]; nextPageToken: string | null } }
         | { ok: false; code: string; error: string };
       if (!res.ok || !body.ok) {
-        setError(("error" in body && body.error) || `HTTP ${res.status}`);
+        setError(toUserMessage("code" in body ? String(body.code) : undefined, undefined, { fallback: `Could not load logs (HTTP ${res.status}).` }));
         return;
       }
       setEntries((prev) => [...prev, ...body.data.entries]);

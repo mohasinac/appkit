@@ -9,6 +9,7 @@ import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const shippingDraftSchema = z.object({
   customCarrierName: z.string().min(1, "Carrier name is required"),
@@ -112,7 +113,7 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
             setFieldError,
           );
         }
-        setError(json?.error ?? "Failed to save");
+        setError(toUserMessage(json?.code, undefined, { fallback: "We couldn't save your shipping settings." }));
         return;
       }
       clearErrors();

@@ -39,6 +39,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import type { PrecisionTier } from "../../../_internal/shared/features/sticker-trace/types";
 import { TIER_HELP } from "../constants/help-content";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 /** Every tier, unlike the studio — see the header. */
 const TIERS: PrecisionTier[] = ["draft", "standard", "precise", "max"];
@@ -120,7 +121,7 @@ export function StickerCommitPanel({
        * buyer, which this is not — and the routes already map their own
        * failures to user-safe text.
        */
-      setError(n.message);
+      setError(toUserMessage(n.code, undefined, { fallback: "We couldn't commit that sheet. Please try again." }));
     } finally {
       setPending(false);
     }

@@ -11,6 +11,7 @@ import { registerSchema, registerPasswordSchema } from "../schemas";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import type { SectionDef } from "../../shell/SectionForm";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 export interface RegisterFormValues {
   email: string;
@@ -196,7 +197,7 @@ export function RegisterForm({
        * email, a rejected password — which is the one thing they can act on.
        */
       const normalized = normalizeError(err);
-      setFieldError("email", normalized.message || "Registration failed");
+      setFieldError("email", toUserMessage(normalized.code, undefined, { fallback: "We couldn't create your account. Please check your details and try again." }));
     }
   };
 

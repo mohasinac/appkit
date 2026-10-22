@@ -57,6 +57,7 @@ import {
 } from "../../../_internal/shared/features/sticker-trace/resume";
 import { paramsForTier } from "../../../_internal/shared/features/sticker-trace/config";
 import { TIER_HELP } from "../constants/help-content";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const TIERS: PrecisionTier[] = ["draft", "standard", "precise", "max"];
 
@@ -149,7 +150,7 @@ export function StickerRetryPanel({
        * operator looking at a form that did nothing — and the likeliest causes,
        * a lapsed session or a rejected name, are both named by the message.
        */
-      setError(n.message);
+      setError(toUserMessage(n.code, undefined, { fallback: "We couldn't retry that run. Please try again." }));
     } finally {
       setPending(false);
     }

@@ -61,6 +61,7 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 interface AdminOffersResponse {
   items?: JsonArray;
@@ -112,7 +113,7 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
       // The row's own data is already on screen, so this degrades to "no
       // chain" rather than to an empty modal. Say so instead of failing silently.
       const normalized = normalizeError(err);
-      showToast(normalized.message || "Couldn't load the full offer history.", "error");
+      showToast(toUserMessage(normalized.code, undefined, { fallback: "Couldn't load the full offer history." }), "error");
     }
   };
 

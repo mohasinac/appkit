@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { useToast } from "../../ui/components/Toast";
 import { surfaceError } from "./surface-error";
+import { toUserMessage } from "../../errors/error-display-map";
 import { ApiError } from "./ApiError";
 
 /**
@@ -108,7 +109,26 @@ export function useApiMutation<
     onSettled: (data, err, variables, context, ctx) => {
       if (loadingIdRef.current) {
         if (err) {
-          updateToast(loadingIdRef.current, "error", err instanceof Error ? err.message : "Action failed");
+          /*
+           * 🛑 This was `err instanceof Error ? err.message : "Action failed"`
+           * — verbatim the inverted ternary `audit-raw-error-text`'s own
+           * header calls "the dominant shape", sitting two lines below the
+           * correct `surfaceError` call in the same hook. The authored
+           * sentence showed only when the value was NOT an Error, i.e. almost
+           * never, so the normal case published the raw message.
+           *
+           * It was dormant only because `loadingMessage` currently has no
+           * call sites; the first consumer to set one would have got two
+           * toasts, one of them raw. `updateToast` is also absent from that
+           * audit's SINKS list, so nothing would have caught it.
+           */
+          updateToast(
+            loadingIdRef.current,
+            "error",
+            toUserMessage((err as { code?: string })?.code, undefined, {
+              fallback: "Action failed",
+            }),
+          );
         } else if (!successMessage) {
           updateToast(loadingIdRef.current, "success", "Done");
         }

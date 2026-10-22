@@ -43,6 +43,7 @@ import {
   Text,
 } from "../../../ui/index";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 /** Mirrors the export route's response. Kept structural — no appkit internals. */
 export interface ExportReport {
@@ -201,7 +202,7 @@ export function StickerPrintPanel({
        * Rendering both the same way would have an operator confirming a DPI to
        * fix a lapsed session.
        */
-      setError(n.message);
+      setError(toUserMessage(n.code, undefined, { fallback: "We couldn't prepare that print. Please try again." }));
       setReport(null);
     } finally {
       setLoading(false);

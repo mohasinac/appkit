@@ -52,6 +52,7 @@ import {
   type GroupRules,
 } from "../../../_internal/shared/features/products/group-rules";
 import type { ListingType } from "../types";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const __O = { xAuto: "overflow-x-auto", hidden: "overflow-hidden" } as const;
 
@@ -212,7 +213,7 @@ export function GroupMemberPicker({
       }
       const json = (await res.json()) as { success?: boolean; error?: string };
       if (!res.ok || json.success === false) {
-        setError(json.error ?? "Couldn't add those items to your cart.");
+        setError(toUserMessage(json.code, undefined, { fallback: "Couldn't add those items to your cart." }));
         return;
       }
       setQty({});
