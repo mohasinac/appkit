@@ -10,6 +10,13 @@ import {
   returnRequestSchema,
 } from "../../../shared/features/orders/schema";
 import { isFinalSaleExempt } from "../../../shared/features/orders/return-reasons";
+import {
+  DISPUTE_KIND_LABEL,
+  checkDisputeGate,
+  isDisputeKind,
+  type DisputeKind,
+} from "../../../shared/features/orders/dispute-reasons";
+import { disputeReasonsRepository } from "../../../../features/dispute-reasons/repository/dispute-reasons.repository";
 import { REFUND_COPY } from "../../../shared/features/orders/refund-copy";
 import { assertOrderCancellable, assertReturnWindowOpen } from "./service";
 import { cancelOrderWithRefund } from "./cancellation-refund";
@@ -410,11 +417,18 @@ export async function adminRejectPaymentAsFraudAction(
  */
 export async function raiseOrderDisputeAction(
   orderId: string,
-  reason: string,
+  input: {
+    kind: DisputeKind;
+    /** `disputeReasons/{id}` — must exist and must match `kind`. */
+    reasonId: string;
+    /** The buyer's own words. Optional; the reason is the required part. */
+    detail?: string;
+  },
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
-    if (!reason.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
+    if (!isDisputeKind(input.kind)) throw new ValidationError("Pick what kind of problem this is.");
+    if (!input.reasonId?.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
 
@@ -427,12 +441,50 @@ export async function raiseOrderDisputeAction(
     if (!isBuyer && !isSeller && !isAdminUser(user) && !isModeratorUser(user)) {
       throw new OrderOwnershipError(orderId);
     }
-    if (!order.autoApproved) {
-      throw new ValidationError(
-        "Disputes can only be raised on auto-approved orders. Use the return/refund flow for manually-reviewed orders.",
-      );
-    }
+    /*
+     * 🛑 THE `autoApproved` RESTRICTION IS GONE, and that is the one
+     * behaviour change an existing path will notice.
+     *
+     * It used to refuse every order whose payment was not auto-approved,
+     * telling the caller to use the return/refund flow — which made this a
+     * narrow "the 2-hour auto-approval might have been wrong" escalation
+     * rather than a dispute mechanism. The owner's rules are about delivery
+     * and item problems on ANY order, so the scope had to widen.
+     *
+     * What replaces it is a REAL gate per kind, below: the old check refused
+     * 99% of orders for a reason unrelated to the complaint, while accepting
+     * "it never arrived" on an order delivered last week.
+     */
     if (order.disputeStatus === "open") return; // idempotent
+
+    /*
+     * The reason must exist AND belong to the kind being claimed.
+     *
+     * 🛑 Both halves matter. Without the kind check a caller could pass an
+     * `item` reason with `kind: "not_reached"` and pass the wrong gate — the
+     * kind is what the gate keys on, so an unvalidated pairing is the gate
+     * being bypassed by the request body.
+     */
+    const reasonDoc = await disputeReasonsRepository.findById(input.reasonId.trim());
+    if (!reasonDoc || !reasonDoc.isActive) {
+      throw new ValidationError("That reason is no longer available. Pick another.");
+    }
+    if (reasonDoc.kind !== input.kind) {
+      throw new ValidationError("That reason doesn't match the kind of problem selected.");
+    }
+
+    /*
+     * ── THE GATES ─────────────────────────────────────────────────────────
+     *
+     * Owner's rules: an item dispute only after the order was received; a
+     * "not reached" dispute only once the ETD is more than 3 days past.
+     *
+     * Enforced HERE, where the request arrives, for the same reason the
+     * 7-day cutoff below is: a refusal has to live where the refusing
+     * happens. The message is buyer-facing and names the next action.
+     */
+    const gate = checkDisputeGate(input.kind, order);
+    if (!gate.allowed) throw new ValidationError(gate.message);
 
     /*
      * ── THE DISPUTE CUTOFF ────────────────────────────────────────────────
@@ -458,6 +510,16 @@ export async function raiseOrderDisputeAction(
      * `disputeWindowClosed` boolean would need a backfill and would drift from
      * the policy the day the duration changed (Root Cause #42).
      */
+    /*
+     * 🛑 This correctly does NOT apply to a `not_reached` dispute, and that is
+     * not an oversight to "fix".
+     *
+     * `order-complete` is anchored on `deliveryDate`, so `deadlinesFor` yields
+     * no such deadline when nothing was delivered — and you cannot be past a
+     * delivery window that never happened. Making the cutoff refuse
+     * undelivered parcels would block exactly the buyers whose parcel is lost,
+     * which is the opposite of what a dispute window is for.
+     */
     const completion = deadlinesFor(order).find((d) => d.kind === "order-complete");
     if (completion && completion.dueAt.getTime() <= Date.now()) {
       throw new ValidationError(
@@ -465,13 +527,27 @@ export async function raiseOrderDisputeAction(
       );
     }
 
+    /*
+     * No `as any`. Every field below is declared on `OrderDocument`, and the
+     * cast that used to be here is precisely how a misspelled field reaches
+     * Firestore unnoticed — it silences the check on all six at once.
+     *
+     * 🛑 `disputeReason` stores the reason's LABEL, not its id. It is a
+     * SNAPSHOT: staff can retire or reword a `disputeReasons` row, and neither
+     * may rewrite what a buyer said months ago. `disputeReasonId` beside it is
+     * the join key for "what are buyers reporting"; the label is the record.
+     * Same discipline as the fee terms and the box presets.
+     */
     await orderRepository.update(orderId, {
       disputeRaised: true,
       disputeRaisedBy: user.uid,
       disputeRaisedAt: new Date(),
-      disputeReason: reason,
+      disputeKind: input.kind,
+      disputeReasonId: reasonDoc.id,
+      disputeReason: reasonDoc.label,
+      ...(input.detail?.trim() ? { disputeDetail: input.detail.trim() } : {}),
       disputeStatus: "open",
-    } as any);
+    });
 
     /*
      * One admin-inbox row, not one notification per admin.
@@ -489,8 +565,16 @@ export async function raiseOrderDisputeAction(
     await adminNotificationsRepository
       .create({
         category: "fraud",
-        title: "Dispute raised on auto-approved order",
-        body: `A dispute was raised on order "${order.productTitle}" (auto-approved payment). Reason: ${reason}.`,
+        /*
+         * 🛑 No longer "on auto-approved order". The title said that because
+         * the action refused everything else; now any order can be disputed,
+         * and a title naming a payment path the dispute has nothing to do with
+         * would send an operator looking in the wrong place.
+         */
+        title: `Dispute raised: ${DISPUTE_KIND_LABEL[input.kind]}`,
+        body: `A dispute was raised on order "${order.productTitle}". Reason: ${reasonDoc.label}.${
+          input.detail?.trim() ? ` Buyer said: "${input.detail.trim()}"` : ""
+        }`,
         severity: "error",
         isRead: false,
         entityType: "order",

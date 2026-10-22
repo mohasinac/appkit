@@ -1595,6 +1595,28 @@ export {
 } from "./_internal/shared/features/orders/return-reasons";
 export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
 
+// Dispute KINDS and their gates. Exported for the same reason the return
+// reasons above are: the buyer's form renders the labels and needs to show the
+// date a `not_reached` dispute becomes filable from, and
+// `@mohasinac/appkit/_internal/*` is NOT a subpath export — `_internal` is
+// reachable only through a barrel.
+export {
+  DISPUTE_KIND,
+  DISPUTE_KIND_LABEL,
+  DISPUTE_GATE,
+  DISPUTE_TRANSIT_WINDOW_DAYS,
+  DISPUTE_NOT_REACHED_GRACE_DAYS,
+  isDisputeKind,
+  checkDisputeGate,
+  resolveDisputeEtd,
+  disputeNotReachedFilableFrom,
+} from "./_internal/shared/features/orders/dispute-reasons";
+export type {
+  DisputeKind,
+  DisputeGateOrder,
+  DisputeGateResult,
+} from "./_internal/shared/features/orders/dispute-reasons";
+
 // Buyer-facing return/refund request form and the window it is gated on.
 // Exported from the CLIENT entry because the page that renders it is a
 // "use client" route — importing it from the main entry there would drag the

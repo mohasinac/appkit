@@ -492,6 +492,21 @@ export interface OrderDocument extends BaseDocument {
    */
   acceptedAt?: Date;
   shippingDate?: Date;
+  /**
+   * The COURIER's estimated delivery date, captured at dispatch.
+   *
+   * 🛑 Not to be confused with `OrderSourcePreOrder.expectedDeliveryDate`,
+   * which is when a pre-ordered product RELEASES — a different concept that
+   * this field was mistaken for while planning the dispute gates.
+   *
+   * Optional, and will stay mostly empty for now: nothing platform-books yet
+   * (`createShipment` has zero callers), and a self-shipping seller types a
+   * tracking number with no estimate attached. `resolveDisputeEtd` therefore
+   * falls back to `shippingDate + DISPUTE_TRANSIT_WINDOW_DAYS` — without that
+   * fallback the `not_reached` dispute gate would be unreachable for every
+   * parcel currently shipped.
+   */
+  estimatedDeliveryDate?: Date;
   deliveryDate?: Date;
   /**
    * When the order was marked COMPLETE — the fact that awards points and
@@ -1199,11 +1214,37 @@ export interface OrderDocument extends BaseDocument {
   /** True when `paymentReviewAutoApprove` approved this order after 2 hours of no manual admin review. */
   autoApproved?: boolean;
   autoApprovedAt?: Date;
-  /** Buyer/seller/admin dispute raised against an auto-approved order — surfaces to the admin queue, does not itself reverse payment/order status. */
+  /**
+   * A buyer/seller/admin dispute. Surfaces to the admin queue; does not itself
+   * reverse payment or order status.
+   *
+   * 🛑 This used to say "against an auto-approved order", and that was the
+   * whole scope: `raiseOrderDisputeAction` refused anything else, telling the
+   * caller to use the return/refund flow. Disputes are now GENERAL — any
+   * delivered-or-late order can be disputed, gated by `disputeKind`.
+   */
   disputeRaised?: boolean;
   disputeRaisedBy?: string;
   disputeRaisedAt?: Date;
+  /**
+   * The reason's LABEL, snapshotted at the moment the dispute was raised.
+   *
+   * 🛑 A snapshot, not a lookup, and that is the point: `disputeReasons` rows
+   * can be retired or reworded by staff, and neither may rewrite what a buyer
+   * said months ago. `disputeReasonId` below is the join key for analytics;
+   * THIS is the record.
+   *
+   * Still a plain `string` and still the field every existing surface renders,
+   * so pre-2026-10-22 disputes (free text typed by the buyer) keep displaying
+   * unchanged rather than being orphaned beside a new field.
+   */
   disputeReason?: string;
+  /** Which gate this dispute passed. Absent on pre-2026-10-22 disputes. */
+  disputeKind?: DisputeKind;
+  /** `disputeReasons/{id}`. The join key for "what are buyers reporting". */
+  disputeReasonId?: string;
+  /** The buyer's own words. Free text, never parsed, never gated on. */
+  disputeDetail?: string;
   disputeStatus?: "open" | "resolved";
 
   // ── Payment Detail Parity (Feature C) ───────────────────────────────────

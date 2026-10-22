@@ -47,6 +47,21 @@ export const AdminAuditActionValues = {
    * same class as `payout_mark_paid` and `coupon_update`, which are both here.
    */
   POINTS_ADJUST: "points_adjust",
+  /**
+   * Staff added a buyer-facing dispute reason.
+   *
+   * 🛑 Here because the list is POLICY VOCABULARY, even though no single row
+   * decides money. The reasons are what buyers are offered when something goes
+   * wrong, so the wording shapes what gets reported and how it is triaged —
+   * and a badly-worded or leading option is the kind of thing that is only
+   * ever noticed later, by which time "who added this, and when" is the
+   * question. `createdByName` on the row answers it for the list; this answers
+   * it in the one place an admin looks for "what have staff done lately".
+   *
+   * Recorded only on a REAL creation. Re-adding wording that already exists
+   * returns the existing row, which is not an act worth logging.
+   */
+  DISPUTE_REASON_CREATE: "dispute_reason_create",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

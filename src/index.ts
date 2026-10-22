@@ -9110,6 +9110,25 @@ export {
 } from "./_internal/shared/features/orders/return-reasons";
 export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
 
+// Dispute KINDS and their gates. `_internal/*` is not a subpath export, so a
+// consumer route reaches these only through a barrel.
+export {
+  DISPUTE_KIND,
+  DISPUTE_KIND_LABEL,
+  DISPUTE_GATE,
+  DISPUTE_TRANSIT_WINDOW_DAYS,
+  DISPUTE_NOT_REACHED_GRACE_DAYS,
+  isDisputeKind,
+  checkDisputeGate,
+  resolveDisputeEtd,
+  disputeNotReachedFilableFrom,
+} from "./_internal/shared/features/orders/dispute-reasons";
+export type {
+  DisputeKind,
+  DisputeGateOrder,
+  DisputeGateResult,
+} from "./_internal/shared/features/orders/dispute-reasons";
+
 // S-SBUNI-4 follow-up â€" shared admin bundle zod schemas.
 export {
  bundleCreateSchema,

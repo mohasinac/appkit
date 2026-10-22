@@ -31,8 +31,6 @@
  * admin alert. The gate is the point of this file.
  */
 
-import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
-
 export const DISPUTE_KIND = ["item", "not_reached"] as const;
 
 export type DisputeKind = (typeof DISPUTE_KIND)[number];
@@ -201,27 +199,27 @@ export const DISPUTE_GATE: Record<
   },
 };
 
-/** Convenience wrapper so callers do not index the record by hand. */
+/**
+ * Convenience wrapper so callers do not index the record by hand.
+ *
+ * 🛑 Takes the NARROW `DisputeGateOrder`, and an `OrderDocument` satisfies it
+ * structurally — so no adapter is needed and none should be added.
+ *
+ * A first draft had a `toDisputeGateOrder(order: OrderDocument)` helper, which
+ * meant this module imported the order schema while the order schema imports
+ * `DisputeKind` from here. That cycle is type-only and therefore erased, so it
+ * would have compiled and run — but it is also entirely avoidable, and a
+ * module that defines a policy should not depend on the document the policy is
+ * applied to. `return-reasons.ts` beside it has no imports at all for the same
+ * reason.
+ *
+ * Nothing leaks by passing the whole order in: what crosses back out is a
+ * `DisputeGateResult`, never the document (Root Cause #70).
+ */
 export function checkDisputeGate(
   kind: DisputeKind,
   order: DisputeGateOrder,
   now?: Date,
 ): DisputeGateResult {
   return DISPUTE_GATE[kind](order, now);
-}
-
-/**
- * Narrow an `OrderDocument` to what the gates read.
- *
- * 🛑 Exists so a caller never passes the whole document into something that
- * then travels further — the gate result is what crosses a boundary, not the
- * order (Root Cause #70).
- */
-export function toDisputeGateOrder(order: OrderDocument): DisputeGateOrder {
-  return {
-    deliveryDate: order.deliveryDate ?? null,
-    completedAt: order.completedAt ?? null,
-    shippingDate: order.shippingDate ?? null,
-    estimatedDeliveryDate: order.estimatedDeliveryDate ?? null,
-  };
 }
