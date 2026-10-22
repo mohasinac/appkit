@@ -45,6 +45,32 @@ export interface IntegrationDescriptor {
   severe: boolean;
   /** The settings path the switch actually writes. Named, so it is auditable. */
   field: string;
+  /**
+   * Whether this integration's API routes are closed when it is off, and WHY
+   * that answer is what it is. Three different answers for four integrations,
+   * so a uniform wrapper applied to everything would be wrong three ways.
+   *
+   * - `"gated"`  — the routes 404 when off (payments, support).
+   * - `"none"`   — there is nothing to gate, stated with the reason, so nobody
+   *                later "completes" the set by guarding a route that must
+   *                stay open.
+   */
+  routeGuard: "gated" | "none";
+  /** Human reason for `routeGuard`, shown nowhere — it is for the next reader. */
+  routeGuardNote: string;
+  /**
+   * 🛑 Which way the guard fails when the settings read itself throws, and this
+   * genuinely DIFFERS per integration — a single uniform direction would be
+   * the wrong call for one of them whichever one was picked.
+   *
+   * `true` (payments): a Firestore blip must not open a money route. Closed is
+   * the safe direction for money.
+   *
+   * `false` (support): refusing support because Firestore hiccupped is worse
+   * than briefly allowing a ticket nobody wanted — and it is the same choice
+   * `guardSend` makes on the same read.
+   */
+  failClosed: boolean;
 }
 
 /**
@@ -55,12 +81,34 @@ export interface IntegrationDescriptor {
 export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
   payments: {
     id: "payments",
-    label: "Online payments (Razorpay)",
-    summary: "Card, UPI and netbanking at checkout.",
+    label: "Online payments",
+    summary: "Card, UPI and netbanking at checkout, through whichever gateway is live.",
+    /*
+     * 🛑 The second sentence is the one that matters and it was missing until
+     * the route guards were traced. `withOnlinePaymentEnabled` fails CLOSED and
+     * guards SIX routes including `/api/payment/verify` and the Razorpay
+     * WEBHOOK — so flipping this switch while a buyer is on the gateway's page
+     * abandons that payment: the money is captured and the callback that would
+     * have placed the order 404s. Razorpay retries on 5xx, NOT on 404, so it is
+     * not retried either.
+     *
+     * Ungating those two routes does not fix it — `providers.config.ts` only
+     * registers the gateway when this flag is on, so a completion path would
+     * reach `ManualPaymentProvider` and fail differently. The real fix is a
+     * bigger change (keep the provider registered for completion while refusing
+     * new orders), so until then this is a WARNING an admin must read rather
+     * than a hazard they discover.
+     */
     offConsequence:
-      "Buyers can no longer pay online. Checkout falls back to the manual methods (cash, UPI with a proof upload), which need an admin to verify every payment by hand.",
+      "Buyers can no longer pay online. Checkout falls back to the manual methods (cash, UPI with a proof upload), which need an admin to verify every payment by hand. 🛑 Payments already in progress are abandoned — a buyer part-way through the gateway may be charged without an order being placed. Switch off when nobody is checking out.",
     severe: true,
-    field: "payment.razorpayEnabled",
+    // Both gateways, because the enforcing guard is an OR across them. See the
+    // note on `readIntegrationStates`.
+    field: "payment.razorpayEnabled + payment.phonepeEnabled",
+    routeGuard: "gated",
+    routeGuardNote:
+      "withOnlinePaymentEnabled, on all six /api/payment routes. Predates this page; this page now reads the same expression so the two cannot disagree.",
+    failClosed: true,
   },
   email: {
     id: "email",
@@ -70,6 +118,16 @@ export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
       "Customer email stops. STAFF email is deliberately unaffected — the daily digest is how an operator notices a stuck payment or a new ticket, so switching customer mail off must not blind you.",
     severe: true,
     field: "messaging.emailEnabled",
+    routeGuard: "none",
+    /*
+     * 🛑 Not an oversight, and not a gap to close later. Email has no inbound
+     * route to guard — it is an OUTBOUND effect, and `guardSend` already
+     * enforces this flag at the single place that sends. Adding a route guard
+     * would mean inventing a route to guard.
+     */
+    routeGuardNote:
+      "Nothing to gate: email is outbound. guardSend() enforces this flag at sendEmail(), the only sender.",
+    failClosed: false,
   },
   shipping: {
     id: "shipping",
@@ -84,6 +142,20 @@ export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
       "We stop booking couriers. Sellers ship themselves and claim the postage back — the flow they already have. Nothing stops moving; in-flight shipments are unaffected.",
     severe: false,
     field: "shipping.provider",
+    routeGuard: "none",
+    /*
+     * 🛑 `/api/shipping/quote` must stay OPEN when this is off, and that is the
+     * whole reason this field exists rather than a blanket wrapper over every
+     * integration's routes.
+     *
+     * "Off" here means `provider: "manual"`, which is a WORKING path, not a
+     * disabled one. 404ing the quote route would break the self-ship flow that
+     * switching the integration off is specifically selecting — the guard would
+     * take out the fallback it is falling back to.
+     */
+    routeGuardNote:
+      "Deliberately ungated: off means provider=manual, a working path. Guarding /api/shipping/quote would break the self-ship flow this switch selects.",
+    failClosed: false,
   },
   support: {
     id: "support",
@@ -95,9 +167,34 @@ export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
      * discover it.
      */
     offConsequence:
-      "The whole support surface disappears for buyers — no contact form, no ticket list, no nav entry. Staff keep full access, so open tickets are still workable. A buyer with a conversation in progress loses sight of it.",
+      "The ticket surface disappears for buyers — no new tickets, no ticket list, no nav entry. The public Help Centre and its FAQs stay up, because self-service is what reduces tickets. Staff keep full access, so open tickets are still workable. A buyer with a conversation in progress loses sight of it.",
     severe: true,
     field: "support.enabled",
+    routeGuard: "gated",
+    /*
+     * 🛑 The line this note draws is RAISING vs ANSWERING, not buyer vs staff,
+     * and it decides three surfaces — so it is written down rather than left to
+     * be re-derived by whoever next "completes" the gating.
+     *
+     * GATED (raising): `/api/support/tickets` GET and POST, and a server layout
+     * over all of `/user/support/*`. The GET too, because gating only the write
+     * leaves a buyer looking at a ticket list they cannot reply to.
+     *
+     * NOT GATED (answering): `/admin/support-tickets`, and `/store/support` —
+     * which is the seller reading tickets raised ABOUT their store, not filing
+     * them. It is served by `SELLER_ENDPOINTS.SUPPORT`, a store-scoped endpoint,
+     * so it is untouched by the gate above and that is correct: the owner's rule
+     * is that open tickets stay workable, and a seller answering one is on the
+     * same side of that line as staff.
+     *
+     * EXEMPT: `unban_request`, the formal appeal channel. It already bypasses
+     * the soft-ban guard and the ticket cap, and an integration toggle must not
+     * be able to close a channel a soft ban is explicitly forbidden from
+     * closing.
+     */
+    routeGuardNote:
+      "Gated on the RAISING side only: /api/support/tickets (GET+POST) and a server layout over /user/support/*. /store/support and /admin/support-tickets stay open — answering, not raising. unban_request is exempt.",
+    failClosed: false,
   },
 };
 
@@ -120,12 +217,37 @@ export type IntegrationState = { enabled: boolean };
  * test keys), while email and support default ON because an older settings
  * document with no such field must not read as "we stopped talking to
  * customers".
+ *
+ * 🛑 THIS FUNCTION IS THE EXPRESSION THE ROUTE GUARDS USE. `withOnlinePaymentEnabled`
+ * had hand-written the payments half, and the first version of this file
+ * reproduced it WRONG — see the payments line. Both now resolve here, so the
+ * admin page and the guard cannot disagree about whether an integration is on.
+ * That disagreement is the entire failure mode this file's header warns about
+ * (Root Cause #42), and it had already happened once, inside the file.
  */
 export function readIntegrationStates(
   settings: Partial<SiteSettingsDocument> | null | undefined,
 ): Record<IntegrationId, IntegrationState> {
   return {
-    payments: { enabled: settings?.payment?.razorpayEnabled === true },
+    /*
+     * 🛑 An OR across BOTH gateways, not `razorpayEnabled` alone.
+     *
+     * This was wrong when written, and wrong in the direction that matters: the
+     * route guard is `razorpayEnabled === true || phonepeEnabled === true`, so
+     * with PhonePe on and Razorpay off the page would have reported "payments
+     * OFF" while all six /api/payment routes were OPEN and taking money. An
+     * admin reading that row would believe they had stopped payments.
+     *
+     * The guard's own docstring explains why it is an OR and must stay one:
+     * these routes are provider-AGNOSTIC — they call `getProviders().payment`,
+     * whichever single gateway `providers.config.ts` registered. The question
+     * is "is an online gateway live at all", asked once.
+     */
+    payments: {
+      enabled:
+        settings?.payment?.razorpayEnabled === true ||
+        settings?.payment?.phonepeEnabled === true,
+    },
     email: { enabled: settings?.messaging?.emailEnabled !== false },
     // "Enabled" means we are booking couriers, i.e. the provider is not manual.
     shipping: { enabled: settings?.shipping?.provider === "shiprocket" },
@@ -145,7 +267,24 @@ export function integrationPatch(
 ): Record<string, unknown> {
   switch (id) {
     case "payments":
-      return { payment: { razorpayEnabled: enabled } };
+      /*
+       * 🛑 Writes BOTH gateway flags, and the OFF case is why.
+       *
+       * The guard is an OR, so clearing only `razorpayEnabled` while PhonePe
+       * was on would leave every /api/payment route open — the switch would
+       * report success and change nothing. "Disable payments" has to mean no
+       * online gateway is live, which is one flag per gateway.
+       *
+       * The ON case re-enables RAZORPAY only, deliberately asymmetric:
+       * `providers.config.ts` prefers Razorpay and ignores PhonePe when both
+       * are true (it logs exactly that), so turning both on would set a flag
+       * with no effect and make the page claim two gateways where there is
+       * one. Choosing a gateway is a different decision from switching
+       * payments on, and it belongs in Site Settings → Payment.
+       */
+      return enabled
+        ? { payment: { razorpayEnabled: true } }
+        : { payment: { razorpayEnabled: false, phonepeEnabled: false } };
     case "email":
       return { messaging: { emailEnabled: enabled } };
     case "shipping":

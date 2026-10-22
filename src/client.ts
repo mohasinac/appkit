@@ -1620,6 +1620,35 @@ export type {
   DisputeGateResult,
 } from "./_internal/shared/features/orders/dispute-reasons";
 
+/*
+ * The integration switches. Exported from the CLIENT entry because the admin
+ * integrations page is a "use client" surface — it renders each row's label and
+ * `offConsequence` and needs `readIntegrationStates` to show the current
+ * position.
+ *
+ * 🛑 The SAME module is re-exported from `server.ts`, deliberately, because the
+ * route guards resolve their answer through `readIntegrationStates` too. One
+ * expression, two entries — which is the point: a hand-written copy of "is this
+ * integration on" in a guard is how the page and the enforcement drift apart,
+ * and that had already happened once inside the module itself (the payments OR
+ * across both gateways).
+ *
+ * Safe in a client bundle: the file's only import is `import type`, so its
+ * runtime graph is empty and it cannot reach firebase-admin.
+ */
+export {
+  INTEGRATIONS,
+  INTEGRATION_ORDER,
+  readIntegrationStates,
+  integrationPatch,
+  allIntegrationsPatch,
+} from "./_internal/shared/features/admin/integrations";
+export type {
+  IntegrationId,
+  IntegrationDescriptor,
+  IntegrationState,
+} from "./_internal/shared/features/admin/integrations";
+
 // Buyer-facing return/refund request form and the window it is gated on.
 // Exported from the CLIENT entry because the page that renders it is a
 // "use client" route — importing it from the main entry there would drag the

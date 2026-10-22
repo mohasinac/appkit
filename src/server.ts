@@ -2199,6 +2199,29 @@ export {
 } from "./_internal/shared/features/orders/return-reasons";
 export type { ReturnReason } from "./_internal/shared/features/orders/return-reasons";
 
+/*
+ * The integration switches, SERVER side — this is the half the route guards
+ * use. `readIntegrationStates` is the one expression that answers "is this
+ * integration on", and both the admin page (via `client.ts`) and every guard
+ * resolve through it so they cannot disagree.
+ *
+ * `IntegrationDescriptor.failClosed` is what a guard reads to decide which way
+ * to fail when the settings read itself throws. It differs per integration on
+ * purpose: closed for money, open for support.
+ */
+export {
+  INTEGRATIONS,
+  INTEGRATION_ORDER,
+  readIntegrationStates,
+  integrationPatch,
+  allIntegrationsPatch,
+} from "./_internal/shared/features/admin/integrations";
+export type {
+  IntegrationId,
+  IntegrationDescriptor,
+  IntegrationState,
+} from "./_internal/shared/features/admin/integrations";
+
 // Seller listing form draft <-> product write payload. The flat form keys and
 // the nested document blocks are different shapes, and nothing translated
 // between them — see the module docstring.
