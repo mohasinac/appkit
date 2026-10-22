@@ -36,7 +36,12 @@ import { Alert, Button, Div, FieldTextarea, Form, Stack, Text, useToast } from "
 import { PaginatedSelect, type AsyncPage, type PaginatedSelectOption } from "../../../ui/components/PaginatedSelect";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { normalizeError } from "../../../errors/normalize";
-import { apiClient } from "../../../http";
+/*
+ * 🛑 From the DEFINING module, not the `@mohasinac/appkit/client` barrel. This
+ * is a `"use client"` component so either resolves, but a barrel import drags
+ * the whole client entry's graph in for one symbol (Root Cause #18).
+ */
+import { apiClient } from "../../../http/ApiClient";
 
 export interface RaiseDisputeFormProps {
   /** The gate reads four dates off this; an `OrderDocument` satisfies it. */
