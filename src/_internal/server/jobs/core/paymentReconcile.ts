@@ -200,6 +200,110 @@ export async function reconcileStuckGatewayEvents(
 
 /* ──────────────── R2: the gateway has it — do we? ───────────────────────── */
 
+/**
+ * Just the fields R2's two case builders read off a gateway payment record.
+ *
+ * Structural on purpose: naming only what is consumed keeps these helpers out
+ * of the provider contract's import chain, and makes it obvious at a glance
+ * that neither of them can reach for anything else.
+ */
+type ReconcileRecordLike = {
+  id: string;
+  gateway: string;
+  amount: number;
+  currency: string;
+  amountRefunded: number;
+  refundStatus?: string | null;
+};
+
+/**
+ * "The gateway captured a different amount from the one the order records."
+ *
+ * Extracted from the sweep below, where it sat inside
+ * fn → `for record` → `for order` → `if` and the whole case literal was a
+ * brace too deep. Pure construction — no branching, and `recorded` is passed
+ * in rather than re-derived, so the one money rule still lives at the call
+ * site (Root Cause #75).
+ */
+async function openAmountMismatchCase(
+  record: ReconcileRecordLike,
+  orderId: string,
+  recorded: number,
+  now: Date,
+): Promise<void> {
+  await paymentCasesRepository().openOrObserve({
+    kind: "amount_mismatch",
+    subjectId: `${record.id}:${orderId}`,
+    severity: "error",
+    title: `Captured ${record.amount} but recorded ${recorded} — ${orderId}`,
+    detail: [
+      `The gateway captured a different amount from the one the order records.`,
+      `Either the buyer was over-charged or the order under-states what was paid.`,
+      "",
+      `Gateway: ${record.gateway}`,
+      `Payment: ${record.id}`,
+      `Order: ${orderId}`,
+      `Captured: ${record.amount} ${record.currency}`,
+      `Order total: ${recorded}`,
+      `Difference: ${(record.amount - recorded).toFixed(2)}`,
+    ].join("\n"),
+    entityType: "order",
+    entityId: orderId,
+    amountAtRisk: Math.abs(record.amount - recorded),
+    orderIds: [orderId],
+    gatewayPaymentId: record.id,
+    now,
+  });
+}
+
+/**
+ * "Our refund total disagrees with the gateway's."
+ *
+ * Same extraction as `openAmountMismatchCase`. `ours` and `base` are both
+ * computed by the caller from the shared helpers, so this never re-derives a
+ * refund figure of its own.
+ *
+ * 🛑 The severity split is the whole point and must not be flattened: the
+ * gateway having refunded MORE than we recorded is money that left without a
+ * record (`error`); our side showing more is a refund reserved and never
+ * completed (`warning`).
+ */
+async function openRefundMismatchCase(
+  record: ReconcileRecordLike,
+  orderId: string,
+  ours: number,
+  base: number,
+  now: Date,
+): Promise<void> {
+  await paymentCasesRepository().openOrObserve({
+    kind: "refund_mismatch",
+    subjectId: `${record.id}:refunds`,
+    severity: record.amountRefunded > ours ? "error" : "warning",
+    title: `Refund total disagrees with the gateway — ${orderId}`,
+    detail: [
+      record.amountRefunded > ours
+        ? `🛑 The gateway has refunded MORE than our records show. Money has left that we did not record.`
+        : `Our records show more refunded than the gateway did — a refund may have been reserved and never completed.`,
+      "",
+      `Gateway: ${record.gateway}`,
+      `Payment: ${record.id}`,
+      `Order: ${orderId}`,
+      `Gateway refunded: ${record.amountRefunded}`,
+      `Our committed refunds: ${ours}`,
+      `Refundable base: ${base}`,
+      record.refundStatus ? `Gateway refund status: ${record.refundStatus}` : null,
+    ]
+      .filter((l): l is string => l !== null)
+      .join("\n"),
+    entityType: "order",
+    entityId: orderId,
+    amountAtRisk: Math.abs(record.amountRefunded - ours),
+    orderIds: [orderId],
+    gatewayPaymentId: record.id,
+    now,
+  });
+}
+
 async function reconcileGatewayPayments(
   ctx: JobContext,
 ): Promise<{
@@ -307,29 +411,7 @@ async function reconcileGatewayPayments(
         const recorded = order.totalPrice ?? 0;
         if (Math.abs(recorded - record.amount) > MONEY_EPSILON) {
           amountMismatch += 1;
-          await paymentCasesRepository().openOrObserve({
-            kind: "amount_mismatch",
-            subjectId: `${record.id}:${order.id}`,
-            severity: "error",
-            title: `Captured ${record.amount} but recorded ${recorded} — ${order.id}`,
-            detail: [
-              `The gateway captured a different amount from the one the order records.`,
-              `Either the buyer was over-charged or the order under-states what was paid.`,
-              "",
-              `Gateway: ${record.gateway}`,
-              `Payment: ${record.id}`,
-              `Order: ${order.id}`,
-              `Captured: ${record.amount} ${record.currency}`,
-              `Order total: ${recorded}`,
-              `Difference: ${(record.amount - recorded).toFixed(2)}`,
-            ].join("\n"),
-            entityType: "order",
-            entityId: order.id,
-            amountAtRisk: Math.abs(record.amount - recorded),
-            orderIds: [order.id],
-            gatewayPaymentId: record.id,
-            now: ctx.now,
-          });
+          await openAmountMismatchCase(record, order.id, recorded, ctx.now);
         }
 
         /*
@@ -341,33 +423,13 @@ async function reconcileGatewayPayments(
         const ours = committedRefundTotal(order);
         if (Math.abs(ours - record.amountRefunded) > MONEY_EPSILON) {
           refundMismatch += 1;
-          await paymentCasesRepository().openOrObserve({
-            kind: "refund_mismatch",
-            subjectId: `${record.id}:refunds`,
-            severity: record.amountRefunded > ours ? "error" : "warning",
-            title: `Refund total disagrees with the gateway — ${order.id}`,
-            detail: [
-              record.amountRefunded > ours
-                ? `🛑 The gateway has refunded MORE than our records show. Money has left that we did not record.`
-                : `Our records show more refunded than the gateway did — a refund may have been reserved and never completed.`,
-              "",
-              `Gateway: ${record.gateway}`,
-              `Payment: ${record.id}`,
-              `Order: ${order.id}`,
-              `Gateway refunded: ${record.amountRefunded}`,
-              `Our committed refunds: ${ours}`,
-              `Refundable base: ${refundableBase(order)}`,
-              record.refundStatus ? `Gateway refund status: ${record.refundStatus}` : null,
-            ]
-              .filter((l): l is string => l !== null)
-              .join("\n"),
-            entityType: "order",
-            entityId: order.id,
-            amountAtRisk: Math.abs(record.amountRefunded - ours),
-            orderIds: [order.id],
-            gatewayPaymentId: record.id,
-            now: ctx.now,
-          });
+          await openRefundMismatchCase(
+            record,
+            order.id,
+            ours,
+            refundableBase(order),
+            ctx.now,
+          );
         }
       }
     } catch (err) {

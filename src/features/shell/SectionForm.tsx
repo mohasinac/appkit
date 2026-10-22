@@ -602,6 +602,22 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
    */
   const showRail = ordered.length >= 3;
 
+  /**
+   * One rail click: open the section if it is not already, then scroll to it.
+   * Named rather than inline in the button's `onClick`, where the `if` body
+   * sat a brace too deep inside the mapped JSX.
+   *
+   * Opening is conditional on purpose — in `single` mode an unconditional
+   * `setOpenIds([id])` would COLLAPSE the section you are already in when you
+   * click its own rail entry, so the rail would look like it closed the form.
+   */
+  const openAndScrollTo = (id: string): void => {
+    if (!openIds.includes(id)) {
+      setOpenIds(expandMode === "single" ? [id] : [...openIds, id]);
+    }
+    scrollToSection(id);
+  };
+
   /*
    * `sticky` under the measured header, and it publishes NO height: per the
    * three-tier rule a sticky element CONSUMES the tier and never joins it.
@@ -663,16 +679,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
                  * where the active tint is subtle.
                  */
                 aria-current={isOpen ? "true" : undefined}
-                onClick={() => {
-                  if (!openIds.includes(section.id)) {
-                    setOpenIds(
-                      expandMode === "single"
-                        ? [section.id]
-                        : [...openIds, section.id],
-                    );
-                  }
-                  scrollToSection(section.id);
-                }}
+                onClick={() => openAndScrollTo(section.id)}
               >
                 {/*
                   🛑 NO REQUIRED ASTERISK HERE, and `audit-field-label-owner`

@@ -313,7 +313,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const unresolvedKey = selectedValues
     .filter((v) => !labelMap.current.has(v))
     .map((v) => String(v))
-    .join(" ");
+    .join("\u0000");
 
   useEffect(() => {
     if (!loadOptions || !unresolvedKey || labelResolveRef.current) return;
