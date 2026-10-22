@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
 import type { JsonValue } from "../../../schemas/types";
 import { formatCurrency } from "../../../utils/number.formatter";
+// The defining module, not a barrel (Root Cause #18). `hasEncPrefix` is a pure
+// string test with no crypto in its import chain, so it is client-safe.
+import { hasEncPrefix } from "../../../security/pii-mask";
 
 /**
  * Listing-row record. Items come from JSON API responses, so values are
@@ -104,6 +107,18 @@ export function toRecordArray(value: unknown): ListingItemRecord[] {
 
 export function toStringValue(value: unknown, fallback = "-"): string {
   if (typeof value === "string") {
+    /*
+     * 🛑 Ciphertext is not a display value. See the twin in
+     * `features/seller/hooks/useSellerListingData.ts` for the full account —
+     * the short version is that `mapDoc` does not decrypt, so a route that
+     * forgets `revealOrders`/`maskedOrders` hands this a stored `enc:v1:…`
+     * blob which is a perfectly ordinary `string` and renders verbatim.
+     *
+     * `/api/admin/orders` already hit this ("measured live at 3 visible
+     * `enc:v1:` strings") and fixed it at the route. This is the backstop for
+     * the next one.
+     */
+    if (hasEncPrefix(value)) return fallback;
     return value.trim() || fallback;
   }
   if (typeof value === "number" || typeof value === "boolean") {
