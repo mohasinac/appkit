@@ -56,6 +56,11 @@
 /* 🛑 Must be imported HERE — `bundle-css.mjs` flattens only this chain, so a
    feature stylesheet not listed in it ships nowhere. */
 @import "./features/shell/SectionForm.style.css";
+/* The kiss-cut label sheet. Shipped unbundled when it was written — the
+   `.appkit-label-sheet` grid and its `@page` rules reached no consumer, so
+   every printed sheet fell back to browser defaults and the die-cut
+   alignment the component exists to produce could not happen. */
+@import "./features/print/components/labels.style.css";
 /*
  * Third-party stylesheet, vendored into dist/vendor by copy-assets.mjs.
  * It used to be a JS import inside ImageEditor.tsx, which made it invisible to

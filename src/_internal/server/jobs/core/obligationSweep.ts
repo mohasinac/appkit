@@ -305,8 +305,7 @@ async function performAction(
       }
 
       const result = await processRefundAction({
-        orderId: order.id,
-        type: "full",
+        orderId: order.id,
         amount: capacity.remaining,
         reasonCode: order.returnReasonCode ?? "not_as_described",
         reasonNote: `Auto-resolved in the buyer's favour — ${policy.describe}`,

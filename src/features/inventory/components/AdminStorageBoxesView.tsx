@@ -19,9 +19,14 @@ import { Button, Div, Form, FieldInput, FieldSelect, Stack, Text } from "../../.
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { sortBy } from "../../../constants/sort";
+import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { operatorMessage } from "./operator-message";
-import { BoxTypeValues, type StorageBoxDocument } from "../schemas/firestore";
+import {
+  BoxTypeValues,
+  STORAGE_BOX_FIELDS,
+  type StorageBoxDocument,
+} from "../schemas/firestore";
 
 interface BoxRow {
   id: string;
@@ -118,7 +123,7 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
                    * exists") is authored for this operator and must survive; a
                    * 5xx terminates in a constant.
                    */
-                  setFieldError("code", operatorMessage(err));
+                  setFieldError("code", operatorMessage(normalizeError(err)));
                 } finally {
                   setBusy(false);
                 }
@@ -174,9 +179,13 @@ export function AdminStorageBoxesView() {
        * AC60-2 — the kind of ordering that makes an operator distrust the
        * screen — which is why `ordinal` is denormalised on write.
        */
-      defaultSort: "ordinal",
+      defaultSort: sortBy(STORAGE_BOX_FIELDS.ORDINAL, "ASC"),
       sortOptions: [
-        { value: "ordinal", label: "Box number" },
+        // Same expression as `defaultSort`, not a matching literal beside it —
+        // `sortBy(f, "ASC")` is the bare field, so the two are identical by
+        // construction. A default that is not one of the options opens the
+        // dropdown with nothing selected (Root Cause #63).
+        { value: sortBy(STORAGE_BOX_FIELDS.ORDINAL, "ASC"), label: "Box number" },
         { value: sortBy("createdAt", "DESC"), label: "Newest" },
         { value: sortBy("code", "ASC"), label: "Code A–Z" },
       ],

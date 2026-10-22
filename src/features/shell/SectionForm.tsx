@@ -622,6 +622,19 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   const rail = showRail ? (
     <Div
       overflow="auto"
+      /*
+       * <StickyToolbar> is a horizontal translucent bar: it ships `border-b`, a
+       * z-10 layer and the dismiss/re-expand CollapseStrip, and offers no
+       * `self-start`, `max-h` or overflow scrolling. Using it here would paint
+       * a bottom border under a 14rem sidebar and give it a horizontal bar's
+       * collapse affordance.
+       *
+       * 🛑 The marker below must stay on the line DIRECTLY above the className.
+       * Every one of these audits reads `lines[i - 1]` and nothing further, so
+       * a tidy explanation with the marker on its first line suppresses
+       * nothing while looking suppressed to a human (CLAUDE.md § Rule #5).
+       */
+      // audit-raw-sticky-toolbar-ok: a vertical RAIL, not a toolbar — see above.
       className="hidden lg:block w-56 flex-shrink-0 sticky self-start top-[calc(var(--header-height,3.5rem)+1rem)] max-h-[calc(100vh-var(--header-height,3.5rem)-2rem)]"
     >
       <Nav aria-label="Form sections">

@@ -92,6 +92,43 @@ const BARE_CATCH_RE = /(^|\s)catch\s*\{/g;
 
 const RAW_OK_RE = /\/\/\s*audit-catch-raw-ok\s*:/i;
 
+/**
+ * The catch line plus the next `budget` lines that carry CODE.
+ *
+ * Block comments are tracked with a depth flag rather than a per-line regex:
+ * a `/* … *\/` spanning eight lines is one comment, and testing each line in
+ * isolation would read its prose as code and exhaust the budget on it.
+ *
+ * The catch line itself is always included — `} catch (e) { return null; }` is
+ * a single line and must still be seen.
+ */
+function nextCodeLines(lines, startIdx, budget) {
+  const out = [lines[startIdx]];
+  let inBlock = false;
+  let taken = 0;
+  for (let j = startIdx + 1; j < lines.length && taken < budget; j++) {
+    let t = lines[j].trim();
+    if (inBlock) {
+      const end = t.indexOf("*/");
+      if (end === -1) continue;
+      t = t.slice(end + 2).trim();
+      inBlock = false;
+    }
+    // Strip any inline block comment that opens and closes on this line.
+    t = t.replace(/\/\*[\s\S]*?\*\//g, "").trim();
+    const open = t.indexOf("/*");
+    if (open !== -1) {
+      inBlock = true;
+      t = t.slice(0, open).trim();
+    }
+    if (t.startsWith("//")) continue;
+    if (t === "") continue;
+    out.push(lines[j]);
+    taken++;
+  }
+  return out;
+}
+
 const violations = [];
 let totalCatch = 0;
 
@@ -107,7 +144,39 @@ for (const root of SCAN_ROOTS) {
     if (file === fileURLToPath(import.meta.url)) continue;
 
     const lines = src.split(/\r?\n/);
+    /*
+     * 🛑 A `catch` written in PROSE is not a catch clause.
+     *
+     * `errors/index.ts` documents itself with "Every catch (e: unknown)
+     * funnels through normalizeError(e)" — two comment lines. The detector
+     * matched the first and the old raw 6-line window found `normalizeError(e)`
+     * on the second, so a comment silenced the audit about itself. Once the
+     * window became code-only, the same comment became a false POSITIVE.
+     *
+     * Both halves are the one bug: comments must be invisible to the detector
+     * and to the window alike. Verified by negative control — a real
+     * unnormalized catch still fails under MIGRATE=strict.
+     */
+    const commentDepth = [];
+    {
+      let inBlock = false;
+      for (const raw of lines) {
+        let t = raw.trim();
+        const startedInBlock = inBlock;
+        if (inBlock) {
+          const end = t.indexOf("*/");
+          if (end === -1) { commentDepth.push(true); continue; }
+          t = t.slice(end + 2).trim();
+          inBlock = false;
+        }
+        t = t.replace(/\/\*[\s\S]*?\*\//g, "").trim();
+        const open = t.indexOf("/*");
+        if (open !== -1) { inBlock = true; t = t.slice(0, open).trim(); }
+        commentDepth.push(startedInBlock || t === "" || t.startsWith("//"));
+      }
+    }
     for (let i = 0; i < lines.length; i++) {
+      if (commentDepth[i]) continue;
       const line = lines[i];
       // Suppression marker on this line or the line above covers every kind.
       const suppressed =
@@ -123,8 +192,22 @@ for (const root of SCAN_ROOTS) {
         totalCatch++;
         if (suppressed) continue;
 
-        // Look ahead 6 lines for an acceptable pattern.
-        const window = lines.slice(i, i + 7).join("\n");
+        /*
+         * Look ahead 6 CODE lines — comments and blanks do not count.
+         *
+         * 🛑 This used to be `lines.slice(i, i + 7)`, raw. The docstring above
+         * has always said "the first non-comment statement", and the
+         * implementation never skipped comments — so in a codebase whose house
+         * style is a paragraph explaining every deliberate swallow, the real
+         * statement sits at +7 to +9 and the rule looked straight past it.
+         *
+         * Measured when this was fixed: of 7 bound catch sites reported,
+         * **4 already called `normalizeError`** and were false positives
+         * (gateway-events.repository +9, obligations.repository +9,
+         * labels.tsx +7, ingest.ts +7). A rule with 4 false positives out of 7
+         * is worse than none, because the 3 real ones get dismissed with them.
+         */
+        const window = nextCodeLines(lines, i, 6).join("\n");
         const callsNormalize = new RegExp(`normalizeError\\s*\\(\\s*${varName}\\b`).test(window);
         const reThrows = new RegExp(`throw\\s+${varName}\\b`).test(window);
         if (callsNormalize || reThrows) continue;

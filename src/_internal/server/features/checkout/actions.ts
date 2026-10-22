@@ -2652,7 +2652,6 @@ async function refundDroppedItemsForPhonePeCheckout(input: {
       : droppedValue;
     const refundResult = await processRefundAction({
       orderId: primaryOrderId,
-      type: "partial",
       amount: refundAmount,
       /*
        * A SYSTEM refund, not a buyer claim: items the buyer paid for turned

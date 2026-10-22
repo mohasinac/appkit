@@ -50,6 +50,12 @@ import { apiClient } from "../../../http/index";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { operatorMessage } from "./operator-message";
+import { normalizeError } from "../../../errors/normalize";
+import {
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "../../../monitoring/error-tracking";
 import { MAX_RECEIVE_ROWS } from "../schemas/firestore";
 
 /** A shipment item that can actually be received — i.e. one that is linked. */
@@ -290,7 +296,15 @@ export function ReceiveStationView({
    * It runs only on a miss, so the common case stays instant and a box-arm is
    * roughly one scan in twenty anyway.
    */
-  async function resolveBoxFromServer(code: string): Promise<BoxOption | null> {
+  /*
+   * Three outcomes, and the third is the point: `BoxOption` (found), `null`
+   * (asked, no such box), `undefined` (could not ask). The caller used to see
+   * only the first two and told the operator "No box registered as …" for a
+   * network failure.
+   */
+  async function resolveBoxFromServer(
+    code: string,
+  ): Promise<BoxOption | null | undefined> {
     const bare = code.startsWith("BOX-") ? code.slice(4) : code;
     try {
       const res = await apiClient.get<{
@@ -302,10 +316,26 @@ export function ReceiveStationView({
       return hit
         ? { id: hit.id, code: hit.code, location: hit.location ?? null }
         : null;
-    } catch {
-      // A failed lookup must not masquerade as "no such box" — the caller
-      // distinguishes the two in what it tells the operator.
-      return null;
+    } catch (err) {
+      /*
+       * 🛑 The predecessor comment here claimed "a failed lookup must not
+       * masquerade as 'no such box' — the caller distinguishes the two". It
+       * could not: the success path returns `null` on a miss and this returned
+       * the same `null`, so the two were indistinguishable by construction and
+       * a network failure WAS reported to the operator as an unrecognised
+       * code. That is the exact confusion the function's own header says it
+       * exists to prevent.
+       *
+       * Classified and recorded rather than swallowed, and `undefined` now
+       * means "could not ask" while `null` keeps meaning "asked, no such box".
+       */
+      const n = normalizeError(err);
+      trackError(n.message, ErrorCategory.API, ErrorSeverity.MEDIUM, {
+        component: "ReceiveStationView",
+        action: "resolveBoxFromServer",
+        metadata: { code: bare },
+      });
+      return undefined;
     }
   }
 
@@ -333,10 +363,20 @@ export function ReceiveStationView({
         setLastScan({ text: `Armed ${fetched.code}`, tone: "ok" });
         return;
       }
-      setLastScan({
-        text: `No box registered as ${code.slice(4)} — register it first`,
-        tone: "bad",
-      });
+      setLastScan(
+        fetched === undefined
+          ? {
+              // "Could not ask" — never "does not exist". The operator is
+              // holding the box; telling them it is unregistered sends them
+              // to re-register something that is already in the system.
+              text: `Could not check ${code.slice(4)} — connection problem, scan again`,
+              tone: "bad",
+            }
+          : {
+              text: `No box registered as ${code.slice(4)} — register it first`,
+              tone: "bad",
+            },
+      );
       return;
     }
 
@@ -466,7 +506,11 @@ export function ReceiveStationView({
       });
       setLastScan({ text: "Committed. Carry on.", tone: "ok" });
     } catch (err) {
-      showToast(operatorMessage(err), "error");
+      // Normalized first: `operatorMessage` duck-types `.status`/`.code`/
+      // `.message`, and the api/app branches of `NormalizedError` carry exactly
+      // those three — so the 4xx passthrough still works and every other kind
+      // correctly falls through to a constant instead of server text.
+      showToast(operatorMessage(normalizeError(err)), "error");
     } finally {
       committingRef.current = false;
       setCommitting(false);

@@ -502,7 +502,15 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   return (
     <Div className="flex h-full flex-col">
       {wrapped}
-      <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)] pt-0">
+      {/*
+       * No `pt-0`: with no `pt-*` class the padding-top is already 0, so the
+       * literal was redundant — and being a bare spacing utility with no token
+       * behind it, it was the one thing here `audit-html-wrappers` could
+       * legitimately refuse. The two remaining values resolve through
+       * `--appkit-space-3`, which is the sanctioned form when no all-sides
+       * preset fits (there is no `paddingX`/`paddingY` prop).
+       */}
+      <Div className="flex justify-end px-[var(--appkit-space-3)] pb-[var(--appkit-space-3)]">
         {ownerActions}
       </Div>
     </Div>

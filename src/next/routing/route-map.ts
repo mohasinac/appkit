@@ -448,7 +448,16 @@ export const DEFAULT_ROUTE_MAP = {
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
     SHIPMENTS: "/admin/shipments",
-    INVENTORY: "/admin/inventory",
+    /*
+     * 🛑 There is deliberately NO `INVENTORY: "/admin/inventory"` key.
+     *
+     * I added one and never built the page behind it, and nothing ever
+     * referenced it — `audit-dead-route-key` caught it. A ROUTES key is a
+     * promise, and the two real surfaces (`INVENTORY_BOXES`,
+     * `INVENTORY_MOVEMENTS`) each carry their own nav entry, so an index page
+     * would be a third place to list the same two links. Build it only when
+     * there is a third child worth grouping.
+     */
     INVENTORY_BOXES: "/admin/inventory/boxes",
     INVENTORY_BOX_DETAIL: (id: string) => `/admin/inventory/boxes/${id}`,
     /*

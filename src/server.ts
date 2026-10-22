@@ -2178,10 +2178,12 @@ export type { ActionIndexDocument } from "./features/search/action-index/reposit
 
 export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
 /*
- * `wouldBeFullRefund` — from refundable-base, NOT return-reasons. It was
- * never exported at all, so the admin refund route could not import it.
+ * 🛑 `wouldBeFullRefund` is deliberately NOT exported. I added it here, and
+ * `audit-appkit-reexports` was right to refuse it: `_internal/shared/checkout/`
+ * is not a `features/` module, so exporting it would have made a money
+ * predicate public purely so one route could duplicate a decision
+ * `processRefundAction` already makes — see the note on `ProcessRefundInput`.
  */
-export { wouldBeFullRefund } from "./_internal/shared/checkout/refundable-base";
 // Return / refund reasons — the closed enum the final-sale gate branches on.
 // See the module docstring for why the exempt set is "seller or carrier fault"
 // rather than "serious reasons".

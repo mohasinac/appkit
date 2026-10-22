@@ -145,28 +145,30 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * spin, grade, chase. Hand-curated from the crawl. */
   productFeatures: "permanent",
   /*
-   * ── the inventory triple: all three PERMANENT ────────────────────────────
+   * ── the inventory triple is deliberately ABSENT ──────────────────────────
    *
-   * They pass the test above in the strongest possible way: clearing them
-   * does not mean re-running a loader, it means **walking to the shelf with a
-   * clipboard**. There is no seed data for any of them and never will be — a
-   * box exists because someone labelled a physical box, and a placement
-   * exists because someone put something in it.
+   * I classified `storageBoxes` / `inventoryPlacements` / `inventoryMovements`
+   * as `permanent` here, with a long argument for why clearing them would be
+   * unrecoverable. The argument was right and the entries were still wrong:
+   * **`appkit-seed` does not load any of the three**, so they had no rows for
+   * a purge to consider and the entries matched nothing.
    *
-   * 🛑 `inventoryMovements` is permanent for a second, stronger reason: it is
-   * append-only EVIDENCE. The repository overrides `update` and `delete` to
-   * throw precisely so history cannot be rewritten, and a purge that cleared
-   * the collection would do in one command what the repository refuses one
-   * row at a time.
+   * That is not harmless. This file's own header settles it — *"a document
+   * with no `seedPurpose` was not written by the seeder, so the purge will not
+   * touch it"* — so the three are protected by never having been seeded, and
+   * the entries added no protection whatsoever. What they added was the
+   * appearance of coverage: a reader checking "are the inventory collections
+   * safe from a purge?" found a confident `permanent` beside a paragraph of
+   * reasoning, and would have had no way to learn that nothing consults it.
+   * That is the `offers` defect in `TEST_DATA_COLLECTIONS` exactly (Root Cause
+   * #90), and `audit-seed-purpose`'s COLLECTION_DEAD rule exists to catch it.
    *
-   * `storageBoxes` is also pointed INTO by every placement and every movement
-   * (`boxId`), the same relationship that makes `categories` permanent —
-   * clearing it orphans both other collections while leaving the physical
-   * boxes sitting there labelled.
+   * 🛑 If seed fixtures are ever added for any of the three, classify it in
+   * the same commit — at that point the entry becomes load-bearing, and
+   * `inventoryMovements` especially: the repository overrides `update` and
+   * `delete` to throw so history cannot be rewritten, and a purge would do in
+   * one command what it refuses one row at a time.
    */
-  storageBoxes: "permanent",
-  inventoryPlacements: "permanent",
-  inventoryMovements: "permanent",
   /*
    * The box-code tables and generation summaries. `permanent` because they
    * are reference data compiled from archived primary sources, not exercise

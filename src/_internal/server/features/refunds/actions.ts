@@ -113,7 +113,23 @@ function revokeFirstSnapDoc(snap: FirebaseFirestore.QuerySnapshot): void {
 
 export type ProcessRefundInput = {
   orderId: string;
-  type: RefundType;
+  /*
+   * 🛑 `type` was REMOVED on 2026-10-22. Do not reinstate it.
+   *
+   * It was a required `RefundType` that every caller had to guess, and this
+   * function then computed the REAL answer four lines later anyway —
+   * `wouldBeFullRefund(order, amount, legacyGstPercent)`. Five callers, five
+   * different guesses: three hardcoded a literal, the admin route
+   * re-implemented the predicate *without* the legacy GST percent (so it could
+   * disagree with the authoritative one on any pre-2026-10-21 order), and
+   * `POST /api/orders/[id]/refund` took it straight from the REQUEST BODY — a
+   * client-supplied label on a money record.
+   *
+   * The stored `type` has no reader anywhere in the codebase; it is a label on
+   * the refund entry. So it is now derived from the `isFull` this function
+   * already owns, and the label can no longer contradict it. Root Cause #75 —
+   * export the computed value, never a factor the caller must recombine.
+   */
   /** Decimal rupees. Must be > 0 and ≤ remaining refundable amount on the order. */
   amount: number;
   /**
@@ -329,7 +345,8 @@ export async function processRefundAction(
 
       const event: OrderRefundEvent = {
         refundId,
-        type: input.type,
+        // Derived from the authoritative `isFull` above, never from a caller.
+        type: isFull ? "full" : "partial",
         amount: input.amount,
         ...(input.itemIds?.length ? { itemIds: input.itemIds } : {}),
         reasonCode: input.reasonCode,

@@ -39,6 +39,7 @@
 
 import type { FirestoreDocument, FirestoreValue } from "../../../../schemas/types";
 import { GATEWAY_EVENT_PAYLOAD_MAX_BYTES } from "../../../../features/gateway-events/schemas/firestore";
+import { normalizeError } from "../../../../errors/normalize";
 
 /**
  * Keys dropped wherever they appear, at any depth.
@@ -149,13 +150,24 @@ export function redactGatewayPayload(body: unknown): RedactResult {
   let serialisedLength: number;
   try {
     serialisedLength = JSON.stringify(redacted)?.length ?? 0;
-  } catch {
+  } catch (err) {
     /*
      * A circular structure cannot come from `JSON.parse`, which is the only
      * producer here — but this function is exported and a future caller could
      * hand it something else. Failing to a marker keeps the row writable.
+     *
+     * 🛑 The reason is CARRIED, not discarded. This was a bare `catch {}`, so
+     * the one case the comment above exists to anticipate — a future caller
+     * handing it something `JSON.stringify` cannot take — produced a row
+     * saying only `redactionFailed: true`, with nothing anywhere to say why.
+     * The row is a debugging record; a marker that cannot explain itself is
+     * the silent-degrade shape this codebase keeps paying for.
      */
-    return { payload: { redactionFailed: true }, truncated: true };
+    const n = normalizeError(err);
+    return {
+      payload: { redactionFailed: true, reason: n.message },
+      truncated: true,
+    };
   }
 
   if (serialisedLength > GATEWAY_EVENT_PAYLOAD_MAX_BYTES) {

@@ -228,7 +228,9 @@ export function AdminStatCard({
                 dots follow): red and green here are reinforcement, not
                 information.
               */}
-              <span aria-hidden="true">{trendArrow} </span>
+              <Text as="span" aria-hidden="true">
+                {trendArrow}{" "}
+              </Text>
               {trendText}
               {trendLabel ? (
                 <Text as="span" size="xs" color="muted" weight="normal">
@@ -238,7 +240,9 @@ export function AdminStatCard({
               ) : null}
             </Text>
           ) : (
-            <span />
+            /* A layout placeholder keeping the grid cell occupied — <Div> is
+               the primitive for that; a bare <span/> carries no semantics. */
+            <Div />
           )}
 
           {showSpark && (

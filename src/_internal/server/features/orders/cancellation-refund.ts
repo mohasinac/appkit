@@ -445,8 +445,7 @@ export async function cancelOrderWithRefund(
    * still the rest of the base, so full is still the honest label.
    */
   const result = await processRefundAction({
-    orderId: order.id,
-    type: "full",
+    orderId: order.id,
     amount,
     /*
      * `changed_mind` is the honest default: a cancellation before dispatch is a

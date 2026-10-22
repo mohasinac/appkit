@@ -43,7 +43,28 @@ import { BID_FIELDS } from "../../../../constants/field-names";
  * is both `test` AND `isTestData`. `audit-seed-purpose` R6 now asserts every
  * entry here declares the field, so the `offers` shape cannot return.
  */
-export const TEST_DATA_COLLECTIONS = ["categories", "stores", "products", "blogPosts", "events"] as const;
+/*
+ * 🛑 Every schema that declares `isTestData` must appear here, or the field is
+ * WRITE-ONLY and the row is never swept — a flag that reads as "this will be
+ * cleaned up" and never is.
+ *
+ * `orders`, `obligations` and `protectionClaims` were added 2026-10-22 after
+ * `audit-seed-purpose`'s inverse rule found all three declaring the field with
+ * no entry. They are the propagation chain: an order carries the flag, writing
+ * an obligation copies it (`orders.repository.ts` → `repo.open({ …isTestData
+ * })`), and a claim inherits it in turn — so a test order left three
+ * generations of descendants behind that nothing would ever collect.
+ */
+export const TEST_DATA_COLLECTIONS = [
+  "categories",
+  "stores",
+  "products",
+  "blogPosts",
+  "events",
+  "orders",
+  "obligations",
+  "protectionClaims",
+] as const;
 const BID_CHUNK_SIZE = 30; // Firestore `in` query cap
 
 export interface TestDataCleanupOptions {
