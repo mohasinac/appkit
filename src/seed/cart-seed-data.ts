@@ -1,6 +1,16 @@
 /*
- * WHY: Seeds shopping carts for the Beyblade marketplace — tests cart flows (multi-item, single, auction, guest, empty).
- * WHAT: 4 carts: Rehan (3 items from Beyblade Arena), Vivaan (2 items from LetItRip Official/Beyblade Arena), Admin (2 items from Beyblade Arena), guest (2 items).
+ * WHY: Shopping carts, pruned to the two that exist in production.
+ * WHAT: 2 carts — Rehan and Admin. Vivaan's and the guest cart were removed;
+ * neither is live.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-22 — the second pass, which caught what the
+ * first missed. The rows here were GENERATED (a `.push()` loop, a spread of a
+ * generator call, or a factory call with a template-literal id), so a static
+ * scan of the array literal read `0` while the loader wrote dozens. The only
+ * authority on what a load writes is `npx appkit-seed load --dry-run`.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test".
  *
  * EXPORTS:
  *   cartsSeedData — Array of CartDocument for seed runner
@@ -118,57 +128,6 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // Vivaan's cart: 2 standard + 1 pre-order
-  {
-    id: "user-seto-kaiba",
-    userId: "user-seto-kaiba",
-    items: [
-      {
-        itemId: "cartitem-kaiba-metal-flame-sagittario",
-        productId: "product-beyblade-metal-flame-sagittario",
-        productTitle: "Beyblade Metal Flame Sagittario",
-        productImage: seedPhoto("product-image-metal-flame-sagittario-1-20260101", 600, 600),
-        price: 2299,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
-        listingType: "standard",
-        addedAt: daysAgo(5),
-        updatedAt: daysAgo(5),
-      },
-      {
-        itemId: "cartitem-kaiba-x-app-unlock",
-        productId: "digitalcode-beyblade-x-app-unlock",
-        productTitle: "Beyblade X App Unlock Code",
-        productImage: seedPhoto("digitalcode-image-x-app-unlock-1-20260101", 600, 600),
-        price: 199,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
-        listingType: "standard",
-        addedAt: daysAgo(4),
-        updatedAt: daysAgo(4),
-      },
-      {
-        itemId: "cartitem-kaiba-x-bx08-preorder",
-        productId: "preorder-beyblade-x-bx-08-wave",
-        productTitle: "Beyblade X BX-08 Wave — Pre-Order",
-        productImage: seedPhoto("preorder-image-x-bx08-wave-2-20260101", 600, 600),
-        price: 899,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
-        listingType: "pre-order",
-        addedAt: daysAgo(2),
-        updatedAt: daysAgo(2),
-      },
-    ],
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(2),
-  },
 
   // Admin's cart: 2 items from Beyblade Arena (Admin as buyer)
   {
@@ -208,41 +167,6 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // Guest cart: 2 items, no userId
-  {
-    id: "guest-session-001",
-    userId: "",
-    items: [
-      {
-        itemId: "cartitem-guest-metal-storm-pegasus",
-        productId: "product-beyblade-metal-storm-pegasus",
-        productTitle: "Beyblade Metal Storm Pegasus",
-        productImage: seedPhoto("product-image-metal-storm-pegasus-1-20260101", 600, 600),
-        price: 2499,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
-        listingType: "standard",
-        addedAt: daysAgo(1),
-        updatedAt: daysAgo(1),
-      },
-      {
-        itemId: "cartitem-guest-burst-valkyrie",
-        productId: "product-beyblade-burst-valkyrie",
-        productTitle: "Beyblade Burst Valkyrie",
-        productImage: seedPhoto("product-image-burst-valkyrie-1-20260101", 600, 600),
-        price: 1899,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
-        listingType: "standard",
-        addedAt: daysAgo(1),
-        updatedAt: daysAgo(1),
-      },
-    ],
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
-  },
+  // Removed 2026-10-22: the guest cart (`guest-session-001`) and Vivaan's
+  // (`user-seto-kaiba`). Neither is live, and live is canonical.
 ];

@@ -1,6 +1,15 @@
 /*
- * WHY: Seeds wishlists for the Beyblade marketplace — one doc per user, max 20 items, newest-first.
- * WHAT: 3 wishlists (Rehan 8 items, Vivaan 5 items, Admin 4 items). All productIds reference the real Beyblade seed products.
+ * WHY: Wishlists — one doc per user, max 20 items, newest-first.
+ * WHAT: 1 doc (Admin), the only one live. Rehan's and Vivaan's were removed.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-22 — the second pass, which caught what the
+ * first missed. The rows here were GENERATED (a `.push()` loop, a spread of a
+ * generator call, or a factory call with a template-literal id), so a static
+ * scan of the array literal read `0` while the loader wrote dozens. The only
+ * authority on what a load writes is `npx appkit-seed load --dry-run`.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test".
  *
  * EXPORTS:
  *   wishlistsSeedData — Array of WishlistSeedDocument for seed runner
@@ -43,26 +52,7 @@ function makeDoc(userId: string, items: WishlistItemSeed[]): WishlistSeedDocumen
 }
 
 export const wishlistsSeedData: WishlistSeedDocument[] = [
-  // Rehan: 8 items — mix of standard + auctions from Beyblade Arena
-  makeDoc("user-yugi-muto", [
-    { productId: "product-beyblade-original-dranzer-s", productType: "product", addedAt: daysAgo(14) },
-    { productId: "product-beyblade-original-driger-v", productType: "product", addedAt: daysAgo(12) },
-    { productId: "product-beyblade-metal-flame-sagittario", productType: "product", addedAt: daysAgo(10) },
-    { productId: "auction-beyblade-original-dragoon-storm", productType: "auction", addedAt: daysAgo(8) },
-    { productId: "product-beyblade-burst-valkyrie", productType: "product", addedAt: daysAgo(6) },
-    { productId: "product-beyblade-metal-storm-pegasus", productType: "product", addedAt: daysAgo(4) },
-    { productId: "auction-beyblade-metal-lightning-l-drago", productType: "auction", addedAt: daysAgo(3) },
-    { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", addedAt: daysAgo(1) },
-  ]),
 
-  // Vivaan: 5 items from Beyblade Arena (Vivaan as buyer)
-  makeDoc("user-seto-kaiba", [
-    { productId: "product-beyblade-x-wizard-arrow", productType: "product", addedAt: daysAgo(10) },
-    { productId: "product-beyblade-x-knife-shinobi", productType: "product", addedAt: daysAgo(7) },
-    { productId: "classified-beyblade-stadium-set", productType: "product", addedAt: daysAgo(5) },
-    { productId: "digitalcode-beyblade-x-app-unlock", productType: "product", addedAt: daysAgo(3) },
-    { productId: "product-beyblade-burst-regalia-genesis", productType: "product", addedAt: daysAgo(1) },
-  ]),
 
   // Admin: 4 items — mix from Beyblade Arena (Admin as buyer)
   makeDoc("user-admin-letitrip", [
@@ -71,4 +61,6 @@ export const wishlistsSeedData: WishlistSeedDocument[] = [
     { productId: "product-beyblade-burst-valkyrie", productType: "product", addedAt: daysAgo(8) },
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", addedAt: daysAgo(2) },
   ]),
+  // Removed 2026-10-22: Vivaan's and Yugi's wishlists — neither is live.
+  // Only `wishlist-user-admin-letitrip` exists, so only it is seeded.
 ];

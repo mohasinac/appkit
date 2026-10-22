@@ -1,6 +1,15 @@
 /*
- * WHY: Seeds browse history for the Beyblade marketplace — one doc per user, FIFO-capped at 50, newest-first.
- * WHAT: 3 history docs (Rehan 15 items, Vivaan 8 items, Admin 10 items). All productIds reference the real Beyblade seed products.
+ * WHY: Browse history — one doc per user, FIFO-capped at 50, newest-first.
+ * WHAT: 2 docs (Rehan, Admin), both live. Vivaan's was removed.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-22 — the second pass, which caught what the
+ * first missed. The rows here were GENERATED (a `.push()` loop, a spread of a
+ * generator call, or a factory call with a template-literal id), so a static
+ * scan of the array literal read `0` while the loader wrote dozens. The only
+ * authority on what a load writes is `npx appkit-seed load --dry-run`.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test".
  *
  * EXPORTS:
  *   historySeedData — Array of HistorySeedDocument for seed runner
@@ -62,17 +71,6 @@ export const historySeedData: HistorySeedDocument[] = [
     { productId: "product-beyblade-original-dranzer-s", productType: "product", viewedAt: daysAgo(6) },
   ]),
 
-  // Vivaan: 8 recently viewed — browsing Beyblade Arena products
-  makeDoc("user-seto-kaiba", [
-    { productId: "product-beyblade-x-wizard-arrow", productType: "product", viewedAt: hoursAgo(2) },
-    { productId: "product-beyblade-x-knife-shinobi", productType: "product", viewedAt: hoursAgo(5) },
-    { productId: "classified-beyblade-stadium-set", productType: "product", viewedAt: hoursAgo(10) },
-    { productId: "digitalcode-beyblade-x-app-unlock", productType: "product", viewedAt: daysAgo(1) },
-    { productId: "product-beyblade-burst-regalia-genesis", productType: "product", viewedAt: daysAgo(1) },
-    { productId: "product-beyblade-metal-storm-pegasus", productType: "product", viewedAt: daysAgo(2) },
-    { productId: "product-beyblade-original-driger-v", productType: "product", viewedAt: daysAgo(3) },
-    { productId: "product-beyblade-burst-valkyrie", productType: "product", viewedAt: daysAgo(4) },
-  ]),
 
   // Admin: 10 recently viewed — browsing Beyblade Arena to review inventory
   makeDoc("user-admin-letitrip", [
@@ -87,4 +85,6 @@ export const historySeedData: HistorySeedDocument[] = [
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", viewedAt: daysAgo(4) },
     { productId: "product-beyblade-original-dranzer-s", productType: "product", viewedAt: daysAgo(5) },
   ]),
+  // Removed 2026-10-22: Vivaan's history (`user-seto-kaiba`) — not live.
+  // The two that remain ARE live, so the seed still reproduces them.
 ];

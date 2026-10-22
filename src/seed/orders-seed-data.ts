@@ -1,7 +1,18 @@
 /*
- * WHY: Seeds the orders that exist in production.
- * WHAT: Order IDs follow order-{itemCount}-{YYYYMMDD}-{rand6}. The 6 demo
- * orders were removed; only live ids remain.
+ * WHY: Order fixtures. Production's orders are real purchases, which a seed
+ * must not fabricate, so this is empty.
+ * WHAT: Empty. `withOrderImages` and `withOrderSearchTxt` are kept — they are
+ * the reason a fixture cannot ship without items[] or tokens. A loop running
+ * to 50, a `.slice(0, 42)` and two hand-written cash fixtures were removed.
+ *
+ * 🛑 PRUNED TO MATCH LIVE, 2026-10-22 — the second pass, which caught what the
+ * first missed. The rows here were GENERATED (a `.push()` loop, a spread of a
+ * generator call, or a factory call with a template-literal id), so a static
+ * scan of the array literal read `0` while the loader wrote dozens. The only
+ * authority on what a load writes is `npx appkit-seed load --dry-run`.
+ *
+ * Consequence, recorded rather than left to be discovered: tester cases that
+ * acted on this data can now only report "could not test".
  *
  * 🛑 PRUNED TO MATCH LIVE, 2026-10-21. This file previously seeded demo
  * fixtures that production does not have. `appkit-seed load` has NO
@@ -51,37 +62,6 @@ import { withOrderSearchTxt } from "./_helpers/search-txt-wrappers";
 import type { OrderPlain } from "../features/orders/schemas/firestore";
 import { seedPhoto } from "./_helpers/media";
 
-const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
-
-/**
- * The anchor the order IDs are built from — fixed, never `NOW`.
- *
- * 🛑 An ID may not contain a value that moves. `generateOrderId` embeds a
- * `yyyymmdd` derived from its anchor, so with `NOW` every order's id changed on
- * every calendar day: `appkit-seed load` CREATED 50 fresh documents instead of
- * upserting the same 50, and `status`/`delete` computed ids that had never been
- * written.
- *
- * Measured immediately after a successful `load --collections orders` that
- * reported "created 50, errors 0": `appkit-seed status` answered
- * **`orders 50 seed / 0 in db`**. Both numbers were right; they were about
- * different sets of ids.
- *
- * This is exactly the case Recurrent Root Cause #25 names — "`Date.now()` used
- * as an ID component (as opposed to just a display timestamp)". The
- * distinction is the whole fix:
- *
- *   - **IDs** anchor to `SEED_EPOCH`, so they are reproducible forever.
- *   - **Display timestamps** (`orderDate`, `createdAt`, shipping dates) keep
- *     using `daysAgo()` off `NOW`, so a reseeded catalogue still looks recent
- *     and time-bound fixtures re-arm, which is what the tester window needs.
- *
- * It also broke every checklist case that names an order by id: they were
- * authored against one day's ids and could never resolve afterwards.
- */
-const SEED_EPOCH = new Date("2026-01-01T00:00:00.000Z");
-
 // Deterministic per-product thumbnail — `seedPhoto` maps a seed string to one
 // of six LOCAL tiles, so this doesn't need to match the real product seed's
 // own image, just be present and consistent across reseeds. (It used to name
@@ -94,194 +74,13 @@ function orderItemImage(productId: string): string {
   return seedPhoto(`order-item-${productId}`, 300, 300);
 }
 
-// Deterministic 6-char base36 suffix derived from a seed string — replaces the
-// previous Math.random() suffix, which regenerated a fresh id on every module
-// import (every `load`/`status`/`delete` CLI invocation), so re-running `load`
-// never actually updated existing docs and `status`/`delete` could never find
-// what a previous `load` had written. A simple string hash keeps ids stable
-// across runs on the same day while remaining unique per (itemCount, daysBack, seed).
-function seededSuffix(seed: string): string {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (Math.imul(31, hash) + seed.charCodeAt(i)) | 0;
-  }
-  // Force unsigned before base36 so the suffix is always 6 lowercase alnum chars.
-  return (hash >>> 0).toString(36).padStart(6, "0").slice(0, 6);
-}
-
-const generateOrderId = (itemCount: number, daysBack: number, seed: string): string => {
-  // SEED_EPOCH, not NOW — see the block comment on SEED_EPOCH. An id that
-  // moves with the calendar is an id that never upserts.
-  const date = new Date(SEED_EPOCH.getTime() - daysBack * 86_400_000);
-  const yyyymmdd = date.toISOString().split("T")[0].replace(/-/g, "");
-  const rand = seededSuffix(`${itemCount}-${daysBack}-${seed}`);
-  return `order-${itemCount}-${yyyymmdd}-${rand}`;
-};
-
-const USER_NAMES: Record<string, string> = {
-  "user-yugi-muto": "Mock User 3",
-  "user-admin-letitrip": "Mock User 1",
-  "user-seto-kaiba": "Mock User 2",
-};
-
-const USER_EMAILS: Record<string, string> = {
-  "user-yugi-muto": "rehan.sheikh@gmail.com",
-  "user-admin-letitrip": "admin@letitrip.in",
-  "user-seto-kaiba": "vivaan.kapoor@gmail.com",
-};
-
 const _rawOrdersSeedData: Partial<OrderPlain>[] = [
 ];
 
-const productPool = [
-  { productId: "product-beyblade-original-dranzer-s", productTitle: "Beyblade Original Dranzer S", unitPrice: 1799 },
-  { productId: "product-beyblade-original-driger-v", productTitle: "Beyblade Original Driger V", unitPrice: 1999 },
-  { productId: "product-beyblade-metal-storm-pegasus", productTitle: "Beyblade Metal Storm Pegasus", unitPrice: 2499 },
-  { productId: "product-beyblade-metal-flame-sagittario", productTitle: "Beyblade Metal Flame Sagittario", unitPrice: 2299 },
-  { productId: "product-beyblade-burst-valkyrie", productTitle: "Beyblade Burst Valkyrie", unitPrice: 1899 },
-  { productId: "product-beyblade-burst-regalia-genesis", productTitle: "Beyblade Burst Regalia Genesis", unitPrice: 3499 },
-  { productId: "product-beyblade-x-wizard-arrow", productTitle: "Beyblade X Wizard Arrow", unitPrice: 1699 },
-  { productId: "product-beyblade-x-knife-shinobi", productTitle: "Beyblade X Knife Shinobi", unitPrice: 2999 },
-];
-
-const statuses = [
-  "pending",
-  "confirmed",
-  "processing",
-  "shipped",
-  "delivered",
-  "cancelled",
-  "refunded",
-  "return_requested",
-  "returned",
-] as const;
-
-const paymentStatuses: Record<string, string> = {
-  pending: "pending",
-  confirmed: "paid",
-  processing: "processing",
-  shipped: "paid",
-  delivered: "paid",
-  cancelled: "refunded",
-  refunded: "refunded",
-  return_requested: "paid",
-  returned: "refunded",
-};
-
-const buyerStoreMatrix = [
-  { userId: "user-yugi-muto", storeId: "store-beyblade-arena", addressId: "addr-yugi-home" },
-  { userId: "user-yugi-muto", storeId: "store-letitrip-official", addressId: "addr-yugi-home" },
-  { userId: "user-admin-letitrip", storeId: "store-beyblade-arena", addressId: "addr-letitrip-hq" },
-  { userId: "user-seto-kaiba", storeId: "store-beyblade-arena", addressId: "addr-kaiba-mansion" },
-];
-
-const expandedOrders: Partial<OrderPlain>[] = [];
-for (let i = _rawOrdersSeedData.length; i < 50; i++) {
-  const combo = buyerStoreMatrix[i % buyerStoreMatrix.length];
-  const product = productPool[i % productPool.length];
-  const status = statuses[i % statuses.length];
-  const daysBack = 70 - i;
-  const qty = (i % 3) + 1;
-
-  expandedOrders.push({
-    id: generateOrderId(qty, daysBack, `${combo.userId}-${product.productId}-${i}`),
-    /*
-     * 🛑 `items[]` IS THE CANONICAL SHAPE. The flat `productId`/`productTitle`
-     * pair below is legacy and is kept only for back-compat readers.
-     *
-     * This generator emitted the flat fields alone, so 44 of the 50 seeded
-     * orders had NO `items[]` — and every order surface reads
-     * `items[0].productTitle` for its row label. The admin list therefore
-     * rendered "🧾 Order order-1-20260822-aucwon" on 22 of 25 rows: a raw id
-     * beside a placeholder emoji, for orders whose product was known all along.
-     *
-     * Same family as Root Cause #60 — a writer producing a shape no reader can
-     * render — except the writer here is the seed, which is why it survived a
-     * fix to the readers.
-     */
-    items: [
-      {
-        productId: product.productId,
-        productTitle: product.productTitle,
-        listingType: "standard",
-        quantity: qty,
-        unitPrice: product.unitPrice,
-        totalPrice: product.unitPrice * qty,
-      },
-    ],
-    productId: product.productId,
-    productTitle: product.productTitle,
-    userId: combo.userId,
-    userName: USER_NAMES[combo.userId],
-    userEmail: USER_EMAILS[combo.userId],
-    storeId: combo.storeId,
-    quantity: qty,
-    unitPrice: product.unitPrice,
-    totalPrice: product.unitPrice * qty,
-    currency: "INR",
-    status: status as any,
-    paymentStatus: (paymentStatuses[status] ?? "pending") as any,
-    paymentMethod: "cash",
-    shippingAddress: combo.addressId,
-    orderDate: daysAgo(daysBack),
-    shippingDate: status === "shipped" || status === "delivered" ? daysAgo(daysBack - 5) : undefined,
-    deliveryDate: status === "delivered" ? daysAgo(daysBack - 10) : undefined,
-    createdAt: daysAgo(daysBack),
-    updatedAt: daysAgo(Math.max(0, daysBack - 10)),
-  });
-}
-
-// P-1 MVP: two cash/UPI manual payment orders for demo purposes.
-// cashOrderPendingProof: buyer submitted proof, admin has NOT yet verified.
-const cashOrderPendingProof: Partial<OrderPlain> = {
-  id: "order-1-20260729-cash01",
-  productId: "product-beyblade-original-dranzer-s",
-  productTitle: "Beyblade Original Dranzer S",
-  userId: "user-yugi-muto",
-  userName: "Mock User 3",
-  userEmail: "rehan.sheikh@gmail.com",
-  storeId: "store-beyblade-arena",
-  quantity: 1,
-  unitPrice: 1799,
-  totalPrice: 1799,
-  currency: "INR",
-  status: "pending",
-  paymentStatus: "pending",
-  paymentMethod: "cash",
-  paymentProofUrl: "/media/payment-proof-demo-pending.jpg",
-  paymentTransactionId: "UPI-DEMO-20260728-PROOF",
-  paymentProofMimeType: "image/jpeg",
-  paymentProofUploadedAt: daysAgo(1),
-  shippingAddress: "addr-yugi-home",
-  orderDate: daysAgo(2),
-  createdAt: daysAgo(2),
-  updatedAt: daysAgo(1),
-};
-
-const cashOrderVerified: Partial<OrderPlain> = {
-  id: "order-1-20260729-cash02",
-  productId: "product-beyblade-metal-storm-pegasus",
-  productTitle: "Beyblade Metal Storm Pegasus",
-  userId: "user-yugi-muto",
-  userName: "Mock User 3",
-  userEmail: "rehan.sheikh@gmail.com",
-  storeId: "store-beyblade-arena",
-  quantity: 1,
-  unitPrice: 2499,
-  totalPrice: 2499,
-  currency: "INR",
-  status: "processing",
-  paymentStatus: "paid",
-  paymentMethod: "cash",
-  paymentProofUrl: "/media/payment-proof-demo-verified.jpg",
-  paymentTransactionId: "UPI-DEMO-20260727-YUGI",
-  paymentProofMimeType: "image/jpeg",
-  paymentProofUploadedAt: daysAgo(3),
-  shippingAddress: "addr-yugi-home",
-  orderDate: daysAgo(4),
-  createdAt: daysAgo(4),
-  updatedAt: daysAgo(2),
-};
+// Removed 2026-10-22: two cash/UPI manual-payment demo fixtures
+// (`order-1-20260729-cash01` and its verified twin). Live has neither, and
+// the manual-payment surfaces they exercised are covered by tester cases
+// rather than by seeded orders.
 
 /*
  * 🛑 DERIVES `items[]` FROM THE FLAT FIELDS WHEN A FIXTURE OMITS IT.
@@ -341,22 +140,20 @@ function withOrderImages(input: Partial<OrderPlain>): Partial<OrderPlain> {
   };
 }
 
-/**
- * Six orders, one per `OrderSourceContext` path.
+/*
+ * 🛑 EMPTIED 2026-10-22. Live holds no seedable orders, and the owner's
+ * decision is that live is canonical.
  *
- * The two auction fixtures are the point of the set: they are the pair
- * `orderType` alone cannot tell apart.
+ * It used to spread four sources — two hand-written cash/UPI fixtures, six
+ * `acquisitionOrders`, and `[..._raw, ...expandedOrders].slice(0, 42)` — for
+ * 44 rows. The `.slice()` is the detail worth keeping: it capped the count
+ * while the LOOP that filled `expandedOrders` ran to 50 regardless, so the
+ * published number came from neither the array literals nor the loop bound
+ * alone. No static read of this file could have told you it was 44.
+ *
+ * The pipeline stays: `withOrderImages` and `withOrderSearchTxt` are the
+ * reason a fixture cannot ship without items[] or tokens, and mapping an
+ * empty array costs nothing.
  */
-const acquisitionOrders: Partial<OrderPlain>[] = [];
-
 export const ordersSeedData = [
-  cashOrderPendingProof,
-  cashOrderVerified,
-  ...acquisitionOrders,
-  // The slice keeps the fixture count stable as fixtures are added above it —
-  // it used to be 48 for the two manual-payment orders, and now also absorbs
-  // the six acquisition-path orders.
-  ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 42),
-// Derived through the wrapper, never written per record — an inline literal
-// is how five product seed files shipped their last fixture with no tokens.
 ].map(withOrderImages).map(withOrderSearchTxt) as OrderPlain[];

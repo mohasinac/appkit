@@ -32,18 +32,11 @@ import type { BidPlain } from "../features/auctions/schemas/firestore";
 import { buildBidSearchTxt } from "../utils/search-txt-builders";
 
 const NOW = new Date();
-const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 const BIDDER_EMAILS: Record<string, string> = {
   "user-meera-bey": "meera.blader@gmail.com",
   "user-rohit-collector": "rohit.collect@gmail.com",
   "user-ananya-collector": "ananya.patel@gmail.com",
-};
-
-const BIDDER_NAMES: Record<string, string> = {
-  "user-meera-bey": "Mock User 11",
-  "user-rohit-collector": "Mock User 14",
-  "user-ananya-collector": "Mock User 9",
 };
 
 /*
@@ -86,133 +79,29 @@ function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
   } as Partial<BidPlain>;
 }
 
-/**
- * One ascending bid ladder per auction. By default the last entry is "active"
- * and the rest "outbid" (a live auction). Pass `closed:true` for an ended
- * auction — the last entry becomes "won" and the rest "lost".
+/*
+ * 🛑 EMPTIED 2026-10-22. Live holds no bids.
+ *
+ * This literal was NOT a list of rows — it was a list of `...buildLadder({…})`
+ * SPREADS, each expanding one auction into a ladder of three to five bids,
+ * for 34 in total.
+ *
+ * That is the third generative shape the first prune could not see, and the
+ * one that fooled the static check most completely: `--source-ids` looks for
+ * `id:` on top-level array elements, and a spread of a function call has no
+ * `id` to find. It reported ONE row (the single hand-written literal) against
+ * the loader's 34.
+ *
+ * 🛑 `buildLadder` and `BIDDER_NAMES` GO TOO, and this comment originally said
+ * the opposite — that they were "kept, ready for the day auction fixtures are
+ * wanted in a scratch project". Caught before committing: with no caller they
+ * are dead code that fails the unused-vars rule, and keeping a generator for a
+ * future that may not come is the speculative-infra pattern this project has a
+ * standing rule against. They are one `git show` away if ever wanted, and the
+ * ladder's real merit — deriving every amount, status and date from its inputs
+ * with no `Math.random()` (Root Cause #25) — is recorded here rather than in
+ * an unreferenced function.
  */
-function buildLadder(params: {
-  productId: string;
-  productTitle: string;
-  startingBid: number;
-  currentBid: number;
-  bidderIds: string[];
-  closed?: boolean;
-}): Partial<BidPlain>[] {
-  const { productId, productTitle, startingBid, currentBid, bidderIds, closed = false } = params;
-  const steps = bidderIds.length;
-  const range = currentBid - startingBid;
-  return bidderIds.map((userId, i) => {
-    const amount = i === steps - 1 ? currentBid : Math.round(startingBid + (range * (i + 1)) / (steps + 1));
-    const daysBack = steps - i;
-    const isFinal = i === steps - 1;
-    return {
-      id: `bid-${productId.replace(/^auction-/, "")}-${userId.replace(/^user-/, "")}-20260601-${String(i).padStart(3, "0")}`,
-      productId,
-      productTitle,
-      userId,
-      userName: BIDDER_NAMES[userId] ?? userId,
-      bidAmount: amount,
-      status: isFinal ? (closed ? "won" : "active") : (closed ? "lost" : "outbid"),
-      bidDate: daysAgo(daysBack),
-      createdAt: daysAgo(daysBack),
-    };
-  });
-}
-
-const _rawBidsSeedData: Partial<BidPlain>[] = [
-  // auction-beyblade-original-dragoon-storm — bidCount: 3, currentBid: 3499
-  ...buildLadder({
-    productId: "auction-beyblade-original-dragoon-storm",
-    productTitle: "Beyblade Original — Dragoon Storm (Rare Sealed)",
-    startingBid: 2999,
-    currentBid: 3499,
-    bidderIds: ["user-rohit-collector", "user-ananya-collector", "user-meera-bey"],
-  }),
-
-  // auction-beyblade-metal-lightning-l-drago — bidCount: 13, currentBid: 3199
-  // Deliberately deep ladder (see file header) to exercise Bid History pagination.
-  ...buildLadder({
-    productId: "auction-beyblade-metal-lightning-l-drago",
-    productTitle: "Metal Fight Beyblade BB-99 Lightning L-Drago",
-    startingBid: 1999,
-    currentBid: 3199,
-    bidderIds: [
-      "user-meera-bey",
-      "user-rohit-collector",
-      "user-ananya-collector",
-      "user-rohit-collector",
-      "user-meera-bey",
-      "user-ananya-collector",
-      "user-rohit-collector",
-      "user-meera-bey",
-      "user-ananya-collector",
-      "user-rohit-collector",
-      "user-meera-bey",
-      "user-ananya-collector",
-      "user-rohit-collector",
-    ],
-  }),
-
-  // auction-beyblade-original-seaborg — bidCount: 4, currentBid: 2200 (reserve 4000 not met)
-  ...buildLadder({
-    productId: "auction-beyblade-original-seaborg",
-    productTitle: "Beyblade Original — Seaborg 2000 (Reserve Auction)",
-    startingBid: 1499,
-    currentBid: 2200,
-    bidderIds: ["user-ananya-collector", "user-meera-bey", "user-rohit-collector", "user-ananya-collector"],
-  }),
-
-  // auction-beyblade-metal-diablo-nemesis — bidCount: 6, currentBid: 6200, CLOSED (won by user-rohit-collector)
-  ...buildLadder({
-    productId: "auction-beyblade-metal-diablo-nemesis",
-    productTitle: "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
-    startingBid: 3499,
-    currentBid: 6200,
-    bidderIds: [
-      "user-meera-bey",
-      "user-ananya-collector",
-      "user-meera-bey",
-      "user-ananya-collector",
-      "user-meera-bey",
-      "user-rohit-collector",
-    ],
-    closed: true,
-  }),
-
-  // auction-beyblade-burst-cho-z-achilles — bidCount: 2, currentBid: 1650
-  ...buildLadder({
-    productId: "auction-beyblade-burst-cho-z-achilles",
-    productTitle: "Beyblade Burst B-100 Cho-Z Achilles",
-    startingBid: 1199,
-    currentBid: 1650,
-    bidderIds: ["user-rohit-collector", "user-meera-bey"],
-  }),
-
-  // auction-beyblade-x-wizard-fafnir — bidCount: 3, currentBid: 1450
-  ...buildLadder({
-    productId: "auction-beyblade-x-wizard-fafnir",
-    productTitle: "Beyblade X BX-06 Wizard Fafnir (Long-Running Auction)",
-    startingBid: 999,
-    currentBid: 1450,
-    bidderIds: ["user-ananya-collector", "user-rohit-collector", "user-meera-bey"],
-  }),
-
-  // auction-beyblade-burst-spriggan-requiem-bought-out — a BUYOUT ended it.
-  //
-  // Three competitive bids that lost, then the buyout that won. A buyout is a
-  // real BidPlain (`isBuyout: true`) — it is not a bid-free purchase, which
-  // is why the order's `sourceContext.bidCount` is 3 rather than 0: the buyout
-  // itself is excluded from the "against N bidders" figure, the three it beat
-  // are not. `standingBidAtBuyout` is read from these bids and NOT from
-  // `product.currentBid`, because a pending buyout never writes that mirror.
-  ...buildLadder({
-    productId: "auction-beyblade-burst-spriggan-requiem-bought-out",
-    productTitle: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
-    startingBid: 2499,
-    currentBid: 3100,
-    bidderIds: ["user-meera-bey", "user-ananya-collector", "user-rohit-collector"],
-    closed: true,
-  }).map((b) => ({ ...b, status: "lost" as const, isWinning: false })),];
+const _rawBidsSeedData: Partial<BidPlain>[] = [];
 
 export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidPlain[];
