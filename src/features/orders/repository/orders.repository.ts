@@ -1574,6 +1574,27 @@ class OrderRepository extends BaseRepository<OrderDocument> {
          * early. Withholding is recoverable — the next sweep picks it up;
          * releasing early is not, because the money has gone.
          */
+        /*
+         * 🛑 A BUYER'S OWN CONFIRMATION RELEASES THE PAYOUT IMMEDIATELY.
+         *
+         * The owner's rule: an order is CONFIRMED when it is delivered and
+         * either the buyer says they received it, or 7 days pass. This filter
+         * only ever implemented the second half — `deliveryDate <= cutoff` —
+         * so a buyer who pressed "Mark complete" on day one still made their
+         * seller wait out the full hold. The fast path existed and bought the
+         * seller nothing.
+         *
+         * Safe in the direction that matters, and not by luck:
+         * `markOrderCompleteAction` is the only writer of `completedAt`, and it
+         * REFUSES while a return in any state, a posted refund or a buyer
+         * dispute is live — the same precondition the `order-complete`
+         * obligation carries. So honouring it here cannot release money while
+         * an issue is open; the hold is skipped only because the one party the
+         * hold protects has said they are satisfied.
+         */
+        const completedAt = toDateOrNull(o.data.completedAt);
+        if (completedAt) return true;
+
         const anchor = toDateOrNull(o.data.deliveryDate) ?? toDateOrNull(o.data.updatedAt);
         if (!o.data.deliveryDate) missingAnchor++;
         if (!anchor) return false;
