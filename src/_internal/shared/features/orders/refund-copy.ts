@@ -43,7 +43,24 @@ export const REFUND_COPY = {
     acknowledgments: [
       "I understand this refund request, once approved, permanently removes my ability to file any dispute or RMA claim on this order.",
       "I confirm the item has not been used, worn, or damaged by me, and I am returning it in original condition (if a return is required).",
-      "I understand the refund amount may take 5–7 business days to reflect and that platform fees may be non-recoverable.",
+      /*
+       * 🛑 Phase 9 — TOKENS, resolved by `resolvePublishedCopy` at render.
+       *
+       * This literal was one of the three contradicting owners of the refund
+       * timeline: "5–7 business days" here, "5–7 business days via Razorpay"
+       * on the policy page (naming a gateway that was not even the one in
+       * use), and "3–5 business days" in the FAQ. Three statements of one
+       * fact, no reconciliation, and the FAQ one admin-editable so it could
+       * drift further after deployment.
+       *
+       * The caller renders this through `resolvePublishedCopy`, so the number
+       * now has exactly one definition. Note this string is an
+       * ACKNOWLEDGEMENT the buyer ticks — a token left unresolved here would
+       * appear in something they are agreeing to, which is the strongest
+       * possible argument for the unknown-token rule leaving `{{…}}` visible
+       * rather than blanking it.
+       */
+      "I understand the refund amount may take {{refundBusinessDaysMin}}–{{refundBusinessDaysMax}} business days to reflect and that platform fees may be non-recoverable.",
     ] as const,
   },
   siblingPayments: {

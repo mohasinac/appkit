@@ -2,6 +2,21 @@ import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
 import { Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
+import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+
+/*
+ * Phase 9 — read from the published-value registry rather than restated.
+ *
+ * 🛑 No settings argument, deliberately: this is the OBLIGATION-derived window
+ * and it has no settings override, so passing settings would imply an
+ * admin-editable number that does not exist (the 18-dead-settings pattern,
+ * from the "control that appears to do something the code ignores" direction).
+ */
+const {
+  returnRespondHours: RETURN_RESPOND_HOURS,
+  refundBusinessDaysMin: REFUND_DAYS_MIN,
+  refundBusinessDaysMax: REFUND_DAYS_MAX,
+} = resolvePublishedValues();
 
 export function AdminOrdersGuideView() {
   return (
@@ -27,7 +42,18 @@ export function AdminOrdersGuideView() {
                 ["PROCESSING", "Seller has acknowledged and is packing."],
                 ["SHIPPED", "Dispatched. Tracking number provided by seller."],
                 ["DELIVERED", "Carrier confirmed delivery."],
-                ["RETURN_REQUESTED", "Buyer opened a return. Seller has 3 days to respond."],
+                /*
+                 * 🛑 Phase 9, decision 23 — this said "3 days" while the FAQ
+                 * said 48 hours, and the FAQ WINS: it is the buyer-facing
+                 * promise and the one a buyer has already read. The number now
+                 * comes from `OBLIGATION_POLICIES["return-respond"]`, which is
+                 * what actually closes the window — so a staff-facing guide can
+                 * no longer quietly contradict what the buyer was told.
+                 */
+                [
+                  "RETURN_REQUESTED",
+                  `Buyer opened a return. Seller has ${RETURN_RESPOND_HOURS} hours to respond.`,
+                ],
                 ["REFUNDED", "Return accepted and refund issued via Razorpay."],
                 ["CANCELLED", "Cancelled before shipping. Payment returned."],
               ].map(([status, note]) => (
@@ -80,7 +106,19 @@ export function AdminOrdersGuideView() {
             <Ul className={GC.listMuted}>
               <Li>Admin can view the return reason and attached photos on the order detail page.</Li>
               <Li><Span weight="bold">When to override a seller rejection</Span>: Only when photographic evidence clearly supports the buyer&apos;s claim of a significant not-as-described defect. Do not override for buyer&apos;s remorse.</Li>
-              <Li>After admin override: refund is issued automatically via Razorpay (3–7 business days for card, 1–2 for UPI). Seller payout for that order is withheld.</Li>
+              {/*
+                🛑 Phase 9 — and "via Razorpay" is DROPPED, not just the
+                number. The policy page named Razorpay while payment ran
+                through PhonePe; naming a vendor in published copy is wrong
+                the next time a provider changes, and the buyer does not need
+                a fact about our gateway contract. The UPI figure stays a
+                literal: it is the rail's own speed, not a window we set.
+              */}
+              <Li>
+                After admin override: the refund is issued automatically ({REFUND_DAYS_MIN}–
+                {REFUND_DAYS_MAX} business days for card, 1–2 for UPI). Seller payout for that
+                order is withheld.
+              </Li>
             </Ul>
           ),
         },

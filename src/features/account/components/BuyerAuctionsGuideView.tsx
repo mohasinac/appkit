@@ -2,6 +2,11 @@ import React from "react";
 import { Gavel, TrendingUp, Trophy, AlertTriangle, Package, XCircle, ShieldCheck } from "lucide-react";
 import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
+import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+
+/* Phase 9 — one definition of the refund timeline. See the 🛑 at the call site. */
+const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
+  resolvePublishedValues();
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -78,7 +83,16 @@ const SECTIONS: AuctionSection[] = [
     content: (
       <>
         <Text className={`${GC.textMuted} mb-3`}>To cancel a pre-order before the item is shipped, open a support ticket with category <Span weight="bold">Billing &amp; Payment</Span> or <Span weight="bold">Order Issue</Span> and reference your order ID.</Text>
-        <Text className={GC.textMuted}>After cancellation is accepted, refunds follow the standard timeline: 3–7 business days to your original payment method.</Text>
+        {/*
+          🛑 Phase 9 — a FOURTH range. The refund timeline was published as
+          3–5 (FAQ), 5–7 (`REFUND_COPY` and i18n), and 3–7 here and in two
+          staff guides. The plan recorded three contradicting owners; the audit
+          found five surfaces and four different ranges.
+        */}
+        <Text className={GC.textMuted}>
+          After cancellation is accepted, refunds follow the standard timeline:{" "}
+          {REFUND_DAYS_MIN}–{REFUND_DAYS_MAX} business days to your original payment method.
+        </Text>
       </>
     ),
   },

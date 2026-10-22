@@ -35,6 +35,10 @@ import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
 import { z } from "zod";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import {
+  resolvePublishedCopy,
+  resolvePublishedValues,
+} from "../../../_internal/shared/content/published-values";
+import {
   RETURN_REASON_LABEL,
   selectableReturnReasons,
   isFinalSaleExempt,
@@ -69,6 +73,14 @@ export interface RefundRequestViewProps {
 }
 
 const ACK_COUNT = REFUND_COPY.request.acknowledgments.length;
+
+/*
+ * Phase 9 — code-derived values, resolved once. No settings argument: the only
+ * token in this copy is the refund timeline, which has no setting (see the 🛑
+ * on `refundBusinessDaysMin` in the registry), so passing settings would imply
+ * an editable number that does not exist.
+ */
+const PUBLISHED_VALUES = resolvePublishedValues();
 
 interface RefundRequestDraft {
   reasonCode: ReturnReason | "";
@@ -199,7 +211,20 @@ export function RefundRequestView({
                     ),
                   })
                 }
-                label={<Text size="sm" className="leading-snug">{text}</Text>}
+                /*
+                 * 🛑 Phase 9 — resolved, because this is an ACKNOWLEDGEMENT
+                 * the buyer ticks. `REFUND_COPY`'s refund-timeline line now
+                 * carries `{{refundBusinessDaysMin}}`/`Max` so it has one
+                 * owner instead of being the third of three contradicting
+                 * statements — and an unresolved token inside something a
+                 * buyer is agreeing to is the strongest reason the unknown-key
+                 * rule leaves `{{…}}` VISIBLE rather than blanking it.
+                 */
+                label={
+                  <Text size="sm" className="leading-snug">
+                    {resolvePublishedCopy(text, PUBLISHED_VALUES)}
+                  </Text>
+                }
                 aria-label={`Acknowledgment ${i + 1}`}
               />
             ))}

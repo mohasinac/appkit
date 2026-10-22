@@ -2,6 +2,11 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Accordion, Alert, Code, Div, Heading, Li, Ol, Row, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
+import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+
+/* Phase 9 — one definition of the refund timeline. */
+const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
+  resolvePublishedValues();
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -60,7 +65,9 @@ const STATUS_ROWS = [
   {
     status: "CANCELLED",
     meaning: "Order was cancelled before shipping (by buyer or seller).",
-    action: "Refund is automatic via Razorpay (3–7 business days).",
+    // Phase 9 — one definition, and no gateway name. See the identical note in
+    // AdminOrdersGuideView.
+    action: `Refund is automatic (${REFUND_DAYS_MIN}–${REFUND_DAYS_MAX} business days).`,
   },
   {
     status: "RETURN_REQUESTED",

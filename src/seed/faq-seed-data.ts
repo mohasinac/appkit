@@ -130,7 +130,18 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-make-an-offer",
     question: "Can I negotiate the price with a seller?",
-    answer: html(`<p>Yes! Most listings have a "Make an Offer" button. Submit your offer and the seller can accept, counter, or decline. If accepted, the item is locked at the agreed price for 24 hours so you can complete checkout.</p>`),
+    /*
+     * 🛑 Decision 23 — the offer checkout deadline. This said 24 hours and the
+     * code enforces 48 (`LANE_CHECKOUT_WINDOW_MS.offer`); the CODE WINS, and
+     * that direction is deliberate: an offer accepted yesterday carries a 48h
+     * `checkoutDeadline` stored on it, so publishing 24 tells a buyer their
+     * live offer expires sooner than it does, and changing the code to match
+     * would shorten deadlines already granted.
+     *
+     * Derived from that constant, so the lapse sweep and this sentence cannot
+     * disagree.
+     */
+    answer: html(`<p>Yes! Most listings have a "Make an Offer" button. Submit your offer and the seller can accept, counter, or decline. If accepted, the item is locked at the agreed price for {{offerCheckoutHours}} hours so you can complete checkout.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
@@ -383,7 +394,17 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-how-to-request-refund",
     question: "How do I request a refund?",
-    answer: html(`<p>Go to Account → My Orders → select the order → Request Refund. Describe the issue and upload photos if the item is damaged or not as described. The seller has 48 hours to respond. If they don't, LetItRip support will step in.</p>`),
+    /*
+     * 🛑 Decision 23 — the seller's return-response window. This FAQ said 48
+     * hours and `AdminOrdersGuideView` said 3 days; the FAQ WINS, because 48h
+     * is the buyer-facing promise and the one a buyer has already read.
+     *
+     * Now rendered from `OBLIGATION_POLICIES["return-respond"]`, which is the
+     * thing that actually enforces it — so the published number and the
+     * enforced one cannot diverge, and the guide has to follow rather than
+     * compete.
+     */
+    answer: html(`<p>Go to Account → My Orders → select the order → Request Refund. Describe the issue and upload photos if the item is damaged or not as described. The seller has {{returnRespondHours}} hours to respond. If they don't, LetItRip support will step in.</p>`),
     category: "returns_refunds",
     showOnHomepage: true,
     showInFooter: false,
@@ -421,7 +442,18 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-refund-timeline",
     question: "How long do refunds take?",
-    answer: html(`<p>Once a refund is approved, it's processed within 3–5 business days. UPI refunds are typically faster (1–2 days). Card and net banking refunds may take up to 7 business days depending on your bank.</p>`),
+    /*
+     * 🛑 Phase 9 — this answer said "3–5 business days" while `REFUND_COPY`
+     * said 5–7 and the policy page said "5–7 via Razorpay". Three owners of
+     * one fact, and THIS one is the dangerous copy: it is seeded into
+     * Firestore and then admin-editable, so it drifts after deployment with no
+     * audit able to see it.
+     *
+     * The token resolves at render (`resolvePublishedCopy` in
+     * `FAQAccordion`), so an admin can still rewrite the sentence and cannot
+     * contradict the published number.
+     */
+    answer: html(`<p>Once a refund is approved, it's processed within {{refundBusinessDaysMin}}–{{refundBusinessDaysMax}} business days. UPI refunds are typically faster (1–2 days). Card and net banking refunds may take longer depending on your bank.</p>`),
     category: "returns_refunds",
     showOnHomepage: false,
     showInFooter: false,
@@ -965,7 +997,7 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-pre-order-cancel",
     question: "Can I cancel a pre-order?",
-    answer: html(`<p>You can cancel a pre-order any time before the seller marks it as shipped. Your deposit is refunded within 3–5 business days. Once the product ships and the remaining balance is charged, standard return policies apply.</p>`),
+    answer: html(`<p>You can cancel a pre-order any time before the seller marks it as shipped. Your deposit is refunded within {{refundBusinessDaysMin}}–{{refundBusinessDaysMax}} business days. Once the product ships and the remaining balance is charged, standard return policies apply.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
@@ -1790,7 +1822,13 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-what-is-the-platform-fee",
     question: "What is the platform fee and who pays it?",
-    answer: html("<p><strong>You do, and it is capped at ₹10</strong> per checkout plus 18% GST on that ₹10. It is charged once per order regardless of how many items or sellers are involved.</p><p>The seller pays a separate commission out of their own proceeds — you are not charged twice for the same thing, and the seller's commission never appears on your bill.</p>"),
+    /*
+     * 🛑 Phase 9 — the cap is `commissions.platformFeeMax`, which IS
+     * admin-editable. A literal "₹10" here is wrong the moment an admin
+     * changes it, and this answer is itself admin-editable, so two editable
+     * copies of one number is the worst arrangement available.
+     */
+    answer: html("<p><strong>You do, and it is capped at {{platformFeeMax}}</strong> per checkout plus GST on that fee. It is charged once per order regardless of how many items or sellers are involved.</p><p>The seller pays a separate commission out of their own proceeds — you are not charged twice for the same thing, and the seller's commission never appears on your bill.</p>"),
     category: "fees_and_taxes",
     showOnHomepage: false,
     showInFooter: false,
@@ -1803,7 +1841,17 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
     seo: {
       slug: "faq-what-is-the-platform-fee",
       metaTitle: "What is the platform fee and who pays it?",
-      metaDescription: "You do, and it is capped at ₹10 per checkout plus 18% GST on that ₹10. It is charged once per order regardless of how many items or sellers are involved. T",
+      /*
+       * 🛑 The meta description is NOT token-resolved — it is read by
+       * `generateMetadata`, which never passes through `FAQAccordion`. So the
+       * cap is removed from it rather than tokenised: a `{{platformFeeMax}}`
+       * visible in a search-result snippet is worse than the number being
+       * absent, and a literal here is the drift this phase exists to close.
+       *
+       * The number stays in the ANSWER, where it resolves. A meta description
+       * does not need to quote a fee to be useful.
+       */
+      metaDescription: "Who pays the platform fee, how it is capped per checkout, and why the seller's commission never appears on your bill.",
     },
     isActive: true,
     createdBy: "user-admin-letitrip",
