@@ -141,6 +141,14 @@ import { resolveKeys } from "../../../../core/integration-keys";
 import { rupeesToPaise, paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { checkEmiEligibility, computeBuyerEmiQuote, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
+import { emiTenderFor, resolveEmiChoice } from "../../../shared/features/emi/choice";
+import {
+  amountDueNow,
+  emiOrderFields,
+  groupEmiGate,
+  groupEmiQuote,
+  groupEmiSchedule,
+} from "../../../shared/features/emi/group";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -149,6 +157,7 @@ import {
   getListingRule,
   runSyncPreflight,
   assertPaymentMethodAllowed,
+  assertEmiOptInAllowed,
 } from "../../../shared/checkout/rules";
 // The `GroupCouponDiscountResult` type is deliberately NOT imported: every
 // call site here destructures the result inline, so naming the type would be
@@ -342,7 +351,20 @@ export interface CreateCheckoutOrderInput {
   /** Required for physical carts; omitted for digital-code-only carts (no shipping). */
   addressId?: string;
   paymentMethod: CheckoutPaymentMethod;
-  /** Required when paymentMethod === "emi" — the buyer's chosen tenure (2–6 months). */
+  /**
+   * LEGACY ONLY. The instalment plan lives on `CartDocument.emiPlan`, written
+   * by `PUT /api/cart/emi`, because the online path needs the same answer in
+   * two separate requests (see that field's own note). This is honoured solely
+   * for a tab opened before 2026-10-22, which posts `paymentMethod: "emi"`
+   * plus a tenure here and has nothing on the cart — and it is ignored
+   * whenever the cart carries a plan, so a client can never re-price a quote
+   * the server has already issued.
+   *
+   * 🛑 "Pay in instalments" is an opt-in ON THE ORDER, orthogonal to the
+   * tender: the token is collected by whichever payment method the buyer
+   * picked. `resolveEmiChoice` is the one expression both axes resolve
+   * through, and `emiTenderFor` maps the legacy `"emi"` tender.
+   */
   emiTenureMonths?: number;
   /**
    * The courier the buyer picked at checkout, with the ₹50-rounded rate they
@@ -947,6 +969,8 @@ interface OrderGroupContext {
    * pincodes the stores do not all carry yet.
    */
   selectedShippingQuote?: SelectedShippingQuote;
+  /** Already normalised by `resolveEmiChoice` at the action boundary. */
+  emiOptIn: boolean;
   emiTenureMonths?: number;
   emiSettings: EmiSettings;
   commissions: CodHandlingFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & SaleProtectionFeeRates & { codDepositPercent: number };
@@ -1150,6 +1174,7 @@ async function createOrderForGroup(
 ): Promise<number> {
   const {
     paymentMethod,
+    emiOptIn,
     emiTenureMonths,
     emiSettings,
     commissions,
@@ -1176,6 +1201,8 @@ async function createOrderForGroup(
     selectedShippingQuote,
     useAllPoints,
     pointsBudget,
+    emiOptIn,
+    emiTenureMonths,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -1308,16 +1335,32 @@ async function createOrderForGroup(
    * `orderTotal`, which is the only place every term is known.
    */
 
-  let emiSchedule: ReturnType<typeof computeEmiSchedule> | undefined;
-  if (paymentMethod === "emi" && emiTenureMonths) {
-    const eligibility = checkEmiEligibility(groupTotal, storeEmiEnabled, emiSettings);
-    if (!eligibility.eligible) {
-      throw new ValidationError(
-        `EMI is not available for this order (${eligibility.reason}). Minimum order value per seller is ₹${emiSettings.minOrderValue}.`,
-      );
-    }
-    emiSchedule = computeEmiSchedule(groupTotal, emiTenureMonths, emiSettings);
+  /*
+   * 🛑 Keyed on `emiOptIn`, NOT on the tender. An EMI order's `paymentMethod`
+   * is now whatever the buyer picked to pay the token with — `online`,
+   * `upi_manual` or `cash` — so testing `paymentMethod === "emi"` here would
+   * build a schedule for nobody and every instalment plan would silently
+   * vanish into a full-price order.
+   */
+  const emiGroupInput = {
+    emiOptIn,
+    emiTenureMonths,
+    groupSubtotal: groupTotal,
+    sellerEmiEnabled: storeEmiEnabled,
+  };
+  /*
+   * 🛑 REFUSES on an ineligible EMI order rather than quietly dropping the
+   * plan. The preview deliberately does the opposite — see `groupEmiGate`'s
+   * docstring. Silently producing a full-price order from an EMI request is
+   * money the buyer did not agree to.
+   */
+  const emiGate = groupEmiGate(emiGroupInput, emiSettings);
+  if (emiOptIn && emiTenureMonths && !emiGate.applies) {
+    throw new ValidationError(
+      `EMI is not available for this order (${emiGate.reason}). Minimum order value per seller is ₹${emiSettings.minOrderValue}.`,
+    );
   }
+  const emiSchedule = groupEmiSchedule(emiGroupInput, emiSettings) ?? undefined;
   // Handling fee charged to the buyer for choosing COD, on top of the order
   // total — not deducted from the deposit/remaining split above.
   const codHandlingFee =
@@ -1571,11 +1614,19 @@ async function createOrderForGroup(
   // Deadline + displayed UPI apply only to methods with a buyer-uploaded
   // proof step — never cod (paid on delivery), online (paid before order
   // creation), or admin_bypass (already marked paid above).
+  /*
+   * 🛑 `PaymentMethodValues.EMI` was a third arm here and is gone on purpose,
+   * not by oversight. It is unreachable after `resolveEmiChoice` — an EMI
+   * order's tender is `online` / `upi_manual` / `cash` — and leaving it would
+   * assert that "EMI" is a way of paying, which is exactly the conflation 0f
+   * removed. An EMI buyer paying by bank transfer still gets the window,
+   * because their tender IS `upi_manual`; one paying online does not, because
+   * the token is captured before the order exists.
+   */
   const hasPaymentWindow =
     !adminBypass &&
     (paymentMethod === PaymentMethodValues.UPI_MANUAL ||
-      paymentMethod === PaymentMethodValues.CASH ||
-      paymentMethod === PaymentMethodValues.EMI);
+      paymentMethod === PaymentMethodValues.CASH);
   const paymentDeadline = hasPaymentWindow
     ? new Date(Date.now() + PAYMENT_WINDOW_MS)
     : undefined;
@@ -1621,6 +1672,17 @@ async function createOrderForGroup(
   });
   if (pointsApplied > 0) pointsBudget.remaining -= pointsApplied;
 
+  /*
+   * What is COLLECTED, composing both tenders that reduce it. On a plain order
+   * this equals `orderTotal`, so the field is omitted below and every
+   * `amountDue ?? totalPrice` reader is unaffected.
+   */
+  const amountDueOnOrder = amountDueNow({
+    orderTotal,
+    pointsApplied,
+    emiRemainingBalance: emiSchedule?.remainingBalance ?? 0,
+  });
+
   // Both creation paths call the SAME builder — two hand-written copies is the
   // create-vs-create axis of Root Cause #39, and these two functions have
   // already drifted once before (add-on fees, Root Cause #65).
@@ -1651,7 +1713,23 @@ async function createOrderForGroup(
      * that predate this.
      */
     pointsApplied: pointsApplied > 0 ? pointsApplied : undefined,
-    amountDue: pointsApplied > 0 ? amountDue : undefined,
+    /*
+     * 🛑 WHAT IS COLLECTED NOW, and on an EMI order that is the token — not
+     * the whole total.
+     *
+     * This was `pointsApplied > 0 ? amountDue : undefined`, so an EMI order
+     * carried no `amountDue` at all and every reader fell back to
+     * `order.total`. The buyer's manual-payment page therefore asked an EMI
+     * buyer to transfer the FULL order value up front and then showed them a
+     * schedule of monthly instalments: `emiTokenAmount` was computed, stored,
+     * and read by nothing (measured — zero readers across both repos).
+     *
+     * `amountDueNow` subtracts the deferred balance as well as the points, so
+     * the two tenders compose. Written only when it differs from the total, so
+     * every historical order keeps resolving through the same
+     * `amountDue ?? totalPrice` fallback its readers already use.
+     */
+    amountDue: amountDueOnOrder !== orderTotal ? amountDueOnOrder : undefined,
     currency: firstItem.currency ?? getDefaultCurrency(),
     storeId: firstItem.storeId || undefined,
     storeName: firstItem.storeName || undefined,
@@ -1775,23 +1853,19 @@ async function createOrderForGroup(
     cgst: gstBreakdown?.cgst || undefined,
     sgst: gstBreakdown?.sgst || undefined,
     igst: gstBreakdown?.igst || undefined,
-    emiEnabled: !adminBypass && !!emiSchedule ? true : undefined,
-    emiTenureMonths: !adminBypass && emiSchedule ? emiTenureMonths : undefined,
-    emiTokenAmount: !adminBypass ? emiSchedule?.tokenAmount : undefined,
-    emiSurchargeAmount: !adminBypass ? emiSchedule?.surchargeAmount : undefined,
     /*
-     * D45: the seller's share of the surcharge, recorded for the first time.
-     * `computeEmiSchedule` has always returned it and nothing ever stored it,
-     * so a split the admin had configured (default 50%) was computed and
-     * discarded on every EMI order. Persisting it moves no money — see the
-     * field's own 🛑 — it just stops the decision being thrown away.
+     * The eleven `emi*` fields, from one builder shared with the gateway
+     * path — which carried none of them, so every order paid online lost its
+     * instalment plan. D45's note about `emiSurchargeSellerShare` being
+     * computed and discarded now lives on `emiOrderFields` itself.
+     *
+     * 🛑 `adminBypass` nulls the whole group by passing no schedule, rather
+     * than by repeating `!adminBypass &&` eleven times. The bypass marks an
+     * order paid without a payment, so there is no token and no plan — and
+     * `resolveEmiChoice` now refuses that combination outright, making this
+     * a second line of defence rather than the only one.
      */
-    emiSurchargeSellerShare: !adminBypass ? emiSchedule?.surchargeSellerShare : undefined,
-    emiInstallments: !adminBypass && emiSchedule
-      ? emiSchedule.installments.map((i) => ({ index: i.index, dueDate: i.dueDate, amount: i.amount, status: "pending" as const }))
-      : undefined,
-    emiRemainingBalance: !adminBypass ? emiSchedule?.remainingBalance : undefined,
-    emiComplete: !adminBypass && emiSchedule ? false : undefined,
+    ...emiOrderFields(adminBypass ? null : (emiSchedule ?? null), emiTenureMonths),
     couponCode: appliedDiscounts[0]?.code,
     couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
     appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
@@ -1873,8 +1947,6 @@ export async function createCheckoutOrderAction(
     userName,
     userEmail,
     addressId,
-    paymentMethod,
-    emiTenureMonths,
     notes,
     excludedProductIds = [],
     adminBypass = false,
@@ -1882,17 +1954,17 @@ export async function createCheckoutOrderAction(
     outOfStockPolicy = OutOfStockPolicyValues.SKIP_ITEMS,
   } = input;
 
+  /*
+   * The TENDER, resolved before anything else because the COD and manual-UPI
+   * guards below are about the tender and run before the cart read. The
+   * ARRANGEMENT (`emiOptIn` + tenure) lives on the cart and is resolved after
+   * it — see the block below the cart load.
+   */
+  const paymentMethod = emiTenderFor(input.paymentMethod);
+
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
   const emiSettings = siteSettings?.emi ?? CHECKOUT_DEFAULT_EMI_SETTINGS;
-
-  if (paymentMethod === "emi") {
-    if (!emiTenureMonths || !emiSettings.tenureOptions.includes(emiTenureMonths)) {
-      throw new ValidationError(
-        `emiTenureMonths must be one of: ${emiSettings.tenureOptions.join(", ")}`,
-      );
-    }
-  }
 
   // W1-43 — enforce COD toggle.
   if (
@@ -1919,6 +1991,33 @@ export async function createCheckoutOrderAction(
   const cart = await unitOfWork.carts.getOrCreate(uid);
   if (!cart.items || cart.items.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
+  }
+
+  /*
+   * ── The two payment axes, resolved ONCE, AFTER the cart is loaded ────────
+   *
+   * Everything below reads `paymentMethod` (the tender) and `emiOptIn` (the
+   * arrangement) from here, never from `input`. A second place deciding "is
+   * this an EMI order" is the drift this normaliser exists to prevent, and
+   * the legacy `paymentMethod: "emi"` mapping only holds if exactly one
+   * expression performs it.
+   *
+   * 🛑 It has to sit below the cart read because the plan LIVES on the cart,
+   * not in the request — see `CartDocument.emiPlan`. The cart is loaded here
+   * anyway, so this costs nothing.
+   */
+  const emiChoice = resolveEmiChoice({
+    paymentMethod: input.paymentMethod,
+    cartEmiPlan: cart.emiPlan ?? null,
+    legacyTenureMonths: input.emiTenureMonths,
+  });
+  if (!emiChoice.ok) throw new ValidationError(emiChoice.reason);
+  const { emiOptIn, emiTenureMonths } = emiChoice.choice;
+
+  if (emiOptIn && (!emiTenureMonths || !emiSettings.tenureOptions.includes(emiTenureMonths))) {
+    throw new ValidationError(
+      `emiTenureMonths must be one of: ${emiSettings.tenureOptions.join(", ")}`,
+    );
   }
 
   const excludedSet = new Set(excludedProductIds);
@@ -2068,6 +2167,19 @@ export async function createCheckoutOrderAction(
    * is the only safe place for this, and the method is decided here.
    */
   assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod);
+  /*
+   * 🛑 The second axis needs its own assertion, and omitting it would have
+   * been a silent regression of a rule that already exists.
+   *
+   * `prizeDrawRule.blockedPaymentMethods` lists `"emi"` because winner
+   * assignment waits on confirmed payment. Once EMI stopped being a tender,
+   * that entry stopped matching anything — the gate above would see
+   * `upi_manual` (explicitly ALLOWED for prize draws) and wave through an
+   * instalment plan on a listing type that forbids one. This reads the SAME
+   * declaration rather than a second list, so a rule written once still
+   * governs both axes.
+   */
+  assertEmiOptInAllowed(cartItems, preTxProductById, emiOptIn);
 
   const preTxPairs = cartItems
     .map((item): { item: CartItemDocument; product: ProductDocument } | null => {
@@ -2289,6 +2401,7 @@ export async function createCheckoutOrderAction(
 
   const groupCtx: OrderGroupContext = {
     paymentMethod,
+    emiOptIn,
     emiTenureMonths,
     emiSettings,
     commissions,
@@ -2414,15 +2527,21 @@ export interface CheckoutPricingPreviewInput {
    */
   lane?: CartLane;
   /**
-   * The chosen EMI tenure, when `paymentMethod` is `"emi"`.
+   * LEGACY ONLY — see `CreateCheckoutOrderInput.emiTenureMonths`.
    *
-   * 🛑 REQUIRED for an EMI preview to be truthful. The surcharge is
-   * `principalRemaining × surchargePercentPerMonth × tenureMonths`, so it
-   * cannot be derived from the cart alone — and without it this function
-   * returned a total that `createOrderForGroup` then exceeded by exactly that
-   * amount. Unlike the add-ons below, the tenure is NOT on the cart document:
-   * it is picked on the payment step and belongs to the order, so it has to
-   * travel with the request.
+   * 🛑 The plan is read off `CartDocument.emiPlan`, so the preview and the
+   * order resolve it from the same durable value. This docstring used to argue
+   * the opposite — *"the tenure is NOT on the cart document: it is picked on
+   * the payment step and belongs to the order, so it has to travel with the
+   * request"* — and that reasoning is what left the ONLINE path unable to
+   * agree with itself, because `/api/payment/create-order` decides the capture
+   * amount in one request and `/api/payment/verify` writes the order in
+   * another. A request body cannot be read by both.
+   *
+   * The surcharge is `principalRemaining × surchargePercentPerMonth ×
+   * tenureMonths`, so it genuinely cannot be derived from the cart ITEMS
+   * alone — which is why the tenure had to become part of the cart DOCUMENT
+   * rather than part of the request.
    */
   emiTenureMonths?: number;
   /**
@@ -2443,6 +2562,15 @@ export interface CheckoutPricingPreviewStore {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
+  /**
+   * How much of this seller's total is DEFERRED into instalments — the
+   * financed principal plus its surcharge. Zero unless instalments are on.
+   *
+   * 🛑 Not a discount and not a fee. `total` stays the full value of the
+   * supply (it is what the invoice declares and what a refund measures
+   * against); this is the slice of it that is not collected today.
+   */
+  emiDeferred: number;
   /**
    * EMI surcharge for THIS seller, when the buyer is previewing an EMI order.
    *
@@ -2505,6 +2633,12 @@ export interface CheckoutPricingPreview {
   saleProtectionFee: number;
   /** Total EMI surcharge across sellers. Zero unless previewing an EMI order. */
   emiSurcharge: number;
+  /**
+   * Total DEFERRED into instalments across sellers. Zero unless instalments
+   * are on. `total − pointsApplied − emiDeferred` is `amountDue` — what the
+   * buyer pays today.
+   */
+  emiDeferred: number;
   gstAmount: number;
   couponDiscount: number;
   /** Buyer-facing platform commission, capped, charged once for this checkout. */
@@ -2534,8 +2668,14 @@ export interface CheckoutPricingPreview {
    *
    * 🛑 THIS is the parity figure. The capture route and the post-capture guard
    * must both use it, or points become a sixth way the captured amount diverges
-   * from the recorded order (D37/D38/D40). Equal to `total` whenever no points
-   * are applied, so every existing reader of `total` stays correct.
+   * from the recorded order (D37/D38/D40). Equal to `total` whenever neither
+   * points nor instalments apply, so every existing reader of `total` stays
+   * correct.
+   *
+   * 🛑 Instalments reduce it too, via `amountDueNow` — the same expression the
+   * two order writers use. An EMI buyer pays the TOKEN today; quoting the full
+   * total here is what made the manual-payment page ask for the whole amount
+   * while scheduling instalments for the same money.
    */
   amountDue: number;
   /**
@@ -2562,6 +2702,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   shipmentProtectionFee: 0,
   saleProtectionFee: 0,
   emiSurcharge: 0,
+  emiDeferred: 0,
   gstAmount: 0,
   couponDiscount: 0,
   platformFee: 0,
@@ -2589,16 +2730,34 @@ export async function previewCheckoutPricing(
   const {
     userId: uid,
     addressId,
-    paymentMethod,
     excludedProductIds = [],
     lane,
-    emiTenureMonths,
   } = input;
+
+  /*
+   * 🛑 Same normaliser as `createCheckoutOrderAction`, and on an INCOMPATIBLE
+   * combination this prices the tender WITHOUT instalments rather than
+   * throwing.
+   *
+   * The preview exists so a buyer can see consequences while they fiddle with
+   * controls; a 500 in the middle of that blanks the Order Summary and reads
+   * as a broken page. The order action still refuses, which is where refusing
+   * belongs — the same split this function already makes for EMI eligibility
+   * two hundred lines below.
+   */
+  const paymentMethod = emiTenderFor(input.paymentMethod);
 
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
 
   const cart = await unitOfWork.carts.getOrCreate(uid);
+  const emiChoice = resolveEmiChoice({
+    paymentMethod: input.paymentMethod,
+    cartEmiPlan: cart.emiPlan ?? null,
+    legacyTenureMonths: input.emiTenureMonths,
+  });
+  const emiOptIn = emiChoice.ok && emiChoice.choice.emiOptIn;
+  const emiTenureMonths = emiChoice.ok ? emiChoice.choice.emiTenureMonths : undefined;
   const excludedSet = new Set(excludedProductIds);
   const selectedSet = cart.selectedItemIds?.length ? new Set(cart.selectedItemIds) : null;
   // An explicit lane wins: the cart page prices whichever tab is open, which may
@@ -2710,17 +2869,17 @@ export async function previewCheckoutPricing(
      * ineligible EMI order, which is where refusing belongs. An ineligible
      * cart simply previews no surcharge, because the tenure never applies.
      */
-    let groupEmiSurcharge = 0;
-    if (paymentMethod === "emi" && emiTenureMonths && siteSettings?.emi) {
-      const emiSettings = siteSettings.emi;
-      if (checkEmiEligibility(groupTotal, storeEmiEnabled, emiSettings).eligible) {
-        groupEmiSurcharge = computeBuyerEmiQuote(
-          groupTotal,
-          emiTenureMonths,
-          emiSettings,
-        ).surchargeAmount;
-      }
-    }
+    const groupEmiPreviewQuote = groupEmiQuote(
+      { emiOptIn, emiTenureMonths, groupSubtotal: groupTotal, sellerEmiEnabled: storeEmiEnabled },
+      siteSettings?.emi,
+    );
+    const groupEmiSurcharge = groupEmiPreviewQuote?.surchargeAmount ?? 0;
+    /*
+     * What the buyer pays TODAY on an instalment order — the token plus every
+     * additive charge. Surfaced so the Order Summary can show both figures
+     * rather than one number the buyer has to interpret.
+     */
+    const groupEmiDeferred = groupEmiPreviewQuote?.remainingBalance ?? 0;
     const groupGiftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissions);
     /*
      * C5e — the same three tiers `createOrderForGroup` enforces, so the figure
@@ -2839,6 +2998,7 @@ export async function previewCheckoutPricing(
       shippingFee: groupShippingFee,
       codHandlingFee: groupCodHandlingFee,
       emiSurcharge: groupEmiSurcharge,
+      emiDeferred: groupEmiDeferred,
       giftWrapFee: groupGiftWrapFee,
       shipmentProtectionFee: groupShipmentProtectionFee,
       saleProtectionFee: groupSaleProtectionFee,
@@ -2882,6 +3042,7 @@ export async function previewCheckoutPricing(
   const shippingFee = sum((s) => s.shippingFee);
   const codHandlingFee = sum((s) => s.codHandlingFee);
   const emiSurcharge = sum((s) => s.emiSurcharge);
+  const emiDeferred = sum((s) => s.emiDeferred);
   const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
   const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
   const saleProtectionFeeTotal = sum((s) => s.saleProtectionFee);
@@ -2995,6 +3156,7 @@ export async function previewCheckoutPricing(
     shippingFee,
     codHandlingFee,
     emiSurcharge,
+    emiDeferred,
     giftWrapFee: giftWrapFeeTotal,
     shipmentProtectionFee: shipmentProtectionFeeTotal,
     saleProtectionFee: saleProtectionFeeTotal,
@@ -3007,7 +3169,12 @@ export async function previewCheckoutPricing(
     pointsApplied,
     // Equal to `total` when no points apply, so every existing reader of
     // either figure keeps getting the right number.
-    amountDue: roundRupees(total - pointsApplied),
+    /*
+     * 🛑 Both tenders, through the SAME helper the two order writers use —
+     * so the figure the buyer is shown and the figure they are charged are
+     * one expression, not two that agree today.
+     */
+    amountDue: amountDueNow({ orderTotal: total, pointsApplied, emiRemainingBalance: emiDeferred }),
     pointsBalance: previewBalance,
     stores,
   };
@@ -3297,6 +3464,17 @@ async function createPhonePeGroupOrder(
      */
     useAllPoints: boolean;
     pointsBudget: { remaining: number };
+    /**
+     * The cart's instalment plan, resolved ONCE by the caller.
+     *
+     * 🛑 This path had NO EMI code at all, so every order paid online lost
+     * its plan entirely — no `emiEnabled`, no schedule, no instalments, and a
+     * capture of the full total. The plan is read from the cart rather than
+     * from the verify request precisely because the capture happened in an
+     * earlier request that had to agree with this one.
+     */
+    emiOptIn: boolean;
+    emiTenureMonths?: number;
   },
 ): Promise<number> {
   const {
@@ -3344,7 +3522,25 @@ async function createPhonePeGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates, storeEmiEnabled } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+
+  /*
+   * The instalment schedule for THIS seller group, through the same helper the
+   * COD/manual writer uses — not a copy of its block. Two hand-written
+   * copies is the create-vs-create axis of Root Cause #39, and these two
+   * functions have already drifted once over add-on fees (#65).
+   *
+   * 🛑 Gate FAILURES are silent here, unlike the manual path, and that is
+   * deliberate rather than sloppy: the money is already captured by the time
+   * this runs, so throwing would produce a charged-with-no-order (the D64
+   * class). `/api/payment/create-order` applies the same gate BEFORE capture,
+   * which is where a refusal belongs; if it declined EMI, it captured the full
+   * total and no schedule is wanted here either.
+   */
+  const phonepeEmiSchedule = groupEmiSchedule(
+    { emiOptIn, emiTenureMonths, groupSubtotal: groupTotal, sellerEmiEnabled: storeEmiEnabled },
+    siteSettings?.emi,
+  );
 
   /*
    * Same supplier-of-record rule as `createOrderForGroup`, through the same
@@ -3509,7 +3705,7 @@ async function createPhonePeGroupOrder(
   // D42: rounded once on the sum — see the COD/UPI path's 🛑 for why a raw
   // float sum of seven 2dp terms reached Firestore as 1011.8000000000001.
   const orderTotal = roundRupees(
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + phonepeSharedQuote.total,
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (phonepeEmiSchedule?.surchargeAmount ?? 0) + phonepeSharedQuote.total,
   );
 
   /*
@@ -3528,13 +3724,27 @@ async function createPhonePeGroupOrder(
    */
   const pointsOptedIn = useAllPoints === true;
   const pointsAccepted = pointsOptedIn && acceptsPoints;
-  const { pointsApplied, amountDue } = resolvePointsTender({
+  const { pointsApplied } = resolvePointsTender({
     orderTotal,
     balance: pointsAccepted ? pointsBudget.remaining : 0,
     accepted: pointsAccepted,
     optedIn: pointsOptedIn,
   });
   if (pointsApplied > 0) pointsBudget.remaining -= pointsApplied;
+
+  /*
+   * 🛑 `resolvePointsTender`'s own `amountDue` is DISCARDED here — it knows
+   * only about points, and on an instalment order the deferred balance reduces
+   * the collection too. `amountDueNow` composes both, and is the same
+   * expression the manual writer and the pricing preview use, so the figure
+   * recorded in `paymentRecord.amount` below cannot drift from the figure
+   * `/api/payment/create-order` actually captured.
+   */
+  const amountDue = amountDueNow({
+    orderTotal,
+    pointsApplied,
+    emiRemainingBalance: phonepeEmiSchedule?.remainingBalance ?? 0,
+  });
 
   // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
   // Same expansion as the COD/UPI path. This was a THIRD hand-rolled copy of
@@ -3583,7 +3793,13 @@ async function createPhonePeGroupOrder(
     // D46/D47 — see the identical pair in `createOrderForGroup`. `totalPrice`
     // stays the full value of the supply; points reduce what is COLLECTED.
     pointsApplied: pointsApplied > 0 ? pointsApplied : undefined,
-    amountDue: pointsApplied > 0 ? amountDue : undefined,
+    /*
+     * Written whenever it differs from the total — points OR instalments. It
+     * was `pointsApplied > 0 ? … : undefined`, so an EMI order carried no
+     * `amountDue` and every reader fell back to the full total.
+     */
+    amountDue: amountDue !== orderTotal ? amountDue : undefined,
+    ...emiOrderFields(phonepeEmiSchedule, emiTenureMonths),
     currency: firstItem.currency ?? getDefaultCurrency(),
     storeId: firstItem.storeId || undefined,
     storeName: firstItem.storeName || undefined,
@@ -4174,6 +4390,44 @@ export async function verifyAndPlaceGatewayOrderAction(
       ),
     );
     const expectedShippingFee = expectedShippingFees.reduce((sum, r) => sum + r.shippingFee, 0);
+    /*
+     * ── The instalment terms, which this guard must expect BOTH of ──────────
+     *
+     * 🛑 Two terms, pulling in opposite directions, and omitting either one
+     * breaks the guard in the direction that costs the buyer an order:
+     *
+     *   + surcharge — the cost of credit, a real addition to the total
+     *   − deferred  — the financed principal plus that surcharge, which is NOT
+     *                 collected today
+     *
+     * With neither term the guard would expect the un-surcharged FULL total
+     * while the gateway captured only the token, trip `paid < expected − 1`,
+     * and throw **after the money was taken** — a charged-with-no-order, the
+     * D64 class, on every single EMI order. That is strictly worse than the
+     * overcharge this guard exists to catch, which is the same trap D44's note
+     * above records one defect over.
+     *
+     * Built from the same per-group goods values and the same `groupEmiQuote`
+     * the capture route and the order writer call, so the only way the three
+     * can disagree is a change made to one and not the others.
+     */
+    const guardEmiPlanTenure = cart.emiPlan?.tenureMonths;
+    const expectedEmiQuotes = expectedShippingGroups.map((g, i) =>
+      groupEmiQuote(
+        {
+          emiOptIn: guardEmiPlanTenure !== undefined,
+          emiTenureMonths: guardEmiPlanTenure,
+          groupSubtotal: g.items.reduce(
+            (sum, { item, product }) => sum + lineTotalFor(item, product),
+            0,
+          ),
+          sellerEmiEnabled: expectedShippingFees[i]?.storeEmiEnabled === true,
+        },
+        siteSettings?.emi,
+      ),
+    );
+    const expectedEmiSurcharge = expectedEmiQuotes.reduce((sum, q) => sum + (q?.surchargeAmount ?? 0), 0);
+    const expectedEmiDeferred = expectedEmiQuotes.reduce((sum, q) => sum + (q?.remainingBalance ?? 0), 0);
     // Add-ons are per store, so the expected total sums each group's own
     // selection — a single cart-wide figure would over- or under-count as soon
     // as the buyer picked add-ons for only some sellers.
@@ -4301,7 +4555,9 @@ export async function verifyAndPlaceGatewayOrderAction(
           expectedPlatformFee +
           expectedGstOnFee +
           expectedAddonFees +
-          expectedShippingFee -
+          expectedShippingFee +
+          expectedEmiSurcharge -
+          expectedEmiDeferred -
           expectedPointsApplied,
       ),
     );
@@ -4459,6 +4715,13 @@ export async function verifyAndPlaceGatewayOrderAction(
       productById: productByIdPaid,
       useAllPoints,
       pointsBudget,
+      /*
+       * Resolved from the CART, exactly as the capture route did — so the
+       * schedule written onto the order is built from the same tenure the
+       * gateway was asked to capture against.
+       */
+      emiOptIn: cart.emiPlan?.tenureMonths !== undefined,
+      emiTenureMonths: cart.emiPlan?.tenureMonths,
     });
   }
 

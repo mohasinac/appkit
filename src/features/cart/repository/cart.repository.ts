@@ -758,6 +758,30 @@ export class CartRepository extends BaseRepository<CartDocument> {
    * and keeping both shapes invites a reader that handles only one. Same
    * reasoning as `setStoreAddons` directly above.
    */
+  /**
+   * Set or clear the instalment plan.
+   *
+   * 🛑 `null` DELETES the field rather than storing `{ optIn: false }`. The
+   * schema's rule is that absent means "no instalments", so a second
+   * representation of the same state is one more thing every reader has to
+   * get right (Root Cause #42's shape). `tenureMonths` is stored verbatim and
+   * validated against the live `emi.tenureOptions` at order time — the admin
+   * can change those options after a cart was saved, so validating here would
+   * freeze a tenure that is no longer offered.
+   */
+  async setEmiPlan(userId: string, plan: { tenureMonths: number } | null): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set(
+        {
+          emiPlan: plan ? { tenureMonths: plan.tenureMonths } : FieldValue.delete(),
+          updatedAt: new Date(),
+        },
+        { merge: true },
+      );
+  }
+
   async setUseAllPoints(userId: string, useAllPoints: boolean): Promise<void> {
     await this.db
       .collection(this.collection)

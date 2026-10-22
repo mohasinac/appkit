@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { Div, Row, Stack, Text } from "../../../ui";
+import { Details, Div, Row, Stack, Summary, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import type { FeeDerivation, FeeDerivations } from "../../../_internal/shared/fees/explain";
 
 /**
  * The aggregate price breakdown shown in the cart's expandable preview and in
@@ -94,6 +95,49 @@ export interface CartPriceBreakdownProps {
   errorNote?: React.ReactNode;
   isLoading?: boolean;
   className?: string;
+  /**
+   * Per-line "why am I paying this" disclosures, built by the
+   * `explain*` helpers in `_internal/shared/fees/explain`.
+   *
+   * 🛑 Optional, and an absent entry renders no disclosure rather than a
+   * placeholder. The cart renders this breakdown for a signed-out guest with
+   * no server preview at all — a line that cannot be explained must say
+   * nothing, never "we could not work this out", which reads as a fault.
+   */
+  derivations?: FeeDerivations;
+}
+
+/**
+ * The "how is this calculated?" disclosure under a fee line.
+ *
+ * 🛑 Collapsed by default, and that is the whole design. An unexplained charge
+ * is untrustworthy, but five expanded derivations turn the Order Summary into
+ * a wall of arithmetic at the moment a buyer is deciding to pay. The
+ * obligation is that the answer is *available at the point of the charge* —
+ * not that it is shouted.
+ *
+ * A native `<details>` rather than a tooltip or a modal: it works before
+ * hydration, it is keyboard-reachable for free, and it does not cover the
+ * number it is explaining.
+ */
+function Derivation({ derivation }: { derivation: FeeDerivation }) {
+  return (
+    <Details tone="muted" padding="sm" rounded="md">
+      <Summary size="xs" color="muted">
+        How is this calculated?
+      </Summary>
+      <Stack gap="xs" className="pt-[var(--appkit-space-2)]">
+        <Text size="xs" color="muted">
+          {derivation.summary}
+        </Text>
+        {derivation.steps.map((step, i) => (
+          <Text key={i} size="xs" color="faint" className="tabular-nums">
+            {step}
+          </Text>
+        ))}
+      </Stack>
+    </Details>
+  );
 }
 
 function Line({
@@ -101,13 +145,16 @@ function Line({
   amount,
   tone = "muted",
   strong = false,
+  derivation,
 }: {
   label: string;
   amount: string;
   tone?: "muted" | "success" | "primary";
   strong?: boolean;
+  /** When present, the line carries a collapsed derivation beneath it. */
+  derivation?: FeeDerivation | null;
 }) {
-  return (
+  const row = (
     <Row align="center" justify="between" gap="sm" className="min-w-0">
       <Text size="sm" color={tone} weight={strong ? "semibold" : undefined} className="min-w-0" truncate={1}>
         {label}
@@ -121,6 +168,14 @@ function Line({
         {amount}
       </Text>
     </Row>
+  );
+
+  if (!derivation) return row;
+  return (
+    <Stack gap="xs">
+      {row}
+      <Derivation derivation={derivation} />
+    </Stack>
   );
 }
 
@@ -138,6 +193,7 @@ export function CartPriceBreakdown({
   errorNote,
   isLoading = false,
   className = "",
+  derivations,
 }: CartPriceBreakdownProps) {
   const money = (value: number) => formatCurrency(value, currency);
 
@@ -178,7 +234,11 @@ export function CartPriceBreakdown({
         <Line label={withStoreCount("Shipping", storeCount)} amount={money(preview.shippingFee)} />
       )}
       {preview.codHandlingFee > 0 && (
-        <Line label="COD handling fee" amount={money(preview.codHandlingFee)} />
+        <Line
+          label="COD handling fee"
+          amount={money(preview.codHandlingFee)}
+          derivation={derivations?.codHandlingFee}
+        />
       )}
       {preview.giftWrapFee > 0 && (
         <Line
@@ -204,7 +264,11 @@ export function CartPriceBreakdown({
         tax-inclusive item GST below the Total.
       */}
       {preview.emiSurcharge > 0 && (
-        <Line label="EMI surcharge" amount={money(preview.emiSurcharge)} />
+        <Line
+          label="EMI surcharge"
+          amount={money(preview.emiSurcharge)}
+          derivation={derivations?.emiSurcharge}
+        />
       )}
       {/*
         S5a — named for what the buyer asked for, not for the mechanism.
@@ -223,7 +287,13 @@ export function CartPriceBreakdown({
         />
       )}
       {/* One commission on one transaction — never multiplied per store. */}
-      {preview.platformFee > 0 && <Line label="Platform fee" amount={money(preview.platformFee)} />}
+      {preview.platformFee > 0 && (
+        <Line
+          label="Platform fee"
+          amount={money(preview.platformFee)}
+          derivation={derivations?.platformFee}
+        />
+      )}
       {/*
         🛑 `gstOnFee` and `gstAmount` are DIFFERENT TAXES and must never share
         a line. This rendered `gstAmount + gstOnFee` under the single label
@@ -241,7 +311,11 @@ export function CartPriceBreakdown({
         a tax-inclusive invoice is supposed to say.
       */}
       {preview.gstOnFee > 0 && (
-        <Line label="GST on platform fee" amount={money(preview.gstOnFee)} />
+        <Line
+          label="GST on platform fee"
+          amount={money(preview.gstOnFee)}
+          derivation={derivations?.gstOnFee}
+        />
       )}
       {preview.couponDiscount > 0 && (
         <Line label="Coupon discount" amount={`−${money(preview.couponDiscount)}`} tone="success" />

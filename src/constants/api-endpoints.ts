@@ -371,6 +371,13 @@ export const CART_ENDPOINTS = {
    * is why there is no `/api/cart/points/amount`.
    */
   POINTS: "/api/cart/points",
+  /**
+   * The instalment plan — a TENURE and nothing else. It lives on the cart,
+   * not in a checkout body, because the online path needs the same answer in
+   * two requests (`/api/payment/create-order` captures, `/api/payment/verify`
+   * writes the order). Same reasoning as `POINTS` and `ADDONS` above.
+   */
+  EMI: "/api/cart/emi",
   COUPON: "/api/cart/coupon",
   /**
    * Add a buyer-assembled group selection as ONE line. Separate from `GET`'s

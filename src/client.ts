@@ -1312,6 +1312,22 @@ export {
   computeBuyerEmiQuote,
 } from "./_internal/shared/features/emi/schedule";
 export type { EmiSettings, BuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
+/*
+ * 0f — the checkout client needs to know which tenders can carry instalments
+ * so it can DISABLE an incompatible one with a reason rather than let the
+ * buyer pick it and be refused at submit. Same map the server refuses from, so
+ * the affordance and the rule cannot disagree.
+ */
+export { emiTenderBlockReason, isTenderCompatibleWithEmi } from "./_internal/shared/features/emi/choice";
+export type { EmiTender } from "./_internal/shared/features/emi/choice";
+/* The derivation strings for the fee breakdown — pure, no I/O. */
+export {
+  explainCodHandlingFee,
+  explainEmiSurcharge,
+  explainGstOnPlatformFee,
+  explainPlatformFee,
+} from "./_internal/shared/fees/explain";
+export type { FeeDerivation, FeeDerivations } from "./_internal/shared/fees/explain";
 // Buyer-facing fee projections — the checkout/cart client props are typed
 // against these so internal economics can't be widened back in by accident.
 export type {

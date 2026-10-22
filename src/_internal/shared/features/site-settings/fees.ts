@@ -39,18 +39,43 @@ export interface BuyerFacingFees {
   codHandlingFeeCap?: number;
   codHandlingFeePercent?: number;
   codDepositPercent?: number;
+
+  /*
+   * ── The four rates that PRICE WHAT THE BUYER IS CHARGED (added 2026-10-22) ──
+   *
+   * 🛑 These were withheld, and withholding them was the defect. A buyer saw
+   * `Platform fee ₹10.00` and `GST on platform fee ₹1.80` as bare numbers with
+   * no way to check either — four figures to be taken on trust, on the screen
+   * where they decide whether to pay. "Show them properly why and how much is
+   * the charges" is the owner's instruction, and a derivation cannot be shown
+   * without the rate that produced it.
+   *
+   * The line the projection draws is unchanged in substance: a rate the BUYER
+   * PAYS is buyer-facing; a rate that describes what we keep, what we pay a
+   * gateway, or when we settle a seller is not. All eleven of those stay
+   * withheld (see below), and so does `surchargeSellerSharePercent`, which is
+   * excluded structurally by `BuyerEmiSettings` rather than by this list.
+   */
+  /** Commission rate applied to the cart subtotal, before the cap. */
+  platformFeePercent?: number;
+  /** Rupee ceiling on the commission — the reason a ₹39,500 order pays ₹10. */
+  platformFeeMax?: number;
+  /** GST rate levied on the commission actually charged (never on the uncapped figure). */
+  gstPercent?: number;
+  /** Rupee floor on `platformFee + gstOnFee` combined. */
+  minimumTransactionFee?: number;
 }
 
 /**
- * Withheld on purpose (15 of 25): platformFeePercent, gstPercent,
- * minimumTransactionFee, platformFeeMax, gatewayFeePercent,
- * sellerShippingFixed, platformShippingPercent, platformShippingFixedMin,
- * autoPayoutWindowDays, payoutHoldDays, minPayoutAmount, auctionListingFee,
- * preOrderListingFee, featuredSlotFee, promotedSlotFee.
+ * Withheld on purpose (11 of 25): gatewayFeePercent, sellerShippingFixed,
+ * platformShippingPercent, platformShippingFixedMin, autoPayoutWindowDays,
+ * payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee,
+ * featuredSlotFee, promotedSlotFee — plus `surchargeSellerSharePercent`, which
+ * lives on the EMI block and is excluded by `BuyerEmiSettings` below.
  *
- * The buyer still SEES the platform fee and GST — as computed amounts in the
- * server pricing preview (`CartPriceBreakdownData`), never as the rates that
- * produced them.
+ * Every one of those prices something between us and a seller or a gateway.
+ * None of them changes what the buyer is asked to pay, so none of them has a
+ * reader in a browser.
  */
 export function toBuyerFacingFees(
   commissions: SiteSettingsDocument["commissions"] | null | undefined,
@@ -68,6 +93,10 @@ export function toBuyerFacingFees(
     codHandlingFeeCap: commissions.codHandlingFeeCap,
     codHandlingFeePercent: commissions.codHandlingFeePercent,
     codDepositPercent: commissions.codDepositPercent,
+    platformFeePercent: commissions.platformFeePercent,
+    platformFeeMax: commissions.platformFeeMax,
+    gstPercent: commissions.gstPercent,
+    minimumTransactionFee: commissions.minimumTransactionFee,
   };
 }
 

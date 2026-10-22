@@ -175,3 +175,36 @@ export function assertPaymentMethodAllowed(
     { code: "PAYMENT_METHOD_BLOCKED" },
   );
 }
+
+/**
+ * Throw when anything in the cart forbids an instalment plan.
+ *
+ * 🛑 Reads the SAME `blockedPaymentMethods` declaration, under the key
+ * `"emi"`, rather than introducing a parallel `blocksEmi` field. The listing
+ * rules already say "this listing type cannot be paid in instalments" — they
+ * said it by naming a payment method, because that is what EMI was. Once EMI
+ * became an order-level opt-in, that declaration needed a second reader, not
+ * a second declaration: a rule stated twice is a rule that drifts (Root Cause
+ * #61), and `prizeDrawRule`'s entry would otherwise have gone inert the day
+ * the tender disappeared.
+ *
+ * `blockedPaymentMessage` is reused verbatim for the same reason the gate
+ * above prefers it to a generated sentence: it names the REASON (winner
+ * assignment waits on confirmed payment), which is what lets a buyer choose
+ * differently instead of abandoning.
+ */
+export function assertEmiOptInAllowed(
+  items: readonly CartItemDocument[],
+  productById: ReadonlyMap<string, ProductDocument>,
+  emiOptIn: boolean,
+): void {
+  if (!emiOptIn) return;
+  const offender = blockedMethodsForCart(items, productById).get("emi");
+  if (!offender) return;
+  throw Object.assign(
+    new ValidationError(
+      `${offender.message} Pay for this order in full instead, or remove the item and buy it on its own.`,
+    ),
+    { code: "EMI_NOT_ALLOWED" },
+  );
+}

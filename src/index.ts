@@ -7119,6 +7119,17 @@ export type {
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).
 export { checkEmiEligibility, computeEmiSchedule, computeBuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
 export type { BuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
+/*
+ * 0f — the per-group instalment helpers. Exported because the CAPTURE amount
+ * is computed in a consumer route (`/api/payment/create-order`), and that
+ * route is one of the four money paths that must agree about an EMI order.
+ * There is no `./_internal/*` subpath, deliberately, so the barrel is how a
+ * consumer reaches shared checkout maths — exactly as `lineTotalFor` and
+ * `resolveShippingCost` already are.
+ */
+export { amountDueNow, groupEmiGate, groupEmiQuote, groupEmiSchedule, emiOrderFields } from "./_internal/shared/features/emi/group";
+export { emiTenderFor, resolveEmiChoice, emiTenderBlockReason, isTenderCompatibleWithEmi } from "./_internal/shared/features/emi/choice";
+export type { EmiChoice, EmiTender } from "./_internal/shared/features/emi/choice";
 // Buyer-facing projections of siteSettings.commissions / .emi — the single
 // definition of "safe to send to a browser" for fee data. See fees.ts header.
 export {
