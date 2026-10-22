@@ -1,3 +1,5 @@
+import type { SidebarNavGroup } from "../../../shared/features/layout/types";
+
 type FilterableItem = { id?: string; requiredPermission?: string };
 
 /**
@@ -43,4 +45,43 @@ export function filterNavItems<T extends FilterableItem>(
     if (item.requiredPermission && !userPermissions?.includes(item.requiredPermission)) return false;
     return true;
   });
+}
+
+/**
+ * The GROUP-level filter — the sidebar's and the dashboard hubs' single answer
+ * to "which sections and links may this viewer see".
+ *
+ * ## 🛑 `permissions === null` MEANS ADMIN, and that is why this is shared
+ *
+ * This lived as a module-private `filterGroups` inside
+ * `DashboardLayoutClient.tsx` until the dashboard hubs needed the same answer.
+ * Copying it would have been Root Cause #75's shape exactly — a rule whose own
+ * comment says it is the convention, reachable only by copy-paste, where the
+ * copy made today never learns about tomorrow's branch. And the branch it would
+ * have lost is the expensive one: the `isAdmin && !navConfig` early return was
+ * ONCE applied only when no navConfig existed, and the moment site settings
+ * carried any nav config an admin's whole sidebar filtered to empty.
+ *
+ * A hub that disagreed with the sidebar would be worse than that, not better:
+ * the sidebar is a list of links, while a hub card is a promise that the page
+ * behind it will open. A card for a page that then 403s is a dead end the
+ * viewer cannot distinguish from a broken permission.
+ *
+ * An empty group is dropped rather than rendered as a heading with nothing
+ * under it — on a hub that is a section card claiming "0 screens", which reads
+ * as a fault rather than as "not for you".
+ */
+export function filterNavGroups<T extends SidebarNavGroup>(
+  groups: T[],
+  navConfig: Record<string, { enabled: boolean }> | undefined,
+  permissions: string[] | null | undefined,
+): T[] {
+  const isAdmin = permissions === null;
+  if (isAdmin && !navConfig) return groups;
+  return groups
+    .map((group) => ({
+      ...group,
+      items: filterNavItems(group.items, navConfig, permissions ?? undefined, isAdmin),
+    }))
+    .filter((group) => group.items.length > 0) as T[];
 }

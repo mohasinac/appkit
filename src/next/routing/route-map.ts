@@ -276,6 +276,16 @@ export const DEFAULT_ROUTE_MAP = {
   },
   USER: {
     DASHBOARD: "/user",
+    /**
+     * A dashboard SECTION hub — the screens of one sidebar group, each with a
+     * sentence on what it is for.
+     *
+     * One parametric route serves every section of the portal; the slug is
+     * `hubSectionSlug(group.title)` and is DERIVED, so there is no list of
+     * section keys here to drift from the nav. `audit-dashboard-hub-coverage`
+     * cross-checks the two.
+     */
+    SECTION: (slug: string) => `/user/sections/${slug}`,
     PROFILE: "/user/profile",
     SETTINGS: "/user/settings",
     ORDERS: "/user/orders",
@@ -360,6 +370,8 @@ export const DEFAULT_ROUTE_MAP = {
   },
   STORE: {
     DASHBOARD: "/store",
+    /** A dashboard SECTION hub — see `USER.SECTION` for the derivation. */
+    SECTION: (slug: string) => `/store/sections/${slug}`,
     PRODUCTS: "/store/products",
     PRODUCTS_NEW: "/store/products/new",
     PRODUCTS_EDIT: (id: string) => `/store/products/${id}/edit`,
@@ -456,6 +468,18 @@ export const DEFAULT_ROUTE_MAP = {
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
+    /**
+     * The sectioned landing at `/admin` — what used to `redirect()` to
+     * `DASHBOARD`.
+     *
+     * 🛑 `DASHBOARD` is `/admin/dashboard` and stays a separate page: it is the
+     * metrics screen, and the sidebar's "Dashboard" entry points at it. This
+     * key is the index that lists the twelve sections. Collapsing the two would
+     * either bury the metrics or make the index unreachable.
+     */
+    HOME: "/admin",
+    /** A dashboard SECTION hub — see `USER.SECTION` for the derivation. */
+    SECTION: (slug: string) => `/admin/sections/${slug}`,
     SHIPMENTS: "/admin/shipments",
     /*
      * 🛑 There is deliberately NO `INVENTORY: "/admin/inventory"` key.

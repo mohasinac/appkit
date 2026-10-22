@@ -32,7 +32,7 @@ import { StoreSidebar, type StoreNavGroup } from "../../../../features/seller/co
 import { UserSidebar, type UserNavGroup } from "../../../../features/account/components/UserSidebar";
 import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../../../shared/features/layout/types";
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
-import { filterNavItems } from "./filterNavItems";
+import { filterNavGroups } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
 import { useHandMode } from "../../hand-mode";
@@ -163,36 +163,12 @@ function useResponsiveDrawer(storageKey: string) {
   return { desktopOpen, mobileOpen, close, closeMobile, toggle };
 }
 
-/** Filter nav groups by navConfig (enabled toggle) + requiredPermission. */
-function filterGroups<T extends SidebarNavGroup>(
-  groups: T[],
-  navConfig: Record<string, { enabled: boolean }> | undefined,
-  permissions: string[] | null | undefined,
-): T[] {
-  /*
-   * `permissions === null` MEANS ADMIN, and that must hold whether or not a
-   * navConfig exists.
-   *
-   * The early return below encoded the convention correctly and then applied it
-   * only when `!navConfig`. The moment site settings carried ANY nav config,
-   * an admin fell through to `filterNavItems(..., undefined)` — and
-   * `undefined?.includes(x)` is falsy, so every item carrying a
-   * `requiredPermission` was dropped. The Admin Panel sidebar rendered empty
-   * while every admin page stayed reachable by URL.
-   *
-   * Passing `isAdmin` keeps the admin's navConfig toggles working (disabling an
-   * entry is a configuration decision, not a permission) while granting the
-   * permissions an admin implicitly holds.
-   */
-  const isAdmin = permissions === null;
-  if (isAdmin && !navConfig) return groups;
-  return groups
-    .map((group) => ({
-      ...group,
-      items: filterNavItems(group.items, navConfig, permissions ?? undefined, isAdmin),
-    }))
-    .filter((group) => group.items.length > 0) as T[];
-}
+/*
+ * The group filter MOVED to `filterNavItems.ts` as `filterNavGroups` when the
+ * dashboard hubs needed the same answer. It is imported, never re-derived —
+ * a hub whose cards disagreed with this sidebar would promise a page that then
+ * 403s. See that function's own header for the `permissions === null` lesson.
+ */
 
 /*
  * ── Content clearance for the desktop sidebar ───────────────────────────────
@@ -308,7 +284,7 @@ export function DashboardLayoutClient({
   const resolvedDarkBackground = darkBackground ?? settings?.background?.dark;
   const hasBackground = Boolean(resolvedLightBackground?.value || resolvedDarkBackground?.value);
 
-  const filteredGroups = filterGroups(groups, navConfig, permissions);
+  const filteredGroups = filterNavGroups(groups, navConfig, permissions);
   const adminGroups =
     variant === "admin"
       ? (filteredGroups as AdminNavGroup[])
