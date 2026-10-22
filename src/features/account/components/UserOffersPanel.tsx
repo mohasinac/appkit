@@ -7,6 +7,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { OfferDocument } from "../../seller/schemas";
 import { normalizeError } from "../../../errors/normalize";
+import { toUserMessage } from "../../../errors/error-display-map";
 
 const CLS_COUNTER_AMOUNT = "text-[length:var(--appkit-text-sm)] font-semibold text-info dark:text-info";
 
@@ -218,7 +219,7 @@ export function UserOffersPanel({
       setOffers(items);
     } catch (err) {
       void normalizeError(err);
-      setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
+      setFetchError(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Failed to load offers." }));
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,7 @@ import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { normalizeError } from "../../../errors/normalize";
 import { TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants/index";
+import { toUserMessage } from "../../../errors/error-display-map";
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -243,7 +244,7 @@ export function SellerAddressesView({
       await load();
     } catch (err) {
       void normalizeError(err);
-      setSaveError(err instanceof Error ? err.message : "Failed to save address");
+      setSaveError(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Failed to save address" }));
     } finally {
       setSaving(false);
     }

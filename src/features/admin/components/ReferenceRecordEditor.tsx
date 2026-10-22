@@ -88,7 +88,7 @@ export function ReferenceRecordEditor({
         setOwned(Array.isArray(row?.adminEditedFields) ? (row.adminEditedFields as string[]) : []);
       } catch (err) {
         const e = normalizeError(err);
-        if (!cancelled) setLoadError(e.message);
+        if (!cancelled) setLoadError(toUserMessage((e as { code?: string })?.code, undefined, { fallback: "Could not load that record." }));
       } finally {
         if (!cancelled) setLoading(false);
       }
