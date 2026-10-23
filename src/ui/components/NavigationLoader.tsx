@@ -1,9 +1,22 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Spinner } from "./Spinner";
+
+/**
+ * The route key this component settles on: path + query, NEVER the hash.
+ *
+ * It has to match what `usePathname()` + `useSearchParams()` can observe,
+ * because those two hooks are the only thing that can hide the overlay. A hash
+ * is invisible to both, so including it here would promise a settle signal
+ * that can never arrive.
+ */
+function windowRouteKey(): string {
+  const url = new URL(window.location.href);
+  return `${url.pathname}?${url.searchParams.toString()}`;
+}
 
 export interface NavigationLoaderProps {
   /**
@@ -15,7 +28,12 @@ export interface NavigationLoaderProps {
   label?: string;
   /**
    * Safety valve: hides the overlay if the route never settles.
-   * @default 15000 (ms)
+   *
+   * 10s, matching the sync-function ceiling this app is written against — an
+   * RSC payload that has not arrived by then is not arriving, so holding a
+   * blocking overlay any longer only hides the page the user still has.
+   *
+   * @default 10000 (ms)
    */
   timeoutMs?: number;
   /** Additional className on the overlay div. */
@@ -32,12 +50,20 @@ export interface NavigationLoaderProps {
  *  - Start: intercept `history.pushState` + `popstate`
  *  - End:   `usePathname()` changing means React has settled
  *
+ * 🛑 It must never start for a navigation whose path+query cannot change,
+ * because the end condition would then be unreachable and the overlay would
+ * block the whole viewport until `timeoutMs`. An in-page anchor is exactly
+ * that: clicking `#section` fires `popstate` (Chrome does, for the App
+ * Router's hash entry) while `usePathname()` and `useSearchParams()` both stay
+ * put — measured against production, 15s of stranded overlay on the way in AND
+ * again on Back. Hence the `live === prev` gate in `onPopState`.
+ *
  * Mount once at the app shell level (e.g. inside LayoutShellClient).
  */
 export function NavigationLoader({
   spinnerVariant = "pokeball",
   label = "Loading page…",
-  timeoutMs = 15_000,
+  timeoutMs = 10_000,
   className = "",
 }: NavigationLoaderProps) {
   const pathname = usePathname();
@@ -51,6 +77,8 @@ export function NavigationLoader({
   const pendingUrl = useRef<string | null>(null);
   const visibleRef = useRef(false);
   const activeRef = useRef(false);
+  /** Last path+query seen on `window.location`. Null until the first effect. */
+  const lastWindowKey = useRef<string | null>(null);
 
   const currentUrl = `${pathname ?? ""}?${searchParams?.toString() ?? ""}`;
 
@@ -60,30 +88,47 @@ export function NavigationLoader({
     visibleRef.current = visible;
   }, [visible]);
 
-  // Hide once the route URL (path + query/hash) has settled in React.
+  /** Drop the overlay and every timer behind it. Safe to call when hidden. */
+  const hideNow = useCallback(() => {
+    activeRef.current = false;
+    visibleRef.current = false;
+    setVisible(false);
+    if (showTimer.current) {
+      clearTimeout(showTimer.current);
+      showTimer.current = null;
+    }
+    if (safetyTimer.current) {
+      clearTimeout(safetyTimer.current);
+      safetyTimer.current = null;
+    }
+    if (tickTimer.current) {
+      clearInterval(tickTimer.current);
+      tickTimer.current = null;
+    }
+    startTime.current = null;
+    pendingUrl.current = null;
+  }, []);
+
+  // Hide once the route URL (path + query) has settled in React.
   useEffect(() => {
     if (currentUrl !== prevUrl.current) {
       prevUrl.current = currentUrl;
-      activeRef.current = false;
-      visibleRef.current = false;
-      setVisible(false);
-      if (showTimer.current) {
-        clearTimeout(showTimer.current);
-        showTimer.current = null;
-      }
-      if (safetyTimer.current) clearTimeout(safetyTimer.current);
-      if (tickTimer.current) clearInterval(tickTimer.current);
-      startTime.current = null;
-      pendingUrl.current = null;
+      lastWindowKey.current = windowRouteKey();
+      hideNow();
     }
-  }, [currentUrl]);
+  }, [currentUrl, hideNow]);
 
   useEffect(() => {
+    if (lastWindowKey.current === null) lastWindowKey.current = windowRouteKey();
+
     function showOverlay(nextKey?: string) {
       if (activeRef.current || visibleRef.current) return;
       if (showTimer.current) return;
-      activeRef.current = true;
+      // Checked BEFORE claiming `activeRef`: returning with it already set
+      // would leave the flag stuck true, and every later navigation would
+      // early-return above — the loader would silently never show again.
       if (nextKey && pendingUrl.current === nextKey) return;
+      activeRef.current = true;
       pendingUrl.current = nextKey ?? pendingUrl.current;
       // Defer to next macrotask to avoid updates during router insertion effects.
       showTimer.current = setTimeout(() => {
@@ -97,14 +142,7 @@ export function NavigationLoader({
         }, 100);
         setVisible(true);
         if (safetyTimer.current) clearTimeout(safetyTimer.current);
-        safetyTimer.current = setTimeout(() => {
-          activeRef.current = false;
-          visibleRef.current = false;
-          setVisible(false);
-          if (tickTimer.current) clearInterval(tickTimer.current);
-          startTime.current = null;
-          pendingUrl.current = null;
-        }, timeoutMs);
+        safetyTimer.current = setTimeout(hideNow, timeoutMs);
       }, 0);
     }
 
@@ -139,18 +177,40 @@ export function NavigationLoader({
           showOverlay();
         }
       }
-      return origPush(...args);
+      const result = origPush(...args);
+      lastWindowKey.current = windowRouteKey();
+      return result;
     };
 
     function onPopState() {
-      showOverlay();
+      // `popstate` fires AFTER the URL has changed, so this is the destination.
+      const live = windowRouteKey();
+      const prev = lastWindowKey.current;
+      lastWindowKey.current = live;
+      // Same path+query means an in-page anchor or a second history entry for
+      // the route we are already on. React will never re-render, so the hide
+      // effect above can never fire — showing the overlay here strands it.
+      if (live === prev) {
+        hideNow();
+        return;
+      }
+      showOverlay(live);
+    }
+
+    // Belt to the braces above: a hash change that reaches us some other way
+    // is still, by definition, not a route change.
+    function onHashChange() {
+      lastWindowKey.current = windowRouteKey();
+      hideNow();
     }
 
     window.addEventListener("popstate", onPopState);
+    window.addEventListener("hashchange", onHashChange);
 
     return () => {
       history.pushState = origPush;
       window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("hashchange", onHashChange);
       if (showTimer.current) clearTimeout(showTimer.current);
       if (safetyTimer.current) clearTimeout(safetyTimer.current);
       if (tickTimer.current) clearInterval(tickTimer.current);
@@ -159,7 +219,7 @@ export function NavigationLoader({
       startTime.current = null;
       pendingUrl.current = null;
     };
-  }, [timeoutMs]);
+  }, [timeoutMs, hideNow]);
 
   if (!visible) return null;
 
