@@ -51,6 +51,7 @@
 @import "./Toggle.style.css";
 @import "./QuantityStepper.style.css";
 @import "./Checkbox.style.css";
+@import "./Chart.style.css";
 @import "./EmptyState.style.css";
 @import "./SkipToMain.style.css";
 @import "./Toast.style.css";

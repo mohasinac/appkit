@@ -1,0 +1,214 @@
+/*
+ * Chart palette + chrome.
+ *
+ * ── 🛑 The custom properties are scoped to `.appkit-chart`, NOT `:root` ────
+ *
+ * Two reasons, and the second is the load-bearing one:
+ *
+ *  1. A chart palette is not a theme token. Nothing outside a chart should be
+ *     able to consume `--chart-3`, and putting it on `:root` invites exactly
+ *     that.
+ *  2. `audit-theme-drift` matches `:root { ... }` blocks in the token layer
+ *     against the TypeScript theme presets, so a NEW `:root` custom property
+ *     declared here is a drift finding waiting to happen. Scoping to the
+ *     component sidesteps the question entirely.
+ *
+ * Reading them off the chart's OWN element (rather than `documentElement`) is
+ * also what makes the cascade do the work: a `[data-theme]` override below
+ * resolves correctly with no JS mode detection.
+ *
+ * ── 🛑 The dark steps are SELECTED, not flipped ───────────────────────────
+ *
+ * Both palettes were run through the dataviz validator against the real app
+ * surfaces (#ffffff and #0f172a). The light set is the reference order. The
+ * dark set keeps that hue ORDER — because the order is what the adjacent-pair
+ * CVD check passes on — and re-steps only the four hues that fell outside the
+ * dark lightness band (L 0.48–0.67).
+ *
+ * Re-ordering instead was tried and was much worse: moving pink next to green
+ * produced an adjacent deuteranopia ΔE of 1.7, i.e. two series a red-green
+ * colourblind reader cannot tell apart at all.
+ *
+ * Light set carries a sub-3:1 contrast WARN on --chart-3/4/5. That is not
+ * dismissable: the component always renders a legend for ≥2 series and offers
+ * a table view, which is the required relief.
+ *
+ * If you change ANY value here, re-run:
+ *   node scripts/validate_palette.js "<the 8 hexes>" --mode light --surface "#ffffff"
+ *   node scripts/validate_palette.js "<the 8 hexes>" --mode dark  --surface "#0f172a"
+ */
+
+.appkit-chart {
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #4a3aa7;
+  --chart-8: #e34948;
+
+  --chart-grid: rgba(113, 113, 122, 0.22);
+  --chart-axis: rgba(113, 113, 122, 0.55);
+  --chart-ink: var(--appkit-color-text, #18181b);
+  --chart-ink-muted: var(--appkit-color-text-muted, #52525b);
+  --chart-tooltip-bg: var(--appkit-color-surface-elevated, #ffffff);
+  --chart-tooltip-border: var(--appkit-color-border, rgba(113, 113, 122, 0.3));
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .appkit-chart {
+    --chart-2: #E36430;
+    --chart-4: #C38600;
+    --chart-5: #D76691;
+    --chart-7: #6655CE;
+    --chart-grid: rgba(161, 161, 170, 0.2);
+    --chart-axis: rgba(161, 161, 170, 0.5);
+  }
+}
+
+/*
+ * The viewer's explicit toggle must win over the media query in BOTH
+ * directions — `applyTheme` stamps `data-theme="<theme id>"` on <html>, and a
+ * light theme chosen on a dark-OS machine has to restore the light steps.
+ * `:root[data-theme]` is deliberately broad here: the attribute carries a theme
+ * ID (e.g. "default-light"), not the literal mode, so the mode-specific
+ * selectors below key off the id prefix the built-in themes use.
+ */
+:root[data-theme*="dark"] .appkit-chart {
+  --chart-2: #E36430;
+  --chart-4: #C38600;
+  --chart-5: #D76691;
+  --chart-7: #6655CE;
+  --chart-grid: rgba(161, 161, 170, 0.2);
+  --chart-axis: rgba(161, 161, 170, 0.5);
+}
+
+:root[data-theme*="light"] .appkit-chart {
+  --chart-2: #eb6834;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-7: #4a3aa7;
+  --chart-grid: rgba(113, 113, 122, 0.22);
+  --chart-axis: rgba(113, 113, 122, 0.55);
+}
+
+.appkit-chart__caption {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--chart-ink-muted);
+  margin: 0;
+}
+
+.appkit-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--chart-ink-muted);
+}
+
+.appkit-chart__legend-swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  margin-right: 0.4rem;
+  vertical-align: -1px;
+  flex: 0 0 auto;
+}
+
+.appkit-chart__plot {
+  width: 100%;
+}
+
+/* Wide charts scroll in their own container so the page body never does. */
+.appkit-chart__scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.appkit-chart__toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.appkit-chart__toggle {
+  font: inherit;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--chart-ink-muted);
+  background: none;
+  border: 1px solid var(--chart-tooltip-border);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+}
+
+.appkit-chart__toggle:hover {
+  color: var(--chart-ink);
+}
+
+.appkit-chart__toggle:focus-visible {
+  outline: 2px solid var(--appkit-color-focus-ring, #2a78d6);
+  outline-offset: 2px;
+}
+
+.appkit-chart__table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--chart-ink);
+}
+
+.appkit-chart__table th,
+.appkit-chart__table td {
+  border-bottom: 1px solid var(--chart-grid);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+
+.appkit-chart__table td + td,
+.appkit-chart__table th + th {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.appkit-chart__tooltip {
+  background: var(--chart-tooltip-bg);
+  border: 1px solid var(--chart-tooltip-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.75rem;
+  color: var(--chart-ink);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.appkit-chart__tooltip-label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--chart-ink);
+}
+
+.appkit-chart__tooltip-row {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.appkit-chart__error {
+  font-size: 0.8125rem;
+  color: var(--appkit-color-error, #e34948);
+  border: 1px solid var(--appkit-color-error, #e34948);
+  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+}

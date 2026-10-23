@@ -2,6 +2,8 @@
 import { useMemo } from "react";
 import { Div } from "../components/Div";
 import { normalizeRichTextHtml } from "../../utils/string.formatter";
+import { splitChartBlocks } from "./chart-blocks";
+import { ChartFromJson } from "../components/Chart";
 
 // --- Allowed HTML tags (safe subset — no script/object; iframe allowed for YouTube only) -------
 
@@ -54,6 +56,19 @@ const ALLOWED_ATTRS: Record<string, string[]> = {
   "*": ["class", "id", "lang", "dir", "aria-label", "role", "tabindex"],
   a: ["href", "title", "target", "rel"],
   img: ["src", "alt", "width", "height", "loading", "data-align"],
+  /*
+   * `data-chart` carries a JSON ChartSpec that the renderer hydrates into
+   * <Chart>. Safe to allow because it is DATA, never markup: it is read with
+   * `getAttribute`, run through `JSON.parse`, and then validated field-by-field
+   * by `parseChartSpec`, which accepts only a fixed `kind` enum, string labels
+   * and finite numbers. Nothing in it reaches `innerHTML`, so a script payload
+   * smuggled into the string fails validation and renders as an error message.
+   *
+   * 🛑 It must stay on `figure` only. Allowing it via "*" would let it ride on
+   * an <a> or <iframe>, where the surrounding element's own attack surface is
+   * the problem rather than the attribute.
+   */
+  figure: ["data-chart"],
   td: ["colspan", "rowspan"],
   th: ["colspan", "rowspan", "scope"],
   ol: ["type", "start"],
@@ -209,6 +224,15 @@ export interface RichTextProps {
  * ```
    */
   highlightCode?: (code: string, lang: string) => string;
+  /**
+   * Render `<figure data-chart>` placeholders as live charts. Default true.
+   *
+   * Set `false` for untrusted user-generated content where an author should not
+   * be able to mount a component at all — the placeholder then renders as the
+   * empty `<figure>` it is. The JSON is still validated either way; this is
+   * about whether a chart is an affordance on that surface.
+   */
+  charts?: boolean;
 }
 
 /**
@@ -229,6 +253,7 @@ export function RichText({
   proseClass = "prose max-w-none dark:prose-invert",
   copyableCode = false,
   highlightCode,
+  charts = true,
 }: RichTextProps) {
   const safe = useMemo(() => {
     const sanitized = sanitiseHtml(normalizeRichTextHtml(html));
@@ -253,11 +278,46 @@ export function RichText({
     }
   };
 
+  /*
+   * Split AFTER sanitising, never before.
+   *
+   * The sanitiser round-trips through `DOMParser` and re-serialises, which
+   * rewrites the single-quoted `data-chart='{"k":1}'` we emit into
+   * double-quoted `data-chart="{&quot;k&quot;:1}"`. `splitChartBlocks` handles
+   * both spellings precisely because of this step — splitting first would
+   * leave chart segments that the sanitiser never got to inspect.
+   */
+  const segments = useMemo(
+    () => (charts ? splitChartBlocks(safe) : [{ type: "html" as const, html: safe }]),
+    [safe, charts],
+  );
+
+  // Fast path: no charts. Byte-identical to the pre-chart render.
+  if (segments.length === 1 && segments[0].type === "html") {
+    return (
+      <Div
+        ref={ref}
+        className={`appkit-rich-text ${proseClass} ${className}`}
+        dangerouslySetInnerHTML={{ __html: segments[0].html }}
+      />
+    );
+  }
+
   return (
-    <Div
-      ref={ref}
-      className={`appkit-rich-text ${proseClass} ${className}`}
-      dangerouslySetInnerHTML={{ __html: safe }}
-    />
+    <Div ref={ref} className={`appkit-rich-text ${proseClass} ${className}`}>
+      {segments.map((seg, i) =>
+        seg.type === "html" ? (
+          <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={`h${i}`}
+            className="appkit-rich-text__seg"
+            dangerouslySetInnerHTML={{ __html: seg.html }}
+          />
+        ) : (
+          // eslint-disable-next-line react/no-array-index-key
+          <ChartFromJson key={`c${i}`} json={seg.json} />
+        ),
+      )}
+    </Div>
   );
 }

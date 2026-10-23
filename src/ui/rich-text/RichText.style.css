@@ -331,3 +331,20 @@
 .dark .appkit-rich-text del {
   color: var(--appkit-color-zinc-400);
 }
+
+/*
+ * Chart-block segment wrapper.
+ *
+ * `RichTextRenderer` has to split the HTML around `<figure data-chart>` and
+ * each resulting run needs an element to carry `dangerouslySetInnerHTML` —
+ * there is no way to inject HTML without one. `display: contents` removes that
+ * element from the box tree so the runs lay out exactly as they did when they
+ * were one `innerHTML` dump.
+ *
+ * 🛑 Without this, `prose`'s adjacency and first/last-child margin rules
+ * restart at every chart, so paragraphs either side of a chart space
+ * differently from paragraphs anywhere else on the page.
+ */
+.appkit-rich-text__seg {
+  display: contents;
+}

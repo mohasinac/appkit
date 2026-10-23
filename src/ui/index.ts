@@ -290,6 +290,28 @@ export { Slider } from "./components/Slider";
 
 export type { CheckboxProps } from "./components/Checkbox";
 export { Checkbox } from "./components/Checkbox";
+export type { ChartProps } from "./components/Chart";
+export { Chart, ChartFromJson } from "./components/Chart";
+/*
+ * The contract comes from `chart-spec`, not from `Chart`, so a server-side
+ * caller can validate authored content without pulling in recharts or a
+ * `"use client"` module. Importing these from `./components/Chart` would work
+ * and would be the Root Cause #76 trap: the binding becomes a client reference
+ * in a Server Component and calling it throws an opaque React #441.
+ */
+export type {
+  ChartKind,
+  ChartSeries,
+  ChartSpec,
+  ChartSpecResult,
+} from "./components/chart-spec";
+export {
+  CHART_KINDS,
+  CHART_MAX_SERIES,
+  exceedsSeriesLimit,
+  parseChartAttr,
+  parseChartSpec,
+} from "./components/chart-spec";
 
 export type { RadioGroupProps, RadioOption, RadioItemProps } from "./components/Radio";
 export { RadioGroup, RadioItem } from "./components/Radio";
@@ -570,6 +592,18 @@ export type { RichTextProps } from "./rich-text/RichText";
 export { RichText } from "./rich-text/RichText";
 export type { RichTextRendererProps } from "./rich-text/RichTextRenderer";
 export { RichTextRenderer } from "./rich-text/RichTextRenderer";
+/*
+ * `chartFigureHtml` is the write-side counterpart to the renderer's split: the
+ * editor toolbar and any seed fixture that embeds a chart must emit the
+ * placeholder through it rather than hand-writing the attribute, so the
+ * single-quote escaping stays in one place.
+ */
+export type { RichTextSegment } from "./rich-text/chart-blocks";
+export {
+  chartFigureHtml,
+  hasChartBlock,
+  splitChartBlocks,
+} from "./rich-text/chart-blocks";
 export type { RichTextEditorProps } from "./components/RichTextEditor";
 export { RichTextEditor } from "./components/RichTextEditor";
 
