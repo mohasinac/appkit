@@ -2666,3 +2666,23 @@ export {
   type ProfitAndLoss,
   type AccountTotals,
 } from "./_internal/shared/features/ledger/reports";
+/*
+ * The per-event posting rules. These are WHERE the "every entry is
+ * machine-generated" constraint lives — a caller posts an order by handing
+ * `orderPlacedPosting(order)` to `journalRepository.post`, never by writing
+ * legs. A backwards entry balances, so nothing downstream would object;
+ * `verify-posting-rules` R7 checks the SIDES, with controls proving it
+ * catches a credited bank, an un-reclaimed refund GST and an inverted
+ * output-GST liability.
+ */
+export {
+  ACCOUNT,
+  orderPlacedPosting,
+  settlementPosting,
+  payoutPosting,
+  refundPosting,
+  type OrderPostingInput,
+  type SettlementPostingInput,
+  type PayoutPostingInput,
+  type RefundPostingInput,
+} from "./_internal/shared/features/ledger/rules";
