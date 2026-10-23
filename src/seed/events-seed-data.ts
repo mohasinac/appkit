@@ -258,7 +258,24 @@ const _raweventsSeedData: EventDocument[] = [
       placement: "cards",
       order: 2,
       active: true,
-      backgroundMediaSlug: "carousel-bg-festive-deals",
+      /*
+       * 🛑 AN IMAGE THAT ALREADY EXISTS, not the new Openverse slot.
+       *
+       * `carousel-bg-festive-deals` is declared in the editorial manifest
+       * but has not been fetched or uploaded, so `/media/<slug>` would 404
+       * and the slide would render as a bare dark box — a broken image is
+       * not an error anywhere, which is exactly how 504 category covers
+       * served 404s for three days while every gate stayed green.
+       *
+       * `carousel-bg-cashback` is real, abstract, already in Storage, and
+       * was freed when the old Diwali slide switched to the event cover —
+       * the manifest says so: "stays in MEDIA for the next promo". This is
+       * the next promo.
+       *
+       * Swap to the Openverse slug once `fetch-openverse-images.mjs` and
+       * `push-editorial-images.mjs` have actually run for it.
+       */
+      backgroundMediaSlug: "carousel-bg-cashback",
       dimOpacity: 0.62,
       cards: [
         {
@@ -377,7 +394,9 @@ const _raweventsSeedData: EventDocument[] = [
       placement: "overlay",
       order: 3,
       active: true,
-      backgroundMediaSlug: "carousel-bg-launch-week",
+      // Real and already uploaded, same reasoning as the hub slide above.
+      // Freed when `slide-bundles-save` was deactivated this session.
+      backgroundMediaSlug: "carousel-bg-bundles",
       dimOpacity: 0.58,
       eyebrow: "6–20 November",
       title: "Beyblade X Launch Week",
