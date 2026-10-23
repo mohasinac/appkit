@@ -1,3 +1,4 @@
+export { chartOfAccountsSeedData } from "./chart-of-accounts-seed-data";
 // appkit/src/seed/index.ts
 //
 // Pure fixture data + factories, consumed by appkit/scripts/seed-cli.mjs

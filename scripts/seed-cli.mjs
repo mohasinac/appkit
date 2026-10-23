@@ -274,6 +274,7 @@ const {
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
   mediaAssetsSeedData, mediaAssetsEditorialSeedData,
+  chartOfAccountsSeedData,
   scammersSeedData, productFeaturesSeedData, taxCodesSeedData,
   disputeReasonsSeedData,
   authenticityKnowledgeSeedData,
@@ -387,6 +388,7 @@ const COLLECTION_MAP = {
    * precisely so a Firestore wipe cannot orphan Storage.
    */
   mediaAssets: "mediaAssets",
+  chartOfAccounts: "chartOfAccounts",
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
   authenticityKnowledge: "authenticityKnowledge",
@@ -769,6 +771,7 @@ const SEED_DATA_MAP = {
   // rewritten wholesale by upload-taxonomy-images.mjs, so the editorial rows
   // are kept beside them rather than inside that file.
   mediaAssets: [...mediaAssetsSeedData, ...mediaAssetsEditorialSeedData],
+  chartOfAccounts: chartOfAccountsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
   authenticityKnowledge: authenticityKnowledgeSeedData,

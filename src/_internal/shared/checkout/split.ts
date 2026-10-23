@@ -67,6 +67,27 @@ export interface SplitResolution {
  * than the agreed total and the surplus silently goes negative — the same
  * remainder discipline `allocateAcrossMembers` uses for bundle tax.
  */
+/**
+ * `percent` of `amount`, where `percent` is 0–100.
+ *
+ * 🛑 A NAMED HELPER rather than the division written inline, for legibility
+ * to a reader AND to `audit-money-units`. That audit flags a scale division
+ * beside a money identifier because it is the exact shape of the 2026-05
+ * minor-unit bug — a conversion left behind by a migration — and a
+ * percentage conversion is visually identical to it. Two such lines are two
+ * judgement calls; one helper is a single place to establish that this
+ * divisor is about PERCENTAGES and never about currency scale.
+ *
+ * 🛑 That audit reads COMMENTS as well as code, so this one cannot quote the
+ * expression it is about: a worked example of the shape is indistinguishable
+ * from the shape. Reading comments is correct of it — a stale "stored in
+ * minor units" remark in prose is one of the things it hunts, and Root Cause
+ * #87 is the opposite mistake, an audit that stripped comments and so
+ * counted a commented-out registration as live.
+ */
+// audit-money-units-ok: a percent-to-fraction conversion, not a minor-unit conversion
+const applyPercent = (percent: number, amount: number): number => (percent / 100) * amount;
+
 export function resolveSplit(
   contributions: readonly SplitContribution[],
   landedCost: number,
@@ -75,7 +96,7 @@ export function resolveSplit(
 
   for (const c of contributions) {
     const raw =
-      c.splitMode === "percent" ? ((c.percent ?? 0) / 100) * landedCost : (c.amount ?? 0);
+      c.splitMode === "percent" ? applyPercent(c.percent ?? 0, landedCost) : (c.amount ?? 0);
     resolved.push({ productId: c.productId, amount: roundRupees(raw) });
   }
 
@@ -91,8 +112,7 @@ export function resolveSplit(
   const allPercent = contributions.every((c) => c.splitMode === "percent");
   if (allPercent && resolved.length > 0) {
     const pctTotal = contributions.reduce((s, c) => s + (c.percent ?? 0), 0);
-    // audit-money-units-ok: `/100` converts a PERCENTAGE to a fraction, not paise to rupees. `pctTotal` is a sum of `c.percent` (0–100) and `landedCost` is already decimal rupees, so the product is rupees throughout.
-    const target = roundRupees((pctTotal / 100) * landedCost);
+    const target = roundRupees(applyPercent(pctTotal, landedCost));
     const sum = resolved.reduce((s, r) => s + r.amount, 0);
     const drift = roundRupees(target - sum);
     if (drift !== 0) {

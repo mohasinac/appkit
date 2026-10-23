@@ -133,6 +133,13 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   /* Real HSN codes and GST rates. A wrong rate on a real invoice is a
    * compliance matter, not a fixture. */
   taxCodes: "permanent",
+  /* 🛑 Every `journalEntries.lines[].accountCode` points in here, and a
+   * journal line naming a code with no account is an entry no report can
+   * classify — it silently drops out of the trial balance rather than
+   * failing. Clearing this does not lose fixtures, it orphans the books.
+   * Same argument as `mediaAssets`, where a wipe left 504 Storage objects
+   * nothing could resolve and 1,134 requests 404ing with no error anywhere. */
+  chartOfAccounts: "permanent",
   /* The `/media/<shortId>` -> Storage-path index. 195 rows back the taxonomy
    * cover images, and `categories` above is permanent for the same reason:
    * clearing these orphans the BUCKET — every category cover 404s while its
