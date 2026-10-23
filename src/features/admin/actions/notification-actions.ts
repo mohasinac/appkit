@@ -459,8 +459,29 @@ export async function sendNotification(
     (!channels.whatsapp.types?.length || channels.whatsapp.types.includes(type)) &&
     (!ORDER_GATED_TYPES.has(type) || (await storeWhatsAppSubscribed(input.storeId)))
   ) {
-    const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";
-    const accessToken = creds.whatsappCloudApiToken?.trim() ?? "";
+    /*
+     * ENV FIRST, site settings second.
+     *
+     * The platform owns one WhatsApp number, so its credentials are
+     * deployment configuration rather than admin-editable content — they
+     * belong beside the other secrets in the env, not in a Firestore document
+     * an admin screen can rewrite. Rotating a leaked Meta token should be a
+     * redeploy, not a form submission.
+     *
+     * 🛑 `WHATSAPP_PHONE_NUMBER_ID` is the Cloud API's numeric id, NOT the
+     * dialable number: sends go to `/{phone-number-id}/messages`, and a `+1…`
+     * string there is a 404 that looks like a routing bug.
+     *
+     * The site-settings fallback is kept so an install that configured these
+     * through the admin screen keeps working — this changes precedence, not
+     * behaviour, and nothing has to be migrated.
+     */
+    const phoneNumberId =
+      process.env.WHATSAPP_PHONE_NUMBER_ID?.trim() ||
+      (creds.whatsappPhoneNumberId?.trim() ?? "");
+    const accessToken =
+      process.env.WHATSAPP_MESSAGES_TOKEN?.trim() ||
+      (creds.whatsappCloudApiToken?.trim() ?? "");
     if (phoneNumberId && accessToken) {
       try {
         const { jobId } = await enqueueJob({

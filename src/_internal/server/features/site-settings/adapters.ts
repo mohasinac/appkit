@@ -42,7 +42,7 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "contact", // user/orders/[id]/payment — contact.whatsappNumber (narrowed: no address/upiVpa)
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
   "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
-  "notificationChannels", // NotificationPreferencesPanel + CheckoutRouteClient (whatsapp.otpEnabled)
+  "notificationChannels", // NARROWED: only {email,whatsapp,sms}.enabled — see the projection below
   "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
   /*
    * `support.enabled` — a REAL client reader, which is the bar this list sets:
@@ -187,7 +187,25 @@ export function toPublicSiteSettings(
     listings: {
       listingTypes: doc.listings?.listingTypes,
     },
-    notificationChannels: doc.notificationChannels,
+    /*
+     * 🛑 Narrowed to the three booleans a client reads, not the group by
+     * reference. Emitted whole, this published every WhatsApp channel setting
+     * to anonymous callers — `minPriority`, and the `types[]` allow-list naming
+     * exactly which notification types each channel carries. Nothing reads
+     * those in a browser: `NotificationPreferencesPanel` wants the three
+     * `enabled` flags to label its toggles, `whatsapp.otpEnabled` is read by a
+     * SERVER action, and the admin editor reads `GET /api/admin/site`.
+     *
+     * Same reasoning as `support` below — a field added to a channel later must
+     * not be published by the act of adding it (Root Cause #70).
+     */
+    notificationChannels: doc.notificationChannels
+      ? {
+          email: { enabled: doc.notificationChannels.email?.enabled === true },
+          whatsapp: { enabled: doc.notificationChannels.whatsapp?.enabled === true },
+          sms: { enabled: doc.notificationChannels.sms?.enabled === true },
+        }
+      : undefined,
     announcementBar: doc.announcementBar,
     // Narrowed to the one boolean a client reads, not the group by reference —
     // so a field added to `support` later is not published by accident.

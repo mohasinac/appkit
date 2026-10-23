@@ -423,28 +423,24 @@ export interface StoreDocument extends BaseDocument {
   returnsDirectToSeller?: boolean;
 
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
-  whatsappConfig?: {
-    /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */
-    phoneNumber?: string;
-    /** Meta WABA ID for this store */
-    wabaId?: string;
-    /** Meta Commerce Catalog ID linked to this store */
-    catalogId?: string;
-    /** Encrypted access token (AES-256-GCM via encryptPii) — never returned to client */
-    accessToken?: string;
-    /** Whether catalog sync is enabled for this store */
-    catalogSyncEnabled: boolean;
-    /** Timestamp of last successful catalog sync */
-    lastCatalogSyncAt?: Date;
-    /** Number of products synced in last run */
-    lastSyncCount?: number;
-    /** Status of last sync attempt */
-    lastSyncStatus?: "success" | "partial" | "failed";
-    /** True when wabaId + catalogId + accessToken are all set */
-    connected: boolean;
-    /** When the seller first connected their account */
-    connectedAt?: Date;
-  };
+  /*
+   * 🛑 `whatsappConfig` IS GONE AND MUST NOT COME BACK.
+   *
+   * It held a per-store WABA id, catalogue id and an AES-encrypted Meta
+   * **access token**. Two things were wrong with that, and neither is fixed by
+   * encrypting it harder:
+   *
+   *   1. `mapDoc` decrypted the token on EVERY read of this document, so any
+   *      code path that forgot to project was handling a live Meta credential
+   *      in plaintext.
+   *   2. It required each seller to create a Meta app and mint a system user
+   *      token. Almost none will, so the feature existed for nobody.
+   *
+   * The platform now owns ONE WhatsApp number. A seller opts in with
+   * `whatsappNotifySubscribed` above, and points their own Commerce Manager at
+   * the public `/whatsapp/{slug}/feed.csv` for catalogue — so no credential
+   * crosses the boundary at all. Enforced by audit-whatsapp-secret-leak R4.
+   */
 
   /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.

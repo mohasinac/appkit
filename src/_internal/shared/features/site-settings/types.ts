@@ -18,6 +18,13 @@ import type {
 } from "../../../../features/admin/schemas/firestore";
 import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
 
+/** The only notification-channel facts a browser is given: is each channel on. */
+export interface PublicNotificationChannels {
+  email: { enabled: boolean };
+  whatsapp: { enabled: boolean };
+  sms: { enabled: boolean };
+}
+
 export interface PublicSiteSettings {
   /** Support channels shown to buyers. Deliberately NOT the full `contact` — `address` and `upiVpa` stay server-side. */
   contact: {
@@ -62,7 +69,20 @@ export interface PublicSiteSettings {
    * therefore reads it as `!== false` a second time rather than `=== true`.
    */
   search?: { indexEnabled: boolean };
-  notificationChannels?: NotificationChannelConfig;
+  /**
+   * 🛑 NARROWER than `NotificationChannelConfig` on purpose, and it must stay
+   * that way. The full config carries `minPriority` and a `types[]` allow-list
+   * naming exactly which notification types each channel carries — operational
+   * routing detail that no browser reads and that an anonymous caller has no
+   * business enumerating.
+   *
+   * `inApp` is deliberately absent too: it is always on and nothing renders a
+   * toggle for it.
+   *
+   * Widening this back to `NotificationChannelConfig` re-publishes the lot by
+   * the act of widening, which is the failure Root Cause #70 records.
+   */
+  notificationChannels?: PublicNotificationChannels;
   announcementBar?: SiteSettingsDocument["announcementBar"];
   navConfig?: SiteSettingsDocument["navConfig"];
   actionConfig?: SiteSettingsDocument["actionConfig"];
