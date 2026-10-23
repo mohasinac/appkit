@@ -29,6 +29,7 @@ import {
 import { revealPii } from "../../../../security/pii-accessors";
 import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
+import { HISTORY_ACTOR_ROLE, type HistoryActor } from "../../../shared/history";
 
 /**
  * How many corrections one order may carry.
@@ -63,7 +64,7 @@ export interface AmendDeliveryInput {
  */
 export async function amendDeliveryAddress(
   input: AmendDeliveryInput,
-  actor: { uid: string; role: "buyer" | "seller" | "admin" | "system" },
+  actor: HistoryActor & { uid: string },
 ): Promise<DeliveryAmendment> {
   const order = (await orderRepository.findById(input.orderId)) as OrderDocument | null;
   if (!order) throw new NotFoundError("Order not found.");
@@ -72,7 +73,7 @@ export async function amendDeliveryAddress(
    * Ownership. A seller or admin may correct on a buyer's behalf — that is
    * the support flow — but a BUYER may only touch their own order.
    */
-  if (actor.role === "buyer" && order.userId !== actor.uid) {
+  if (actor.role === HISTORY_ACTOR_ROLE.BUYER && order.userId !== actor.uid) {
     throw new NotFoundError("Order not found.");
   }
 

@@ -8,7 +8,7 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { apiClient } from "../../../utils/api-client";
+import { apiClient } from "../../../http/ApiClient";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

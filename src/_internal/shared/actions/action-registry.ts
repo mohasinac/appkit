@@ -1149,7 +1149,7 @@ export const ACTIONS: ActionTree = {
     "dispatch-platform": {
       iconKey: "ship",
       id: "store.dispatch-platform",
-      label: "Book through LetItRip",
+      label: "Book through the platform",
       ariaLabel: "Book this parcel through the platform's courier account",
       description:
         "Book a pickup on the platform's own carrier account. The tracking id comes back from the courier.",
@@ -1163,7 +1163,7 @@ export const ACTIONS: ActionTree = {
        * pressing the button again.
        */
       confirmation: {
-        title: "Book this parcel through LetItRip?",
+        title: "Book this parcel through the platform?",
         body: "A courier pickup will be scheduled at the address you picked and the cost charged to the platform's carrier account. This cannot be undone from here.",
         confirmLabel: "Book pickup",
       },

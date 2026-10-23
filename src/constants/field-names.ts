@@ -1326,6 +1326,46 @@ export const PRICE_OBSERVATION_FIELDS = {
 } as const;
 
 // ============================================================================
+// STOCK RESERVATIONS
+// ============================================================================
+
+/**
+ * A TTL-bounded hold on units of a product. See
+ * `features/inventory/schemas/stock-reservation.ts` for why a reservation is
+ * its own document rather than a counter on the product: the row and the
+ * counter move in ONE transaction, so a crash between them is impossible.
+ */
+export const STOCK_RESERVATION_FIELDS = {
+  PRODUCT_ID: "productId",
+  QUANTITY: "quantity",
+  HOLDER_KIND: "holderKind",
+  HOLDER_ID: "holderId",
+  CREATED_BY: "createdBy",
+  STATUS: "status",
+  EXPIRES_AT: "expiresAt",
+  ENDED_AT: "endedAt",
+  ENDED_REASON: "endedReason",
+} as const;
+
+// ============================================================================
+// AD BOOKINGS
+// ============================================================================
+
+/**
+ * One advertiser's booking of one placement for one period. The document id
+ * IS the lock (`adBookingId`), so there is deliberately no `period`+`placementId`
+ * uniqueness query to write — see `features/ads/schemas/firestore.ts`.
+ */
+export const AD_BOOKING_FIELDS = {
+  PLACEMENT_ID: "placementId",
+  PERIOD: "period",
+  ADVERTISER_UID: "advertiserUid",
+  PAYMENT_STATE: "paymentState",
+  CANCELLED_AT: "cancelledAt",
+  CREATED_AT: "createdAt",
+} as const;
+
+// ============================================================================
 // OAUTH STATE VALUES
 // ============================================================================
 

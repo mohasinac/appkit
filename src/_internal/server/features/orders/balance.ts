@@ -33,9 +33,19 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
+import { AuthorizationError } from "../../../../errors/authorization-error";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { serverLogger } from "../../../../monitoring/server-logger";
 
+
+/*
+ * 🛑 ONE message, for the same reason the ads collector names its own: an
+ * order that is not the caller's answers 404 rather than 403, so "no such
+ * order" and "not yours" must read identically. Two matching literals are a
+ * coincidence; a constant is the rule.
+ */
+const ORDER_NOT_FOUND = "Order not found.";
 /**
  * How long a buyer gets, once the balance is opened for collection.
  *
@@ -67,13 +77,38 @@ export function balanceDueOn(order: OrderDocument): number | null {
  * window — which, since `dueBy` is what a reminder and any future
  * auto-cancel would read, would silently extend the deadline every time
  * anyone touched the button.
+ *
+ * 🛑 **Ownership is checked HERE, and it has to be**: the route that calls
+ * this is role-gated to sellers, and every seller passes that gate. Without
+ * this block any seller could open — and therefore start the payment clock
+ * on, and notify the buyer about — another seller's pre-order.
+ *
+ * It was missing, and the reason it was invisible is worth recording: the
+ * route also carried `permission: "orders:write"` alongside a `roles` array
+ * holding `seller`, which `getServerPermissions()` resolves for `employee`
+ * only — so every seller got a 403 before reaching this function at all. A
+ * broken gate masked an absent one, exactly as in Root Cause #98.
  */
 export async function openBalanceCollection(
   orderId: string,
+  actor: { uid: string; role: string },
   now: Date = new Date(),
 ): Promise<OrderDocument> {
   const order = (await orderRepository.findById(orderId)) as OrderDocument | null;
-  if (!order) throw new NotFoundError("Order not found.");
+  if (!order) throw new NotFoundError(ORDER_NOT_FOUND);
+
+  /*
+   * 🛑 `order.storeId` is the store SLUG, never the seller's Firebase UID —
+   * two namespaces by design (§ "Store Identity Architecture"). Comparing it
+   * to `actor.uid` returns false for every legitimate seller, which is the
+   * other half of Root Cause #98. Resolve the store first.
+   */
+  if (actor.role !== "admin") {
+    const store = await storeRepository.findByOwnerId(actor.uid);
+    if (!store || order.storeId !== store.id) {
+      throw new AuthorizationError("You do not own this order");
+    }
+  }
 
   const due = balanceDueOn(order);
   if (due == null) {
@@ -128,7 +163,7 @@ export async function submitBalanceProof(
   now: Date = new Date(),
 ): Promise<void> {
   const order = (await orderRepository.findById(orderId)) as OrderDocument | null;
-  if (!order) throw new NotFoundError("Order not found.");
+  if (!order) throw new NotFoundError(ORDER_NOT_FOUND);
   /*
    * 🛑 Ownership checked against `userId`, which is the buyer field on
    * `OrderDocument` — NOT `buyerId`, which does not exist. A query or guard
@@ -137,7 +172,7 @@ export async function submitBalanceProof(
    * real time once already).
    */
   if (order.userId !== buyerUid) {
-    throw new NotFoundError("Order not found.");
+    throw new NotFoundError(ORDER_NOT_FOUND);
   }
   if (!order.balance) {
     throw new ValidationError("No balance has been opened on this order yet.", {
@@ -192,7 +227,7 @@ export async function reviewBalanceProof(
   now: Date = new Date(),
 ): Promise<void> {
   const order = (await orderRepository.findById(orderId)) as OrderDocument | null;
-  if (!order) throw new NotFoundError("Order not found.");
+  if (!order) throw new NotFoundError(ORDER_NOT_FOUND);
   if (order.balance?.status !== "submitted") {
     throw new ValidationError("There is no submitted balance proof to review.", {
       orderId: `The balance is "${order.balance?.status ?? "not opened"}".`,

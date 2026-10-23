@@ -56,6 +56,14 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
+/*
+ * The hairline that separates each panel section inside the order drawer.
+ * Named because the drawer gained its fourth section with D55's balance
+ * collector, and four copies of one border declaration is four places a
+ * future token rename has to find.
+ */
+const SECTION_DIVIDER = "border-t border-[var(--appkit-color-border)]";
+
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -782,7 +790,7 @@ export function SellerOrderDetailPanel({
             )}
 
             {order.emiEnabled && (
-              <Div className="border-t border-[var(--appkit-color-border)]" padding="t-md">
+              <Div className={SECTION_DIVIDER} padding="t-md">
                 <Row align="center" justify="between" className="mb-2">
                   <Text size="sm" weight="semibold">
                     EMI plan {order.emiTenureMonths ? `· ${order.emiTenureMonths} months` : ""}
@@ -855,7 +863,7 @@ export function SellerOrderDetailPanel({
             */}
             {order.sourceContext?.path === "pre-order" &&
               order.sourceContext.balanceDue > 0 && (
-                <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
+                <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
                   <SellerBalanceBlock
                     orderId={orderId}
                     apiBase={apiBase}
@@ -886,7 +894,7 @@ export function SellerOrderDetailPanel({
               renders inside a `SideDrawer` on the orders list, where
               `useFormBottomActions` suppresses the bar anyway.
             */}
-            <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
+            <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
               <DispatchForm
                 orderId={orderId}
                 trackingNumber={order.trackingNumber}
@@ -908,7 +916,7 @@ export function SellerOrderDetailPanel({
               />
             </Stack>
 
-            <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
+            <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
               <FormShellContext.Provider value={form.shellCtx}>
                 <FormErrorSummary />
                 <SectionForm<SellerOrderUpdateValues>

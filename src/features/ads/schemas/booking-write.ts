@@ -32,7 +32,12 @@ import { isAdPeriod } from "./firestore";
  * the public — this is the one field on this schema where a miss is a
  * security defect rather than a tidiness one.
  */
-const httpUrl = z
+/*
+ * Exported so `creative-form.ts` reuses the REFINEMENT rather than restating
+ * it — the form and the wire must agree on what a link is, and a second copy
+ * of a security check is a second thing to forget.
+ */
+export const httpUrl = z
   .string()
   .url()
   .refine((u) => /^https?:\/\//i.test(u), "Links must start with http:// or https://");

@@ -11,7 +11,23 @@ import type { FirestoreValue } from "../../../schemas/types";
  * with no type and no reuse.
  */
 
-export type HistoryActorRole = "buyer" | "seller" | "admin" | "system";
+/*
+ * 🛑 This is an ACTOR KIND, not a `UserDocument.role`. No user has the role
+ * "buyer" — a buyer's stored role is "user" — so the two namespaces must never
+ * be compared, and `audit-phantom-buyer-role` exists to catch exactly that
+ * mistake in a runtime auth gate.
+ *
+ * The constant below is what a gate should compare against: it names the
+ * namespace at the call site, where a bare `"buyer"` literal cannot.
+ */
+export const HISTORY_ACTOR_ROLE = {
+  BUYER: "buyer",
+  SELLER: "seller",
+  ADMIN: "admin",
+  SYSTEM: "system",
+} as const;
+
+export type HistoryActorRole = (typeof HISTORY_ACTOR_ROLE)[keyof typeof HISTORY_ACTOR_ROLE];
 
 export interface HistoryActor {
   /** Firebase Auth uid. Absent for `system` (cron jobs, Firestore triggers). */

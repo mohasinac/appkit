@@ -31,6 +31,29 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { addressesRepository } from "../../../../features/addresses/repository/addresses.repository";
 import { deliveryPartyFor } from "../../../shared/features/orders/delivery-snapshot";
+import { revealPii } from "../../../../security/pii-accessors";
+import { ORDER_PII_FIELDS } from "../../../../security/pii-schemas";
+
+/*
+ * The order with its delivery PII decrypted. `revealPii`'s type parameter is
+ * the OUTPUT shape, so naming `OrderDocument` there would assert the fields
+ * are still `Encrypted<string>` — i.e. claim the decrypt did not happen, and
+ * hand `deliveryPartyFor` the same unusable branded strings.
+ *
+ * Only the five encrypted fields are widened; city/state/pincode/country are
+ * deliberately NOT PII (they have to stay queryable for tax and
+ * serviceability) and keep their own types from `OrderDocument`.
+ */
+type PlainDeliveryOrder = Omit<
+  OrderDocument,
+  "deliveryFullName" | "deliveryPhone" | "deliveryAddressLine1" | "deliveryAddressLine2" | "deliveryLandmark"
+> & {
+  deliveryFullName?: string;
+  deliveryPhone?: string;
+  deliveryAddressLine1?: string;
+  deliveryAddressLine2?: string;
+  deliveryLandmark?: string;
+};
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 import type {
   CreateShipmentInput,
@@ -40,7 +63,7 @@ import type {
 import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
 import { normalizeError } from "../../../../errors/normalize";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 
 export interface BookShipmentInput {
   orderId: string;
@@ -87,7 +110,19 @@ export async function bookShipment(input: BookShipmentInput): Promise<BookShipme
     });
   }
 
-  const delivery = deliveryPartyFor(order);
+  /*
+   * 🛑 DECRYPTED first. `OrderDocument`'s delivery name, phone and address
+   * lines are `Encrypted<string>` (ciphertext-by-default), and `Encrypted<T>`
+   * is deliberately assignable to nothing that wants a plain `string` — which
+   * is what made this a compile error rather than a courier label printed
+   * with `enc:v1:…` on it.
+   *
+   * A courier booking is the one place the plaintext is genuinely required:
+   * the carrier has to deliver to a real person at a real door. Masked would
+   * be the wrong default HERE and the right one almost everywhere else, which
+   * is why the two accessors are separately named.
+   */
+  const delivery = deliveryPartyFor(revealPii<PlainDeliveryOrder>(order, ORDER_PII_FIELDS));
   if (!delivery) {
     /*
      * An order placed before the delivery snapshot existed. Refused, loudly,
@@ -129,7 +164,20 @@ export async function bookShipment(input: BookShipmentInput): Promise<BookShipme
     country: pickupPlain.country ?? "",
   };
 
+  /*
+   * 🛑 `getProviders().shipping` is OPTIONAL on the registry, and refusing
+   * here is the honest handling. `providers.config.ts` always registers one
+   * today, so this is unreachable in this app — but a non-null assertion
+   * would turn the day somebody ships a build without it into a
+   * `Cannot read properties of undefined` at the moment money is involved,
+   * instead of a sentence a seller can act on.
+   */
   const provider = getProviders().shipping;
+  if (!provider) {
+    throw new ValidationError("No shipping provider is configured.", {
+      orderId: "Automatic booking is unavailable — dispatch this order manually.",
+    });
+  }
 
   /*
    * 🛑 `WalletBalance` is a THREE-state union and collapsing it is the whole

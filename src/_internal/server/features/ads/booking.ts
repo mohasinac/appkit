@@ -29,6 +29,19 @@ import { ConflictError } from "../../../../errors/conflict-error";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
+import { AD_BOOKING_FIELDS } from "../../../../constants/field-names";
+
+/*
+ * 🛑 ONE message for both "no such booking" and "not yours", and that is the
+ * whole point of naming it.
+ *
+ * A booking the caller does not own answers 404, never 403 — a 403 confirms
+ * the id exists, which turns a guessable id into an enumeration oracle for
+ * who is advertising where. The two branches must therefore be
+ * indistinguishable, and two string literals that merely happen to match
+ * today are one careless edit away from telling them apart.
+ */
+const BOOKING_NOT_FOUND = "Booking not found.";
 import {
   AD_BOOKING_COLLECTION,
   adBookingId,
@@ -162,7 +175,7 @@ export async function moderateAdCreative(
 
   await db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
-    if (!snap.exists) throw new NotFoundError("Booking not found.");
+    if (!snap.exists) throw new NotFoundError(BOOKING_NOT_FOUND);
 
     const booking = snap.data() as AdBookingDocument;
     if (booking.cancelledAt) {
@@ -197,11 +210,11 @@ export async function resubmitAdCreative(
 
   await db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
-    if (!snap.exists) throw new NotFoundError("Booking not found.");
+    if (!snap.exists) throw new NotFoundError(BOOKING_NOT_FOUND);
 
     const booking = snap.data() as AdBookingDocument;
     if (booking.advertiserUid !== advertiserUid) {
-      throw new NotFoundError("Booking not found.");
+      throw new NotFoundError(BOOKING_NOT_FOUND);
     }
     if (booking.cancelledAt) throw new ConflictError("That booking was cancelled.");
 
@@ -228,11 +241,11 @@ export async function cancelAdBooking(
 
   await db.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
-    if (!snap.exists) throw new NotFoundError("Booking not found.");
+    if (!snap.exists) throw new NotFoundError(BOOKING_NOT_FOUND);
 
     const booking = snap.data() as AdBookingDocument;
     if (!opts.byAdmin && booking.advertiserUid !== opts.actorUid) {
-      throw new NotFoundError("Booking not found.");
+      throw new NotFoundError(BOOKING_NOT_FOUND);
     }
     if (booking.cancelledAt) return; // idempotent
 
@@ -302,7 +315,7 @@ export async function pendingAdBookings(limit = 50): Promise<AdBookingDocument[]
   const snap = await db
     .collection(AD_BOOKING_COLLECTION)
     .where("moderation.state", "==", "pending")
-    .orderBy("createdAt", "asc")
+    .orderBy(AD_BOOKING_FIELDS.CREATED_AT, "asc")
     .limit(limit)
     .get();
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as AdBookingDocument);
@@ -316,8 +329,8 @@ export async function adBookingsForAdvertiser(
   const db = getAdminDb();
   const snap = await db
     .collection(AD_BOOKING_COLLECTION)
-    .where("advertiserUid", "==", advertiserUid)
-    .orderBy("createdAt", "desc")
+    .where(AD_BOOKING_FIELDS.ADVERTISER_UID, "==", advertiserUid)
+    .orderBy(AD_BOOKING_FIELDS.CREATED_AT, "desc")
     .limit(limit)
     .get();
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as AdBookingDocument);

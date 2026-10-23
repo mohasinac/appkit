@@ -6,7 +6,7 @@ export type {
   AppendHistoryResult,
   SerialisedStatusChangeEntry,
 } from "./types";
-export { STATUS_HISTORY_MAX } from "./types";
+export { STATUS_HISTORY_MAX, HISTORY_ACTOR_ROLE } from "./types";
 
 export type { BuildHistoryEntryInput } from "./history";
 export {

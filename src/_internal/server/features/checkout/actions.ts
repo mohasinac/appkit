@@ -1213,8 +1213,6 @@ async function createOrderForGroup(
     selectedShippingQuote,
     useAllPoints,
     pointsBudget,
-    emiOptIn,
-    emiTenureMonths,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -3547,6 +3545,17 @@ async function createPhonePeGroupOrder(
     buyerState,
     useAllPoints,
     pointsBudget,
+    /*
+     * 🛑 All three were DECLARED on the params above and never destructured,
+     * so the body referenced them as free names: `emiOptIn`/`emiTenureMonths`
+     * in the schedule call and `deliverySnapshot` in `placeOfSupply`. The
+     * interface promised them and the function could not see them — which is
+     * why appkit's own `tsc` is the gate for this file and not a reading of
+     * the diff.
+     */
+    emiOptIn,
+    emiTenureMonths,
+    deliverySnapshot,
   } = ctx;
 
   /*

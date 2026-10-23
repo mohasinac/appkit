@@ -240,19 +240,38 @@ export function AdminDisputeReasonsView({
 
   return (
     <>
+      {/*
+        🛑 ONE `config` prop, not spread props. `DataListingView` takes
+        `{ config: ListingViewConfig<Res, Row> }` — spreading the fields reads
+        identically and types as nothing, which is how every callback below
+        lost its parameter types to implicit `any` (Root Cause #5: read the
+        component, never assume the prop surface).
+      */}
       <DataListingView<ListResponse, Row>
-        portal="admin"
-        title="Dispute reasons"
-        subtitle="What buyers can pick when reporting a problem. A reason's kind decides which gate it inherits — the wording is yours."
-        endpoint={endpoint}
-        queryKey={["admin", "dispute-reasons"]}
-        defaultSort="label"
-        filterKeys={["scope"]}
-        filterDefaults={{ scope: "active" }}
-        buildFilters={(state) =>
+        config={{
+        portal: "admin",
+        title: "Dispute reasons",
+        subtitle: "What buyers can pick when reporting a problem. A reason's kind decides which gate it inherits — the wording is yours.",
+        endpoint: endpoint,
+        queryKey: ["admin", "dispute-reasons"],
+        defaultSort: "label",
+        /*
+         * 🛑 REQUIRED on `ListingViewConfig`, and the default must be one of
+         * these or the dropdown opens with nothing selected (Root Cause #63).
+         * Eleven rows, so the only orders worth offering are the buyer-facing
+         * wording and which kind a reason belongs to.
+         */
+        sortOptions: [
+          { value: "label", label: "Wording (A–Z)" },
+          { value: "-label", label: "Wording (Z–A)" },
+          { value: "kind", label: "Kind" },
+        ],
+        filterKeys: ["scope"],
+        filterDefaults: { scope: "active" },
+        buildFilters: (state) =>
           SCOPE_CHIPS.find((c) => c.id === (state.scope ?? "active"))?.filter
-        }
-        mapRows={(res) =>
+        ,
+        mapRows: (res) =>
           (res.items ?? []).map((r) => ({
             id: r.id,
             label: r.label,
@@ -260,8 +279,8 @@ export function AdminDisputeReasonsView({
             isActive: r.isActive,
             createdByName: r.createdByName,
           }))
-        }
-        getTotal={(res, rows) => res.total ?? rows.length}
+        ,
+        getTotal: (res, rows) => res.total ?? rows.length,
         /*
          * 🛑 No `searchPlaceholder` and no `search` — the endpoint does not read
          * `q`, and declaring either is what makes the box exist. ~39 views here
@@ -269,23 +288,23 @@ export function AdminDisputeReasonsView({
          * request carries it, and the results do not change, with no error
          * anywhere. Eleven rows with scope chips need no search.
          */
-        emptyLabel="No reasons in this scope."
-        primaryAction={{
+        emptyLabel: "No reasons in this scope.",
+        primaryAction: {
           label: ACTIONS.ADMIN["add-dispute-reason"].label,
           onClick: ({ openCreatePanel }) => openCreatePanel(),
-        }}
-        renderEditor={({ close }) => (
+        },
+        renderEditor: ({ closePanel }) => (
           <CreateReasonForm
             onSubmit={async (input) => {
               await onCreate(input);
-              close();
+              closePanel();
             }}
           />
-        )}
-        resolveEditorTitle={() => "Add a dispute reason"}
-        onRowClick={(row) => setOpen(row)}
-        renderRowActions={rowControls}
-        renderCards={(rows) => (
+        ),
+        resolveEditorTitle: () => "Add a dispute reason",
+        onRowClick: (row) => setOpen(row),
+        renderRowActions: rowControls,
+        renderCards: (rows) => (
           <Stack gap="sm">
             {rows.map((row) => (
               <Row
@@ -310,7 +329,7 @@ export function AdminDisputeReasonsView({
                       (`{status}-surface` + matching ink), never a
                       theme-inverting tint under literal white (Root Cause #67).
                     */}
-                    <Badge variant={row.isActive ? "success" : "neutral"}>
+                    <Badge variant={row.isActive ? "success" : "inactive"}>
                       {row.isActive ? "Active" : "Retired"}
                     </Badge>
                   </Row>
@@ -325,7 +344,8 @@ export function AdminDisputeReasonsView({
               </Row>
             ))}
           </Stack>
-        )}
+        ),
+        }}
       />
 
       {open && (
@@ -336,7 +356,7 @@ export function AdminDisputeReasonsView({
           badges={[
             {
               label: open.isActive ? "Active" : "Retired",
-              variant: open.isActive ? "success" : "neutral",
+              variant: open.isActive ? "success" : "secondary",
             },
           ]}
           fields={[

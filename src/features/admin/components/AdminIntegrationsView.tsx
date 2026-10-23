@@ -23,7 +23,7 @@ import {
   type IntegrationId,
   type IntegrationPatch,
 } from "../../../_internal/shared/features/admin/integrations";
-import type { SiteSettingsDocument } from "../../schemas/firestore";
+import type { SiteSettingsDocument } from "../schemas/firestore";
 
 /**
  * Admin → Site → Integrations. The four switches that decide whether we take
@@ -193,7 +193,7 @@ export function AdminIntegrationsView({ settings, onSave }: AdminIntegrationsVie
                         theme-inverting tint under literal white (Root Cause
                         #67).
                       */}
-                      <Badge variant={enabled ? "success" : "neutral"}>
+                      <Badge variant={enabled ? "success" : "inactive"}>
                         {stateLabel(id, enabled)}
                       </Badge>
                       {d.severe && <Badge variant="warning">High impact</Badge>}

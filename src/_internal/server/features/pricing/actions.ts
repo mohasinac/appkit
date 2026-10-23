@@ -37,7 +37,7 @@ import {
 import { recordAdminAction } from "../audit-log/actions";
 import { AdminAuditActionValues } from "../../../../features/audit-log/schemas/firestore";
 import { normalizeError } from "../../../../errors/normalize";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 import { ValidationError } from "../../../../errors/validation-error";
 
 const SINGLETON_ID = "global";

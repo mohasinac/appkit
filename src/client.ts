@@ -1495,6 +1495,8 @@ export {
 } from "./features/orders/schemas/buyer-forms";
 export { scamReportFormSchema } from "./features/scams/schemas/report-form";
 export { sublistingCategoryFormSchema } from "./features/store-extensions/schemas/sublisting-category-form";
+export { adCreativeFormSchema } from "./features/ads/schemas/creative-form";
+export type { AdCreativeFormValues } from "./features/ads/schemas/creative-form";
 export {
   adminStoreUpdateSchema,
   announcementBarSchema,

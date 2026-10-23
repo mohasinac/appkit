@@ -33,7 +33,7 @@ import {
 } from "../../../shared/features/offers/coordination";
 import { ValidationError } from "../../../../errors/validation-error";
 import { normalizeError } from "../../../../errors/normalize";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 
 export interface DestinationCheck {
   addressId: string;
@@ -82,7 +82,16 @@ export async function checkDestinations(
     );
   }
 
+  /*
+   * 🛑 Optional on the registry. This is the serviceability PRE-FLIGHT, so
+   * with no provider the honest answer is "unknown", not "unserviceable":
+   * reporting every destination as unserviceable would block an accept that
+   * manual dispatch handles perfectly well.
+   */
   const provider = getProviders().shipping;
+  if (!provider) {
+    return ids.map((addressId) => ({ addressId, pincode: "", serviceable: true }));
+  }
   const docs = await Promise.all(ids.map((id) => addressesRepository.findById(id)));
 
   return Promise.all(

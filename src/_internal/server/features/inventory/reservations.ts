@@ -45,6 +45,7 @@ import { ConflictError } from "../../../../errors/conflict-error";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
+import { STOCK_RESERVATION_FIELDS } from "../../../../constants/field-names";
 import {
   RESERVATION_DEFAULT_TTL_HOURS,
   RESERVATION_MAX_TTL_HOURS,
@@ -153,9 +154,9 @@ export async function releaseReservationsForHolder(
   const db = getAdminDb();
   const snap = await db
     .collection(STOCK_RESERVATION_COLLECTION)
-    .where("holderKind", "==", holderKind)
-    .where("holderId", "==", holderId)
-    .where("status", "==", "held")
+    .where(STOCK_RESERVATION_FIELDS.HOLDER_KIND, "==", holderKind)
+    .where(STOCK_RESERVATION_FIELDS.HOLDER_ID, "==", holderId)
+    .where(STOCK_RESERVATION_FIELDS.STATUS, "==", "held")
     .get();
 
   let released = 0;
@@ -191,9 +192,9 @@ export async function expireDueReservations(
   const db = getAdminDb();
   const snap = await db
     .collection(STOCK_RESERVATION_COLLECTION)
-    .where("status", "==", "held")
-    .where("expiresAt", "<=", new Date())
-    .orderBy("expiresAt", "asc")
+    .where(STOCK_RESERVATION_FIELDS.STATUS, "==", "held")
+    .where(STOCK_RESERVATION_FIELDS.EXPIRES_AT, "<=", new Date())
+    .orderBy(STOCK_RESERVATION_FIELDS.EXPIRES_AT, "asc")
     .limit(limit)
     .get();
 
@@ -221,8 +222,8 @@ export async function activeReservationsForProduct(
   const db = getAdminDb();
   const snap = await db
     .collection(STOCK_RESERVATION_COLLECTION)
-    .where("productId", "==", productId)
-    .where("status", "==", "held")
+    .where(STOCK_RESERVATION_FIELDS.PRODUCT_ID, "==", productId)
+    .where(STOCK_RESERVATION_FIELDS.STATUS, "==", "held")
     .get();
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as StockReservationDocument);
 }

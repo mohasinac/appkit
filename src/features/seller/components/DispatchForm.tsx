@@ -26,17 +26,48 @@ import React, { useState } from "react";
 
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { apiClient, ApiClientError } from "../../../http/index";
+import { useApiMutation } from "../../../client/api/useApiMutation";
+import { useQuery } from "@tanstack/react-query";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { Button } from "../../../ui/components/Button";
-import { Div } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import { Row } from "../../../ui/components/Layout";
 import { Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
+/*
+ * audit-form-sectionised-ok: `shipOrderSchema` is a `z.discriminatedUnion`,
+ * and `buildSectionsFromSchema` cannot drive a form from one — `resolveFields`
+ * calls `objectShape(schema)` and returns `[]` when there is no `.shape`.
+ * Measured against the repo's zod (4.4.3): a discriminated union's `.shape` is
+ * `undefined`, so `<SectionForm sections={buildSectionsFromSchema(shipOrderSchema)}>`
+ * would render ZERO fields. That is the whole form, silently blank.
+ *
+ * The branch structure is the reason the schema is a union rather than one
+ * object with every field optional: "custom" needs a carrier and a tracking
+ * id, "platform" needs a pickup address and a box, and neither set is valid
+ * for the other. Flattening them to make this sectionisable would delete the
+ * per-branch requiredness the route and the action both parse against — i.e.
+ * it would weaken the server contract to satisfy a client-side layout rule.
+ *
+ * The schema is still load-bearing here: the submit handler safe-parses
+ * against it and pipes issues through `applyZodIssues` + `rootLevelMessages`,
+ * so every bound is enforced on this surface. What is missing is only the
+ * schema-DERIVED section layout.
+ */
+import type { z } from "zod";
 import { shipOrderSchema } from "../schemas/order-forms";
+
+/*
+ * The parsed payload, derived from the schema rather than restated — a
+ * second hand-written shape here would be a copy of the one contract the
+ * route, the action and this form all parse against.
+ */
+type ShipOrderPayload = z.infer<typeof shipOrderSchema>;
 import { applyZodIssues, rootLevelMessages } from "../../../ui/forms/apply-zod-issues";
 
 /** A store pickup address, as `GET /api/store/addresses` returns it. */
@@ -83,9 +114,6 @@ export function DispatchForm({
   const [trackingUrl, setTrackingUrl] = useState("");
   const [pickupId, setPickupId] = useState("");
   const [boxId, setBoxId] = useState<string>(BOX_PRESETS[1].id);
-  const [pickups, setPickups] = useState<PickupOption[]>([]);
-  const [pickupsFailed, setPickupsFailed] = useState(false);
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   /*
@@ -94,35 +122,76 @@ export function DispatchForm({
    * would be a request on every order panel open for a field most sellers
    * never reach (Rule #6).
    */
+  /*
+   * 🛑 `toUserMessage(code)` on failure, never the server's own `error`
+   * string — an unmapped code would print server internals into the panel,
+   * which is literally how a Node `MODULE_NOT_FOUND` with a require stack
+   * reached a buyer-facing modal (Root Cause #86). `ApiClientError` carries
+   * the stable code, so the mapping survives the move off raw `fetch`.
+   */
+  /*
+   * 🛑 A REF, because `setFieldError` comes from `<Form>`'s render-prop and
+   * therefore does not exist in component scope where the mutation is
+   * declared. The mutation needs a STABLE sink — passing the render-prop
+   * helper directly is impossible, and re-creating the mutation per render to
+   * close over it would reset its pending state mid-request.
+   *
+   * It is assigned inside the render-prop below, so by the time any submit
+   * can fire it is populated. The `?.` is not defensive decoration: the first
+   * render completes before `<Form>` calls its child.
+   */
+  const fieldErrorSink = React.useRef<((name: string, error: string | null) => void) | null>(null);
+
+  const shipMutation = useApiMutation({
+    /*
+     * 🛑 Passed so the server's own per-field `issues` land on the fields
+     * they name. The route parses the same `shipOrderSchema` this form does,
+     * so a rejection it produces that the client parse did not is real news
+     * — a carrier the courier does not recognise, a pickup address that
+     * stopped being serviceable — and collapsing that into one generic
+     * sentence hides which input to fix.
+     */
+    setFieldError: (field: string, message: string) =>
+      fieldErrorSink.current?.(field, message),
+    mutationFn: (payload: ShipOrderPayload) =>
+      apiClient.post(SELLER_ENDPOINTS.ORDER_SHIP(orderId), payload),
+    onSuccess: () => onDispatched(),
+    onError: (err) => {
+      void normalizeError(err);
+      setError(toUserMessage(err instanceof ApiClientError ? err.code : undefined));
+    },
+  });
+
+  /*
+   * 🛑 `enabled` is what keeps this request off the common path. The custom
+   * branch needs no address at all, so loading pickups on mount would fire a
+   * request on every order panel a seller opens for a field most of them
+   * never reach (Rule #6). `useQuery` also dedupes and caches it, which the
+   * hand-rolled effect could not — it refetched on every branch toggle.
+   */
+  const pickupsQuery = useQuery({
+    queryKey: ["store", "addresses", "pickup"],
+    enabled: method === "platform",
+    queryFn: () => apiClient.get<{ items?: PickupOption[] }>(SELLER_ENDPOINTS.STORE_ADDRESSES),
+  });
+  const pickups: PickupOption[] = Array.isArray(pickupsQuery.data?.items)
+    ? pickupsQuery.data.items
+    : [];
+  /*
+   * 🛑 A FAILED request and an empty list must not render the same. An empty
+   * dropdown reads as "this store has no pickup addresses" — a fact about the
+   * store — when it may be a network error, and the two need different
+   * actions from the seller.
+   */
+  const pickupsFailed = pickupsQuery.isError;
+
   React.useEffect(() => {
-    if (method !== "platform" || pickups.length > 0 || pickupsFailed) return;
-    let live = true;
-    fetch(SELLER_ENDPOINTS.STORE_ADDRESSES)
-      .then((r) => r.json())
-      .then((json) => {
-        if (!live) return;
-        const rows = (json?.data?.items ?? json?.data ?? json?.items ?? []) as PickupOption[];
-        setPickups(Array.isArray(rows) ? rows : []);
-        if (Array.isArray(rows) && rows.length === 1) setPickupId(rows[0]!.id);
-      })
-      .catch((err: unknown) => {
-        void normalizeError(err);
-        /*
-         * 🛑 Recorded, not swallowed into an empty list. An empty dropdown
-         * reads as "this store has no pickup addresses" — a fact about the
-         * store — when it may be a failed request. The two need different
-         * actions from the seller, so they must not render the same.
-         */
-        if (live) setPickupsFailed(true);
-      });
-    return () => {
-      live = false;
-    };
-  }, [method, pickups.length, pickupsFailed]);
+    if (pickups.length === 1 && !pickupId) setPickupId(pickups[0]!.id);
+  }, [pickups, pickupId]);
 
   if (trackingNumber) {
     return (
-      <Stack gap="2">
+      <Stack gap="sm">
         <Text size="sm" weight="medium">
           Dispatched
         </Text>
@@ -136,7 +205,9 @@ export function DispatchForm({
   }
 
   const submit = async (
-    setFieldError: (field: string, message: string) => void,
+    /* The `<Form>` render-prop's own signature — `applyZodIssues` clears a
+     * field by passing `null`, so a `string`-only sink is not assignable. */
+    setFieldError: (name: string, error: string | null) => void,
     clearErrors: () => void,
   ) => {
     clearErrors();
@@ -176,31 +247,7 @@ export function DispatchForm({
       return;
     }
 
-    setBusy(true);
-    try {
-      const res = await fetch(SELLER_ENDPOINTS.ORDER_SHIP(orderId), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      const json = await res.json().catch(() => null);
-      if (!res.ok) {
-        /*
-         * 🛑 `toUserMessage(code)`, never the server's own `error` string —
-         * an unmapped code would otherwise print server internals into the
-         * panel, which is literally how a Node `MODULE_NOT_FOUND` with a
-         * require stack reached a buyer-facing modal (Root Cause #86).
-         */
-        setError(toUserMessage(json?.code));
-        return;
-      }
-      onDispatched();
-    } catch (err) {
-      void normalizeError(err);
-      setError(toUserMessage(undefined));
-    } finally {
-      setBusy(false);
-    }
+    shipMutation.mutate(parsed.data);
   };
 
   return (
@@ -233,7 +280,9 @@ export function DispatchForm({
       </Row>
 
       <Form onSubmit={(e) => e.preventDefault()}>
-        {({ setFieldError, clearErrors }) => (
+        {({ setFieldError, clearErrors }) => {
+          fieldErrorSink.current = setFieldError;
+          return (
           <Stack gap="3">
             {method === "custom" ? (
               <>
@@ -326,11 +375,12 @@ export function DispatchForm({
                   ? ACTIONS.STORE["dispatch-platform"]
                   : ACTIONS.STORE["dispatch-custom"]
               }
-              isLoading={busy}
+              isLoading={shipMutation.isPending}
               onClick={() => void submit(setFieldError, clearErrors)}
             />
           </Stack>
-        )}
+          );
+        }}
       </Form>
     </Stack>
   );

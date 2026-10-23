@@ -36,7 +36,8 @@
 import { useState } from "react";
 import type { Order } from "../types";
 import { Button } from "../../../ui/components/Button";
-import { Div, Row, Stack } from "../../../ui/components/Layout";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import { Text, Span } from "../../../ui/components/Typography";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";

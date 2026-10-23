@@ -12,11 +12,16 @@
  * @tag sideEffects:firestore
  */
 
-import { BaseRepository } from "../../../providers/db-firebase/base";
+/* The DIRECTORY barrel, which is where every other repository gets this
+ * from — `providers/db-firebase/base` exports only `FirebaseRepository`,
+ * and `BaseRepository` (the one with `this.db` and `mapDoc`) is composed
+ * one level up. */
+import { BaseRepository } from "../../../providers/db-firebase";
 import { unitOfWork } from "../../../core/unit-of-work";
 import {
   JOURNAL_ENTRIES_COLLECTION,
   ACCOUNTING_PERIODS_COLLECTION,
+  LEDGER_FIELDS,
   type JournalEntryDocument,
   type AccountingPeriodDocument,
 } from "../schemas/firestore";
@@ -320,8 +325,8 @@ export class JournalRepository extends BaseRepository<JournalEntryDocument> {
   ): Promise<{ entries: JournalEntryDocument[]; truncated: boolean }> {
     const snap = await this.db
       .collection(JOURNAL_ENTRIES_COLLECTION)
-      .where("period", "==", period)
-      .orderBy("entryDate")
+      .where(LEDGER_FIELDS.PERIOD, "==", period)
+      .orderBy(LEDGER_FIELDS.ENTRY_DATE)
       .limit(limit + 1)
       .get();
     const docs = snap.docs.slice(0, limit);
@@ -359,7 +364,7 @@ export class JournalRepository extends BaseRepository<JournalEntryDocument> {
   ): Promise<JournalEntryDocument> {
     const existing = await this.db
       .collection(JOURNAL_ENTRIES_COLLECTION)
-      .where("sourceEvent", "==", "opening-balance")
+      .where(LEDGER_FIELDS.SOURCE_EVENT, "==", "opening-balance")
       .limit(1)
       .get();
     if (!existing.empty) {
