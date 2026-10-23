@@ -312,10 +312,14 @@ function emitOrderPlacedNotifications(args: {
   storeOwnerId: string | undefined;
   productLabel: string;
   paid: boolean;
-  /** Buyer paid the ₹10 WhatsApp order-updates addon on this order — only this order's buyer-facing sends get the WhatsApp channel. */
-  whatsappNotifyAddon: boolean;
+  /**
+   * The seller. `sendNotification` reads their WhatsApp subscription to decide
+   * the WhatsApp arm — the per-order addon this replaced put that choice on the
+   * buyer, who should not have to purchase their own delivery updates.
+   */
+  storeId: string | undefined;
 }): void {
-  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid, whatsappNotifyAddon } = args;
+  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid, storeId } = args;
   const buyerNotif = sendNotification({
     userId: buyerUid,
     type: "order_placed",
@@ -325,7 +329,7 @@ function emitOrderPlacedNotifications(args: {
     relatedId: orderId,
     relatedType: "order",
     actionUrl: `/user/orders/view/${orderId}`,
-    orderWhatsappAddonPaid: whatsappNotifyAddon,
+    storeId,
   }).catch((err: unknown) =>
     serverLogger.warn("Failed to send buyer order_placed notification", {
       err: err instanceof Error ? err.message : String(err),
@@ -1971,7 +1975,7 @@ async function createOrderForGroup(
     productLabel:
       orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: adminBypass,
-    whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0,
+    storeId: order.storeId,
   });
 
   return groupTotal;
@@ -4052,7 +4056,7 @@ async function createPhonePeGroupOrder(
     productLabel:
       orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: true,
-    whatsappNotifyAddon: whatsappNotifyFee > 0,
+    storeId: order.storeId,
   });
 
   return orderTotal;

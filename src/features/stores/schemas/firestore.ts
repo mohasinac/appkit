@@ -130,6 +130,19 @@ export interface StoreDocument extends BaseDocument {
   /** Admin "verified store" badge — distinct from `status`/`isPublic`. */
   isVerified?: boolean;
   /**
+   * Does this store subscribe to WhatsApp order notifications?
+   *
+   * A monthly add-on priced by the admin (`commissions.whatsappNotifyMonthlyFee`),
+   * not a per-order charge: the platform owns one WhatsApp number, so the cost
+   * is standing and borne by the seller who benefits, rather than a line item
+   * a buyer opts into per order.
+   *
+   * 🛑 Absent means NOT subscribed, and the gate fails closed on it. Defaulting
+   * a missing flag to `true` would message customers on behalf of every seller
+   * who never signed up, and bill the platform for each template.
+   */
+  whatsappNotifySubscribed?: boolean;
+  /**
    * Paid at SHIPPING rather than at delivery.
    *
    * 🛑 **A risk transfer, not a courtesy or a badge.** Paying before delivery

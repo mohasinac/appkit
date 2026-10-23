@@ -2,6 +2,8 @@ import { normalizeError } from "../../../errors/normalize";
 import { notificationRepository } from "../repository/notification.repository";
 import { siteSettingsRepository } from "../repository/site-settings.repository";
 import { userRepository } from "../../auth/repository/user.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
+import { safeRead } from "../../../errors/safe-read";
 import { createResendProvider } from "../../../providers/email-resend/provider";
 import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
 import { enqueueJob } from "../../jobs/actions/enqueue-job";
@@ -45,13 +47,42 @@ import {
 } from "../schemas/firestore";
 
 /**
- * Notification types whose WhatsApp send is gated behind the buyer's
- * per-order ₹10 WhatsApp-updates addon (`OrderDocument.whatsappNotifyAddon`)
- * — see `orderWhatsappAddonPaid` on `SendNotificationInput`. Every other
- * type (bid_won, offers, scam reports, support tickets, admin alerts, …)
- * keeps the original two-gate behavior (admin channel enabled + user hasn't
- * opted out) unchanged.
+ * Notification types whose WhatsApp send is gated behind the SELLER's
+ * standing WhatsApp-notifications subscription — see `storeId` on
+ * `SendNotificationInput`.
+ *
+ * 🛑 This replaced a per-ORDER ₹10 addon the buyer paid at checkout
+ * (`OrderDocument.whatsappNotifyAddon`). The axis moved deliberately: the
+ * platform owns one WhatsApp number, so the cost is a standing monthly one
+ * borne by the seller who benefits from it, not a line item a buyer opts into
+ * per order. A buyer should not have to purchase their own delivery updates.
+ *
+ * Every other type (bid_won, offers, scam reports, support tickets, admin
+ * alerts, …) keeps the original two gates — admin channel enabled, user has
+ * not opted out — unchanged.
  */
+/**
+ * Does this store subscribe to WhatsApp order notifications?
+ *
+ * The subscription is a monthly add-on priced by the admin
+ * (`commissions.whatsappNotifyMonthlyFee`); this reads only whether it is
+ * currently active. Billing lives with the other recurring charges, not here.
+ *
+ * 🛑 Fails CLOSED. A store we cannot read, or one that has not subscribed,
+ * gets no WhatsApp send — the buyer still receives the in-app notification and
+ * the email, which are ungated. Failing open would message customers on behalf
+ * of a seller who is not paying for it, and bill the platform for the template.
+ */
+async function storeWhatsAppSubscribed(storeId: string | undefined): Promise<boolean> {
+  if (!storeId) return false;
+  const store = await safeRead(() => storeRepository.findBySlug(storeId), {
+    route: "sendNotification",
+    key: `whatsapp-subscription:${storeId}`,
+    fallback: null,
+  });
+  return store?.whatsappNotifySubscribed === true;
+}
+
 const ORDER_GATED_TYPES = new Set([
   "order_placed",
   "order_confirmed",
@@ -134,8 +165,17 @@ export interface SendNotificationInput extends NotificationCreateInput {
   userPhone?: string;
   /** Pre-rendered email HTML — falls back to a plain-text <p> when absent. */
   emailHtml?: string;
-  /** Buyer paid the ₹10 WhatsApp order-updates addon — enables WhatsApp channel for this notification even when the user has no standing WhatsApp subscription. */
-  orderWhatsappAddonPaid?: boolean;
+  /**
+   * The store this notification is about, for the order-lifecycle types in
+   * `ORDER_GATED_TYPES`. Its WhatsApp subscription decides whether the
+   * WhatsApp arm runs; absent, those types fall back to in-app + email.
+   *
+   * Resolved HERE rather than by each caller: six call sites would otherwise
+   * each do their own store read and each be a place the rule could drift
+   * (Root Cause #75). The read only happens when the type is gated AND
+   * WhatsApp is otherwise eligible, so the common path costs nothing.
+   */
+  storeId?: string;
   /**
    * Which portal the recipient reads this in — decides where `actionUrl`
    * points when the caller does not supply one.
@@ -417,7 +457,7 @@ export async function sendNotification(
     resolvedPhone &&
     meetsMinPriority(priority, channels.whatsapp.minPriority) &&
     (!channels.whatsapp.types?.length || channels.whatsapp.types.includes(type)) &&
-    (!ORDER_GATED_TYPES.has(type) || input.orderWhatsappAddonPaid === true)
+    (!ORDER_GATED_TYPES.has(type) || (await storeWhatsAppSubscribed(input.storeId)))
   ) {
     const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";
     const accessToken = creds.whatsappCloudApiToken?.trim() ?? "";

@@ -70,8 +70,8 @@ export type OrderAfter = {
    */
   paymentStatus?: string;
   invoiceNumber?: string;
-  /** Buyer opted into the ₹10 WhatsApp order-updates addon at checkout. */
-  whatsappNotifyAddon?: boolean;
+  /** The seller. Decides the WhatsApp arm via their notification subscription. */
+  storeId?: string;
 };
 export type OrderBefore = { status: OrderStatus; paymentStatus?: string };
 
@@ -175,7 +175,7 @@ export async function handleOrderStatusChange(
       relatedId: orderId,
       relatedType: "order",
       userEmail,
-      orderWhatsappAddonPaid: after.whatsappNotifyAddon === true,
+      storeId: after.storeId,
     });
 
     // The RTDB mirror that used to live here has been removed. `sendNotification`
