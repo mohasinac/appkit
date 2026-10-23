@@ -233,3 +233,41 @@
   font-size: var(--appkit-text-sm);
   color: var(--appkit-color-text-muted);
 }
+
+/* ── Docked: the collapsed control lives in the bottom bar on mobile ────────
+ *
+ * The shell stays in flow as a zero-height measuring box — `useRowCollapse`
+ * compares the row's cached natural width against THIS element, so it must
+ * keep the original container's width. Portalling it instead would make it
+ * measure the viewport, read as "there is room", expand, and oscillate.
+ */
+.appkit-overflow-row--docked {
+  height: 0;
+  /* Not `display:none`: a hidden box has no width, and width is the entire
+     input to the collapse decision. */
+  overflow: hidden;
+}
+
+.appkit-overflow-row__dock {
+  position: relative;
+  display: flex;
+  width: 100%;
+  pointer-events: auto;
+  padding: var(--appkit-space-2) var(--appkit-space-4);
+  background: var(--appkit-color-surface-elevated);
+  border-top: 1px solid var(--appkit-color-border);
+}
+
+.appkit-overflow-row__dock > .appkit-overflow-row__trigger {
+  width: 100%;
+}
+
+/* 🛑 Opens UPWARD when docked. The default popover is `top: 100%`, which from
+   a bar at the bottom edge renders off-screen — the control would look dead.
+   `BottomChrome` deliberately sets no `overflow`, so the panel may escape the
+   tier; that is the documented contract its own header relies on. */
+.appkit-overflow-row__dock .appkit-overflow-row__popover {
+  top: auto;
+  bottom: calc(100% + var(--appkit-space-1));
+  width: 100%;
+}

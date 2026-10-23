@@ -21,7 +21,16 @@ const STORAGE_PREFIX = "appkit:sticky-toolbar-collapsed:";
 /** Below this the toolbar defaults to collapsed. Matches the `lg` boundary
  *  that both toolbars already use to switch between their mobile and desktop
  *  rows, so the default flips at the same width the layout does. */
-const MOBILE_QUERY = "(max-width: 1023px)";
+/**
+ * Below `lg` — the complement of `DESKTOP_QUERY` in `features/layout`.
+ *
+ * Exported so `OverflowRow` can dock its collapsed control into the bottom bar
+ * at exactly the width the tab bar exists at. It is NOT imported from
+ * `features/layout`: this is `ui/`, and a `ui → features` edge inverts the
+ * layering and is how `audit-import-cycles` regressions start. One literal in
+ * the lower layer, shared, beats two that can drift apart.
+ */
+export const MOBILE_QUERY = "(max-width: 1023px)";
 
 /**
  * Tri-state on purpose: `null` means "the user has never chosen", which is
