@@ -2577,3 +2577,27 @@ export {
   type OfferCoordination,
 } from "./_internal/shared/features/offers/coordination";
 export { assertOwnedAddresses } from "./_internal/server/features/offers/destinations";
+
+/*
+ * [SERVER-ONLY] Part 14 — the delivery snapshot and its corrections.
+ *
+ * `amendDeliveryAddress` is server-only (Firestore + the addresses
+ * repository). The pure readers ship with it rather than from the main
+ * barrel so a caller cannot reach `deliveryPartyFor` without the module that
+ * explains why it reads the amendment while `placeOfSupplyFrom` reads the
+ * snapshot — getting those two the wrong way round sends a parcel to the old
+ * address, or restates tax on a filed invoice.
+ */
+export {
+  snapshotDeliveryAddress,
+  deliveryPartyFor,
+  placeOfSupplyFrom,
+  type DeliverySnapshot,
+  type DeliveryParty,
+} from "./_internal/shared/features/orders/delivery-snapshot";
+export {
+  amendDeliveryAddress,
+  revealAmendments,
+  DELIVERY_AMENDMENT_MAX,
+  type AmendDeliveryInput,
+} from "./_internal/server/features/orders/amend-delivery";
