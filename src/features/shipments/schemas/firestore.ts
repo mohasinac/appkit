@@ -77,7 +77,32 @@ export const DEFAULT_SHIPMENT_TOTALS: ShipmentTotals = {
 
 export interface ShipmentDocument extends BaseDocument {
   shipmentNumber: string;
+  /**
+   * The supplier as TYPED. Kept, and kept required, for display.
+   *
+   * 🛑 It is free text, so four shipments from one supplier are four
+   * unjoined strings — "Acme Toys", "acme toys", "Acme Toys Ltd", "ACME".
+   * Nothing can total what we have spent with anyone, which is the first
+   * question anybody asks of procurement data.
+   */
   supplierName: string;
+  /**
+   * The joinable identity — a `vendors` row.
+   *
+   * 🛑 OPTIONAL, and that is deliberate rather than a migration left half
+   * done. Every existing shipment has only the string, and backfilling by
+   * fuzzy-matching names is precisely how two real suppliers get merged into
+   * one spend figure that nobody can unpick afterwards. A shipment gains an
+   * id when a human links it; until then it is honestly unattributed, and
+   * the vendor report can say how many are.
+   *
+   * 🛑 The NAME is not derived from the vendor row on read. Two reasons: a
+   * vendor rename would retroactively rewrite what every past shipment says
+   * it was bought from, and the typed string is evidence of what the invoice
+   * actually said. Same stance the order item's frozen listing snapshot
+   * takes (Part 14).
+   */
+  supplierId?: string;
   originCountry?: string;
   status: ShipmentStatus;
   trackingNumber?: string;

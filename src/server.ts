@@ -2685,4 +2685,19 @@ export {
   type SettlementPostingInput,
   type PayoutPostingInput,
   type RefundPostingInput,
+  expensePosting,
+  type ExpensePostingInput,
 } from "./_internal/shared/features/ledger/rules";
+/*
+ * Vendors and expenses. `ShipmentDocument.supplierId` joins to a vendor row;
+ * `supplierName` stays as typed, because deriving the name on read would let
+ * a vendor rename rewrite what every past shipment says it was bought from.
+ */
+export {
+  VENDORS_COLLECTION,
+  EXPENSES_COLLECTION,
+  EXPENSE_FIELDS,
+  type VendorDocument,
+  type ExpenseDocument,
+  type ExpenseCategory,
+} from "./features/ledger/schemas/expenses";

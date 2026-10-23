@@ -26,6 +26,7 @@
 
 import type { PostingInput } from "./posting";
 import type { JournalLine } from "../../../../features/ledger/schemas/firestore";
+import type { ExpenseCategory } from "../../../../features/ledger/schemas/expenses";
 
 /** The accounts these rules post to. Codes match `chartOfAccountsSeedData`. */
 export const ACCOUNT = {
@@ -34,6 +35,7 @@ export const ACCOUNT = {
   GATEWAY_RECEIVABLE: "1200",
   INPUT_GST: "1300",
   SELLER_PAYABLE: "2100",
+  ACCOUNTS_PAYABLE: "2300",
   OUTPUT_GST: "2200",
   BUYER_DEPOSITS: "2400",
   REFUNDS_PAYABLE: "2500",
@@ -180,6 +182,74 @@ export function payoutPosting(p: PayoutPostingInput): PostingInput {
       { accountCode: ACCOUNT.SELLER_PAYABLE, debit: r2(p.amount), credit: 0, counterpartyId: p.storeId },
       { accountCode: ACCOUNT.BANK, debit: 0, credit: r2(p.amount) },
     ],
+  };
+}
+
+/**
+ * Which expense account each category posts to.
+ *
+ * 🛑 A `Record<ExpenseCategory, …>`, so adding a category is a COMPILE
+ * ERROR until someone says where it lands. The alternative — a lookup with
+ * a default — silently files every new kind of spend into "other", and
+ * "other" growing is indistinguishable from nobody having noticed.
+ *
+ * 🛑 `asset` maps to a BALANCE-SHEET account, not an expense, and that is
+ * the one entry here that changes a P&L. A camera bought for ₹80,000 is not
+ * an ₹80,000 trading loss in the month it was bought; depreciation is the
+ * CA's and this system deliberately does not attempt it.
+ */
+const EXPENSE_ACCOUNT: Record<ExpenseCategory, string> = {
+  freight: ACCOUNT.FREIGHT_PAID,
+  "platform-software": "5500",
+  wages: "5400",
+  packaging: "5900",
+  asset: "1500",
+  other: "5900",
+};
+
+export interface ExpensePostingInput {
+  expenseId: string;
+  vendorId?: string;
+  vendorName: string;
+  category: ExpenseCategory;
+  billDate: Date;
+  amount: number;
+  inputGst?: number;
+  /** Paid outright, or on credit? Decides the funding leg. */
+  paid: boolean;
+}
+
+/**
+ * A bill.
+ *
+ * 🛑 The funding leg depends on whether it was PAID, and conflating the two
+ * is the commonest small-business bookkeeping error: crediting Bank for a
+ * bill not yet paid shows cash leaving that is still there, and crediting
+ * Accounts payable for one already settled leaves a debt that does not
+ * exist. Both balance; both are wrong; neither announces itself.
+ *
+ * 🛑 `inputGst` is DEBITED to an asset, never added to the cost. Expensing
+ * it is how input credit silently stops being claimable — the money is
+ * spent either way, but only one of the two gets it back.
+ */
+export function expensePosting(e: ExpensePostingInput): PostingInput {
+  const net = r2(e.amount);
+  const gst = r2(e.inputGst ?? 0);
+  return {
+    entryDate: e.billDate,
+    sourceEvent: "expense-recorded",
+    sourceId: e.expenseId,
+    narration: `${e.vendorName} — ${e.category}`,
+    lines: compact([
+      { accountCode: EXPENSE_ACCOUNT[e.category], debit: net, credit: 0, ...(e.vendorId ? { counterpartyId: e.vendorId } : {}) },
+      { accountCode: ACCOUNT.INPUT_GST, debit: gst, credit: 0, memo: "ITC on this bill" },
+      {
+        accountCode: e.paid ? ACCOUNT.BANK : ACCOUNT.ACCOUNTS_PAYABLE,
+        debit: 0,
+        credit: r2(net + gst),
+        ...(e.vendorId ? { counterpartyId: e.vendorId } : {}),
+      },
+    ]),
   };
 }
 
