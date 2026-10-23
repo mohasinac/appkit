@@ -28,6 +28,7 @@ import {
   SHIPPING_CONFIGS_COLLECTION,
   STORE_CATEGORIES_COLLECTION,
   STORE_GOOGLE_CONFIG_COLLECTION,
+  STORE_WHATSAPP_CONFIG_COLLECTION,
   type AnalyticsAlertDocument,
   type AnalyticsCardDocument,
   type ItemRequestDocument,
@@ -39,6 +40,7 @@ import {
   type ShippingConfigDocument,
   type StoreCategoryDocument,
   type StoreGoogleConfigDocument,
+  type StoreWhatsAppConfigDocument,
 } from "../schemas/firestore";
 
 export class PayoutMethodsRepository extends BaseRepository<PayoutMethodDocument> {
@@ -195,6 +197,15 @@ export class ItemRequestsRepository extends BaseRepository<ItemRequestDocument> 
   }
 }
 
+export class StoreWhatsAppConfigRepository extends BaseRepository<StoreWhatsAppConfigDocument> {
+  constructor() {
+    super(STORE_WHATSAPP_CONFIG_COLLECTION);
+  }
+  async getByStore(storeId: string): Promise<StoreWhatsAppConfigDocument | null> {
+    return this.findOneBy("storeId", storeId);
+  }
+}
+
 export class StoreGoogleConfigRepository extends BaseRepository<StoreGoogleConfigDocument> {
   constructor() {
     super(STORE_GOOGLE_CONFIG_COLLECTION);
@@ -213,4 +224,5 @@ export const listingTemplatesRepository = new ListingTemplatesRepository();
 export const moderationQueueRepository = new ModerationQueueRepository();
 export const reportsRepository = new ReportsRepository();
 export const itemRequestsRepository = new ItemRequestsRepository();
+export const storeWhatsAppConfigRepository = new StoreWhatsAppConfigRepository();
 export const storeGoogleConfigRepository = new StoreGoogleConfigRepository();

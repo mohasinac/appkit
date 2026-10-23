@@ -78,7 +78,7 @@ export interface AdminOrderEditorViewProps {
   paymentReviewOutcome?: string;
   /**
    * Paid add-ons + applied coupon for this order. Operational, not decorative:
-   * `giftWrapAddon` tells the packer to wrap the parcel, and the
+   * `whatsappNotifyAddon` is who a status change should message, and the
    * coupon is what an admin needs when reconciling a discounted order.
    */
   addons?: OrderAddonBadgesOrder;

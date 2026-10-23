@@ -78,6 +78,7 @@ export const FEATURE_SUBPATH_MAP: Record<string, string> = {
   "before-after": "@mohasinac/appkit/features/before-after",
   collections: "@mohasinac/appkit/features/collections",
   preorders: "@mohasinac/appkit/features/pre-orders",
+  "whatsapp-bot": "@mohasinac/appkit/features/whatsapp-bot",
 };
 
 /**
@@ -133,6 +134,7 @@ const FEATURE_NAMESPACE_MAP: Record<string, string> = {
   corporate: "corporate",
   "before-after": "beforeAfter",
   collections: "collections",
+  "whatsapp-bot": "whatsappBot",
 };
 
 // Opaque dynamic import — prevents bundlers from statically analysing the path

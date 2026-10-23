@@ -82,7 +82,7 @@ export type SeedCollectionName =
   | "supportTickets" | "productFeatures" | "taxCodes" | "offers" | "couponUsage" | "claimedCoupons"
   | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
   | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
-  | "itemRequests" | "storeGoogleConfig" | "roleOverrides"
+  | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
   | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
   | "shipmentLots" | "shipmentItems" | "catalogueItems" | "testerChecklistItems";
 
@@ -318,6 +318,15 @@ export const SEED_MANIFEST: SeedManifest = {
   itemRequests: pick(
     asArr(itemRequestsSeedData).map((r) => ({ ...r, name: r.title ?? r.id })),
   ),
+  /*
+   * Empty on purpose. `storeWhatsAppConfig` held a per-store WABA + catalogue
+   * + access token, which the platform-number model replaces: one number owned
+   * by LetItRip, and sellers subscribe to notifications rather than bringing
+   * credentials. The collection stays declared so the manifest type is honest
+   * about what exists; seeding rows into it would re-create the per-store
+   * token this design exists to avoid.
+   */
+  storeWhatsAppConfig: [],
   storeGoogleConfig: pick(asArr(storeGoogleConfigSeedData)),
   // RBAC + admin notifications — no seed docs yet; manifest stays empty until populated.
   roleOverrides: [],

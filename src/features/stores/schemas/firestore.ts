@@ -409,6 +409,29 @@ export interface StoreDocument extends BaseDocument {
    */
   returnsDirectToSeller?: boolean;
 
+  // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
+  whatsappConfig?: {
+    /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */
+    phoneNumber?: string;
+    /** Meta WABA ID for this store */
+    wabaId?: string;
+    /** Meta Commerce Catalog ID linked to this store */
+    catalogId?: string;
+    /** Encrypted access token (AES-256-GCM via encryptPii) — never returned to client */
+    accessToken?: string;
+    /** Whether catalog sync is enabled for this store */
+    catalogSyncEnabled: boolean;
+    /** Timestamp of last successful catalog sync */
+    lastCatalogSyncAt?: Date;
+    /** Number of products synced in last run */
+    lastSyncCount?: number;
+    /** Status of last sync attempt */
+    lastSyncStatus?: "success" | "partial" | "failed";
+    /** True when wabaId + catalogId + accessToken are all set */
+    connected: boolean;
+    /** When the seller first connected their account */
+    connectedAt?: Date;
+  };
 
   /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
@@ -443,12 +466,9 @@ export const STORE_TRACKED_FIELDS = [
 ] as const;
 
 /**
- * PII on this document, for the `withHistory` scrub.
- *
- * `accessToken` stays listed although the WhatsApp integration that produced
- * one was removed 2026-10-20: a scrub list is cheap, and a future secret
- * reaching this document under that name should be scrubbed by default
- * rather than by someone remembering to add it.
+ * PII on this document, for `withHistory`'s scrub. `whatsappConfig.accessToken`
+ * is a live Meta credential; `mapDoc` decrypts it on EVERY read, so it is
+ * present in memory whenever a diff runs.
  */
 export const STORE_HISTORY_PII_FIELDS = [
   "accessToken",

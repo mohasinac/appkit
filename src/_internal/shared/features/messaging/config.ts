@@ -17,12 +17,7 @@
  * and find the budget already covers them. A channel that is born capped
  * cannot repeat what email did.
  */
-/**
- * `whatsapp` was removed 2026-10-20 with the Cloud API integration. `sms`
- * stays declared with no sender — the ceiling exists so one cannot ship
- * uncapped — and `email` is the only channel with a live transport.
- */
-export type MessageChannel = "email" | "sms";
+export type MessageChannel = "email" | "whatsapp" | "sms";
 
 /**
  * Who the message is FOR — which is what the kill switch keys on.
@@ -90,12 +85,13 @@ export type SendDecision =
 /**
  * Defaults, mirrored into `DEFAULT_SITE_SETTINGS_DATA.messaging`.
  *
- * 🛑 `emailEnabled` defaults to FALSE. An install that
+ * 🛑 `emailEnabled` and `whatsappEnabled` default to FALSE. An install that
  * has not made a decision should be quiet, not loud — the opposite default is
  * how a fresh deploy mails real people from a half-configured site.
  */
 export const MESSAGE_BUDGET_DEFAULTS = {
   emailEnabled: false,
+  whatsappEnabled: false,
   dailyCeiling: {
     /**
      * Resend's free tier is 100/day. 80 is not timidity — the counter is
@@ -105,6 +101,8 @@ export const MESSAGE_BUDGET_DEFAULTS = {
      * headroom is what stops "at the limit" from becoming "over it".
      */
     email: 80,
+    /** Meta's pricing is per-conversation, not per-message; this is a sanity bound, not a tier limit. */
+    whatsapp: 200,
     /** No sender exists yet. Present so one cannot ship uncapped. */
     sms: 50,
   },

@@ -196,7 +196,7 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     couponDiscount: doc.couponDiscount,
     appliedDiscounts: doc.appliedDiscounts,
     // Add-ons are operational, not decorative: the status-change notifier reads
-    // the packer needs giftWrapMessage in hand. An
+    // whatsappNotifyAddon, and the packer needs giftWrapMessage in hand. An
     // adapter that drops them makes every downstream surface render its
     // "not applicable" fallback instead (Root Cause #57).
     // EMI, so the buyer can see and pay their own schedule. Mapped with the
@@ -206,6 +206,8 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     emiEnabled: doc.emiEnabled,
     emiInstallments: doc.emiInstallments,
     emiRemainingBalance: doc.emiRemainingBalance,
+    whatsappNotifyAddon: doc.whatsappNotifyAddon,
+    whatsappNotifyFee: doc.whatsappNotifyFee,
     giftWrapAddon: doc.giftWrapAddon,
     giftWrapFee: doc.giftWrapFee,
     giftWrapMessage: doc.giftWrapMessage,

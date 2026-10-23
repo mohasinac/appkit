@@ -919,6 +919,10 @@ export interface OrderDocument extends BaseDocument {
   codRemainingAmount?: number;
   /** COD handling fee charged to the buyer: min(subtotal × codHandlingFeePercent / 100, codHandlingFeeCap). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
+  /** Buyer opted into WhatsApp order-update messages at checkout (unchecked by default). */
+  whatsappNotifyAddon?: boolean;
+  /** Fee charged for the WhatsApp addon, decimal rupees — snapshot of siteSettings.commissions.whatsappNotifyFee at order time. */
+  whatsappNotifyFee?: number;
   /** Buyer opted into gift wrapping at checkout (unchecked by default). */
   giftWrapAddon?: boolean;
   /** Fee charged for gift wrap, decimal rupees — snapshot of siteSettings.commissions.giftWrapFee at order time. */

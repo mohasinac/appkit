@@ -42,7 +42,7 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "contact", // user/orders/[id]/payment — contact.whatsappNumber (narrowed: no address/upiVpa)
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
   "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
-  "notificationChannels", // NotificationPreferencesPanel reads the per-channel toggles
+  "notificationChannels", // NotificationPreferencesPanel + CheckoutRouteClient (whatsapp.otpEnabled)
   "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
   /*
    * `support.enabled` — a REAL client reader, which is the bar this list sets:

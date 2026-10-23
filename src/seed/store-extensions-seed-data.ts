@@ -39,6 +39,7 @@ import type {
   ShippingConfigDocument,
   StoreCategoryDocument,
   StoreGoogleConfigDocument,
+  StoreWhatsAppConfigDocument,
 } from "../features/store-extensions/schemas/firestore";
 
 // ───── payoutMethods (empty — production has none) ──────────────────────────────────────────

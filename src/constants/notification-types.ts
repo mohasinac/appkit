@@ -12,7 +12,7 @@
  *    **18 of the 27 real types** and was offered two that never appear.
  *  · `AdminSiteSettingsView`'s per-channel allow-list, so an admin literally
  *    **could not allow-list `offer_received` or `payment_review`** for email
- *    — the toggle did not exist.
+ *    or WhatsApp — the toggle did not exist.
  *
  * Everything here now derives from `NOTIFICATION_TYPE_VALUES`, so a new
  * notification type is one edit and cannot be missing from either surface.

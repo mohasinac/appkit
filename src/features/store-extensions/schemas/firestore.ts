@@ -18,6 +18,7 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
  *   7. moderationQueue       — video / media moderation queue items
  *   8. reports               — buyer-submitted reports against listings/stores
  *   9. itemRequests          — community item request bulletin board
+ *  10. storeWhatsAppConfig   — per-store WhatsApp business catalogue + auto-replies
  *  11. storeGoogleConfig     — per-store Google Business reviews integration
  */
 
@@ -152,7 +153,7 @@ export interface AnalyticsAlertDocument extends BaseDocument {
   threshold: number;
   windowHours: number;
   isActive: boolean;
-  notifyChannels: Array<"in-app" | "email">;
+  notifyChannels: Array<"in-app" | "email" | "whatsapp">;
   /**
    * When this alert last fired.
    *
@@ -467,7 +468,34 @@ export const DEFAULT_ITEM_REQUEST_DATA: Partial<ItemRequestDocument> = {
   replyCount: 0,
 };
 
-// 10. ───── storeGoogleConfig ────────────────────────────────────────────
+// 10. ───── storeWhatsAppConfig ──────────────────────────────────────────
+
+export interface StoreWhatsAppConfigDocument extends BaseDocument {
+  storeId: string;
+  isConnected: boolean;
+  isPaid: boolean;
+  phoneNumber?: string;
+  businessProfileName?: string;
+  catalogUrl?: string;
+  autoReply?: string;
+  welcomeMessage?: string;
+  /** Status of pending WhatsApp Business onboarding (Meta Cloud API). */
+  onboardingStatus?: "pending" | "approved" | "rejected";
+}
+
+export const STORE_WHATSAPP_CONFIG_COLLECTION =
+  "storeWhatsAppConfig" as const;
+export const STORE_WHATSAPP_CONFIG_INDEXED_FIELDS = [
+  "storeId",
+  "isConnected",
+  "isPaid",
+] as const;
+export const DEFAULT_STORE_WHATSAPP_CONFIG_DATA: Partial<StoreWhatsAppConfigDocument> = {
+  isConnected: false,
+  isPaid: false,
+};
+
+// 11. ───── storeGoogleConfig ────────────────────────────────────────────
 
 export interface StoreGoogleConfigDocument extends BaseDocument {
   storeId: string;

@@ -175,7 +175,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
          
         (encrypted as any)[key] = encryptSecret(value.trim());
       } else if (value !== undefined && typeof value !== "string") {
-        // Non-string credential fields (e.g. a nested Record<string,string>)
+        // Non-string credential fields (e.g. whatsappTemplates: Record<string,string>)
         // are stored as-is — they are not secret values to encrypt.
          
         (encrypted as any)[key] = value;

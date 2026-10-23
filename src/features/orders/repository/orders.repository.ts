@@ -799,6 +799,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // Fulfilment flags. Filterable so "which of my orders need gift wrap?" is a
     // query against the orders themselves — the whole point of recording the
     // add-on on the order rather than keeping a side list of who asked for what.
+    whatsappNotifyAddon: { canFilter: true, canSort: false },
     giftWrapAddon: { canFilter: true, canSort: false },
     shipmentProtectionAddon: { canFilter: true, canSort: false },
     saleProtectionAddon: { canFilter: true, canSort: false },
@@ -931,6 +932,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // Same fulfilment flags as SELLER_SIEVE_FIELDS — admin needs to answer
     // "who opted into WhatsApp updates?" when a status change goes out, without
     // maintaining a parallel tracker.
+    whatsappNotifyAddon: { canFilter: true, canSort: false },
     giftWrapAddon: { canFilter: true, canSort: false },
     shipmentProtectionAddon: { canFilter: true, canSort: false },
     saleProtectionAddon: { canFilter: true, canSort: false },

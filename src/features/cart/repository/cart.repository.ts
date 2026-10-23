@@ -722,7 +722,8 @@ export class CartRepository extends BaseRepository<CartDocument> {
   ): Promise<void> {
     const isEmpty =
       !addons ||
-      (!addons.giftWrapAddon &&
+      (!addons.whatsappNotifyAddon &&
+        !addons.giftWrapAddon &&
         !addons.shipmentProtectionAddon &&
         !addons.saleProtectionAddon);
 

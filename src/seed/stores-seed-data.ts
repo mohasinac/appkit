@@ -130,6 +130,7 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
       "api_access",
       "multiple_stores",
       "early_access_features",
+      "whatsapp_catalog_sync",
     ] as StoreCapability[],
     createdAt: daysAgo(400),
     updatedAt: daysAgo(1),

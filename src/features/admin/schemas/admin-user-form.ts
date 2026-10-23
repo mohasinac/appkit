@@ -8,20 +8,24 @@
  *      false, and saving any unrelated field silently stripped a real
  *      tester's access.
  *
+ *      `SellerWhatsAppSettingsView` writes `accessToken` — a live Meta
+ *      credential — plus the WABA and catalog ids the sync runs against. A
+ *      malformed id there fails at sync time, hours later, with no obvious
+ *      cause.
  *
  *      `LotteryPullForm` is a buyer-facing entry: a transaction id, a payment
  *      time and an item number, all parsed with a bare `parseInt` and a `new
  *      Date(...)` that yields `Invalid Date` on anything unparseable.
  *
  * EXPORTS:
- *   adminUserUpdateSchema, lotteryPullSchema,
+ *   adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema,
  *   and their inferred value types
  *
- * @tag domain:admin,lottery
+ * @tag domain:admin,whatsapp,lottery
  * @tag layer:schema
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:AdminUserEditorView,LotteryPullForm
+ * @tag consumers:AdminUserEditorView,SellerWhatsAppSettingsView,LotteryPullForm
  * @tag sideEffects:none
  */
 
@@ -137,6 +141,61 @@ export function toPublicProfilePayload(v: {
 }
 
 export type AdminUserUpdateValues = z.infer<typeof adminUserUpdateSchema>;
+
+/**
+ * A store's WhatsApp Business connection.
+ *
+ * `accessToken` is optional because the form shows a masked placeholder and
+ * only sends the field when the seller types a NEW value — so "absent" means
+ * "unchanged", not "clear it". The `.min(20)` therefore applies only to a real
+ * replacement, and is there because a truncated token fails silently at sync
+ * time rather than on save.
+ */
+export const whatsappSettingsSchema = z.object({
+  catalogSyncEnabled: annotate(z.boolean(), {
+    section: "sync", sectionLabel: "Catalog sync", sectionRequired: true, quick: true, order: 1, row: "quarter",
+  }),
+  phoneNumber: annotate(
+    z.string().trim().regex(PHONE_RE, "Enter the 10-digit WhatsApp Business number.").optional().or(z.literal("")),
+    { section: "connection", sectionLabel: "Connection", order: 1, row: "pair" },
+  ),
+  // Meta ids are numeric strings; a pasted URL or a stray space is the usual
+  // mistake and produces a sync that never runs.
+  wabaId: annotate(
+    z.string().trim().regex(/^\d{5,32}$/, "A WABA ID is a numeric id, not a URL.").optional().or(z.literal("")),
+    { section: "connection", order: 2, row: "pair" },
+  ),
+  catalogId: annotate(
+    z.string().trim().regex(/^\d{5,32}$/, "A catalog ID is a numeric id, not a URL.").optional().or(z.literal("")),
+    { section: "connection", order: 3, row: "pair" },
+  ),
+  accessToken: annotate(
+    z.string().trim().min(20, "That access token looks truncated.").optional().or(z.literal("")),
+    { section: "connection", order: 4, row: "full", help: "Leave blank to keep the current token." },
+  ),
+});
+
+export type WhatsappSettingsValues = z.infer<typeof whatsappSettingsSchema>;
+
+/**
+ * The CONNECTION form's fields — credentials only.
+ *
+ * `catalogSyncEnabled` is deliberately absent. Its toggle lives in a different
+ * card and owns its own write (`syncToggleMutation`), because the credentials
+ * form used to send it unconditionally from two cards away: a seller flipped
+ * the switch, saw it move, and nothing persisted it. A field in this schema is
+ * a field this form's Save button owns.
+ *
+ * 🛑 `.omit()` rather than a second literal, so the two cannot drift — it
+ * carries the SAME field instances into the new shape, which is what keeps the
+ * `annotate()` WeakMap entries alive. (A wrapper such as `.superRefine()` is
+ * transparent for the same reason; a field-level re-wrap is not.)
+ */
+export const whatsappConnectionSchema = whatsappSettingsSchema.omit({
+  catalogSyncEnabled: true,
+});
+
+export type WhatsappConnectionValues = z.infer<typeof whatsappConnectionSchema>;
 
 /**
  * A buyer's lottery entry.

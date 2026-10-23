@@ -158,7 +158,28 @@ function VacationModeSection() {
   );
 }
 
-// -- Section 5: Visibility states ---------------------------------------------
+// -- Section 5: WhatsApp integration ------------------------------------------
+
+function WhatsAppSection() {
+  return (
+    <Div className={SECTION_BODY}>
+      <Text className="leading-relaxed">
+        The WhatsApp integration allows your customers to contact you via WhatsApp from your store profile
+        and lets you sync your product catalog to your WhatsApp Business Catalog (requires the
+        <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">whatsapp_catalog_sync</Code> capability).
+      </Text>
+      <Text className="leading-relaxed">
+        Full settings and the catalog sync toggle are at{" "}
+        <TextLink variant="bare" href={String(ROUTES.STORE.WHATSAPP)} className="underline text-[var(--appkit-color-primary)] hover:opacity-80">
+          Settings → WhatsApp
+        </TextLink>.
+        See the WhatsApp settings page for step-by-step setup instructions.
+      </Text>
+    </Div>
+  );
+}
+
+// -- Section 6: Visibility states ---------------------------------------------
 
 function VisibilityStatesSection() {
   const STATES = [
@@ -218,7 +239,7 @@ export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
           Settings Guide
         </Heading>
         <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
-          Store profile, shipping, returns, vacation mode, and visibility.
+          Store profile, shipping, returns, vacation mode, WhatsApp, and visibility.
         </Text>
       </Div>
 
@@ -239,7 +260,11 @@ export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
         <VacationModeSection />
       </GuideSection>
 
-      <GuideSection title="5. Visibility states">
+      <GuideSection title="5. WhatsApp integration">
+        <WhatsAppSection />
+      </GuideSection>
+
+      <GuideSection title="6. Visibility states">
         <VisibilityStatesSection />
       </GuideSection>
     </Stack>

@@ -13,6 +13,8 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   // Mirrors the SiteSettingsDocument defaults, which enable every add-on.
   // Consequence of the mirror: if the settings read fails, an add-on already
   // ticked on the cart document is still billed rather than silently dropped.
+  whatsappNotifyFeeEnabled: true,
+  whatsappNotifyFee: 10,
   giftWrapFeeEnabled: true,
   giftWrapFee: 49,
   shipmentProtectionFeeEnabled: true,

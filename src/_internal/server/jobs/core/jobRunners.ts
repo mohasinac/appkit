@@ -13,7 +13,9 @@ import type { JobContext } from "../runtime/types";
 import { runWeeklyPayoutEligibility } from "./weeklyPayoutEligibility";
 import { runHardBanCascade } from "./hardBanCascade";
 import { runResetOtpVerification } from "./resetOtpVerification";
+import { runWhatsAppNotify, type WhatsAppNotifyPayload } from "./whatsappNotify";
 import { runNewsletterExport } from "./newsletterExport";
+import { runWhatsAppCatalogImport } from "./whatsappCatalogImport";
 import { runStoreNameBackfill } from "./storeNameBackfill";
 import { runCategoryTaxonomyBackfill } from "./categoryTaxonomyBackfill";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -75,11 +77,28 @@ async function runResetOtpVerificationJob(
   return runResetOtpVerification(ctx);
 }
 
+async function runWhatsAppNotifyJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runWhatsAppNotify(payload as unknown as WhatsAppNotifyPayload, ctx);
+}
+
 async function runNewsletterExportJob(
   _payload: Record<string, JsonValue>,
   ctx: JobContext,
 ): Promise<JobRunResult> {
   return runNewsletterExport(ctx);
+}
+
+async function runWhatsAppCatalogImportJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runWhatsAppCatalogImport(
+    { storeSlug: String(payload.storeSlug ?? "") },
+    ctx,
+  );
 }
 
 async function runStoreNameBackfillJob(
@@ -158,7 +177,9 @@ export const JOB_RUNNERS: Record<string, JobRunner> = {
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
   resetOtpVerification: runResetOtpVerificationJob,
+  whatsappNotify: runWhatsAppNotifyJob,
   newsletterExport: runNewsletterExportJob,
+  whatsappCatalogImport: runWhatsAppCatalogImportJob,
   storeNameBackfill: runStoreNameBackfillJob,
   categoryTaxonomyBackfill: runCategoryTaxonomyBackfillJob,
 };

@@ -94,6 +94,8 @@ import {
 import {
   computeCodHandlingFee,
   type CodHandlingFeeRates,
+  computeWhatsAppNotifyFee,
+  type WhatsAppNotifyFeeRates,
   computeGiftWrapFee,
   type GiftWrapFeeRates,
   computeShipmentProtectionFee,
@@ -310,8 +312,10 @@ function emitOrderPlacedNotifications(args: {
   storeOwnerId: string | undefined;
   productLabel: string;
   paid: boolean;
+  /** Buyer paid the ₹10 WhatsApp order-updates addon on this order — only this order's buyer-facing sends get the WhatsApp channel. */
+  whatsappNotifyAddon: boolean;
 }): void {
-  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid } = args;
+  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid, whatsappNotifyAddon } = args;
   const buyerNotif = sendNotification({
     userId: buyerUid,
     type: "order_placed",
@@ -321,6 +325,7 @@ function emitOrderPlacedNotifications(args: {
     relatedId: orderId,
     relatedType: "order",
     actionUrl: `/user/orders/view/${orderId}`,
+    orderWhatsappAddonPaid: whatsappNotifyAddon,
   }).catch((err: unknown) =>
     serverLogger.warn("Failed to send buyer order_placed notification", {
       err: err instanceof Error ? err.message : String(err),
@@ -978,7 +983,7 @@ interface OrderGroupContext {
   emiOptIn: boolean;
   emiTenureMonths?: number;
   emiSettings: EmiSettings;
-  commissions: CodHandlingFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & SaleProtectionFeeRates & { codDepositPercent: number };
+  commissions: CodHandlingFeeRates & WhatsAppNotifyFeeRates & GiftWrapFeeRates & ShipmentProtectionFeeRates & SaleProtectionFeeRates & { codDepositPercent: number };
   appliedCoupons: CartAppliedCoupon[];
   cartSubtotal: number;
   couponUsageAccumulator: Map<string, CouponAccumEntry>;
@@ -1220,6 +1225,7 @@ async function createOrderForGroup(
 
   // Add-ons are this store's choice, not the cart's — see OrderGroupContext.
   const {
+    whatsappNotifyAddon = false,
     giftWrapAddon = false,
     giftWrapMessage,
     shipmentProtectionAddon = false,
@@ -1388,6 +1394,7 @@ async function createOrderForGroup(
   // total — not deducted from the deposit/remaining split above.
   const codHandlingFee =
     paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+  const whatsappNotifyFee = computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
   const giftWrapFee = computeGiftWrapFee(giftWrapAddon, commissions);
   /*
    * ── C5e: all three protection tiers, enforced SERVER-SIDE ────────────────
@@ -1587,7 +1594,7 @@ async function createOrderForGroup(
      * drifts from the sum of the lines shown beside it.
      */
     roundRupees(
-      Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + sharedQuote.total,
+      Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (emiSchedule?.surchargeAmount ?? 0) + sharedQuote.total,
     );
 
   /*
@@ -1810,6 +1817,8 @@ async function createOrderForGroup(
      * one so a later reader does not have to reconstruct it.
      */
     platformFeeGst: !adminBypass && platformFeeGst > 0 ? platformFeeGst : undefined,
+    whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0 ? true : undefined,
+    whatsappNotifyFee: !adminBypass && whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
     giftWrapAddon: !adminBypass && giftWrapFee > 0 ? true : undefined,
     giftWrapFee: !adminBypass && giftWrapFee > 0 ? giftWrapFee : undefined,
     giftWrapMessage: !adminBypass && giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
@@ -1962,6 +1971,7 @@ async function createOrderForGroup(
     productLabel:
       orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: adminBypass,
+    whatsappNotifyAddon: !adminBypass && whatsappNotifyFee > 0,
   });
 
   return groupTotal;
@@ -2598,6 +2608,7 @@ export interface CheckoutPricingPreviewStore {
   subtotal: number;
   shippingFee: number;
   codHandlingFee: number;
+  whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
@@ -2667,6 +2678,7 @@ export interface CheckoutPricingPreview {
   subtotal: number;
   shippingFee: number;
   codHandlingFee: number;
+  whatsappNotifyFee: number;
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
@@ -2737,6 +2749,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   subtotal: 0,
   shippingFee: 0,
   codHandlingFee: 0,
+  whatsappNotifyFee: 0,
   giftWrapFee: 0,
   shipmentProtectionFee: 0,
   saleProtectionFee: 0,
@@ -2919,6 +2932,7 @@ export async function previewCheckoutPricing(
      * rather than one number the buyer has to interpret.
      */
     const groupEmiDeferred = groupEmiPreviewQuote?.remainingBalance ?? 0;
+    const groupWhatsappFee = computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissions);
     const groupGiftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissions);
     /*
      * C5e — the same three tiers `createOrderForGroup` enforces, so the figure
@@ -3038,6 +3052,7 @@ export async function previewCheckoutPricing(
       codHandlingFee: groupCodHandlingFee,
       emiSurcharge: groupEmiSurcharge,
       emiDeferred: groupEmiDeferred,
+      whatsappNotifyFee: groupWhatsappFee,
       giftWrapFee: groupGiftWrapFee,
       shipmentProtectionFee: groupShipmentProtectionFee,
       saleProtectionFee: groupSaleProtectionFee,
@@ -3057,6 +3072,7 @@ export async function previewCheckoutPricing(
         groupShippingFee +
         groupCodHandlingFee +
         groupEmiSurcharge +
+        groupWhatsappFee +
         groupGiftWrapFee +
         groupShipmentProtectionFee +
         groupSaleProtectionFee +
@@ -3082,6 +3098,7 @@ export async function previewCheckoutPricing(
   const codHandlingFee = sum((s) => s.codHandlingFee);
   const emiSurcharge = sum((s) => s.emiSurcharge);
   const emiDeferred = sum((s) => s.emiDeferred);
+  const whatsappNotifyFeeTotal = sum((s) => s.whatsappNotifyFee);
   const giftWrapFeeTotal = sum((s) => s.giftWrapFee);
   const shipmentProtectionFeeTotal = sum((s) => s.shipmentProtectionFee);
   const saleProtectionFeeTotal = sum((s) => s.saleProtectionFee);
@@ -3132,6 +3149,7 @@ export async function previewCheckoutPricing(
     shippingFee +
     codHandlingFee +
     emiSurcharge +
+    whatsappNotifyFeeTotal +
     giftWrapFeeTotal +
     shipmentProtectionFeeTotal +
     saleProtectionFeeTotal +
@@ -3196,6 +3214,7 @@ export async function previewCheckoutPricing(
     codHandlingFee,
     emiSurcharge,
     emiDeferred,
+    whatsappNotifyFee: whatsappNotifyFeeTotal,
     giftWrapFee: giftWrapFeeTotal,
     shipmentProtectionFee: shipmentProtectionFeeTotal,
     saleProtectionFee: saleProtectionFeeTotal,
@@ -3645,6 +3664,7 @@ async function createPhonePeGroupOrder(
   // cart-wide fee was passed in and billed against every group.
   const commissionRates = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
   const addons = storeAddons?.[firstItem.storeId] ?? {};
+  const whatsappNotifyFee = computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissionRates);
   const giftWrapFee = computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates);
   const giftWrapMessage = addons.giftWrapMessage;
   /*
@@ -3761,7 +3781,7 @@ async function createPhonePeGroupOrder(
   // D42: rounded once on the sum — see the COD/UPI path's 🛑 for why a raw
   // float sum of seven 2dp terms reached Firestore as 1011.8000000000001.
   const orderTotal = roundRupees(
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (phonepeEmiSchedule?.surchargeAmount ?? 0) + phonepeSharedQuote.total,
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + whatsappNotifyFee + giftWrapFee + shipmentProtectionFee + saleProtectionFee + platformFee + platformFeeGst + (phonepeEmiSchedule?.surchargeAmount ?? 0) + phonepeSharedQuote.total,
   );
 
   /*
@@ -3922,6 +3942,8 @@ async function createPhonePeGroupOrder(
     // leaving the refund path to re-derive it from live percentages (D32).
     platformFeeGst: platformFeeGst > 0 ? platformFeeGst : undefined,
     shippingFee: shippingFee > 0 ? shippingFee : undefined,
+    whatsappNotifyAddon: whatsappNotifyFee > 0 ? true : undefined,
+    whatsappNotifyFee: whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
     giftWrapAddon: giftWrapFee > 0 ? true : undefined,
     giftWrapFee: giftWrapFee > 0 ? giftWrapFee : undefined,
     giftWrapMessage: giftWrapFee > 0 ? giftWrapMessage?.slice(0, 500) : undefined,
@@ -4030,6 +4052,7 @@ async function createPhonePeGroupOrder(
     productLabel:
       orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: true,
+    whatsappNotifyAddon: whatsappNotifyFee > 0,
   });
 
   return orderTotal;
@@ -4518,6 +4541,7 @@ export async function verifyAndPlaceGatewayOrderAction(
       );
       return (
         sum +
+        computeWhatsAppNotifyFee(addons.whatsappNotifyAddon ?? false, commissionRates) +
         computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates) +
         computeShipmentProtectionFee(groupSubtotal, addons.shipmentProtectionAddon ?? false, commissionRates)
       );

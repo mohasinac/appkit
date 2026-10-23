@@ -105,6 +105,7 @@ export async function issuePartialRefund(
       : `Your full refund of ₹${grossRefund} is being processed.`,
     relatedId: orderId,
     relatedType: "order",
+    orderWhatsappAddonPaid: order.whatsappNotifyAddon === true,
   });
 
   serverLogger.info("Admin partial refund initiated", {

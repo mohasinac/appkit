@@ -28,6 +28,8 @@ import type { EmiSettings } from "../emi/schedule";
  * and each `compute*Fee` helper carries its own default.
  */
 export interface BuyerFacingFees {
+  whatsappNotifyFeeEnabled?: boolean;
+  whatsappNotifyFee?: number;
   giftWrapFeeEnabled?: boolean;
   giftWrapFee?: number;
   shipmentProtectionFeeEnabled?: boolean;
@@ -82,6 +84,8 @@ export function toBuyerFacingFees(
 ): BuyerFacingFees | null {
   if (!commissions) return null;
   return {
+    whatsappNotifyFeeEnabled: commissions.whatsappNotifyFeeEnabled,
+    whatsappNotifyFee: commissions.whatsappNotifyFee,
     giftWrapFeeEnabled: commissions.giftWrapFeeEnabled,
     giftWrapFee: commissions.giftWrapFee,
     shipmentProtectionFeeEnabled: commissions.shipmentProtectionFeeEnabled,

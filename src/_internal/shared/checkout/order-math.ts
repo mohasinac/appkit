@@ -521,7 +521,7 @@ export interface PayableOrderLike {
  * money bug in all four payout paths (`autoPayoutEligibility`,
  * `weeklyPayoutEligibility`, and both `seller-actions` entry points). That
  * field is the GRAND TOTAL — `checkout/actions.ts` builds it as
- * `goods − coupon + shipping + codHandling + giftWrap +
+ * `goods − coupon + shipping + codHandling + whatsappNotify + giftWrap +
  * shipmentProtection + platformFee + platformFeeGst + emiSurcharge + gstAmount`
  * — so using it as the payout base did three wrong things at once:
  *

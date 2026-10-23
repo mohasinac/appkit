@@ -1,5 +1,5 @@
 /**
- * Circuit breaker for outbound notification channels.
+ * Circuit breaker for outbound notification channels (email, WhatsApp).
  *
  * Persisted as a singleton Firestore doc `system/channelHealth` so the
  * "is this channel currently known-bad" state survives across requests and
@@ -15,9 +15,11 @@ import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring";
 
 /**
- * Email is the only outbound *notification* channel with a transport.
- * "whatsapp" was the other arm until 2026-10-20, when the Cloud API
- * integration was removed.
+ * Email and WhatsApp are the outbound *notification* channels with a
+ * transport. The WhatsApp arm was removed 2026-10-20 with the Cloud API
+ * integration and restored 2026-10-23; it stays inert until
+ * `siteSettings.whatsapp.enabled` is on AND a number is registered on the
+ * Cloud API, so a breaker on it reports a channel nobody is using until then.
  *
  * ## 🛑 Phase 8 widened this to the RECONCILERS' reads — and only those
  *
@@ -41,7 +43,7 @@ import { serverLogger } from "../../../monitoring";
  * backing off costs only freshness. Anything that moves money is not a reader
  * and does not belong in this union.
  */
-export type NotificationChannel = "email" | "razorpay_read" | "shiprocket_read";
+export type NotificationChannel = "email" | "whatsapp" | "razorpay_read" | "shiprocket_read";
 
 interface ChannelHealthState {
   consecutiveFailures: number;
@@ -113,7 +115,7 @@ function delay(ms: number): Promise<void> {
 /**
  * Runs `fn` up to 3 times (500ms then 1.5s between attempts) and records the
  * final outcome against the channel's health state. `fn` must throw on
- * failure — for a helper that returns a boolean instead (e.g. a sender
+ * failure — for a helper that returns a boolean instead (e.g. the WhatsApp
  * Cloud API helpers), convert `false` into a thrown error at the call site
  * before passing it in.
  */

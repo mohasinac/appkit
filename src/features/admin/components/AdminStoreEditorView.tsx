@@ -123,7 +123,9 @@ const CAPABILITY_META: Record<
   api_access: { group: CAP_GROUP.PLATFORM, label: "API Access" },
   lower_commission_rate: { group: CAP_GROUP.PLATFORM, label: "Lower Commission Rate" },
   early_access_features: { group: CAP_GROUP.PLATFORM, label: "Early Access Features" },
-  advanced_analytics: { group: CAP_GROUP.PLATFORM, label: "Advanced Analytics" },};
+  advanced_analytics: { group: CAP_GROUP.PLATFORM, label: "Advanced Analytics" },
+  whatsapp_catalog_sync: { group: CAP_GROUP.PLATFORM, label: "WhatsApp Catalog Sync" },
+};
 
 const CAPABILITY_GROUP_ORDER: CapabilityGroupKey[] = [
   CAP_GROUP.LISTINGS,

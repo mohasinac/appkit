@@ -411,6 +411,7 @@ export const DEFAULT_ROUTE_MAP = {
     ADDRESSES_NEW: "/store/addresses/new",
     ADDRESSES_EDIT: (id: string) => `/store/addresses/${id}/edit`,
     OFFERS: "/store/offers",
+    WHATSAPP: "/store/whatsapp",
     REVIEWS: "/store/reviews",
     BIDS: "/store/bids",
     BID_DETAIL: (id: string) => `/store/bids/${id}/view`,
@@ -480,6 +481,7 @@ export const DEFAULT_ROUTE_MAP = {
     GUIDE_FINANCE: "/store/guide/finance",
     GUIDE_CAPABILITIES: "/store/guide/capabilities",
     GUIDE_SETTINGS: "/store/guide/settings",
+    GUIDE_WHATSAPP: "/store/guide/whatsapp",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
@@ -743,6 +745,7 @@ export const DEFAULT_ROUTE_MAP = {
     GUIDE_TEAM: "/admin/guide/team",
     GUIDE_ANALYTICS: "/admin/guide/analytics",
     GUIDE_TRUST: "/admin/guide/trust",
+    GUIDE_WHATSAPP: "/admin/guide/whatsapp",
     GUIDE_PAYMENTS: "/admin/guide/payments",
     BANNED_ADDRESSES: "/admin/banned-addresses",
     ADDRESS_CLUSTERS: "/admin/address-clusters",

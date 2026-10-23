@@ -13,13 +13,14 @@ import { formatCurrency } from "../../../utils/number.formatter";
  * Paid add-on checkboxes for ONE store.
  *
  * Add-on fees are billed per order group (= per store), so they are chosen per
- * store: ticking "gift wrap" for one seller must not bill it for every
+ * store: ticking "WhatsApp updates" for one seller must not bill it for every
  * seller in the cart. Rendered inside that store's card in the cart, and inside
  * that store's row of the checkout summary — Buy Now skips the cart entirely,
  * so both surfaces have to be able to edit them.
  */
 
 export interface StoreAddonsValue {
+  whatsappNotifyAddon?: boolean;
   giftWrapAddon?: boolean;
   giftWrapMessage?: string;
   shipmentProtectionAddon?: boolean;
@@ -28,6 +29,8 @@ export interface StoreAddonsValue {
 
 /** The subset of `siteSettings.commissions` that gates and prices the add-ons. */
 export interface StoreAddonsRates {
+  whatsappNotifyFeeEnabled?: boolean;
+  whatsappNotifyFee?: number;
   giftWrapFeeEnabled?: boolean;
   giftWrapFee?: number;
   shipmentProtectionFeeEnabled?: boolean;
@@ -70,7 +73,7 @@ export interface StoreProtectionContext {
  * showing an explanatory line instead.
  *
  * 🛑 Deliberately asks only about TIER 1. A seller who supports neither
- * protection still has gift wrap, and a store whose only
+ * protection still has WhatsApp updates and gift wrap, and a store whose only
  * enabled add-ons are protections it declined must still render the picker —
  * because that is where the risk notice lives, and a hidden notice is the
  * tri-state failure in § `StoreProtectionContext`.
@@ -79,6 +82,7 @@ export function hasAnyStoreAddon(rates: StoreAddonsRates | null | undefined): bo
   return (
     !!rates &&
     !!(
+      rates.whatsappNotifyFeeEnabled ||
       rates.giftWrapFeeEnabled ||
       rates.shipmentProtectionFeeEnabled ||
       rates.saleProtectionFeeEnabled
@@ -160,6 +164,21 @@ export function StoreAddonsPicker({
         <Text size="xs" color="muted">
           {disabledReason}
         </Text>
+      )}
+
+      {rates.whatsappNotifyFeeEnabled && (
+        <Row gap="sm" align="start" className="min-w-0">
+          <IconBox size="sm" tone="brand"><MessageCircle size={14} /></IconBox>
+          <Div className="flex-1 min-w-0">
+            <FieldCheckbox
+              name={`whatsappNotifyAddon-${storeId}`}
+              label={`WhatsApp order updates (+${money(rates.whatsappNotifyFee ?? 10)})`}
+              checked={!!value.whatsappNotifyAddon}
+              onChange={(checked) => set({ whatsappNotifyAddon: checked })}
+              disabled={disabled}
+            />
+          </Div>
+        </Row>
       )}
 
       {rates.giftWrapFeeEnabled && (

@@ -74,6 +74,12 @@ export async function FeesView({
       note: t("codHandlingFeeNote"),
     },
     {
+      category: t("whatsappNotifyFeeTitle"),
+      rate: t("whatsappNotifyFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("whatsappNotifyFeeNote"),
+    },
+    {
       category: t("giftWrapFeeTitle"),
       rate: t("giftWrapFeeRate"),
       who: t("paidByBuyer"),

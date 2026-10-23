@@ -18,10 +18,6 @@ import {
 } from "../../../_internal/shared/features/notifications/action-url";
 import { isEmailEligible } from "../../../_internal/shared/features/notifications/email-eligibility";
 import { renderNotificationEmail } from "../../email/notification-templates";
-import {
-  DEFAULT_NOTIFICATION_CHANNELS,
-  meetsMinPriority,
-} from "../schemas/firestore";
 
 /**
  * A notification's `actionUrl` is a site-relative path — correct for the
@@ -42,6 +38,62 @@ function absoluteActionUrl(path: string | undefined): string | undefined {
   if (/^https?:\/\//i.test(path)) return path;
   const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "");
   return base ? `${base}${path}` : path;
+}
+import {
+  DEFAULT_NOTIFICATION_CHANNELS,
+  meetsMinPriority,
+} from "../schemas/firestore";
+
+/**
+ * Notification types whose WhatsApp send is gated behind the buyer's
+ * per-order ₹10 WhatsApp-updates addon (`OrderDocument.whatsappNotifyAddon`)
+ * — see `orderWhatsappAddonPaid` on `SendNotificationInput`. Every other
+ * type (bid_won, offers, scam reports, support tickets, admin alerts, …)
+ * keeps the original two-gate behavior (admin channel enabled + user hasn't
+ * opted out) unchanged.
+ */
+const ORDER_GATED_TYPES = new Set([
+  "order_placed",
+  "order_confirmed",
+  "order_shipped",
+  "order_delivered",
+  "order_cancelled",
+  "refund_initiated",
+]);
+
+/**
+ * Notification type → the flat `SiteSettingsCredentials` field holding its
+ * approved Meta template name.
+ *
+ * 🛑 **`Partial` here is CORRECT and is not the `typeToPrefsKey` mistake.**
+ *
+ * The distinction is what a missing key MEANS. A missing `typeToPrefsKey`
+ * entry silently ignored a user's opt-out — a real setting that read as
+ * honoured and was not. A missing entry here means "no Meta-approved template
+ * exists for this type", which is a fact about the Meta account, not a bug:
+ * six of the 28 types have one, and the rest legitimately fall back to
+ * free-form (which Meta accepts inside the 24-hour customer-service window
+ * and rejects outside it — the runner already logs that rejection).
+ *
+ * Getting six approved templates is a Meta Business review process, not a
+ * code change, so listing all 28 here with empty values would be a
+ * `Record<…>` that lies about coverage.
+ *
+ * The six that ARE approved are the order lifecycle, which is also the set
+ * gated behind the buyer's ₹10 addon above — the two lists agree on purpose.
+ */
+const WHATSAPP_TEMPLATE_FIELD: Partial<Record<string, keyof SiteSettingsCredentials>> = {
+  order_placed: "whatsappTemplateOrderPlaced",
+  order_confirmed: "whatsappTemplateOrderConfirmed",
+  order_shipped: "whatsappTemplateOrderShipped",
+  order_delivered: "whatsappTemplateOrderDelivered",
+  order_cancelled: "whatsappTemplateOrderCancelled",
+  refund_initiated: "whatsappTemplateRefundInitiated",
+};
+
+function resolveWhatsAppTemplateName(type: string, creds: SiteSettingsCredentials): string {
+  const field = WHATSAPP_TEMPLATE_FIELD[type];
+  return (field ? creds[field] : undefined)?.trim() ?? "";
 }
 
 export async function markNotificationRead(id: string): Promise<void> {
@@ -78,8 +130,12 @@ export async function getUnreadNotificationCount(userId: string): Promise<number
 export interface SendNotificationInput extends NotificationCreateInput {
   /** User's email — used by the email channel when enabled. */
   userEmail?: string;
+  /** User's phone with country code, digits only — used by WhatsApp channel. */
+  userPhone?: string;
   /** Pre-rendered email HTML — falls back to a plain-text <p> when absent. */
   emailHtml?: string;
+  /** Buyer paid the ₹10 WhatsApp order-updates addon — enables WhatsApp channel for this notification even when the user has no standing WhatsApp subscription. */
+  orderWhatsappAddonPaid?: boolean;
   /**
    * Which portal the recipient reads this in — decides where `actionUrl`
    * points when the caller does not supply one.
@@ -117,22 +173,24 @@ export interface SendNotificationInput extends NotificationCreateInput {
 export interface SendNotificationResult {
   notification: NotificationDocument;
   email: "sent" | "skipped" | "failed";
+  /** WhatsApp dispatch is now async (enqueued as a `whatsappNotify` job) — "queued" replaces "sent" as the immediate outcome; the real delivery result lands on `notification.whatsappStatus`. */
+  whatsapp: "queued" | "skipped" | "failed";
 }
 
 /**
  * Create an in-app notification and fan out to enabled external channels.
  *
- * In-app is always written. Email is sent only when:
+ * In-app is always written.  Email / WhatsApp are sent only when:
  *   1. The channel is enabled in siteSettings.notificationChannels
  *   2. Notification priority meets the channel's minPriority threshold
  *   3. The optional `types` filter includes this notification type (or is absent)
- *   4. The contact field (userEmail) is supplied by the caller
+ *   4. The contact field (userEmail / userPhone) is supplied by the caller
  *   5. The required credentials are set in siteSettings.credentials
  */
 export async function sendNotification(
   input: SendNotificationInput,
 ): Promise<SendNotificationResult> {
-  const { userEmail, emailHtml, audience, eligibilityOverride, ...notifInput } = input;
+  const { userEmail, userPhone, emailHtml, audience, eligibilityOverride, ...notifInput } = input;
 
   /*
    * Fill `actionUrl` when the caller did not.
@@ -182,14 +240,14 @@ export async function sendNotification(
    * suppresses the emailed/messaged COPY, not the notification.
    *
    * One map gates both channels deliberately. If a type is ever genuinely
-   * worth a channel of its own, split the map then rather than
+   * WhatsApp-worthy but not email-worthy, split the map then rather than
    * loosening this early return.
    */
   if (
     !isEmailEligible(notifInput.type as NotificationType) &&
     eligibilityOverride !== "staff_requested"
   ) {
-    return { notification, email: "skipped" };
+    return { notification, email: "skipped", whatsapp: "skipped" };
   }
 
   // Load channel config + credentials (one Firestore read).
@@ -199,7 +257,7 @@ export async function sendNotification(
   } catch (err) {
     void normalizeError(err);
     serverLogger.warn("sendNotification: could not load siteSettings — skipping external channels", { err });
-    return { notification, email: "skipped" };
+    return { notification, email: "skipped", whatsapp: "skipped" };
   }
 
   const channels = settings.notificationChannels ?? DEFAULT_NOTIFICATION_CHANNELS;
@@ -207,7 +265,7 @@ export async function sendNotification(
   const { type, priority, title, message } = notifInput;
 
   // Load user notification preferences (best-effort — if missing, all channels allowed).
-  let userChannelPrefs: { email?: boolean; sms?: boolean } = {};
+  let userChannelPrefs: { email?: boolean; whatsapp?: boolean; sms?: boolean } = {};
   let userTypePrefs: NotificationTypePrefs = {};
   let fetchedUserDoc: Awaited<ReturnType<typeof userRepository.findById>> | undefined;
   try {
@@ -233,6 +291,7 @@ export async function sendNotification(
     ? userRepository.revealUser(fetchedUserDoc)
     : null;
   const resolvedEmail = userEmail ?? fetchedUserPlain?.email ?? undefined;
+  const resolvedPhone = userPhone ?? fetchedUserPlain?.phoneNumber ?? undefined;
 
   // Map NotificationType to a NotificationTypePrefs key.
   /*
@@ -296,7 +355,7 @@ export async function sendNotification(
   const typeKey = typeToPrefsKey[type as NotificationType];
   // If the user has explicitly disabled this notification type, skip all external channels.
   if (typeKey && userTypePrefs[typeKey] === false) {
-    return { notification, email: "skipped" };
+    return { notification, email: "skipped", whatsapp: "skipped" };
   }
 
   // Email channel — admin enabled AND user hasn't opted out
@@ -349,11 +408,57 @@ export async function sendNotification(
     }
   }
 
+  // WhatsApp channel — admin enabled AND user hasn't opted out AND (for
+  // order-lifecycle types) the buyer paid the per-order WhatsApp addon.
+  let whatsappStatus: SendNotificationResult["whatsapp"] = "skipped";
+  if (
+    channels.whatsapp.enabled &&
+    userChannelPrefs.whatsapp !== false &&
+    resolvedPhone &&
+    meetsMinPriority(priority, channels.whatsapp.minPriority) &&
+    (!channels.whatsapp.types?.length || channels.whatsapp.types.includes(type)) &&
+    (!ORDER_GATED_TYPES.has(type) || input.orderWhatsappAddonPaid === true)
+  ) {
+    const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";
+    const accessToken = creds.whatsappCloudApiToken?.trim() ?? "";
+    if (phoneNumberId && accessToken) {
+      try {
+        const { jobId } = await enqueueJob({
+          jobType: "whatsappNotify",
+          payload: {
+            toPhone: resolvedPhone,
+            title,
+            message,
+            type,
+            templateName: resolveWhatsAppTemplateName(type, creds),
+            templateLanguage: creds.whatsappTemplateLanguage ?? "en",
+            notificationId: notification.id,
+            phoneNumberId,
+            accessToken,
+          },
+          requestedBy: input.userId,
+        });
+        whatsappStatus = "queued";
+        await notificationRepository
+          .update(notification.id, { whatsappStatus: "queued", whatsappJobId: jobId } as never)
+          .catch((err: unknown) => {
+            void normalizeError(err);
+            serverLogger.warn("sendNotification: failed to write whatsappJobId onto notification doc", { notificationId: notification.id });
+          });
+      } catch (err) {
+        void normalizeError(err);
+        serverLogger.error("sendNotification: WhatsApp job enqueue failed", { userId: input.userId, err });
+        whatsappStatus = "failed";
+      }
+    }
+  }
+
   serverLogger.info("sendNotification: dispatched", {
     userId: input.userId,
     type,
     email: emailStatus,
+    whatsapp: whatsappStatus,
   });
 
-  return { notification, email: emailStatus };
+  return { notification, email: emailStatus, whatsapp: whatsappStatus };
 }

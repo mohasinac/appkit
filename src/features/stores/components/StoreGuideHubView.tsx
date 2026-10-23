@@ -50,7 +50,7 @@ const GUIDE_CARDS: GuideCard[] = [
   {
     Icon: Settings,
     title: "Settings",
-    description: "Store profile, shipping config, return policy, and vacation mode.",
+    description: "Store profile, shipping config, return policy, vacation mode, and WhatsApp integration.",
     href: String(ROUTES.STORE.GUIDE_SETTINGS),
   },
   {
@@ -58,6 +58,12 @@ const GUIDE_CARDS: GuideCard[] = [
     title: "Capabilities",
     description: "Admin-granted feature flags — auctions, pre-orders, lower commissions, and more.",
     href: String(ROUTES.STORE.GUIDE_CAPABILITIES),
+  },
+  {
+    Icon: MessageSquare,
+    title: "WhatsApp Catalog Sync",
+    description: "Push your product catalog to Meta Commerce Manager for WhatsApp, Facebook, and Instagram Shops.",
+    href: String(ROUTES.STORE.GUIDE_WHATSAPP),
   },
   {
     Icon: Headphones,

@@ -120,6 +120,7 @@ export const PRIVATE_STORE_FIELDS = [
   // hundred tokens.
   "searchTxt",
   "updatedAt", // bookkeeping; no public reader
+  "whatsappConfig", // Meta access token + WABA/catalog ids — secret
   "adminNotes", // schema comment: never shown to the owner or the public
   // Admin decisions with actor UIDs and suspension reasons. The store OWNER
   // sees this on their own admin surfaces; an anonymous visitor to /stores has

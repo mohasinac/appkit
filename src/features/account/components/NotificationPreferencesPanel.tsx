@@ -94,7 +94,7 @@ export function NotificationPreferencesPanel({
   const { data: settings } = useSiteSettings<SiteSettingsShape>();
   const adminChannels = settings?.notificationChannels;
 
-  const [channels, setChannels] = useState<NotificationChannelPrefs>({ email: true, sms: true });
+  const [channels, setChannels] = useState<NotificationChannelPrefs>({ email: true, whatsapp: true, sms: true });
   const [types, setTypes] = useState<NotificationTypePrefs>({
     orderUpdates: true, bids: true, promotions: true,
     system: true, reviews: true, messages: true, offers: true,
@@ -161,8 +161,9 @@ export function NotificationPreferencesPanel({
 
   // Which channels are admin-enabled (only show those toggles to the user)
   const emailAdminEnabled   = adminChannels?.email?.enabled ?? false;
+  const whatsappAdminEnabled = adminChannels?.whatsapp?.enabled ?? false;
   const smsAdminEnabled     = adminChannels?.sms?.enabled ?? false;
-  const anyChannelEnabled   = emailAdminEnabled || smsAdminEnabled;
+  const anyChannelEnabled   = emailAdminEnabled || whatsappAdminEnabled || smsAdminEnabled;
 
   return (
     <Stack gap="lg">
@@ -190,6 +191,14 @@ export function NotificationPreferencesPanel({
               description="Receive notifications by email"
               checked={channels.email !== false}
               onChange={(v) => setChannel("email", v)}
+            />
+          )}
+          {whatsappAdminEnabled && (
+            <ToggleRow
+              label="WhatsApp"
+              description="Receive notifications on WhatsApp"
+              checked={channels.whatsapp !== false}
+              onChange={(v) => setChannel("whatsapp", v)}
             />
           )}
           {smsAdminEnabled && (

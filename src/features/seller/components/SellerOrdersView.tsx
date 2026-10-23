@@ -224,8 +224,10 @@ interface OrderDetail {
   paymentReviewOutcome?: string;
   createdAt?: JsonValue;
   // Fulfilment flags — the seller has to act on all three, not just gift wrap:
-  // Gift wrap changes how the parcel is packed, protection changes how a
+  // WhatsApp changes how status updates go out, protection changes how a
   // loss claim is handled.
+  whatsappNotifyAddon?: boolean;
+  whatsappNotifyFee?: number;
   giftWrapAddon?: boolean;
   giftWrapFee?: number;
   giftWrapMessage?: string;
