@@ -3,7 +3,7 @@
 import type { OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
-import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
+import { sieveFilter, SIEVE_OP, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -115,10 +115,20 @@ function toOrderItemRows(item: ListingItemRecord): AdminOrderItemRow[] {
  * cast true instead of hopeful. `as unknown as OrderSourceContext` would
  * assert exactly the same thing while checking nothing (Root Cause #98).
  */
-function toSourceContext(value: unknown): OrderSourceContext | undefined {
+function toSourceContext(value: JsonValue | undefined): OrderSourceContext | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
-  return typeof (value as { path?: unknown }).path === "string"
-    ? (value as OrderSourceContext)
+  /*
+   * Via `object` rather than straight off the JsonValue union, for two
+   * reasons that pull the same way. `Array.isArray` does not narrow
+   * `JsonArray | JsonObject` apart, so `value.path` does not resolve; and
+   * `OrderSourceContext` is not assignable to `JsonObject` (its optional
+   * members admit `undefined`, which is not a JsonValue), so TS refuses that
+   * conversion outright. Probing as `{ path?: string }` keeps both the probe
+   * and the assertion legal without an `unknown` anywhere.
+   */
+  const obj: object = value;
+  return typeof (obj as { path?: string }).path === "string"
+    ? (obj as OrderSourceContext)
     : undefined;
 }
 
