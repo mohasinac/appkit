@@ -53,18 +53,23 @@ export interface DestinationCheck {
  * evidence that a pincode cannot be served, and refusing on it would block a
  * legitimate purchase on an outage we caused. The booking itself will fail
  * loudly if the address really is unservable, which is the recoverable
- * direction.
+ * direction — and it is the same reasoning `bookShipment` applies to a wallet
+ * balance it could not read.
+ *
+ * A MISSING pincode is the opposite case and is reported unserviceable: that
+ * is a fact about the stored address, not about the provider, and it will not
+ * fix itself on a retry.
  */
 export async function checkDestinations(
   members: readonly CoordinationMember[],
   /**
    * 🛑 The parcel's weight in kg, NOT an origin pincode.
    *
-   * `IShippingProvider.checkServiceability(pincode, weight)` reads the pincode
-   * as the DESTINATION and the second argument as weight — a reasonable guess
-   * of `(origin, destination)` typechecks (both strings would not, but a
-   * number and a string are distinguishable) and would ask the carrier about
-   * the wrong thing entirely.
+   * `IShippingProvider.checkServiceability(pincode, weight)` reads its first
+   * argument as the DESTINATION. A reasonable guess of `(origin, destination)`
+   * would pass two strings into a `(string, number)` signature — caught by
+   * `tsc` here, but worth naming because the argument ORDER is the part a
+   * reader assumes.
    */
   weightKg: number,
 ): Promise<DestinationCheck[]> {
@@ -82,10 +87,16 @@ export async function checkDestinations(
 
   return Promise.all(
     ids.map(async (addressId, i) => {
+      /*
+       * 🛑 `.postalCode` needs no reveal — it is not PII and
+       * `AddressRepository` deliberately leaves it unencrypted so it stays
+       * queryable (see its own `computeAddressHash` comment). Calling
+       * `revealAddress` here would decrypt a name and a phone number we have
+       * no use for, on a path that only needs six digits.
+       */
       const pincode = docs[i]?.postalCode ?? "";
-      if (!pincode) {
-        return { addressId, pincode, serviceable: false };
-      }
+      if (!pincode) return { addressId, pincode, serviceable: false };
+
       try {
         const res = await provider.checkServiceability(pincode, weightKg);
         return { addressId, pincode, serviceable: res.isServiceable };
@@ -116,4 +127,34 @@ export function assertAllServiceable(checks: readonly DestinationCheck[]): void 
         .join("; "),
     },
   );
+}
+
+/**
+ * The parcels one coordinated order produces.
+ *
+ * 🛑 **Keyed by ADDRESS, not by member.** Two members naming the same address
+ * are one parcel, not two — that is the whole reason `destinationIds` returns
+ * a distinct set. Fanning out per member would book the courier twice to the
+ * same door and bill for both.
+ *
+ * 🛑 **A member with no `destinationAddressId` is NOT in this list.** Absent
+ * means "the coordinator's address", which is the ordinary one-parcel case
+ * and is handled by `bookShipment`'s existing single-delivery path — the
+ * order's own snapshot. Inventing a parcel for them here would duplicate it.
+ */
+export interface ParcelPlan {
+  addressId: string;
+  /** Members whose share rides in this parcel. Never empty. */
+  memberUids: string[];
+}
+
+export function planParcels(members: readonly CoordinationMember[]): ParcelPlan[] {
+  const byAddress = new Map<string, string[]>();
+  for (const m of members) {
+    if (!m.destinationAddressId) continue;
+    const uids = byAddress.get(m.destinationAddressId);
+    if (uids) uids.push(m.uid);
+    else byAddress.set(m.destinationAddressId, [m.uid]);
+  }
+  return [...byAddress].map(([addressId, memberUids]) => ({ addressId, memberUids }));
 }

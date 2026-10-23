@@ -8,6 +8,12 @@
 import { serverLogger } from "../../../monitoring";
 import { offerRepository } from "../repository/offer.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { categoriesRepository } from "../../categories/repository/categories.repository";
+import { resolveParcel } from "../../../_internal/shared/features/shipping/parcel";
+import {
+  checkDestinations,
+  assertAllServiceable,
+} from "../../../_internal/server/features/shipping/book-split";
 import { ProductStatusValues } from "../../products/schemas";
 import { sendNotification } from "../../admin/actions/notification-actions";
 import { userRepository } from "../../auth/repository/user.repository";
@@ -266,6 +272,60 @@ export async function respondToOffer(
   let updated: OfferDocument;
 
   if (action === "accept") {
+    /*
+     * ── S5a: a coordinated offer must be SHIPPABLE before it is binding ──
+     *
+     * Accepting locks a price and starts the buyer's checkout deadline, so it
+     * is the last moment at which "the courier cannot reach one of these
+     * addresses" costs nobody anything. After it, the coordinator has paid
+     * and the only remedies left are a refund and an apology.
+     *
+     * 🛑 Deliberately NOT at booking time, which is the obvious place and the
+     * wrong one: by then the money is taken, and a four-destination order
+     * that fails on the fourth has three parcels the carrier already accepted
+     * and no rollback. `assertAllServiceable` still guards the booking path —
+     * this is the check that keeps it from ever being reached in that state.
+     *
+     * 🛑 Costs NOTHING on an ordinary offer. `coordination` is absent on
+     * every non-coordinated one, so this whole block is skipped — a check
+     * that charges every seller for a feature most never use is how Rule #6's
+     * round-trip budget gets spent by accident.
+     *
+     * 🛑 The weight comes from `resolveParcel`, NOT from a literal. That
+     * module's whole argument is that an item weight systematically
+     * under-estimates a packed box (a bey is ~30 g loose and ~300 g boxed),
+     * and a hard-coded `1` here would be a fourth, worse tier beside the
+     * three it defines. The shipment tier is deliberately absent — nothing is
+     * packed yet at accept time, which is exactly the case tier two and three
+     * exist for.
+     *
+     * 🛑 **No resolvable weight SKIPS the check** rather than guessing one.
+     * The carrier is being asked "can you reach this pincode with a parcel of
+     * this size", so an invented weight asks a question about a parcel that
+     * does not exist and may refuse a destination that is perfectly
+     * reachable. Not checking is honest; the booking path still has
+     * `assertAllServiceable`, and a listing with no weight at any tier has a
+     * data problem this is not the place to report.
+     */
+    const members = offer.coordination?.members ?? [];
+    if (members.length > 0) {
+      const offerProduct = await productRepository.findById(offer.productId);
+      /*
+       * 🛑 `categorySlugs[0]` is the LEAF, and `findById` is the right lookup
+       * for it. Products carry the full ancestor chain `[leaf, …, root]` and
+       * categories are pure slugs (`id === slug`), so this is one get rather
+       * than the `where("slug","==")` query `findBySlugAndType` would run —
+       * and the leaf is the tier whose packed default is actually about this
+       * kind of item. A root's default would be the average of the catalogue.
+       */
+      const leafSlug = offerProduct?.categorySlugs?.[0];
+      const leaf = leafSlug ? await categoriesRepository.findById(leafSlug) : null;
+      const parcel = resolveParcel(null, offerProduct, leaf?.productDefaults ?? null);
+      if (parcel) {
+        assertAllServiceable(await checkDestinations(members, parcel.weightG / 1000));
+      }
+    }
+
     updated = await offerRepository.accept(
       offerId,
       offer.offerAmount,

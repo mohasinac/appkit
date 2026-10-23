@@ -2577,6 +2577,23 @@ export {
   type OfferCoordination,
 } from "./_internal/shared/features/offers/coordination";
 export { assertOwnedAddresses } from "./_internal/server/features/offers/destinations";
+/*
+ * S5a — N destinations is N parcels, so N carrier quotes.
+ *
+ * 🛑 `checkDestinations` + `assertAllServiceable` are a PRE-FLIGHT and are
+ * exported as a pair for that reason: booking as you go and failing on the
+ * fourth leaves three parcels the carrier has already accepted and the
+ * coordinator cannot undo. It is not a transaction — a booking has no
+ * rollback — it just moves the common failure to the point where rolling
+ * back is still free.
+ */
+export {
+  checkDestinations,
+  assertAllServiceable,
+  planParcels,
+  type DestinationCheck,
+  type ParcelPlan,
+} from "./_internal/server/features/shipping/book-split";
 
 /*
  * [SERVER-ONLY] Part 14 — the delivery snapshot and its corrections.
