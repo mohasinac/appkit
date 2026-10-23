@@ -163,6 +163,22 @@ export interface ProductDetailPageViewProps {
    * Available" feature badge.
    */
   emiEnabled?: boolean;
+  /**
+   * Site-wide returns availability (`siteSettings.returns.windowDays > 0`),
+   * threaded from the page's data layer. Drives the "Returnable" badge.
+   *
+   * 🛑 A SITE feature gate, not a product attribute. The badge used to read
+   * `returnable={!finalSale}` — purely the product's own flag — so a platform
+   * with returns switched off still promised "Returnable" on every listing
+   * that was not a final sale. Same shape as the COD gate beside it: the
+   * product may carry the attribute, and we simply do not advertise it while
+   * the feature is off. Nothing is written to the product.
+   *
+   * Defaults to `true` when omitted so the two detail views that do not thread
+   * site settings keep their current behaviour rather than silently losing a
+   * badge they were correctly showing.
+   */
+  returnsEnabled?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -212,6 +228,7 @@ export async function ProductDetailPageView({
   productFeatures,
   codEnabled,
   emiEnabled,
+  returnsEnabled = true,
 }: ProductDetailPageViewProps) {
   // Use pre-fetched data when available to avoid a redundant repository call.
   // The page layer wraps getProductForDetail in React.cache(), so both
@@ -770,7 +787,7 @@ export async function ProductDetailPageView({
                 emiAvailable={emiEnabled === true}
                 emiHref={String(ROUTES.PUBLIC.HOW_EMI_WORKS)}
                 condition={condition ?? undefined}
-                returnable={!finalSale}
+                returnable={!finalSale && returnsEnabled}
                 finalSale={finalSale}
                 labels={{
                   featured: "Featured",
