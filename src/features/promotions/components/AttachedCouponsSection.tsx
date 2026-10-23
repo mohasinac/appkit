@@ -130,14 +130,14 @@ export function AttachedCouponsSection({
         {coupons.map((coupon) => {
           const summary = summarise(coupon);
           const conditions = conditionsOf(coupon);
+          /*
+           * `surface="card"` already carries the border, radius and shadow —
+           * adding `border=` / `rounded=` beside it emits a second, competing
+           * set of utilities, and with `important: true` in both Tailwind
+           * configs the winner is decided by emission order rather than by
+           * anything readable here (Root Cause #79).
+           */
           return (
-            {/*
-              `surface="card"` already carries the border, radius and shadow —
-              adding `border=` / `rounded=` beside it emits a second, competing
-              set of utilities, and with `important: true` in both Tailwind
-              configs the winner is decided by emission order rather than by
-              anything readable here (Root Cause #79).
-            */}
             <Div key={coupon.id} surface="card" padding="card">
               <Stack gap="sm">
                 <Stack gap="xs">

@@ -325,6 +325,7 @@ const DEFAULT_DRAFT: EventDraft = {
   createdBy: "",
   allowGuestParticipation: false,
   isPinned: false,
+  couponIds: [],
   discountPercent: "10",
   saleBannerText: "",
   couponId: "",
