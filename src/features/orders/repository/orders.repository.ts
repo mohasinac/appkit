@@ -417,10 +417,11 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         reason: ctx?.reason,
         note: ctx?.note,
         extraChanges: ctx?.extraChanges,
-        // `encryptPiiFields` is a flat top-level loop and never descends into
-        // arrays, so anything PII-named reaching `changes` would persist in
-        // PLAINTEXT inside statusHistory. None of ORDER_TRACKED_FIELDS is PII
-        // today — this is defence for the next field somebody adds.
+        // `encryptPiiFields` covers a field only where it is NAMED, so a
+        // PII-named value reaching `changes` is plaintext unless somebody
+        // declared `statusHistory[].changes.<that key>` — which nobody will.
+        // The scrub removes the guesswork. None of ORDER_TRACKED_FIELDS is PII
+        // today; this is defence for the next field somebody adds.
         piiFields: ORDER_PII_FIELDS,
         historyField: "statusHistory",
         truncatedField: "statusHistoryTruncated",

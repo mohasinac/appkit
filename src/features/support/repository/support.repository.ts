@@ -451,7 +451,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         trigger: ctx?.trigger ?? defaultTrigger,
         reason: ctx?.reason,
         note: ctx?.note,
-        // `encryptPiiFields` never descends into arrays, so a PII-named value
+        // `encryptPiiFields` covers only NAMED paths, so an undeclared PII-named value
         // reaching `changes` would persist in PLAINTEXT inside statusHistory.
         piiFields: SUPPORT_TICKET_PII_FIELDS,
       },

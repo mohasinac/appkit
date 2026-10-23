@@ -608,13 +608,17 @@ export interface OrderDocument extends BaseDocument {
    * 🛑 FLAT TOP-LEVEL KEYS, not a nested `deliveryAddress` object, and this is
    * the whole reason the shape looks clumsy.
    *
-   * `encryptPiiFields` is a flat top-level loop that never descends — the same
-   * trap § "Status History" documents for `statusHistory[].changes`, where a
-   * value named `buyerName` nested one level down would be stored in plaintext
-   * and never decrypted on the way back out. A nested object here would need
-   * the encryptor taught about nested paths, and an unencrypted nested field
-   * looks IDENTICAL to an encrypted one in every inspection. Flattening cannot
-   * silently half-apply.
+   * 🛑 The flattening argument CORRECTED. It read "`encryptPiiFields` is a
+   * flat top-level loop that never descends", which is false — it handles
+   * `a.b` and `a[].b` and has shipped `lastMessage.body` for a long time.
+   *
+   * The true argument is that the encryptor does not INFER: a nested field is
+   * covered only if its exact path is declared, the near-miss `"fullName"`
+   * reads as covering `delivery.fullName` and does not, and an unencrypted
+   * nested field looks IDENTICAL to an encrypted one in every inspection
+   * (both are `string`; `Encrypted<string>` is erased). Flat keys put each
+   * field's treatment in the list where a reviewer sees it — which also lets
+   * city/state/pincode stay queryable without a half-encrypted object.
    *
    * 🛑 These four are IMMUTABLE once written. They record what was chosen at
    * purchase, which is what the invoice states and what a dispute argues over.

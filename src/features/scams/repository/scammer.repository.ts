@@ -225,7 +225,8 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
           reason: ctx?.reason,
           note: ctx?.note,
           // A scammer profile is built entirely from identifying details, and
-          // `encryptPiiFields` never descends into arrays.
+          // `encryptPiiFields` covers a field only where it is NAMED. It CAN
+          // reach into an array via `array[].key`, but a bare key does not.
           piiFields: SCAMMER_HISTORY_PII_FIELDS,
         },
       );

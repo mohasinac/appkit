@@ -48,15 +48,23 @@ export const SHARED_PURCHASE_MAX_MEMBERS = 5;
  *
  * ## 🛑 There is deliberately NO member NAME field
  *
- * `encryptPiiFields` is a FLAT top-level loop that never descends into
- * arrays, so a `name` nested inside `coordination.members` would be written
- * to Firestore in PLAINTEXT and never decrypted on the way back out — the
- * same trap § "Status History" documents for `statusHistory[].changes`, where
- * it was closed by scrubbing rather than by convention.
+ * 🛑 **CORRECTED — the reason first given here was false.** It said
+ * `encryptPiiFields` *"is a FLAT top-level loop that never descends into
+ * arrays"*, taken from CLAUDE.md and wrong: the function handles dotted paths
+ * and `array[].key` via `encryptInArray`, and `CONVERSATION_PII_FIELDS` ships
+ * `"lastMessage.body"` in production.
  *
- * A member is a uid; names are resolved from it at render time. Anyone adding
- * `name` here must add it to `OFFER_PII_FIELDS` in the same change, and that
- * list does not reach into arrays either — so the real answer is: don't.
+ * The real argument is narrower and still decisive. The encryptor does not
+ * INFER — a field is protected only where it is NAMED, in notation matching
+ * the object the list is applied to. So a `name` here would need
+ * `"coordination.members[].name"` in `OFFER_PII_FIELDS`, and the near-miss
+ * `"name"` would read as covered in review while storing plaintext: both are
+ * `string`, and `Encrypted<string>` is erased at runtime.
+ *
+ * A member is a uid; names resolve from it at render time. That costs one
+ * lookup the renderer was making anyway and removes the field from the
+ * document entirely, which is stronger than encrypting it — there is nothing
+ * to classify, nothing to retain, and nothing to get the notation wrong for.
  */
 export interface CoordinationMember extends SplitContribution {
   /** Firebase Auth uid of the person chipping in. */

@@ -395,7 +395,9 @@ export class BidRepository extends BaseRepository<BidDocument> {
         reason: ctx?.reason,
         note: ctx?.note,
         // `userName`/`userEmail` are denormalised onto every bid, and
-        // `encryptPiiFields` never descends into arrays.
+        // `encryptPiiFields` covers a field only where it is NAMED. It CAN reach
+        // into an array via `array[].key`, but a bare key does not — so an
+        // undeclared nested value is stored in plaintext.
         piiFields: BID_HISTORY_PII_FIELDS,
       },
     );

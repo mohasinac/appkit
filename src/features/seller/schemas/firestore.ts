@@ -77,11 +77,12 @@ export interface OfferDocument extends BaseDocument {
    * `_internal/shared/features/offers/coordination.ts` for the full list of
    * things this deliberately does NOT add.
    *
-   * 🛑 No member NAME is stored in here. `encryptPiiFields` is a flat
-   * top-level loop that never descends into arrays, so a name nested inside
-   * `coordination.members` would sit in Firestore as plaintext and never be
-   * decrypted on the way out — the same trap § "Status History" documents.
-   * Members are uids; names are resolved at render time.
+   * 🛑 No member NAME is stored in here. `encryptPiiFields` CAN reach into an
+   * array (`coordination.members[].name`) — the claim that it cannot was
+   * wrong — but it covers only what is NAMED, and the near-miss `"name"`
+   * reads as covering it while storing plaintext. Members are uids; names
+   * resolve at render time, which removes the field rather than classifying
+   * it. See `coordination.ts`.
    */
   coordination?: OfferCoordination;
   /** Set by `markPaid` once the buyer's order exists — makes "paid" auditable. */
@@ -132,8 +133,9 @@ export interface OfferDocument extends BaseDocument {
 /**
  * Fields whose changes are recorded in an offer's `statusHistory`.
  *
- * Excludes `buyerName`/`buyerEmail` (PII — `encryptPiiFields` never descends
- * into arrays, so they would persist in plaintext inside the history),
+ * Excludes `buyerName`/`buyerEmail` (PII — nothing declares them under
+ * `statusHistory[].changes`, and `encryptPiiFields` covers only NAMED paths,
+ * so they would persist in plaintext inside the history),
  * `buyerNote`/`sellerNote` (they ride in the entry's `note`), and
  * `updatedAt`/`respondedAt` (noise that would burn the FIFO cap).
  */

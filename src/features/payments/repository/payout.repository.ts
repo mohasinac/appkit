@@ -319,8 +319,9 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
         trigger: ctx?.trigger ?? defaultTrigger,
         reason: ctx?.reason,
         note: ctx?.note,
-        // `sellerEmail` / `upiId` — `encryptPiiFields` never descends into
-        // arrays, so either reaching `changes` would persist in PLAINTEXT.
+        // `sellerEmail` / `upiId` — `encryptPiiFields` covers only NAMED paths,
+        // and nothing declares them under `statusHistory[].changes`, so either
+        // one reaching `changes` would persist in PLAINTEXT.
         piiFields: PAYOUT_PII_FIELDS,
       },
     );

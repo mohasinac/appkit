@@ -700,7 +700,8 @@ export const SCAMMER_TRACKED_FIELDS = [
 /**
  * PII on this document, for `withHistory`'s scrub. A scammer profile is built
  * ENTIRELY out of identifying details, so this list is long on purpose —
- * `encryptPiiFields` never descends into arrays, and history is an array.
+ * `encryptPiiFields` covers only NAMED paths, and nobody is going to declare
+ * `statusHistory[].changes.<key>` for every field that might land there.
  */
 export const SCAMMER_HISTORY_PII_FIELDS = [
   "name",

@@ -44,8 +44,8 @@
  * changes no tracked field, so it is contributed explicitly.
  *
  * `actorUid` is the only identity an entry may carry. Never a name or an
- * email: `encryptPiiFields` never descends into arrays, so PII inside
- * `statusHistory` would be stored in plaintext.
+ * email: `encryptPiiFields` covers only paths somebody NAMED, and nothing
+ * declares `statusHistory[].changes.<key>`, so PII in there is plaintext.
  *
  * EXPORTS:
  *   ordersSeedData — Array of 50 order documents with full transactional metadata

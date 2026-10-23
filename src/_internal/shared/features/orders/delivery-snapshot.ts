@@ -3,14 +3,18 @@
  *
  * ## 🛑 Why the fields are flat and ugly
  *
- * `encryptPiiFields` is a flat top-level loop that never descends. A nested
- * `deliveryAddress: { fullName, phone, … }` would be written to Firestore in
- * PLAINTEXT and never decrypted on the way back out — the same trap
- * § "Status History" documents for `statusHistory[].changes`, and the reason
- * `withHistory` takes an explicit `piiFields` scrub.
+ * 🛑 **CORRECTED.** This read "`encryptPiiFields` is a flat top-level loop
+ * that never descends", which is FALSE — it handles `a.b` and `a[].b` via
+ * `encryptInArray`, and `CONVERSATION_PII_FIELDS` ships `lastMessage.body`.
+ *
+ * What it does not do is INFER. A nested `deliveryAddress: {fullName, …}`
+ * is covered only if somebody writes `deliveryAddress.fullName` into
+ * `ORDER_PII_FIELDS`, and the near-miss `"fullName"` reads as covering it
+ * while storing plaintext.
  *
  * The decisive argument is not tidiness: **an unencrypted nested field looks
- * identical to an encrypted one in every inspection.** Flat keys cannot
+ * identical to an encrypted one in every inspection** — both are `string`,
+ * and `Encrypted<string>` is erased at runtime. Flat keys cannot
  * silently half-apply, because `ORDER_PII_FIELDS` either names them or does
  * not and the audit can see which.
  *

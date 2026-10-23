@@ -227,7 +227,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
         trigger: ctx?.trigger ?? defaultTrigger,
         reason: ctx?.reason,
         note: ctx?.note,
-        // `encryptPiiFields` never descends into arrays, so a nested secret
+        // `encryptPiiFields` covers only NAMED paths, so an undeclared nested secret
         // would be stored in plaintext — the list below is the scrub.
         piiFields: STORE_HISTORY_PII_FIELDS,
       },

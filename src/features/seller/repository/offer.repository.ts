@@ -384,9 +384,10 @@ class OfferRepository extends BaseRepository<OfferDocument> {
         trigger: ctx?.trigger ?? "offerRepository.updateStatus",
         reason: ctx?.reason,
         note: ctx?.note,
-        // buyerName/buyerEmail live on this document. `encryptPiiFields` is a
-        // flat top-level loop and never descends into arrays, so without this
-        // they would persist in PLAINTEXT inside statusHistory.
+        // buyerName/buyerEmail live on this document. `encryptPiiFields` covers
+        // only NAMED paths, and nothing declares them under
+        // `statusHistory[].changes` — so without this scrub they persist in
+        // PLAINTEXT inside the history.
         piiFields: OFFER_PII_FIELDS,
         historyField: OFFER_FIELDS.STATUS_HISTORY,
         truncatedField: OFFER_FIELDS.STATUS_HISTORY_TRUNCATED,
