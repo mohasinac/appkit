@@ -197,8 +197,22 @@ export const usersSeedData: Partial<UserPlain>[] = [
     role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeSlug: "store-beyblade-arena",
-    storeStatus: "approved",
+    /*
+     * 🛑 NO `storeSlug` / `storeStatus`. This persona carried
+     * `storeSlug: "store-beyblade-arena"` with `storeStatus: "approved"` after the
+     * 2026-10-21 store prune deleted that store — a dangling FK of exactly
+     * the kind Root Cause #26 is about, in the file the prune did not
+     * revisit.
+     *
+     * It is not cosmetic: `becomeSeller` and every seller gate read
+     * `storeStatus`, so this persona presented as an approved seller whose
+     * store does not exist. The dashboard resolves the store by slug and
+     * finds nothing, which reads as a broken dashboard rather than as bad
+     * fixture data.
+     *
+     * `publicProfile.storeName` stays — it is display copy on the person's
+     * own profile, not a reference to a row.
+     */
     publicProfile: {
       isPublic: true,
       showEmail: false,
@@ -331,8 +345,22 @@ export const usersSeedData: Partial<UserPlain>[] = [
     role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeSlug: "store-blader-bazaar",
-    storeStatus: "pending",
+    /*
+     * 🛑 NO `storeSlug` / `storeStatus`. This persona carried
+     * `storeSlug: "store-blader-bazaar"` with `storeStatus: "pending"` after the
+     * 2026-10-21 store prune deleted that store — a dangling FK of exactly
+     * the kind Root Cause #26 is about, in the file the prune did not
+     * revisit.
+     *
+     * It is not cosmetic: `becomeSeller` and every seller gate read
+     * `storeStatus`, so this persona presented as an approved seller whose
+     * store does not exist. The dashboard resolves the store by slug and
+     * finds nothing, which reads as a broken dashboard rather than as bad
+     * fixture data.
+     *
+     * `publicProfile.storeName` stays — it is display copy on the person's
+     * own profile, not a reference to a row.
+     */
     publicProfile: {
       storeName: "Blader Bazaar",
       storeCategory: "category-beyblade-burst",
@@ -387,8 +415,22 @@ export const usersSeedData: Partial<UserPlain>[] = [
     role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
-    storeSlug: "store-vintage-vault-co",
-    storeStatus: "approved",
+    /*
+     * 🛑 NO `storeSlug` / `storeStatus`. This persona carried
+     * `storeSlug: "store-vintage-vault-co"` with `storeStatus: "approved"` after the
+     * 2026-10-21 store prune deleted that store — a dangling FK of exactly
+     * the kind Root Cause #26 is about, in the file the prune did not
+     * revisit.
+     *
+     * It is not cosmetic: `becomeSeller` and every seller gate read
+     * `storeStatus`, so this persona presented as an approved seller whose
+     * store does not exist. The dashboard resolves the store by slug and
+     * finds nothing, which reads as a broken dashboard rather than as bad
+     * fixture data.
+     *
+     * `publicProfile.storeName` stays — it is display copy on the person's
+     * own profile, not a reference to a row.
+     */
     publicProfile: {
       storeName: "Vintage Vault Co.",
       storeCategory: "category-beyblade-original",
