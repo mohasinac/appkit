@@ -311,6 +311,27 @@ export interface Order {
   timelineTruncated?: number;
   /** How the buyer acquired the right to buy. Written once, at creation. */
   sourceContext?: OrderSourceContext;
+  /**
+   * D55 — the pre-order balance, once the seller has OPENED it for collection.
+   *
+   * 🛑 Absent until then, and that is the difference between "a balance
+   * exists" (`sourceContext.balanceDue > 0`, true from the moment the order
+   * was placed) and "a balance is payable". The buyer's panel gates on this
+   * field, so forgetting it in `orderDocumentToOrder` would render the
+   * "nothing to pay" branch on every order forever — Root Cause #57, which
+   * is what made the whole manual-payment flow dead for weeks.
+   */
+  balance?: {
+    amount: number;
+    method: "manual";
+    status: "awaiting" | "submitted" | "paid" | "rejected";
+    dueBy?: string;
+    proofUrl?: string;
+    transactionId?: string;
+    submittedAt?: string;
+    reviewedAt?: string;
+    reviewNote?: string;
+  };
   physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;

@@ -1403,6 +1403,59 @@ export interface OrderDocument extends BaseDocument {
   buyerFraudAgreementAccepted?: boolean;
   buyerFraudAgreementAcceptedAt?: Date;
 
+  /**
+   * ── D55: the pre-order BALANCE, which is a second payment ──────────────
+   *
+   * 🛑 Its own block rather than reusing the fields above, and that is the
+   * decision this whole feature turns on. Every field above describes ONE
+   * payment; a pre-order has two, months apart. Reusing `paymentProofUrl`
+   * for the balance overwrites the deposit's proof — the evidence for the
+   * payment that created the order — and `paymentReviewOutcome` then means
+   * two different things depending on when you read it.
+   *
+   * Worse, `paymentWindowTimeout` sweeps orders that are `pending`/`pending`
+   * with no `paymentProofUrl`, so clearing that field to collect a balance
+   * would make the sweep cancel and restock a PAID order.
+   *
+   * The balance is therefore its own small state machine beside the
+   * deposit's, sharing the review vocabulary but none of the storage.
+   */
+  balance?: {
+    /**
+     * 🛑 SNAPSHOTTED, not recomputed — D61, and the worst case in the
+     * codebase for it: a deposit-to-balance gap is months. It is copied from
+     * `sourceContext.balanceDue` at the moment the collection is opened, so
+     * a price change, a tax-rate change or a re-quote in between cannot move
+     * what the buyer was told they owe. Recomputing at payment time is how a
+     * buyer who agreed to ₹4,000 is charged ₹4,400.
+     */
+    amount: number;
+    /**
+     * `manual` only, today, and the field exists so the absence is explicit.
+     *
+     * 🛑 The AUTO path is not merely unbuilt — it is blocked on things
+     * outside this repo. A months-long gap cannot use authorise-then-capture
+     * (capture windows are days), so it needs a real RBI-compliant mandate:
+     * AFA at creation, a pre-debit notice at least 24 HOURS before every
+     * debit, and a max amount fixed at registration. Razorpay must also have
+     * recurring enabled, and production runs TEST keys with
+     * `razorpayEnabled` defaulting false. Declaring the union now means
+     * adding `auto` later is a compile-checked change rather than a new
+     * field nobody wires.
+     */
+    method: "manual";
+    status: "awaiting" | "submitted" | "paid" | "rejected";
+    /** Set when the collection is opened, so the buyer has a stated window. */
+    dueBy?: Date;
+    proofUrl?: string;
+    transactionId?: string;
+    submittedAt?: Date;
+    reviewedBy?: string;
+    reviewedAt?: Date;
+    /** Required on `rejected`, for the same reason a refund reason is. */
+    reviewNote?: string;
+  };
+
   /** Which of the three admin review actions was taken on this order's payment proof. */
   paymentReviewOutcome?: "approved" | "reupload_requested" | "rejected_fraud";
   /** Admin's reason text — required for both `reupload_requested` and `rejected_fraud`. */

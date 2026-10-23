@@ -2192,6 +2192,48 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    /*
+     * D55 — the pre-order BALANCE's two review verdicts.
+     *
+     * 🛑 Deliberately separate from `verify-payment` / `reject-payment-fraud`
+     * above, which review the DEPOSIT. A pre-order's two payments are months
+     * apart, and the consequences do not match: rejecting a deposit proof
+     * cancels the order, restores stock and bans the account for 7 days,
+     * because the order had no legitimate basis. Rejecting a BALANCE proof on
+     * goods already made and allocated must do none of that — it asks for a
+     * better screenshot. Reusing the deposit's action would attach a 7-day
+     * ban to a blurry photo.
+     */
+    "verify-balance": {
+      iconKey: "verify",
+      id: "admin.verify-balance",
+      label: "Accept Balance",
+      ariaLabel: "Accept the pre-order balance payment proof",
+      description:
+        "Confirms the pre-order balance was received. The order becomes shippable. Does NOT post a ledger entry — the sale was recognised in full at order creation.",
+      kind: "primary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Accept the balance payment?",
+        body: "This records the remaining balance as received and clears the order to ship. Check the reference against your bank first.",
+        confirmLabel: "Yes, accept",
+      },
+    },
+    "reject-balance": {
+      iconKey: "reject",
+      id: "admin.reject-balance",
+      label: "Reject Balance Proof",
+      ariaLabel: "Reject the pre-order balance proof and ask the buyer to resend",
+      description:
+        "Sends the proof back with your note. The buyer can submit again — no cancellation, no stock change, no ban: the goods are already made and allocated to them.",
+      kind: "secondary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Reject this balance proof?",
+        body: "The buyer is told why and can send another. The order stays open and the item stays theirs.",
+        confirmLabel: "Reject and ask again",
+      },
+    },
     "verify-vendor": {
       iconKey: "verify",
       id: "admin.verify-vendor",

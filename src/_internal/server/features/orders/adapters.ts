@@ -357,6 +357,27 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     timelineTruncated: doc.statusHistoryTruncated,
     /** How the buyer acquired the right to buy. Written once, at creation. */
     sourceContext: doc.sourceContext,
+    /*
+     * D55 — the pre-order balance, present only once a seller has opened it.
+     *
+     * 🛑 `reviewedBy` is deliberately NOT mapped. It is the reviewing staff
+     * member's uid and no buyer surface reads it, so it stays server-side by
+     * default (§ Public Data Projections — a field is private until someone
+     * names the client that reads it).
+     */
+    balance: doc.balance
+      ? {
+          amount: doc.balance.amount,
+          method: doc.balance.method,
+          status: doc.balance.status,
+          dueBy: toIsoOrUndefined(doc.balance.dueBy),
+          proofUrl: doc.balance.proofUrl,
+          transactionId: doc.balance.transactionId,
+          submittedAt: toIsoOrUndefined(doc.balance.submittedAt),
+          reviewedAt: toIsoOrUndefined(doc.balance.reviewedAt),
+          reviewNote: doc.balance.reviewNote,
+        }
+      : undefined,
     createdAt:
       doc.createdAt instanceof Date
         ? doc.createdAt.toISOString()

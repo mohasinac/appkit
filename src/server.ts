@@ -2701,3 +2701,19 @@ export {
   type ExpenseDocument,
   type ExpenseCategory,
 } from "./features/ledger/schemas/expenses";
+
+/*
+ * [SERVER-ONLY] D55 — the pre-order balance collector.
+ *
+ * `balanceDue` has been computed and rendered since Part 2 with nothing to
+ * collect it. These three are the whole collection path: the seller opens it
+ * when stock lands, the buyer submits a proof, staff review it. Manual only —
+ * the auto path is blocked on RBI mandate requirements, not on effort.
+ */
+export {
+  BALANCE_WINDOW_DAYS,
+  balanceDueOn,
+  openBalanceCollection,
+  submitBalanceProof,
+  reviewBalanceProof,
+} from "./_internal/server/features/orders/balance";

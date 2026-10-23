@@ -163,6 +163,12 @@ export const ADMIN_ENDPOINTS = {
   ORDER_PAYMENT_VERIFY: (id: string) => `/api/admin/orders/${id}/payment-verify`,
   ORDER_PAYMENT_REUPLOAD: (id: string) => `/api/admin/orders/${id}/payment-reupload`,
   ORDER_PAYMENT_REJECT_FRAUD: (id: string) => `/api/admin/orders/${id}/payment-reject-fraud`,
+  /*
+   * D55 — approve or reject a pre-order BALANCE proof. Separate from the
+   * three `ORDER_PAYMENT_*` routes above, which review the DEPOSIT: the two
+   * payments are months apart and each carries its own proof, status and note.
+   */
+  ORDER_BALANCE_REVIEW: (id: string) => `/api/admin/orders/${id}/balance-review`,
   USERS: "/api/admin/users",
   USERS_BULK: "/api/admin/users/bulk",
   USER_BY_ID: (uid: string) => `/api/admin/users/${uid}`,
@@ -669,6 +675,13 @@ export const ORDER_ENDPOINTS = {
   BY_ID: (id: string) => `/api/orders/${id}`,
   TRACK: (trackingId: string) => `/api/orders/track/${trackingId}`,
   PAYMENT_PROOF: (id: string) => `/api/orders/${id}/payment-proof`,
+  /*
+   * D55 — proof of paying a pre-order BALANCE. Deliberately a separate
+   * endpoint from `PAYMENT_PROOF`, which is the DEPOSIT's: a pre-order has
+   * two payments months apart, and writing the second over the first would
+   * destroy the evidence for the payment that created the order.
+   */
+  BALANCE_PROOF: (id: string) => `/api/orders/${id}/balance-proof`,
   DISPUTE: (id: string) => `/api/orders/${id}/dispute`,
 } as const;
 
@@ -763,6 +776,13 @@ export const SELLER_ENDPOINTS = {
    * Root Cause #85.
    */
   ORDER_SHIP: (orderId: string) => `/api/store/orders/${orderId}/ship`,
+  /*
+   * D55 — "the goods have landed, the balance is now payable". An EVENT, not
+   * a derived state: a pre-order's premise is that the item does not exist
+   * yet, so the balance becomes collectable when the seller says stock
+   * arrived, and the buyer's 7-day window runs from that moment.
+   */
+  ORDER_OPEN_BALANCE: (orderId: string) => `/api/store/orders/${orderId}/open-balance`,
   AUCTIONS: "/api/store/products",
   COUPONS: "/api/store/coupons",
   COUPON_BY_ID: (id: string) => `/api/store/coupons/${id}`,

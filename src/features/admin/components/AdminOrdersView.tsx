@@ -26,7 +26,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
-import { AdminOrderEditorView, type AdminOrderItemRow } from "./AdminOrderEditorView";
+import { AdminOrderEditorView, type AdminOrderItemRow, type AdminOrderEditorViewProps } from "./AdminOrderEditorView";
 
 interface AdminOrdersResponse {
   items?: JsonArray;
@@ -196,6 +196,13 @@ interface OrderRow {
    * (the same reason `addons` below needs no serializer entry).
    */
   sourceContext?: OrderSourceContext;
+  /*
+   * D55 — the pre-order balance. Same reasoning as `sourceContext` above:
+   * this route returns whole masked documents, so the field arrives with no
+   * serializer entry and the only thing that was ever missing is the local
+   * type and the prop pass-through (Root Cause #38).
+   */
+  balance?: AdminOrderEditorViewProps["balance"];
   currency?: string;
 }
 
@@ -333,6 +340,30 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           // which coerces every field by hand, this one needs a tag check
           // before it can be trusted. See `toSourceContext`.
           sourceContext: toSourceContext(item.sourceContext),
+          /*
+           * D55. Coerced field by field like `addons` above, deliberately
+           * NOT `as AdminOrderEditorViewProps["balance"]` — a cast at a
+           * raw-document boundary is where Root Cause #98 lives, and main
+           * had just removed the same cast from `sourceContext` one line up.
+           *
+           * `proofUrl` is omitted ON PURPOSE: this is the LIST payload, and
+           * the screenshot is admin-detail only. A list row never needs it.
+           */
+          balance: item.balance
+            ? {
+                amount: Number((item.balance as Record<string, unknown>).amount ?? 0),
+                status: toStringValue(
+                  (item.balance as Record<string, unknown>).status,
+                  "awaiting",
+                ) as "awaiting" | "submitted" | "paid" | "rejected",
+                transactionId:
+                  toStringValue((item.balance as Record<string, unknown>).transactionId) ||
+                  undefined,
+                reviewNote:
+                  toStringValue((item.balance as Record<string, unknown>).reviewNote) ||
+                  undefined,
+              }
+            : undefined,
           currency: toStringValue(item.currency, "") || undefined,
         };
       }),
@@ -459,6 +490,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         paymentReviewOutcome={selectedRow?.paymentReviewOutcome}
         addons={selectedRow?.addons}
         sourceContext={selectedRow?.sourceContext}
+        balance={selectedRow?.balance}
         currency={selectedRow?.currency}
       />
     </>

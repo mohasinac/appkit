@@ -5,6 +5,7 @@ import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard
 import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
+import { formatCurrency } from "../../../utils/number.formatter";
 // The defining module, not a barrel (Root Cause #18). Maps a server error CODE
 // to user-facing copy; it can never return server text, which is the point.
 import { toUserMessage } from "../../../errors/error-display-map";
@@ -191,6 +192,23 @@ interface OrderDetail {
   trackingUrl?: string;
   /** Set by `bookShipment`; distinguishes "we booked it" from "you posted it". */
   platformBookedShipment?: boolean;
+  /*
+   * D55 — the pre-order balance, once OPENED for collection.
+   *
+   * 🛑 The seller's copy is deliberately narrower than the stored block:
+   * `GET /api/store/orders/[id]` rebuilds it without `proofUrl` (the buyer's
+   * bank screenshot) or `reviewedBy` (a staff uid), matching the deposit's
+   * rule that a seller sees the reference and the state while the screenshot
+   * is admin-only. Declaring the narrow shape here is what makes a later
+   * `order.balance.proofUrl` a compile error rather than a blank image.
+   */
+  balance?: {
+    amount: number;
+    status: "awaiting" | "submitted" | "paid" | "rejected";
+    dueBy?: JsonValue;
+    transactionId?: string;
+    submittedAt?: JsonValue;
+  };
   paymentMethod?: string;
   paymentStatus?: string;
   paymentTransactionId?: string;
@@ -292,6 +310,113 @@ interface SellerOrdersResponse {
 
 export interface SellerOrdersViewProps {
   orderDetailApiBase?: string;
+}
+
+/**
+ * D55 — the seller's half of the pre-order balance.
+ *
+ * ## 🛑 Opening is an EVENT, and the control has to say so
+ *
+ * The balance has existed on the order since checkout. What the seller is
+ * declaring here is that the GOODS HAVE ARRIVED — a pre-order's premise is
+ * that the item does not exist yet, so asking for the balance before then is
+ * asking a buyer to fund inventory. The button's label and its blurb both
+ * name that, rather than saying "request payment", which would read as a
+ * nudge the seller could send at any time.
+ *
+ * ## Why no Cancel and no confirm dialog
+ *
+ * Opening takes money NOWHERE and reverses by simply not chasing it — the
+ * worst case is a buyer told a week early. A confirmation step on a
+ * non-destructive, idempotent action is the dialog people learn to click
+ * through, which is what makes the ones on real deletions worthless.
+ *
+ * ## The states are the seller's, not the buyer's
+ *
+ * Once opened the seller cannot act again, so every later state is read-only
+ * here: "with the buyer", "proof submitted, we are checking it", "paid". The
+ * verification is staff-only and deliberately NOT offered — a seller
+ * approving payment to themselves is not a review.
+ */
+function SellerBalanceBlock({
+  orderId,
+  apiBase,
+  balance,
+  balanceDue,
+  currency,
+  onOpened,
+}: {
+  orderId: string;
+  apiBase: string;
+  balance?: OrderDetail["balance"];
+  balanceDue: number;
+  currency?: string;
+  onOpened: () => void;
+}) {
+  const [opening, setOpening] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  if (balance) {
+    const label =
+      balance.status === "paid"
+        ? "Balance paid"
+        : balance.status === "submitted"
+          ? "Balance proof under review"
+          : balance.status === "rejected"
+            ? "Balance proof rejected — the buyer has been asked to resend"
+            : "Balance open — awaiting the buyer";
+    return (
+      <Div>
+        <Text size="sm" weight="semibold" color="primary">Pre-order balance</Text>
+        <Text className="mt-1" color="muted" size="xs">
+          {formatCurrency(balance.amount, currency)} — {label}
+          {balance.transactionId ? ` · Ref ${balance.transactionId}` : ""}
+        </Text>
+      </Div>
+    );
+  }
+
+  const handleOpen = async () => {
+    setOpening(true);
+    setError(null);
+    try {
+      const res = await fetch(`${apiBase}/${orderId}/open-balance`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        setError("Could not open the balance. Try again, or contact support if it persists.");
+        return;
+      }
+      onOpened();
+    } catch (err: unknown) {
+      void normalizeError(err);
+      setError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setOpening(false);
+    }
+  };
+
+  return (
+    <Div>
+      <Text size="sm" weight="semibold" color="primary">Pre-order balance</Text>
+      <Text className="mt-1" color="muted" size="xs">
+        {formatCurrency(balanceDue, currency)} is still owed on this order. Open
+        it once the stock is physically with you — the buyer is notified and
+        gets a week to pay, and the parcel ships when it clears.
+      </Text>
+      <Row className="mt-2" gap="3">
+        <Button variant="primary" size="sm" disabled={opening} onClick={handleOpen}>
+          {opening ? "Opening…" : "Stock has arrived — open balance"}
+        </Button>
+      </Row>
+      {error && (
+        <Div textSize="xs" className="mt-2 border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
+          {error}
+        </Div>
+      )}
+    </Div>
+  );
 }
 
 /**
@@ -714,6 +839,39 @@ export function SellerOrderDetailPanel({
                 )}
               </Div>
             )}
+
+            {/*
+              D55 — the pre-order balance.
+
+              Rendered only when the order HAS one: `sourceContext.path` is
+              `pre-order` with a non-zero `balanceDue`. On every other order
+              there is nothing to open and the block is absent rather than
+              disabled — a greyed control the seller can never use is noise
+              on 95% of orders.
+
+              Sits above dispatch because that is the sequence: the balance
+              has to be collected before the parcel goes out, which is the
+              whole reason a pre-order splits its payment in two.
+            */}
+            {order.sourceContext?.path === "pre-order" &&
+              order.sourceContext.balanceDue > 0 && (
+                <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
+                  <SellerBalanceBlock
+                    orderId={orderId}
+                    apiBase={apiBase}
+                    balance={order.balance}
+                    balanceDue={order.sourceContext.balanceDue}
+                    currency={order.currency}
+                    onOpened={() => {
+                      showToast("Balance opened — the buyer has been notified", "success");
+                      void fetch(`${apiBase}/${orderId}`)
+                        .then((r) => r.json())
+                        .then((json) => setOrder((json?.data ?? json) as OrderDetail))
+                        .catch((err: unknown) => void normalizeError(err));
+                    }}
+                  />
+                </Stack>
+              )}
 
             {/*
               🛑 Dispatch is its OWN form, above the status form, not a section

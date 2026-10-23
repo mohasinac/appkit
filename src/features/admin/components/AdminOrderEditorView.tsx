@@ -94,6 +94,21 @@ export interface AdminOrderEditorViewProps {
   sourceContext?: OrderSourceContext;
   /** For the provenance card's money formatting; falls back to the default. */
   currency?: string;
+  /**
+   * D55 — the pre-order balance block, present once a seller has opened it.
+   *
+   * 🛑 Admin is the ONLY role that sees `proofUrl` here, matching the deposit:
+   * the seller's own endpoint strips it, because a bank screenshot is the
+   * buyer's and verification is not the seller's job. Reviewing a payment to
+   * yourself is not a review.
+   */
+  balance?: {
+    amount: number;
+    status: "awaiting" | "submitted" | "paid" | "rejected";
+    proofUrl?: string;
+    transactionId?: string;
+    reviewNote?: string;
+  };
 }
 
 /**
@@ -157,6 +172,7 @@ export function AdminOrderEditorView({
   buyerFraudAgreementAccepted,
   paymentReviewOutcome,
   addons,
+  balance,
 }: AdminOrderEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -199,6 +215,19 @@ export function AdminOrderEditorView({
   const [reviewNoteError, setReviewNoteError] = React.useState<string | null>(null);
   const [isRequestingReupload, setIsRequestingReupload] = useState(false);
   const [isRejectingFraud, setIsRejectingFraud] = useState(false);
+  /*
+   * D55 — the balance review's OWN note and its own pending flags.
+   *
+   * 🛑 Not shared with `reviewNote` above, which belongs to the deposit's
+   * three actions. One note box feeding two reviews is the bug where an admin
+   * types "blurry screenshot" meaning the balance and sends it as a
+   * fraud-rejection reason on the deposit — and the deposit's rejection bans
+   * the account for 7 days.
+   */
+  const [balanceNote, setBalanceNote] = React.useState("");
+  const [balanceNoteError, setBalanceNoteError] = React.useState<string | null>(null);
+  const [isAcceptingBalance, setIsAcceptingBalance] = useState(false);
+  const [isRejectingBalance, setIsRejectingBalance] = useState(false);
 
   // This used to inline `paymentMethod === "cash" || === "upi_manual"`, which
   // omitted `emi` — so the whole proof panel never rendered for an EMI order and
@@ -224,6 +253,10 @@ export function AdminOrderEditorView({
         notes: "",
       });
       setReviewNote("");
+      // Reset with its sibling — a note typed for one order must not reappear
+      // under the next one the drawer opens.
+      setBalanceNote("");
+      setBalanceNoteError(null);
     }
   }, [open, currentStatus]);
 
@@ -328,6 +361,51 @@ export function AdminOrderEditorView({
       showToast("Failed to reject payment.", "error");
     } finally {
       setIsRejectingFraud(false);
+    }
+  };
+
+  /**
+   * D55 — accept or reject the pre-order BALANCE proof.
+   *
+   * 🛑 One handler, because the two verdicts differ by a boolean and a note
+   * and nothing else. The deposit has three handlers because its three
+   * outcomes are genuinely different operations (verify / re-ask / cancel +
+   * ban); mirroring that shape here would be three copies of one request.
+   *
+   * The note requirement is checked in BOTH places on purpose: here so the
+   * admin is told before the round trip, and in `reviewBalanceProof` because
+   * the route is reachable without this component.
+   */
+  const handleBalanceReview = async (approve: boolean) => {
+    if (!orderId) return;
+    if (!approve && !balanceNote.trim()) {
+      setBalanceNoteError(
+        "Say what was wrong — without it the buyer will send the same proof again.",
+      );
+      return;
+    }
+    setBalanceNoteError(null);
+    const setPending = approve ? setIsAcceptingBalance : setIsRejectingBalance;
+    setPending(true);
+    try {
+      await apiClient.post(ADMIN_ENDPOINTS.ORDER_BALANCE_REVIEW(orderId), {
+        approve,
+        ...(balanceNote.trim() ? { note: balanceNote.trim() } : {}),
+      });
+      showToast(
+        approve
+          ? "Balance accepted. The order is clear to ship."
+          : "Proof returned to the buyer with your note.",
+        "success",
+      );
+      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+      onClose();
+    } catch (err) {
+      void normalizeError(err);
+      // Authored copy — `err.message` is server text (Root Cause #86).
+      showToast("Could not record that decision.", "error");
+    } finally {
+      setPending(false);
     }
   };
 
@@ -520,6 +598,86 @@ export function AdminOrderEditorView({
               </Stack>
             ) : (
               <Text size="xs" color="faint">No proof uploaded yet.</Text>
+            )}
+          </Stack>
+        )}
+
+        {/*
+          D55 — the pre-order BALANCE review, below the deposit's.
+
+          🛑 Its own section with its own heading, note box and buttons,
+          rather than more buttons under "Payment Proof". The two reviews
+          judge two different payments months apart and their rejections do
+          opposite things: rejecting the deposit cancels the order, restores
+          stock and bans the account for seven days; rejecting the balance
+          asks for a better screenshot on goods already made for this buyer.
+          Putting both under one heading is how the wrong button gets used.
+
+          Gated on `balance` so it is absent on every order that is not a
+          pre-order and on every pre-order whose seller has not yet opened
+          collection — there is nothing to review in either case.
+        */}
+        {balance && (
+          <Stack gap="xs">
+            <Label size="sm" weight="medium" color="primary">Pre-order balance</Label>
+            <Text size="xs" color="muted">
+              {toCurrency(balance.amount)} ·{" "}
+              {balance.status === "paid"
+                ? "accepted"
+                : balance.status === "submitted"
+                  ? "proof submitted, awaiting your decision"
+                  : balance.status === "rejected"
+                    ? "returned to the buyer"
+                    : "open — the buyer has not paid yet"}
+              {balance.transactionId ? ` · Ref ${balance.transactionId}` : ""}
+            </Text>
+            {balance.status === "rejected" && balance.reviewNote && (
+              <Text size="xs" color="muted">Last note: {balance.reviewNote}</Text>
+            )}
+            {balance.status === "submitted" && (
+              <Stack gap="xs">
+                {balance.proofUrl && (
+                  <Div border="default" rounded="lg" overflow="hidden">
+                    <MediaImage src={balance.proofUrl} alt="Balance payment screenshot" size="card" />
+                  </Div>
+                )}
+                <Text size="xs" color="muted">
+                  Check the reference against the bank before accepting. Accepting
+                  does NOT post a ledger entry — the sale was recognised in full
+                  when the order was created, so a second entry would double it.
+                </Text>
+                <Textarea
+                  value={balanceNote}
+                  onChange={(e) => {
+                    setBalanceNote(e.target.value);
+                    if (balanceNoteError) setBalanceNoteError(null);
+                  }}
+                  rows={2}
+                  aria-invalid={balanceNoteError ? true : undefined}
+                  placeholder="Required when rejecting — e.g. reference does not match any credit we received"
+                />
+                {balanceNoteError && (
+                  <Text size="xs" color="error" role="alert">{balanceNoteError}</Text>
+                )}
+                <Button
+                  type="button"
+                  action={ACTIONS.ADMIN["verify-balance"]}
+                  onClick={() => void handleBalanceReview(true)}
+                  isLoading={isAcceptingBalance}
+                  disabled={isAcceptingBalance || isRejectingBalance}
+                  variant="primary"
+                  className="w-full"
+                />
+                <Button
+                  type="button"
+                  action={ACTIONS.ADMIN["reject-balance"]}
+                  onClick={() => void handleBalanceReview(false)}
+                  isLoading={isRejectingBalance}
+                  disabled={isAcceptingBalance || isRejectingBalance}
+                  variant="secondary"
+                  className="w-full"
+                />
+              </Stack>
             )}
           </Stack>
         )}

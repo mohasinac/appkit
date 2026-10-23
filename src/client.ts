@@ -840,6 +840,16 @@ export type { OrderCompletionPanelProps, RateableLine } from "./features/orders/
 // Buyer-facing EMI schedule with a pay-any-instalment action.
 export { EmiInstallmentsPanel } from "./features/orders/components/EmiInstallmentsPanel";
 export type { EmiInstallmentsPanelProps } from "./features/orders/components/EmiInstallmentsPanel";
+
+// D55 — the pre-order balance collector's buyer panel and its write shapes.
+export { BalancePaymentPanel } from "./features/orders/components/BalancePaymentPanel";
+export type { BalancePaymentPanelProps } from "./features/orders/components/BalancePaymentPanel";
+export {
+  balanceProofSchema,
+  balanceReviewSchema,
+  type BalanceProofInput,
+  type BalanceReviewInput,
+} from "./features/orders/schemas/balance";
 export { CountdownDisplay } from "./ui/components/CountdownDisplay";
 export type { CountdownDisplayProps } from "./ui/components/CountdownDisplay";
 export { OrderAddonBadges } from "./features/orders/components/OrderAddonBadges";
@@ -1276,6 +1286,13 @@ export {
   AdminSupportTicketDetailView,
 } from "./features/admin/index";
 export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AdminMoneyCasesViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
+/*
+ * The order editor's props, so the consumer's full-page variant
+ * (`/admin/orders/[id]/view`) can declare the SAME `balance` shape the drawer
+ * takes rather than restating it. Two hand-written copies of one prop type is
+ * how the full page came to behave differently from the drawer once already.
+ */
+export type { AdminOrderEditorViewProps } from "./features/admin/components/AdminOrderEditorView";
 // NavItemData — the whole nav record AdminNavEditorView takes (it has no
 // id-based loader), needed by the /admin/navigation page clients.
 export type { NavItemData } from "./features/admin/index";
