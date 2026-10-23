@@ -2768,3 +2768,47 @@ export type {
  */
 export { assertCheckoutValueOtp } from "./_internal/server/features/checkout/value-otp-gate";
 export type { CheckoutValueOtpGateInput } from "./_internal/server/features/checkout/value-otp-gate";
+
+/*
+ * [SERVER-ONLY] D56 — self-serve ad bookings.
+ *
+ * 🛑 Availability is a DOCUMENT COLLISION, never a query. The booking id
+ * is `${placementId}__${period}` and creation uses `tx.create`, so a second
+ * booking of the same slot fails on an existing document inside its own
+ * transaction. Query-then-write would let two concurrent requests both read
+ * "free" and sell the slot twice, with nothing erroring.
+ *
+ * 🛑 Flat fee per period, explicitly NOT CPM — impression counting is a
+ * write per page view, which is the cost pattern that suspended this
+ * project (Root Cause #104).
+ */
+export {
+  bookAdSlot,
+  moderateAdCreative,
+  resubmitAdCreative,
+  cancelAdBooking,
+  releaseAdSlot,
+  liveBookingForPlacement,
+  pendingAdBookings,
+  adBookingsForAdvertiser,
+  adSlotOffers,
+} from "./_internal/server/features/ads/booking";
+export type { BookAdSlotInput, AdSlotOffer } from "./_internal/server/features/ads/booking";
+export {
+  AD_BOOKING_COLLECTION,
+  AD_BOOKING_PAYMENT_STATES,
+  AD_MODERATION_STATES,
+  adBookingId,
+  adPeriodOf,
+  adPeriodStart,
+  adPeriodEnd,
+  isAdPeriod,
+  isAdBookingLive,
+} from "./features/ads/schemas/firestore";
+export type {
+  AdBookingDocument,
+  AdBookingCreative,
+  AdBookingPaymentState,
+  AdModerationState,
+  AdPeriod,
+} from "./features/ads/schemas/firestore";

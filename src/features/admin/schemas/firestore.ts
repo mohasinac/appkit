@@ -449,6 +449,18 @@ export type SiteSettingsAdPlacement = {
   label: string;
   enabled: boolean;
   reservedHeight: number;
+  /**
+   * D56 — the flat monthly rate for a self-serve booking of this slot, in
+   * rupees. Absent means NOT SOLD: `bookAdSlot` refuses rather than
+   * defaulting to zero, because a free booking that looks successful takes
+   * the slot, bills nothing, and says nothing about the missing price.
+   *
+   * 🛑 Editing this does NOT reprice a sold slot. `AdBookingDocument.priceRs`
+   * is snapshotted at booking, for the same reason `sourceContext` is
+   * written once: the rate is a price somebody agreed to, and re-deriving it
+   * later silently rewrites a completed sale.
+   */
+  priceRsPerPeriod?: number;
 };
 
 /** Embedded in siteSettings.adSettings — a type alias, not a collection root. */

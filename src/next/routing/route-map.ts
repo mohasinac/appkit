@@ -23,6 +23,8 @@ export const DEFAULT_ROUTE_MAP = {
     AUCTIONS: "/auctions",
     AUCTION_DETAIL: (id: string) => `/auctions/${id}`,
     PRE_ORDERS: "/pre-orders",
+    /** D56 — the public rate card + self-serve booking form. */
+    ADVERTISE: "/advertise",
     PRE_ORDER_DETAIL: (id: string) => `/pre-orders/${id}`,
     // SB1-J — bundles + prize draws (additive, pages not yet built)
     BUNDLES: "/bundles",
@@ -369,6 +371,8 @@ export const DEFAULT_ROUTE_MAP = {
     SUPPORT_NEW: "/user/support/new",
     SUPPORT_TICKET: (id: string) => `/user/support/${id}`,
     PRE_ORDERS: "/user/pre-orders",
+    /** D56 — the advertiser's own bookings and their moderation state. */
+    AD_BOOKINGS: "/user/ad-bookings",
     DIGITAL_CODES: "/user/digital-codes",
     PRIZE_DRAWS: "/user/prize-draws",
     EVENTS: "/user/events",
@@ -661,6 +665,8 @@ export const DEFAULT_ROUTE_MAP = {
     ADS: "/admin/ads",
     ADS_NEW: "/admin/ads/new",
     ADS_EDIT: (id: string) => `/admin/ads/${id}/edit`,
+    /** D56 — the self-serve creative moderation queue. */
+    AD_BOOKINGS: "/admin/ads/bookings",
     NEWSLETTER: "/admin/newsletter",
     CONTACT: "/admin/contact",
     SESSIONS: "/admin/sessions",

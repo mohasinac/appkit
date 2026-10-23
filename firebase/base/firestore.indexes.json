@@ -12639,6 +12639,34 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "adBookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "moderation.state",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "adBookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "advertiserUid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

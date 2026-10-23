@@ -151,6 +151,10 @@ export const ADMIN_ENDPOINTS = {
   /** The action-index control plane (W7 / D7) — GET the whole index, PATCH one override. */
   ACTION_INDEX: "/api/admin/action-index",
   AD_BY_ID: (id: string) => `/api/admin/ads/${id}`,
+  /** D56 — the self-serve creative moderation queue. */
+  AD_BOOKINGS: "/api/admin/ads/bookings",
+  /** D56 — approve or reject one creative. A rejection REQUIRES a note. */
+  AD_BOOKING_MODERATE: (id: string) => `/api/admin/ads/bookings/${id}/moderate`,
   PAYMENTS_SETTINGS: "/api/admin/payments/settings",
   PRODUCTS: "/api/admin/products",
   PRODUCT_BY_ID: (id: string) => `/api/admin/products/${id}`,

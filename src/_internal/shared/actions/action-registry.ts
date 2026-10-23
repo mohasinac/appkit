@@ -190,6 +190,77 @@ export function actionLabel(def: ActionDef): string {
 // flows can reference today.
 
 export const ACTIONS: ActionTree = {
+  /*
+   * D56 — self-serve ad bookings.
+   *
+   * 🛑 `book-ad-slot` carries a confirmation because it is a PURCHASE of a
+   * named month, and cancelling it does not free that month for re-sale —
+   * the booking document IS the availability lock and keeping it is
+   * deliberate. A control that spends money and cannot be undone by the
+   * person who clicked it is exactly what Rule #7's confirmation is for.
+   */
+  ADS: {
+    "book-ad-slot": {
+      iconKey: "add",
+      id: "ads.book-ad-slot",
+      label: "Book this slot",
+      ariaLabel: "Book this ad slot for the selected month",
+      description:
+        "Reserves one placement for one month at the listed flat fee. The creative is reviewed by a person before it appears anywhere.",
+      kind: "primary",
+      permissions: ["user"],
+      confirmation: {
+        title: "Book this slot?",
+        body: "This reserves the placement for the whole month at the listed price. Cancelling later does not release the month for someone else to buy.",
+        confirmLabel: "Yes, book it",
+      },
+    },
+    "cancel-ad-booking": {
+      iconKey: "cancel",
+      id: "ads.cancel-ad-booking",
+      label: "Cancel booking",
+      ariaLabel: "Cancel this ad booking",
+      description:
+        "Stops the creative running. 🛑 Does NOT free the month — the slot stays yours for the period you booked; releasing it is a separate admin act with a refund behind it.",
+      kind: "danger",
+      permissions: ["user"],
+      confirmation: {
+        title: "Cancel this booking?",
+        body: "Your ad stops running. The month is NOT released for another advertiser, and this does not issue a refund on its own.",
+        confirmLabel: "Yes, cancel",
+      },
+    },
+    "approve-ad-creative": {
+      iconKey: "verify",
+      id: "ads.approve-ad-creative",
+      label: "Approve creative",
+      ariaLabel: "Approve this ad creative so it can render",
+      description:
+        "Clears the creative to render for its booked month. Approval is of THIS creative — an edit returns it to review.",
+      kind: "primary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Approve this creative?",
+        body: "It will render on the public site for its booked month once the booking is paid.",
+        confirmLabel: "Yes, approve",
+      },
+    },
+    "reject-ad-creative": {
+      iconKey: "reject",
+      id: "ads.reject-ad-creative",
+      label: "Reject creative",
+      ariaLabel: "Reject this ad creative and tell the advertiser why",
+      description:
+        "Sends it back with your note. A note is REQUIRED — without one the advertiser resubmits the same creative and you review it twice.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Reject this creative?",
+        body: "The advertiser sees your note and can submit a new creative against the same booking. The slot stays theirs.",
+        confirmLabel: "Yes, reject",
+      },
+    },
+  },
   PRODUCT: {
     /*
      * The buyer-facing verbs below shipped long ago; the four CRUD entries
