@@ -126,7 +126,16 @@ function SlideBackground({
   priority?: boolean;
 }) {
   const effectiveBg = bg ?? (legacy ? { type: legacy.type, url: legacy.url } as CarouselBackground : undefined);
-  const mobileUrl = effectiveBg?.mobileUrl ?? (isMobile && mobileLegacy ? mobileLegacy.url : undefined);
+  /*
+   * 🛑 Both halves are gated on `isMobile`. `effectiveBg.mobileUrl` was read
+   * UNCONDITIONALLY, so any slide carrying a mobile crop served that
+   * phone-sized image to desktop too — a narrow picture stretched across a
+   * 1920px hero, and the desktop asset never loaded at all. The legacy half
+   * was already gated correctly, which is what made the asymmetry easy to miss.
+   */
+  const mobileUrl = isMobile
+    ? (effectiveBg?.mobileUrl ?? mobileLegacy?.url)
+    : undefined;
   const src = mobileUrl ?? effectiveBg?.url ?? "";
 
   if (!effectiveBg) {
@@ -244,10 +253,17 @@ function CarouselCardRenderer({
   isMobile: boolean;
   push?: (href: string) => void;
 }) {
-  const mobileZone = card.mobileZone;
-  const gridPos = isMobile && mobileZone
-    ? { gridRow: mobileZone <= 3 ? 1 : 2, gridColumn: mobileZone <= 3 ? mobileZone : mobileZone - 3 }
-    : resolveZoneToGrid(card.zone);
+  /*
+   * 🛑 On mobile the card takes NO explicit grid placement at all — the parent
+   * is a one-column auto-flow grid, so source order is the layout.
+   *
+   * The old branch mapped `mobileZone` to a `gridColumn`, which against a
+   * single declared column created an implicit column 2 and stacked every
+   * card into one cell. `mobileZone` was also typed `2 | 5` only, so it could
+   * not express a six-card slide even in principle. Zones are a desktop
+   * concept; a phone has one column and nothing to place into.
+   */
+  const gridPos = isMobile ? null : resolveZoneToGrid(card.zone);
 
   const hoverClass = getHoverClass(card.hover?.effect);
   const textAlign = card.content?.textAlign ?? "left";
@@ -258,8 +274,9 @@ function CarouselCardRenderer({
     <Div
       className={`relative overflow-hidden transition-all duration-300 ${hoverClass}`} rounded="lg" shadow="lg"
       style={{
-        gridRow: String(gridPos.gridRow),
-        gridColumn: String(gridPos.gridColumn),
+        ...(gridPos
+          ? { gridRow: String(gridPos.gridRow), gridColumn: String(gridPos.gridColumn) }
+          : {}),
         minHeight: isMobile ? 100 : 140,
       }}
     >
@@ -480,6 +497,11 @@ export function HeroCarousel({
                   <OwnerQuickActions
                     resource="CAROUSEL"
                     placement="card"
+                    /* Sits on the slide photograph — without this it renders
+                     * the light `surface-elevated` chip, a pale rounded box
+                     * floating on the artwork. `onMedia` selects the dark
+                     * translucent backdrop that variant exists for. */
+                    onMedia
                     recordLabel={slide.title ?? `Slide ${slideIndex + 1}`}
                     editHref={String(ROUTES.ADMIN.CAROUSEL_EDIT(slide.id))}
                   />
@@ -495,8 +517,17 @@ export function HeroCarousel({
                   />
                 </Div>
 
-                {/* Overlay text (no cards, or overlay present) */}
-                {slide.overlay && (
+                {/*
+                  * Overlay text (no cards, or overlay present).
+                  *
+                  * 🛑 `enabled !== false`, not a bare truthiness test. The seed
+                  * and `push-editorial-content.mjs` both write
+                  * `overlay: { enabled: true, … }`, so an admin setting it
+                  * false expected the overlay to disappear and it rendered
+                  * anyway. Absent still means shown — most stored overlays
+                  * predate the flag.
+                  */}
+                {slide.overlay && slide.overlay.enabled !== false && (
                   <Div layout="flex-col" align="start" justify="center" className={`${POSITION_FILL} text-left md:px-[4rem] lg:px-[8rem]`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text color="inverse" shadow="sm" className="stagger-1 opacity-80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
@@ -511,7 +542,20 @@ export function HeroCarousel({
                       // so this changes the outline and not one pixel.
                       <Heading color="inverse"
                         level={2}
-                        className="stagger-2 font-display ! mb-2 md:mb-4 break-words" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
+                        /*
+                         * 🛑 `max-w-[16ch]` is load-bearing, not taste. The box
+                         * is `absolute inset-0`, so with no cap the title runs
+                         * the full slide width minus padding and an 8xl
+                         * headline wraps into a wall. A character-based cap
+                         * tracks the font size instead of guessing at pixels.
+                         *
+                         * `text-balance` evens the lines so a two-line title
+                         * does not leave one word stranded on line two.
+                         *
+                         * (A stray bare `!` token sat in this className and
+                         * generated nothing — removed.)
+                         */
+                        className="stagger-2 font-display mb-2 md:mb-4 break-words text-balance max-w-[16ch] md:max-w-[18ch] lg:max-w-[20ch]" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
                       >
                         {slide.overlay.title}
                       </Heading>
@@ -539,13 +583,31 @@ export function HeroCarousel({
                   </Div>
                 )}
 
-                {/* Cards grid */}
+                {/*
+                  * Cards grid — the full 2x3 zone layout on desktop.
+                  *
+                  * 🛑 MOBILE IS DOCUMENT-ORDER FLOW, NOT ZONES. The previous
+                  * shape declared ONE column (`1fr`) while every card still
+                  * resolved an explicit `gridColumn` from its zone/mobileZone —
+                  * and all three seeded hero cards use `mobileZone: 2`, i.e.
+                  * column 2. A single explicit column plus an explicit
+                  * placement in column 2 creates an IMPLICIT second column and
+                  * puts every card in the same cell, stacked on top of each
+                  * other. On a phone the hero rendered as one unreadable pile.
+                  *
+                  * Letting the grid auto-flow in source order is also what
+                  * makes a six-card slide usable on a phone: six rows, read
+                  * top to bottom. `gridTemplateRows` must go to `auto` with
+                  * it — a fixed `repeat(2, 1fr)` would squeeze six cards into
+                  * two rows' worth of height.
+                  */}
                 {hasCards && (
                   <Div
-                    className={`${POSITION_FILL} grid gap-[var(--appkit-space-2)] md:gap-[var(--appkit-space-4)] md:p-[var(--appkit-space-8)]`} padding="md"
+                    className={`${POSITION_FILL} grid gap-[var(--appkit-space-2)] md:gap-[var(--appkit-space-4)] md:p-[var(--appkit-space-8)] overflow-y-auto`} padding="md"
                     style={{
-                      gridTemplateRows: "repeat(2, 1fr)",
+                      gridTemplateRows: isMobile ? "auto" : "repeat(2, 1fr)",
                       gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                      gridAutoFlow: "row",
                       alignContent: "center",
                       alignItems: "stretch",
                     }}

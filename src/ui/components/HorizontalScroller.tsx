@@ -258,7 +258,20 @@ export function HorizontalScroller<T = unknown>({
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      const count = resolvePerView(perView, w);
+      /*
+       * 🛑 Clamp the column count to how many items there actually ARE.
+       *
+       * `perView` says "four across at lg", and the width was divided by that
+       * unconditionally — so a rail holding ONE item pinned it to 25% of the
+       * row and left three empty columns. The nav also hides itself at
+       * `pageCount <= 1`, so nothing filled or explained the gap: the live
+       * "Events & Offers" section rendered one card against ~75% whitespace.
+       *
+       * Clamping makes a short rail lay its items out across the full width,
+       * which is what every other grid in the app already does. A full rail is
+       * unaffected — `min` is a no-op once itemCount >= perView.
+       */
+      const count = Math.min(resolvePerView(perView, w), Math.max(itemCount, 1));
       if (count > 0) {
         setColCount(count);
         setItemWidth((w - (count - 1) * gap) / count);
@@ -267,7 +280,7 @@ export function HorizontalScroller<T = unknown>({
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [perView, gap, containerRef, updateExtents]);
+  }, [perView, gap, containerRef, updateExtents, itemCount]);
 
   // Recompute extents when content size changes (itemWidth resolved, items count changes).
   useEffect(() => {

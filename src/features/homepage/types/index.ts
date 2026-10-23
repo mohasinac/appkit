@@ -199,6 +199,13 @@ export interface CarouselSlide {
   mobileMedia?: { type: "image" | "video"; url: string; alt?: string };
   cards: CarouselSlideCard[];
   overlay?: {
+    /**
+     * Absent means SHOWN — most stored overlays predate this flag. Only an
+     * explicit `false` hides it. The seed and `push-editorial-content.mjs`
+     * have always written `enabled: true`; the renderer simply never read it,
+     * so an admin switching it off changed nothing.
+     */
+    enabled?: boolean;
     title?: string;
     subtitle?: string;
     description?: string;

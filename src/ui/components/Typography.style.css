@@ -87,6 +87,41 @@
   line-height: 1;
 }
 
+/*
+ * 🛑 6xl–8xl MUST declare a line-height, and the reason is a live bug.
+ *
+ * These three tiers used to exist only as Tailwind arbitrary utilities in
+ * `TYPOGRAPHY.textSize` (`text-[length:var(--appkit-text-6xl)]`), which set
+ * FONT-SIZE ONLY — and with `important: true` in both configs, at that.
+ * `.appkit-heading`'s `line-height: var(--appkit-leading-tight)` is then
+ * overridden by whichever size class the element also carries: a
+ * `size="4xl" lgSize="8xl"` heading resolved to `.appkit-text--4xl`'s
+ * `line-height: 2.5rem` at EVERY breakpoint, because no `lg:` rule ever
+ * touched line-height.
+ *
+ * Measured on the live hero carousel: 96px glyphs in a 40px line box. A
+ * two-line title overlapped itself and spilled ~28px above and below into the
+ * eyebrow and the description — the reported "Diwali title is unreadable".
+ *
+ * So each tier carries BOTH properties, exactly like 2xl–5xl above. Keep them
+ * as real classes rather than arbitrary utilities: an arbitrary utility can
+ * only carry the one property its bracket names.
+ */
+.appkit-text--6xl {
+  font-size: var(--appkit-text-6xl, 3.75rem);
+  line-height: var(--appkit-leading-tight, 1.15);
+}
+
+.appkit-text--7xl {
+  font-size: var(--appkit-text-7xl, 4.5rem);
+  line-height: var(--appkit-leading-tight, 1.15);
+}
+
+.appkit-text--8xl {
+  font-size: var(--appkit-text-8xl, 6rem);
+  line-height: var(--appkit-leading-tight, 1.15);
+}
+
 .appkit-font--light {
   font-weight: 300;
 }

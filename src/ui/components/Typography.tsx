@@ -21,9 +21,15 @@ const TYPOGRAPHY = {
     "3xl": "appkit-text--3xl",
     "4xl": "appkit-text--4xl",
     "5xl": "appkit-text--5xl",
-    "6xl": "text-[length:var(--appkit-text-6xl)]",
-    "7xl": "text-[length:var(--appkit-text-7xl)]",
-    "8xl": "text-[length:var(--appkit-text-8xl)]",
+    /*
+     * 🛑 Real classes, not `text-[length:…]` arbitrary utilities. An arbitrary
+     * utility carries only the property its bracket names, so these three set
+     * font-size and left line-height to whatever the BASE size class had —
+     * 40px under 96px glyphs on the hero carousel. See Typography.style.css.
+     */
+    "6xl": "appkit-text--6xl",
+    "7xl": "appkit-text--7xl",
+    "8xl": "appkit-text--8xl",
   },
   textWeight: {
     light: "appkit-font--light",
@@ -119,6 +125,28 @@ type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | 
  * candidate to the scanner, which copies it verbatim into the generated CSS
  * and produces an unparsable declaration. Every combination below appears as
  * a complete literal so the scanner only ever sees real, generatable classes.
+ *
+ * ── 🛑 EACH ENTRY CARRIES ITS LINE-HEIGHT TOO ────────────────────────────
+ *
+ * `text-[length:…]` sets FONT-SIZE AND NOTHING ELSE. So before this, a
+ * responsive size changed the glyph size at the breakpoint and left
+ * line-height at whatever the BASE size class had declared — the two
+ * properties came from different breakpoints and nothing reconciled them.
+ *
+ * Measured on the live hero carousel (`size="4xl" mdSize="6xl" lgSize="8xl"`):
+ * at >=1024px the title drew 96px glyphs inside `.appkit-text--4xl`'s 40px
+ * line box. Two lines overlapped each other and spilled ~28px into the eyebrow
+ * above and the description below — the reported unreadable Diwali headline.
+ *
+ * The paired value is the SAME line-height that size's base class declares in
+ * Typography.style.css, so the responsive path now behaves exactly like the
+ * base path at that size. That is the invariant that should always have held.
+ *
+ * 🛑 `xs`–`xl` deliberately carry NO leading. Those sizes declare none in the
+ * base CSS either, so the element keeps its component default — 1.15 under
+ * `.appkit-heading`, 1.65 under `.appkit-text`. Pinning one value here would
+ * have to pick a winner and would silently retune every small responsive
+ * `<Text>` in the app.
  */
 const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<Record<HeadingSize, string>>> = {
   "sm:": {
@@ -127,13 +155,13 @@ const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<
     base: "sm:text-[length:var(--appkit-text-base)]",
     lg: "sm:text-[length:var(--appkit-text-lg)]",
     xl: "sm:text-[length:var(--appkit-text-xl)]",
-    "2xl": "sm:text-[length:var(--appkit-text-2xl)]",
-    "3xl": "sm:text-[length:var(--appkit-text-3xl)]",
-    "4xl": "sm:text-[length:var(--appkit-text-4xl)]",
-    "5xl": "sm:text-[length:var(--appkit-text-5xl)]",
-    "6xl": "sm:text-[length:var(--appkit-text-6xl)]",
-    "7xl": "sm:text-[length:var(--appkit-text-7xl)]",
-    "8xl": "sm:text-[length:var(--appkit-text-8xl)]",
+    "2xl": "sm:text-[length:var(--appkit-text-2xl)] sm:leading-[2rem]",
+    "3xl": "sm:text-[length:var(--appkit-text-3xl)] sm:leading-[2.25rem]",
+    "4xl": "sm:text-[length:var(--appkit-text-4xl)] sm:leading-[2.5rem]",
+    "5xl": "sm:text-[length:var(--appkit-text-5xl)] sm:leading-[1]",
+    "6xl": "sm:text-[length:var(--appkit-text-6xl)] sm:leading-[1.15]",
+    "7xl": "sm:text-[length:var(--appkit-text-7xl)] sm:leading-[1.15]",
+    "8xl": "sm:text-[length:var(--appkit-text-8xl)] sm:leading-[1.15]",
   },
   "md:": {
     xs: "md:text-[length:var(--appkit-text-xs)]",
@@ -141,13 +169,13 @@ const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<
     base: "md:text-[length:var(--appkit-text-base)]",
     lg: "md:text-[length:var(--appkit-text-lg)]",
     xl: "md:text-[length:var(--appkit-text-xl)]",
-    "2xl": "md:text-[length:var(--appkit-text-2xl)]",
-    "3xl": "md:text-[length:var(--appkit-text-3xl)]",
-    "4xl": "md:text-[length:var(--appkit-text-4xl)]",
-    "5xl": "md:text-[length:var(--appkit-text-5xl)]",
-    "6xl": "md:text-[length:var(--appkit-text-6xl)]",
-    "7xl": "md:text-[length:var(--appkit-text-7xl)]",
-    "8xl": "md:text-[length:var(--appkit-text-8xl)]",
+    "2xl": "md:text-[length:var(--appkit-text-2xl)] md:leading-[2rem]",
+    "3xl": "md:text-[length:var(--appkit-text-3xl)] md:leading-[2.25rem]",
+    "4xl": "md:text-[length:var(--appkit-text-4xl)] md:leading-[2.5rem]",
+    "5xl": "md:text-[length:var(--appkit-text-5xl)] md:leading-[1]",
+    "6xl": "md:text-[length:var(--appkit-text-6xl)] md:leading-[1.15]",
+    "7xl": "md:text-[length:var(--appkit-text-7xl)] md:leading-[1.15]",
+    "8xl": "md:text-[length:var(--appkit-text-8xl)] md:leading-[1.15]",
   },
   "lg:": {
     xs: "lg:text-[length:var(--appkit-text-xs)]",
@@ -155,13 +183,13 @@ const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<
     base: "lg:text-[length:var(--appkit-text-base)]",
     lg: "lg:text-[length:var(--appkit-text-lg)]",
     xl: "lg:text-[length:var(--appkit-text-xl)]",
-    "2xl": "lg:text-[length:var(--appkit-text-2xl)]",
-    "3xl": "lg:text-[length:var(--appkit-text-3xl)]",
-    "4xl": "lg:text-[length:var(--appkit-text-4xl)]",
-    "5xl": "lg:text-[length:var(--appkit-text-5xl)]",
-    "6xl": "lg:text-[length:var(--appkit-text-6xl)]",
-    "7xl": "lg:text-[length:var(--appkit-text-7xl)]",
-    "8xl": "lg:text-[length:var(--appkit-text-8xl)]",
+    "2xl": "lg:text-[length:var(--appkit-text-2xl)] lg:leading-[2rem]",
+    "3xl": "lg:text-[length:var(--appkit-text-3xl)] lg:leading-[2.25rem]",
+    "4xl": "lg:text-[length:var(--appkit-text-4xl)] lg:leading-[2.5rem]",
+    "5xl": "lg:text-[length:var(--appkit-text-5xl)] lg:leading-[1]",
+    "6xl": "lg:text-[length:var(--appkit-text-6xl)] lg:leading-[1.15]",
+    "7xl": "lg:text-[length:var(--appkit-text-7xl)] lg:leading-[1.15]",
+    "8xl": "lg:text-[length:var(--appkit-text-8xl)] lg:leading-[1.15]",
   },
   "xl:": {
     xs: "xl:text-[length:var(--appkit-text-xs)]",
@@ -169,13 +197,13 @@ const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<
     base: "xl:text-[length:var(--appkit-text-base)]",
     lg: "xl:text-[length:var(--appkit-text-lg)]",
     xl: "xl:text-[length:var(--appkit-text-xl)]",
-    "2xl": "xl:text-[length:var(--appkit-text-2xl)]",
-    "3xl": "xl:text-[length:var(--appkit-text-3xl)]",
-    "4xl": "xl:text-[length:var(--appkit-text-4xl)]",
-    "5xl": "xl:text-[length:var(--appkit-text-5xl)]",
-    "6xl": "xl:text-[length:var(--appkit-text-6xl)]",
-    "7xl": "xl:text-[length:var(--appkit-text-7xl)]",
-    "8xl": "xl:text-[length:var(--appkit-text-8xl)]",
+    "2xl": "xl:text-[length:var(--appkit-text-2xl)] xl:leading-[2rem]",
+    "3xl": "xl:text-[length:var(--appkit-text-3xl)] xl:leading-[2.25rem]",
+    "4xl": "xl:text-[length:var(--appkit-text-4xl)] xl:leading-[2.5rem]",
+    "5xl": "xl:text-[length:var(--appkit-text-5xl)] xl:leading-[1]",
+    "6xl": "xl:text-[length:var(--appkit-text-6xl)] xl:leading-[1.15]",
+    "7xl": "xl:text-[length:var(--appkit-text-7xl)] xl:leading-[1.15]",
+    "8xl": "xl:text-[length:var(--appkit-text-8xl)] xl:leading-[1.15]",
   },
 };
 
