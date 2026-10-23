@@ -10,6 +10,7 @@
  */
 
 import { blogRepository } from "../repository/blog.repository";
+import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import type {
@@ -44,7 +45,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     const pageSize = url.searchParams.has("perPage")
       ? numParam(url, "perPage", 20)
       : numParam(url, "pageSize", 20);
-    const sort = param(url, "sort") ?? "-publishedAt";
+    // Must be the SAME constant the SSR view uses — the view's result becomes
+    // this route's `initialData` under `staleTime: Infinity` (Root Cause #30).
+    const sort = param(url, "sort") ?? BLOG_DEFAULT_PUBLIC_SORT;
 
     const parts: string[] = [];
     const category = param(url, "category");

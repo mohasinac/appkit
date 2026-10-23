@@ -3,6 +3,7 @@ import { blogRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
+import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
 import type { BlogPostCategory, BlogListResponse } from "../types";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
@@ -19,7 +20,7 @@ export interface BlogIndexPageViewProps {
 }
 
 export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || "-publishedAt";
+  const sort = sp(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
   const category = sp(searchParams, "category") as BlogPostCategory | undefined;

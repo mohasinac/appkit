@@ -35,6 +35,23 @@ export interface BlogPostDocument extends BaseDocument {
   category: BlogPostCategory;
   tags: string[];
   isFeatured: boolean;
+  /**
+   * Keeps the post at the top of the blog index and the homepage
+   * `blog-articles` section, above newer posts.
+   *
+   * 🛑 REQUIRED, not optional, and that is load-bearing. The default sort is
+   * `-isPinned,-publishedAt`, and Firestore EXCLUDES a document that lacks an
+   * `orderBy` field (Root Cause #100) — so an optional `isPinned` would drop
+   * every pre-existing post out of its own index, silently, with a 200.
+   * A `mapDoc` default cannot rescue it either: that is a read-side fixup and
+   * a query never sees it (Root Cause #101). Every row needs a real `false`
+   * written, which is why the seed carries it explicitly.
+   *
+   * Distinct from `isFeatured` on purpose: featured drives the badge and the
+   * featured-card treatment, and there are several featured posts. Overloading
+   * it would make "featured" and "first" the same decision.
+   */
+  isPinned: boolean;
   status: BlogPostStatus;
   publishedAt?: Date;
   authorId: string;
@@ -53,9 +70,29 @@ export const BLOG_POSTS_INDEXED_FIELDS = [
   "status",
   "publishedAt",
   "isFeatured",
+  "isPinned",
   "category",
   "slug",
 ] as const;
+
+/**
+ * The default ordering for every PUBLIC blog surface — the `/blog` index, the
+ * `/api/blog` route that refetches it, and the homepage `blog-articles` feed.
+ *
+ * 🛑 ONE constant, three consumers, deliberately. The SSR view hands its result
+ * to the listing hook as `initialData`, and that hook sets `staleTime: Infinity`
+ * when given SSR data — so if the route's default sort differed from the view's
+ * by even a character, the first paint would be frozen in one order while the
+ * query key described another (Root Cause #30). Three literals is how that
+ * drift happens; one import is how it cannot.
+ *
+ * `isPinned` leads so pinned posts sit above newer ones. Needs the composite
+ * indexes on (status, isPinned DESC, publishedAt DESC) and its category /
+ * isFeatured / searchTxt variants — a multi-field sieve sort becomes two
+ * `orderBy` calls, and a missing index is a silent FAILED_PRECONDITION that
+ * every caller swallows into an empty page (Root Cause #2 / #59).
+ */
+export const BLOG_DEFAULT_PUBLIC_SORT = "-isPinned,-publishedAt" as const;
 
 export const BLOG_POST_FIELDS = {
   /** Word-prefix search tokens. Derived on write by `buildSearchTxtFor`. */
@@ -72,6 +109,7 @@ export const BLOG_POST_FIELDS = {
   CATEGORY: "category",
   TAGS: "tags",
   IS_FEATURED: "isFeatured",
+  IS_PINNED: "isPinned",
   STATUS: "status",
   PUBLISHED_AT: "publishedAt",
   AUTHOR_ID: "authorId",
@@ -108,6 +146,7 @@ export const DEFAULT_BLOG_POST_DATA: Omit<
   category: "news",
   tags: [],
   isFeatured: false,
+  isPinned: false,
   status: "draft",
   authorId: "",
   authorName: "",
@@ -125,6 +164,7 @@ export const BLOG_POST_PUBLIC_FIELDS: (keyof BlogPostDocument)[] = [
   "category",
   "tags",
   "isFeatured",
+  "isPinned",
   "status",
   "publishedAt",
   "authorName",
@@ -148,6 +188,7 @@ export type BlogPostUpdateInput = Partial<
 export const blogPostQueryHelpers = {
   published: () => ["status", "==", "published" as BlogPostStatus] as const,
   featured: () => ["isFeatured", "==", true] as const,
+  pinned: () => ["isPinned", "==", true] as const,
   byCategory: (category: BlogPostCategory) =>
     ["category", "==", category] as const,
   bySlug: (slug: string) => ["slug", "==", slug] as const,

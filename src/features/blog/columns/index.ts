@@ -29,6 +29,11 @@ export const blogAdminColumns: TableColumn<BlogPost>[] = [
     render: (p) => (p.isFeatured ? "Yes" : "No"),
   },
   {
+    key: "isPinned",
+    header: "Pinned",
+    render: (p) => (p.isPinned ? "Yes" : "No"),
+  },
+  {
     key: "readTimeMinutes",
     header: "Read Time",
     render: (p) =>

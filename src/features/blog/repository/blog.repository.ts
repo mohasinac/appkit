@@ -210,6 +210,11 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     authorName: { canFilter: true, canSort: true },
     authorId: { canFilter: true, canSort: false },
     isFeatured: { canFilter: true, canSort: false },
+    // canSort because it is the FIRST key of the default sort
+    // `-isPinned,-publishedAt`. A `canSort: false` field is silently dropped by
+    // sievejs (Root Cause #63), which would leave the index ordered by date
+    // alone and the pin doing nothing, with no error anywhere.
+    isPinned: { canFilter: true, canSort: true },
     readTimeMinutes: { canFilter: true, canSort: true },
     views: { canFilter: true, canSort: true },
     publishedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },

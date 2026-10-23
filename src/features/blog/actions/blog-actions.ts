@@ -10,6 +10,8 @@ import {
   finalizeStagedMediaObject,
   finalizeStagedMediaObjectArray,
 } from "../../media/finalize";
+// Defining module, not the `../schemas` barrel — Root Cause #18.
+import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
 import type {
   BlogPostDocument,
   BlogPostCreateInput,
@@ -50,6 +52,11 @@ export const createBlogPostSchema = z.object({
   category: z.enum(["news", "tips", "guides", "updates", "community"]),
   tags: z.array(z.string()).default([]),
   isFeatured: z.boolean().default(false),
+  // `.default(false)` is required, not cosmetic: `isPinned` is the first key of
+  // the public default sort, and Firestore excludes a document that lacks an
+  // `orderBy` field (Root Cause #100). A create that omitted it would write a
+  // post that cannot appear on its own index.
+  isPinned: z.boolean().default(false),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   coverImage: singleImageMediaSchema,
   contentImages: z.array(mediaFieldSchema).max(10).optional().default([]),
@@ -186,9 +193,17 @@ export async function getLatestBlogPosts(
 ): Promise<BlogPostDocument[]> {
   const result = await blogRepository.listPublished(
     {},
-    { sorts: sortBy("publishedAt", "DESC"), page: 1, pageSize: count },
+    { sorts: BLOG_DEFAULT_PUBLIC_SORT, page: 1, pageSize: count },
   );
-  return result.items;
+  /*
+   * 🛑 `hidePublicTestData` was MISSING here while its sibling
+   * `getFeaturedBlogPosts` has always had it. This function feeds the homepage
+   * `blog-articles` section, so the seeded sandbox post was reaching the
+   * busiest public page on the site — the exact shape
+   * `audit-public-test-data-leak` exists to block, in the one blog path it
+   * does not scan.
+   */
+  return hidePublicTestData(result.items);
 }
 
 export async function getBlogPostById(

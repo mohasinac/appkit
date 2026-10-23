@@ -108,4 +108,5 @@ export const blogDraftSchema = z.object({
   }),
   authorName: annotate(z.string(), { section: "publish", order: 3, row: "pair" }),
   isFeatured: annotate(z.boolean(), { section: "publish", order: 4, row: "quarter" }),
+  isPinned: annotate(z.boolean(), { section: "publish", order: 5, row: "quarter" }),
 });

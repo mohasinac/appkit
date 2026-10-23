@@ -23,6 +23,8 @@ export interface BlogPost {
   category: BlogPostCategory;
   tags?: string[];
   isFeatured?: boolean;
+  /** Keeps the post above newer ones on the blog index and homepage. */
+  isPinned?: boolean;
   status: BlogPostStatus;
   publishedAt?: string;
   authorId?: string;
