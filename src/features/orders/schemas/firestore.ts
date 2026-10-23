@@ -282,6 +282,15 @@ export interface DeliveryAmendment {
  */
 export const ORDER_ITEM_DESCRIPTION_MAX = 2000;
 
+/**
+ * How many spec rows one order line keeps.
+ *
+ * Capped by COUNT rather than characters: a spec table is rows, and half a
+ * row is worse than a missing one — "Weight: 4" with the unit cut off reads
+ * as a fact rather than as truncation.
+ */
+export const ORDER_ITEM_SPECIFICATIONS_MAX = 30;
+
 export interface OrderDocumentItem {
   productId: string;
   productTitle: string;

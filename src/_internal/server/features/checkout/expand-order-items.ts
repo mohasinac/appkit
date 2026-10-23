@@ -20,11 +20,68 @@
 
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
-import type { OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
+import {
+  ORDER_ITEM_DESCRIPTION_MAX,
+  ORDER_ITEM_SPECIFICATIONS_MAX,
+  type OrderDocumentItem,
+} from "../../../../features/orders/schemas/firestore";
 import { lineTotalFor, allocateAcrossMembers } from "../../../shared/checkout/order-math";
 import { isFinalSale } from "../../../../features/products/constants/final-sale";
 
 /** A row before rule decoration — the shape `decorateOrderItem` receives. */
+/**
+ * The listing text as it read at purchase, bounded.
+ *
+ * 🛑 `description` is seller prose on every line of every order, and
+ * `items[]` is inline on a document Firestore caps at 1 MiB. Unbounded, a
+ * 20-line order is a REJECTED WRITE AT CHECKOUT — failing the one operation
+ * that must never fail for a reason the buyer cannot act on.
+ *
+ * Truncation is RECORDED rather than silent, for the same reason
+ * `statusHistoryTruncated` exists: a short description and a cut one must not
+ * read alike, or a dispute argues over text nobody can tell was clipped.
+ *
+ * `specifications` is capped by COUNT rather than characters — it is a table,
+ * and a half-row is worse than a missing one.
+ */
+type ListingSnapshot = Pick<
+  OrderDocumentItem,
+  "description" | "descriptionTruncated" | "specifications"
+>;
+
+function listingSnapshot(
+  p:
+    | {
+        description?: string;
+        specifications?: Array<{ name: string; value: string; unit?: string }>;
+      }
+    | null
+    | undefined,
+): ListingSnapshot {
+  if (!p) return {};
+  /*
+   * 🛑 A named Pick, not `Record<string, unknown>`. A bag of unknowns
+   * type-checks against anything, so a misspelled key — `descriptionTruncted`
+   * — would compile, spread onto the order line, and simply never be read.
+   * The field would look set and the truncation flag would be missing from
+   * every row (`audit-unknown-leakage` blocks exactly this).
+   */
+  const out: ListingSnapshot = {};
+  const desc = typeof p.description === "string" ? p.description.trim() : "";
+  if (desc) {
+    out.description = desc.slice(0, ORDER_ITEM_DESCRIPTION_MAX);
+    if (desc.length > ORDER_ITEM_DESCRIPTION_MAX) out.descriptionTruncated = true;
+  }
+  if (p.specifications?.length) {
+    out.specifications = p.specifications.slice(0, ORDER_ITEM_SPECIFICATIONS_MAX).map((x) => ({
+      name: x.name,
+      value: x.value,
+      ...(x.unit ? { unit: x.unit } : {}),
+    }));
+  }
+  return out;
+}
+
 export type BaseOrderLine = Omit<OrderDocumentItem, "listingType">;
 
 /**
@@ -103,6 +160,8 @@ export function expandCartLineToOrderRows(
       ...(representative.condition ? { condition: representative.condition } : {}),
       // I9 — the physical variant, for the price index's colourway slice.
       ...(representative.colourway ? { colourway: representative.colourway } : {}),
+      /* Part 14 — what the listing SAID, which is what a dispute argues over. */
+      ...listingSnapshot(representative),
       // Legacy collapsed bundle rows (no groupMembers) keep their old shape so
       // orders already in flight and their UI stay untouched.
       ...(item.bundleCategorySlug && item.bundleProductIds
@@ -167,6 +226,9 @@ export function expandCartLineToOrderRows(
       // blended condition would describe neither.
       ...(product?.condition ? { condition: product.condition } : {}),
       ...(product?.colourway ? { colourway: product.colourway } : {}),
+      /* Per MEMBER, same as condition above: a bundle can mix a sealed item
+       * with a loose one, and one blended description would describe neither. */
+      ...listingSnapshot(product),
       ...(gstRate != null ? { gstRate, ...(hsnCode ? { hsnCode } : {}) } : {}),
     };
   });
