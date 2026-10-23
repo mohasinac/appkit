@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { parseChartAttr, CHART_KINDS } from "./chart-spec";
 import { chartFigureHtml } from "../rich-text/chart-blocks";
 
@@ -69,19 +69,30 @@ function ChartDraftPanel({
   onCancel: () => void;
 }) {
   const result = useMemo(() => parseChartAttr(draft), [draft]);
-  const errorId = "appkit-chart-draft-error";
+  /*
+   * 🛑 Generated, not a literal. Two RichTextEditors on one page — a category
+   * form with a description and an SEO blurb, say — would otherwise emit the
+   * SAME hardcoded id twice, so the second panel's `htmlFor` and
+   * `aria-describedby` resolve to the FIRST one's textarea and error. A screen
+   * reader then reads the wrong field's error and clicking the label focuses
+   * the wrong box, which is exactly the class of bug the `ariaLabelledBy` note
+   * at the top of this file exists about.
+   */
+  const panelId = useId();
+  const fieldId = `${panelId}-draft`;
+  const errorId = `${panelId}-error`;
 
   return (
     <div className="appkit-rich-text-editor__chart border-b p-2 border-[var(--appkit-color-border)]">
       <label
         className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
-        htmlFor="appkit-chart-draft"
+        htmlFor={fieldId}
       >
         Chart data — kinds: {CHART_KINDS.join(", ")}. Each series needs one
         value per category.
       </label>
       <textarea
-        id="appkit-chart-draft"
+        id={fieldId}
         value={draft}
         onChange={(e) => onDraftChange(e.target.value)}
         rows={12}

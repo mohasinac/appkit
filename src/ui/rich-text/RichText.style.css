@@ -25,6 +25,24 @@
   border-bottom-color: var(--appkit-color-border);
 }
 
+/*
+ * The chart-draft panel the toolbar's "Chart" button opens.
+ *
+ * It sits between the toolbar and the editable area, so it needs the same
+ * recessive surface the toolbar has — without it the panel reads as part of the
+ * document being edited rather than as editor chrome, which is misleading when
+ * the thing inside it is a block of JSON.
+ */
+.appkit-rich-text-editor__chart {
+  background-color: var(--appkit-color-surface-raised);
+  border-bottom: 1px solid var(--appkit-color-border);
+}
+
+.dark .appkit-rich-text-editor__chart {
+  background-color: var(--appkit-color-slate-900);
+  border-bottom-color: var(--appkit-color-border);
+}
+
 .appkit-rich-text-editor__btn {
   border: 1px solid var(--appkit-color-border);
   color: var(--appkit-color-zinc-700);
