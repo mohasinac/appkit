@@ -179,7 +179,7 @@ import { sendNotification } from "../../../../features/admin/actions/notificatio
 import { resolveDisplayedUpiId } from "./upi-resolution";
 import { resolveSupplierIdentity } from "./supplier-identity";
 import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
-import { isCheckoutValueOtpVerified } from "../../../../features/checkout/actions/checkout-value-otp-actions";
+import { assertCheckoutValueOtp } from "./value-otp-gate";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
@@ -2082,19 +2082,13 @@ export async function createCheckoutOrderAction(
   // otherwise a buyer could dodge it by splitting a big cart across
   // sellers. Skipped for COD (physical hand-off at the door is its own
   // verification) and admin-bypass checkouts.
-  const otpThreshold = siteSettings?.payment?.otpCheckoutThreshold;
-  if (!adminBypass && paymentMethod !== "cod" && typeof otpThreshold === "number" && otpThreshold > 0) {
-    const cartTotalForOtpCheck = cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
-    if (cartTotalForOtpCheck >= otpThreshold) {
-      const verified = await isCheckoutValueOtpVerified(uid);
-      if (!verified) {
-        throw new ApiError(403, "CHECKOUT_VALUE_OTP_REQUIRED");
-      }
-    }
-  }
+  await assertCheckoutValueOtp({
+    uid,
+    amount: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    threshold: siteSettings?.payment?.otpCheckoutThreshold,
+    paymentMethod,
+    adminBypass,
+  });
 
   /*
    * COD value cap — the SERVER half of the gate.

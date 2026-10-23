@@ -10,6 +10,7 @@
 
 export { couponExpiryHandler } from "./couponExpiry";
 export { offerExpiryHandler } from "./offerExpiry";
+export { reservationExpiryHandler } from "./reservationExpiry";
 export { cartPruneHandler } from "./cartPrune";
 export { notificationPruneHandler } from "./notificationPrune";
 export { dailyDataCleanupHandler } from "./dailyDataCleanup";

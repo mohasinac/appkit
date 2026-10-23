@@ -17,6 +17,7 @@ import {
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
+  reservationExpiryHandler,
   obligationSweepHandler,
   paymentReconcileHandler,
   paymentWindowTimeoutHandler,
@@ -168,6 +169,28 @@ export const offerExpiry = defineFunction({
   trigger: { kind: "schedule", cron: "15 0 * * *", timeZone: "UTC" },
   handler: offerExpiryHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
+});
+
+/*
+ * 🛑 The ONLY bound on a leaked stock hold.
+ *
+ * Every other way a reservation ends is an action somebody takes; this is
+ * what happens when nobody does. Without it a hold is permanent, and a
+ * permanent hold is indistinguishable from stock the seller no longer has —
+ * with no error anywhere, because a lower `availableQuantity` is just a
+ * number.
+ *
+ * Every 15 minutes rather than daily: the default hold is 72 hours, so the
+ * cadence is not about precision, it is about the WORST case. A daily sweep
+ * means "expired at 09:01, buyable again tomorrow", and a buyer told an item
+ * is sold out for a day after the hold lapsed is the failure this prevents.
+ */
+export const reservationExpiry = defineFunction({
+  name: "reservationExpiry",
+  description: "Expire stock reservations past their TTL and restore availableQuantity (every 15 minutes).",
+  trigger: { kind: "schedule", cron: "every 15 minutes" },
+  handler: reservationExpiryHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
 export const productStatsSync = defineFunction({
@@ -559,6 +582,7 @@ export const SCHEDULED_FUNCTIONS = [
   paymentReviewAutoApprove,
   couponExpiry,
   offerExpiry,
+  reservationExpiry,
   productStatsSync,
   revenueRollup,
   priceIndexRollup,

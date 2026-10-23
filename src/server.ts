@@ -2717,3 +2717,54 @@ export {
   submitBalanceProof,
   reviewBalanceProof,
 } from "./_internal/server/features/orders/balance";
+
+/*
+ * [SERVER-ONLY] Stock reservation with a TTL.
+ *
+ * A hold on units that is NOT an order. The only mechanism before this was
+ * `onOrderCreate`'s decrement plus `pendingOrderTimeout`'s 15-minute restore,
+ * both keyed to an order — which cannot serve a multi-day shared purchase
+ * without either starting a payment clock on day one or letting an ordinary
+ * buyer take the item out from under the arrangement.
+ *
+ * 🛑 Every one of these moves the reservation row and `availableQuantity`
+ * inside ONE transaction. A caller that writes either half itself has
+ * reintroduced exactly the drift this primitive exists to remove.
+ */
+export {
+  reserveStock,
+  releaseReservation,
+  releaseReservationsForHolder,
+  consumeReservation,
+  expireDueReservations,
+  activeReservationsForProduct,
+} from "./_internal/server/features/inventory/reservations";
+export type { ReserveStockInput } from "./_internal/server/features/inventory/reservations";
+export {
+  RESERVATION_DEFAULT_TTL_HOURS,
+  RESERVATION_MAX_TTL_HOURS,
+  RESERVATION_HOLDER_KINDS,
+  RESERVATION_STATUSES,
+  STOCK_RESERVATION_COLLECTION,
+  isReservationActive,
+} from "./features/inventory/schemas/stock-reservation";
+export type {
+  ReservationHolderKind,
+  ReservationStatus,
+  StockReservationDocument,
+} from "./features/inventory/schemas/stock-reservation";
+
+/*
+ * [SERVER-ONLY] The high-value checkout OTP gate.
+ *
+ * 🛑 It takes the AMOUNT it judges. There were two hand-rolled copies of
+ * this rule — `createOrderForGroup` summing the cart, the gateway route
+ * using its own `subtotalRs` — which is Root Cause #75's shape, and they
+ * had already drifted on what they measured.
+ *
+ * Taking the amount is also Part 6's prerequisite: `otpCheckoutThreshold`
+ * is per CHECKOUT, so an N-party arrangement clears ₹12,000 in three
+ * ₹4,000 pieces with no OTP unless it can present its own total.
+ */
+export { assertCheckoutValueOtp } from "./_internal/server/features/checkout/value-otp-gate";
+export type { CheckoutValueOtpGateInput } from "./_internal/server/features/checkout/value-otp-gate";
