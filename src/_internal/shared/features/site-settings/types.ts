@@ -45,6 +45,15 @@ export interface PublicSiteSettings {
   /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
   chat?: { enabled: boolean };
   /**
+   * Is the support desk reachable — read by `UserLayoutClient`, a client
+   * component. Narrowed to the one boolean rather than passed by reference,
+   * so a field added to the document's `support` group later is not published
+   * by accident; `PUBLIC_SITE_SETTINGS_FIELDS` carries the same caveat beside
+   * its entry. Optional here because the group is absent on a settings
+   * document written before it existed.
+   */
+  support?: { enabled: boolean };
+  /**
    * The browser-side search index kill switch. **ON by default** — the
    * projection emits `indexEnabled: doc.search?.indexEnabled !== false`, so
    * an unseeded settings document and an absent group both mean "search

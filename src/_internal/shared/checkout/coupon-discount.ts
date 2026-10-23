@@ -52,6 +52,20 @@ export interface GroupCouponDiscountResult {
     scope?: "admin" | "seller";
     storeId?: string;
   }[];
+}
+
+/**
+ * What the CART-level call returns: the same totals, plus the per-group
+ * breakdown.
+ *
+ * 🛑 A separate interface rather than one optional field on the result above.
+ * `computeGroupCouponDiscount` scores ONE group, so it has no per-group list
+ * to report and never will — giving it an empty `perGroup` would be a value
+ * that type-checks and means nothing, and the capture route's points tender
+ * reads this array positionally. A caller that gets `[]` where it expected one
+ * entry per group apportions every point against group zero.
+ */
+export interface CartCouponDiscountResult extends GroupCouponDiscountResult {
   /**
    * The per-group discount, in the order the groups were passed.
    *
@@ -163,14 +177,14 @@ export function computeCartCouponDiscount(
     storeId: string | undefined;
     lines: { itemId: string; lineTotal: number }[];
   }[],
-): GroupCouponDiscountResult {
+): CartCouponDiscountResult {
   const cartSubtotal = groups.reduce(
     (sum, g) => sum + g.lines.reduce((s, l) => s + l.lineTotal, 0),
     0,
   );
   let couponDiscount = 0;
   const appliedDiscounts: GroupCouponDiscountResult["appliedDiscounts"] = [];
-  const perGroup: GroupCouponDiscountResult["perGroup"] = [];
+  const perGroup: CartCouponDiscountResult["perGroup"] = [];
   for (const group of groups) {
     const groupTotal = group.lines.reduce((s, l) => s + l.lineTotal, 0);
     const res = computeGroupCouponDiscount(

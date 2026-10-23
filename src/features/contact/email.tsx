@@ -19,7 +19,7 @@ import { recordSendAttempt } from "../../_internal/server/notifications/send-rec
 import type { SendGuardContext } from "../../_internal/shared/features/messaging/config";
 import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../contracts";
-import type { IEmailProvider } from "../../contracts/email";
+import type { EmailOptions, IEmailProvider } from "../../contracts/email";
 import { createResendProvider } from "../../providers/email-resend/provider";
 import { siteSettingsRepository } from "../admin/repository/site-settings.repository";
 import { serverLogger } from "../../monitoring";
@@ -41,15 +41,21 @@ import {
   EmailRow,
 } from "../email/primitives";
 
-type SendEmailOptions = Record<string, JsonValue> & {
-  to: string | string[];
-  subject: string;
-  html?: string;
-  text?: string;
-  from?: string;
-  cc?: string | string[];
-  replyTo?: string;
-};
+/*
+ * Derived from the provider contract rather than re-declared beside it. The
+ * hand-rolled copy this replaces was `Record<string, JsonValue> & {...}`, and
+ * the index signature was the bug: `attachments` carries a Buffer, which is
+ * not a JsonValue, so the one caller that passes an invoice PDF could not
+ * compile — and `sendEmail` was not forwarding `attachments` to the provider
+ * either, so even once it compiled the attachment would have been dropped
+ * silently (Root Cause #57). Two shapes for one contract is what let those
+ * drift apart; `headers` had the same history, declared on the provider side
+ * only and read here through a cast.
+ *
+ * `html` is widened back to optional because a few senders here are text-only
+ * and `sendEmail` defaults it to "" on the way out.
+ */
+type SendEmailOptions = Omit<EmailOptions, "html"> & { html?: string };
 
 /**
  * Everything `sendEmail` needs beyond the message itself.
@@ -63,9 +69,9 @@ type SendEmailOptions = Record<string, JsonValue> & {
  * (CLAUDE.md Rule #22: make the wrong thing unrepresentable).
  *
  * Kept as a separate second parameter rather than a field on
- * `SendEmailOptions` because that type has a `Record<string, JsonValue>` index
- * signature — a structured object would not satisfy it, and widening the index
- * signature to accommodate one field would weaken every other field's typing.
+ * `SendEmailOptions`, which is now the provider's own `EmailOptions`. The
+ * guard is about who may send and why; it is not part of the message, and
+ * folding it in would put it on the wire to the provider.
  */
 export type SendEmailGuard = SendGuardContext;
 
@@ -185,10 +191,10 @@ export async function sendEmail(
           ? (opts.cc as string | string[])
           : undefined,
       replyTo: typeof opts.replyTo === "string" ? opts.replyTo : undefined,
-      headers:
-        typeof opts.headers === "object" && opts.headers
-          ? (opts.headers as Record<string, string>)
-          : undefined,
+      headers: opts.headers,
+      // Forwarded, not dropped — the provider has mapped these to Resend's
+      // `attachments` all along; nothing here ever handed them over.
+      attachments: opts.attachments,
     });
     void recordSendAttempt({
       to: opts.to as string | string[],

@@ -180,7 +180,7 @@ async function alertAdminOnce(input: {
       ? `Courier wallet needs a top-up (${provider})`
       : `Courier booking failing (${provider})`;
 
-  const result = await paymentCasesRepository.openOrObserve({
+  const result = await paymentCasesRepository().openOrObserve({
     kind: "courier_unavailable",
     /*
      * 🛑 `subjectId` identifies THE PROBLEM, not the observation — the

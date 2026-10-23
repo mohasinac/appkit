@@ -324,6 +324,7 @@ export {
   computeGroupCouponDiscount,
   computeCartCouponDiscount,
   type GroupCouponDiscountResult,
+  type CartCouponDiscountResult,
 } from "./_internal/shared/checkout/coupon-discount";
 
 /*

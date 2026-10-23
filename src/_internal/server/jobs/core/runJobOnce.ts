@@ -212,7 +212,7 @@ async function openDeadJobCase(
 ): Promise<void> {
   const subjectId = job.parentJobId ?? jobId;
   try {
-    await paymentCasesRepository.openOrObserve({
+    await paymentCasesRepository().openOrObserve({
       kind: "dead_job",
       subjectId,
       severity: "error",

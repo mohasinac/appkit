@@ -690,7 +690,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
    * holder — a distinction with no decision behind it, which is how a
    * permission union becomes unreadable.
    */
-  "/admin/invoicing": "settings:write",
+  "/admin/invoicing": "admin:settings:write",
 };
 
 // ============================================================================

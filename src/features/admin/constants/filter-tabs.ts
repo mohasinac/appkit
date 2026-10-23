@@ -494,6 +494,7 @@ export const ADMIN_PAYMENT_CASE_KIND_TABS = [
   { id: "protection_claim", label: "Protection claim" },
   { id: "grievance", label: "Grievance" },
   { id: "shipping_unpriced", label: "Shipping unpriced" },
+  { id: "courier_unavailable", label: "Courier unavailable" },
   { id: "dead_job", label: "Dead job" },
   { id: "ledger_drift", label: "Points drift" },
 ] as const satisfies readonly AdminFilterTab[];

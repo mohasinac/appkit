@@ -75,7 +75,7 @@ export function AdminInvoicingView() {
         </Text>
       </Div>
 
-      <Card padding="card">
+      <Card padding="md">
         <Stack gap="md">
           <Heading level={2}>GSTR-1 draft</Heading>
           {/*
@@ -101,7 +101,7 @@ export function AdminInvoicingView() {
                 label="FY starting"
                 value={fyStart}
                 onChange={setFyStart}
-                helperText="e.g. 2026 for FY 26-27"
+                hint="e.g. 2026 for FY 26-27"
               />
             </Div>
           </Row>

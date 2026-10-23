@@ -9,6 +9,7 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 import type { ListingType } from "../../products/types";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
+import type { DisputeKind } from "../../../_internal/shared/features/orders/dispute-reasons";
 import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
 import type {
   ActualShipmentCost,

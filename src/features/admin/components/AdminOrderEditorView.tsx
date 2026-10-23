@@ -359,7 +359,7 @@ export function AdminOrderEditorView({
                   adminOrderItemRow(group.item, `s-${group.index}`)
                 ) : (
                   <Div key={`g-${gi}`}>
-                    <Div layout="flex" align="center" gap="sm" padding="x-sm" surface="muted">
+                    <Div layout="flex" align="center" gap="2" padding="x-sm" surface="muted">
                       <Text size="xs" weight="semibold">
                         {group.groupTitle ?? "Grouped purchase"}
                       </Text>

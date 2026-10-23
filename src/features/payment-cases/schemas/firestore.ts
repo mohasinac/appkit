@@ -294,6 +294,7 @@ const PAYMENT_CASE_KIND_MAP: Record<PaymentCaseKind, true> = {
   protection_claim: true,
   manual_refund_due: true,
   ledger_drift: true,
+  courier_unavailable: true,
 };
 export const PAYMENT_CASE_KINDS = Object.keys(PAYMENT_CASE_KIND_MAP) as PaymentCaseKind[];
 

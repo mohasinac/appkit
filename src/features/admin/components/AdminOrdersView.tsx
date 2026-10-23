@@ -2,6 +2,7 @@
 
 import type { OrderAddonBadgesOrder } from "../../orders/components/OrderAddonBadges";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
+import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
@@ -105,6 +106,22 @@ function toOrderItemRows(item: ListingItemRecord): AdminOrderItemRow[] {
  * bundle plus one standalone reads "+1 more". The number a buyer or admin
  * reads on a row should match the number of lines they will see inside it.
  */
+/*
+ * `sourceContext` arrives as JsonValue off the raw admin-list doc, so it can
+ * be a string, an array or null — none of which `OrderProvenanceCard` can
+ * switch on. This narrows to "an object carrying a `path` tag" and nothing
+ * further: that is deliberately NOT the card's own switch duplicated, it only
+ * establishes that there is a tag to switch on, which is what makes the single
+ * cast true instead of hopeful. `as unknown as OrderSourceContext` would
+ * assert exactly the same thing while checking nothing (Root Cause #98).
+ */
+function toSourceContext(value: unknown): OrderSourceContext | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  return typeof (value as { path?: unknown }).path === "string"
+    ? (value as OrderSourceContext)
+    : undefined;
+}
+
 function firstOrderItem(item: ListingItemRecord): { image?: string; title?: string; extraCount: number } {
   const groups = groupOrderItemsByLine(toOrderItemRows(item));
   const first = groups[0];
@@ -302,13 +319,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             couponCode: toStringValue(item.couponCode) || undefined,
             couponDiscount: Number(item.couponDiscount ?? 0) || undefined,
           },
-          /*
-           * Same reasoning as `addons` — raw doc in, so no serializer entry.
-           * Cast rather than re-validated: `path` is the discriminator the
-           * card switches on, and narrowing it here would duplicate that
-           * switch in a second place for no gain.
-           */
-          sourceContext: item.sourceContext as OrderSourceContext | undefined,
+          // Raw doc in, so no serializer entry — but unlike `addons` above,
+          // which coerces every field by hand, this one needs a tag check
+          // before it can be trusted. See `toSourceContext`.
+          sourceContext: toSourceContext(item.sourceContext),
           currency: toStringValue(item.currency, "") || undefined,
         };
       }),

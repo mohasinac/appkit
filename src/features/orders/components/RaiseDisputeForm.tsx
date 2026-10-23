@@ -89,7 +89,7 @@ export function RaiseDisputeForm({
    */
   const loadReasons = useCallback(
     async (query: string, page: number): Promise<AsyncPage<PaginatedSelectOption<string>>> => {
-      if (!kind) return { options: [], hasMore: false };
+      if (!kind) return { items: [], hasMore: false };
       const res = await fetch(`${reasonsEndpoint}?kind=${encodeURIComponent(kind)}`);
       if (!res.ok) {
         /*

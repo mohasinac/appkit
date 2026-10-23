@@ -120,7 +120,7 @@ export const CONSOLIDATED_TAB_SURFACES: readonly ConsolidatedTabSurface[] = [
     tab: "navigation",
     portal: "admin",
     sectionPath: "Admin › System › Permissions Toggles",
-    requiredPermission: "settings:write",
+    requiredPermission: "admin:settings:write",
   },
 ];
 

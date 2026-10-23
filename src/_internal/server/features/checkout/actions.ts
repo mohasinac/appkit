@@ -1113,7 +1113,7 @@ async function settlePointsTender(input: {
           amountUnfunded: input.pointsApplied,
           error: inner.message,
         });
-        void paymentCasesRepository
+        void paymentCasesRepository()
           .openOrObserve({
             kind: "amount_mismatch",
             // The problem is this order's unfunded discount, so the subject is
