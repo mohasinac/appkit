@@ -992,6 +992,32 @@ export interface SiteSettingsDocument extends BaseDocument {
     windowDays: number;
   };
   /**
+   * Thresholds for the Trusted Seller tier — admin-tunable.
+   *
+   * 🛑 DECLARED, not written through a cast. An undeclared field that admin
+   * code writes is invisible to every type-driven review AND to the public
+   * projection's deny-list, which is literally how `adSettings`,
+   * `integrations` and `platformLimits` reached anonymous callers (Root Cause
+   * #70). `siteSettings` is projected through an allow-list
+   * (`toPublicSiteSettings`) so this one is not exposed today — but the field
+   * being undeclared is the defect, independent of today's blast radius.
+   *
+   * Every key is optional and folded onto `SELLER_STANDING_DEFAULTS` by
+   * `resolveSellerStandingThresholds`, so an admin who changes one number
+   * keeps the rest. A negative or non-finite override is IGNORED there rather
+   * than honoured — a threshold of `-1` would make its criterion trivially
+   * true and auto-grant early payout to every store, which is the only
+   * failure mode of this feature that moves money.
+   */
+  sellerStanding?: {
+    windowDays?: number;
+    minDeliveredOrders?: number;
+    minDistinctBuyers?: number;
+    minDistinctAddresses?: number;
+    minRatedOrders?: number;
+    minAverageRating?: number;
+  };
+  /**
    * The support integration's on/off switch.
    *
    * 🛑 The ONLY new integration flag. The other three the admin page switches

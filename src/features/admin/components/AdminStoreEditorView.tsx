@@ -23,6 +23,8 @@ interface AdminStoreFormValues {
   storeStatus: StoreStatus;
   isVerified: boolean;
   isFeatured: boolean;
+  sellerTier: "seller" | "trusted";
+  trustedSeller: boolean;
   suspensionReason: string;
   capabilities: string[];
   adminNotes: string;
@@ -56,6 +58,17 @@ export interface AdminStoreEditorViewProps {
   currentStatus?: string;
   currentIsVerified?: boolean;
   currentIsFeatured?: boolean;
+  /**
+   * 🛑 Both REQUIRED for the controls to show the stored value, and both are
+   * the Root Cause #38 trap: `AdminStoresView` seeds this editor from a LIST
+   * row, so a field the list serializer omits arrives `undefined`, the control
+   * defaults to off, and the save handler sends that wrong default back —
+   * silently un-trusting a trusted store while the admin was editing
+   * something else. The list route emits `trustedSeller` already; `sellerTier`
+   * had to be added to it in the same change.
+   */
+  currentSellerTier?: "seller" | "trusted";
+  currentTrustedSeller?: boolean;
   currentCapabilities?: string[];
   /**
    * 🛑 Required for the note to DISPLAY. Without it `adminNotes` was hardcoded
@@ -222,6 +235,8 @@ export function AdminStoreEditorView({
   currentStatus,
   currentIsVerified,
   currentIsFeatured,
+  currentSellerTier,
+  currentTrustedSeller,
   currentCapabilities,
   currentAdminNotes,
 }: AdminStoreEditorViewProps) {
@@ -232,6 +247,8 @@ export function AdminStoreEditorView({
     storeStatus: (currentStatus as StoreStatus) ?? "pending",
     isVerified: currentIsVerified ?? false,
     isFeatured: currentIsFeatured ?? false,
+    sellerTier: currentSellerTier ?? "seller",
+    trustedSeller: currentTrustedSeller ?? false,
     suspensionReason: "",
     capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
     adminNotes: currentAdminNotes ?? "",
@@ -254,7 +271,16 @@ export function AdminStoreEditorView({
       capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
       adminNotes: currentAdminNotes ?? "",
     });
-  }, [open, currentStatus, currentIsVerified, currentIsFeatured, currentCapabilities, currentAdminNotes]);
+  }, [
+    open,
+    currentStatus,
+    currentIsVerified,
+    currentIsFeatured,
+    currentSellerTier,
+    currentTrustedSeller,
+    currentCapabilities,
+    currentAdminNotes,
+  ]);
 
   const saveMutation = useApiMutation({
     errorMessage: "Failed to update store.",
@@ -277,6 +303,21 @@ export function AdminStoreEditorView({
         adminNotes: parsed.adminNotes ?? "",
         isFeatured: parsed.isFeatured,
         isVerified: parsed.isVerified,
+        /*
+         * 🛑 `sellerTier` is sent ONLY when the admin actually moved it away
+         * from the stored value, because the route treats any `sellerTier` in
+         * the body as a deliberate override and PINS it against the monthly
+         * recompute. Sending it unconditionally would lock every store an
+         * admin ever opened and saved — quietly freezing the automatic tier
+         * for the whole catalogue, one unrelated edit at a time.
+         *
+         * `trustedSeller` has no such side effect and is sent every time, so
+         * it can also be cleared.
+         */
+        ...(parsed.sellerTier !== undefined && parsed.sellerTier !== (currentSellerTier ?? "seller")
+          ? { sellerTier: parsed.sellerTier }
+          : {}),
+        trustedSeller: parsed.trustedSeller ?? false,
         suspensionReason: parsed.suspensionReason || undefined,
         capabilities: parsed.capabilities ?? [],
       });

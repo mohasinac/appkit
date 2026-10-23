@@ -247,6 +247,17 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         currentStatus={editorRow?.status?.toLowerCase()}
         currentIsVerified={Boolean(editorRow?._raw?.isVerified)}
         currentIsFeatured={Boolean(editorRow?._raw?.isFeatured)}
+        /*
+         * Both now travel from the list route's serializer through to the
+         * editor. `trustedSeller` was ALREADY emitted by the route and simply
+         * never passed down — the API accepted the field, nothing could send
+         * it, and the control did not exist. Root Cause #38's shape at the
+         * prop, which is where it hides best.
+         */
+        currentSellerTier={
+          editorRow?._raw?.sellerTier === "trusted" ? "trusted" : "seller"
+        }
+        currentTrustedSeller={Boolean(editorRow?._raw?.trustedSeller)}
         currentCapabilities={
           Array.isArray(editorRow?._raw?.capabilities)
             ? (editorRow!._raw!.capabilities as string[])

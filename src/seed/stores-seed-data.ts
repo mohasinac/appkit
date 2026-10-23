@@ -111,6 +111,30 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     isVerified: true,
     isFeatured: true,
     /*
+     * The platform's own store is trusted by default, and PINNED.
+     *
+     * 🛑 `tierLockedByAdmin` is the load-bearing part. `sellerStandingRollup`
+     * measures 25 delivered orders, 25 distinct buyers, 25 distinct addresses
+     * and 25 ratings inside a rolling 90 days — figures the platform store has
+     * never had on a seeded catalogue — so without the pin the first month-end
+     * run would strip the badge from LetItRip's own storefront and revert its
+     * payout timing, with a perfectly correct audit row explaining why.
+     *
+     * `trustedSeller: true` is the private half: this store is paid at
+     * shipping. That is trivially safe here — the counterparty is the platform
+     * itself, so there is no risk being transferred to anyone.
+     *
+     * No `standing` is seeded at all. A seeded metrics block would be a
+     * fabricated measurement, and the next real run overwrites it anyway;
+     * absent means "never measured", which the seller panel renders honestly
+     * instead of as a confident zero (Root Cause #72). The pin is a top-level
+     * field for exactly this reason — pinning a store must not require
+     * inventing figures.
+     */
+    sellerTier: "trusted",
+    trustedSeller: true,
+    tierLockedByAdmin: true,
+    /*
      * The platform's own store subscribes by default — it is the one shop
      * LetItRip does not have to sell the add-on to, and leaving it off would
      * mean the only seeded storefront never demonstrates the feature it ships.

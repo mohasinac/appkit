@@ -73,6 +73,40 @@ export const PUBLIC_STORE_FIELDS = [
   "allowSharedPurchase",
   "sharedPurchaseHandlingFee",
   "sharedPurchaseExtraShippingPerDestination",
+  /*
+   * ── Seller trust, 2026-10-24 ──────────────────────────────────────────────
+   *
+   * 🛑 `isVerified` MOVED here from PRIVATE, deliberately, and this is a
+   * reclassification rather than a drive-by.
+   *
+   * It was filed as "admin moderation state; surfaced via a separate badge
+   * feed if ever needed". That badge feed never existed, and meanwhile three
+   * things were already treating the field as public: `/sellers` filters on
+   * `isVerified == true` to offer a "verified sellers" view,
+   * `StoreCapabilitiesGuideView` told sellers in as many words that "the
+   * Verified badge appears on your store profile page and on every listing
+   * card", and the seller onboarding checklist offered "Request verified
+   * badge" as a step. All three described a public badge; the projection
+   * stripped the field, so no badge could render anywhere and the guide copy
+   * was simply false.
+   *
+   * It is a badge, not moderation state — `status` / `isPublic` /
+   * `suspensionReason` are the moderation fields and all three stay private
+   * or already are public for their own reasons. The named reader is
+   * `<SellerTierBadge>`.
+   *
+   * `sellerTier` and `standing` are public for the same reason: the tier is
+   * the whole point of the feature being visible to a buyer, and `standing`
+   * carries the METRICS behind it (counts and a mean — no buyer uids, no
+   * addresses) so a seller's own dashboard panel can render progress from the
+   * store document it already holds without a second read.
+   *
+   * 🛑 `trustedSeller` stays PRIVATE and must never be added here. It is the
+   * money-moving half of the same decision — see its entry below.
+   */
+  "isVerified",
+  "sellerTier",
+  "standing",
   "createdAt",
 ] as const;
 
@@ -127,7 +161,14 @@ export const PRIVATE_STORE_FIELDS = [
   // no business reading who suspended whom and why.
   "statusHistory",
   "statusHistoryTruncated",
-  "isVerified", // admin moderation state; surfaced via a separate badge feed if ever needed
+  // `isVerified` moved to PUBLIC_STORE_FIELDS on 2026-10-24 — it is a badge,
+  // and three surfaces already described it as one. See the note there.
+  //
+  // `tierLockedByAdmin` is the opposite call: `sellerTier` is public because a
+  // buyer should see the badge, but HOW we administer that record — whether an
+  // admin pinned it against the monthly recompute — says nothing about the
+  // goods or the seller and is nobody's business outside the back office.
+  "tierLockedByAdmin",
   "suspensionReason", // admin moderation note
   "capabilities", // internal feature gating; server-enforced, never client-read
   "customCommissionRate", // commercial terms for this seller
@@ -260,6 +301,24 @@ export function toStoreListItem(
     sharedPurchaseHandlingFee: doc.sharedPurchaseHandlingFee,
     sharedPurchaseExtraShippingPerDestination:
       doc.sharedPurchaseExtraShippingPerDestination,
+    /*
+     * 🛑 `?? false` and `?? "seller"` — the same tri-state rule as the
+     * protection flags, for a sharper reason. A badge component testing
+     * `undefined` loosely renders nothing, which is correct here, but a
+     * component testing `!== false` or `!== "seller"` would render a VERIFIED
+     * or TRUSTED badge on a store that has earned neither. Defaulting on the
+     * server means no client can make that mistake.
+     */
+    isVerified: doc.isVerified ?? false,
+    sellerTier: doc.sellerTier ?? "seller",
+    /*
+     * `standing` is passed through as `undefined` when absent, NOT defaulted
+     * to a zeroed object. "Never computed" and "computed, and you have zero
+     * delivered orders" are different facts, and the panel renders them
+     * differently — a confident "0 of 25" on a store that has simply never
+     * been measured is the regression Root Cause #72 names.
+     */
+    standing: doc.standing,
     createdAt: toIsoString(doc.createdAt),
   };
 }

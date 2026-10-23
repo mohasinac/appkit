@@ -33,6 +33,7 @@ export { hardBanReinstatementHandler } from "./hardBanReinstatement";
 export { paymentReviewAutoApproveHandler } from "./paymentReviewAutoApprove";
 export { productStatsSyncHandler } from "./productStatsSync";
 export { revenueRollupHandler } from "./revenueRollup";
+export { sellerStandingRollupHandler } from "./sellerStandingRollup";
 export { priceIndexRollupHandler } from "./priceIndexRollup";
 export { marketPriceRollupHandler } from "./marketPriceRollup";
 export { searchIndexBuildHandler } from "./searchIndexBuild";
