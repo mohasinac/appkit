@@ -57,6 +57,9 @@
  */
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
+import { MAX_ACTIVE_SLIDES } from "../features/homepage/schemas";
+import { buildSlidesFromEvents } from "../features/events/utils/carousel-slide";
+import { eventsSeedData } from "./events-seed-data";
 import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
@@ -228,11 +231,22 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
    *
    * Overlay-only with `cards: []`, per the header's rule 2.
    */
+  /*
+   * 🛑 SUPERSEDED 2026-10-24 by the event-owned slide generated from
+   * `event-festive-cashback-10`'s own `carouselConfig` — see the note above
+   * the `buildSlidesFromEvents` call at the foot of this file.
+   *
+   * Kept rather than deleted, `active: false`: `appkit-seed load` is a MERGE
+   * write and cannot remove a document, so deleting this literal would leave
+   * the live slide exactly as it is, still active, still carrying the stale
+   * headline. Flipping the flag is the only edit that actually reaches
+   * production.
+   */
   {
     id: "slide-festive-cashback",
-    title: "Festive cashback (promo)",
+    title: "Festive cashback (promo) — superseded by the event-owned slide",
     order: 2,
-    active: true,
+    active: false,
     background: {
       type: "image",
       // Uses the EVENT cover so the slide and the page it links to look
@@ -266,11 +280,22 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     createdAt: NOW,
     updatedAt: NOW,
   },
+  /*
+   * 🛑 DEACTIVATED 2026-10-24 to make room, not because it is bad.
+   *
+   * Two event-owned slides joined the rail (the festive hub and launch week)
+   * and the ceiling is five. Bundles lost the slot because it is the one
+   * message already carried elsewhere on the slide that replaced it — zone 1
+   * of the festive cards slide is BUY3GET1, which is the bundle pitch in the
+   * form people actually act on during the season.
+   *
+   * Re-activate it when the season ends; nothing else needs to change.
+   */
   {
     id: "slide-bundles-save",
     title: "Bundles",
     order: 3,
-    active: true,
+    active: false,
     background: {
       type: "image",
       url: MEDIA.bgBundles,
@@ -555,7 +580,50 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
 ];
 
-export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = _rawSlides.map((s) => ({
+/*
+ * ── EVENT-OWNED SLIDES ───────────────────────────────────────────────────
+ *
+ * An event that carries a `carouselConfig` generates its own slide, through
+ * the one builder both this file and `push-editorial-content.mjs` consume.
+ *
+ * 🛑 THIS IS WHY `slide-festive-cashback` ABOVE IS NOW `active: false`.
+ * The homepage slide advertising the Diwali offer and the event page it links
+ * to were two separately-edited documents, and they drifted: the slide said
+ * "Diwali: 10% cashback on every order" long after the event had been
+ * rebranded to "Diwali to New Year: Four Offers, Three Months". Neither edit
+ * knew about the other and nothing reported the disagreement.
+ *
+ * The replacement is generated FROM the event, so the headline cannot say
+ * something the page does not. Its id is `slide-event-festive-cashback-10`
+ * (derived from the event id), which is deliberately NOT the old slide's id —
+ * a merge-write onto the old id would inherit its stale overlay.
+ *
+ * `buildSlidesFromEvents` throws if the active count exceeds
+ * `MAX_ACTIVE_SLIDES`, counting ONLY event-owned slides. The hand-written
+ * ones above are counted here, together with them, because the rail renders
+ * one combined list and five is the ceiling for the whole thing.
+ */
+const _eventSlides = buildSlidesFromEvents(
+  eventsSeedData,
+  (event) => String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id)),
+  "user-admin-letitrip",
+);
+
+const _allSlides = [..._rawSlides, ..._eventSlides];
+
+const _activeTotal = _allSlides.filter((s) => s.active).length;
+if (_activeTotal > MAX_ACTIVE_SLIDES) {
+  throw new Error(
+    `carousel-slides-seed-data: ${_activeTotal} active slides across hand-written ` +
+      `(${_rawSlides.filter((s) => s.active).length}) and event-owned ` +
+      `(${_eventSlides.filter((s) => s.active).length}), but MAX_ACTIVE_SLIDES is ` +
+      `${MAX_ACTIVE_SLIDES}. HeroCarousel renders the first five; the rest would be ` +
+      `authored, stored and never seen. Deactivate one, or fold several promotions ` +
+      `into one \`placement: "cards"\` slide — that is what the six zones are for.`,
+  );
+}
+
+export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = _allSlides.map((s) => ({
   cards: [] as CarouselSlideDocument["cards"],
   ...s,
 }));

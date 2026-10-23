@@ -1,8 +1,26 @@
 /*
- * WHY: Seeds the ONE live event — the Diwali → New Year season offers.
- * WHAT: 1 active, PINNED `offer` event spanning 6 Nov 2026 → 5 Feb 2027,
+ * WHY: Seeds the live events — the Diwali → New Year season.
+ * WHAT: 6 active events. The PINNED `offer` hub (6 Nov 2026 → 5 Feb 2027,
  *       advertising the four codes a community poll chose plus the
- *       festival-only CASHBACK10.
+ *       festival-only CASHBACK10), two `sale` events, a `spin_wheel`,
+ *       a `poll` and a `raffle`.
+ *
+ * ## 🛑 FIVE EVENTS ADDED 2026-10-24, AND WHY THAT IS NOT A PRUNE REVERSAL
+ *
+ * The prune recorded below deleted ELEVEN DEMO events — placeholder rows that
+ * existed to exercise UI, pointing at coupons and stores that no longer exist.
+ * These five are the opposite: real seasonal content, written to run, each
+ * anchored to a coupon that actually exists and carries its own validity.
+ *
+ * They also close the gap the prune's own consequence note predicted. It said
+ * the tester cases needing a poll, a spin wheel or a raffle "now have NO
+ * fixture" and "can only report could not test" — four of those three types
+ * are back, as live content rather than as demo rows. `survey`, `feedback`
+ * and `lottery` still have none.
+ *
+ * 🛑 `saleConfig` HAS NEVER HAD A FIXTURE UNTIL NOW. `EventSaleBanner` and the
+ * whole `type: "sale"` branch of the detail page shipped with nothing to
+ * render, so neither had ever been seen by anyone.
  *
  * 🛑 Its id and slug still say `festive-cashback-10`, which is now narrower
  * than what the event covers. They are KEPT: the slug is the live public URL
@@ -63,6 +81,49 @@ import { editorialImage } from "./_helpers/editorial-media";
 import { SEASON_START, SEASON_END } from "./_helpers/festive-window";
 
 const NOW = new Date();
+
+/*
+ * ── Windows for the five season events added 2026-10-24 ──────────────────
+ *
+ * Absolute IST instants, for the same reason `festive-window.ts` gives: a
+ * `daysAhead(n)` offset moves the whole festival every time anyone reseeds,
+ * so prose naming a weekday stops being true the next run.
+ *
+ * These live here rather than in `festive-window.ts` because that file exists
+ * to hold ONE invariant — the event window and the coupon window that must
+ * agree. None of these five opens a coupon window of its own: the two sale
+ * events advertise codes that already exist and carry their own validity, so
+ * there is no second file to disagree with.
+ */
+const LAUNCH_WEEK_END = new Date("2026-11-20T23:59:59+05:30");
+const CLEARANCE_START = new Date("2026-11-21T00:00:00+05:30");
+const CLEARANCE_END = new Date("2026-11-23T23:59:59+05:30");
+const SPIN_END = new Date("2026-11-16T23:59:59+05:30");
+const VOTE_END = new Date("2026-12-15T23:59:59+05:30");
+const RAFFLE_END = new Date("2026-12-01T23:59:59+05:30");
+
+/*
+ * 🛑 EVENT COVERS REUSE REAL CATALOGUE PHOTOGRAPHY, DELIBERATELY.
+ *
+ * These `category-*-image` slugs are the model covers already fetched from
+ * beyblade.fandom.com, already uploaded to Storage, already recorded in
+ * `docs/research/.../image-provenance.json`, and already resolvable through
+ * `/media/<shortId>`. Pointing an event at one costs no new fetch and cannot
+ * 404 — and it is the only source that has Beyblade subject matter at all.
+ * Openverse indexes Commons, Flickr and museums; it has no Beyblades.
+ *
+ * The carousel BACKGROUNDS are different and must not come from here: a
+ * full-bleed backdrop sits under inverse-ink copy at ~55% dim, and a product
+ * shot competes with the headline and loses both. Those are the abstract
+ * `carousel-bg-*` slots in the editorial manifest.
+ */
+const COVER = {
+  launchWeek: "category-ultimate-valkyrie-legacy-variable-9-image",
+  clearance: "category-spriggan-requiem-0-zeta-image",
+  spin: "category-storm-spriggan-knuckle-unite-image",
+  vote: "category-astral-spriggan-over-quattro-0-image",
+  raffle: "category-dranzer-g-image",
+} as const;
 
 const _raweventsSeedData: EventDocument[] = [
   // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
@@ -172,6 +233,319 @@ const _raweventsSeedData: EventDocument[] = [
       "coupon-cashback5",
       "coupon-freeship2000",
     ],
+    /*
+     * The season hub slide — SIX tiles, one per thing running this festive
+     * season, each linking to its own page.
+     *
+     * 🛑 THIS IS WHY `placement: "cards"` EXISTS. The rail renders at most
+     * `MAX_ACTIVE_SLIDES` (5), and four of those are standing messages
+     * (how-to-shop, authenticity, pre-orders, and the launch sale below).
+     * Giving each of the six promotions its own overlay slide would need six
+     * slots we do not have; one tiled slide advertises all six inside one.
+     *
+     * Zones are the 2x3 desktop grid — 1·2·3 across the top, 4·5·6 beneath.
+     * On a phone they flow in this source order, one per row, which is why
+     * the two strongest offers are zones 1 and 2 rather than buried at 5–6.
+     */
+    carouselConfig: {
+      placement: "cards",
+      order: 2,
+      active: true,
+      backgroundMediaSlug: "carousel-bg-festive-deals",
+      dimOpacity: 0.62,
+      cards: [
+        {
+          zone: 1,
+          mediaSlug: COVER.launchWeek,
+          eyebrow: "Buy 3, get 1 free",
+          title: "BUY3GET1",
+          description: "Four items under ₹2,000 — the cheapest comes off.",
+          buttonText: "Copy the code",
+        },
+        {
+          zone: 2,
+          mediaSlug: COVER.clearance,
+          eyebrow: "Opens Dhanteras",
+          title: "10% back, up to ₹1,000",
+          description: "CASHBACK10, on orders over ₹999. Diwali fortnight only.",
+          buttonText: "See all four codes",
+        },
+        {
+          zone: 3,
+          mediaSlug: COVER.spin,
+          eyebrow: "Daily, free",
+          title: "Spin the Launcher",
+          description: "One spin a day through the Diwali fortnight.",
+          href: "/events/spin-the-launcher",
+          buttonText: "Take your spin",
+        },
+        {
+          zone: 4,
+          mediaSlug: COVER.launchWeek,
+          eyebrow: "6–20 November",
+          title: "Beyblade X Launch Week",
+          description: "The X range, with the festive codes on top.",
+          href: "/events/beyblade-x-launch-week",
+          buttonText: "Shop the range",
+        },
+        {
+          zone: 5,
+          mediaSlug: COVER.raffle,
+          eyebrow: "Free to enter",
+          title: "Signed Dranzer G",
+          description: "One raffle, one winner, drawn 1 December.",
+          href: "/events/signed-dranzer-raffle",
+          buttonText: "Enter the raffle",
+        },
+        {
+          zone: 6,
+          mediaSlug: COVER.vote,
+          eyebrow: "Your call",
+          title: "What should we restock?",
+          description: "Vote on what we bring back in 2027.",
+          href: "/events/restock-vote-2027",
+          buttonText: "Cast a vote",
+        },
+      ],
+    },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  } as EventDocument,
+
+  // ── SALE — Beyblade X launch week ────────────────────────────────────────
+  /*
+   * 🛑 THE FIRST `saleConfig` FIXTURE THIS CORPUS HAS EVER HAD.
+   * `EventSaleBanner` and the whole `type: "sale"` branch shipped with no row
+   * to render, so neither had ever been seen. See the `discountPercent` note.
+   */
+  {
+    id: "event-beyblade-x-launch-sale",
+    slug: "beyblade-x-launch-week",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Beyblade X Launch Week",
+    description:
+      `<p><strong>The Beyblade X range, for the two weeks either side of Diwali.</strong> Launch week runs from Dhanteras, Friday 6 November, to Friday 20 November 2026.</p>` +
+      `<p>X is the fourth generation — the Xtreme Gear Ratchet system, the rail-launch stadiums, and a part pool that mixes with nothing that came before it. If you have been waiting to start, this is the fortnight to.</p>` +
+      `<h2>What is in it</h2>` +
+      `<ul>` +
+      `<li>Starter sets, including the rail launchers</li>` +
+      `<li>Loose blades, ratchets and bits as spares</li>` +
+      `<li>Stadiums and the gear the X system needs</li>` +
+      `</ul>` +
+      `<h2>Stacking it with the festive codes</h2>` +
+      `<p>Launch week sits inside the festive season, so the season codes apply here too. <strong>CASHBACK10</strong> is the one to use during the Diwali fortnight — 10% back up to ₹1,000 on anything over ₹999.</p>` +
+      `<p><em>One code per order. If your basket is over ₹10,000, CASHBACK5 is worth more than the capped codes.</em></p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: SEASON_START,
+    endsAt: LAUNCH_WEEK_END,
+    coverImage: {
+      type: "image",
+      url: editorialImage(COVER.launchWeek),
+      alt: "A Beyblade X top on its launcher",
+    },
+    tags: ["sale", "beyblade-x", "launch", "festive", "starter-set"],
+    /*
+     * 🛑 `discountPercent: 10` IS NOT A DISCOUNT THE TILL APPLIES.
+     *
+     * `SaleConfig` is display copy — `EventSaleBanner` renders it and nothing
+     * reads it at checkout. So the number here MUST describe a mechanism that
+     * really exists, and it describes CASHBACK10, which is a real coupon with
+     * a real `validity` window attached below. Writing an arbitrary percentage
+     * would advertise a reduction no code honours — the exact failure
+     * `festive-window.ts` was created to stop happening in the other direction.
+     */
+    saleConfig: {
+      discountPercent: 10,
+      bannerText: "10% back on the X range with CASHBACK10 — up to ₹1,000, orders over ₹999.",
+    },
+    couponIds: ["coupon-cashback10", "coupon-freeship2000"],
+    /*
+     * The one event besides the season hub with its own slide. An overlay
+     * rather than tiles: launch week is a single message with a single
+     * destination, which is what an overlay is for.
+     */
+    carouselConfig: {
+      placement: "overlay",
+      order: 3,
+      active: true,
+      backgroundMediaSlug: "carousel-bg-launch-week",
+      dimOpacity: 0.58,
+      eyebrow: "6–20 November",
+      title: "Beyblade X Launch Week",
+      description: "The whole X range, with 10% back on orders over ₹999.",
+      buttonText: "Shop launch week",
+    },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  } as EventDocument,
+
+  // ── SALE — Burst clearance weekend ───────────────────────────────────────
+  {
+    id: "event-burst-clearance-weekend",
+    slug: "burst-clearance-weekend",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Burst Clearance Weekend",
+    description:
+      `<p><strong>Three days on the Burst generation — Saturday 21 to Monday 23 November 2026.</strong></p>` +
+      `<p>Burst ran for seven years and left a deep parts pool behind it. We are clearing the shelves of the generation before X: God layers, Superking, Dynamite Battle, and the loose parts that go with them.</p>` +
+      `<h2>Worth knowing</h2>` +
+      `<ul>` +
+      `<li>Burst parts do not fit the X system. If you are buying for an X top, this is not the sale.</li>` +
+      `<li>Condition is stated on every listing — sealed, opened-complete, or loose.</li>` +
+      `<li>Stock is what is on the shelf. When a listing goes, it is gone.</li>` +
+      `</ul>` +
+      `<h2>The code</h2>` +
+      `<p><strong>FREESHIP2000</strong> takes the delivery charge off anything over ₹2,000, which is roughly where a three-top order lands. It runs the whole season, not just this weekend.</p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: CLEARANCE_START,
+    endsAt: CLEARANCE_END,
+    coverImage: {
+      type: "image",
+      url: editorialImage(COVER.clearance),
+      alt: "A Burst-generation Beyblade disassembled into its layers",
+    },
+    tags: ["sale", "burst", "clearance", "spares", "festive"],
+    saleConfig: {
+      discountPercent: 0,
+      bannerText: "Free delivery over ₹2,000 with FREESHIP2000. Three days only.",
+    },
+    couponIds: ["coupon-freeship2000", "coupon-cashback5"],
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  } as EventDocument,
+
+  // ── SPIN WHEEL — one free spin a day over the Diwali fortnight ───────────
+  /*
+   * 🛑 `weight` IS THE ODDS AND NEVER REACHES A BROWSER. `toClientSpinPrize`
+   * is an allow-list that emits `{id, label, isActive}` only, and the tester
+   * asserts `weightsInPublicSource: 0`. The public wheel therefore draws
+   * EQUAL segments — it shows what you could win, not what you are likely to.
+   *
+   * The weights below sum to 100 so they read as percentages at a glance.
+   * `assignSpinPrize` picks with `crypto.randomInt(0, totalWeight)` inside a
+   * transaction, so two concurrent spins cannot both take the same prize.
+   */
+  {
+    id: "event-spin-the-launcher",
+    slug: "spin-the-launcher",
+    type: EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL,
+    title: "Spin the Launcher",
+    description:
+      `<p><strong>One free spin a day, from Dhanteras to 16 November.</strong> No purchase, no entry fee — sign in and spin.</p>` +
+      `<p>Every segment on the wheel is a real coupon that lands in your wallet the moment it stops. Most spins win the smaller codes; the free-shipping and cashback segments are rarer.</p>` +
+      `<h2>How it works</h2>` +
+      `<ol>` +
+      `<li>Sign in and open this page during the fortnight.</li>` +
+      `<li>Spin. The wheel stops on what you won.</li>` +
+      `<li>Claim it — the code goes to your wallet and is yours to use at checkout.</li>` +
+      `</ol>` +
+      `<p><em>One spin per account per day. Coupons won here follow the same one-code-per-order rule as the rest of the season.</em></p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: SEASON_START,
+    endsAt: SPIN_END,
+    coverImage: {
+      type: "image",
+      url: editorialImage(COVER.spin),
+      alt: "A Beyblade launcher with its ripcord drawn",
+    },
+    tags: ["spin-wheel", "festive", "diwali", "free", "coupons"],
+    spinPrizes: [
+      { id: "spin-cashback5", label: "5% back, no limit", couponId: "coupon-cashback5", weight: 30, isActive: true },
+      { id: "spin-freeship", label: "Free delivery over ₹2,000", couponId: "coupon-freeship2000", weight: 25, isActive: true },
+      { id: "spin-cashback500", label: "10% back, up to ₹500", couponId: "coupon-cashback500", weight: 20, isActive: true },
+      { id: "spin-buy3get1", label: "Buy 3, get 1 free", couponId: "coupon-buy3get1", weight: 15, isActive: true },
+      { id: "spin-cashback10", label: "10% back, up to ₹1,000", couponId: "coupon-cashback10", weight: 8, isActive: true },
+      { id: "spin-again", label: "Spin again tomorrow", weight: 2, isActive: true },
+    ],
+    spinMaxPerUser: 1,
+    spinWindowStart: SEASON_START,
+    spinWindowEnd: SPIN_END,
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  } as EventDocument,
+
+  // ── POLL — what to restock in 2027 ───────────────────────────────────────
+  /*
+   * 🛑 `resultsVisibility: "after_vote"` is the honest setting for a poll whose
+   * result changes what we buy: showing the running tally BEFORE someone votes
+   * pulls them toward whatever is already winning. It also gives the results
+   * chart something to reveal, which "always" would not.
+   */
+  {
+    id: "event-restock-vote-2027",
+    slug: "restock-vote-2027",
+    type: EVENT_FIELDS.TYPE_VALUES.POLL,
+    title: "What should we restock in 2027?",
+    description:
+      `<p><strong>We have one container of shelf space to commit for the first half of 2027. You decide what goes in it.</strong></p>` +
+      `<p>Voting runs to 15 December 2026. Results are published here as soon as you have voted, and the winning line is what we place the order for in January.</p>` +
+      `<p>The last poll we ran chose BUY3GET1 over three other festive offers, 28 votes to 5 — and that is the offer running right now. These polls decide real things.</p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: SEASON_START,
+    endsAt: VOTE_END,
+    coverImage: {
+      type: "image",
+      url: editorialImage(COVER.vote),
+      alt: "A shelf of boxed Beyblades",
+    },
+    tags: ["poll", "restock", "community", "2027"],
+    pollConfig: {
+      allowMultiSelect: false,
+      allowComment: true,
+      requireLogin: true,
+      resultsVisibility: "after_vote",
+      options: [
+        { id: "opt-x-stadiums", label: "Beyblade X stadiums and rail gear" },
+        { id: "opt-burst-parts", label: "Burst loose parts and spares" },
+        { id: "opt-metal-fight", label: "Metal Fight classics" },
+        { id: "opt-original-vintage", label: "Original-generation vintage" },
+        { id: "opt-launchers", label: "Launchers and grips" },
+      ],
+    },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  } as EventDocument,
+
+  // ── RAFFLE — signed Dranzer G ────────────────────────────────────────────
+  /*
+   * 🛑 NO `raffleWinner*` FIELDS. The draw has not happened, and
+   * `EventRaffleWinnerView` branches on `raffleWinnerUserId` being absent to
+   * render "not drawn yet". Seeding a winner would publish a result for a
+   * raffle nobody has entered.
+   */
+  {
+    id: "event-signed-dranzer-raffle",
+    slug: "signed-dranzer-raffle",
+    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
+    title: "Win a Signed Dranzer G",
+    description:
+      `<p><strong>One Dranzer G, signed, going to one person. Free to enter, drawn on 1 December 2026.</strong></p>` +
+      `<p>Entries are open to any signed-in account from Dhanteras until the end of 30 November. One entry per person — a second does not improve your odds and the form will tell you so.</p>` +
+      `<h2>How the winner is picked</h2>` +
+      `<p>An open raffle: every confirmed entry goes in, and one is drawn at random when entries close. The draw is run by a scheduled job, not by hand, and the result appears on this page the moment it runs.</p>` +
+      `<p><em>Shipping within India is on us. You will need a delivery address on your account before we can send it.</em></p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: SEASON_START,
+    endsAt: RAFFLE_END,
+    coverImage: {
+      type: "image",
+      url: editorialImage(COVER.raffle),
+      alt: "A Dranzer G Beyblade",
+    },
+    tags: ["raffle", "free", "giveaway", "dranzer", "festive"],
+    hasRaffle: true,
+    raffleType: "open_raffle",
+    rafflePrize: "A signed Dranzer G, shipped free within India",
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,

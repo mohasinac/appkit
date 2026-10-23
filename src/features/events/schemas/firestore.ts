@@ -11,6 +11,85 @@ import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
+
+/**
+ * Shared by both placements: which slide this event owns, and how prominent.
+ *
+ * `order` is the slide's position in the hero rail. `active` is what decides
+ * whether it renders at all — and it is capped downstream, not here: the rail
+ * shows at most `MAX_ACTIVE_SLIDES` (5), and `buildSlideFromEvent` refuses
+ * loudly rather than emitting a sixth that would never be seen.
+ */
+interface EventCarouselBase {
+  /** Slide order in the hero rail. Lower is earlier. */
+  order?: number;
+  /** Whether the generated slide is live. Absent means false — opt in. */
+  active?: boolean;
+  /**
+   * Background image slug for the slide. Defaults to the event's own
+   * `coverImage` when absent, which is usually what you want: the slide and
+   * the page it links to then read as one promotion.
+   *
+   * 🛑 A cover is cropped at `banner` (1200x600) and a hero background wants
+   * `hero` (1920x860). Naming a dedicated hero slug here is the difference
+   * between a sharp full-bleed backdrop and a 1200px image upscaled across it.
+   */
+  backgroundMediaSlug?: string;
+  /** Dim applied over the background so inverse ink stays readable. 0–1. */
+  dimOpacity?: number;
+}
+
+/**
+ * One headline, one line of copy, one button, centred over the background.
+ * The right shape for a single offer with a single call to action.
+ */
+export interface EventCarouselOverlayConfig extends EventCarouselBase {
+  placement: "overlay";
+  /** Small uppercase line above the headline — a date, a status, a hook. */
+  eyebrow?: string;
+  /** The headline. Kept short: it renders at up to 6rem on a wide screen. */
+  title: string;
+  description?: string;
+  buttonText?: string;
+}
+
+/**
+ * Up to six independently-linked tiles in a 2x3 grid.
+ *
+ * This is what makes one slide able to advertise several deals at once —
+ * each card is its own background, its own copy and its own destination, so
+ * three sale events can share a single slide instead of consuming three of
+ * the five available.
+ */
+export interface EventCarouselCardsConfig extends EventCarouselBase {
+  placement: "cards";
+  /**
+   * 🛑 Max SIX. Zones are 1–6 over a 2-row x 3-column grid (row 1 = 1·2·3,
+   * row 2 = 4·5·6) and `HeroCarousel` slices to 6 — a seventh card is
+   * silently dropped, so it is refused at build time instead.
+   */
+  cards: EventCarouselCard[];
+}
+
+/** One tile. Mirrors `CarouselCard` but without the stored-slide plumbing. */
+export interface EventCarouselCard {
+  /** 1–3 is the top row, 4–6 the bottom. Desktop only — a phone lays these
+   *  out in document order, one per row. */
+  zone: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Background image slug for this tile. */
+  mediaSlug?: string;
+  dimOpacity?: number;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  /** Where the tile's button goes. Absent uses the event's own detail page. */
+  href?: string;
+  buttonText?: string;
+}
+
+export type EventCarouselConfig =
+  | EventCarouselOverlayConfig
+  | EventCarouselCardsConfig;
 export interface EventDocument extends BaseDocument {
   /** Normalized edge-n-gram search field — see appkit/src/utils/search-txt.ts. */
   searchTxt?: string[];
@@ -68,6 +147,30 @@ export interface EventDocument extends BaseDocument {
    * renderer, on purpose.
    */
   couponIds?: string[];
+
+  /**
+   * How this event presents itself as a homepage carousel slide.
+   *
+   * An event is the natural owner of its own promo artwork: authoring the
+   * slide here rather than in a separate `carouselSlides` document means the
+   * two cannot drift, which they did — the live Diwali slide and its event
+   * page carried different headline copy for weeks because each was edited
+   * separately.
+   *
+   * `buildSlideFromEvent()` is the one function that turns this into a
+   * `CarouselSlideDocument`; both the seed and `push-editorial-content.mjs`
+   * call it, so there is no second rendering of the same intent.
+   *
+   * 🛑 A DISCRIMINATED UNION ON `placement`, NOT TWO OPTIONAL ARRAYS. A slide's
+   * overlay and its cards are sibling `POSITION_FILL` elements — they stack on
+   * exactly the same pixels, so a slide carrying both renders its text twice,
+   * overlapping. Making that unrepresentable is why this is a union;
+   * `push-editorial-content.mjs` had to enforce the same rule imperatively by
+   * nulling the opposite field on every merge-write, which only works for as
+   * long as everyone remembers to do it.
+   */
+  carouselConfig?: EventCarouselConfig;
+
   saleConfig?: SaleConfig;
   offerConfig?: OfferConfig;
   pollConfig?: PollConfig;
