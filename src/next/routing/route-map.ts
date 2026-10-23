@@ -100,6 +100,15 @@ export const DEFAULT_ROUTE_MAP = {
     HELP_ORDERS: "/help/orders",
     HELP_ACCOUNT: "/help/account",
     /*
+     * What the Verified and Trusted Seller badges mean, for BUYERS.
+     *
+     * 🛑 A badge nobody can look up is decoration. Every `SellerTierBadge`
+     * links here, and until this page existed the two badges were explained
+     * only inside the seller dashboard — i.e. to the one audience that does
+     * not need to be reassured by them.
+     */
+    HELP_SELLER_BADGES: "/help/seller-badges",
+    /*
      * 🛑 A LICENCE OBLIGATION, not a vanity page — which is why it is a route
      * key and sits in PUBLIC_ROUTES. The facts across ~5,500 rows (parts, beys,
      * products, characters) come from a CC-BY-SA community wiki; taking facts
@@ -811,6 +820,10 @@ export const PUBLIC_ROUTES = [
   ROUTES.PUBLIC.CONTACT as string,
   ROUTES.BLOG.LIST as string,
   ROUTES.PUBLIC.HELP as string,
+  /* Unauthenticated by necessity for the same reason as CREDITS below: the
+   * badges it explains are shown to signed-out visitors on every store card,
+   * so the explanation has to be reachable by one. */
+  ROUTES.PUBLIC.HELP_SELLER_BADGES as string,
   /* Unauthenticated BY NECESSITY: an attribution a reader must sign in to see
    * is not attribution. Same reasoning as the grievance-officer entry below. */
   ROUTES.PUBLIC.CREDITS as string,

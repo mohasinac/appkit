@@ -12,6 +12,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";
 import { SellerTrustBadge } from "../../scams/components/SellerTrustBadge";
+import { SellerTierBadge } from "./SellerTierBadge";
 import type { SellerTrustResult } from "../../scams/actions/scam-actions";
 import type { StoreDetail } from "../types";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
@@ -79,6 +80,18 @@ export function StoreHeader({
                   ★ {store.averageRating.toFixed(1)}
                 </Span>
               )}
+              {/*
+                🛑 Two different badges, both legitimately visible at once.
+                `SellerTierBadge` is OUR assessment of this store (verified
+                identity, earned tier); `SellerTrustBadge` is the scam-registry
+                lookup. A store can be verified by us and still carry a report,
+                and collapsing them would hide exactly that case.
+              */}
+              <SellerTierBadge
+                isVerified={store.isVerified}
+                sellerTier={store.sellerTier}
+                href={String(ROUTES.PUBLIC.HELP_SELLER_BADGES)}
+              />
               {trust && <SellerTrustBadge trust={trust} />}
             </Row>
             {/*

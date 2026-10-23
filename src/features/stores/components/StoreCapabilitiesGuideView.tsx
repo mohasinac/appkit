@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
+import { SellerStandingPanel } from "./SellerStandingPanel";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -64,7 +65,24 @@ const CAPABILITY_GROUPS = [
   {
     group: "Trust & Visibility",
     items: [
-      { cap: "verified_seller", unlocks: "Shows a Verified badge on your store profile and listing cards.", defaultOn: false },
+      /*
+       * 🛑 CORRECTED 2026-10-24. This read "Shows a Verified badge on your
+       * store profile and listing cards", and that was false in two ways.
+       *
+       * (1) The badge is driven by `StoreDocument.isVerified`, not by this
+       * capability — `verified_seller` is read by NOTHING: no gate, no
+       * render, anywhere. Granting it has never done a thing.
+       * (2) No badge rendered at all, because `isVerified` sat in
+       * `PRIVATE_STORE_FIELDS` and was stripped from every public store
+       * payload. A seller could read this sentence, be granted the
+       * capability, and correctly conclude the platform was broken.
+       *
+       * The badge now renders (`SellerTierBadge`) off `isVerified`. The
+       * capability stays declared because existing store documents carry it
+       * and removing a union member would fail their next write — but it is
+       * described as what it is.
+       */
+      { cap: "verified_seller", unlocks: "Legacy flag — kept so existing stores stay valid. The Verified badge is granted by an admin on the store itself, not by this capability.", defaultOn: false },
       { cap: "featured_placement", unlocks: "Your store is eligible to appear in featured store sections on the homepage.", defaultOn: false },
       { cap: "promotional_banner", unlocks: "Your store banner can be used in carousel and promotional homepage sections.", defaultOn: false },
       { cap: "priority_support", unlocks: "Your support tickets go to a dedicated queue with faster response SLA.", defaultOn: false },
@@ -188,34 +206,50 @@ function LockedFeatureGuide() {
 
 // -- Section 4: Verified seller badge -----------------------------------------
 
+/*
+ * 🛑 REWRITTEN 2026-10-24. This section used to state a fourth, invented set
+ * of criteria — "store active for at least 6 months", "average rating of 4.5
+ * or above", "at least 50 delivered orders" — none of which any code has ever
+ * read, alongside `AdminStoresGuideView`'s own different numbers (">=20
+ * delivered orders, >=4.0 rating, 3+ months"). Two guides, two sets of
+ * promises, zero enforcement, and a badge that could not render at all.
+ *
+ * The two badges are now described as what they are, and the earned one
+ * renders its criteria from `SELLER_STANDING_DEFAULTS` so this page cannot
+ * drift from the job that grants it.
+ */
 function VerifiedSellerSection() {
   return (
     <Div className={SECTION_BODY}>
       <Div>
-        <Text className={SUBHEADING}>What it means for buyers</Text>
+        <Text className={SUBHEADING}>Two different badges</Text>
         <Text className="leading-relaxed">
-          The Verified badge appears on your store profile page and on every listing card.
-          It signals to buyers that LetItRip has reviewed your identity and track record.
-          Verified sellers typically see higher conversion rates, especially on high-value items.
+          <Span weight="bold">Verified</Span> means LetItRip has checked who you are.
+          It is granted by an admin after an identity review, it is not earned by
+          volume, and it does not expire on its own.{" "}
+          <Span weight="bold">Trusted Seller</Span> is earned from your trading record
+          and is recalculated every month — you can gain it and you can lose it.
+          A store can hold either, both, or neither.
         </Text>
       </Div>
       <Div>
-        <Text className={SUBHEADING}>Requirements</Text>
-        <Ul spacing="tight" indent="lg">
-          <Li className={LIST_DISC}>Government-issued photo ID submitted to LetItRip support.</Li>
-          <Li className={LIST_DISC}>Store active for at least 6 months.</Li>
-          <Li className={LIST_DISC}>Average rating of 4.5 or above (across all reviews).</Li>
-          <Li className={LIST_DISC}>At least 50 delivered orders with no outstanding fraud reports.</Li>
-          <Li className={LIST_DISC}>No active hard ban or store suspension in the past 12 months.</Li>
-        </Ul>
-      </Div>
-      <Div>
-        <Text className={SUBHEADING}>How to apply</Text>
+        <Text className={SUBHEADING}>Getting Verified</Text>
         <Text className="leading-relaxed">
-          Open a support ticket from your store dashboard with category "Account" and subject
-          "Verified Seller Application". Attach your government ID scan. Our team reviews within 10 business days.
+          Open a support ticket from your store dashboard with category "Account" and
+          subject "Verified Seller Application", and attach a government-issued photo
+          ID. An admin reviews it and sets the badge on your store.
         </Text>
       </Div>
+      <Div>
+        <Text className={SUBHEADING}>Earning Trusted Seller</Text>
+        <Text className="leading-relaxed">
+          Every criterion below is measured over the same rolling window, and all of
+          them have to hold at the same time. Meeting them also changes when you are
+          paid: your payout starts when you ship rather than when the parcel is
+          delivered.
+        </Text>
+      </Div>
+      <SellerStandingPanel heading="The criteria" />
     </Div>
   );
 }

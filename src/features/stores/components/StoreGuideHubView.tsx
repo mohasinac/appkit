@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { Div, Grid, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import type { StoreDocument } from "../schemas";
+import type { SellerStandingSnapshot } from "../types";
+import { SellerStandingPanel } from "./SellerStandingPanel";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_CHECK_ICON = "w-5 h-5 flex-shrink-0 text-emerald-500";
@@ -97,10 +99,22 @@ function buildChecklist(store: StoreDocument | null): ChecklistStep[] {
       done: (store?.shippingConfig?.providers?.length ?? 0) > 0,
       href: String(ROUTES.STORE.SHIPPING_CONFIGS),
     },
+    /*
+     * 🛑 Was "Request verified badge" → a SUPPORT TICKET, and the cast beside
+     * it (`store as StoreDocument & { isVerified?: boolean }`) was the tell
+     * that `isVerified` was not even on the type. Two things were wrong: the
+     * badge was not something to request (an admin grants it after checking
+     * identity, and no ticket category asked for it), and the step it pointed
+     * at could not complete itself.
+     *
+     * The earned tier is a real step with a real destination — the
+     * capabilities guide, where the criteria and the seller's own figures are
+     * both rendered from `SELLER_STANDING_DEFAULTS`.
+     */
     {
-      label: "Request verified badge",
-      done: Boolean((store as (StoreDocument & { isVerified?: boolean }) | null)?.isVerified),
-      href: String(ROUTES.USER.SUPPORT),
+      label: "Earn Trusted Seller status",
+      done: store?.sellerTier === "trusted",
+      href: String(ROUTES.STORE.GUIDE_CAPABILITIES),
     },
   ];
 }
@@ -182,6 +196,19 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               </TextLink>
             ))}
           </Grid>
+
+          {/*
+            Seller standing, under the guide cards.
+            🛑 Costs NO extra read — this view already receives the whole store
+            document, and `standing` is the cached monthly computation written
+            onto it. Nothing here recomputes anything.
+          */}
+          <SellerStandingPanel
+            standing={store?.standing as SellerStandingSnapshot | undefined}
+            tier={store?.sellerTier}
+            showProgress
+            heading="Your Trusted Seller standing"
+          />
         </Stack>
 
         {/* Getting started checklist — 1/3 width on lg */}
