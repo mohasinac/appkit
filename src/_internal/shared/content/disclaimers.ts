@@ -140,7 +140,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
       "Entry requires a purchase and is void where prohibited by local law. Residents of states that " +
       "restrict prize draws or games of chance are not eligible, and an entry from such a state will be " +
       "refunded rather than drawn. Prizes are as described on the listing, are not transferable and cannot " +
-      "be exchanged for cash. The draw is run by LetItRip and is not affiliated with any government lottery.",
+      "be exchanged for cash. The draw is run by {{siteName}} and is not affiliated with any government lottery.",
     tone: "warning",
     surfaces: ["PrizeDrawDetailPageView", "/prize-draws", "/lottery", "PrizeRevealModal"],
   },
@@ -154,7 +154,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
   "not-investment-advice": {
     body:
       "Prices shown are past transactions, not a valuation, a projection or a guarantee. Collectibles can " +
-      "fall in value as easily as rise, may be difficult to sell at any price, and LetItRip does not provide " +
+      "fall in value as easily as rise, may be difficult to sell at any price, and {{siteName}} does not provide " +
       "investment advice. Nothing here should be relied on as a reason to buy.",
     tone: "legal",
     surfaces: ["PriceIndexView", "RealisedPriceStrip", "/franchise", "ProductDetailPageView"],
@@ -176,7 +176,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
 
   "authenticity": {
     body:
-      "LetItRip is not an authentication or grading service. We do not inspect, test or re-grade items, " +
+      "{{siteName}} is not an authentication or grading service. We do not inspect, test or re-grade items, " +
       "and a grade shown on a listing is the one the seller states a third-party grader assigned. " +
       "Guidance on spotting a counterfeit is general information, not a verification of any particular item.",
     tone: "legal",
@@ -195,7 +195,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
   "protection-cover": {
     heading: "What protection covers",
     body:
-      "Buyer protection is cover provided by LetItRip. It is **not insurance** and there is no insurer. " +
+      "Buyer protection is cover provided by {{siteName}}. It is **not insurance** and there is no insurer. " +
       "Shipment protection covers loss or damage in transit and must be claimed within " +
       "{{shipmentClaimHours}} hours of delivery. Sale protection covers an item up to " +
       "{{saleProtectionMaxValue}} and must be claimed within {{saleClaimHours}} hours of delivery. " +
@@ -214,7 +214,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
     body:
       "These are management figures produced from this platform's own records. They are not audited " +
       "accounts and have not been reviewed by an accountant. The GSTR-1 export is a draft for your " +
-      "accountant to check and use — nothing here is filed with any tax authority, and LetItRip has no " +
+      "accountant to check and use — nothing here is filed with any tax authority, and {{siteName}} has no " +
       "connection to the GST portal.",
     tone: "warning",
     surfaces: ["AdminInvoicingView", "AdminAnalyticsView", "ProfitLossView", "TrialBalanceView"],
@@ -252,7 +252,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
   "emi": {
     body:
       "EMI adds a surcharge to the order total, shown before you pay. The instalment plan is between you " +
-      "and LetItRip rather than a bank, and a missed instalment may suspend access to the order and is " +
+      "and {{siteName}} rather than a bank, and a missed instalment may suspend access to the order and is " +
       "recoverable as a debt.",
     tone: "legal",
     surfaces: ["CheckoutRouteClient", "/fees", "EmiScheduleTable"],
@@ -269,7 +269,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
   "user-content": {
     body:
       "Reviews, catalogue entries and comments are the opinions of the people who wrote them, not " +
-      "LetItRip's. We remove content that breaks our rules when it is reported, but we do not verify every " +
+      "{{siteName}}'s. We remove content that breaks our rules when it is reported, but we do not verify every " +
       "claim made in it.",
     tone: "legal",
     surfaces: ["ReviewsList", "ReviewDetailShell", "PublicProfileView", "BlogPostView"],

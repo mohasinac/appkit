@@ -91,6 +91,7 @@ export function resolveSplit(
   const allPercent = contributions.every((c) => c.splitMode === "percent");
   if (allPercent && resolved.length > 0) {
     const pctTotal = contributions.reduce((s, c) => s + (c.percent ?? 0), 0);
+    // audit-money-units-ok: `/100` converts a PERCENTAGE to a fraction, not paise to rupees. `pctTotal` is a sum of `c.percent` (0–100) and `landedCost` is already decimal rupees, so the product is rupees throughout.
     const target = roundRupees((pctTotal / 100) * landedCost);
     const sum = resolved.reduce((s, r) => s + r.amount, 0);
     const drift = roundRupees(target - sum);

@@ -140,7 +140,9 @@ export async function handleOrderStatusChange(
        * demand. Throwing here would also make the Firestore trigger retry the
        * whole handler, re-sending the notification.
        */
-      ctx.logger.error("Invoice allocation failed", error, { orderId });
+      ctx.logger.error("Invoice allocation failed", normalizeError(error), {
+        orderId,
+      });
     }
   }
 

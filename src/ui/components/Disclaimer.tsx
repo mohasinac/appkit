@@ -1,5 +1,14 @@
 import React from "react";
-import { Div, Stack, Text } from "../index";
+/*
+ * Defining modules, not `../index` — Root Cause #18.
+ *
+ * The barrel re-exports THIS component, so importing three primitives back
+ * through it closed a two-module cycle (`audit-import-cycles` component 1).
+ * The deep paths below have one direction only.
+ */
+import { Div } from "./Div";
+import { Stack } from "./Layout";
+import { Text } from "./Typography";
 import {
   DISCLAIMERS,
   type DisclaimerId,

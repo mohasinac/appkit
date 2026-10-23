@@ -28,11 +28,12 @@
  * as a required field to get past.
  */
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 /** `box-` prefixed slug, so the id reads as what it is. */
 export const SHIPPING_BOX_COLLECTION = "shippingBoxes";
 
-export interface ShippingBoxDocument {
-  id: string;
+export interface ShippingBoxDocument extends BaseDocument {
   /** What a seller picks it by: "Standard Beyblade carton", "Poly mailer S". */
   name: string;
   /** cm. */
@@ -57,8 +58,6 @@ export interface ShippingBoxDocument {
    * not vanish mid-dispatch, and a deleted row takes its author with it.
    */
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const SHIPPING_BOX_FIELDS = {

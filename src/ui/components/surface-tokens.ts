@@ -231,7 +231,7 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-export type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page" | "l-xl";
+export type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page" | "l-md" | "l-xl";
 type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "t-md" | "b-md" | "b-md-lg" | "b-lg" | "t-md-b-lg";
 
 export const X_ONLY_MAP: Record<XPaddingKey, string> = {
@@ -258,6 +258,15 @@ export const X_ONLY_MAP: Record<XPaddingKey, string> = {
   // selection-checkbox gutter).
   /** Asymmetric: `pl-8` — reserves a left gutter (e.g. for an overlaid selection checkbox). */
   "l-xl": "pl-[var(--appkit-space-8)]",
+  /**
+   * Asymmetric: `pl-4` — indents a nested block under its own heading.
+   *
+   * The grouped order-item rows (admin and seller) are the motivating pair:
+   * a group header followed by its member lines, where the indent is the only
+   * thing expressing the nesting. `x-md` would pad the right edge too, which
+   * is not what an indent means.
+   */
+  "l-md": "pl-[var(--appkit-space-4)]",
 };
 
 const Y_ONLY_MAP: Record<YPaddingKey, string> = {

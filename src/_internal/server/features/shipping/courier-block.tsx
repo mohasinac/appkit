@@ -22,6 +22,13 @@
  *    operator blind to everything else.
  */
 
+import { Fragment } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import {
+  EmailContainer,
+  EmailDoc,
+  EmailRow,
+} from "../../../../features/email/primitives";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 // `adminNotificationsRepository` lives behind the repositories barrel — the
 // same import the two existing staff-signal call sites use.
@@ -291,7 +298,16 @@ async function emailStaff(input: {
     {
       to: recipients,
       subject: input.title,
-      html: `<p>${body.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br/>")}</p>`,
+      /*
+       * Composed from the Email primitives rather than hand-built HTML.
+       *
+       * The old line string-replaced `\n\n` into `</p><p>`, which produces
+       * markup no email client was ever tested against and which
+       * `audit-email-raw-html` blocks for that reason. `EmailDoc` renders the
+       * table-based, inline-styled structure clients actually honour, and the
+       * paragraph split now happens on the DATA before it reaches the markup.
+       */
+      html: renderStaffAlertEmail(input.title, body),
       text: body,
     },
     { channel: "email", feature: "courier_wallet_low", audience: "staff" },
@@ -305,3 +321,35 @@ async function emailStaff(input: {
   }
 }
 
+
+/**
+ * The staff courier-block alert, as an email document.
+ *
+ * Kept local to this file rather than exported: it is one alert with one
+ * shape, and a shared "generic staff alert" helper would invite the next
+ * caller to pass admin-editable text through it — which is how an email
+ * template becomes an injection surface. The body here is built entirely from
+ * our own constants and the provider/reason enums.
+ */
+function renderStaffAlertEmail(title: string, body: string): string {
+  return `<!DOCTYPE html>${renderToStaticMarkup(
+    <EmailDoc title={title}>
+      <EmailContainer>
+        <EmailRow>
+          {body.split("\n\n").map((para, i) => (
+            <Fragment key={i}>
+              {i > 0 ? <br /> : null}
+              {i > 0 ? <br /> : null}
+              {para.split("\n").map((line, j) => (
+                <Fragment key={j}>
+                  {j > 0 ? <br /> : null}
+                  {line}
+                </Fragment>
+              ))}
+            </Fragment>
+          ))}
+        </EmailRow>
+      </EmailContainer>
+    </EmailDoc>,
+  )}`;
+}

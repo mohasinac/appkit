@@ -367,7 +367,7 @@ export function AdminOrderEditorView({
                         {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
                       </Text>
                     </Div>
-                    <Div className="pl-4">
+                    <Div paddingX="l-md">
                       {group.items.map(({ item, index }) =>
                         adminOrderItemRow(item, `m-${index}`),
                       )}

@@ -316,6 +316,7 @@ export interface StoreDocument extends BaseDocument {
    * in code rather than seeded, so it cannot be switched off by an edit.
    */
   acceptsPoints?: boolean;
+  // (see PLATFORM_STORE_ID, declared at the end of this file)
 
   /**
    * ── S5a: this store allows a SHARED PURCHASE (one payer, N destinations) ──
@@ -523,3 +524,23 @@ export {
 
 /** @deprecated SB-UNI-A — literal alias only. Use ADDRESSES_COLLECTION. */
 export const STORE_ADDRESS_SUBCOLLECTION = "addresses" as const;
+
+/**
+ * The platform's own storefront.
+ *
+ * An IDENTITY, not a setting — it is the same id the seed's `REAL_STORE_IDS`
+ * and `realListingsOnly` already treat as the platform's own, and resolving it
+ * in code is what stops it being switched off by an edit, a reseed, or a
+ * mis-clicked admin toggle. `storeAcceptsPoints` is the motivating reader: the
+ * one store the points programme is advertised on cannot be allowed to decline
+ * to fund it.
+ *
+ * 🛑 It lives HERE, in `features/`, and not beside its reader in
+ * `_internal/shared/features/points/` — `audit-ssr-in-appkit` Rule 3 forbids a
+ * brand-bearing literal inside `_internal/`, because a consumer of appkit would
+ * inherit OUR store id with no way to override it. `features/` is where the
+ * same literal already lives legitimately (`CONSIGNMENT_STORE_ID` in
+ * `features/catalogue/utils/product-from-item.ts`), and this file is the one
+ * that already documents the rule on `acceptsPoints` above.
+ */
+export const PLATFORM_STORE_ID = "store-letitrip-official";

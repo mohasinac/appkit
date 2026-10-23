@@ -576,7 +576,7 @@ export function SellerOrderDetailPanel({
                             {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
                           </Text>
                         </Row>
-                        <Div className="pl-4">
+                        <Div paddingX="l-md">
                           {group.items.map(({ item, index }) =>
                             sellerOrderItemRow(item, `m-${index}`),
                           )}

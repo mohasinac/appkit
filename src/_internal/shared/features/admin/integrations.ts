@@ -261,10 +261,32 @@ export function readIntegrationStates(
  * Returned as a nested partial rather than applied here, so the caller does
  * one write and the audit log records one action.
  */
+/**
+ * The settings groups an integration switch may write, and nothing else.
+ *
+ * 🛑 Deliberately a LOCAL shape rather than `Partial<SiteSettingsDocument>`.
+ * This module sits in `_internal/shared` and the settings schema pulls in the
+ * whole admin feature; importing it here to describe four booleans would add
+ * an edge `audit-import-cycles` exists to keep out. The four groups below are
+ * the entire surface these two functions write, so a local type is both
+ * narrower and honest.
+ *
+ * It replaces `Record<string, unknown>`, which said "some object" and
+ * therefore type-checked a patch that wrote a misspelled group or the wrong
+ * value shape — on a function whose whole job is flipping production kill
+ * switches.
+ */
+export interface IntegrationPatch {
+  payment?: { razorpayEnabled?: boolean; phonepeEnabled?: boolean };
+  messaging?: { emailEnabled: boolean };
+  shipping?: { provider: "manual" | "shiprocket" };
+  support?: { enabled: boolean };
+}
+
 export function integrationPatch(
   id: IntegrationId,
   enabled: boolean,
-): Record<string, unknown> {
+): IntegrationPatch {
   switch (id) {
     case "payments":
       /*
@@ -310,13 +332,22 @@ export function integrationPatch(
 }
 
 /** Every patch for a bulk enable/disable, merged into one object. */
-export function allIntegrationsPatch(enabled: boolean): Record<string, unknown> {
-  const merged: Record<string, unknown> = {};
+export function allIntegrationsPatch(enabled: boolean): IntegrationPatch {
+  const merged: IntegrationPatch = {};
   for (const id of INTEGRATION_ORDER) {
     const patch = integrationPatch(id, enabled);
-    for (const [group, value] of Object.entries(patch)) {
-      merged[group] = { ...(merged[group] as object | undefined), ...(value as object) };
-    }
+    /*
+     * Merged group by group rather than through `Object.entries`, which could
+     * only be typed with the two `as object` casts this replaces. Listing the
+     * groups also means a fifth integration writing a NEW group does not
+     * silently vanish from the bulk switch — it fails to merge until someone
+     * adds the line, which is the same forcing function as the exhaustive
+     * `never` in `integrationPatch` above.
+     */
+    if (patch.payment) merged.payment = { ...merged.payment, ...patch.payment };
+    if (patch.messaging) merged.messaging = { ...merged.messaging, ...patch.messaging };
+    if (patch.shipping) merged.shipping = { ...merged.shipping, ...patch.shipping };
+    if (patch.support) merged.support = { ...merged.support, ...patch.support };
   }
   return merged;
 }

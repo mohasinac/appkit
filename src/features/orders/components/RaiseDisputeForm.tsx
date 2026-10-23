@@ -36,6 +36,7 @@ import { Alert, Button, Div, FieldTextarea, Form, Stack, Text, useToast } from "
 import { PaginatedSelect, type AsyncPage, type PaginatedSelectOption } from "../../../ui/components/PaginatedSelect";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { normalizeError } from "../../../errors/normalize";
+import { apiClient } from "../../../http";
 
 export interface RaiseDisputeFormProps {
   /** The gate reads four dates off this; an `OrderDocument` satisfies it. */
@@ -90,17 +91,21 @@ export function RaiseDisputeForm({
   const loadReasons = useCallback(
     async (query: string, page: number): Promise<AsyncPage<PaginatedSelectOption<string>>> => {
       if (!kind) return { items: [], hasMore: false };
-      const res = await fetch(`${reasonsEndpoint}?kind=${encodeURIComponent(kind)}`);
-      if (!res.ok) {
-        /*
-         * Surfaced, not swallowed into an empty list. An empty picker is
-         * indistinguishable from "there are no reasons", and the buyer would
-         * sit on a required field with nothing in it (Root Cause #59).
-         */
-        throw new Error("Could not load the list of reasons. Please try again.");
-      }
-      const json = (await res.json()) as { data?: { items?: ReasonRow[] } };
-      const rows = json.data?.items ?? [];
+      /*
+       * `apiClient`, not a bare `fetch` — it carries the credentials and the
+       * error shape every other call in this feature uses, and the bare form
+       * is what `audit-form-mutation-hook` blocks inside a <Form>-rendering
+       * file. Same shape as `YourPurchaseStrip`'s read, one folder over.
+       *
+       * It THROWS on a non-2xx, which is the behaviour this call site already
+       * wanted: surfaced, not swallowed into an empty list. An empty picker is
+       * indistinguishable from "there are no reasons", and the buyer would sit
+       * on a required field with nothing in it (Root Cause #59).
+       */
+      const json = await apiClient.get<{ data?: { items?: ReasonRow[] } }>(
+        `${reasonsEndpoint}?kind=${encodeURIComponent(kind)}`,
+      );
+      const rows = json?.data?.items ?? [];
       const q = query.trim().toLowerCase();
       const filtered = q ? rows.filter((r) => r.label.toLowerCase().includes(q)) : rows;
       return {

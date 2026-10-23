@@ -41,6 +41,7 @@
  * somebody has to remember — and it is why there is no literal for the offer
  * deadline or the claim windows even though both appear in published copy.
  */
+import { SITE_CONFIG } from "../../../core/site-config";
 import { OBLIGATION_POLICIES } from "../../../features/obligations/constants/policies";
 import {
   POINTS_EARN_PERCENT,
@@ -118,7 +119,20 @@ export type PublishedValueKey =
   | "pointsExpiryMonths"
   // ── Refunds ──────────────────────────────────────────────────────────────
   | "refundBusinessDaysMin"
-  | "refundBusinessDaysMax";
+  | "refundBusinessDaysMax"
+  /*
+   * ── The operator's own name ───────────────────────────────────────────────
+   *
+   * Seven disclaimer bodies name the platform — "the draw is run by X", "X is
+   * not an authentication or grading service", "buyer protection is cover
+   * provided by X". They are legal statements about WHO is making them, so
+   * they cannot be brand-neutral prose; the name has to come from somewhere.
+   *
+   * It was hardcoded as a literal inside `_internal/`, which is the one thing
+   * `audit-ssr-in-appkit` Rule 3 exists to prevent: a consumer of appkit would
+   * have published OUR company's name on their own disclaimers.
+   */
+  | "siteName";
 
 export type PublishedValues = Record<PublishedValueKey, string>;
 
@@ -132,6 +146,11 @@ export type PublishedValues = Record<PublishedValueKey, string>;
  * TypeScript's structural typing strips nothing at runtime).
  */
 export interface PublishedValueSettings {
+  /**
+   * The operator's display name, for the disclaimers that name who is making
+   * the statement. Falls back to `SITE_CONFIG.brand.name`.
+   */
+  siteName?: string;
   platformFeeMax?: number;
   platformFeePercent?: number;
   shipmentProtectionFeePercent?: number;
@@ -267,6 +286,14 @@ export function resolvePublishedValues(
      */
     refundBusinessDaysMin: "5",
     refundBusinessDaysMax: "7",
+
+    /*
+     * `SITE_CONFIG.brand.name` is appkit's own neutral default ("App") until a
+     * consumer overrides it, which is exactly the right failure mode here: a
+     * fork that forgets to configure its brand publishes a visibly generic
+     * disclaimer rather than silently attributing its legal statements to us.
+     */
+    siteName: settings?.siteName ?? SITE_CONFIG.brand.name,
   };
 }
 

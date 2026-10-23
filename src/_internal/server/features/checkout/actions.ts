@@ -32,6 +32,7 @@ import { calculateGst, isIntraStateSupply } from "../../../shared/fees/calculato
 import { resolveStateKey, INDIA_STATES } from "../../../shared/fees/india-states";
 import {
   allocatePointsAcrossGroups,
+  pointsBaseForGroup,
   computePreOrderDepositAmount,
   lineTotalFor,
   resolvePointsTender,
@@ -4255,29 +4256,36 @@ export async function verifyAndPlaceGatewayOrderAction(
             })),
           })),
         ).perGroup;
-        const guardBases = expectedShippingGroups.map((g, i) => {
-          const storeId = g.items[0].item.storeId;
+        /*
+         * The per-group add-on fee, lifted out of the `map` below so that
+         * callback has no block body. Its statements sat at brace-depth 6
+         * inside `if → if → callback`, which DEEP_NESTING blocks — and the
+         * add-on sum is the one part of this base the sibling money path
+         * (`POST /api/payment/create-order`) computes earlier rather than
+         * inline, so it is also the natural seam.
+         */
+        const guardAddonFee = (storeId: string, goods: number): number => {
           const addons = cart.storeAddons?.[storeId] ?? {};
-          const goods = guardSubtotals[i][1];
-          const share = guardFeeByGroup.get(storeId);
-          const groupAddons =
+          return (
             computeGiftWrapFee(addons.giftWrapAddon ?? false, commissionRates) +
             computeShipmentProtectionFee(
               goods,
               addons.shipmentProtectionAddon ?? false,
               commissionRates,
-            );
-          return {
-            total: roundRupees(
-              Math.max(0, goods - (guardCouponByGroup[i]?.couponDiscount ?? 0)) +
-                (expectedShippingFees[i]?.shippingFee ?? 0) +
-                groupAddons +
-                (share?.platformFee ?? 0) +
-                (share?.gstOnFee ?? 0),
-            ),
-            accepted: expectedShippingFees[i]?.acceptsPoints === true,
-          };
-        });
+            )
+          );
+        };
+        const guardBases = expectedShippingGroups.map((g, i) =>
+          pointsBaseForGroup({
+            goods: guardSubtotals[i][1],
+            couponDiscount: guardCouponByGroup[i]?.couponDiscount ?? 0,
+            shippingFee: expectedShippingFees[i]?.shippingFee ?? 0,
+            addonFee: guardAddonFee(g.items[0].item.storeId, guardSubtotals[i][1]),
+            platformFee: guardFeeByGroup.get(g.items[0].item.storeId)?.platformFee ?? 0,
+            gstOnFee: guardFeeByGroup.get(g.items[0].item.storeId)?.gstOnFee ?? 0,
+            acceptsPoints: expectedShippingFees[i]?.acceptsPoints === true,
+          }),
+        );
         expectedPointsApplied = allocatePointsAcrossGroups(
           guardBases,
           guardBalance,

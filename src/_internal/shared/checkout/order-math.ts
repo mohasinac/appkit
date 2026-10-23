@@ -903,8 +903,54 @@ export function resolvePointsTender(input: {
  * shown and charged figures diverge on exactly the carts where the balance is
  * tight.
  */
+/** One order group's payable total, and whether its store takes points. */
+export interface PointsBase {
+  total: number;
+  accepted: boolean;
+}
+
+/** Everything one group contributes to its own payable total. */
+export interface PointsBaseParts {
+  /** Goods subtotal for the group, before any discount. */
+  goods: number;
+  couponDiscount: number;
+  shippingFee: number;
+  /** Gift wrap + shipment protection + any other per-store add-on. */
+  addonFee: number;
+  platformFee: number;
+  gstOnFee: number;
+  acceptsPoints: boolean;
+}
+
+/**
+ * The payable total a points allocation is measured against.
+ *
+ * 🛑 ONE implementation, because it was two. `POST /api/payment/create-order`
+ * and `verifyAndPlaceRazorpayOrderAction`'s amount guard each built this sum
+ * by hand, in the same shape, from the same six parts — and they are the
+ * *shown* figure and the *charged* figure for the same cart. Two hand-written
+ * copies of one money rule is Root Cause #75 exactly, and the failure mode is
+ * the worst kind: they only disagree on carts where the arithmetic differs, so
+ * nothing errors and the buyer is quoted one number and charged another.
+ *
+ * The coupon is floored at zero before the fees are added, never after — a
+ * discount larger than the goods must not eat the shipping and platform fee.
+ */
+export function pointsBaseForGroup(parts: PointsBaseParts): PointsBase {
+  return {
+    total: roundRupees(
+      Math.max(0, parts.goods - parts.couponDiscount) +
+        parts.shippingFee +
+        parts.addonFee +
+        parts.platformFee +
+        parts.gstOnFee,
+    ),
+    accepted: parts.acceptsPoints,
+  };
+}
+
 export function allocatePointsAcrossGroups(
-  groups: readonly { total: number; accepted: boolean }[],
+  groups: readonly PointsBase[],
   balance: number,
   optedIn: boolean,
 ): { perGroup: number[]; pointsApplied: number } {

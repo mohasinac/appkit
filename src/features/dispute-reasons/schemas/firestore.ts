@@ -29,12 +29,12 @@
  * ten times over.
  */
 import type { DisputeKind } from "../../../_internal/shared/features/orders/dispute-reasons";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export const DISPUTE_REASON_COLLECTION = "disputeReasons";
 
-export interface DisputeReasonDocument {
-  /** `dreason-<slug of label>`, so the same reason cannot be added twice. */
-  id: string;
+/** `id` is `dreason-<slug of label>`, so the same reason cannot be added twice. */
+export interface DisputeReasonDocument extends BaseDocument {
   /** Buyer-facing. Shown verbatim in the picker. */
   label: string;
   /** Which gate this reason is subject to. Never free-form. */
@@ -52,8 +52,6 @@ export interface DisputeReasonDocument {
   createdByName: string;
   /** The uid, for moderation. Never rendered. */
   createdByUid: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const DISPUTE_REASON_FIELDS = {

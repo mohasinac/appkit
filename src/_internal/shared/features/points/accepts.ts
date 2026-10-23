@@ -23,14 +23,20 @@
  * cannot tell a seller who declined from one who has not been asked.
  */
 
-/**
- * The platform's own storefront.
+/*
+ * 🛑 `PLATFORM_STORE_ID` is DECLARED in `features/stores/schemas/firestore.ts`
+ * and re-exported here, not defined here.
  *
- * Hard-coded deliberately: this is an identity, not a setting. It is the same
- * id `realListingsOnly` and the seed's `REAL_STORE_IDS` already treat as the
- * platform's own.
+ * It is still an identity rather than a setting — that reasoning is unchanged
+ * and is recorded at the declaration. What moved, and why: a brand-bearing
+ * literal inside `_internal/` is what `audit-ssr-in-appkit` Rule 3 blocks,
+ * because a consumer of appkit would inherit OUR store id with no seam to
+ * override it. The stores schema is also where the matching `acceptsPoints`
+ * docstring already explains the always-accepts rule, so the constant and its
+ * justification now sit together.
  */
-export const PLATFORM_STORE_ID = "store-letitrip-official";
+export { PLATFORM_STORE_ID } from "../../../../features/stores/schemas/firestore";
+import { PLATFORM_STORE_ID } from "../../../../features/stores/schemas/firestore";
 
 export function storeAcceptsPoints(
   store: { id?: string; acceptsPoints?: boolean } | null | undefined,
