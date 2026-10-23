@@ -2558,3 +2558,22 @@ export {
   type ApplyRateChangeInput,
   type ApplyRateChangeResult,
 } from "./_internal/server/features/pricing/actions";
+
+/*
+ * [SERVER-ONLY] Coordinated purchase — a SPECIALISED OFFER, not a new flow.
+ *
+ * `assertOwnedAddresses` is the one piece that must run server-side: a
+ * destination is a REFERENCE, and an id is guessable in a way an address is
+ * not, so an unverified one ships a parcel to a stranger's house with nothing
+ * erroring. The shared half (the member shape, the member-count rule) is pure
+ * and could sit in the main barrel — it stays here beside its checker so a
+ * caller cannot reach for one without meeting the other.
+ */
+export {
+  SHARED_PURCHASE_MAX_MEMBERS,
+  rejectCoordination,
+  destinationIds,
+  type CoordinationMember,
+  type OfferCoordination,
+} from "./_internal/shared/features/offers/coordination";
+export { assertOwnedAddresses } from "./_internal/server/features/offers/destinations";

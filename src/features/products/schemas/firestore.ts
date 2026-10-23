@@ -729,6 +729,31 @@ export interface ProductDocument extends BaseDocument {
   howToUse?: string[];
   allowOffers?: boolean;
   minOfferPercent?: number;
+  /**
+   * The seller permits a COORDINATED purchase on this listing.
+   *
+   * ## 🛑 A coordinated purchase is a SPECIALISED OFFER, not a listing type
+   *
+   * Owner, 2026-10-22: *"it is not a variant, it is similar to an offer, which
+   * the seller enables on the listing, then the customer can coordinate on it,
+   * it is a specialized offer."*
+   *
+   * That framing REMOVES work rather than adding it, and the removals are the
+   * part worth knowing — otherwise somebody rebuilds them:
+   *
+   * | Looks like it needs | Actually |
+   * |---|---|
+   * | a 7th `OrderSourceContext` variant | **nothing** — it is `offer-accepted`, and the provenance card already renders that branch |
+   * | an `orderType` tab | **nothing** — the Offer-wins tab already covers it |
+   * | a commit/settlement path | the offer lifecycle, with its chain fields, `checkoutDeadline` and lapse sweep |
+   * | a new money term | **none** — `unitPriceFor` already honours `lockedPrice`, so tax, payout base, refund ceiling and the invoice all follow |
+   *
+   * So this flag is deliberately shaped exactly like `allowOffers` above: same
+   * optional boolean, same seller control, same projection list. A listing
+   * with `allowOffers: false` and this `true` is coherent — the seller takes
+   * no solo offers but will consider a group — and nothing needs to forbid it.
+   */
+  allowCoordination?: boolean;
   customFields?: CustomField[];
   customSections?: CustomSection[];
   sublistingCategoryId?: string;
@@ -1058,6 +1083,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   // the moment something starts projecting through it.
   "allowOffers",
   "minOfferPercent",
+  /* Same reasoning as `allowOffers`: the card renders a pill from it. */
+  "allowCoordination",
   "id",
   "title",
   "description",

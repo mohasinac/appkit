@@ -9,6 +9,7 @@ import {
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/index";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
+import type { OfferCoordination } from "../../../_internal/shared/features/offers/coordination";
 
 export type OfferStatus =
   | "pending"
@@ -65,6 +66,24 @@ export interface OfferDocument extends BaseDocument {
   acceptedAt?: Date;
   checkoutDeadline?: Date;
   respondedAt?: Date;
+  /**
+   * Present when this offer is a COORDINATED purchase — several people
+   * chipping in on one listing.
+   *
+   * 🛑 A field on the offer, not a new document and not a new lifecycle.
+   * Acceptance produces an ordinary `offer-accepted` order; `unitPriceFor`
+   * already honours `lockedPrice`, so tax, payout base, refund ceiling and
+   * the invoice all follow with no new money term. See
+   * `_internal/shared/features/offers/coordination.ts` for the full list of
+   * things this deliberately does NOT add.
+   *
+   * 🛑 No member NAME is stored in here. `encryptPiiFields` is a flat
+   * top-level loop that never descends into arrays, so a name nested inside
+   * `coordination.members` would sit in Firestore as plaintext and never be
+   * decrypted on the way out — the same trap § "Status History" documents.
+   * Members are uids; names are resolved at render time.
+   */
+  coordination?: OfferCoordination;
   /** Set by `markPaid` once the buyer's order exists — makes "paid" auditable. */
   paidOrderId?: string;
   paidAt?: Date;
