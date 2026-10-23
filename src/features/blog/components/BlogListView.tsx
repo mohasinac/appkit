@@ -4,6 +4,7 @@ import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { Article, Div, Grid, Heading, OverflowRow, type OverflowRowItem, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { blogCategoryBadge } from "../constants/category-badge";
 
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
@@ -66,7 +67,11 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       </Div>
       <Stack className={`flex-1 ${__P.p5}`}>
         <Row className="mb-2" gap="sm" wrap>
-          <Span size="xs" weight="medium" className="bg-primary/10 text-primary" rounded="full" padding="pill-xs" transform="capitalize">
+          {/* Was `bg-primary/10 text-primary` for ALL five categories. The
+              real palette lived in BlogFeaturedCard, which only the homepage
+              rail mounts — so the index, the one page where telling a guide
+              from a release note matters, had no category colour at all. */}
+          <Span size="xs" weight="medium" className={blogCategoryBadge(post.category)} rounded="full" padding="pill-xs" transform="capitalize">
             {post.category}
           </Span>
           {post.isFeatured && (
@@ -113,6 +118,20 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             )}
             {date && <Span className="ml-1 text-neutral-400">· {date}</Span>}
           </Text>
+        </Row>
+
+        {/*
+          * 🛑 THE CARD HAD NO CALL TO ACTION AT ALL. The whole card is a
+          * <Link>, so it was always clickable — but nothing on it said so,
+          * which is why the grid read as a wall of static tiles. The arrow
+          * is `aria-hidden` and the text carries the meaning.
+          *
+          * `group-hover` on the parent <Article>, so the whole card is the
+          * hover target rather than this small strip.
+          */}
+        <Row align="center" gap="xs" className="mt-3 text-primary" textSize="sm" textWeight="medium">
+          <Span>Read</Span>
+          <Span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</Span>
         </Row>
       </Stack>
     </Article>

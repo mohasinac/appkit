@@ -1,7 +1,7 @@
 import React from "react";
 import { eventRepository } from "../../../repositories";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { Container, Heading, Main, Section } from "../../../ui";
+import { Container, Main, Section, PageHeroHeading } from "../../../ui";
 import { EventsIndexListing } from "./EventsIndexListing";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
@@ -85,9 +85,19 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
     <Main>
       <Section padding="y-2xl">
         <Container size="xl">
-          <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
-            Events
-          </Heading>
+          {/*
+            * Was a bare one-word <Heading> — no description, no count, no
+            * rule. The editorial treatment already existed but was inlined
+            * inside SectionCarousel and gated on headingVariant, so the two
+            * pages it was designed for could not reach it.
+            */}
+          <PageHeroHeading
+            className="mb-8"
+            pill="Events & Offers"
+            title="Events"
+            description="Sales, spin wheels, raffles and polls — everything running right now, and what is opening next."
+            meta={publicResult?.total ? `${publicResult.total} running` : undefined}
+          />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

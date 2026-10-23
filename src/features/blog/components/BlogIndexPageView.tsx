@@ -1,6 +1,6 @@
 import React from "react";
 import { blogRepository } from "../../../repositories";
-import { Container, Heading, Main, Section } from "../../../ui";
+import { Container, Main, Section, PageHeroHeading } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
 import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
@@ -64,9 +64,19 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
     <Main>
       <Section padding="y-2xl">
         <Container size="xl">
-          <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
-            Blog
-          </Heading>
+          {/*
+            * Was a bare one-word <Heading> — no description, no count, no
+            * rule. The editorial treatment already existed but was inlined
+            * inside SectionCarousel and gated on headingVariant, so the two
+            * pages it was designed for could not reach it.
+            */}
+          <PageHeroHeading
+            className="mb-8"
+            pill="From the shop floor"
+            title="Blog"
+            description="Buying guides, release notes and what we have learned importing and grading Beyblades."
+            meta={initialData?.total ? `${initialData.total} articles` : undefined}
+          />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <BlogIndexListing initialData={initialData} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

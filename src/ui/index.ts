@@ -120,6 +120,8 @@ export {
 
 export type { DivProps } from "./components/Div";
 export { Div } from "./components/Div";
+export type { PageHeroHeadingProps } from "./components/PageHeroHeading";
+export { PageHeroHeading } from "./components/PageHeroHeading";
 /*
  * Phase 12 — the one way to render a disclaimer. `id` only: there is no `text`
  * prop, because an escape hatch would make it a styled box and the legally
