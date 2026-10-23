@@ -94,14 +94,7 @@ const GUIDE_CARDS: AdminGuideCard[] = [
     href: String(ROUTES.ADMIN.GUIDE_TRUST),
     permission: "admin:moderation:read",
   },
-  {
-    Icon: MessageSquare,
-    title: "WhatsApp Integration",
-    description: "Connect Meta's WhatsApp Business Cloud API — Business Manager setup, phone registration, access tokens, and message templates.",
-    href: String(ROUTES.ADMIN.GUIDE_WHATSAPP),
-    permission: "admin:site:read",
-  },
-  {
+    {
     Icon: CreditCard,
     title: "Payments (Razorpay)",
     description: "Enable and configure Razorpay — API keys, webhooks, and going live from test mode.",

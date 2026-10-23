@@ -2239,14 +2239,20 @@ export function AdminSiteSettingsView({
                     <Text size="xs" color="muted">
                       WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.
                     </Text>
-                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
+                    {/*
+                      The label is a PROP, not a <Text> above the control. A
+                      <Text> renders a <p>, so the field looks labelled to a
+                      sighted reader and has no accessible name at all.
+                    */}
                     <PaginatedSelect<string>
                       multiple
+                      ariaLabel="Notification types to send over WhatsApp"
                       options={NOTIF_TYPE_OPTIONS}
                       value={notifWhatsappTypes}
                       onChange={(values) => setNotifWhatsappTypes(values)}
                       placeholder="All notification types"
                     />
+                    <Text size="xs" color="muted">Leave empty to send all types.</Text>
                   </Stack>
                 )}
               </Stack>
