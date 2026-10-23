@@ -157,11 +157,15 @@ class EventLikesRepository extends BaseRepository<EventLikeDocument> {
 
       return snapshot.docs
         .map((d) => {
-          const raw = (d.data() as { createdAt?: unknown }).createdAt;
+          /*
+           * Firestore hands back a Timestamp, the Admin SDK sometimes a Date,
+           * and a seeded row a Date. Naming both shapes beats `unknown`: the
+           * union is small, closed, and says what the field can actually be.
+           */
+          const raw = (d.data() as { createdAt?: Date | { toDate?: () => Date } })
+            .createdAt;
           if (raw instanceof Date) return raw;
-          // Firestore hands back a Timestamp; `toDate` is the only way across.
-          const ts = raw as { toDate?: () => Date } | undefined;
-          return typeof ts?.toDate === "function" ? ts.toDate() : null;
+          return typeof raw?.toDate === "function" ? raw.toDate() : null;
         })
         .filter((d): d is Date => d !== null);
     } catch (err) {

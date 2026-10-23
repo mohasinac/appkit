@@ -19,7 +19,8 @@
 import type { ChartSpec } from "../../../ui/components/chart-spec";
 import { calculateDiscount } from "../../promotions/schemas/firestore";
 import type { CouponDocument } from "../../promotions/schemas/firestore";
-import type { PollConfig } from "../types";
+import type { AttachedCoupon } from "../../promotions/constants/attached-coupons";
+
 
 /** A poll needs at least one real vote before a bar chart means anything. */
 const MIN_VOTES = 1;
@@ -33,7 +34,9 @@ const MIN_VOTES = 1;
  * shaped so the differences between options are visible at a glance.
  */
 export function buildPollChart(
-  pollConfig: PollConfig | undefined,
+  // Structural, not the full `PollConfig`: this reads `options` and nothing
+  // else, and the page carries a narrower local declaration of its own.
+  pollConfig: { options?: { id: string; label: string }[] } | undefined,
   results: { optionId: string; count: number }[] | undefined,
 ): ChartSpec | null {
   if (!pollConfig?.options?.length || !results?.length) return null;
@@ -70,7 +73,7 @@ const INR = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
  *
  * 🛑 COMPUTED WITH THE REAL `calculateDiscount`, never a re-derived formula.
  * That function is where `maxDiscount`, `minPurchase` and the tier table are
- * honoured; a local `total * value / 100` would silently ignore all three and
+ * honoured; computing the percentage inline here would silently ignore all three and
  * overstate every capped code. Root Cause #75 is a money rule hand-copied into
  * six places, where the copies never learned about a branch added later.
  *
@@ -81,7 +84,34 @@ const INR = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
  * at zero for either would read as "this code saves you nothing", which is a
  * lie by omission. They belong in the caption, and that is where they go.
  */
-export function buildCouponSavingsChart(coupons: CouponDocument[]): ChartSpec | null {
+/**
+ * 🛑 TAKES THE PUBLIC PROJECTION, NOT THE DOCUMENT — and still calls the
+ * real `calculateDiscount`.
+ *
+ * The event page only ever holds `AttachedCoupon`, the allow-list
+ * projection (Root Cause #70 — the full document carries fields no public
+ * surface should see). That projection carries exactly the four facts the
+ * calculator needs, under different names: `type`, `discountValue`,
+ * `maxDiscount`, `minPurchase`.
+ *
+ * So this MAPS NAMES and delegates. The tempting shortcut — computing
+ * the percentage inline right here, because the projection makes it
+ * easy — is precisely Root Cause #75: a money rule re-derived at a call
+ * site, which then never learns about the cap, the minimum or the tier
+ * table the real function honours.
+ */
+function toCalculable(c: AttachedCoupon): CouponDocument {
+  return {
+    type: c.type,
+    discount: {
+      value: c.discountValue,
+      maxDiscount: c.maxDiscount,
+      minPurchase: c.minPurchase,
+    },
+  } as unknown as CouponDocument;
+}
+
+export function buildCouponSavingsChart(coupons: AttachedCoupon[]): ChartSpec | null {
   const plottable = coupons.filter(
     (c) => c.type === "percentage" || c.type === "fixed",
   );
@@ -94,7 +124,7 @@ export function buildCouponSavingsChart(coupons: CouponDocument[]): ChartSpec | 
   const series = plottable.map((coupon) => ({
     label: coupon.code,
     values: BASKET_SIZES.map((basket) =>
-      Math.round(calculateDiscount(coupon, basket)),
+      Math.round(calculateDiscount(toCalculable(coupon), basket)),
     ),
   }));
 

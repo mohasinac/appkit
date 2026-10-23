@@ -130,16 +130,20 @@ export function SpinWheel({
         ease: ["easeOut", "easeInOut"] as Easing[],
       };
 
+  /*
+   * The wrapper shrink-wraps the svg, which already carries width/height —
+   * it exists only to anchor the absolutely-positioned pointer. Sizing it
+   * again from props would be a second source of truth for one number.
+   */
   return (
-    <Div className="relative mx-auto" style={{ width: size, height: size }}>
+    <Div className="relative mx-auto inline-block leading-none">
       {/*
         * The pointer. OUTSIDE the rotating group — it is the fixed reference
         * the wheel lands against, and a pointer that rotates with the wheel
         * would always point at the same segment.
         */}
       <Div
-        className="absolute left-1/2 -translate-x-1/2 z-10"
-        style={{ top: -2 }}
+        className="absolute left-1/2 -translate-x-1/2 -top-0.5 z-10"
         aria-hidden="true"
       >
         <svg width="28" height="22" viewBox="0 0 28 22">
@@ -163,7 +167,14 @@ export function SpinWheel({
         onAnimationComplete={() => {
           if (winningIndex !== null) onSettled?.();
         }}
-        style={{ transformOrigin: "50% 50%" }}
+        /*
+         * 🛑 NOT `origin-center` — that class generates no rule in this
+         * project's Tailwind build, and a class with no rule renders as an
+         * unstyled element rather than as an error. It matters here: an SVG
+         * element's transform-origin defaults to `0 0`, so without this the
+         * wheel ORBITS its top-left corner instead of spinning in place.
+         */
+        className="[transform-origin:50%_50%]"
         role="img"
         aria-label={`Prize wheel with ${n} segment${n === 1 ? "" : "s"}: ${segments.map((s) => s.label).join(", ")}`}
       >

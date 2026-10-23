@@ -1081,6 +1081,15 @@ export type {
 } from "./_internal/shared/features/messaging/config";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventById - Shared export for admin get event by id.
+export {
+  getEventLikers,
+  getEventLikersCached,
+  viewerHasLiked,
+  viewerHasLikedCached,
+  getLikeTrend,
+  getLikeTrendCached,
+} from "./_internal/server/features/events/likes";
+export { toggleEventLikeAction, getEventLikersAction } from "./_internal/server/features/events/like-actions";
 export { adminGetEventById } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventEntries - Shared export for admin get event entries.
