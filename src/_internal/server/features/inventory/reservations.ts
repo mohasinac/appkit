@@ -43,7 +43,7 @@ import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
 import { ConflictError } from "../../../../errors/conflict-error";
 import { normalizeError } from "../../../../errors/normalize";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import {
   RESERVATION_DEFAULT_TTL_HOURS,

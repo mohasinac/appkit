@@ -52,6 +52,8 @@ export type ActionResource =
   | "GROUP"
   | "CATEGORY"
   | "BRAND"
+  /* D56 — self-serve ad bookings (book / cancel / approve / reject). */
+  | "ADS"
   /*
    * The two GENERATED reference databases. `ActionTree` is
    * `Record<ActionResource, …>`, so adding a bucket without adding it here
@@ -201,7 +203,7 @@ export const ACTIONS: ActionTree = {
    */
   ADS: {
     "book-ad-slot": {
-      iconKey: "add",
+      iconKey: "create",
       id: "ads.book-ad-slot",
       label: "Book this slot",
       ariaLabel: "Book this ad slot for the selected month",
@@ -2020,7 +2022,7 @@ export const ACTIONS: ActionTree = {
       },
     },
     "add-dispute-reason": {
-      iconKey: "add",
+      iconKey: "create",
       id: "admin.add-dispute-reason",
       label: "Add reason",
       ariaLabel: "Add a dispute reason",

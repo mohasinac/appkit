@@ -27,7 +27,7 @@ import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
 import { ConflictError } from "../../../../errors/conflict-error";
 import { normalizeError } from "../../../../errors/normalize";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import {
   AD_BOOKING_COLLECTION,

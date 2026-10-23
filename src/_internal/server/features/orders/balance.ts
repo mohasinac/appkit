@@ -34,7 +34,7 @@ import type { OrderDocument } from "../../../../features/orders/schemas/firestor
 import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
-import { serverLogger } from "../../../../utils/server-logger";
+import { serverLogger } from "../../../../monitoring/server-logger";
 
 /**
  * How long a buyer gets, once the balance is opened for collection.
