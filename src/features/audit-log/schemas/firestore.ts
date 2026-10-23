@@ -97,6 +97,45 @@ export const AdminAuditActionValues = {
    * read.
    */
   STORE_TRUST_CHANGE: "store_trust_change",
+  /*
+   * ── Part 14 / A5 ─────────────────────────────────────────────────────────
+   *
+   * `audit-privileged-write-unlogged` found 14 admin write paths that record
+   * nothing. These are the action values the ones being closed now need; the
+   * rest stay on the ratchet until each is given one deliberately.
+   *
+   * 🛑 Each is a SEPARATE value rather than a shared `admin_write`. The log's
+   * question is "what have admins done lately", and an undifferentiated value
+   * answers it with a row that says only "something". Filtering is the whole
+   * point of the collection.
+   */
+  /** A role's permission set changed — the definition of who can do what. */
+  ROLE_CHANGE: "role_change",
+  /**
+   * A tax code's rate or HSN mapping changed.
+   *
+   * 🛑 The one STATUTORY thing an admin can edit, which is why
+   * `/admin/pricing` deliberately does not mirror it. A wrong rate here is a
+   * wrong return, so "who set this and when" is the question an assessment
+   * asks first.
+   */
+  TAX_CODE_CHANGE: "tax_code_change",
+  /** Sessions forcibly revoked — the user is signed out everywhere, now. */
+  SESSION_REVOKE: "session_revoke",
+  /** A bulk operation over many users at once. */
+  USER_BULK_ACTION: "user_bulk_action",
+  /** A moderation report resolved, dismissed or actioned. */
+  MODERATION_DECISION: "moderation_decision",
+  /** A payment case claimed or resolved — money a buyer says did not arrive. */
+  PAYMENT_CASE_DECISION: "payment_case_decision",
+  /**
+   * A scammer profile edited.
+   *
+   * 🛑 Public-facing accusation. The profile names a person or a payment
+   * handle, so the wording and the status are reputational — and the one
+   * question that follows a complaint is who wrote it.
+   */
+  SCAMMER_PROFILE_UPDATE: "scammer_profile_update",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];
