@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { parseChartAttr, CHART_KINDS } from "./chart-spec";
+import { chartFigureHtml } from "../rich-text/chart-blocks";
 
 export interface RichTextEditorProps {
   value: string;
@@ -30,6 +32,95 @@ export interface RichTextEditorProps {
   ariaLabel?: string;
 }
 
+/**
+ * What the Chart button drops into the editor to be edited.
+ *
+ * A filled, working example rather than an empty skeleton: an author editing
+ * real numbers into a chart that already renders can see what each field does,
+ * where one facing `{"kind":"","categories":[],"series":[]}` has to guess the
+ * shape before anything appears at all.
+ */
+const STARTER_CHART = JSON.stringify(
+  {
+    kind: "groupedBar",
+    title: "Untitled chart",
+    categories: ["First", "Second", "Third"],
+    series: [
+      { label: "Series A", values: [3, 5, 4] },
+      { label: "Series B", values: [4, 2, 6] },
+    ],
+    unit: "",
+    caption: "",
+  },
+  null,
+  2,
+);
+
+/** The chart JSON editor shown under the toolbar, with live validation. */
+function ChartDraftPanel({
+  draft,
+  onDraftChange,
+  onInsert,
+  onCancel,
+}: {
+  draft: string;
+  onDraftChange: (v: string) => void;
+  onInsert: () => void;
+  onCancel: () => void;
+}) {
+  const result = useMemo(() => parseChartAttr(draft), [draft]);
+  const errorId = "appkit-chart-draft-error";
+
+  return (
+    <div className="appkit-rich-text-editor__chart border-b p-2 border-[var(--appkit-color-border)]">
+      <label
+        className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
+        htmlFor="appkit-chart-draft"
+      >
+        Chart data — kinds: {CHART_KINDS.join(", ")}. Each series needs one
+        value per category.
+      </label>
+      <textarea
+        id="appkit-chart-draft"
+        value={draft}
+        onChange={(e) => onDraftChange(e.target.value)}
+        rows={12}
+        spellCheck={false}
+        aria-invalid={!result.ok}
+        aria-describedby={result.ok ? undefined : errorId}
+        className="w-full rounded border p-2 font-mono text-xs border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] text-[var(--appkit-color-text)]"
+      />
+      {/*
+        The reason comes straight from the shared validator, so the author is
+        told which rule they broke ("Series X has 2 values but there are 3
+        categories") instead of a generic "invalid".
+      */}
+      {result.ok ? null : (
+        <p id={errorId} role="alert" className="mt-1 text-xs text-[var(--appkit-color-error)]">
+          {result.reason}
+        </p>
+      )}
+      <div className="mt-2 flex gap-2">
+        <button
+          type="button"
+          onClick={onInsert}
+          disabled={!result.ok}
+          className="rounded px-2 py-1 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 bg-[var(--appkit-color-primary)] text-[var(--appkit-color-text-on-primary)]"
+        >
+          Insert chart
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded px-2 py-1 text-xs font-medium transition hover:bg-surface-hover text-[var(--appkit-color-text-muted)]"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
 type ToolbarAction = {
   label: string;
   title: string;
@@ -45,6 +136,9 @@ type ToolbarAction = {
 const ALLOWED_TAGS = new Set([
   "B", "STRONG", "I", "EM", "U", "S", "STRIKE",
   "UL", "OL", "LI", "A", "BR", "DIV", "SPAN", "P",
+  // FIGURE is here only because the toolbar's "Chart" button produces it.
+  // It carries no text content — see sanitizeAttribute for the data-chart rule.
+  "FIGURE",
 ]);
 
 function isSafeHref(href: string): boolean {
@@ -55,13 +149,34 @@ function isSafeHref(href: string): boolean {
   return /^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(trimmed);
 }
 
+/**
+ * 🛑 This is the SAVE-time sanitiser, and it is a different, stricter one from
+ * `RichText.tsx`'s render-time `sanitiseHtml`. Both had to learn about
+ * `data-chart` — teaching only the renderer, as a first pass here did, means a
+ * chart inserted in the editor is silently deleted the moment it is saved,
+ * with the toolbar button appearing to work perfectly.
+ *
+ * The rule is stricter than the renderer's on purpose: the value is not merely
+ * allowed through, it must PARSE as a valid ChartSpec. Invalid JSON or a spec
+ * that fails validation loses the attribute, and the empty `<figure>` that
+ * remains is then dropped by `sanitizeElement`. So malformed chart data cannot
+ * be persisted at all, which is the right place to stop it — once stored, it
+ * is every future reader's problem.
+ */
 function sanitizeAttribute(el: HTMLElement, attr: Attr): void {
-  const isSafeAnchorHref = el.tagName === "A" && attr.name.toLowerCase() === "href";
-  if (!isSafeAnchorHref) {
-    el.removeAttribute(attr.name);
+  const name = attr.name.toLowerCase();
+
+  if (el.tagName === "A" && name === "href") {
+    if (!isSafeHref(attr.value)) el.setAttribute("href", "#");
     return;
   }
-  if (!isSafeHref(attr.value)) el.setAttribute("href", "#");
+
+  if (el.tagName === "FIGURE" && name === "data-chart") {
+    if (!parseChartAttr(attr.value).ok) el.removeAttribute(attr.name);
+    return;
+  }
+
+  el.removeAttribute(attr.name);
 }
 
 function sanitizeElement(root: DocumentFragment | HTMLElement, el: HTMLElement): void {
@@ -70,6 +185,16 @@ function sanitizeElement(root: DocumentFragment | HTMLElement, el: HTMLElement):
     return;
   }
   Array.from(el.attributes).forEach((attr) => sanitizeAttribute(el, attr));
+
+  // A <figure> is only legal here as a chart carrier. If the attribute did not
+  // survive validation above, what is left is an empty element with no text and
+  // no meaning — drop it rather than persist a blank block the author cannot
+  // see, select, or delete.
+  if (el.tagName === "FIGURE" && !el.hasAttribute("data-chart")) {
+    root.removeChild(el);
+    return;
+  }
+
   sanitizeChildren(el);
 }
 
@@ -102,6 +227,7 @@ export function RichTextEditor({
   ariaLabel,
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
+  const [chartDraft, setChartDraft] = useState<string | null>(null);
 
   const emitChange = () => {
     if (!editorRef.current) return;
@@ -150,6 +276,11 @@ export function RichTextEditor({
         },
       },
       {
+        label: "Chart",
+        title: "Insert chart",
+        run: () => setChartDraft(STARTER_CHART),
+      },
+      {
         label: "Clear",
         title: "Clear formatting",
         run: () => exec("removeFormat"),
@@ -157,6 +288,22 @@ export function RichTextEditor({
     ],
     [],
   );
+
+  /*
+   * `insertHTML` rather than building a node and splicing it in: the editor is
+   * a contenteditable and execCommand is already how every other toolbar action
+   * writes, so this keeps the caret and the undo stack behaving the same way.
+   * The inserted markup then goes straight through `emitChange` →
+   * `sanitizeRichTextHtml`, so the chart is validated on the way out exactly as
+   * a pasted one would be — the button gets no privileged path.
+   */
+  const insertChart = () => {
+    if (chartDraft === null) return;
+    const parsed = parseChartAttr(chartDraft);
+    if (!parsed.ok) return;
+    exec("insertHTML", chartFigureHtml(parsed.spec));
+    setChartDraft(null);
+  };
 
   useEffect(() => {
     const editor = editorRef.current;
@@ -189,6 +336,28 @@ export function RichTextEditor({
           </button>
         ))}
       </div>
+
+      {/*
+        Inline panel rather than a Modal: <Modal> mounts the overlay context
+        that makes <Form>'s bottom bar stand itself down, and this editor is
+        frequently rendered INSIDE a form. Opening a chart editor would then
+        blank the surrounding form's Save bar until it closed.
+
+        The author edits JSON. That is honest for a first cut — the validator
+        gives a specific, readable reason for every mistake, which is more
+        useful than a field-by-field builder that silently permits a series
+        length mismatch. A visual builder can replace the textarea later
+        without touching anything else, because the contract is the spec.
+      */}
+      {chartDraft !== null ? (
+        <ChartDraftPanel
+          draft={chartDraft}
+          onDraftChange={setChartDraft}
+          onInsert={insertChart}
+          onCancel={() => setChartDraft(null)}
+        />
+      ) : null}
+
       <div
         ref={editorRef}
         /*
