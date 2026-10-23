@@ -18,6 +18,7 @@ import {
   RichTextEditor,
   Row,
   Select,
+  Span,
   Stack,
   StackedViewShell,
   TagInput,
@@ -42,6 +43,8 @@ import type {
   SurveyFormField,
 } from "../types";
 import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
+import { rafflePrizeCouponIdsOf } from "../schemas/firestore";
+import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
 import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 import { eventDraftSchema } from "../schemas/event-form";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -231,6 +234,14 @@ interface EventDraft {
   allowGuestParticipation: boolean;
   // Pin — lifts this event to the top of /events and the homepage rail.
   isPinned: boolean;
+  /*
+   * PROMOTIONAL coupons shown on the public event page. Distinct from the
+   * `couponId` of an OFFER event below (that one IS the offer) and from
+   * `rafflePrizeCouponIds` (awarded to one winner). Three coupon fields on one
+   * form is two too many to leave unlabelled, which is why each says what it
+   * is rather than relying on the field name.
+   */
+  couponIds: string[];
   // Sale
   discountPercent: string;
   saleBannerText: string;
@@ -259,7 +270,7 @@ interface EventDraft {
   raffleType: RaffleType;
   raffleTopN: string;
   rafflePrize: string;
-  rafflePrizeCouponId: string;
+  rafflePrizeCouponIds: string[];
   rafflePrizeProductIds: string[];
   spinPrizes: SpinPrize[];
   spinMaxPerUser: string;
@@ -336,7 +347,7 @@ const DEFAULT_DRAFT: EventDraft = {
   raffleType: "open_raffle",
   raffleTopN: "10",
   rafflePrize: "",
-  rafflePrizeCouponId: "",
+  rafflePrizeCouponIds: [],
   rafflePrizeProductIds: [],
   spinPrizes: [],
   spinMaxPerUser: "1",
@@ -363,7 +374,27 @@ function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
   fields.raffleType = isRaffleType && draft.type === "spin_wheel" ? "spin_wheel" : draft.raffleType;
   if (Number(draft.raffleTopN) > 0) fields.raffleTopN = Number(draft.raffleTopN);
   if (draft.rafflePrize) fields.rafflePrize = draft.rafflePrize;
-  if (draft.rafflePrizeCouponId) fields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
+  /*
+   * 🛑 Writes the ARRAY and never the deprecated `rafflePrizeCouponId`. The
+   * editor LOADS the legacy scalar (see the hydration below, which folds it in
+   * through `rafflePrizeCouponIdsOf`) so an old event's prize is visible and
+   * editable — but the moment an admin saves, the value lives in the array
+   * alone. Writing both would leave two fields to keep in step, which is the
+   * mirror-drift trap in Root Cause #42.
+   *
+   * The legacy scalar is deliberately NOT cleared here: a merge-write cannot
+   * remove a field anyway (§ Seed API Reference), and `rafflePrizeCouponIdsOf`
+   * dedupes, so a stale scalar duplicating an array entry awards nothing twice.
+   */
+  /*
+   * Unconditional — `[]` included. Every neighbouring field here is written
+   * only when non-empty, which means none of them can be CLEARED through this
+   * form: the route merges, the stored value survives, and the admin's
+   * deletion silently reverts on reload. Not fixing the others in this change
+   * (each needs its own think about what "cleared" means for an event
+   * mid-flight), but a brand-new field must not be born with the bug.
+   */
+  fields.rafflePrizeCouponIds = draft.rafflePrizeCouponIds;
   if (draft.rafflePrizeProductIds.length > 0) fields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
   if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
     fields.spinPrizes = draft.spinPrizes as unknown as JsonObjectWithUndefined[];
@@ -372,6 +403,46 @@ function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
     if (draft.spinWindowEnd) fields.spinWindowEnd = toISOString(draft.spinWindowEnd);
   }
   return fields;
+}
+
+/**
+ * Promotional coupons — shown to everyone who opens the public event page.
+ *
+ * 🛑 NOT gated on event type, unlike the sale/offer/poll blocks beside it in
+ * the Settings step. Any event can advertise a code: a tournament can hand out
+ * a shipping coupon, a sale event can list three more. Gating it would make
+ * the field invisible on most of the catalogue for no reason.
+ *
+ * Module-level for the same reason `SpinPrizesEditor` below is — the Settings
+ * step's render closure is counted by `audit-code-quality`'s LARGE_COMPONENT
+ * rule and this block put it 3 lines over. Purely a line-count split; no
+ * behaviour differs from when it was inline.
+ */
+function PromotionalCouponsField({
+  values,
+  onChange,
+}: {
+  values: Pick<EventDraft, "couponIds">;
+  onChange: (patch: Partial<EventDraft>) => void;
+}) {
+  return (
+    <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+      <Text size="sm" weight="semibold" color="muted">Promotional coupons</Text>
+      <CouponInlineSelect
+        scope="admin"
+        multiple
+        value={values.couponIds}
+        onChange={(ids) => onChange({ couponIds: ids })}
+        placeholder="Search coupons to feature on this event…"
+        allowCreate={false}
+      />
+      <Text size="xs" color="muted">
+        Shown on the public event page for readers to copy and use at checkout. Up to {ATTACHED_COUPON_MAX}.
+        Expired and deactivated coupons are hidden automatically, so an old event never advertises a dead code.
+        These are <Span className="italic">not</Span> prizes — raffle prizes are set in the Raffle step.
+      </Text>
+    </Stack>
+  );
 }
 
 // Extracted out of the raffle/spin step's render() so that closure stays
@@ -462,6 +533,7 @@ function eventToDraft(event: Record<string, any>): EventDraft {
         // the toggle as off rather than leaving it `undefined`, which React
         // would read as an uncontrolled input.
         isPinned: Boolean(event.isPinned),
+        couponIds: Array.isArray(event.couponIds) ? event.couponIds : [],
         discountPercent: String(event.saleConfig?.discountPercent ?? 10),
         saleBannerText: event.saleConfig?.bannerText || "",
         couponId: event.offerConfig?.couponId || "",
@@ -486,7 +558,14 @@ function eventToDraft(event: Record<string, any>): EventDraft {
         raffleType: (event.raffleType as RaffleType) || "open_raffle",
         raffleTopN: String(event.raffleTopN ?? 10),
         rafflePrize: event.rafflePrize || "",
-        rafflePrizeCouponId: event.rafflePrizeCouponId || "",
+        /*
+         * 🛑 Through `rafflePrizeCouponIdsOf`, never `event.rafflePrizeCouponIds`
+         * directly. An event created before the widening carries ONLY the
+         * deprecated scalar, and reading just the array would show an empty
+         * picker — so the first save of an unrelated field would silently drop
+         * a prize the admin never knew was set.
+         */
+        rafflePrizeCouponIds: rafflePrizeCouponIdsOf(event),
         rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
         spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
         spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
@@ -559,6 +638,15 @@ export function AdminEventEditorView({
         coverImageUrl: draft.coverImageUrl || undefined,
         allowGuestParticipation: draft.allowGuestParticipation,
         isPinned: draft.isPinned,
+        /*
+         * Sent UNCONDITIONALLY, including as `[]`. An editor that omits the
+         * key when the list is empty can never REMOVE the last coupon: the
+         * route merges, so the stored array survives and the admin watches
+         * their deletion silently undo itself on reload. Root Cause #76's
+         * shape, from the other side — there the form could express state it
+         * did not own; here it must be able to express an empty one it does.
+         */
+        couponIds: draft.couponIds,
         ...buildEventTypeConfig(draft),
         ...buildEventRaffleFields(draft),
       };
@@ -712,7 +800,7 @@ export function AdminEventEditorView({
     {
       id: "settings",
       label: "Settings",
-      fields: ["status", "allowGuestParticipation", "isPinned", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
+      fields: ["status", "allowGuestParticipation", "isPinned", "couponIds", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
       // Same: the offer-coupon, offer-display-code and poll-minimum-options
       // rules are all stated in eventDraftSchema's superRefine, which now
       // surfaces them inline on the field instead of as a step-blocking banner.
@@ -751,6 +839,8 @@ export function AdminEventEditorView({
               Pinned events are listed first on the Events page and in the homepage strip, ahead of the usual soonest-first order. A pinned event still has to be Active to appear at all — pinning does not publish it.
             </Text>
           </Stack>
+
+          <PromotionalCouponsField values={values} onChange={onChange} />
 
           {/* Sale config */}
           {values.type === "sale" && (
@@ -857,7 +947,7 @@ export function AdminEventEditorView({
     {
       id: "raffle",
       label: "Raffle / Spin",
-      fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponId", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
+      fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponIds", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
       render: ({ values, onChange, errors }) => {
         const isRaffleType = values.type === "raffle" || values.type === "spin_wheel";
         const showRaffleConfig = isRaffleType || values.hasRaffle;
@@ -884,14 +974,18 @@ export function AdminEventEditorView({
                 <Input label="Prize description"
                 error={errors.rafflePrize} value={values.rafflePrize} onChange={(e) => onChange({ rafflePrize: e.target.value })} placeholder="₹2,000 store credit + exclusive Pikachu sticker" />
                 <Div>
-                  <Text size="sm" weight="medium" className="mb-1">Coupon for winner (optional)</Text>
+                  <Text size="sm" weight="medium" className="mb-1">Coupons for winner (optional)</Text>
                   <CouponInlineSelect
                     scope="admin"
-                    value={values.rafflePrizeCouponId}
-                    onChange={(id) => onChange({ rafflePrizeCouponId: id ?? "" })}
+                    multiple
+                    value={values.rafflePrizeCouponIds}
+                    onChange={(ids) => onChange({ rafflePrizeCouponIds: ids })}
                     placeholder="Search coupons…"
                     allowCreate={false}
                   />
+                  <Text size="xs" color="muted" className="mt-1">
+                    Every coupon listed here is awarded to the winner when the draw runs. Up to {ATTACHED_COUPON_MAX}.
+                  </Text>
                 </Div>
                 <Div>
                   <Text size="sm" weight="medium" className="mb-1">Prize products (optional)</Text>

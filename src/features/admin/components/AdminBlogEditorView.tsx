@@ -14,6 +14,8 @@ import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
 import { blogDraftSchema } from "../../blog/schemas/blog-form";
+import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
+import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
 import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
 
 
@@ -45,6 +47,8 @@ interface BlogDraft {
   youtubeId: string;
   category: BlogPostCategory;
   tags: string[];
+  /** Promotional coupons rendered as copyable cards below the article. */
+  couponIds: string[];
   status: BlogPostStatus;
   isFeatured: boolean;
   authorName: string;
@@ -78,6 +82,7 @@ const DEFAULT_DRAFT: BlogDraft = {
   youtubeId: "",
   category: "news",
   tags: [],
+  couponIds: [],
   status: "published",
   isFeatured: true,
   authorName: "Admin",
@@ -154,6 +159,7 @@ export function AdminBlogEditorView({
       youtubeId: p.youtubeId ?? "",
       category: p.category ?? "news",
       tags: Array.isArray(p.tags) ? p.tags : [],
+      couponIds: Array.isArray(p.couponIds) ? p.couponIds : [],
       status: p.status ?? "published",
       isFeatured: p.isFeatured ?? true,
       authorName: p.authorName ?? "Admin",
@@ -177,6 +183,10 @@ export function AdminBlogEditorView({
         youtubeId: draft.youtubeId || undefined,
         category: draft.category,
         tags: draft.tags,
+        // Unconditional, `[]` included — see the matching note in the event
+        // editor: a key omitted when empty cannot clear the stored array,
+        // because the route merges.
+        couponIds: draft.couponIds,
         status: draft.status,
         isFeatured: draft.isFeatured,
         authorName: draft.authorName,
@@ -403,7 +413,7 @@ export function AdminBlogEditorView({
       id: "publish",
       label: "Publish",
       quick: true,
-      fields: ["status", "publishedAt", "authorName", "isFeatured"],
+      fields: ["status", "publishedAt", "authorName", "isFeatured", "couponIds"],
       render: ({ values, onChange, errors }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
@@ -436,6 +446,26 @@ export function AdminBlogEditorView({
             checked={values.isFeatured}
             onChange={(checked) => onChange({ isFeatured: checked })}
           />
+          {/*
+            Lives on "Publish" rather than "SEO & Tags": a coupon is part of
+            how a post goes out, not part of how it is indexed. It is also the
+            step an editor is on when they decide to promote something.
+          */}
+          <Div>
+            <Text className="mb-1.5" size="sm" weight="medium">Coupons (optional)</Text>
+            <CouponInlineSelect
+              scope="admin"
+              multiple
+              value={values.couponIds}
+              onChange={(ids) => onChange({ couponIds: ids })}
+              placeholder="Search coupons to feature in this post…"
+              allowCreate={false}
+            />
+            <Text className="text-[var(--appkit-color-text-muted)] mt-1" size="xs">
+              Shown as copyable code cards below the article. Up to {ATTACHED_COUPON_MAX}.
+              Expired and deactivated coupons are hidden automatically, so an old post never advertises a dead code.
+            </Text>
+          </Div>
           {isEdit && (
             <Div className="border-t border-[var(--appkit-color-border)]" padding="t-md">
               <Button

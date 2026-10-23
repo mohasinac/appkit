@@ -17,6 +17,12 @@ export interface RaffleWinnerEvent {
    * `currentUserIsWinner` so the CTA only renders for the actual winner.
    */
   rafflePrizeCouponCode?: string;
+  /**
+   * Every prize coupon's code, for a raffle awarding more than one. Supersedes
+   * the singular field above, which stays declared because raffles drawn
+   * before this existed recorded only that.
+   */
+  rafflePrizeCouponCodes?: string[];
 }
 
 export interface EventRaffleWinnerViewProps {
@@ -50,6 +56,21 @@ const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>
 
 export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: EventRaffleWinnerViewProps) {
   const l = { ...DEFAULT_LABELS, ...(labels ?? {}) };
+
+  /*
+   * Array first, singular as the fallback — and deduped, because the page
+   * feeds `rafflePrizeCouponCode` from the first entry of the same list, so a
+   * naive concat would render the first prize twice.
+   */
+  const winnerCouponCodes = Array.from(
+    new Set(
+      event.rafflePrizeCouponCodes?.length
+        ? event.rafflePrizeCouponCodes
+        : event.rafflePrizeCouponCode
+          ? [event.rafflePrizeCouponCode]
+          : [],
+    ),
+  );
 
   if (!event.raffleWinnerUserId) {
     return (
@@ -91,13 +112,28 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
         {/* Plan §10 — when the prize is a coupon code AND the viewer is the
             winner, surface a one-click Claim button that auto-claims into the
             wallet + deep-links to the cart. */}
-        {currentUserIsWinner && event.rafflePrizeCouponCode ? (
+        {/*
+          🛑 One Claim button PER CODE. A raffle may award several coupons, and
+          `ClaimCouponButton` claims exactly one — so rendering only the first
+          would show the winner a complete-looking prize while silently
+          stranding the rest, with no surface anywhere that lists them.
+
+          Falls back to the singular `rafflePrizeCouponCode` when the array is
+          absent: every raffle drawn before this change recorded only the
+          scalar, and those winners must keep their button.
+        */}
+        {currentUserIsWinner && winnerCouponCodes.length > 0 ? (
           <Div padding="t-xs">
-            <ClaimCouponButton
-              couponCode={event.rafflePrizeCouponCode}
-              source="raffle"
-              size="sm"
-            />
+            <Row wrap className="gap-x-3 gap-y-2">
+              {winnerCouponCodes.map((code) => (
+                <ClaimCouponButton
+                  key={code}
+                  couponCode={code}
+                  source="raffle"
+                  size="sm"
+                />
+              ))}
+            </Row>
           </Div>
         ) : null}
 

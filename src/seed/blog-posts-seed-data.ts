@@ -304,6 +304,22 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     coverImage: { type: "image", url: editorialImage("blog-cover-top10-vintage-beyblade"), alt: "Original-series Beyblade tops" },
     category: "news",
     tags: ["top-10", "vintage", "investment", "rare-beyblades"],
+    /*
+     * The one blog fixture exercising attached coupons, so the feature is
+     * demonstrable from a clean `appkit-seed load` rather than only after a
+     * human edits a post.
+     *
+     * 🛑 Two entries, not one, because one coupon cannot show that the grid
+     * LAYS OUT several — a single-item grid renders identically whether the
+     * component handles a list or just the first element.
+     *
+     * FREESHIP2000 is the honest pick for this post: it is a list of items in
+     * the lakhs, so a free-shipping code applies to every one of them while a
+     * capped cashback code is noise at that price. CASHBACK5 is uncapped, so
+     * it is the one that actually matters above ₹10,000 — which is this
+     * article's entire price range.
+     */
+    couponIds: ["coupon-freeship2000", "coupon-cashback5"],
     isFeatured: false,
     status: "published",
     publishedAt: daysAgo(20),

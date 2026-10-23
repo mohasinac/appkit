@@ -34,6 +34,22 @@ export interface BlogPostDocument extends BaseDocument {
   youtubeId?: string;
   category: BlogPostCategory;
   tags: string[];
+  /**
+   * PROMOTIONAL coupons shown below the article for a reader to copy.
+   *
+   * Mirrors `EventDocument.couponIds` exactly — same name, same shape, same
+   * `<AttachedCouponsSection>` renderer, same `getAttachedCoupons` resolver.
+   * That symmetry is the point: "attach coupons to content" is one feature
+   * with two hosts, not two features that happen to look alike.
+   *
+   * 🛑 OPTIONAL, unlike `isPinned` above, and for a reason worth keeping
+   * straight: `isPinned` had to be required because it is an `orderBy` field
+   * and Firestore excludes a document that lacks one (Root Cause #100).
+   * `couponIds` is never sorted or filtered on — it is read only after a post
+   * has already been fetched by slug — so an absent field costs nothing and
+   * needs no backfill across the 21 existing posts.
+   */
+  couponIds?: string[];
   isFeatured: boolean;
   /**
    * Keeps the post at the top of the blog index and the homepage
@@ -108,6 +124,7 @@ export const BLOG_POST_FIELDS = {
   YOUTUBE_ID: "youtubeId",
   CATEGORY: "category",
   TAGS: "tags",
+  COUPON_IDS: "couponIds",
   IS_FEATURED: "isFeatured",
   IS_PINNED: "isPinned",
   STATUS: "status",

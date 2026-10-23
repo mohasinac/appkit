@@ -21,6 +21,7 @@
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
 import { blogPostCategorySchema } from "./index";
+import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
 
 /**
  * The blog form's own schema. Distinct from `blogPostSchema` (blog/schemas),
@@ -109,4 +110,17 @@ export const blogDraftSchema = z.object({
   authorName: annotate(z.string(), { section: "publish", order: 3, row: "pair" }),
   isFeatured: annotate(z.boolean(), { section: "publish", order: 4, row: "quarter" }),
   isPinned: annotate(z.boolean(), { section: "publish", order: 5, row: "quarter" }),
+  /*
+   * 🛑 Declared here even though the picker enforces the cap in the UI, and
+   * this file's own header says why: `z.object()` STRIPS unknown keys, so a
+   * field missing from this schema is silently dropped on every save — the
+   * form would show the coupons, accept the edit, and persist nothing. Same
+   * shape as the grouped-listings PATCH in Root Cause #76(b).
+   *
+   * The cap is `attachedCouponIdsSchema`'s, imported rather than re-stated, so
+   * the form and the route cannot disagree about what "too many" means.
+   */
+  couponIds: annotate(attachedCouponIdsSchema, {
+    section: "publish", order: 6, row: "full", kind: "list",
+  }),
 });

@@ -43,6 +43,7 @@ import { EVENT_ENTRY_FIELDS, EVENT_FIELDS } from "../../../../constants/field-na
 import { EVENT_ENTRY_PII_FIELDS, maskPii } from "../../../../security";
 import { resolveEventRef } from "./_event-ref";
 import { EVENT_DRAW_REASON } from "./event-draw-reasons";
+import { rafflePrizeCouponIdsOf } from "../../../../features/events/schemas/firestore";
 
 /**
  * The winner's display name, masked for a PUBLIC announcement.
@@ -82,7 +83,9 @@ interface EventForRaffle {
   raffleType?: TriggerEventRaffleInput["raffleType"];
   raffleTopN?: number;
   raffleWinnerUserId?: string;
+  /** @deprecated legacy scalar — read via `rafflePrizeCouponIdsOf`, never alone. */
   rafflePrizeCouponId?: string;
+  rafflePrizeCouponIds?: string[];
 }
 
 type EntryDoc = {
@@ -216,21 +219,49 @@ export async function runTriggerEventRaffle(
    * re-deriving it. Resolution is best-effort: a missing coupon must not cost
    * somebody their win.
    */
-  let rafflePrizeCouponCode: string | undefined;
-  if (event.rafflePrizeCouponId) {
-    const coupSnap = await ctx.db
-      .collection(COUPONS_COLLECTION)
-      .doc(event.rafflePrizeCouponId)
-      .get();
-    if (coupSnap.exists) {
-      rafflePrizeCouponCode = (coupSnap.data() as { code?: string }).code;
-    } else {
-      ctx.logger.warn("Raffle prize couponId does not resolve to a coupon", {
-        eventId,
-        couponId: event.rafflePrizeCouponId,
-      });
+  /*
+   * 🛑 Through `rafflePrizeCouponIdsOf`, so an event written before the
+   * widening — carrying only the deprecated scalar — still awards its prize.
+   * Reading `rafflePrizeCouponIds` alone would silently hand those winners
+   * nothing, and a raffle that draws a winner and awards no prize is a bug
+   * with no error and no second chance: the draw is irreversible.
+   */
+  const prizeCouponIds = rafflePrizeCouponIdsOf(event);
+  const rafflePrizeCouponCodes: string[] = [];
+  if (prizeCouponIds.length > 0) {
+    /*
+     * ONE `getAll` for all of them, not a loop of `.get()`. This runs inside a
+     * Cloud Function rather than a Vercel route, so it is not against Rule #6's
+     * 10s ceiling — but it sits immediately before a transaction, and holding
+     * N sequential round trips open there widens the window in which a
+     * concurrent draw can collide.
+     */
+    const refs = prizeCouponIds.map((id) => ctx.db.collection(COUPONS_COLLECTION).doc(id));
+    const snaps = await ctx.db.getAll(...refs);
+    for (const snap of snaps) {
+      if (snap.exists) {
+        const code = (snap.data() as { code?: string }).code;
+        if (code) rafflePrizeCouponCodes.push(code);
+      } else {
+        /*
+         * Best-effort, per coupon: one deleted coupon must not cost the
+         * winner the other prizes, and must not cost them the win at all.
+         * Warned rather than thrown for exactly that reason.
+         */
+        ctx.logger.warn("Raffle prize couponId does not resolve to a coupon", {
+          eventId,
+          couponId: snap.id,
+        });
+      }
     }
   }
+  /*
+   * The first code is still written to the singular `rafflePrizeCouponCode`
+   * the winner page already reads, so that page keeps working untouched while
+   * the full list lands beside it. Dropping the scalar would blank the prize
+   * on every existing winner announcement.
+   */
+  const rafflePrizeCouponCode: string | undefined = rafflePrizeCouponCodes[0];
 
   /*
    * 🛑 The one-draw invariant. Re-read the event INSIDE the transaction.
@@ -269,6 +300,7 @@ export async function runTriggerEventRaffle(
       [EVENT_FIELDS.RAFFLE_TRIGGERED_AT]: ctx.now,
       [EVENT_FIELDS.RAFFLE_ENTRY_COUNT]: entriesSnap.size,
       ...(rafflePrizeCouponCode ? { rafflePrizeCouponCode } : {}),
+      ...(rafflePrizeCouponCodes.length > 0 ? { rafflePrizeCouponCodes } : {}),
       [EVENT_FIELDS.RAFFLE_GITHUB_FUNCTION_URL]:
         `${ctx.env("PROOF_OF_FAIRNESS_BASE_URL") ?? ""}/raffles/${eventId}.json`,
       [EVENT_FIELDS.UPDATED_AT]: ctx.now,

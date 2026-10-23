@@ -472,12 +472,16 @@ export const EVENT_FIELDS = {
   ENDS_AT: "endsAt",
   CREATED_BY: "createdBy",
   STATS: "stats",
+  /** Promotional coupons shown on the event page — not prizes. */
+  COUPON_IDS: "couponIds",
   // Raffle fields (SB9)
   HAS_RAFFLE: "hasRaffle",
   RAFFLE_TYPE: "raffleType",
   RAFFLE_TOP_N: "raffleTopN",
   RAFFLE_PRIZE: "rafflePrize",
+  /** @deprecated legacy scalar — resolve via `rafflePrizeCouponIdsOf`. */
   RAFFLE_PRIZE_COUPON_ID: "rafflePrizeCouponId",
+  RAFFLE_PRIZE_COUPON_IDS: "rafflePrizeCouponIds",
   RAFFLE_GITHUB_FUNCTION_URL: "raffleGithubFunctionUrl",
   RAFFLE_WINNER_USER_ID: "raffleWinnerUserId",
   RAFFLE_WINNER_DISPLAY_NAME: "raffleWinnerDisplayName",

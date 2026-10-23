@@ -3,6 +3,7 @@ import { z } from "zod";
 import { mediaUrlSchema } from "../../../validation/schemas";
 import { mediaFieldSchema } from "../../media/types/index";
 import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
+import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
 // Mirrors BlogPostDocument in ./firestore.ts. Registered into SCHEMAS.firestore.blogPosts.
@@ -20,6 +21,7 @@ export const blogPostFirestoreSchema = z.object({
   additionalImages: z.array(mediaFieldSchema).optional(),
   category: z.string(),
   tags: z.array(z.string()),
+  couponIds: attachedCouponIdsSchema,
   isFeatured: z.boolean(),
   isPinned: z.boolean(),
   status: blogPostStatusEnumSchema,
@@ -83,6 +85,7 @@ export const blogPostSchema = z.object({
   additionalImages: z.array(mediaFieldSchema).max(5).optional().default([]),
   category: blogPostCategorySchema,
   tags: z.array(z.string()).optional(),
+  couponIds: attachedCouponIdsSchema,
   isFeatured: z.boolean().optional(),
   isPinned: z.boolean().optional(),
   status: blogPostStatusSchema,

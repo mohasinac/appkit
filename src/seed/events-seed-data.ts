@@ -131,19 +131,47 @@ const _raweventsSeedData: EventDocument[] = [
     },
     tags: ["offer", "cashback", "diwali", "festive", "new-year", "bogo", "free-shipping"],
     /*
-     * 🛑 `offerConfig` holds exactly ONE code — it drives the single
-     * copy-to-clipboard card, and the type has no array form. BUY3GET1 is
-     * featured because it is what the poll actually voted for; the other four
-     * are listed in the description above, which is the only place they can
-     * be. Do not "fix" this by inventing a second couponId field: the card
-     * component reads this shape, and a field nothing renders is worse than
-     * the prose that currently works.
+     * 🛑 `offerConfig` still holds exactly ONE code — it drives the single
+     * headline copy-to-clipboard card and the type has no array form.
+     * BUY3GET1 is featured because it is what the poll actually voted for.
+     *
+     * This comment used to end: "Do not 'fix' this by inventing a second
+     * couponId field: the card component reads this shape, and a field
+     * nothing renders is worse than the prose that currently works."
+     *
+     * That was correct, and its PREMISE has since changed: `couponIds` below
+     * is rendered by `<AttachedCouponsSection>` on the event page. So the
+     * other four codes are no longer prose-only. The reasoning is worth
+     * keeping anyway — it is the right test for any field like this, and the
+     * answer only flipped because a renderer landed, not because the rule
+     * softened.
      */
     offerConfig: {
       couponId: "coupon-buy3get1",
       displayCode: "BUY3GET1",
       bannerText: "Buy 3, get 1 free on items under ₹2,000 — add 4 and the cheapest comes off. Plus 3 more codes inside.",
     },
+    /*
+     * The four codes the description lists in prose, now also rendered as
+     * copyable cards.
+     *
+     * 🛑 BUY3GET1 is deliberately ABSENT — it is already the `offerConfig`
+     * headline card directly above, and listing it again would render the
+     * same code twice on one page. The two fields are different jobs: that
+     * one is the offer, these are the rest of the list.
+     *
+     * CASHBACK10 is included even though it expires mid-season on 16 November
+     * while the event runs to February. That is the fixture that proves
+     * `getAttachedCoupons` drops an expired coupon rather than advertising a
+     * code the till will refuse — after the 16th this card should simply stop
+     * appearing, with the other three unaffected.
+     */
+    couponIds: [
+      "coupon-cashback10",
+      "coupon-cashback500",
+      "coupon-cashback5",
+      "coupon-freeship2000",
+    ],
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,

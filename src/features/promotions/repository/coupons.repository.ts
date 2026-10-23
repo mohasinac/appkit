@@ -36,6 +36,7 @@ import {
   createCouponId,
 } from "../schemas";
 import type { CouponType } from "../types";
+import { ATTACHED_COUPON_MAX } from "../constants/attached-coupons";
 import type { FirestoreDocument } from "../../../schemas/types";
 import { USER_COLLECTION } from "../../auth/schemas";
 import { DatabaseError } from "../../../errors";
@@ -106,6 +107,45 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve coupon by code: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
+  /**
+   * Batch-read coupons by id, for content that ATTACHES a set of them
+   * (`EventDocument.couponIds`, `BlogPostDocument.couponIds`).
+   *
+   * 🛑 ONE `getAll`, never a loop of `findById`. A blog post carrying six
+   * coupons would otherwise be six sequential round trips on a public,
+   * ISR-regenerated page — Rule #6 budgets about three for a whole request.
+   *
+   * 🛑 Order is PRESERVED and missing ids are DROPPED, not nulled — the same
+   * contract as `categoriesRepository.findByIds`, deliberately, so the two
+   * batch readers in this codebase cannot behave differently. A content
+   * editor's ordering is the display order, and a coupon that was deleted
+   * after being attached must not render as a hole in the grid.
+   *
+   * Bounded at `ATTACHED_COUPON_MAX`. The cap is the reason this is safe to
+   * call from a Server Component: the write schemas enforce the same number,
+   * so a hand-edited Firestore document cannot turn a public page into an
+   * unbounded read.
+   */
+  async findByIds(ids: string[]): Promise<CouponDocument[]> {
+    const unique = Array.from(new Set(ids.filter(Boolean))).slice(0, ATTACHED_COUPON_MAX);
+    if (unique.length === 0) return [];
+    try {
+      const refs = unique.map((id) => this.db.collection(this.collection).doc(id));
+      const snaps = await this.db.getAll(...refs);
+      return snaps.filter((s) => s.exists).map((s) => this.mapDoc<CouponDocument>(s));
+    } catch (error) {
+      const e = normalizeError(error);
+      /*
+       * `kind` and a COUNT, never the raw message and never the ids —
+       * Root Cause #86 (a thrown message is written for a developer and this
+       * one can reach a user through a 500) plus Hobby's ~4 KB/s log budget.
+       */
+      throw new DatabaseError(
+        `Failed to batch-read ${unique.length} coupon(s) by id (${e.kind})`,
       );
     }
   }

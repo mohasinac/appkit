@@ -22,6 +22,8 @@ export interface BlogPost {
   youtubeId?: string;
   category: BlogPostCategory;
   tags?: string[];
+  /** Promotional coupons shown below the article — see `BlogPostDocument.couponIds`. */
+  couponIds?: string[];
   isFeatured?: boolean;
   /** Keeps the post above newer ones on the blog index and homepage. */
   isPinned?: boolean;

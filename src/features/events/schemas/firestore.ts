@@ -50,6 +50,24 @@ export interface EventDocument extends BaseDocument {
   winnerImages?: MediaField[];
   additionalImages?: MediaField[];
   tags?: string[];
+  /**
+   * PROMOTIONAL coupons shown on the event page for a reader to copy.
+   *
+   * 🛑 Not a prize, and not the same field as `rafflePrizeCouponIds` below.
+   * These are advertised to everyone who opens the page; those are awarded to
+   * one winner. The two were deliberately kept apart rather than overloaded,
+   * because every reader of a prize field asks "who won it" and every reader
+   * of a promo field asks "can I use it", and one array cannot answer both.
+   *
+   * Capped at `ATTACHED_COUPON_MAX` by the write schemas AND re-clamped by
+   * `couponsRepository.findByIds`. Resolved for display by
+   * `getAttachedCoupons`, which drops expired and inactive entries so a page
+   * never advertises a code the till will refuse.
+   *
+   * Mirrors `BlogPostDocument.couponIds` — same name, same shape, same
+   * renderer, on purpose.
+   */
+  couponIds?: string[];
   saleConfig?: SaleConfig;
   offerConfig?: OfferConfig;
   pollConfig?: PollConfig;
@@ -59,12 +77,43 @@ export interface EventDocument extends BaseDocument {
   raffleType?: RaffleType;
   raffleTopN?: number;
   rafflePrize?: string;
+  /**
+   * @deprecated Legacy single raffle-prize coupon. READ-ONLY — kept because
+   * `appkit-seed load` writes with `set({merge:true})` and therefore CANNOT
+   * remove a field from a live document (§ Seed API Reference), so events
+   * written before this widening still carry it and a reader that stops
+   * looking silently stops awarding their prize.
+   *
+   * 🛑 Never write this from new code. Resolve both through
+   * `rafflePrizeCouponIdsOf(event)`, which folds the legacy scalar into the
+   * array — the reader-side fallback Root Cause #42 prescribes, so no data
+   * migration is required and a forgotten write path cannot strand a prize.
+   */
   rafflePrizeCouponId?: string;
+  /**
+   * Coupons awarded to the raffle winner. Replaces the single
+   * `rafflePrizeCouponId` above; a raffle may now hand over several.
+   */
+  rafflePrizeCouponIds?: string[];
   rafflePrizeProductIds?: string[];
   raffleGithubFunctionUrl?: string;
   raffleWinnerUserId?: string;
   raffleWinnerDisplayName?: string;
   raffleWinnerEntryId?: string;
+  /**
+   * The prize coupon CODES, resolved and frozen at draw time by
+   * `triggerEventRaffle` so the prize survives a later edit of the event's
+   * coupon list — the same reason an entry stores `spinPrizeCouponCode`
+   * instead of re-deriving it.
+   *
+   * 🛑 Both were WRITTEN by the raffle job and declared on no interface until
+   * this change. An undeclared field is invisible to every type-driven review
+   * and to `audit-public-projection-parity`, which is how five settings fields
+   * ended up publicly readable in Root Cause #70. Declared now, even though
+   * both are already public by design (a winner announcement is a public page).
+   */
+  rafflePrizeCouponCode?: string;
+  rafflePrizeCouponCodes?: string[];
   raffleTriggeredAt?: Date;
   raffleEntryCount?: number;
   spinPrizes?: SpinPrize[];
@@ -184,6 +233,8 @@ export const EVENT_FIELDS = {
   WINNER_IMAGES: "winnerImages",
   ADDITIONAL_IMAGES: "additionalImages",
   TAGS: "tags",
+  COUPON_IDS: "couponIds",
+  RAFFLE_PRIZE_COUPON_IDS: "rafflePrizeCouponIds",
   IS_PINNED: "isPinned",
   ALLOW_GUEST_PARTICIPATION: "allowGuestParticipation",
   CREATED_BY: "createdBy",
@@ -263,6 +314,32 @@ export type EventEntryCreateInput = Omit<
   EventEntryPlain,
   "id" | "submittedAt"
 >;
+
+/**
+ * Every coupon this event awards its raffle winner, folding the deprecated
+ * single `rafflePrizeCouponId` into the array.
+ *
+ * 🛑 EVERY reader goes through this — never touch either field directly.
+ * `appkit-seed load` merge-writes, so it cannot remove a field from a live
+ * document: events created before the widening still carry only the scalar,
+ * and a reader that looks solely at `rafflePrizeCouponIds` hands those
+ * winners nothing while erroring nowhere. Making the READER resilient is the
+ * fix Root Cause #42 prescribes, and it means this change needs no migration
+ * and no backfill script.
+ *
+ * Deduped because an admin who edits an old event through the new picker ends
+ * up with the same id in both fields, and awarding it twice would double the
+ * prize.
+ */
+export function rafflePrizeCouponIdsOf(
+  event: Pick<EventDocument, "rafflePrizeCouponId" | "rafflePrizeCouponIds">,
+): string[] {
+  const ids = [
+    ...(event.rafflePrizeCouponIds ?? []),
+    ...(event.rafflePrizeCouponId ? [event.rafflePrizeCouponId] : []),
+  ].filter(Boolean);
+  return Array.from(new Set(ids));
+}
 
 export const eventQueryHelpers = {
   active: () => ["status", "==", "active" as EventStatus] as const,

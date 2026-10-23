@@ -1848,6 +1848,10 @@ export {
 } from "./_internal/server/features/franchises/index";
 export { getBlogPostForDetail } from "./_internal/server/features/blog/index";
 export { getEventForDetail } from "./_internal/server/features/events/index";
+// Attached promotional coupons — shared by the event detail page and the blog
+// post page, which is why it lives in its own feature rather than inside
+// either one.
+export { getAttachedCoupons, toAttachedCoupon } from "./_internal/server/features/promotions/index";
 export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";
 export { getCategoryForDetail, listRootCategories, listFeaturedCategories, listMenuCategories, getCategoryTree, listSitemapCategories } from "./_internal/server/features/categories/index";
 

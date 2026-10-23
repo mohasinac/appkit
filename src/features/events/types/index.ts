@@ -214,11 +214,15 @@ export interface EventItem {
   pollConfig?: PollConfig;
   surveyConfig?: SurveyConfig;
   feedbackConfig?: FeedbackConfig;
+  /** Promotional coupons shown on the page — see `EventDocument.couponIds`. */
+  couponIds?: string[];
   hasRaffle?: boolean;
   raffleType?: RaffleType;
   raffleTopN?: number;
   rafflePrize?: string;
+  /** @deprecated legacy scalar — resolve via `rafflePrizeCouponIdsOf`. */
   rafflePrizeCouponId?: string;
+  rafflePrizeCouponIds?: string[];
   rafflePrizeProductIds?: string[];
   raffleGithubFunctionUrl?: string;
   raffleWinnerUserId?: string;

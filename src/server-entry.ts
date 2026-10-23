@@ -96,6 +96,9 @@ export {
   toggleBrandActiveAction,
 } from "./_internal/server/features/brands/index";
 
+// Promotional coupons attached to content (events + blog posts)
+export { getAttachedCoupons, toAttachedCoupon } from "./_internal/server/features/promotions/index";
+
 // S3: blog data layer + actions
 export {
   getBlogPostForDetail,

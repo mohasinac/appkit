@@ -291,8 +291,23 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         */}
 
         {/* Desktop: slide-over panel + always-visible primary toggle tab */}
+        {/*
+         * 🛑 `w-[18rem]` is NOT a free choice — it is the width
+         * `DashboardLayoutClient`'s CONTENT_PADDING reserves (`lg:pl-[18rem]` /
+         * `lg:pr-[18rem]`) for every dashboard variant. This panel carried
+         * `w-[13rem]` from the 2026-06-26 audit-cleanup sweep while its two
+         * siblings (AdminSidebar, SellerSidebar) carried `w-[18rem]`, so the
+         * user portal reserved 18rem of content clearance and then filled 13
+         * of it — 5rem of dead space beside a nav column 80px narrower than
+         * admin's. The `w-9 shrink-0` collapse toggle is a flex sibling INSIDE
+         * this box, so the nav itself only ever gets `width - 2.25rem`: 10.75rem
+         * at 13, which is what clipped the labels and the search placeholder.
+         *
+         * Change this only together with CONTENT_PADDING and the other two
+         * sidebars — all four spellings there are literals Tailwind must see.
+         */}
         <Div
-          className={`hidden lg:flex fixed ${rail.edgeClass} z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[13rem] ${desktopOpen ? "translate-x-0" : rail.collapsedTranslateClass}`}
+          className={`hidden lg:flex fixed ${rail.edgeClass} z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : rail.collapsedTranslateClass}`}
         >
           {/* Nav panel */}
           <Stack border="default" surface="default" className={`flex-1 ${rail.borderClass} dark:border-[var(--appkit-color-border)] ${__O.hidden}`} shadow="xl">

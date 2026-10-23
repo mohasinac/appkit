@@ -1,10 +1,10 @@
 "use client";
-import { normalizeError } from "../../../errors/normalize";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { Code, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Div, Heading, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
+import { CouponCodeCopyRow } from "../../promotions/components/CouponCodeCopyRow";
 
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
@@ -32,23 +32,9 @@ export function EventOfferCard({
   title = "Exclusive offer",
   filterParam,
 }: EventOfferCardProps) {
-  const [copied, setCopied] = useState(false);
   const href = filterParam
     ? `${ROUTES.PUBLIC.PRODUCTS}?${encodeURIComponent(filterParam.key)}=${encodeURIComponent(filterParam.value)}`
     : String(ROUTES.PUBLIC.PRODUCTS);
-
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(couponCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      // Clipboard access is denied outright on insecure origins and by user
-      // permission. The button simply never flips to "Copied", and the code is
-      // still visible on screen to select by hand.
-    } catch (_err) {
-      void normalizeError(_err);
-    }
-  };
 
   return (
     <Div className={`${__P.p6}`} rounded="2xl" border="default">
@@ -64,14 +50,7 @@ export function EventOfferCard({
           ) : null}
         </Stack>
 
-        <Row surface="muted" padding="inline" align="center" gap="3" rounded="lg">
-          <Code className="flex-1" weight="bold" size="base" color="primary">
-            {couponCode}
-          </Code>
-          <Button type="button" variant="outline" onClick={copyCode}>
-            {copied ? "Copied!" : "Copy code"}
-          </Button>
-        </Row>
+        <CouponCodeCopyRow code={couponCode} ariaContext={title} />
 
         <Div>
           <Link href={href}>

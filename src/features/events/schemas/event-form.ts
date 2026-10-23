@@ -17,6 +17,7 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
+import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
 
 /**
  * ## `.passthrough()` STAYS here, deliberately
@@ -68,6 +69,24 @@ export const eventDraftSchema = z.object({
   }),
   pollOptions: annotate(z.array(z.object({ id: z.string(), label: z.string() })), {
     section: "settings", order: 3, row: "full", kind: "list",
+  }),
+  /*
+   * Named explicitly even though this object is `.passthrough()` and would
+   * carry them regardless — passthrough preserves a value, it does not
+   * VALIDATE one. Without these two entries the cap would be enforced only by
+   * the API route, so an admin who picked eleven coupons would fill the form,
+   * hit Save, and be told by a 400 what the field could have told them while
+   * they were still looking at it.
+   *
+   * 🛑 `couponIds` (promotional, shown to every reader) and
+   * `rafflePrizeCouponIds` (awarded to one winner) are DIFFERENT fields on
+   * purpose — see `EventDocument`. They share a schema, never a value.
+   */
+  couponIds: annotate(attachedCouponIdsSchema, {
+    section: "settings", order: 4, row: "full", kind: "list",
+  }),
+  rafflePrizeCouponIds: annotate(attachedCouponIdsSchema, {
+    section: "raffle", sectionLabel: "Raffle & Spin Wheel", order: 5, row: "full", kind: "list",
   }),
 }).passthrough().superRefine((v, ctx) => {
   if (v.type === "offer") {

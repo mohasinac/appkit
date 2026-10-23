@@ -2,6 +2,7 @@ export * from "./firestore";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../validation/schemas";
 import { mediaFieldSchema } from "../../media/types/index";
+import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
 
 const eventCoverImageSchema = z
   .union([
@@ -140,12 +141,16 @@ export const eventItemSchema = z.object({
   pollConfig: pollConfigSchema.optional(),
   surveyConfig: surveyConfigSchema.optional(),
   feedbackConfig: feedbackConfigSchema.optional(),
+  // Promotional coupons shown on the event page — NOT prizes (see below).
+  couponIds: attachedCouponIdsSchema,
   // Raffle fields
   hasRaffle: z.boolean().optional(),
   raffleType: z.enum(["top_n_scorers", "top_n_participants", "open_raffle", "spin_wheel"]).optional(),
   raffleTopN: z.number().optional(),
   rafflePrize: z.string().optional(),
+  /** @deprecated read-only legacy scalar — see `rafflePrizeCouponIdsOf`. */
   rafflePrizeCouponId: z.string().optional(),
+  rafflePrizeCouponIds: attachedCouponIdsSchema,
   rafflePrizeProductIds: z.array(z.string()).optional(),
   raffleGithubFunctionUrl: z.string().optional(),
   raffleWinnerUserId: z.string().optional(),
