@@ -1682,6 +1682,11 @@ export { piiBlindIndex } from "./security/index";
 export { piiIndicesFor } from "./security/index";
 export { reserveUserSlug, userSlugBase, USER_SLUGS_COLLECTION } from "./features/auth/actions/user-slug";
 export { resolveProfileUser } from "./features/auth/actions/profile-actions";
+export {
+  getBuyerActivityStats,
+  getProfileStats,
+} from "./features/auth/actions/profile-actions";
+export type { BuyerActivityStats } from "./features/auth/actions/profile-actions";
 export { getPiiConfigError } from "./security/index";
 export { encryptPayoutDetails } from "./security/index";
 export { decryptPayoutDetails } from "./security/index";

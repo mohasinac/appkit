@@ -246,6 +246,25 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
   }
 
+  /**
+   * How many reviews this account has WRITTEN.
+   *
+   * Deliberately every status and both reviewer roles — it counts the same set
+   * `GET /api/user/reviews` lists by default (`findByUser`), so the number in
+   * the sidebar and the rows on the page it links to agree by construction. A
+   * count that quietly excluded pending reviews would read as the author's
+   * work having vanished.
+   *
+   * An aggregation, not `findByUser(...).length`: that sibling downloads every
+   * review the account has ever written to learn how many there are, and the
+   * caller here runs on every session profile fetch.
+   */
+  async countByUser(userId: string): Promise<number> {
+    return getFirestoreCount(
+      this.getCollection().where(REVIEW_FIELDS.USER_ID, "==", userId),
+    );
+  }
+
   async findPending(): Promise<ReviewDocument[]> {
     return this.findBy(REVIEW_FIELDS.STATUS, "pending");
   }

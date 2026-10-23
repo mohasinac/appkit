@@ -77,7 +77,23 @@ export interface SessionUser {
   canTestAdmin?: boolean;
 
   publicProfile?: FirestoreDocument;
-  stats?: FirestoreDocument;
+  /**
+   * Buyer activity counts, DERIVED by `/api/user/profile` — orders placed,
+   * auctions won, reviews written. Each is optional and `undefined` means the
+   * count could not be taken, which is NOT the same as zero: render nothing.
+   *
+   * 🛑 Not the `users/{uid}.stats` document field, which has no writer at all
+   * and holds seed literals. Do not "restore" it by reading the profile
+   * document here; see `getBuyerActivityStats`.
+   *
+   * Seller numbers are deliberately absent. This is the account holder's own
+   * record; what their store has sold belongs to the store.
+   */
+  stats?: {
+    totalOrders?: number;
+    auctionsWon?: number;
+    reviewsCount?: number;
+  };
   metadata?: FirestoreDocument;
   scamAwarenessAcknowledgedAt?: Date | null;
   /** RBAC permission keys granted to this user (from their role's permission set). */

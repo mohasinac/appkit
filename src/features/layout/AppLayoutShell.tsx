@@ -17,6 +17,7 @@ const ROLE_DOT_BG_CLASS: Record<string, string> = {
 import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
+import { useListingTypeFlags } from "../../react/hooks/useListingTypeFlags";
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
 import SideActionDock from "./SideActionDock";
@@ -129,6 +130,14 @@ export interface AppLayoutShellProps {
   userWishlistHref?: string;
   /** Href for the user settings page — auto-generates PROFILE section in sidebar. */
   userSettingsHref?: string;
+  /**
+   * Href for the user's OWN reviews list — the target of the "Reviews" stat.
+   *
+   * The stat pointed at `${profileHref}#reviews` before, an anchor the profile
+   * page does not render, so the count linked to the top of an unrelated page.
+   * Omitting this prop hides the tile rather than guessing at a route.
+   */
+  userReviewsHref?: string;
   /** Locale switcher node rendered at the bottom of the sidebar. */
   sidebarLocaleSlot?: React.ReactNode;
   /** When true, shows theme toggle button in the sidebar footer. */
@@ -570,6 +579,7 @@ interface SidebarContentProps {
   userOrdersHref?: string;
   userWishlistHref?: string;
   userSettingsHref?: string;
+  userReviewsHref?: string;
   adminHref?: string;
   storeHref?: string;
   sellerHref?: string;
@@ -593,6 +603,7 @@ function SidebarContent({
   userOrdersHref,
   userWishlistHref,
   userSettingsHref,
+  userReviewsHref,
   adminHref,
   storeHref,
   sellerHref,
@@ -611,6 +622,13 @@ function SidebarContent({
   const role = user?.role ?? "user";
   const isAdminOrSeller = role === "admin" || role === "seller";
   const resolvedStoreHref = storeHref ?? sellerHref;
+  /*
+   * Defaults to ENABLED while site settings are loading, matching the hook's
+   * own contract — hiding the tile on first paint and popping it in a moment
+   * later is worse than showing it to the handful of installs that have
+   * auctions switched off.
+   */
+  const auctionsEnabled = useListingTypeFlags().isEnabled("auction");
 
   const labels = {
     sectionTitle: sidebarProfileLabels?.sectionTitle ?? "Profile",
@@ -725,23 +743,33 @@ function SidebarContent({
       )}
 
       {/*
-        * Each stat LINKS to the list it counts.
+        * THE ACCOUNT HOLDER'S OWN RECORD AS A BUYER — never as a seller, and
+        * never as an admin.
         *
-        * 🛑 These were four inert `<Div>`s — a number the user could see and
-        * could not act on, which is Root Cause #56's shape at a smaller scale
-        * ("a row that only offers mutations is not done"). Nothing new had to
-        * be threaded in: `userOrdersHref`, `profileHref` and
-        * `resolvedStoreHref` were already props on this component, and the
-        * Orders stat sat thirty lines below a nav link using the very href it
-        * was missing.
+        * 🛑 "Items Sold" used to render here whenever the viewer owned a store,
+        * so an admin or seller opening their own sidebar read "200 Items Sold"
+        * beside "20 Orders" as though the two were the same kind of fact. They
+        * are not: one is what this person BOUGHT, the other is what their store
+        * SHIPPED to other people. The store dashboard is where a seller's
+        * numbers belong, and `resolvedStoreHref` already links to it two
+        * sections below. Everyone sees the same three buyer stats regardless of
+        * role.
+        *
+        * Each stat LINKS to the list it counts — these were four inert `<Div>`s
+        * once, which is Root Cause #56's shape at a smaller scale.
         *
         * "Auctions Won" deep-links to the orders list filtered to the auction
-        * LANE — not to `/user/bids`, which is open bids rather than won
-        * orders. That filter is the `orderType` tab in `UserOrdersView`, so
-        * the two surfaces agree by construction.
+        * LANE — not to `/user/bids`, which is open bids rather than won orders.
+        * That filter is the `orderType` tab in `UserOrdersView`, so the two
+        * surfaces agree by construction. It is hidden outright when auctions are
+        * switched off in Site Settings: a disabled listing type has no browse
+        * route, no nav entry and no new orders, so a tile counting it is a dead
+        * facet (`brand-rows.ts` trap 3 — worse than absent, because it renders
+        * as something to click).
         *
-        * "Items Sold" renders only when the viewer actually has a store;
-        * otherwise it is a number with nowhere to go.
+        * 🛑 Every value is `undefined` when its count could not be taken, NOT 0
+        * — so a transient Firestore failure hides a tile instead of telling a
+        * buyer with thirty orders that they have none. Keep the `!= null` tests.
         */}
       {isAuthenticated && user?.stats && (
         <Div layout="grid" gap="2" className="grid-cols-2">
@@ -751,22 +779,16 @@ function SidebarContent({
               <Text className={CLS_STAT_LABEL}>Orders</Text>
             </TextLink>
           )}
-          {user.stats.reviewsCount != null && (
-            <TextLink href={`${profileHref}#reviews`} variant="none" className={CLS_STAT_BOX}>
+          {user.stats.reviewsCount != null && userReviewsHref && (
+            <TextLink href={userReviewsHref} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.reviewsCount}</Text>
               <Text className={CLS_STAT_LABEL}>Reviews</Text>
             </TextLink>
           )}
-          {user.stats.auctionsWon != null && userOrdersHref && (
+          {auctionsEnabled && user.stats.auctionsWon != null && userOrdersHref && (
             <TextLink href={`${userOrdersHref}?orderType=auction`} variant="none" className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.auctionsWon}</Text>
               <Text className={CLS_STAT_LABEL}>Auctions Won</Text>
-            </TextLink>
-          )}
-          {user.stats.itemsSold != null && resolvedStoreHref && (
-            <TextLink href={resolvedStoreHref} variant="none" className={CLS_STAT_BOX}>
-              <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.itemsSold}</Text>
-              <Text className={CLS_STAT_LABEL}>Items Sold</Text>
             </TextLink>
           )}
         </Div>
@@ -885,6 +907,7 @@ export function AppLayoutShell({
   userOrdersHref,
   userWishlistHref,
   userSettingsHref,
+  userReviewsHref,
   sidebarLocaleSlot,
   showThemeToggleInSidebar = false,
   sidebarProfileLabels,
@@ -956,6 +979,7 @@ export function AppLayoutShell({
       userOrdersHref={userOrdersHref}
       userWishlistHref={userWishlistHref}
       userSettingsHref={userSettingsHref}
+      userReviewsHref={userReviewsHref}
       adminHref={adminHref}
       storeHref={storeHref}
       sellerHref={sellerHref}

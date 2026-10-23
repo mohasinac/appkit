@@ -170,12 +170,27 @@ export interface UserDocument extends BaseDocument {
     vacationMessage?: string;
   };
 
+  /**
+   * 🛑 LEGACY AND UNMAINTAINED — do not read these to answer "how many X does
+   * this account have". Nothing in either repo writes them: every occurrence
+   * across the codebase is a read, and the only `stats.itemsSold` write is
+   * `StoreRepository`'s, on the STORE document. The values present in Firestore
+   * today are seed literals.
+   *
+   * `getBuyerActivityStats` / `getProfileStats` count the real collections, and
+   * every surface that showed a number now goes through them.
+   *
+   * Kept on the schema because the documents still carry the field and a
+   * migration to strip it would buy nothing. `rating` was REMOVED outright: it
+   * had no writer AND no buyer-rating concept behind it, so its one reader
+   * (`/admin/users/[id]`) rendered a tile guarded on a value that could never
+   * be set.
+   */
   stats?: {
     totalOrders: number;
     auctionsWon: number;
     itemsSold: number;
     reviewsCount: number;
-    rating?: number;
   };
 
   metadata?: {
@@ -487,7 +502,8 @@ export const USER_FIELDS = {
     AUCTIONS_WON: "stats.auctionsWon",
     ITEMS_SOLD: "stats.itemsSold",
     REVIEWS_COUNT: "stats.reviewsCount",
-    RATING: "stats.rating",
+    // `RATING` removed — `stats.rating` had no writer and no buyer-rating
+    // concept behind it anywhere in the codebase.
   },
   METADATA: "metadata",
   META: {

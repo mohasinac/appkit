@@ -15,6 +15,8 @@ import { sessionRepository } from "../repository/session.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
+import { orderRepository } from "../../orders/repository/orders.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
 import type { UserDocument } from "../schemas";
 import type { Review } from "../../reviews/types";
 
@@ -48,6 +50,107 @@ export async function getUserProfile(
 
 export async function getUserSessions(userId: string) {
   return sessionRepository.findAllByUser(userId);
+}
+
+/**
+ * What an account has actually DONE, counted from the collections that record
+ * it rather than read off `users/{uid}.stats`.
+ *
+ * 🛑 `users/{uid}.stats.*` HAS NO WRITER. Measured 2026-10-23: every occurrence
+ * of `stats.totalOrders` / `auctionsWon` / `itemsSold` / `reviewsCount` across
+ * both repos is a READ, and the only `stats.itemsSold` write in the codebase is
+ * `StoreRepository`'s, on the STORE document. So the stored numbers are
+ * whatever `users-seed-data.ts` hardcoded — the admin persona ships
+ * `{ totalOrders: 20, auctionsWon: 2, itemsSold: 200 }` — and a real signup gets
+ * `DEFAULT_USER_DATA.stats`, all zeros, which stay zero after twenty orders.
+ *
+ * A number nobody maintains is worse than no number: it is indistinguishable
+ * from a maintained one at every call site. These are counted live instead.
+ *
+ * ## Cost
+ *
+ * Three Firestore AGGREGATIONS, in parallel — billed at one read per 1000 index
+ * entries matched, so ~3 reads for any real account and flat as history grows.
+ * That is what makes this affordable on `GET /api/user/profile`, which the
+ * session hits on every page load. Never replace one with `findByUser(...).length`:
+ * that downloads the whole history to learn its size.
+ *
+ * ## Failure is `undefined`, never 0
+ *
+ * A failed count means "unknown", and 0 means "none" — Root Cause #72's rule.
+ * Callers render nothing for `undefined`, so a transient Firestore error hides
+ * a tile rather than telling a buyer with 30 orders that they have none.
+ */
+export interface BuyerActivityStats {
+  /** Orders this account placed, all lanes. */
+  totalOrders?: number;
+  /** Orders that came from winning (or buying out) an auction. */
+  auctionsWon?: number;
+  /** Reviews this account WROTE — the set `/user/reviews` lists. */
+  reviewsCount?: number;
+}
+
+/**
+ * 🛑 React.cache-wrapped: `/api/user/profile` and the public profile page can
+ * both ask for the same uid inside one request, and three aggregations is a
+ * cost worth paying once.
+ */
+export const getBuyerActivityStats = cache(async function getBuyerActivityStats(
+  uid: string,
+): Promise<BuyerActivityStats> {
+  const route = "profile:buyer-activity-stats";
+  const [totalOrders, auctionsWon, reviewsCount] = await Promise.all([
+    safeRead(() => orderRepository.countForUser(uid), {
+      route,
+      key: "orders:total",
+      fallback: undefined as number | undefined,
+    }),
+    safeRead(() => orderRepository.countForUser(uid, "auction"), {
+      route,
+      key: "orders:auction",
+      fallback: undefined as number | undefined,
+    }),
+    safeRead(() => reviewRepository.countByUser(uid), {
+      route,
+      key: "reviews:written",
+      fallback: undefined as number | undefined,
+    }),
+  ]);
+  return { totalOrders, auctionsWon, reviewsCount };
+});
+
+/**
+ * Buyer activity plus, for an account that owns a store, the one SELLER number
+ * that is genuinely maintained.
+ *
+ * `stores/{storeId}.stats.itemsSold` has real writers — `incrementItemsSold`
+ * from the fulfilment trigger and `setStats` from the nightly reconciliation —
+ * unlike its namesake on the user document. It is read here, from the store, so
+ * a seller's PUBLIC profile can keep showing it honestly.
+ *
+ * It deliberately does NOT reach the sidebar's own profile block, which is the
+ * buyer's view of their own account: see `AppLayoutShell`.
+ */
+export async function getProfileStats(
+  user: Pick<UserDocument, "uid" | "id" | "storeId">,
+): Promise<BuyerActivityStats & { itemsSold?: number }> {
+  const uid = user.uid ?? user.id;
+  const [activity, itemsSold] = await Promise.all([
+    getBuyerActivityStats(uid),
+    user.storeId
+      ? safeRead(
+          async () =>
+            (await storeRepository.findById(user.storeId as string))?.stats
+              ?.itemsSold,
+          {
+            route: "profile:store-items-sold",
+            key: "store:itemsSold",
+            fallback: undefined as number | undefined,
+          },
+        )
+      : Promise.resolve(undefined),
+  ]);
+  return { ...activity, itemsSold };
 }
 
 /**
@@ -87,22 +190,30 @@ export async function resolveProfileUser(
  * page + generateMetadata pair is memoised per argument list, so the second call
  * is free. Note it caches the NARROW public projection, which is what both
  * callers want; anything needing the whole document still goes to the repository.
+ *
+ * 🛑 `stats` is DERIVED by `getProfileStats`, not `user.stats`. The stored field
+ * has no writer and is seed fiction — see `getBuyerActivityStats`. It is derived
+ * here as well as on the session endpoint deliberately: fixing only the sidebar
+ * would have left a signed-in user reading real counts in the nav and seeded
+ * ones on their own public profile, which is a worse state than both being wrong.
  */
 export const getPublicUserProfile = cache(async function getPublicUserProfile(
   userId: string,
-): Promise<Pick<
-  UserDocument,
-  | "id"
-  | "slug"
-  | "displayName"
-  | "photoURL"
-  | "role"
-  | "createdAt"
-  | "storeId"
-  | "storeSlug"
-  | "publicProfile"
-  | "stats"
-> | null> {
+): Promise<
+  | (Pick<
+      UserDocument,
+      | "id"
+      | "slug"
+      | "displayName"
+      | "photoURL"
+      | "role"
+      | "createdAt"
+      | "storeId"
+      | "storeSlug"
+      | "publicProfile"
+    > & { stats: BuyerActivityStats & { itemsSold?: number } })
+  | null
+> {
   const user = await resolveProfileUser(userId);
   if (!user) return null;
   return {
@@ -115,7 +226,7 @@ export const getPublicUserProfile = cache(async function getPublicUserProfile(
     storeId: user.storeId,
     storeSlug: user.storeSlug,
     publicProfile: user.publicProfile,
-    stats: user.stats,
+    stats: await getProfileStats(user),
   };
 });
 

@@ -278,6 +278,17 @@ export const ORDER_FIELDS = {
   TOTAL_AMOUNT: "totalAmount",
   BUYER_ID: "buyerId",
   BUNDLE_ID: "bundleId",
+  /**
+   * Which checkout LANE produced this order (`standard` / `auction` / `offer`
+   * / `preorder` / `prize-draw`) — see § "Checkout Lanes".
+   *
+   * 🛑 Never filter `orderType == "standard"` in a query. Orders written
+   * before the field existed carry no value at all, and a Firestore equality
+   * cannot match an absent field, so that filter silently drops every legacy
+   * order. `UserOrdersView` filters the standard lane in memory for exactly
+   * this reason; the other four values are safe as equalities.
+   */
+  ORDER_TYPE: "orderType",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
   PAYMENT_DEADLINE: "paymentDeadline",

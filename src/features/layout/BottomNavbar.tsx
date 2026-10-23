@@ -51,12 +51,20 @@ export interface BottomNavbarUser {
   photoURL: string | null;
   role?: string;
   avatarMetadata?: { url: string; position: { x: number; y: number }; zoom: number } | null;
+  /**
+   * The account holder's own activity AS A BUYER, derived live by
+   * `/api/user/profile`. `undefined` on a member means the count could not be
+   * taken — render nothing, never 0.
+   *
+   * 🛑 `itemsSold` and `rating` were removed, not forgotten. `itemsSold` is a
+   * SELLER number and had no business in the account holder's own profile
+   * block (see `AppLayoutShell`); `rating` had no writer anywhere in either
+   * repo, so its `!= null` guard meant the tile could never render.
+   */
   stats?: {
     totalOrders?: number;
     auctionsWon?: number;
-    itemsSold?: number;
     reviewsCount?: number;
-    rating?: number;
   } | null;
 }
 

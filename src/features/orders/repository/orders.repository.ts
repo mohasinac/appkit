@@ -7,7 +7,12 @@ import {
 } from "../../../utils/search-txt-query";
 import { normalizeError } from "../../../errors/normalize";
 
-import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
+import type {
+  DocumentData,
+  DocumentReference,
+  Query,
+  WriteBatch,
+} from "firebase-admin/firestore";
 /*
  * `ValidationError` from `../../../errors`, which is the REAL one — the class
  * `mapToHttpError` instanceof-checks to produce a 400. The other
@@ -24,6 +29,7 @@ import {
   BaseRepository,
   prepareForFirestore,
   parseSieveDateValue,
+  getFirestoreCount,
 } from "../../../providers/db-firebase";
 import {
   maskPii,
@@ -44,6 +50,9 @@ import {
 import { withHistory, type HistoryActor, type FieldChange } from "../../../_internal/shared/history/index";
 import type { FirestoreDocument } from "../../../schemas/types";
 import type { OrderStatus, PaymentStatus } from "../types";
+// `import type` only — the edge is erased by the compiler, so this does not
+// pull the checkout rule registry into the repository's runtime graph.
+import type { OrderType } from "../utils/order-splitter";
 import {
   MANUAL_PAYMENT_METHODS,
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
@@ -704,6 +713,34 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .where(ORDER_FIELDS.STATUS, "in", ACTIVE_ALLOWANCE_STATUSES)
       .get();
     return snapshot.size;
+  }
+
+  /**
+   * How many orders this buyer has placed, optionally scoped to one lane.
+   *
+   * A Firestore aggregation — billed at one read per 1000 index entries
+   * matched, not one per order — so it stays flat as an account's history
+   * grows. That matters because the only caller is the session profile
+   * endpoint, which every page load hits.
+   *
+   * 🛑 `orderType` may only name a NON-standard lane. The field was added
+   * after orders already existed, so an equality on `"standard"` would return
+   * zero for every legacy order while looking perfectly correct — see the
+   * constant's own note.
+   */
+  async countForUser(
+    userId: string,
+    orderType?: Exclude<OrderType, "standard">,
+  ): Promise<number> {
+    let query: Query<DocumentData> = this.getCollection().where(
+      ORDER_FIELDS.USER_ID,
+      "==",
+      userId,
+    );
+    if (orderType) {
+      query = query.where(ORDER_FIELDS.ORDER_TYPE, "==", orderType);
+    }
+    return getFirestoreCount(query);
   }
 
   async deleteByUser(userId: string): Promise<number> {
