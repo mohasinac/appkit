@@ -125,6 +125,7 @@ import {
   type StockBucketResult,
 } from "./bundle-expansion";
 import { expandCartLineToOrderRows } from "./expand-order-items";
+import { freezePartsOnItems } from "./freeze-parts";
 import {
   OrderStatusValues,
   PaymentStatusValues,
@@ -1267,13 +1268,26 @@ async function createOrderForGroup(
   // A multi-member line expands into one row PER MEMBER sharing a groupSlug, so
   // each row carries its own HSN/GST and can be cancelled independently; the
   // receipt still collapses them under one header.
-  const orderItems = group.flatMap(({ item, product }) => {
+  const baseOrderItems = group.flatMap(({ item, product }) => {
     const lt = (product.listingType ?? "standard") as ListingType;
     const itemRule = getListingRule(lt);
     return expandCartLineToOrderRows(item, product, ctx.productById).map((baseLine) =>
       itemRule.decorateOrderItem(baseLine, product),
     );
   });
+  /*
+   * Part 14 — freeze the parts a composed listing was sold as containing.
+   *
+   * A separate pass because composition lives in `modelCompositions` keyed by
+   * the model's CATEGORY leaf, not on the product, so it needs a read — and
+   * `expandCartLineToOrderRows` is pure by design.
+   *
+   * 🛑 Usually free: it returns immediately unless some line's listing type
+   * has a composition at all, and then reads only the DISTINCT leaves,
+   * capped. It never throws — a parts list we could not read must not fail a
+   * payment (see the module header).
+   */
+  const orderItems = await freezePartsOnItems(baseOrderItems);
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   /*
@@ -3791,13 +3805,20 @@ async function createPhonePeGroupOrder(
   // two in the consumer's checkout route — silently omitted `lockedPrice`, so
   // an accepted offer paid through PhonePe was RECORDED at the seller's list
   // price. `lineTotalFor` inside the expansion is the single definition.
-  const orderItems = group.flatMap(({ item, product }) => {
+  const basePhonepeItems = group.flatMap(({ item, product }) => {
     const lt = (product?.listingType ?? "standard") as ListingType;
     const itemRule = getListingRule(lt);
     return expandCartLineToOrderRows(item, product!, phonepeProductById).map((baseLine) =>
       itemRule.decorateOrderItem(baseLine, product!),
     );
   });
+  /*
+   * Part 14 — the parts freeze, on THIS path too. The comment four lines
+   * above records the cost of the last thing added to one path and not the
+   * other: an accepted offer paid through PhonePe was recorded at the
+   * seller's list price.
+   */
+  const orderItems = await freezePartsOnItems(basePhonepeItems);
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   const imageUrls = [
