@@ -2381,6 +2381,20 @@
       ]
     },
     {
+      "collectionGroup": "eventLikes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "eventId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "eventEntries",
       "queryScope": "COLLECTION",
       "fields": [

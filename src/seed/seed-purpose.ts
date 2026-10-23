@@ -278,6 +278,13 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   catalogueItems: "test",
   events: "test",
   eventEntries: "test",
+  /*
+   * "test" like its siblings: a seeded like is demo social proof, and a purge
+   * should take it. It is NOT "permanent" — nothing outside Firestore is
+   * orphaned by clearing it (contrast mediaAssets, where a purge strands every
+   * Storage object behind a 404 that re-running the loader cannot repair).
+   */
+  eventLikes: "test",
   groupedListings: "test",
   scammerProfiles: "test",
   /*

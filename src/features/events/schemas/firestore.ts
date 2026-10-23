@@ -239,6 +239,22 @@ export interface EventDocument extends BaseDocument {
     totalEntries: number;
     approvedEntries: number;
     flaggedEntries: number;
+    /**
+     * Likes. The public social signal, shown on the card and the detail hero
+     * in place of the entry count — nobody "enters" a cashback code, so
+     * `totalEntries` was structurally 0 on every `offer` and `sale` event
+     * while still being rendered as "0 entries".
+     *
+     * 🛑 OPTIONAL, and readers must treat absent as 0. Every event written
+     * before this field existed has no value for it, so a Firestore
+     * `orderBy("stats.likeCount")` would EXCLUDE all of them (Root Cause
+     * #100) — sort likes in memory, never in the query.
+     *
+     * Written only by `eventLikesRepository.toggle`, inside the same
+     * transaction that creates or deletes the like row, so the count and the
+     * membership cannot disagree.
+     */
+    likeCount?: number;
   };
   createdBy: string;
 }

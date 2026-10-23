@@ -79,6 +79,13 @@ import { editorialImage } from "./_helpers/editorial-media";
  * season — only `coupons-seed-data.ts` has a field that date belongs in.
  */
 import { SEASON_START, SEASON_END } from "./_helpers/festive-window";
+/*
+ * 🛑 DERIVED, never hand-typed. The like ROWS live in event-likes-seed-data
+ * and the COUNT lives here, so a hand-written number drifts the moment a like
+ * is added there — the mirror-drift trap (Root Cause #42). Importing the
+ * tally makes the two one fact with one writer.
+ */
+import { SEEDED_LIKE_COUNTS } from "./event-likes-seed-data";
 
 const NOW = new Date();
 
@@ -308,7 +315,7 @@ const _raweventsSeedData: EventDocument[] = [
         },
       ],
     },
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-festive-cashback-10"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
@@ -377,7 +384,7 @@ const _raweventsSeedData: EventDocument[] = [
       description: "The whole X range, with 10% back on orders over ₹999.",
       buttonText: "Shop launch week",
     },
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-beyblade-x-launch-sale"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
@@ -414,7 +421,7 @@ const _raweventsSeedData: EventDocument[] = [
       bannerText: "Free delivery over ₹2,000 with FREESHIP2000. Three days only.",
     },
     couponIds: ["coupon-freeship2000", "coupon-cashback5"],
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-burst-clearance-weekend"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
@@ -466,7 +473,7 @@ const _raweventsSeedData: EventDocument[] = [
     spinMaxPerUser: 1,
     spinWindowStart: SEASON_START,
     spinWindowEnd: SPIN_END,
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-spin-the-launcher"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
@@ -510,7 +517,7 @@ const _raweventsSeedData: EventDocument[] = [
         { id: "opt-launchers", label: "Launchers and grips" },
       ],
     },
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-restock-vote-2027"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
@@ -546,7 +553,7 @@ const _raweventsSeedData: EventDocument[] = [
     hasRaffle: true,
     raffleType: "open_raffle",
     rafflePrize: "A signed Dranzer G, shipped free within India",
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-signed-dranzer-raffle"] ?? 0 },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
