@@ -110,6 +110,13 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     // the same change) had nothing to match.
     isVerified: true,
     isFeatured: true,
+    /*
+     * The platform's own store subscribes by default — it is the one shop
+     * LetItRip does not have to sell the add-on to, and leaving it off would
+     * mean the only seeded storefront never demonstrates the feature it ships.
+     * Every other store starts unsubscribed; the gate fails closed on absence.
+     */
+    whatsappNotifySubscribed: true,
 
     stats: {
       totalProducts: 0,

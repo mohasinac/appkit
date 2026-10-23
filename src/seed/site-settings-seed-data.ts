@@ -488,8 +488,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     codHandlingFeePercent: 10,
     // Enabled so a seeded install actually shows the add-ons — see the matching
     // comment on DEFAULT_SITE_SETTINGS_DATA.commissions.
-    whatsappNotifyFeeEnabled: true,
+    whatsappNotifyFeeEnabled: false,
     whatsappNotifyFee: 10,
+    /* Monthly, seller-paid. The per-order buyer addon above is disabled by default. */
+    whatsappNotifyMonthlyFee: 199,
     giftWrapFeeEnabled: true,
     giftWrapFee: 49,
     shipmentProtectionFeeEnabled: true,

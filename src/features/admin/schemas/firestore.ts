@@ -712,10 +712,30 @@ export interface SiteSettingsDocument extends BaseDocument {
      */ // audit-money-units-ok: rupee ceiling, not paise
     codHandlingFeeCap: number;
     codHandlingFeePercent: number;
-    /** Admin master toggle — whether the WhatsApp order-updates addon is offered at checkout at all. */
+    /**
+     * Admin master toggle for the per-order, BUYER-paid WhatsApp addon.
+     *
+     * 🛑 Defaults to FALSE. The cost of WhatsApp moved to a standing monthly
+     * charge on the SELLER (`whatsappNotifyMonthlyFee` below) — the platform
+     * owns one number, so the expense is standing rather than per order, and a
+     * buyer should not have to purchase their own delivery updates. The
+     * checkout path that charges it is left intact rather than cut out again:
+     * it is woven through the order-total arithmetic that carries D42's
+     * round-once fix, and disabling it makes the fee resolve to 0 without
+     * touching that money code.
+     */
     whatsappNotifyFeeEnabled: boolean;
-    /** Flat rupee fee charged to the buyer when they opt into the WhatsApp order-updates addon. */
+    /** Flat rupee fee charged to the buyer when they opt into the per-order addon. Unreachable while `whatsappNotifyFeeEnabled` is false. */
     whatsappNotifyFee: number;
+    /**
+     * What a seller pays per month to receive WhatsApp order notifications —
+     * the admin-set price of `StoreDocument.whatsappNotifySubscribed`.
+     *
+     * Rupees per month, not per message: Meta bills us per template, but a
+     * seller cannot predict their own order count, and a per-message price
+     * would make their bill a function of how well they sold.
+     */ // audit-money-units-ok: rupees per month, not paise
+    whatsappNotifyMonthlyFee: number;
     /** Admin master toggle — whether the gift-wrap addon is offered at checkout at all. */
     giftWrapFeeEnabled: boolean;
     /** Flat rupee fee charged to the buyer when they opt into gift wrap. */
@@ -1215,8 +1235,9 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     // means disabled everywhere (computeWhatsAppNotifyFee et al. read
     // `if (!rates.XEnabled) return 0`) — only the DEFAULT changed, so an
     // existing siteSettings document keeps whatever it already stored.
-    whatsappNotifyFeeEnabled: true,
+    whatsappNotifyFeeEnabled: false,
     whatsappNotifyFee: 10,
+    whatsappNotifyMonthlyFee: 199,
     giftWrapFeeEnabled: true,
     giftWrapFee: 49,
     shipmentProtectionFeeEnabled: true,
