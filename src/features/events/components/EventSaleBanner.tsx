@@ -43,7 +43,7 @@ export function EventSaleBanner({
     <Section color="inverse" tone="accent-banner" className={`${__P.p6}`} rounded="2xl" shadow="lg">
       <Stack gap="md">
         <Stack gap="xs">
-          <Heading level={2} weight="bold" size="3xl">
+          <Heading color="inverse" variant="none" level={2} weight="bold" size="3xl">
             {headline}
           </Heading>
           {subtitle ? <Text color="inverse-muted" size="base">{subtitle}</Text> : null}
