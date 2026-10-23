@@ -82,3 +82,17 @@ export const adModerationSchema = z
   });
 
 export type AdModerationInput = z.infer<typeof adModerationSchema>;
+
+/*
+ * The resubmit body — the creative alone, under the key the route reads.
+ *
+ * 🛑 Declared HERE rather than rebuilt at the route, and the reason is a type
+ * rather than tidiness: a locally-written `z.object({ creative:
+ * adBookingCreativeSchema }).strict()` loses the inner type under this repo's
+ * zod, so `body!.creative` arrives as `unknown` and the handler cannot pass it
+ * to `resubmitAdCreative`. The sibling POST route works precisely because it
+ * uses a published schema's own `_output`; this gives PATCH the same.
+ */
+export const adCreativeResubmitSchema = z
+  .object({ creative: adBookingCreativeSchema })
+  .strict();

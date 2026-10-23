@@ -2812,3 +2812,19 @@ export type {
   AdModerationState,
   AdPeriod,
 } from "./features/ads/schemas/firestore";
+
+/*
+ * The dashboard hub's data, for `/admin`, `/store` and `/user` and their
+ * `sections/[section]` pages.
+ *
+ * 🛑 Exported because **there is no `./_internal/*` subpath and there must not
+ * be** — four consumer pages imported
+ * `@mohasinac/appkit/_internal/server/features/dashboard/data` directly and it
+ * resolved to nothing, so `/admin` and all three section indexes were a build
+ * error waiting for the first consumer typecheck that could see it. `_internal`
+ * is unpublished on purpose (audit-violations enforces the boundary); the
+ * server entry is the sanctioned way through, exactly as the checkout maths
+ * above reaches a consumer route.
+ */
+export { getDashboardHubData } from "./_internal/server/features/dashboard/data";
+export type { DashboardHubData } from "./_internal/server/features/dashboard/data";

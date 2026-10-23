@@ -300,6 +300,15 @@ export {
   sumGroupGst,
   computePreOrderDepositAmount,
   allocatePointsAcrossGroups,
+  /*
+   * The FIFTH, and it is the same story one more time: the route already
+   * imported `pointsBaseForGroup` and the import did not resolve, because the
+   * symbol was only ever reachable inside appkit. The points tender is
+   * computed on a BASE that excludes what points may not be spent on, and a
+   * consumer that cannot reach that function has to re-derive it — which is
+   * precisely how the four defects named above happened.
+   */
+  pointsBaseForGroup,
   resolvePointsTender,
   type GroupGstSummary,
   type GstRateSlice,
