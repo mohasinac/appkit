@@ -28,6 +28,105 @@ const makeStats = (views = 0, helpful = 0) => ({ views, helpful, notHelpful: 0 }
 
 const faqSeedRecords: Partial<FAQDocument>[] = [
 
+  // ── SELLING & SELLER BADGES (4) ─────────────────────────────────────────────
+  /*
+   * 🛑 The numbers in these answers are written out, and that is a KNOWN
+   * compromise rather than an oversight.
+   *
+   * Every other surface renders the criteria from `SELLER_STANDING_DEFAULTS`
+   * so it cannot drift — but an FAQ answer is stored HTML in Firestore, which
+   * no component interpolates, so there is nowhere for a live value to go.
+   * These answers therefore point at `/help/seller-badges`, which does render
+   * from the config, and they state the thresholds only as "currently" with
+   * the link as the authority. If an admin retunes the thresholds, these four
+   * rows are the thing to re-seed.
+   */
+
+  {
+    id: "faq-how-do-i-become-a-seller",
+    question: "How do I start selling on LetItRip?",
+    answer: html(`<p>Create an account, then open <strong>Become a Seller</strong> from your profile. You apply, then set up your storefront — a name, a short description of what you sell, and a main category. It takes a few minutes.</p><p>Your store stays <strong>private until we review it</strong>, so nothing is visible to buyers while you are still setting up. Once an admin approves it, your store page and your listings go live.</p><p>Listing is free to start; fees apply when you sell. See the <a href="/fees">fees page</a> and the <a href="/seller-guide">seller guide</a>.</p>`),
+    category: "selling",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: true,
+    order: 1,
+    priority: 9,
+    tags: ["seller", "become a seller", "open a store", "sell"],
+    relatedFAQs: ["faq-what-is-a-trusted-seller", "faq-verified-vs-trusted-seller"],
+    useSiteSettings: false,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: { slug: "faq-how-do-i-become-a-seller", metaTitle: "How to start selling on LetItRip", metaDescription: "Apply to become a seller, open your storefront, and go live after review." },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "faq-verified-vs-trusted-seller",
+    question: "What is the difference between a Verified seller and a Trusted Seller?",
+    answer: html(`<p>They answer different questions.</p><p><strong>Verified</strong> means we have checked <em>who the seller is</em> — a real person or business, confirmed against government-issued ID. It is granted by an admin after an identity review. It has no sales threshold, so a brand-new store can be Verified on its first day.</p><p><strong>Trusted Seller</strong> is <em>earned from the store's recent trading record</em> and recalculated every month. A store can gain it and lose it.</p><p>A store can hold either, both, or neither — and an unbadged store is not a warning. See <a href="/help/seller-badges">what seller badges mean</a>.</p>`),
+    category: "selling",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 2,
+    priority: 8,
+    tags: ["verified", "trusted seller", "badges", "safety"],
+    relatedFAQs: ["faq-what-is-a-trusted-seller", "faq-why-did-i-lose-trusted-seller"],
+    useSiteSettings: false,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: { slug: "faq-verified-vs-trusted-seller", metaTitle: "Verified vs Trusted Seller on LetItRip", metaDescription: "Verified is an identity check; Trusted Seller is earned from a store's recent trading record." },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "faq-what-is-a-trusted-seller",
+    question: "How does a store earn Trusted Seller status?",
+    answer: html(`<p>A store has to meet every criterion at the same time, measured over the same rolling window — currently 90 days: enough delivered orders, to enough <em>different</em> buyers, going to enough <em>different</em> delivery addresses, with enough rated orders and a high enough average rating.</p><p>The exact figures are set by LetItRip and shown live on <a href="/help/seller-badges">the seller badges page</a> and in your Store Dashboard, so you can see how close you are.</p><p>Orders a seller places with their own store do not count, and neither do test orders.</p>`),
+    category: "selling",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 3,
+    priority: 7,
+    tags: ["trusted seller", "criteria", "badges", "seller"],
+    relatedFAQs: ["faq-verified-vs-trusted-seller", "faq-why-did-i-lose-trusted-seller"],
+    useSiteSettings: false,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: { slug: "faq-what-is-a-trusted-seller", metaTitle: "How to earn Trusted Seller status", metaDescription: "Delivered orders, distinct buyers, distinct addresses and a rating floor, all within the same rolling window." },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "faq-why-did-i-lose-trusted-seller",
+    question: "Why did my store lose Trusted Seller status?",
+    answer: html(`<p>Because it is measured over a <strong>rolling window</strong> and recalculated on the last day of every month, it is not permanent. If your store drops below any one criterion — a quiet few months, or an average rating that slipped — the badge pauses until you are back above the line.</p><p>Your Store Dashboard shows every criterion with your current figure beside the target, plus the date it was last calculated and when it will next update. A good month shows up at month end, not immediately.</p><p>Suspension removes it straight away, and re-activating a store does not restore it — the next month-end recalculation decides.</p>`),
+    category: "selling",
+    showOnHomepage: false,
+    showInFooter: false,
+    isPinned: false,
+    order: 4,
+    priority: 6,
+    tags: ["trusted seller", "lost badge", "seller", "standing"],
+    relatedFAQs: ["faq-what-is-a-trusted-seller", "faq-verified-vs-trusted-seller"],
+    useSiteSettings: false,
+    variables: {},
+    stats: makeStats(0, 0),
+    seo: { slug: "faq-why-did-i-lose-trusted-seller", metaTitle: "Why a store loses Trusted Seller status", metaDescription: "Trusted Seller is recalculated monthly over a rolling window, so it can be lost and regained." },
+    isActive: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
   // ── GENERAL (10) ────────────────────────────────────────────────────────────
 
   {
