@@ -42,7 +42,26 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
           "/preview/",
           "/track/",
           "/unauthorized/",
-          "/_next/",
+          /*
+           * 🛑 `/_next/` IS DELIBERATELY NOT DISALLOWED — do not re-add it.
+           *
+           * It was here until 2026-10-24 and it was blocking Googlebot from
+           * fetching the app's own JS and CSS chunks, i.e. from RENDERING the
+           * page at all. Google's guidance is explicit that blocking resources
+           * needed for rendering harms how a page is understood.
+           *
+           * It was actively load-bearing here rather than merely untidy: every
+           * dynamic route streams its metadata late, so the `<title>` lands
+           * inside `<body>` (measured at byte 563,190 of a 747 KB document,
+           * with the `<head>` ending at 8,180 carrying no title at all). The
+           * one mechanism that recovers it is React hoisting those tags into
+           * `<head>` during hydration — which cannot happen if the crawler is
+           * forbidden from downloading the script that performs the hoist.
+           *
+           * Blocking it buys nothing: these are immutable, content-hashed
+           * static assets that are not indexable documents, and Google does not
+           * list them as search results.
+           */
           "/profile/*/edit",
         ],
       },

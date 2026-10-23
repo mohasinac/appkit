@@ -2003,6 +2003,16 @@ export type { BannedAction } from "./features/auth/permissions/constants";
 export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE, resolveOgImageUrl } from "./_internal/server/features/seo";
 export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions } from "./_internal/server/features/seo";
 
+// -- generateStaticParams slug enumerators --
+// Prerendering a detail route is what puts its <title> in <head> instead of
+// streaming it into <body>; see static-params.ts for the measurement.
+export {
+  productDetailSlugs,
+  brandDetailSlugs,
+  franchiseDetailSlugs,
+  blogPostSlugs,
+} from "./_internal/server/features/seo";
+
 
 // -- Action gate + nav route helpers (server-side) --
 export { checkActionAllowed } from "./features/admin/utils/checkActionAllowed";
