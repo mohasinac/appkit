@@ -2013,6 +2013,12 @@ export {
   blogPostSlugs,
 } from "./_internal/server/features/seo";
 
+// -- Taxonomy hub link indexes --
+// The hub pages filter client-side, so they rendered zero outbound entity
+// links in server HTML; these feed <TaxonomyLinkIndex>.
+export { brandLinks, franchiseLinks, categoryRootLinks } from "./_internal/server/features/seo";
+export type { TaxonomyLink } from "./_internal/server/features/seo";
+
 
 // -- Action gate + nav route helpers (server-side) --
 export { checkActionAllowed } from "./features/admin/utils/checkActionAllowed";

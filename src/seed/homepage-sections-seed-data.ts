@@ -136,8 +136,22 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
        * is NOT rewritten by editing this file — change it in the admin
        * homepage-sections editor, or re-seed.
        */
-      h1: "Buy & Sell Collectibles",
-      subtitle: "Verified sellers, secure payments, and authenticity checks on every listing.",
+      /*
+       * 🛑 The h1 carries the head term. Changed 2026-10-24.
+       *
+       * It read "Buy & Sell Collectibles" — four words, no "Beyblade", no
+       * "India" — on the one page Google actually ranks for "beyblade india"
+       * (position ~21 when measured). 100% of the live catalogue is Beyblade,
+       * so the page was describing a shop that does not exist while the shop
+       * that does went unnamed.
+       *
+       * Hybrid on purpose: the marketplace identity stays, the head term
+       * leads. Matches the title/description in appkit.config.js — the three
+       * must say the same thing or Google picks its own.
+       */
+      h1: "Buy Beyblade in India",
+      subtitle:
+        "Beyblade X, Burst and Metal Fight tops, spares, launchers and stadiums — verified sellers, authenticity stated on every listing.",
       description:
         "A marketplace built for collectors — browse thousands of listings, reserve upcoming releases, and buy with secure, verified payments.",
       showCTA: true,
