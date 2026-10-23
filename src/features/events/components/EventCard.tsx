@@ -4,9 +4,11 @@ import Link from "next/link";
 import { BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import type { EventItem, EventType } from "../types";
+import type { EventItem } from "../types";
 import { EVENT_FIELDS } from "../schemas";
 import { EventStatusBadge } from "./EventStatusBadge";
+import { EventTypeBadge } from "./EventTypeBadge";
+import { eventTypeMeta } from "../constants/event-type-meta";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
@@ -19,16 +21,6 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const TYPE_ICONS: Record<EventType, string> = {
-  sale: "🏷️",
-  offer: "🎁",
-  poll: "📊",
-  survey: "📝",
-  feedback: "💬",
-  raffle: "🎟️",
-  spin_wheel: "🎡",
-  lottery: "🎰",
-};
 
 interface EventCardProps {
   event: EventItem;
@@ -107,16 +99,22 @@ export function EventCard({
         ) : (
           <Row surface="muted" className="aspect-video" align="center" justify="center">
             <Span className="opacity-40" size="5xl" aria-hidden="true">
-              {TYPE_ICONS[event.type]}
+              {eventTypeMeta(event.type).emoji}
             </Span>
           </Row>
         )}
       </Link>
       <Stack className={`flex-1 ${__P.p4}`}>
+        {/*
+          * 🛑 A LABELLED type chip, not a bare emoji. This row used to render
+          * `<Span aria-hidden>{TYPE_ICONS[type]}</Span>` with no text
+          * companion anywhere on the card, so a screen-reader user got no
+          * event type at all — and the private TYPE_ICONS map was unreachable
+          * from the detail hero, which printed the raw enum instead
+          * ("Spin_wheel"). Both now resolve to EVENT_TYPE_META.
+          */}
         <Row className="mb-2" align="start" justify="between" gap="sm">
-          <Span size="lg" aria-hidden="true">
-            {TYPE_ICONS[event.type]}
-          </Span>
+          <EventTypeBadge type={event.type} />
           <EventStatusBadge status={event.status} />
         </Row>
         <Link href={detailHref} className="block">
@@ -133,11 +131,23 @@ export function EventCard({
           className="mb-3 line-clamp-3 text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]"
         />
 
+        {/*
+          * 🛑 LIKES, NOT ENTRIES. This row read `stats.totalEntries` as
+          * "N entries" on every event type. Nobody "enters" a cashback code,
+          * so on an `offer` or a `sale` — which is most of the corpus — it was
+          * structurally 0 and the label meant nothing. A like works on every
+          * type. Entries are still shown where they are real: participate,
+          * leaderboard, and every admin surface.
+          *
+          * `likeCount` is OPTIONAL, so `?? 0` is required — every event
+          * written before the field exists has no value for it.
+          */}
         <Row color="muted" textSize="xs" className="mb-3 mt-auto" align="center" justify="between">
           {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
             daysLeft > 0 && <Span>⏱ {daysLeft}d remaining</Span>}
           <Span>
-            👥 {event.stats.totalEntries} {labels.entries ?? "entries"}
+            ♥ {event.stats.likeCount ?? 0}{" "}
+            {(event.stats.likeCount ?? 0) === 1 ? "like" : "likes"}
           </Span>
         </Row>
 

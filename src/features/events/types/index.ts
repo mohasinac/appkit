@@ -241,6 +241,13 @@ export interface EventItem {
     totalEntries: number;
     approvedEntries: number;
     flaggedEntries: number;
+    /**
+     * Likes — the public social signal the card and hero render in place of
+     * the entry count. OPTIONAL: every event written before the field has
+     * no value, so readers must treat absent as 0 and must never sort on it
+     * in Firestore (an orderBy excludes documents lacking the field).
+     */
+    likeCount?: number;
   };
   createdBy: string;
   createdAt: string;
