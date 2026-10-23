@@ -411,6 +411,14 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   onValidationChangeRef.current = onValidationChange;
 
   /**
+   * The last error map actually HANDED TO the caller.
+   *
+   * 🛑 This is what stops an infinite render loop, and the loop froze the whole
+   * app — see `emitValidation` below.
+   */
+  const lastEmittedRef = useRef<Record<string, string> | null>(null);
+
+  /**
    * Are two field-error maps the same set of messages?
    *
    * Flat string maps, so a key sweep is exact — no deep compare needed. This is
@@ -433,6 +441,47 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
       .map((s) => s.id);
   }, [ordered]);
 
+  /**
+   * Hand the result to the caller, but ONLY when it actually changed.
+   *
+   * ## 🛑 The loop this closes froze every admin editor drawer
+   *
+   * `runValidation` runs on EVERY render by design: `values` is a fresh object
+   * each time, so `ordered` → `erroringSectionIds` → `runValidation` are all
+   * new identities and the effect below re-fires. The comment there argues
+   * that is safe, and for this component's OWN state it is — `sameErrors` and
+   * the `forceOpenIds` length check both return the previous object, so React
+   * bails out.
+   *
+   * It was NOT safe for the caller. `onValidationChange` was invoked
+   * unconditionally on every run, and the real call site is
+   * `onValidationChange={() => form.validate(draft)}` — which setStates. So:
+   * render → effect → emit → caller setState → render → … forever. React
+   * reported "Maximum update depth exceeded" ~4x/second.
+   *
+   * The visible symptom was not a validation bug at all. A React tree stuck in
+   * an update loop never commits a transition, and App Router navigation IS a
+   * transition — so with the drawer open, Cancel, the X, the sort dropdown and
+   * even plain nav links all did nothing. Measured on production: `router.replace`
+   * produced ZERO `history.replaceState` calls, no error, no failed request.
+   * The only escape was a full page reload.
+   *
+   * Emitting only on a real change is also what the prop NAME promises; firing
+   * it with an identical map on every render was never meaningful to a caller.
+   */
+  const emitValidation = useCallback(
+    (next: Record<string, string>, index: Record<string, number>) => {
+      const prev = lastEmittedRef.current;
+      if (prev && sameErrors(prev, next)) return;
+      lastEmittedRef.current = next;
+      onValidationChangeRef.current?.(next, index);
+    },
+    // `sameErrors` is a pure local helper; `lastEmittedRef`/`onValidationChangeRef`
+    // are refs. Nothing here needs to re-create this callback.
+
+    [],
+  );
+
   const runValidation = useCallback((nextValues: T) => {
     const activeSchema = schema ?? inheritedSchema;
     if (!activeSchema) return;
@@ -443,7 +492,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
     if (parsed.success) {
       setFieldErrors((prev) => (Object.keys(prev).length === 0 ? prev : {}));
       setForceOpenIds((prev) => (prev.length === 0 ? prev : []));
-      onValidationChangeRef.current?.({}, fieldToSectionIndex);
+      emitValidation({}, fieldToSectionIndex);
       return;
     }
     const next: Record<string, string> = {};
@@ -465,7 +514,7 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
       const kept = prev.filter((id) => stillBad.has(id));
       return kept.length === prev.length ? prev : kept;
     });
-    onValidationChangeRef.current?.(next, fieldToSectionIndex);
+    emitValidation(next, fieldToSectionIndex);
   }, [schema, inheritedSchema, fieldToSectionIndex, erroringSectionIds]);
 
   /*
