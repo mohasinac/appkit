@@ -910,6 +910,23 @@ export const ACTIONS: ActionTree = {
     },
   },
   STORE: {
+    /*
+     * Open a storefront — the submit button for the store-creation form.
+     *
+     * No `confirmation`: creating a store is additive, reversible by the
+     * seller, and produces a `pending` / non-public document that no buyer can
+     * see until an admin approves it. A dialog here would be friction on the
+     * one step the seller came to perform.
+     */
+    "create-store": {
+      iconKey: "create",
+      id: "store.create-store",
+      label: "Create my store",
+      ariaLabel: "Create your store",
+      description:
+        "Create the seller's storefront. The store starts pending and private until an admin approves it.",
+      kind: "primary",
+    },
     "follow": {
       iconKey: "wishlist",
       id: "store.follow",
@@ -2381,6 +2398,52 @@ export const ACTIONS: ActionTree = {
         title: "Suspend this store?",
         body: "All listings from this store will be hidden. The seller will be notified.",
         confirmLabel: "Suspend store",
+        confirmKind: "danger",
+      },
+    },
+    /*
+     * 🛑 Approve/reject a seller's PENDING store — the step that was missing.
+     *
+     * A store is created `status: "pending"`, `isPublic: false`, and until
+     * 2026-10-24 nothing in any admin UI could move it: `AdminStoresView` had
+     * verify and suspend row actions only, and the one action named for this
+     * job (`adminUpdateStoreStatus`) writes the USER-level `storeStatus`
+     * mirror and never touches the store document — so wiring that would have
+     * marked the applicant approved while leaving their store invisible, with
+     * no error. Both of these go through the store PATCH route, i.e. through
+     * `storeRepository.setStatus`, which is the only writer that keeps
+     * `status` and `isPublic` in step (Root Cause #42).
+     *
+     * Approve carries a confirmation despite being `primary`: it is what makes
+     * a storefront publicly visible, and that is outward-facing.
+     */
+    "approve-store": {
+      iconKey: "approve",
+      id: "admin.approve-store",
+      label: "Approve store",
+      ariaLabel: "Approve this store and make it public",
+      description:
+        "Approve a pending store — sets it active and makes its listings visible to buyers.",
+      kind: "primary",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Approve this store?",
+        body: "The store becomes active and its listings become visible to buyers. The seller will be notified.",
+        confirmLabel: "Approve store",
+      },
+    },
+    "reject-store": {
+      iconKey: "reject",
+      id: "admin.reject-store",
+      label: "Reject store",
+      ariaLabel: "Reject this store application",
+      description: "Reject a pending store application — the store stays hidden from buyers.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Reject this store application?",
+        body: "The store will not be published and the seller will be notified. You can approve it later if they resolve the issue.",
+        confirmLabel: "Reject store",
         confirmKind: "danger",
       },
     },
