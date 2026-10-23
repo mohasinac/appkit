@@ -96,33 +96,21 @@ export const SELLER_STANDING_DEFAULTS: SellerStandingThresholds = {
   minAverageRating: 4,
 };
 
-/**
- * Fold a partial admin override onto the defaults.
+/*
+ * 🛑 There is deliberately no `resolveSellerStandingThresholds` override
+ * folder, and it was REMOVED rather than left unused.
  *
- * 🛑 Per-field, not `?? DEFAULTS`. A settings document that carries only
- * `windowDays` must keep every other default rather than collapsing the whole
- * object — the half-set case is the normal one for an admin who changed one
- * number.
+ * The thresholds were briefly admin-tunable via `siteSettings.sellerStanding`.
+ * The problem was not the merge — it was that the job read the override while
+ * `/seller-guide`, `/help/seller-badges` and the capabilities guide all render
+ * their criteria tables from this constant, so retuning the numbers would have
+ * changed what the tier is granted on and left three public pages promising
+ * the old figures. That is the drift this whole module exists to prevent.
+ *
+ * Making them tunable again is a real option; it just has to thread the
+ * resolved thresholds into every display surface in the same change, which is
+ * why the display helpers below already take a `thresholds` argument.
  */
-export function resolveSellerStandingThresholds(
-  override?: Partial<SellerStandingThresholds> | null,
-): SellerStandingThresholds {
-  if (!override) return { ...SELLER_STANDING_DEFAULTS };
-  const merged = { ...SELLER_STANDING_DEFAULTS };
-  for (const key of Object.keys(merged) as (keyof SellerStandingThresholds)[]) {
-    const value = override[key];
-    /*
-     * A non-finite or negative override is ignored rather than honoured. An
-     * admin typing "-1" into a threshold would otherwise make the criterion
-     * trivially true and auto-grant early payout to every store — the one
-     * failure mode of this feature that moves money.
-     */
-    if (typeof value === "number" && Number.isFinite(value) && value >= 0) {
-      merged[key] = value;
-    }
-  }
-  return merged;
-}
 
 // ---------------------------------------------------------------------------
 // Metrics + verdict

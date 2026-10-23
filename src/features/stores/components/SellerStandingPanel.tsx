@@ -96,12 +96,12 @@ export function SellerStandingPanel({
               tone={row.met ? "success" : "muted"}
               aria-hidden
             />
-            <Stack gap="2xs" className="min-w-0 flex-1">
+            <Stack gap="xs" className="min-w-0 flex-1">
               <Row gap="sm" align="center" justify="between" wrap>
                 <Text size="sm" weight="medium">
                   {row.label}
                 </Text>
-                <Text size="sm" color={row.met ? "default" : "muted"} numeric>
+                <Text size="sm" color={row.met ? "inherit" : "muted"} numeric>
                   {/*
                     🛑 `actual === null` means NEVER MEASURED, and renders as an
                     em-dash rather than 0. A confident "0 / 25" on a store the

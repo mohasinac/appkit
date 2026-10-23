@@ -991,32 +991,25 @@ export interface SiteSettingsDocument extends BaseDocument {
   returns: {
     windowDays: number;
   };
-  /**
-   * Thresholds for the Trusted Seller tier — admin-tunable.
+  /*
+   * 🛑 There is deliberately NO `sellerStanding` threshold group here, and it
+   * was removed rather than triaged.
    *
-   * 🛑 DECLARED, not written through a cast. An undeclared field that admin
-   * code writes is invisible to every type-driven review AND to the public
-   * projection's deny-list, which is literally how `adSettings`,
-   * `integrations` and `platformLimits` reached anonymous callers (Root Cause
-   * #70). `siteSettings` is projected through an allow-list
-   * (`toPublicSiteSettings`) so this one is not exposed today — but the field
-   * being undeclared is the defect, independent of today's blast radius.
+   * It existed briefly as an admin-tunable override folded onto
+   * `SELLER_STANDING_DEFAULTS`. `audit-public-projection-parity` caught it
+   * untriaged, and triaging it exposed the real problem: `siteSettings` is
+   * projected through an allow-list, while `/seller-guide` and
+   * `/help/seller-badges` render their criteria tables from the CODE defaults.
+   * So an admin retuning the numbers would move what the job grants on and
+   * leave both public pages stating the old figures — the exact drift the
+   * seller-standing config module exists to prevent, reintroduced one layer
+   * out.
    *
-   * Every key is optional and folded onto `SELLER_STANDING_DEFAULTS` by
-   * `resolveSellerStandingThresholds`, so an admin who changes one number
-   * keeps the rest. A negative or non-finite override is IGNORED there rather
-   * than honoured — a threshold of `-1` would make its criterion trivially
-   * true and auto-grant early payout to every store, which is the only
-   * failure mode of this feature that moves money.
+   * The criteria are therefore a single constant, and every surface agrees by
+   * construction. Making them tunable again means threading the resolved
+   * thresholds into all three public surfaces in the SAME change, not adding
+   * a settings field and leaving the pages on defaults.
    */
-  sellerStanding?: {
-    windowDays?: number;
-    minDeliveredOrders?: number;
-    minDistinctBuyers?: number;
-    minDistinctAddresses?: number;
-    minRatedOrders?: number;
-    minAverageRating?: number;
-  };
   /**
    * The support integration's on/off switch.
    *

@@ -26,7 +26,8 @@
  * `findTrustedStoreIds` left in place so saturation is visible.
  */
 
-import { siteSettingsRepository, storeRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../repositories";
+import { ORDER_FIELDS, REVIEW_FIELDS } from "../../../../constants/field-names";
 import type { StoreDocument } from "../../../../features/stores/schemas/firestore";
 import { recordAdminAction } from "../../features/audit-log/actions";
 import { AdminAuditActionValues } from "../../../../features/audit-log/schemas/firestore";
@@ -34,12 +35,12 @@ import { sendNotification } from "../../../../features/admin/actions/notificatio
 import { normalizeError } from "../../../../errors/normalize";
 import {
   evaluateSellerStanding,
-  resolveSellerStandingThresholds,
+  SELLER_STANDING_DEFAULTS,
   SELLER_TIER,
   type SellerStandingMetrics,
-  type SellerStandingThresholds,
   type SellerTier,
 } from "../../../shared/features/seller-standing/config";
+import type { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import type { JobContext } from "../runtime/types";
 
 export interface SellerStandingRollupResult {
@@ -143,16 +144,50 @@ function toMetrics(t: Tally): SellerStandingMetrics {
   };
 }
 
-function isTestRow(data: Record<string, unknown>): boolean {
+/**
+ * The two shapes this job reads out of Firestore, declared rather than left as
+ * `Record<string, unknown>`.
+ *
+ * 🛑 Narrow interfaces, not the full `OrderDocument` / `ReviewDocument`: both
+ * queries use `.select()`-free reads but only ever touch these fields, and
+ * claiming the full document type would assert the presence of ~80 fields this
+ * code never looks at — including encrypted ones it must not touch.
+ */
+interface SeedMarked {
+  isTestData?: boolean;
+  seedPurpose?: string;
+}
+
+interface OrderRow extends SeedMarked {
+  status?: string;
+  storeId?: string;
+  userId?: string;
+  deliveryAddressId?: string;
+}
+
+interface ReviewRow extends SeedMarked {
+  status?: string;
+  storeId?: string;
+  rating?: number;
+}
+
+interface StoreRow {
+  ownerId?: string;
+  status?: string;
+  sellerTier?: SellerTier;
+  trustedSeller?: boolean;
+  tierLockedByAdmin?: boolean;
+}
+
+function isTestRow(data: SeedMarked): boolean {
   /*
    * Both spellings. `isTestData` is the legacy boolean and `seedPurpose` is
    * the newer field it is derived from; a row may carry either, so testing one
    * would let the other through and let a tester fixture count toward a real
    * money-moving grant.
    */
-  if (data["isTestData"] === true) return true;
-  const purpose = data["seedPurpose"];
-  return purpose === "test" || purpose === "tester";
+  if (data.isTestData === true) return true;
+  return data.seedPurpose === "test" || data.seedPurpose === "tester";
 }
 
 // ---------------------------------------------------------------------------
@@ -178,8 +213,17 @@ export async function runSellerStandingRollup(
     return { ...EMPTY_RESULT };
   }
 
-  const settings = await siteSettingsRepository.getSingleton();
-  const thresholds = resolveSellerStandingThresholds(settings.sellerStanding);
+  /*
+   * 🛑 The CONSTANT, not a settings read.
+   *
+   * This briefly folded an admin override from `siteSettings.sellerStanding`
+   * onto the defaults. That made the job disagree with `/seller-guide` and
+   * `/help/seller-badges`, which render their criteria from the code defaults
+   * — so retuning the numbers would have changed what the tier is granted on
+   * while both public pages went on promising the old figures. One constant,
+   * every surface, agreeing by construction.
+   */
+  const thresholds = SELLER_STANDING_DEFAULTS;
   const cutoff = new Date(
     ctx.now.getTime() - thresholds.windowDays * 24 * 60 * 60 * 1000,
   );
@@ -204,14 +248,14 @@ export async function runSellerStandingRollup(
     .select("ownerId", "status", "sellerTier", "trustedSeller", "tierLockedByAdmin")
     .get();
   for (const doc of storeSnap.docs) {
-    const d = doc.data() as Record<string, unknown>;
+    const d = doc.data() as StoreRow;
     stores.set(doc.id, {
       id: doc.id,
-      ownerId: d["ownerId"] as string | undefined,
-      status: d["status"] as string | undefined,
-      sellerTier: d["sellerTier"] as SellerTier | undefined,
-      trustedSeller: d["trustedSeller"] as boolean | undefined,
-      tierLockedByAdmin: d["tierLockedByAdmin"] === true,
+      ownerId: d.ownerId,
+      status: d.status,
+      sellerTier: d.sellerTier,
+      trustedSeller: d.trustedSeller,
+      tierLockedByAdmin: d.tierLockedByAdmin === true,
     });
   }
 
@@ -241,27 +285,27 @@ export async function runSellerStandingRollup(
    * served by the automatic index. `status` is filtered in memory for the same
    * reason.
    */
-  let orderCursor: unknown = null;
+  let orderCursor: QueryDocumentSnapshot | null = null;
   let ordersScanned = 0;
   for (;;) {
     let q = ctx.db
       .collection("orders")
-      .where("orderDate", ">=", cutoff)
-      .orderBy("orderDate", "asc")
+      .where(ORDER_FIELDS.ORDER_DATE, ">=", cutoff)
+      .orderBy(ORDER_FIELDS.ORDER_DATE, "asc")
       .limit(SCAN_PAGE);
     if (orderCursor) q = q.startAfter(orderCursor);
     const snap = await q.get();
     if (snap.empty) break;
     for (const doc of snap.docs) {
-      const d = doc.data() as Record<string, unknown>;
+      const d = doc.data() as OrderRow;
       ordersScanned += 1;
-      if (d["status"] !== "delivered") continue;
+      if (d.status !== "delivered") continue;
       if (isTestRow(d)) continue;
-      const storeId = d["storeId"] as string | undefined;
+      const storeId = d.storeId;
       if (!storeId) continue;
       const store = stores.get(storeId);
       if (!store) continue;
-      const userId = d["userId"] as string | undefined;
+      const userId = d.userId;
       /*
        * 🛑 Self-bought orders do not count. Without this a seller reaches the
        * tier — and early payout — by buying from themselves 25 times, which is
@@ -288,8 +332,7 @@ export async function runSellerStandingRollup(
        * place as several address rows. The distinct-BUYER floor is the real
        * defence; this one raises the cost.
        */
-      const addressId = d["deliveryAddressId"] as string | undefined;
-      if (addressId) t.addresses.add(addressId);
+      if (d.deliveryAddressId) t.addresses.add(d.deliveryAddressId);
     }
     orderCursor = snap.docs[snap.docs.length - 1];
     if (snap.size < SCAN_PAGE) break;
@@ -301,23 +344,23 @@ export async function runSellerStandingRollup(
    * `ReviewDocument` has no `publishedAt` field at all — CLAUDE.md's seed
    * table says it does, and that is stale.
    */
-  let reviewCursor: unknown = null;
+  let reviewCursor: QueryDocumentSnapshot | null = null;
   for (;;) {
     let q = ctx.db
       .collection("reviews")
-      .where("createdAt", ">=", cutoff)
-      .orderBy("createdAt", "asc")
+      .where(REVIEW_FIELDS.CREATED_AT, ">=", cutoff)
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "asc")
       .limit(SCAN_PAGE);
     if (reviewCursor) q = q.startAfter(reviewCursor);
     const snap = await q.get();
     if (snap.empty) break;
     for (const doc of snap.docs) {
-      const d = doc.data() as Record<string, unknown>;
-      if (d["status"] !== "approved") continue;
+      const d = doc.data() as ReviewRow;
+      if (d.status !== "approved") continue;
       if (isTestRow(d)) continue;
-      const storeId = d["storeId"] as string | undefined;
+      const storeId = d.storeId;
       if (!storeId || !stores.has(storeId)) continue;
-      const rating = Number(d["rating"]);
+      const rating = Number(d.rating);
       if (!Number.isFinite(rating)) continue;
       const t = tally(storeId);
       t.ratingSum += rating;
@@ -343,10 +386,10 @@ export async function runSellerStandingRollup(
    * `sellerTier` and `trustedSeller` — both of which the shell selects. The
    * cast says exactly that and nothing more.
    */
-  const writeStore = (store: StoreShell, patch: Record<string, unknown>) =>
+  const writeStore = (store: StoreShell, patch: Partial<StoreDocument>) =>
     storeRepository.adminUpdate(
       store.id,
-      patch as Partial<StoreDocument>,
+      patch,
       { actor: { role: "system" }, trigger: "sellerStandingRollup" },
       store as unknown as StoreDocument,
     );
@@ -396,12 +439,12 @@ export async function runSellerStandingRollup(
     const currentTier = store.sellerTier ?? SELLER_TIER.SELLER;
     const nextTier: SellerTier = eligible ? SELLER_TIER.TRUSTED : SELLER_TIER.SELLER;
 
-    const update: Record<string, unknown> = { standing };
+    const update: Partial<StoreDocument> = { standing };
     const isTransition =
       nextTier !== currentTier || Boolean(store.trustedSeller) !== eligible;
     if (isTransition) {
-      update["sellerTier"] = nextTier;
-      update["trustedSeller"] = eligible;
+      update.sellerTier = nextTier;
+      update.trustedSeller = eligible;
       if (eligible) granted.push(store.id);
       else revoked.push(store.id);
     }

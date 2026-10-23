@@ -4,6 +4,8 @@ import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody,
 import { GC } from "../../_guide-cls";
 
 const STILL_ALLOWED = "✓ Still allowed";
+/** Named because it is used on three rows in the seller-trust table. */
+const ROW_BORDER = "border-b border-[var(--appkit-color-border)]";
 
 export function AdminTrustGuideView() {
   return (
@@ -27,7 +29,7 @@ export function AdminTrustGuideView() {
               <Div overflow="x-auto">
                 <Table size="sm">
                   <Thead>
-                    <Tr className="border-b border-[var(--appkit-color-border)]">
+                    <Tr className={ROW_BORDER}>
                       {["Field", "Public?", "What it means", "Who sets it"].map((h) => (
                         <Th key={h} align="left" paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
                       ))}
@@ -39,7 +41,7 @@ export function AdminTrustGuideView() {
                       ["sellerTier", "Yes — badge", "EARNED from the last 90 days of trading. Recomputed monthly.", "sellerStandingRollup, or an admin override that pins it"],
                       ["trustedSeller", "NO — never", "We pay this store at SHIPPING, not at delivery. A risk transfer.", "The tier carries it; an admin can also set it alone"],
                     ].map((row) => (
-                      <Tr key={row[0]} className="border-b border-[var(--appkit-color-border)]">
+                      <Tr key={row[0]} className={ROW_BORDER}>
                         {row.map((cell, i) => (
                           <Td key={i} paddingSide="pr-md" padding="xs-tall">
                             {i === 0 ? <Code size="xs" padding="xs" rounded="default" surface="subtle">{cell}</Code> : cell}

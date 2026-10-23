@@ -17,6 +17,7 @@
  */
 
 import { z } from "zod";
+import { annotate } from "../../shell/field-ui-meta";
 
 /**
  * 🛑 `.or(z.literal(""))` on both optional fields, matching the action.
@@ -27,21 +28,66 @@ import { z } from "zod";
  * reads as a broken form, because the field they are being blocked on is one
  * they were told was optional.
  */
+/*
+ * 🛑 ANNOTATED, and the annotations do not change what this parses.
+ *
+ * `annotate()` returns the same schema and registers its UI metadata in a side
+ * registry, so the server action validates exactly what it validated before.
+ * That is what lets ONE schema drive both the form's sections
+ * (`buildSectionsFromSchema`) and the server-side parse — the alternative is a
+ * second form-only schema, which is the drift this file exists to prevent.
+ *
+ * One section, because there is one: a store has a name, what it sells, and a
+ * category. `audit-form-sectionised` requires the fields to live in a section
+ * engine rather than a bare `<Form>`, which is also what gets this step the
+ * pinned mobile action bar every other form in the app has.
+ */
 export const storeCreateSchema = z.object({
-  storeName: z
-    .string()
-    .min(2, "Store name must be at least 2 characters")
-    .max(80, "Store name must be 80 characters or fewer"),
-  storeDescription: z
-    .string()
-    .max(10000, "Description must be 10,000 characters or fewer")
-    .optional()
-    .or(z.literal("")),
-  storeCategory: z
-    .string()
-    .max(80, "Category must be 80 characters or fewer")
-    .optional()
-    .or(z.literal("")),
+  storeName: annotate(
+    z
+      .string()
+      .min(2, "Store name must be at least 2 characters")
+      .max(80, "Store name must be 80 characters or fewer"),
+    {
+      section: "store",
+      sectionLabel: "Your store",
+      sectionRequired: true,
+      quick: true,
+      order: 1,
+      row: "full",
+      label: "Store name",
+      help: "Buyers see this. It also forms your store's web address.",
+    },
+  ),
+  storeDescription: annotate(
+    z
+      .string()
+      .max(10000, "Description must be 10,000 characters or fewer")
+      .optional()
+      .or(z.literal("")),
+    {
+      section: "store",
+      order: 2,
+      row: "full",
+      kind: "textarea",
+      label: "What do you sell?",
+      help: "Optional. A short introduction for your storefront page.",
+    },
+  ),
+  storeCategory: annotate(
+    z
+      .string()
+      .max(80, "Category must be 80 characters or fewer")
+      .optional()
+      .or(z.literal("")),
+    {
+      section: "store",
+      order: 3,
+      row: "full",
+      label: "Main category",
+      help: "Optional. Helps buyers browsing that category find your store.",
+    },
+  ),
 });
 
 export type StoreCreateInput = z.infer<typeof storeCreateSchema>;

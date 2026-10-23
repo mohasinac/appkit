@@ -267,6 +267,8 @@ export function AdminStoreEditorView({
       storeStatus: (currentStatus as StoreStatus) ?? "pending",
       isVerified: currentIsVerified ?? false,
       isFeatured: currentIsFeatured ?? false,
+      sellerTier: currentSellerTier ?? "seller",
+      trustedSeller: currentTrustedSeller ?? false,
       suspensionReason: "",
       capabilities: currentCapabilities ?? DEFAULT_CAPABILITIES,
       adminNotes: currentAdminNotes ?? "",

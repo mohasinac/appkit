@@ -609,6 +609,7 @@ export const SCHEDULED_FUNCTIONS = [
   reservationExpiry,
   productStatsSync,
   revenueRollup,
+  sellerStandingRollup,
   priceIndexRollup,
   marketPriceRollup,
   searchIndexBuild,
