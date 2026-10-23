@@ -9,9 +9,9 @@ import { isAuthError } from "../../../utils/auth-error";
 // every caller, which is how a public wheel came to be handed both.
 import type { DisplaySpinPrize } from "../types";
 
+import { SpinWheel } from "./SpinWheel";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
-const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-warning bg-[image:var(--appkit-gradient-promotion)]";
 // audit-content-alignment-ok: self-contained circular spin-wheel game widget, all text centered under the wheel by design
 const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-[var(--appkit-space-4)] text-center";
 const CLS_PRIZE_TITLE = "mt-1 text-[length:var(--appkit-text-lg)] font-bold text-success dark:text-success";
@@ -56,7 +56,6 @@ const DEFAULT_LABELS: Required<NonNullable<SpinWheelViewProps["labels"]>> = {
   errorFallback: "Spin failed. Please try again.",
 };
 
-const ANIMATION_MS = 3200;
 
 export function SpinWheelView({
   eventId,
@@ -104,13 +103,27 @@ export function SpinWheelView({
     setSpinning(true);
 
     try {
+      /*
+       * 🛑 AWAIT FIRST, THEN LAND. The wheel idles while this resolves and
+       * only afterwards animates to the segment it actually won.
+       *
+       * It used to start a 3.2s CSS animation on click, await the server, and
+       * then reveal the prize after ANOTHER blind `setTimeout(3200)` — so the
+       * real wait was `latency + 3200ms`, the wheel visibly stopped before the
+       * prize appeared, and it never landed anywhere meaningful because the
+       * keyframes always finished at 0deg mod 360.
+       *
+       * `<SpinWheel>` now calls `onSettled` when it has physically stopped,
+       * which is what reveals the prize card — so the reveal is tied to the
+       * animation actually ending rather than to a duration guessed twice.
+       */
       const result = await onSpin(eventId);
-      window.setTimeout(() => {
-        setSpinning(false);
+      {
         if (result.spinPrizeId) {
           setResultPrizeId(result.spinPrizeId);
           setResultCoupon(result.spinPrizeCouponCode);
         } else {
+          setSpinning(false);
           /*
            * A 2xx with no prize. The server now refuses with a real status and
            * code for every reason it knows (`reasonToHttp`), so reaching here
@@ -119,7 +132,7 @@ export function SpinWheelView({
            */
           setError(l.errorFallback);
         }
-      }, ANIMATION_MS);
+      }
     } catch (err) {
       const e = normalizeError(err);
       setSpinning(false);
@@ -162,6 +175,23 @@ export function SpinWheelView({
     ? prizes.find((p) => p.id === resultPrizeId)
     : undefined;
 
+  /*
+   * Which SEGMENT to land on — an index into `activePrizes`, because that is
+   * what the wheel draws.
+   *
+   * 🛑 `wonPrize` is looked up in the FULL list (a prize deactivated after
+   * somebody won it must still render), but the INDEX must come from the
+   * drawn list or the wheel would stop on the wrong wedge. `-1` means the
+   * won prize is no longer on the wheel, which is a real state: the result
+   * card still shows, the wheel simply does not animate to a segment that
+   * is not there.
+   */
+  const winningIndex = useMemo(() => {
+    if (!resultPrizeId) return null;
+    const i = activePrizes.findIndex((p) => p.id === resultPrizeId);
+    return i >= 0 ? i : null;
+  }, [resultPrizeId, activePrizes]);
+
   return (
     <Stack gap="md">
       <LoginRequiredModal
@@ -174,27 +204,38 @@ export function SpinWheelView({
         🎡 {l.heading}
       </Heading>
 
-      <Div
-        className={CLS_WHEEL}
-        aria-label="Spin wheel"
-      >
-        <Row
-          className="absolute inset-0" align="center" justify="center"
-          style={{
-            animation: spinning
-              ? `lir-spin ${ANIMATION_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1)`
-              : undefined,
-          }}
-        >
-          <Text size="4xl">🎁</Text>
+      <SpinWheel
+        segments={activePrizes.map((p) => ({ id: p.id, label: p.label }))}
+        winningIndex={winningIndex}
+        spinning={spinning}
+        onSettled={() => setSpinning(false)}
+      />
+
+      {/*
+        * 🛑 THE PRIZE LIST, VISIBLE BEFORE SPINNING.
+        *
+        * `activePrizes` was computed and used ONLY to decide whether to
+        * disable the button — so a visitor could not see what was on the
+        * wheel at all. Showing it is also what makes the equal segments
+        * honest: it says "these are the prizes", which is exactly what the
+        * wheel can truthfully claim without publishing the odds.
+        */}
+      {!wonPrize && activePrizes.length > 0 && (
+        <Row wrap gap="xs" justify="center" className="mt-3">
+          {activePrizes.map((prize) => (
+            <Span
+              key={prize.id}
+              layout="inline-flex"
+              padding="pill-sm"
+              rounded="full"
+              size="xs"
+              surface="muted"
+            >
+              {prize.label}
+            </Span>
+          ))}
         </Row>
-        <style>{`
- @keyframes lir-spin {
- 0% { transform: rotate(0deg); }
- 100% { transform: rotate(2160deg); }
- }
- `}</style>
-      </Div>
+      )}
 
       {wonPrize ? (
         <Div className={CLS_PRIZE_BOX}>
