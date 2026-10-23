@@ -69,6 +69,7 @@ export interface DashboardSectionsClientProps {
   /** Live stat tiles and anything else that belongs above the cards. */
   above?: React.ReactNode;
   emptyMessage?: string;
+}
 
 export function DashboardSectionsClient({
   portal,

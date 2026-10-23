@@ -3,6 +3,28 @@
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
+    /*
+     * 🛑 EXPLICIT, so TypeScript stops auto-including every @types/* it finds.
+     *
+     * With this key absent, tsc loads the global declarations of EVERY package
+     * under node_modules/@types — measured here as 34 in appkit and 24 in the
+     * consumer, including @types/express, @types/qs, @types/body-parser and
+     * nine @types/d3-*, none of which any source file imports. Each one is
+     * parsed on every tsc run and every Turbopack compile, and the cost scales
+     * with the module graph, which is the lever Phase 13 is about.
+     *
+     * 🛑 Narrowing it is a CORRECTNESS risk, not just a speed change: a package
+     * that contributes a needed GLOBAL stops contributing it. The ones that
+     * declare globals here are caseless, d3-shape, esrecurse, json5, long, ms,
+     * react, react-dom, request and validator — of which only react, react-dom
+     * and node are ever used deliberately. The rest reach the compiler by
+     * transitive install, not by intent.
+     *
+     * 🛑 And this does NOT stop an explicit type import from working. A file
+     * that imports from a package keeps its types; the key governs the AMBIENT
+     * set only. That distinction is the whole reason the narrowing is safe.
+     */
+    "types": ["node", "react", "react-dom"],
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
