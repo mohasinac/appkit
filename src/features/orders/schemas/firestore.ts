@@ -220,14 +220,17 @@ export const RefundStatusValues = {
 /**
  * The PII inside one amendment.
  *
- * 🛑 This list exists because `encryptPiiFields` CANNOT cover an array.
- * `ORDER_PII_FIELDS` names top-level keys and the loop never descends, so an
- * amendment's `fullName` would be written plaintext and never decrypted —
- * exactly the trap § "Status History" closed for `statusHistory[].changes`
- * with `withHistory`'s explicit `piiFields` scrub.
+ * 🛑 BARE keys, and `ORDER_PII_FIELDS` uses the `deliveryAmendments[].…`
+ * form for the same five fields. Two notations, two scopes, both correct:
+ * the `[]` form is for the whole ORDER document, where the hook has to walk
+ * into the array; these bare names are for ONE amendment object, where they
+ * are genuinely top-level.
  *
- * Declaring it separately is what lets `audit-snapshot-integrity` tell "this
- * array's PII is handled by a named mechanism" from "nobody noticed".
+ * 🛑 This list was first justified as "`encryptPiiFields` CANNOT cover an
+ * array" — CLAUDE.md's wording, and FALSE. `encryptInArray` has always
+ * handled `a[].b`, in both directions. The real rule is that the encryptor
+ * does not infer: a field is covered only where it is NAMED, in the notation
+ * matching the object the list is applied to.
  */
 export const AMENDMENT_PII_FIELDS = [
   "fullName",

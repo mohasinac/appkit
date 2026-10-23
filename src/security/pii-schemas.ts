@@ -48,10 +48,22 @@ export const ORDER_PII_FIELDS = [
   /*
    * ── The delivery snapshot (Part 14) ──────────────────────────────────────
    *
-   * 🛑 Flat keys BECAUSE this loop is flat. `encryptPiiFields` never descends,
-   * so a nested `deliveryAddress.fullName` would be written in plaintext and
-   * never decrypted on the way back out — indistinguishable, in any
-   * inspection, from an encrypted one.
+   * 🛑 **CORRECTED 2026-10-23.** These were first written as flat keys on the
+   * argument that "`encryptPiiFields` is a flat top-level loop that never
+   * descends" — CLAUDE.md's wording, and it is FALSE. Read the function: it
+   * handles dotted paths (`lastMessage.body`, already live above) AND
+   * `array[].key` via `encryptInArray`, in both directions.
+   *
+   * Flat keys stay, on a smaller and true argument: city / state / pincode /
+   * country must remain unencrypted and QUERYABLE, so a single
+   * `deliveryAddress` object would be half-encrypted — and a half-encrypted
+   * object is the shape nobody can reason about at a glance. Flat keys make
+   * each field's treatment visible in this list.
+   *
+   * What the encryptor does NOT do is infer. A field is covered only if it is
+   * NAMED, in the right notation — and `"fullName"` does not cover
+   * `deliveryAmendments[].fullName`. That is the real failure mode, and what
+   * `audit-snapshot-integrity` R1 checks.
    *
    * 🛑 `shippingAddress` is deliberately NOT added. It is legacy free text on
    * existing rows; encrypting the field now would encrypt it on the next
@@ -67,6 +79,17 @@ export const ORDER_PII_FIELDS = [
   "deliveryAddressLine1",
   "deliveryAddressLine2",
   "deliveryLandmark",
+  /*
+   * The amendment array, in the `array[].key` notation `encryptInArray`
+   * implements. Declared HERE rather than encrypted by hand at the write
+   * site: the repository's write hook already runs this list, and a second
+   * mechanism doing the same job is the drift this codebase keeps paying for.
+   */
+  "deliveryAmendments[].fullName",
+  "deliveryAmendments[].phone",
+  "deliveryAmendments[].addressLine1",
+  "deliveryAmendments[].addressLine2",
+  "deliveryAmendments[].landmark",
 ] as const;
 
 /** PII fields in payouts */
