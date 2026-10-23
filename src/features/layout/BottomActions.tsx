@@ -375,7 +375,8 @@ export default function BottomActions() {
    * own reveal — bulk mode is a state the user just entered deliberately, and
    * making them scroll to act on it would be a puzzle.
    */
-  const revealed = useCtaReveal(hasContent && !isBulkMode, ctaAnchorId) || isBulkMode;
+  const { revealed: ctaRevealed } = useCtaReveal(hasContent && !isBulkMode, ctaAnchorId);
+  const revealed = ctaRevealed || isBulkMode;
   const isVisible = hasContent && revealed;
 
   // A panel left open after its content is withdrawn (bulk mode taking over, or

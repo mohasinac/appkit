@@ -56,7 +56,7 @@ import { useClickOutside } from "../../react";
 import { useHandMode } from "../../_internal/client/hand-mode";
 import { useCtaReveal } from "./useCtaReveal";
 import { useIsDesktop } from "./useIsDesktop";
-import { ActionRow, Div, IconButton, Row, Span, Stack, Text, Button } from "../../ui";
+import { ActionRow, Div, ICON_SIZE, IconButton, Row, Span, Stack, Text, Button } from "../../ui";
 
 const PANEL_SURFACE =
   "bg-[color-mix(in_srgb,var(--appkit-color-bg)_94%,transparent)] backdrop-blur-md border border-[var(--appkit-color-border)]";
@@ -256,8 +256,45 @@ export default function SideActionDock() {
     !!secondaryLabel;
 
   // Rule 3 — a selection is its own reveal.
-  const revealed = useCtaReveal(hasContent && !isBulkMode, ctaAnchorId) || isBulkMode;
+  const {
+    revealed: ctaRevealed,
+    hasAnchor,
+    scrollToAnchor,
+  } = useCtaReveal(hasContent && !isBulkMode, ctaAnchorId);
+  const revealed = ctaRevealed || isBulkMode;
   const isVisible = isDesktop && hasContent && revealed;
+
+  /*
+   * ── Rule 4 — a page with a REAL Buy button gets a way BACK to it ─────────
+   *
+   * On a detail page the dock was a second copy of the CTA you had just
+   * scrolled past, which is the one thing rule 2 says a floating control must
+   * not be: `useCtaReveal` already means "you have met the Buy button and left
+   * it", so re-offering the purchase mid-screen answers a question the user
+   * did not ask. Taking them back to the real control answers the one they
+   * did — and it keeps the purchase decision on the page's own CTA, beside
+   * the price, the variant and the stock state that qualify it.
+   *
+   * 🛑 Gated on `hasAnchor`, NOT on a route or a listing type. A bulk screen
+   * marks no anchor, so it keeps the centred dock carrying its actions — which
+   * is correct, because there was never an inline control there to return to.
+   * `ctaAnchorProps` has exactly one caller today (`ProductDetailPageView`),
+   * so this branch is opt-in by construction and ~70 admin bulk bars cannot
+   * reach it.
+   *
+   * It sits in the bottom-right cluster above `BackToTop` and shares that
+   * control's bottom-tier `calc()` verbatim, so the two stack rather than
+   * overlap — and rule 1's objection (a bottom-anchored bar reads as a browser
+   * download bar) does not apply to a single round puck in the corner that is
+   * already where the scroll affordance lives.
+   *
+   * 🛑 The RETURN for this branch is deliberately deferred to just above the
+   * main one. An early return here would sit above this component's remaining
+   * `useEffect`s, so the hook order would differ between a detail page and a
+   * bulk screen — React's "rendered fewer hooks than expected" crash, and the
+   * kind that only shows up on the page nobody opened during review.
+   */
+  const isBackToCta = isDesktop && hasAnchor && !isBulkMode;
 
   // Rule 1 — opposite the sidebar, which docks to the hand-mode side.
   const dockSideClass = hand === "left" ? "right-0" : "left-0";
@@ -332,6 +369,40 @@ export default function SideActionDock() {
   const fabLabel = isBulkMode
     ? `${bulk?.selectedCount ?? 0} selected — bulk actions`
     : (primaryAction?.label ?? infoLabel ?? "Page actions");
+
+  // Rule 4's deferred return — below every hook, for the reason given above.
+  if (isBackToCta) {
+    if (!ctaRevealed) return null;
+    return (
+      <Div
+        className={[
+          "fixed pointer-events-auto z-[var(--appkit-z-back-to-top)]",
+          hand === "left" ? "left-4" : "right-4",
+          /*
+           * `BackToTop`'s own expression verbatim — including its `4rem`
+           * default for `--bottom-nav-height`, not the `0px` the dock's other
+           * branch would imply — plus 3.5rem to clear that control's touch
+           * box and its gap. Copying the expression rather than inventing one
+           * is what keeps the two stacked when the tier changes height.
+           */
+          "bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4)+3.5rem)]",
+          "transition-[bottom] duration-300 ease-out",
+        ].join(" ")}
+        data-section="back-to-cta"
+      >
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={scrollToAnchor}
+          aria-label={`Back to ${primaryAction?.label ?? "the buy button"}`}
+        >
+          <ChevronUp aria-hidden="true" size={ICON_SIZE.sm} />
+          {`Back to ${primaryAction?.label ?? "buy"}`}
+        </Button>
+      </Div>
+    );
+  }
 
   return (
     <Div
