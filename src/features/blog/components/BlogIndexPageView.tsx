@@ -75,7 +75,7 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
             pill="From the shop floor"
             title="Blog"
             description="Buying guides, release notes and what we have learned importing and grading Beyblades."
-            meta={initialData?.total ? `${initialData.total} articles` : undefined}
+            meta={initialData?.meta?.total ? `${initialData.meta.total} articles` : undefined}
           />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <BlogIndexListing initialData={initialData} />

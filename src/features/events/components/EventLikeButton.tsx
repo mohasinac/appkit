@@ -10,8 +10,8 @@
 import React, { useCallback, useState, useTransition } from "react";
 import { Button, Row, Span, Icon } from "../../../ui";
 import { PressScale } from "../../../ui/components/Motion";
-import { useOptionalSession } from "../../auth/hooks/useOptionalSession";
-import { LoginRequiredModal } from "../../auth/components/LoginRequiredModal";
+import { useOptionalSession } from "../../../react/contexts/SessionContext";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
 import { normalizeError } from "../../../errors/normalize";
 
 export interface EventLikeButtonProps {

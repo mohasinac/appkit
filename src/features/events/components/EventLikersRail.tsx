@@ -86,7 +86,7 @@ export function EventLikersRail({
           Liked by <Span weight="medium">{summarise(likers, totalCount)}</Span>
         </Text>
         {(hasMore || totalCount > likers.length) && (
-          <Button type="button" variant="link" size="sm" onClick={() => setOpen(true)}>
+          <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(true)}>
             View all
           </Button>
         )}

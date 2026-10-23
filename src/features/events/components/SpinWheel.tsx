@@ -27,7 +27,7 @@
  */
 
 import React, { useMemo } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, type Easing } from "motion/react";
 import { Div } from "../../../ui";
 
 export interface SpinWheelSegment {
@@ -126,7 +126,8 @@ export function SpinWheel({
         // Most of the journey is the decelerating spin; the last 12% is the
         // settle back from the overshoot.
         times: [0, 0.88, 1],
-        ease: ["easeOut", "easeInOut"] as const,
+        // Mutable, not `as const` — motion types `ease` as `Easing[]`.
+        ease: ["easeOut", "easeInOut"] as Easing[],
       };
 
   return (

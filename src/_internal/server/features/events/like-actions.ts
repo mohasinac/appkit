@@ -6,7 +6,7 @@
  * @tag access:server-only
  */
 
-import { wrapAction, type ActionResult } from "../../core/wrap-action";
+import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { eventLikesRepository } from "../../../../features/events/repository/event-likes.repository";
 import { resolveEventIdAction } from "../raffle/actions";
 import { getEventLikers, type EventLikersPage } from "./likes";
