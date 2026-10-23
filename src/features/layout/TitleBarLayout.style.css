@@ -1,0 +1,59 @@
+/*
+ * Title-bar icons that are carrying something.
+ *
+ * The count badge already states the fact, but it is a 16px dot in the corner
+ * of a dense bar — easy to miss on a phone, and it never changes once drawn.
+ * A small periodic nudge is what makes "you have three things in your cart"
+ * noticeable without adding a second place to read the number.
+ *
+ * 🛑 It is a PERIODIC nudge, not a loop. The movement lasts about half a
+ * second at the END of a 10s cycle and the icon is still for the other ~9.5s,
+ * so it reads as an occasional glance-catcher rather than a permanent
+ * animation sitting in the chrome of every page. A continuously-moving element
+ * in a fixed header is the kind of thing people learn to tune out — or leave.
+ *
+ * 🛑 The percentages and the duration are ONE number, not two. The keyframe
+ * stops are a fraction of the cycle, so changing `10s` alone silently
+ * stretches the nudge itself — at 20s the same stops would swing the bell over
+ * a full second, which reads as a glitch rather than a nudge. Rescale the
+ * stops with it: the window is 4.8% here, which is ~480ms of a 10s cycle.
+ *
+ * The pivot is near the TOP of the glyph so the motion reads as a bell swing
+ * rather than a wobble around the middle, which is what the notification bell
+ * wants and what the cart and wishlist tolerate.
+ */
+@keyframes appkit-nav-icon-nudge {
+  0%,
+  95.2%,
+  100% {
+    transform: rotate(0deg);
+  }
+  96.1% {
+    transform: rotate(-12deg);
+  }
+  97.3% {
+    transform: rotate(9deg);
+  }
+  98.5% {
+    transform: rotate(-5deg);
+  }
+  99.4% {
+    transform: rotate(2deg);
+  }
+}
+
+.appkit-nav-icon--has-items {
+  transform-origin: 50% 15%;
+  animation: appkit-nav-icon-nudge 10s ease-in-out infinite;
+}
+
+/*
+ * 🛑 Honoured, not approximated. This is decoration carrying no information
+ * the badge does not already carry, so for a reader who has asked for less
+ * motion the correct amount is none — not a shorter or gentler version.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .appkit-nav-icon--has-items {
+    animation: none;
+  }
+}

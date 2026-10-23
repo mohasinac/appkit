@@ -53,6 +53,7 @@
  * a missing rule means two stacked breadcrumbs with nothing looking wrong.
  */
 @import "./features/layout/AutoBreadcrumbs.style.css";
+@import "./features/layout/TitleBarLayout.style.css";
 /* 🛑 Must be imported HERE — `bundle-css.mjs` flattens only this chain, so a
    feature stylesheet not listed in it ships nowhere. */
 @import "./features/shell/SectionForm.style.css";
