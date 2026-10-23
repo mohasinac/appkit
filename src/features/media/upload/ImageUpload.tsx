@@ -285,7 +285,16 @@ export function ImageUpload({
       <Div className="relative">
         {preview ? (
           <Stack gap="sm">
-            <Div className={`relative h-32 max-w-xs mx-auto ${__O.hidden}`} rounded="lg" border="default">
+            {/*
+              * 🛑 `w-full` is load-bearing beside `mx-auto`. This Div is a flex
+              * item of the `Stack` above, and an auto cross-axis margin DEFEATS
+              * `align-items: stretch` — so without an explicit width the box is
+              * shrink-to-fit, and its only in-flow content is an absolutely
+              * positioned image that contributes none. The preview collapsed to
+              * the width of the fallback emoji: a ~44px sliver of a 128px-tall
+              * frame, which is what the Site Settings logo field rendered as.
+              */}
+            <Div className={`relative w-full h-32 max-w-xs mx-auto ${__O.hidden}`} rounded="lg" border="default">
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
                 <Div className="absolute inset-x-0 bottom-0">

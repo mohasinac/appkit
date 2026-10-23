@@ -258,8 +258,29 @@ export function MediaImage({
    * the placeholder, the `<picture>` and the plain `<Image>` cannot disagree
    * about their dimensions — a fallback that occupies a different box from the
    * image it replaces makes a grid jump as things load.
+   *
+   * 🛑 `max-h-full` IS THE OTHER HALF OF SIZE_BOX, added 2026-10-23. SIZE_BOX
+   * alone fixed the auto-height parent and broke the ALREADY-SIZED one: a
+   * parent that is 320x128 got a 320x320 box, so `overflow-hidden` cropped it
+   * to the top 40% of a letterboxed square. Measured 89 of 143 call sites in
+   * that shape — every image preview on the review, document and site-settings
+   * surfaces. `max-height:100%` resolves to `none` against an auto-height
+   * parent, so it clamps ONLY in the broken case.
+   *
+   * Measured in a browser (box for each parent shape), not argued:
+   *
+   *   parent               w-full aspect  +max-h-full   +h-full
+   *   320x128 definite     320x320  ✗     320x128  ✓    320x128 ✓
+   *   h128, width shrink   320x320  ✗     320x128  ✓    320x128 ✓
+   *   width 200, h AUTO    200x200  ✓     200x200  ✓    200x784 ✗
+   *   64px thumb stretched
+   *     by a flex row       64x64   ✓      64x64   ✓     64x90  ✗
+   *
+   * So `h-full` is NOT the fix — it wins over `aspect-ratio` whenever the
+   * parent's height is definite, including the height a flex/grid row hands a
+   * thumbnail by stretching it. That is why this is a MAX and not a height.
    */
-  const boxClass = fill ? "h-full" : SIZE_BOX[size];
+  const boxClass = fill ? "h-full" : `${SIZE_BOX[size]} max-h-full`;
 
   // Reset error/load/retry state whenever the resolved src actually changes.
   // Without this, a component instance that hit a load failure once (e.g.
