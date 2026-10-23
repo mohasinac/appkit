@@ -26,6 +26,7 @@
  */
 
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import NextLink from "next/link";
 import { Check, ChevronDown, Search } from "lucide-react";
 import { Avatar } from "./Avatar";
@@ -33,9 +34,16 @@ import { Icon } from "./Icon";
 import type { IconKey } from "../icons/icon-registry";
 import { Input } from "./Input";
 import { useRowCollapse } from "./row-collapse";
+import { MOBILE_QUERY } from "./toolbar-collapse";
+import { useBottomChromeSlot } from "./bottom-chrome-slot";
+import { useMediaQuery } from "../../react/hooks/useMediaQuery";
 
 const UI_OVERFLOW_ROW = {
   shell: "appkit-overflow-row",
+  /** The in-flow measuring box, once the control itself has been portalled away. */
+  shellDocked: "appkit-overflow-row--docked",
+  /** The portalled control, as its own row inside `BottomChrome`. */
+  dock: "appkit-overflow-row__dock",
   row: "appkit-overflow-row__row",
   pill: "appkit-overflow-row__pill",
   pillActive: "appkit-overflow-row__pill--active",
@@ -204,12 +212,24 @@ export function OverflowRow({
   const shellRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  /*
+   * The portalled control, when docked into the bottom bar. Needed only by the
+   * outside-click handler: a portal moves the node out of `shellRef`'s subtree
+   * in the DOM, so `shell.contains(target)` is FALSE for a click on the
+   * trigger itself — the dropdown would close on the very click that opened
+   * it, which reads as the control being dead.
+   */
+  const dockRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const listboxId = useId();
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Both before any conditional return — the collapsed branch is one.
+  const bottomChromeSlot = useBottomChromeSlot();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   const signature = useMemo(() => signatureOf(items), [items]);
   const collapsed = useRowCollapse(shellRef, rowRef, signature, {
@@ -221,7 +241,11 @@ export function OverflowRow({
   useEffect(() => {
     if (!open) return;
     const onDown = (event: MouseEvent) => {
-      if (!shellRef.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      const inShell = shellRef.current?.contains(target) ?? false;
+      // See `dockRef` — when docked, the control lives outside the shell.
+      const inDock = dockRef.current?.contains(target) ?? false;
+      if (!inShell && !inDock) setOpen(false);
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
@@ -298,12 +322,8 @@ export function OverflowRow({
 
   // ── Collapsed: one searchable dropdown ──────────────────────────────────
   if (collapsed) {
-    return (
-      <div
-        ref={shellRef}
-        className={[UI_OVERFLOW_ROW.shell, className].filter(Boolean).join(" ")}
-        data-collapsed="true"
-      >
+    const dropdown = (
+      <>
         <button
           ref={triggerRef}
           type="button"
@@ -418,6 +438,51 @@ export function OverflowRow({
             </div>
           </div>
         )}
+      </>
+    );
+
+    /*
+     * ── Mobile: the collapsed row docks into the bottom bar ────────────────
+     *
+     * A row that has collapsed to a dropdown is no longer a row — it is one
+     * control, and on a phone the place for one control is the thumb zone,
+     * not a band competing with the page heading. It joins `BottomChrome` as
+     * its OWN row, so it stacks above a CTA bar instead of overlapping it,
+     * and the tier's single `ResizeObserver` adds its height to
+     * `--bottom-chrome-height` — which is what keeps page content from being
+     * hidden behind it on scroll, with no consumer doing anything.
+     *
+     * 🛑 `shellRef` STAYS IN PLACE, always. It is what `useRowCollapse`
+     * measures the available width against; portal it into the bottom bar and
+     * it would measure the VIEWPORT instead, read as "there is room now",
+     * expand, return to the narrow container, collapse, and oscillate forever.
+     * So the shell remains an empty in-flow box at the original position and
+     * only the CONTROL is portalled. The expanded branch below is unchanged
+     * and still renders the real row there.
+     */
+    const docked = isMobile && !!bottomChromeSlot;
+
+    return (
+      <div
+        ref={shellRef}
+        className={[
+          UI_OVERFLOW_ROW.shell,
+          docked ? UI_OVERFLOW_ROW.shellDocked : "",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        data-collapsed="true"
+        data-docked={docked ? "true" : "false"}
+      >
+        {docked
+          ? createPortal(
+              <div ref={dockRef} className={UI_OVERFLOW_ROW.dock}>
+                {dropdown}
+              </div>,
+              bottomChromeSlot,
+            )
+          : dropdown}
       </div>
     );
   }

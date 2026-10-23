@@ -26,7 +26,23 @@ import { CTA_ANCHOR_ATTR } from "./cta-anchor";
  * page that owns it mounts AFTER this dock — the dock lives in the app shell
  * and the CTA arrives with the route.
  */
-export function useCtaReveal(enabled = true, anchorId?: string): boolean {
+export interface CtaRevealState {
+  /** Should the floating dock / bar be on screen? */
+  revealed: boolean;
+  /**
+   * Does this page mark an inline CTA at all?
+   *
+   * The discriminator between a DETAIL page (a real Buy button exists, so the
+   * floating control's job is to take you back to it) and a BULK screen (no
+   * Buy button was ever there, so the floating control IS the only affordance
+   * and must carry the actions itself).
+   */
+  hasAnchor: boolean;
+  /** Scroll the inline CTA back into view. A no-op when there is no anchor. */
+  scrollToAnchor: () => void;
+}
+
+export function useCtaReveal(enabled = true, anchorId?: string): CtaRevealState {
   const [anchor, setAnchor] = useState<Element | null>(null);
   const [anchorExists, setAnchorExists] = useState(false);
   const [seen, setSeen] = useState(false);
@@ -79,7 +95,21 @@ export function useCtaReveal(enabled = true, anchorId?: string): boolean {
     return () => io.disconnect();
   }, [anchor]);
 
-  if (!enabled) return false;
-  if (!anchorExists) return true;
-  return seen && !inView;
+  /*
+   * Re-read at CLICK time rather than closing over `anchor`. A client-side
+   * navigation swaps the page under a dock that never unmounts, and the
+   * element captured when the effect last ran may already be detached — a
+   * `scrollIntoView` on a detached node silently does nothing.
+   */
+  const scrollToAnchor = () => {
+    if (typeof document === "undefined") return;
+    const el = anchorId
+      ? document.getElementById(anchorId)
+      : document.querySelector(`[${CTA_ANCHOR_ATTR}]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  if (!enabled) return { revealed: false, hasAnchor: anchorExists, scrollToAnchor };
+  if (!anchorExists) return { revealed: true, hasAnchor: false, scrollToAnchor };
+  return { revealed: seen && !inView, hasAnchor: true, scrollToAnchor };
 }

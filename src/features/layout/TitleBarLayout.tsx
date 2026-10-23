@@ -90,6 +90,17 @@ const countBadge =
   "appkit-hand-badge absolute -top-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-error-solid text-error-on-solid text-[10px] font-bold leading-none";
 
 /**
+ * Applied to the GLYPH, never the link, when the icon is carrying something.
+ *
+ * On the glyph so the count badge stays put: animating the link would swing
+ * the number with it, which turns a readable badge into a moving target. The
+ * keyframes and the `prefers-reduced-motion` opt-out live in
+ * `TitleBarLayout.style.css`.
+ */
+const nudgeWhenCarrying = (count: number): string =>
+  count > 0 ? "appkit-nav-icon--has-items" : "";
+
+/**
  * TitleBarLayout — generic top sticky title-bar shell.
  *
  * Layout:
@@ -210,7 +221,7 @@ export function TitleBarLayout({
       aria-label={`Notifications${unreadNotificationCount > 0 ? `, ${unreadNotificationCount} unread` : ""}`}
       className={`relative ${iconBtn}`}
     >
-      <Icon name="notification" size="lg" />
+      <Icon name="notification" size="lg" className={nudgeWhenCarrying(unreadNotificationCount)} />
       {unreadNotificationCount > 0 && (
         <Span className={countBadge}>
           {unreadNotificationCount > 99 ? "99+" : unreadNotificationCount}
@@ -228,7 +239,7 @@ export function TitleBarLayout({
       aria-label={`Messages${unreadMessageCount > 0 ? `, ${unreadMessageCount} unread` : ""}`}
       className={`relative ${iconBtn}`}
     >
-      <Icon name="message" size="lg" />
+      <Icon name="message" size="lg" className={nudgeWhenCarrying(unreadMessageCount)} />
       {unreadMessageCount > 0 && (
         <Span className={countBadge}>{unreadMessageCount > 99 ? "99+" : unreadMessageCount}</Span>
       )}
@@ -242,7 +253,7 @@ export function TitleBarLayout({
       className={`relative ${iconBtn}`}
       data-tour="nav-wishlist"
     >
-      <Icon name="wishlist" size="lg" />
+      <Icon name="wishlist" size="lg" className={nudgeWhenCarrying(wishlistCount)} />
       {wishlistCount > 0 && (
         <Span className={countBadge}>{wishlistCount > 9 ? "9+" : wishlistCount}</Span>
       )}
@@ -256,7 +267,7 @@ export function TitleBarLayout({
       className={`relative ${iconBtn}`}
       data-tour="nav-cart"
     >
-      <Icon name="cart" size="lg" />
+      <Icon name="cart" size="lg" className={nudgeWhenCarrying(cartCount)} />
       {cartCount > 0 && (
         <Span className={countBadge}>{cartCount > 9 ? "9+" : cartCount}</Span>
       )}
