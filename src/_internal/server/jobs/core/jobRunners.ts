@@ -17,6 +17,7 @@ import { runNewsletterExport } from "./newsletterExport";
 import { runStoreNameBackfill } from "./storeNameBackfill";
 import { runCategoryTaxonomyBackfill } from "./categoryTaxonomyBackfill";
 import type { JsonValue } from "@mohasinac/appkit";
+import { bookShipment } from "../../features/shipping/book";
 
 export interface JobRunResult {
   summary: {
@@ -105,7 +106,55 @@ async function runCategoryTaxonomyBackfillJob(
   );
 }
 
+/**
+ * Book a parcel through the platform's carrier account.
+ *
+ * 🛑 A JOB rather than a synchronous route, and the reason is Rule #6. A
+ * booking is an outbound carrier call on a path the seller is waiting on,
+ * against a 10s sync-function ceiling — and a timeout there is the worst
+ * outcome available: the carrier may have accepted, so retrying double-books
+ * and not retrying leaves a parcel nobody collects.
+ *
+ * The runner's own failure is recoverable: `bookShipment` refuses an order
+ * that already has a tracking number, so a retried job is a no-op rather
+ * than a second parcel.
+ */
+async function runBookShipmentJob(
+  payload: Record<string, JsonValue>,
+  _ctx: JobContext,
+): Promise<JobRunResult> {
+  const dims = (payload.dimensions ?? {}) as Record<string, number>;
+  const result = await bookShipment({
+    orderId: String(payload.orderId ?? ""),
+    pickupAddressId: String(payload.pickupAddressId ?? ""),
+    dimensions: {
+      weight: Number(dims.weight ?? 0),
+      length: Number(dims.length ?? 0),
+      width: Number(dims.width ?? 0),
+      height: Number(dims.height ?? 0),
+    },
+  });
+  const orderId = String(payload.orderId ?? "");
+  return {
+    summary: { total: 1, succeeded: 1, skipped: 0, failed: 0 },
+    succeeded: [orderId],
+    skipped: [],
+    failed: [],
+    /*
+     * The tracking id goes in `data`, which `useBulkEvent` surfaces — the
+     * seller's next question after "did it book" is "what is the number",
+     * and making them reload the order to find it is a wasted round trip.
+     */
+    data: {
+      trackingId: result.trackingId,
+      ...(result.courier ? { courier: result.courier } : {}),
+      ...(result.estimatedDelivery ? { estimatedDelivery: result.estimatedDelivery } : {}),
+    },
+  };
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
+  bookShipment: runBookShipmentJob,
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
   resetOtpVerification: runResetOtpVerificationJob,

@@ -2601,3 +2601,18 @@ export {
   DELIVERY_AMENDMENT_MAX,
   type AmendDeliveryInput,
 } from "./_internal/server/features/orders/amend-delivery";
+
+/*
+ * [SERVER-ONLY] Part 1′ — parcel booking.
+ *
+ * 🛑 Exported for the ENQUEUE route only. The booking itself runs in the
+ * `bookShipment` job runner, because a carrier call on a 10s sync ceiling
+ * times out in the one way that cannot be retried safely: the carrier may
+ * have accepted, so a retry double-books and a non-retry leaves a parcel
+ * nobody collects.
+ */
+export {
+  bookShipment,
+  type BookShipmentInput,
+  type BookShipmentResult,
+} from "./_internal/server/features/shipping/book";

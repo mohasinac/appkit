@@ -102,15 +102,48 @@ export type SellerOrderUpdateValues = z.infer<typeof sellerOrderUpdateSchema>;
  */
 
 /**
- * Manual shipment entry. `method` is a literal rather than an enum because
- * `ManualShippingProvider` is the only provider — see § "Provider Resolution".
+ * Shipment entry — manual, or booked through the platform.
+ *
+ * 🛑 **`method` was `z.literal("custom")`, and that literal WAS bug 0e.**
+ *
+ * Its comment said *"a literal rather than an enum because
+ * `ManualShippingProvider` is the only provider"* — no longer true:
+ * `providers/shipping-shiprocket/` is 570 lines with all six methods, and
+ * `providers.config.ts` already resolves it from
+ * `siteSettings.shipping.provider`. The seller simply could not EXPRESS
+ * "book this through us", so there was no option to offer, and
+ * `platformBookedShipment` — which `order-math.ts` gates reimbursement on —
+ * had zero writers.
+ *
+ * A DISCRIMINATED UNION rather than an enum plus optional fields, because
+ * the two branches need different things and an optional-everything shape
+ * cannot say so:
+ *
+ * · `custom` — the seller posted it and types the carrier and tracking id.
+ *   Those are REQUIRED, which is the rule enforced in three places today.
+ * · `platform` — we book it, so there is no tracking id to type; it comes
+ *   back from the carrier. Requiring one here would be asking the seller to
+ *   invent the thing the booking produces.
  */
-export const shipOrderSchema = z.object({
-  method: z.literal("custom"),
-  shippingCarrier: z.string().min(1),
-  trackingNumber: z.string().min(1),
-  trackingUrl: z.string().url(),
-});
+export const shipOrderSchema = z.discriminatedUnion("method", [
+  z.object({
+    method: z.literal("custom"),
+    shippingCarrier: z.string().min(1),
+    trackingNumber: z.string().min(1),
+    trackingUrl: z.string().url(),
+  }),
+  z.object({
+    method: z.literal("platform"),
+    /* The store address the courier collects from. */
+    pickupAddressId: z.string().min(1),
+    dimensions: z.object({
+      weight: z.number().positive().max(50),
+      length: z.number().positive().max(200),
+      width: z.number().positive().max(200),
+      height: z.number().positive().max(200),
+    }),
+  }),
+]);
 
 export type ShipOrderValues = z.infer<typeof shipOrderSchema>;
 
