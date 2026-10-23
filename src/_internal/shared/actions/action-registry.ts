@@ -1064,6 +1064,37 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["seller", "admin"],
     },
+    "dispatch-custom": {
+      iconKey: "ship",
+      id: "store.dispatch-custom",
+      label: "Record dispatch",
+      ariaLabel: "Record a parcel you posted yourself",
+      description: "Record the carrier and tracking id for a parcel the seller posted themselves.",
+      kind: "primary",
+      permissions: ["seller", "admin"],
+    },
+    "dispatch-platform": {
+      iconKey: "ship",
+      id: "store.dispatch-platform",
+      label: "Book through LetItRip",
+      ariaLabel: "Book this parcel through the platform's courier account",
+      description:
+        "Book a pickup on the platform's own carrier account. The tracking id comes back from the courier.",
+      kind: "primary",
+      permissions: ["seller", "admin"],
+      /*
+       * 🛑 Confirmed because it SPENDS MONEY and cannot be undone from this
+       * screen. A booking debits the platform's carrier wallet and schedules
+       * a real pickup; `bookShipment` then refuses a second attempt on the
+       * same order, so a mis-click is not a thing the seller can take back by
+       * pressing the button again.
+       */
+      confirmation: {
+        title: "Book this parcel through LetItRip?",
+        body: "A courier pickup will be scheduled at the address you picked and the cost charged to the platform's carrier account. This cannot be undone from here.",
+        confirmLabel: "Book pickup",
+      },
+    },
     "mark-installment-paid": {
       iconKey: "confirm",
       id: "store.mark-installment-paid",

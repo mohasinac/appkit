@@ -39,6 +39,7 @@ import {
 import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { DispatchForm } from "./DispatchForm";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
@@ -188,6 +189,8 @@ interface OrderDetail {
   shippingCarrier?: string;
   carrier?: string;
   trackingUrl?: string;
+  /** Set by `bookShipment`; distinguishes "we booked it" from "you posted it". */
+  platformBookedShipment?: boolean;
   paymentMethod?: string;
   paymentStatus?: string;
   paymentTransactionId?: string;
@@ -711,6 +714,41 @@ export function SellerOrderDetailPanel({
                 )}
               </Div>
             )}
+
+            {/*
+              🛑 Dispatch is its OWN form, above the status form, not a section
+              inside it — and that separation is the point rather than layout
+              taste. The status form diffs its draft against the loaded order
+              and PATCHes whatever moved; dispatch posts a discriminated union
+              to a different route and, on the platform branch, enqueues a job
+              that spends money. Folding them together would give one Save two
+              meanings, which is bug 0d one level up from where it was found.
+
+              It carries its own single submit and no `bottomBar`: this panel
+              renders inside a `SideDrawer` on the orders list, where
+              `useFormBottomActions` suppresses the bar anyway.
+            */}
+            <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
+              <DispatchForm
+                orderId={orderId}
+                trackingNumber={order.trackingNumber}
+                platformBooked={order.platformBookedShipment}
+                onDispatched={() => {
+                  showToast("Dispatch recorded", "success");
+                  /*
+                   * Re-read rather than patching local state: the platform
+                   * branch's tracking id is produced by the CARRIER, so there
+                   * is no value here to optimistically write. On that branch
+                   * the job is still running, so this first re-read correctly
+                   * shows no tracking number yet.
+                   */
+                  void fetch(`${apiBase}/${orderId}`)
+                    .then((r) => r.json())
+                    .then((json) => setOrder((json?.data ?? json) as OrderDetail))
+                    .catch((err: unknown) => void normalizeError(err));
+                }}
+              />
+            </Stack>
 
             <Stack className="border-t border-[var(--appkit-color-border)]" padding="t-md" gap="3">
               <FormShellContext.Provider value={form.shellCtx}>

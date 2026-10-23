@@ -131,17 +131,23 @@ export async function bookShipment(input: BookShipmentInput): Promise<BookShipme
 
   const provider = getProviders().shipping;
 
-  const balance = await provider.getWalletBalance?.().catch((err: unknown) => {
-    /*
-     * A balance we could not read must not block a dispatch. The provider may
-     * not implement it at all (manual shipping has no wallet), and a transient
-     * API failure is not evidence of an empty account.
-     */
+  /*
+   * 🛑 `WalletBalance` is a THREE-state union and collapsing it is the whole
+   * hazard the contract's own header describes. Only `{known: true, amount: 0}`
+   * is a decision to skip. `{known: false}` means either "no wallet exists"
+   * (manual shipping) or "could not read it right now" — and refusing on an
+   * unreadable balance would fail every dispatch on a transient blip.
+   *
+   * An earlier draft of this function tested `typeof balance === "number"`,
+   * which is never true against this contract: the guard was dead, so a
+   * genuinely empty wallet would have been booked into anyway.
+   */
+  const balance = await provider.getWalletBalance().catch((err: unknown) => {
     void normalizeError(err);
     serverLogger.warn("bookShipment: wallet balance unavailable", { orderId: input.orderId });
-    return undefined;
+    return { known: false, supported: true } as const;
   });
-  if (typeof balance === "number" && balance <= 0) {
+  if (balance.known && balance.amount <= 0) {
     throw new ValidationError(
       "The courier account has no balance, so the booking was not attempted.",
       { orderId: "Top up the carrier wallet and try again." },

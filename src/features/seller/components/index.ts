@@ -5,6 +5,7 @@ export { SellerListingTypeView, SELLER_LISTING_TYPE_SPECS } from "./SellerListin
 export type { SellerListingTypeViewProps, SellerListingTypeSpec, SellerListingTypeKey, SellerListingRow } from "./SellerListingTypeView";
 export type { SellerProductsViewProps } from "./SellerProductsView";
 export { PrintCenterView } from "./PrintCenterView";
+export { DispatchForm } from "./DispatchForm";
 export { SellerOrdersView, SellerOrderDetailPanel } from "./SellerOrdersView";
 export type { SellerOrdersViewProps } from "./SellerOrdersView";
 export { SellerOffersView } from "./SellerOffersView";

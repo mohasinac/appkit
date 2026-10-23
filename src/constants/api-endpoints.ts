@@ -753,6 +753,16 @@ export const SELLER_ENDPOINTS = {
   PRODUCTS: "/api/store/products",
   ORDERS: "/api/store/orders",
   ORDERS_BY_ID: (orderId: string) => `/api/store/orders/${orderId}`,
+  /**
+   * Dispatch — BOTH branches of `shipOrderSchema`'s discriminated union.
+   *
+   * `method: "custom"` records a carrier the seller posted themselves;
+   * `method: "platform"` enqueues a booking through our own account. One
+   * route, because they are one decision — a second endpoint for the
+   * platform branch would be the same handler behind two ceilings, which is
+   * Root Cause #85.
+   */
+  ORDER_SHIP: (orderId: string) => `/api/store/orders/${orderId}/ship`,
   AUCTIONS: "/api/store/products",
   COUPONS: "/api/store/coupons",
   COUPON_BY_ID: (id: string) => `/api/store/coupons/${id}`,
