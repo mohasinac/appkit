@@ -2633,3 +2633,36 @@ export {
   type BookShipmentInput,
   type BookShipmentResult,
 } from "./_internal/server/features/shipping/book";
+
+/*
+ * [SERVER-ONLY] Part 4 — the double-entry books.
+ *
+ * 🛑 The repository is server-only (Firestore), and the posting rules ship
+ * beside it rather than from the main barrel even though they are pure: a
+ * caller who can reach `assertBalanced` without reaching `journalRepository`
+ * can compute a balanced entry and write it some other way, which is exactly
+ * the "every entry is machine-generated through one path" constraint the
+ * whole design rests on. Same stance `assertOwnedAddresses` takes.
+ *
+ * 🛑 The LEDGER IS A PROJECTION. Orders, payouts and expenses are truth —
+ * never read a balance to make an operational decision.
+ */
+export { journalRepository, JournalRepository, JOURNAL_PERIOD_SCAN_LIMIT } from "./features/ledger/repository/journal.repository";
+export {
+  assertBalanced,
+  buildReversal,
+  resolvePostingPeriod,
+  periodOf,
+  UnbalancedEntryError,
+  BALANCE_TOLERANCE,
+  type PostingInput,
+  type BalancedPosting,
+} from "./_internal/shared/features/ledger/posting";
+export {
+  trialBalance,
+  profitAndLoss,
+  signedBalance,
+  type TrialBalance,
+  type ProfitAndLoss,
+  type AccountTotals,
+} from "./_internal/shared/features/ledger/reports";
