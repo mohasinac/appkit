@@ -217,6 +217,68 @@ export const RefundStatusValues = {
 } as const satisfies Record<string, RefundStatus>;
 
 /** Firestore storage shape for an order line item â€" distinct from the API display model OrderItem */
+/**
+ * The PII inside one amendment.
+ *
+ * 🛑 This list exists because `encryptPiiFields` CANNOT cover an array.
+ * `ORDER_PII_FIELDS` names top-level keys and the loop never descends, so an
+ * amendment's `fullName` would be written plaintext and never decrypted —
+ * exactly the trap § "Status History" closed for `statusHistory[].changes`
+ * with `withHistory`'s explicit `piiFields` scrub.
+ *
+ * Declaring it separately is what lets `audit-snapshot-integrity` tell "this
+ * array's PII is handled by a named mechanism" from "nobody noticed".
+ */
+export const AMENDMENT_PII_FIELDS = [
+  "fullName",
+  "phone",
+  "addressLine1",
+  "addressLine2",
+  /* Encrypted on the snapshot as `deliveryLandmark`; the two must agree or the
+   * same datum is protected before a correction and exposed after it. */
+  "landmark",
+] as const;
+
+/**
+ * A correction to the delivery address after the order was placed.
+ *
+ * 🛑 Carries the FULL new address, not a diff. A diff would make the current
+ * address reconstructable only by replaying every entry in order, so one
+ * malformed entry in the middle makes everything after it unreadable — and
+ * the parcel label is produced from the current address.
+ *
+ * PII in here is the same problem as everywhere else: `encryptPiiFields` does
+ * not descend into arrays, so these values are NOT encrypted by that
+ * mechanism. `scrubAmendmentPii` is what handles them; see its header.
+ */
+export interface DeliveryAmendment {
+  at: Date;
+  /** Who asked. `actorRole` distinguishes a buyer correction from a support fix. */
+  actorUid?: string;
+  actorRole: "buyer" | "seller" | "admin" | "system";
+  reason?: string;
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+}
+
+/**
+ * How much seller prose a single order line carries.
+ *
+ * 🛑 A Firestore document caps at 1 MiB and `items[]` is inline on the order.
+ * 2,000 characters × 20 lines is ~40 KB of description — comfortable. The
+ * same field unbounded is a rejected write at checkout, and the checkout is
+ * the one operation in the system that must never fail for a reason the buyer
+ * cannot act on.
+ */
+export const ORDER_ITEM_DESCRIPTION_MAX = 2000;
+
 export interface OrderDocumentItem {
   productId: string;
   productTitle: string;
@@ -304,6 +366,39 @@ export interface OrderDocumentItem {
   /** Which kind of multi-member line produced these rows. */
   groupSource?: "bundle" | "product-group" | "grouped-listing";
   /** P-8 GST — snapshotted from the product at order time so the invoice stays accurate even if the product's HSN/rate later changes. */
+  /*
+   * ── WHAT WAS DESCRIBED (Part 14) ─────────────────────────────────────────
+   *
+   * `condition`, `brand`, `colourway`, `hsnCode`, `gstRate` and `finalSale`
+   * above were already frozen. These three close the remaining gap: a dispute
+   * about *what did I actually buy* otherwise resolves against the LIVE
+   * listing, which the seller can edit after the sale — so "it was described
+   * as sealed" has nothing to point at.
+   */
+  /**
+   * The listing description as it read at purchase.
+   *
+   * 🛑 BOUNDED at `ORDER_ITEM_DESCRIPTION_MAX`, with `descriptionTruncated`
+   * recording that it was cut. A Firestore document caps at 1 MiB and this is
+   * free-form seller prose on every line of every order — an unbounded copy
+   * on a 20-line order is a rejected write AT CHECKOUT, which fails the one
+   * operation that must not fail. Truncation is recorded rather than silent
+   * for the same reason `statusHistoryTruncated` exists: a short description
+   * and a cut one must not read alike.
+   */
+  description?: string;
+  descriptionTruncated?: boolean;
+  /** The spec table as it read at purchase. */
+  specifications?: Array<{ name: string; value: string; unit?: string }>;
+  /**
+   * For a composed listing, the parts it was sold as containing.
+   *
+   * Ids and names only — the part CATALOGUE is a live reference work and
+   * copying its entries onto every order line would duplicate a research
+   * corpus per purchase. What matters for a dispute is which parts were
+   * claimed, not their current catalogue entry.
+   */
+  parts?: Array<{ code: string; name: string }>;
   hsnCode?: string;
   gstRate?: 0 | 5 | 12 | 18 | 28;
   /**
@@ -472,7 +567,94 @@ export interface OrderDocument extends BaseDocument {
   paymentStatus: PaymentStatus;
   paymentId?: string;
   paymentMethod?: string;
+  /**
+   * 🛑 LEGACY. Never written for an order created after Part 14.
+   *
+   * Flat free text with no pincode, no phone and no address id — which is why
+   * `placeOfSupply` had to be written separately rather than derived, and why
+   * parcel booking could not be built at all (`CreateShipmentInput` needs a
+   * structured `{name, phone, addressLine1, city, state, pincode, country}`).
+   *
+   * It is ALSO in `ORDER_UPDATABLE_FIELDS`, so it is editable after the order
+   * — meaning it never recorded what the buyer actually chose. And it was
+   * never encrypted: `ORDER_PII_FIELDS` is `userName` / `userEmail` /
+   * `sellerEmail`, so every delivery address on every order up to now sits in
+   * Firestore in plaintext, despite the docs saying otherwise.
+   *
+   * Read it only as a fallback for orders that predate `deliveryAddress*`,
+   * and render it labelled as legacy. Forward-only; no backfill — parsing a
+   * state out of free text to file a tax return is the thing the
+   * `placeOfSupply` comment below already refuses.
+   */
   shippingAddress?: string;
+
+  /*
+   * ── THE DELIVERY SNAPSHOT (Part 14) ──────────────────────────────────────
+   *
+   * Where the buyer asked this order to go, as they chose it at checkout.
+   *
+   * 🛑 FLAT TOP-LEVEL KEYS, not a nested `deliveryAddress` object, and this is
+   * the whole reason the shape looks clumsy.
+   *
+   * `encryptPiiFields` is a flat top-level loop that never descends — the same
+   * trap § "Status History" documents for `statusHistory[].changes`, where a
+   * value named `buyerName` nested one level down would be stored in plaintext
+   * and never decrypted on the way back out. A nested object here would need
+   * the encryptor taught about nested paths, and an unencrypted nested field
+   * looks IDENTICAL to an encrypted one in every inspection. Flattening cannot
+   * silently half-apply.
+   *
+   * 🛑 These four are IMMUTABLE once written. They record what was chosen at
+   * purchase, which is what the invoice states and what a dispute argues over.
+   * A buyer correcting their address before dispatch writes an entry in
+   * `deliveryAmendments` instead; dispatch reads the latest amendment, the
+   * invoice reads these. Both questions stay answerable.
+   */
+  /** PII — encrypted. See `ORDER_PII_FIELDS`. */
+  deliveryFullName?: Encrypted<string>;
+  /** PII — encrypted. */
+  deliveryPhone?: Encrypted<string>;
+  /** PII — encrypted. */
+  deliveryAddressLine1?: Encrypted<string>;
+  /** PII — encrypted. Optional second line / apartment. */
+  deliveryAddressLine2?: Encrypted<string>;
+  /** PII — encrypted. */
+  deliveryLandmark?: Encrypted<string>;
+  /*
+   * NOT PII and deliberately not encrypted: city, state, pincode and country
+   * are what tax and serviceability are decided from, and both need to be
+   * QUERYABLE. An encrypted pincode cannot be filtered, grouped for a courier
+   * manifest, or read by `placeOfSupply` without a decrypt per row.
+   */
+  deliveryCity?: string;
+  deliveryState?: string;
+  deliveryPincode?: string;
+  deliveryCountry?: string;
+  /**
+   * The `addresses` row this was taken from, for provenance only.
+   *
+   * 🛑 Never resolved at read time. The row can be edited or deleted after the
+   * order, and following it would make the invoice disagree with what the
+   * buyer chose — which is the entire failure a snapshot exists to prevent.
+   */
+  deliveryAddressId?: string;
+
+  /**
+   * Corrections after the fact, newest LAST. Append-only.
+   *
+   * 🛑 Its OWN array, not a passenger on `statusHistory`.
+   *
+   * `statusHistory` caps at 50 with FIFO eviction. Address edits riding that
+   * log would compete with status transitions for the same slots and evict
+   * the thing the timeline exists to show — and on a chatty order the
+   * creation entry goes first, which is precisely the value reconstruction
+   * depends on. The creation snapshot is a FIELD above for the same reason: a
+   * field cannot be truncated.
+   *
+   * Dispatch reads the latest amendment (or the snapshot when there is none).
+   * The invoice always reads the snapshot.
+   */
+  deliveryAmendments?: DeliveryAmendment[];
   trackingNumber?: string;
   notes?: string;
   orderDate: Date;

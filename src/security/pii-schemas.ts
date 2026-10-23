@@ -45,6 +45,28 @@ export const ORDER_PII_FIELDS = [
   "userName",
   "userEmail",
   "sellerEmail",
+  /*
+   * ── The delivery snapshot (Part 14) ──────────────────────────────────────
+   *
+   * 🛑 Flat keys BECAUSE this loop is flat. `encryptPiiFields` never descends,
+   * so a nested `deliveryAddress.fullName` would be written in plaintext and
+   * never decrypted on the way back out — indistinguishable, in any
+   * inspection, from an encrypted one.
+   *
+   * 🛑 `shippingAddress` is deliberately NOT added. It is legacy free text on
+   * existing rows; encrypting the field now would encrypt it on the next
+   * write of an old order while every other old row stays plaintext, giving
+   * one field two formats and no way to tell which a given row holds.
+   * Forward-only means the new fields carry the protection.
+   *
+   * city / state / pincode / country are absent on purpose — they decide tax
+   * and serviceability and must stay QUERYABLE.
+   */
+  "deliveryFullName",
+  "deliveryPhone",
+  "deliveryAddressLine1",
+  "deliveryAddressLine2",
+  "deliveryLandmark",
 ] as const;
 
 /** PII fields in payouts */

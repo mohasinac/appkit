@@ -108,6 +108,10 @@ import {
   getAdminRealtimeDb,
   RTDB_PATHS,
 } from "../../../../providers/db-firebase";
+import {
+  snapshotDeliveryAddress,
+  type DeliverySnapshot,
+} from "../../../shared/features/orders/delivery-snapshot";
 import { PRODUCT_COLLECTION, PRODUCT_CODES_SUBCOLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
@@ -996,7 +1000,13 @@ interface OrderGroupContext {
    * the per-order values sum to exactly what the buyer was shown.
    */
   platformFeeByStore: Map<string, { platformFee: number; gstOnFee: number }>;
+  /** LEGACY free text. Still written so old readers keep working; never read for booking. */
   shippingAddress?: string;
+  /**
+   * The structured, immutable copy of what the buyer chose (Part 14).
+   * Absent for a digital-only cart, which has nowhere to ship to.
+   */
+  deliverySnapshot?: DeliverySnapshot;
   notes?: string;
   adminBypass: boolean;
   adminBypassBy?: string;
@@ -1185,6 +1195,7 @@ async function createOrderForGroup(
     userName,
     userEmail,
     shippingAddress,
+    deliverySnapshot,
     notes,
     adminBypass,
     adminBypassBy,
@@ -1763,6 +1774,12 @@ async function createOrderForGroup(
     displayedUpiId,
     adminBypassBy: adminBypassBy,
     shippingAddress,
+    /*
+     * 🛑 Spread BEFORE `placeOfSupply`, which now prefers the snapshot's
+     * state. Spreading after would let an absent snapshot overwrite a
+     * state the digital-cart fallback had already resolved.
+     */
+    ...(deliverySnapshot ?? {}),
     notes,
     shippingFee: shippingFee > 0 ? shippingFee : undefined,
     depositAmount: adminBypass ? undefined : depositAmount,
@@ -1815,7 +1832,12 @@ async function createOrderForGroup(
      * before, so an order could not state why it was taxed the way it was, and
      * GSTR-1's mandatory place-of-supply column had nothing to read.
      */
-    placeOfSupply: buyerState || undefined,
+    /*
+     * Part 14 — the snapshot's state is authoritative, because it is the
+     * field the invoice and GSTR-1 actually read. `buyerState` stays as
+     * the fallback for a digital cart, which has no delivery address.
+     */
+    placeOfSupply: deliverySnapshot?.deliveryState || buyerState || undefined,
     /* The supplier of record AS IT STANDS NOW. A tax invoice without the
      * supplier's GSTIN is not a tax invoice, and the invoice page cannot read
      * it from site settings — `gst` is in PRIVATE_SITE_FIELDS. See the schema.
@@ -2101,6 +2123,7 @@ export async function createCheckoutOrderAction(
   const isDigitalCart = cartIsDigitalOnly(cartItems);
 
   let shippingAddress: string | undefined;
+  let deliverySnapshot: DeliverySnapshot | undefined;
   let resolvedAddress: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
   if (!isDigitalCart) {
     if (!addressId) {
@@ -2121,6 +2144,15 @@ export async function createCheckoutOrderAction(
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     shippingAddress = formatShippingAddress(resolvedAddress);
+    /*
+     * 🛑 REVEALED first. `findById` returns this PII encrypted, and
+     * `snapshotDeliveryAddress` demands `AddressPlain` precisely so that
+     * freezing `enc:v1:…` onto an invoice is a compile error rather than
+     * something discovered on a printed label.
+     */
+    deliverySnapshot = snapshotDeliveryAddress(
+      unitOfWork.addresses.revealAddress(resolvedAddress),
+    );
   }
 
   const db = getAdminDb();
@@ -2412,6 +2444,7 @@ export async function createCheckoutOrderAction(
     userName,
     userEmail,
     shippingAddress,
+    deliverySnapshot,
     notes,
     adminBypass,
     adminBypassBy,
@@ -3440,7 +3473,13 @@ async function createPhonePeGroupOrder(
     phonepeOrderId?: string;
     /** PhonePe's transaction id for the completed payment attempt, if available. */
     transactionId?: string;
-    shippingAddress?: string;
+  /** LEGACY free text. Still written so old readers keep working; never read for booking. */
+  shippingAddress?: string;
+  /**
+   * The structured, immutable copy of what the buyer chose (Part 14).
+   * Absent for a digital-only cart, which has nowhere to ship to.
+   */
+  deliverySnapshot?: DeliverySnapshot;
     notes?: string;
     outOfStockPolicy: OutOfStockPolicy;
     unavailablePaid: StockBucketResult["unavailable"];
@@ -3888,7 +3927,12 @@ async function createPhonePeGroupOrder(
     // Phase 7 — the place of supply, matching `createOrderForGroup` field for
     // field. This path recorded NONE of the tax breakdown until C0c defect 1,
     // which is precisely why every addition here has to be made twice.
-    placeOfSupply: buyerState || undefined,
+    /*
+     * Part 14 — the snapshot's state is authoritative, because it is the
+     * field the invoice and GSTR-1 actually read. `buyerState` stays as
+     * the fallback for a digital cart, which has no delivery address.
+     */
+    placeOfSupply: deliverySnapshot?.deliveryState || buyerState || undefined,
     // Our registration at the moment of supply — see the schema. Mirrors the
     // COD/UPI path so both produce an invoiceable order.
     supplierGstin: supplier.gstin,
@@ -4190,6 +4234,7 @@ export async function verifyAndPlaceGatewayOrderAction(
   const isDigitalCartPp = cartIsDigitalOnly(settleItems);
 
   let shippingAddress: string | undefined;
+  let deliverySnapshot: DeliverySnapshot | undefined;
   let resolvedAddressPp: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
   if (!isDigitalCartPp) {
     if (!addressId) {
@@ -4204,6 +4249,15 @@ export async function verifyAndPlaceGatewayOrderAction(
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     shippingAddress = formatShippingAddress(resolvedAddressPp);
+    /*
+     * 🛑 REVEALED first. `findById` returns this PII encrypted, and
+     * `snapshotDeliveryAddress` demands `AddressPlain` precisely so that
+     * freezing `enc:v1:…` onto an invoice is a compile error rather than
+     * something discovered on a printed label.
+     */
+    deliverySnapshot = snapshotDeliveryAddress(
+      unitOfWork.addresses.revealAddress(resolvedAddressPp),
+    );
   }
 
   // SB-UNI-5 2026-05-13 — bundle-aware product fetch + validation. Each
