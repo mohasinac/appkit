@@ -14,9 +14,14 @@ import {
   type DisputeKind,
 } from "../../../_internal/shared/features/orders/dispute-reasons";
 import {
+  DISPUTE_REASON_FIELDS,
   DISPUTE_REASON_LABEL_MAX,
   type DisputeReasonDocument,
 } from "../schemas/firestore";
+/* 🛑 The DEFINING module, never `@mohasinac/appkit/client` — in a view that is
+ * fine, but these are the canonical sort helpers and `audit-sieve-constants-views`
+ * is what blocks the raw `"label"` / `"-label"` literals below. */
+import { sortBy } from "../../../constants/sort";
 
 /**
  * Admin → Trust & Safety → Dispute reasons.
@@ -254,7 +259,7 @@ export function AdminDisputeReasonsView({
         subtitle: "What buyers can pick when reporting a problem. A reason's kind decides which gate it inherits — the wording is yours.",
         endpoint: endpoint,
         queryKey: ["admin", "dispute-reasons"],
-        defaultSort: "label",
+        defaultSort: sortBy(DISPUTE_REASON_FIELDS.LABEL, "ASC"),
         /*
          * 🛑 REQUIRED on `ListingViewConfig`, and the default must be one of
          * these or the dropdown opens with nothing selected (Root Cause #63).
@@ -262,9 +267,9 @@ export function AdminDisputeReasonsView({
          * wording and which kind a reason belongs to.
          */
         sortOptions: [
-          { value: "label", label: "Wording (A–Z)" },
-          { value: "-label", label: "Wording (Z–A)" },
-          { value: "kind", label: "Kind" },
+          { value: sortBy(DISPUTE_REASON_FIELDS.LABEL, "ASC"), label: "Wording (A–Z)" },
+          { value: sortBy(DISPUTE_REASON_FIELDS.LABEL, "DESC"), label: "Wording (Z–A)" },
+          { value: sortBy(DISPUTE_REASON_FIELDS.KIND, "ASC"), label: "Kind" },
         ],
         filterKeys: ["scope"],
         filterDefaults: { scope: "active" },
