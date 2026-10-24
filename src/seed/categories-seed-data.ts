@@ -58,6 +58,7 @@ import { buildCategoryTree } from "./_helpers/category-tree";
 import { withCategorySearchTxt } from "./_helpers/search-txt-wrappers";
 import { CATEGORY_FOREST } from "./_helpers/category-forest";
 import { BRAND_ROW_COUNT, buildBrandRows } from "./_helpers/brand-rows";
+import { CHARACTER_ROW_COUNT, buildCharacterRows } from "./_helpers/character-rows";
 import { FRANCHISE_ROW_COUNT, buildFranchiseRows } from "./_helpers/franchise-rows";
 import { MODEL_LEAF_COUNT, MODEL_LEAVES } from "./_helpers/category-models";
 import { PART_LEAF_COUNT, PART_LEAVES } from "./_helpers/category-parts";
@@ -218,6 +219,18 @@ const brandRows: Partial<CategoryDocument>[] = buildBrandRows({
 // Same tier-0, outside-the-forest shape as brands. Seven of the eight are
 // seeded INACTIVE on purpose; see the dead-facet rule in _helpers/franchise-rows.ts.
 const franchiseRows: Partial<CategoryDocument>[] = buildFranchiseRows({
+  createdBy: "user-admin-letitrip",
+  createdAt: daysAgo(300),
+  updatedAt: daysAgo(30),
+});
+
+// CHARACTER rows — WHO USED the bey, the third sibling of brand and franchise:
+// who made it / what it is from / who used it. All 320 are seeded INACTIVE,
+// because no product carries a character slug yet; see the dead-facet rule in
+// _helpers/character-rows.ts, which also records why the owner link cannot be
+// derived by matching bey names (the anime and the product spell them
+// differently — 46% join rate).
+const characterRows: Partial<CategoryDocument>[] = buildCharacterRows({
   createdBy: "user-admin-letitrip",
   createdAt: daysAgo(300),
   updatedAt: daysAgo(30),
@@ -629,6 +642,7 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
   ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...franchiseRows.map((f) => ({ ancestors: [] as any[], ...f, createdByType: "admin" as const })),
+  ...characterRows.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
   ...bundleRows.map((b) => ({ ancestors: [] as any[], ...withBundleMosaic(b) })),
 ]
   .map(withGeneratedContent)
@@ -844,6 +858,11 @@ if (brandRows.length !== BRAND_ROW_COUNT) {
 if (franchiseRows.length !== FRANCHISE_ROW_COUNT) {
   throw new Error(
     `category seed: ${franchiseRows.length} franchise rows built, expected ${FRANCHISE_ROW_COUNT}`,
+  );
+}
+if (characterRows.length !== CHARACTER_ROW_COUNT) {
+  throw new Error(
+    `category seed: ${characterRows.length} character rows built, expected ${CHARACTER_ROW_COUNT}`,
   );
 }
 {

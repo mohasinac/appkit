@@ -74,7 +74,6 @@ const QUERY_LIMIT = 500;
  * uses.
  */
 const ORDERS_COLLECTION = "orders";
-const REVIEWS_COLLECTION = "reviews";
 const PAYOUTS_COLLECTION = "payouts";
 const REPORTS_COLLECTION = "reports";
 const USERS_COLLECTION = "users";

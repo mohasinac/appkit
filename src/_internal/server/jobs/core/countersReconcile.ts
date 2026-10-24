@@ -12,7 +12,6 @@ import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
 import type { JobContext } from "../runtime/types";
 import { QUERY_LIMIT } from "../handlers/messages";
 
-const STORES_COLLECTION = "stores";
 const ORDERS_COLLECTION = "orders";
 /** Page size for the products scan. Bounded reads, unbounded total coverage. */
 const PAGE_SIZE = 500;

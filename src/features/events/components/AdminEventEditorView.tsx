@@ -3,7 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined } from "@mohasinac/appkit/client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import { useQuery } from "@tanstack/react-query";

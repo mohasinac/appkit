@@ -4808,6 +4808,23 @@ export async function verifyAndPlaceGatewayOrderAction(
       phonepeOrderId: gatewayOrder.gatewayOrderId,
       transactionId: gatewayOrder.transactionId,
       shippingAddress,
+      /*
+       * 🛑 Was MISSING until 2026-10-24, and nothing reported it. The snapshot was
+       * computed ~490 lines above with a comment explaining why it must be revealed
+       * first — and then never passed, so every order settled through the gateway
+       * path lost its immutable delivery copy while the COD/UPI path (which calls
+       * `createOrderForGroup` and does pass it) kept one.
+       *
+       * Two consequences, both silent: the invoice address was not frozen at
+       * purchase time (Part 14's whole point), and `placeOfSupply` fell through to
+       * `buyerState` — so the CGST/SGST-vs-IGST split was decided by the buyer's
+       * profile state rather than the address they actually shipped to.
+       *
+       * Root Cause #39's shape exactly: two create paths, one applies a transform
+       * the other does not. Found as an unused-variable warning, which is the only
+       * signal a dropped value ever gives.
+       */
+      deliverySnapshot,
       // For the CGST/SGST vs IGST split. The TOTAL does not depend on it
       // (see createPhonePeGroupOrder), which is what let the pre-payment
       // amount be computed before this address was known.

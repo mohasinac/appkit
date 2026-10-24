@@ -1945,7 +1945,6 @@ export function SellerProductShell({
     useFormShellState(sellerProductSchema, undefined, {
       allowAddAnother: mode === "create",
     });
-  const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
   const { showToast } = useToast();
@@ -2417,9 +2416,19 @@ export function SellerProductShell({
                 </Button>
               </Row>
             </Div>
-            {stepError && (
-              <Text className="text-[var(--appkit-color-error)] px-[1.25rem] pb-[0.75rem]" size="sm">{stepError}</Text>
-            )}
+            {/*
+              🛑 A `stepError` message block used to sit here and was DELETED
+              2026-10-24. `setStepError` had no call site anywhere in the file, so
+              the state could only ever be `null` and this branch could never
+              render — an error surface nothing was able to populate, which reads
+              as "errors are handled here" to anyone extending the form.
+
+              Step and section errors do reach the user: `<FormErrorSummary>` lists
+              them from `FormShellContext` (gated on `submitAttemptCount`, Root
+              Cause #74) and `useFormBottomActions` publishes the same set into the
+              bottom-chrome sheet. Re-add a local message only if there is a real
+              setter for it.
+            */}
           </Div>
         )}
       >

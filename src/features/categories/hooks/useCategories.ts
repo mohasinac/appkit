@@ -51,6 +51,11 @@ export interface CategoriesFilteredParams {
    * Not part of the react-query key, deliberately — the FETCH is the same
    * unfiltered `?flat=true` for every tab, so keying on it would mint five
    * cache entries for one response.
+   *
+   * 🛑 That applies to the QUERY KEY ONLY. It must still be a dependency of the
+   * in-memory filter/sort memo, and omitting it there was a live bug: a tab
+   * change altered nothing else the memo watched, so it returned the previous
+   * tab's rows. Caller supplies it via `useCallback` on the tab key.
    */
   predicate?: (c: CategoryItem) => boolean;
 }
@@ -74,8 +79,58 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
 
   const { page = 1, pageSize = 24, sort = "name", q = "", minProductCount, maxProductCount } = params;
 
+  /*
+   * Every LIVE row in the payload — before any tab partition, search or
+   * pagination. Exposed because a caller that partitions this response into
+   * tabs needs to know whether a tab has anything in it at all, and its own
+   * `categories` slice cannot tell it that (it is one tab's page).
+   *
+   * 🛑 Deliberately NOT narrowed by `q`. A tab bar that loses tabs as the
+   * visitor types is worse than one that keeps a tab whose search found
+   * nothing — the second has an honest empty state, the first makes the
+   * section look deleted.
+   */
+  const allRows = useMemo(() => {
+    const items = query.data ?? [];
+    /*
+     * 🛑 AN INACTIVE ROW IS A DEAD FACET, AND UNTIL 2026-10-24 NOTHING ENFORCED IT.
+     *
+     * `brand-rows.ts` trap 3 states the rule — *"a row with no product is a
+     * DEAD FACET, and worse than absent: it renders as a card in the grid that
+     * opens an empty page"* — and `franchise-rows.ts` claims its seven inactive
+     * rows are therefore *"excluded from the grid and from search"*.
+     *
+     * **They were not.** `GET /api/categories` builds its Sieve string from
+     * `type` / `parentIds` / `isFeatured` / `isBrand` / `showOnHomepage` /
+     * `tier` only, and `useCategoriesFiltered` sends nothing but `flat=true`,
+     * so no layer ever added an `isActive` clause. All seven inactive
+     * franchises have been rendering on the Franchises tab, each one a card
+     * opening an empty page. The promise was in a comment; the mechanism did
+     * not exist (Root Cause #106).
+     *
+     * It surfaced when 320 inactive CHARACTER rows were seeded on the strength
+     * of that promise — seven dead cards is easy to miss, 320 is not.
+     *
+     * 🛑 IN MEMORY, AND ONLY ON AN EXPLICIT `false`. Two reasons, both of which
+     * a server-side clause would get wrong:
+     *
+     *   - A Firestore inequality EXCLUDES every document that lacks the field.
+     *     `isActive` is optional on `CategoryDocument`, so pushing this down
+     *     would hide every row that never set it — which is most of the real
+     *     taxonomy. That is the documented trap in CLAUDE.md's TS-patterns
+     *     table, in the one shape that returns a plausible non-empty list.
+     *   - The same reason `isActive?: boolean` is declared on `CategoryItem` at
+     *     all: absent must mean "live", never "unknown".
+     *
+     * ADMIN IS NOT AFFECTED. `/admin/categories` reads this route through
+     * `useAdminListingData`, not this hook, and must keep seeing inactive rows
+     * — they are what it offers a Status column to flip.
+     */
+    return items.filter((c) => c.isActive !== false);
+  }, [query.data]);
+
   const paginated = useMemo(() => {
-    let items = query.data ?? [];
+    let items = allRows;
     const lq = q.toLowerCase();
     if (lq) items = items.filter((c) => c.name.toLowerCase().includes(lq) || (c.description ?? "").toLowerCase().includes(lq));
     if (params.isBrand === false) items = items.filter((c) => !c.isBrand);
@@ -113,10 +168,32 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
     const slice = items.slice((page - 1) * pageSize, page * pageSize);
     return { items: slice, total, totalPages };
-  }, [query.data, q, sort, page, pageSize, minProductCount, maxProductCount]);
+    /*
+     * 🛑 `params.predicate` BELONGS IN THIS LIST, and leaving it out was a live
+     * bug on the categories index — not a theoretical lint complaint.
+     *
+     * The predicate IS the tab partition. `switchTab` writes only the `tab` URL
+     * param, so on a tab change `q`, `sort`, `page` and `pageSize` are all
+     * unchanged, and the request string is identical for every tab except
+     * brands (the one that sends `isBrand=true`) — so react-query hands back
+     * the SAME `query.data` reference. With the predicate absent from the deps,
+     * nothing in them changed, the memo returned its cached slice, and
+     * **switching Categories → Franchises → Bundles re-rendered the previous
+     * tab's rows.** Only the brands tab worked, by accident, because its query
+     * key differs.
+     *
+     * It is a changing reference by nature, so the call site must `useCallback`
+     * it on the tab key — `CategoriesIndexListing` now does. Were it ever
+     * passed inline again the memo would recompute every render, which is
+     * merely wasteful over ~1,500 in-memory rows and still CORRECT; the
+     * previous behaviour was neither.
+     */
+  }, [allRows, q, sort, page, pageSize, minProductCount, maxProductCount, params.predicate, params.isBrand]);
 
   return {
     categories: paginated.items,
+    /* Every live row, unpartitioned — see `allRows` above. */
+    allRows,
     total: paginated.total,
     totalPages: paginated.totalPages,
     isLoading: query.isLoading,

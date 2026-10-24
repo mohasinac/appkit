@@ -181,7 +181,6 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
   let labelled: ReturnType<typeof labelComponents>;
   let beforeBridge: number;
   let merges = 0;
-  let sameMaterialDropped = 0;
   /*
    * 1 on the art path, where the flood never runs and the question of "was
    * there anything to flood through" does not arise. Reporting 0 there would
@@ -218,7 +217,19 @@ export function segmentSheet(raster: DecodedRaster, params: TraceParams): Segmen
       filtered,
       params.paperTolerance * 2,
     );
-    sameMaterialDropped = Math.round(material.meanScore * 1000);
+    /*
+     * 🛑 `sameMaterialDropped = Math.round(material.meanScore * 1000)` used to sit
+     * here and was removed 2026-10-24: the local was assigned and never read, is
+     * not in the `diagnostics` object this function returns, and is not declared on
+     * that type — so nothing anywhere could observe it.
+     *
+     * The `sameMaterialScore` call above stays, and that distinction is the point:
+     * `material.score` feeds `mergeWeakBoundaries` a few lines down, so the pass is
+     * load-bearing even though that one derived number was not. I deleted the call
+     * first, on a grep for `sameMaterialDropped` rather than for `material` — `tsc`
+     * caught it. Re-add the metric with a declared diagnostics field if it is ever
+     * actually wanted.
+     */
 
     const open = new Uint8Array(width * height);
     for (let i = 0; i < open.length; i++) open[i] = lineBarrier[i] ? 0 : 1;

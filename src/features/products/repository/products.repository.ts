@@ -421,7 +421,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * derived one is the one that goes stale.
      */
     const assignments = readAssignments(input);
-    const leaf = assignments[0] ?? null;
     /*
      * The brand selector's option value is the brand ROW's id (`brand-beyblade`),
      * but `ProductDocument.brand` is matched by DISPLAY NAME —

@@ -260,6 +260,29 @@ export async function runCategoryTaxonomyBackfill(
       }
 
       /*
+       * 🛑 PARTIAL resolution is reported, not acted on — and the distinction is
+       * the reason. `unresolved` was set here and never read until 2026-10-24, so
+       * a product carrying one dangling category id had that id silently dropped
+       * from its closure: exactly the shortening the comment above this loop warns
+       * about ("dropping it would shorten the closure and un-list the product from
+       * a category it is genuinely in").
+       *
+       * It is NOT turned into a skip, because the two causes are indistinguishable
+       * from inside this job: a dangling id may be a category that was legitimately
+       * DELETED, in which case dropping it is the correct repair, or a data error,
+       * in which case writing the short chain is the defect. Skipping would leave
+       * the first case permanently un-repaired; guessing on a job that mutates
+       * every product in a subtree is worse than reporting it.
+       */
+      if (unresolved) {
+        ctx.logger.warn("categoryTaxonomyBackfill: product has unresolvable category ids", {
+          productId: doc.id,
+          assigned: assignments.length,
+          resolved: resolved.length,
+        });
+      }
+
+      /*
        * The default is the DEEPEST assignment, and the tie-break is deliberately
        * NOT consulted here: reading counts per product would be one extra read
        * per row on a job that already pages thousands. A tie therefore falls to

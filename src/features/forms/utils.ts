@@ -1,4 +1,3 @@
-import { joinClasses } from "../../utils/classnames";
 // --- Shared style constants ---------------------------------------------------
 
 export const INPUT_BASE =

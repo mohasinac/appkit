@@ -237,12 +237,24 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
     table.set(TABLE_KEYS.TAB, key);
   };
 
-  const { categories, totalPages, isLoading } = useCategoriesFiltered({
+  const { categories, allRows, totalPages, isLoading } = useCategoriesFiltered({
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     isFeatured: table.get(TABLE_KEYS.IS_FEATURED) === "true" || undefined,
     isBrand: isBrandParam,
-    // The tab partition — applied before pagination inside the hook.
-    predicate: (c) => matchesCategoryTab(c as never, activeTab),
+    /*
+     * The tab partition — applied before pagination inside the hook.
+     *
+     * 🛑 `useCallback` on `activeTab` is REQUIRED, not hygiene. The hook
+     * memoises its filter/sort/slice on this reference; an inline arrow is a
+     * new reference every render, so it would recompute on each one. (The
+     * converse was the actual bug: the predicate was missing from the hook's
+     * dependency list entirely, so a tab change recomputed NOTHING and the
+     * previous tab's rows stayed on screen.)
+     */
+    predicate: useCallback(
+      (c: CategoryItem) => matchesCategoryTab(c as never, activeTab),
+      [activeTab],
+    ),
     rootOnly: table.get("rootOnly") === "true" || undefined,
     tier: getNumericParam(table, "tier"),
     minProductCount: getNumericParam(table, "minItemCount"),
@@ -270,7 +282,44 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
    * navigate. That is also why the items carry `onSelect` rather than `href`,
    * and therefore why `linkProps`/`scroll` do not apply here.
    */
-  const tabItems = CATEGORY_TABS.map((tab) => ({
+  /*
+   * 🛑 A TAB THAT CAN ONLY EVER BE EMPTY IS THE SAME DEAD FACET AS AN EMPTY CARD.
+   *
+   * This index already removed its Parts tab for being "the worse half of two
+   * better homes", and `category-tabs.ts` records that *"every tab answers a
+   * question; 'all' answered none"*. A tab whose answer is always "nothing"
+   * answers none either — it is a labelled promise of content that opens on
+   * "No characters found".
+   *
+   * It became load-bearing the moment 320 character rows were seeded `isActive:
+   * false`: the type is real, the rows exist and resolve, and NOT ONE is live
+   * until a product carries a character slug. Shipping the tab regardless
+   * would have put a permanently empty section in the site's main taxonomy
+   * index — and then quietly filled itself the day someone flipped a flag,
+   * with no second commit needed. That is the behaviour worth having, so the
+   * tab is DERIVED from the payload rather than from a list.
+   *
+   * 🛑 Counted from `allRows` — the whole cached response — never from
+   * `categories`, which is this tab's own paginated slice and would make every
+   * inactive tab hide itself. Root Cause #72 is the trap here ("a 'hide it when
+   * it's empty' rule is only as good as its count map"), and the reason this
+   * version is safe is that there IS no map: both the count and the render
+   * partition one payload through the same `matchesCategoryTab`, so a tab
+   * cannot be uncovered by construction.
+   *
+   * Two rows that must not be collapsed into the count:
+   *   - WHILE LOADING, `allRows` is empty, so every tab would vanish and
+   *     reappear. The bar renders in full until the payload lands.
+   *   - THE ACTIVE TAB IS NEVER HIDDEN. A direct link to `?tab=characters`
+   *     must not leave the visitor on a bar with no selected tab; it shows the
+   *     tab and its honest empty state.
+   */
+  const tabItems = CATEGORY_TABS.filter(
+    (tab) =>
+      isLoading ||
+      tab.key === activeTab ||
+      allRows.some((c) => matchesCategoryTab(c as never, tab.key)),
+  ).map((tab) => ({
     id: tab.key,
     label: tab.label,
     onSelect: () => switchTab(tab.key),
