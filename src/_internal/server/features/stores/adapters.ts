@@ -79,6 +79,23 @@ export const PUBLIC_STORE_FIELDS = [
 /** Everything else, with the reason it stays server-side. */
 export const PRIVATE_STORE_FIELDS = [
   /*
+   * 🛑 `whatsappNotifySubscribed` — a BILLING-BEARING operational flag.
+   *
+   * It records whether this seller opted in to the platform WhatsApp number,
+   * and the gate fails CLOSED on it: absent means not subscribed, because
+   * defaulting a missing flag to true would message customers on behalf of
+   * every seller who never signed up and bill the platform per template.
+   *
+   * A buyer has no use for it — it says nothing about the goods, the price
+   * or the dispatch record. Published, it would also advertise which sellers
+   * can be reached on WhatsApp, which is a channel the platform owns rather
+   * than the seller, and an invitation to contact them off-platform.
+   *
+   * Default-private per this file's own rule: a field is private until
+   * someone can name the client that reads it.
+   */
+  "whatsappNotifySubscribed",
+  /*
    * 🛑 `trustedSeller` — OUR RISK POSTURE, not a badge.
    *
    * It means we pay this store before the parcel is delivered, so the platform

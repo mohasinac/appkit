@@ -602,6 +602,15 @@ export const EVENT_ENDPOINTS = {
     `/api/events/${id}/leaderboard${limit !== undefined ? `?limit=${limit}` : ""}`,
   // SB9-E user spin assignment
   SPIN: (id: string) => `/api/events/${id}/spin`,
+  /**
+   * Likes. POST toggles the viewer's; GET pages the "liked by" list.
+   *
+   * `id` may be a slug — public event URLs link by slug — and the route
+   * resolves it to the canonical document id before keying anything.
+   */
+  LIKES: (id: string) => `/api/events/${id}/likes`,
+  LIKERS: (id: string, offset: number) =>
+    `/api/events/${id}/likes?offset=${offset}`,
   // Lottery: user self-pull (draw happens immediately on submit)
   LOTTERY_PULL: (id: string) => `/api/events/${id}/lottery-pull`,
   LOTTERY_ENTRIES: (id: string) => `/api/events/${id}/lottery-entries`,

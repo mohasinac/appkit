@@ -9,7 +9,7 @@
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { eventLikesRepository } from "../../../../features/events/repository/event-likes.repository";
 import { resolveEventIdAction } from "../raffle/actions";
-import { getEventLikers, type EventLikersPage } from "./likes";
+import { getEventLikers, viewerHasLiked, type EventLikersPage } from "./likes";
 import { NotFoundError } from "../../../../errors";
 import { LIKERS_PAGE_SIZE } from "../../../../features/events/schemas/likes";
 
@@ -45,11 +45,21 @@ export async function toggleEventLikeAction(
   });
 }
 
+/**
+ * One page of likers, plus whether THIS viewer has liked it.
+ *
+ * 🛑 `viewerLiked` rides along here rather than having its own endpoint
+ * because the event page cannot resolve it server-side: that page is
+ * publicly CDN-cached, so a session read there would let one visitor's
+ * state be served to the next (audit-cdn-cache-headers R3). The client
+ * asks once after hydration, and this saves it a second round trip.
+ */
 export async function getEventLikersAction(
   idOrSlug: string,
   offset = 0,
   limit: number = LIKERS_PAGE_SIZE,
-): Promise<ActionResult<EventLikersPage>> {
+  viewerId?: string,
+): Promise<ActionResult<EventLikersPage & { viewerLiked: boolean }>> {
   return wrapAction(async () => {
     const eventId = await canonicalEventId(idOrSlug);
     /*
@@ -59,6 +69,10 @@ export async function getEventLikersAction(
      * lookup per row.
      */
     const safeLimit = Math.min(Math.max(1, limit), LIKERS_PAGE_SIZE);
-    return getEventLikers(eventId, safeLimit, Math.max(0, offset));
+    const [page, viewerLiked] = await Promise.all([
+      getEventLikers(eventId, safeLimit, Math.max(0, offset)),
+      viewerHasLiked(eventId, viewerId),
+    ]);
+    return { ...page, viewerLiked };
   });
 }

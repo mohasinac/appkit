@@ -2241,8 +2241,8 @@ export function AdminSiteSettingsView({
                     </Text>
                     {/*
                       The label is a PROP, not a <Text> above the control. A
-                      <Text> renders a <p>, so the field looks labelled to a
-                      sighted reader and has no accessible name at all.
+                      <Text> renders a paragraph element, so the field looks
+                      labelled to a sighted reader and has no accessible name at all.
                     */}
                     <PaginatedSelect<string>
                       multiple
