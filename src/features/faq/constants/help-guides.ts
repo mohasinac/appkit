@@ -1,3 +1,4 @@
+import { ROUTES } from "../../../next/routing/route-map";
 import type { FAQCategory } from "../types/index";
 
 /**
@@ -20,12 +21,15 @@ import type { FAQCategory } from "../types/index";
  * they get the Help Centre index instead, via `HELP_INDEX_PATH`. Writing a
  * guide to point them at later is a content decision, not a missing entry.
  *
- * 🛑 Paths, not `ROUTES`. The Help Centre pages are consumer routes under
- * `src/app/[locale]/help/`, and `ROUTES` is appkit's own map — adding them
- * there would make appkit declare pages it does not own. They are stable,
- * linked from the footer, and covered by `audit-nav-page-wiring`.
+ * 🛑 CORRECTED 2026-10-24 — this said *"Paths, not `ROUTES`. … `ROUTES` is
+ * appkit's own map — adding them there would make appkit declare pages it does
+ * not own."* The premise was already false when it was written: appkit's route
+ * map has declared `PUBLIC.HELP` and six `HELP_*` children for a long time
+ * (`route-map.ts:97-110`). So the file was hand-writing a literal to avoid
+ * adding something that was already there, and a renamed segment would have
+ * moved the real pages while leaving these guide links on the old path.
  */
-export const HELP_INDEX_PATH = "/help" as const;
+export const HELP_INDEX_PATH = String(ROUTES.PUBLIC.HELP);
 
 /**
  * The orders guide, named once because THREE categories share it.

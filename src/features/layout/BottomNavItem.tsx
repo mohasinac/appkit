@@ -1,4 +1,5 @@
 import React from "react";
+import NextLink from "next/link";
 
 import { Li, Span } from "../../ui";
 
@@ -9,6 +10,14 @@ export interface BottomNavItemProps {
   badge?: number | null;
   isActive?: boolean;
   className?: string;
+  /**
+   * The link component. Defaults to `next/link`, and that default is
+   * load-bearing — see the note at the render below.
+   *
+   * Override it to supply a locale-aware link (`@/i18n/navigation`), never to go
+   * back to a bare anchor. Same contract as `OverflowRow`'s `linkAs`.
+   */
+  linkAs?: React.ElementType;
 }
 
 /**
@@ -36,12 +45,26 @@ export function BottomNavItem({
   badge,
   isActive = false,
   className,
+  linkAs: Link = NextLink,
 }: BottomNavItemProps) {
-  // Use a plain anchor so this component stays framework-agnostic.
-  // Consumer projects may swap for next/link if preferred.
+  /*
+   * 🛑 `next/link`, not a bare `<a>`. This rendered a plain anchor until
+   * 2026-10-24, with two comments in this file contradicting each other about
+   * it — the docstring above said "Renders as `<a>` via Next.js `<Link>`" while
+   * the line below it said "use a plain anchor so this component stays
+   * framework-agnostic". The code did the second, so every tap on the MOBILE
+   * BOTTOM NAV — the primary navigation on a phone — was a full page load, and
+   * the only symptom is a flash.
+   *
+   * "Framework-agnostic" was never the real constraint: `OverflowRow` has
+   * imported `next/link` as its `linkAs` default since it shipped, and
+   * CLAUDE.md records that default as load-bearing for exactly this reason. The
+   * same escape hatch is here, so a consumer can still inject a locale-aware
+   * link.
+   */
   return (
     <Li className="flex-1">
-      <a
+      <Link
         href={href}
         aria-label={label}
         aria-current={isActive ? "page" : undefined}
@@ -63,7 +86,7 @@ export function BottomNavItem({
           )}
         </Span>
         <Span weight="medium" className="text-[10px] leading-none">{label}</Span>
-      </a>
+      </Link>
     </Li>
   );
 }

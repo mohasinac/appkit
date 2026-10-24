@@ -11,6 +11,7 @@ import {
   PosterGrid,
   POSTER_CLASS,
   Section,
+  Anchor,
 } from "../../../ui";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 /* Not re-exported from `ui/index` — import from the defining module (Root Cause #18). */
@@ -56,15 +57,16 @@ function Chip({
   const external = button.target === "_blank" || /^https?:\/\//.test(button.href);
 
   if (external) {
+    /*
+     * 🛑 `<Anchor>`, not a raw `<a>`. It owns the target+rel pair, so an external
+     * link cannot ship `target="_blank"` without `rel="noopener noreferrer"` —
+     * that is a tabnabbing hole, not a style preference. This branch had both
+     * written out by hand and correct; the point is that the next one will not be.
+     */
     return (
-      <a
-        href={button.href}
-        className={className}
-        target={button.target ?? "_blank"}
-        rel="noopener noreferrer"
-      >
+      <Anchor href={button.href} className={className} external target={button.target ?? "_blank"}>
         {button.label}
-      </a>
+      </Anchor>
     );
   }
 

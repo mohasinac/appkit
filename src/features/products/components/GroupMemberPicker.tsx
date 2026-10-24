@@ -35,6 +35,7 @@ import {
   Th,
   Thead,
   Tr,
+  TextLink,
 } from "../../../ui";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { MediaImage } from "../../media/MediaImage";
@@ -304,12 +305,13 @@ export function GroupMemberPicker({
                     </Td>
                   )}
                   <Td padding="xs-tall">
-                    <a
+                    <TextLink
                       href={memberHref(m)}
-                      className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline"
+                      size="xs"
+                      className="text-[var(--appkit-color-primary)] hover:underline"
                     >
                       View →
-                    </a>
+                    </TextLink>
                   </Td>
                 </Tr>
               );

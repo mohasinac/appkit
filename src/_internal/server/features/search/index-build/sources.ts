@@ -163,14 +163,14 @@ export const INDEX_TYPES: readonly SearchIndexType[] = [
   { key: "event", hrefTemplate: ROUTES.PUBLIC.EVENT_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.EVENTS), weight: 0.7 },
   { key: "faq", hrefTemplate: ROUTES.PUBLIC.FAQ_CATEGORY("{s}"), moreHref: String(ROUTES.PUBLIC.FAQS), weight: 0.6 },
   { key: "review", hrefTemplate: ROUTES.PUBLIC.REVIEW_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.REVIEWS), weight: 0.5 },
-  { key: "group", hrefTemplate: "/groups/{s}", moreHref: "/products", weight: 0.5 },
-  { key: "scammer", hrefTemplate: "/scams/{s}", moreHref: "/scams", weight: 0.5 },
+  { key: "group", hrefTemplate: ROUTES.PUBLIC.GROUP_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.PRODUCTS), weight: 0.5 },
+  { key: "scammer", hrefTemplate: ROUTES.PUBLIC.SCAM_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.SCAMS), weight: 0.5 },
   /* `/promotions` has no per-coupon page, so `{s}` is absent on purpose and
    * `hrefFor`'s replace is a no-op. Eleven rows all landing on one page would
    * be noise in the federated GROUP (which is why `search-sources.ts` omits
    * coupons), but in the index it is the difference between a code being
    * findable and not. */
-  { key: "coupon", hrefTemplate: "/promotions", moreHref: "/promotions", weight: 0.4 },
+  { key: "coupon", hrefTemplate: String(ROUTES.PUBLIC.PROMOTIONS), moreHref: String(ROUTES.PUBLIC.PROMOTIONS), weight: 0.4 },
 ];
 
 const facet = (pairs: ReadonlyArray<readonly [string, unknown]>): string | undefined => {
