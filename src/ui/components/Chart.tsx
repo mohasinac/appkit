@@ -145,7 +145,6 @@ function useChartPalette(ref: React.RefObject<HTMLDivElement | null>): ChartPale
 
     if (!series[0] && !warnedMissingStylesheet) {
       warnedMissingStylesheet = true;
-      // eslint-disable-next-line no-console
       console.warn(
         "[appkit] <Chart> found no --chart-* custom properties. " +
           'Import the stylesheet once at your app root: import "@mohasinac/appkit/styles". ' +

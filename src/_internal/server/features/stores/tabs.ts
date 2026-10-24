@@ -29,11 +29,7 @@ import { STORE_PAGE_TABS } from "../../../../features/products/constants/listing
 import { isListingTypeEnabled, isCategoryTypeEnabled } from "../../../shared/listing-types/feature-flags";
 import { pluginFor } from "../../../shared/listing-types/_registry";
 import type { ListingType } from "../../../../features/products/types";
-import {
-  listingTabCounts,
-  type ListingTabCounts,
-  type ListingTabCountResult,
-} from "../products/listing-tab-counts";
+import { listingTabCounts, type ListingTabCountResult } from "../products/listing-tab-counts";
 
 type SiteSettingsSnapshot = Parameters<typeof isListingTypeEnabled>[1];
 

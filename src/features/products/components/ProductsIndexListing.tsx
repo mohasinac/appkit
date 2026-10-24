@@ -14,7 +14,7 @@ import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-d
 import { CompareOverlay } from "./CompareOverlay";
 import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
-import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
+import { ProductGrid, ProductFilters } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { getGuestCartItems } from "../../cart/utils/guest-cart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
@@ -544,7 +544,6 @@ export function ProductsIndexListing({
         )}
 
       </Div>
-
 
       <CompareOverlay
         isOpen={compareIds.length > 0}

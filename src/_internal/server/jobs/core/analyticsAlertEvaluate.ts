@@ -46,7 +46,7 @@ import {
   ProductStatusValues,
   PRODUCT_COLLECTION,
 } from "../../../../features/products/schemas/firestore";
-import { ANALYTICS_ALERTS_COLLECTION } from "../../../../features/store-extensions/schemas/firestore";
+
 import {
   ALERT_METRICS,
   LOW_STOCK_THRESHOLD,

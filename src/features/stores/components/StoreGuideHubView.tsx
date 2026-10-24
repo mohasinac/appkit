@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Package,
-  ShoppingBag,
-  Wallet,
-  Settings,
-  Shield,
-  Headphones,
-  CheckCircle2,
-  Circle,
-  BookOpen,
-  MessageSquare,
-} from "lucide-react";
+import { Package, ShoppingBag, Wallet, Settings, Shield, Headphones, CheckCircle2, Circle, BookOpen } from "lucide-react";
 import { Div, Grid, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import type { SellerStandingSnapshot } from "../types";

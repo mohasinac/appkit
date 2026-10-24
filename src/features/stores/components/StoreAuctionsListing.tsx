@@ -11,8 +11,7 @@ import { AuctionFilters } from "../../auctions/components/AuctionFilters";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushWishlistOp } from "../../cart/utils/pending-ops";
-import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { sortBy } from "../../../constants/sort";
+
 import { AUCTION_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";
 import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
@@ -88,7 +87,6 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
 
     AVAILABILITY_VALUES.AVAILABLE;
-
 
   const params = {
     q: table.get("q") || undefined,

@@ -35,7 +35,6 @@ import type { ProductFeatureProductType } from "../../products/schemas/product-f
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
-import { toUserMessage } from "../../../errors/error-display-map";
 
 /**
  * "bundle" is a categoryType, not a ListingType, so it can't live in
@@ -1488,7 +1487,6 @@ function StepPrintMetaSettings({
 // (create mode) / section (edit mode) — one Record lookup instead of a
 // duplicated 5(+)-way chain in each mode.
 
-
 /*
  * Per-section schemas for the product form.
  *
@@ -1877,7 +1875,6 @@ const EDIT_SECTIONS: FormShellSection[] = [
 ];
 
 // ── Main SellerProductShell ───────────────────────────────────────────────
-
 
 /**
  * The message for a failed save.

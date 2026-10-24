@@ -25,10 +25,7 @@ import {
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
-import {
-  encryptSecret,
-  decryptSecret,
-} from "../../../security/settings-encryption";
+
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import { buildStoreSearchTxt } from "../../../utils/search-txt-builders";

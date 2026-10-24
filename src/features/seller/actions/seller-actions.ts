@@ -13,7 +13,7 @@ import { serverLogger } from "../../../monitoring";
 import { normalizeError } from "../../../errors/normalize";
 import { reconcileOrderShipping } from "../../../_internal/server/features/shipping/reconcile";
 import { enqueueJob } from "../../jobs/actions/enqueue-job";
-import { isAdminUser, isSellerUser, isStrictSellerUser, isTesterUser } from "../../auth/role-predicates";
+import { isAdminUser, isStrictSellerUser, isTesterUser } from "../../auth/role-predicates";
 import {
   ApiError,
   AuthorizationError,
@@ -50,7 +50,7 @@ import {
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
 } from "../../media/finalize";
-import type { UserPlain, UserDocument, SellerPayoutDetails } from "../../auth/schemas/firestore";
+import type { UserPlain, SellerPayoutDetails } from "../../auth/schemas/firestore";
 import type { StoreDocument } from "../../stores/schemas/firestore";
 import { StoreStatusValues } from "../../stores/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";

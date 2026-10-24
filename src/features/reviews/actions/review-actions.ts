@@ -14,7 +14,7 @@ import {
 } from "../../../errors";
 
 import { serverLogger } from "../../../monitoring";
-import { maskPublicReview } from "../../../security";
+
 import {
   finalizeStagedMediaArray,
   finalizeStagedMediaUrl,

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 
-
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import {
   CATEGORY_TABS,
@@ -10,7 +9,7 @@ import {
   type CategoryTabKey,
 } from "../constants/category-tabs";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Button, Div, Grid, ListingFilterDrawer, ListingToolbar, OverflowRow, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div, Grid, ListingFilterDrawer, ListingToolbar, OverflowRow, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";

@@ -13,7 +13,7 @@ import {
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
-import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
 import { AdminFaqEditorView } from "./AdminFaqEditorView";
 import type { AdminTableColumn } from "../types";
 

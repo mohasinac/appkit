@@ -38,7 +38,7 @@ import type {
 import type { EventStatus } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { sortPinnedFirst } from "../utils/sort-pinned";
-import { maskName } from "../../../security/pii-mask";
+
 import type {
   FirebaseSieveResult,
   SieveModel,

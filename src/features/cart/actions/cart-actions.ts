@@ -12,12 +12,7 @@ import { productRepository } from "../../products/repository/products.repository
 import { storeRepository } from "../../stores/repository/store.repository";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import {
-  CART_LANE,
-  activeLane,
-  canAddNewItems,
-  laneOf,
-} from "../../../_internal/shared/checkout/lanes";
+import { CART_LANE, activeLane, canAddNewItems } from "../../../_internal/shared/checkout/lanes";
 import { CART_MAX_ITEMS } from "../../../constants/limits";
 import {
   getExpandedDecrements,
@@ -441,7 +436,6 @@ export async function removeCartItem(
 export async function clearCart(userId: string): Promise<CartDocument> {
   return cartRepository.clearCart(userId);
 }
-
 
 export async function mergeGuestCart(
   userId: string,

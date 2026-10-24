@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
+import { SIEVE_OP, Stack, sieveFilter, type JsonValue } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
 import { FilterChipGroup, Heading, ListingLayout, Span, Text } from "../../../ui";

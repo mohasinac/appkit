@@ -28,19 +28,7 @@
  * @tag sideEffects:none
  */
 
-import type {
-  AnalyticsAlertDocument,
-  AnalyticsCardDocument,
-  ItemRequestDocument,
-  ListingTemplateDocument,
-  ModerationQueueDocument,
-  PayoutMethodDocument,
-  ReportDocument,
-  ShippingConfigDocument,
-  StoreCategoryDocument,
-  StoreGoogleConfigDocument,
-  StoreWhatsAppConfigDocument,
-} from "../features/store-extensions/schemas/firestore";
+import type { AnalyticsAlertDocument, AnalyticsCardDocument, ItemRequestDocument, ListingTemplateDocument, ModerationQueueDocument, PayoutMethodDocument, ReportDocument, ShippingConfigDocument, StoreCategoryDocument, StoreGoogleConfigDocument } from "../features/store-extensions/schemas/firestore";
 
 // ───── payoutMethods (empty — production has none) ──────────────────────────────────────────
 export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [];

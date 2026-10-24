@@ -38,12 +38,7 @@ import {
   resolvePublishedCopy,
   resolvePublishedValues,
 } from "../../../_internal/shared/content/published-values";
-import {
-  RETURN_REASON_LABEL,
-  selectableReturnReasons,
-  isFinalSaleExempt,
-  type ReturnReason,
-} from "../../../_internal/shared/features/orders/return-reasons";
+import { RETURN_REASON_LABEL, selectableReturnReasons, type ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { Order } from "../types";
 import { normalizeError } from "../../../errors/normalize";

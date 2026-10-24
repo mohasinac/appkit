@@ -3,7 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
-import { Button, Checkbox, Code, ConfirmDeleteModal, Div, FormField, Grid, Heading, Input, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
+import { Button, Checkbox, Code, ConfirmDeleteModal, Div, Grid, Heading, Input, Modal, Row, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
 import { FormShellContext, useFormShellState, FormErrorSummary } from "../../../ui/forms";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import type { GroupRules } from "../../../_internal/shared/features/products/group-rules";

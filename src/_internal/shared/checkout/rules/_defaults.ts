@@ -8,7 +8,6 @@ import type {
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
-import { STANDARD_MAX_QTY_PER_LINE } from "./_limits";
 
 export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
   purchaseable: true,

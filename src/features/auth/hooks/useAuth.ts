@@ -10,10 +10,7 @@ import { apiClient } from "../../../http";
 import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
-import {
-  AUTH_ENDPOINTS,
-  ACCOUNT_ENDPOINTS,
-} from "../../../constants/api-endpoints";
+import { AUTH_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseCurrentUserOptions {
   initialData?: AuthUser | null;

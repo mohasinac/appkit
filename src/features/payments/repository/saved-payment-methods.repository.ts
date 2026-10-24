@@ -13,11 +13,7 @@ import { createHash } from "crypto";
 import { normalizeError } from "../../../errors/normalize";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
-import {
-  BaseRepository,
-  prepareForFirestore,
-  type DocumentSnapshot,
-} from "../../../providers/db-firebase";
+import { BaseRepository, prepareForFirestore } from "../../../providers/db-firebase";
 import {
   PAYMENT_METHOD_PII_FIELDS,
   encryptPiiFields,

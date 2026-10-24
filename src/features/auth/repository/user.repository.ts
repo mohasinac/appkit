@@ -2,7 +2,6 @@ import { normalizeError } from "../../../errors/normalize";
 import { buildTokensIndex } from "../../../security/blind-index-tokens";
 import type { JsonValue } from "../../../schemas/types";
 
-import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
@@ -199,7 +198,6 @@ export class UserRepository extends BaseRepository<UserDocument> {
     if (access.shippingConfig) access.shippingConfig = encryptShippingConfig(access.shippingConfig);
     return out;
   }
-
 
   /*
    * Takes PLAINTEXT, like the base it overrides — the three real signup paths

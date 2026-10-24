@@ -14,7 +14,7 @@ import {
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
-import type { DocumentReference, WriteResult } from "firebase-admin/firestore";
+import type { DocumentReference } from "firebase-admin/firestore";
 import type {
   PayoutDocument,
   PayoutPlain,

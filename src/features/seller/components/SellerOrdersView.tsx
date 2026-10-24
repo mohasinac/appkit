@@ -18,7 +18,7 @@ import { Eye, ExternalLink, Printer, MapPin, Truck } from "lucide-react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
-import { Badge, Button, Div, FilterChipGroup, Heading, Input, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
@@ -1139,7 +1139,6 @@ export function SellerOrdersView({
   ];
 
   const orderScope = useOrderScope();
-
 
   const config: ListingViewConfig<SellerOrdersResponse, OrderRow> = {
     portal: "seller",

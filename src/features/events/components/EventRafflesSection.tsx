@@ -7,7 +7,7 @@ import { serverLogger } from "../../../monitoring/server-logger";
 // this section silently rendered nothing instead of failing loudly.
 import { sieveFilter, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
 import { sortBy } from "../../../constants/sort";
-import { Container, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
+import { Container, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import type { EventRafflesSectionConfig } from "../../homepage/schemas/firestore";
 import { eventRepository } from "../repository/events.repository";
 import { EventCard } from "./EventCard";

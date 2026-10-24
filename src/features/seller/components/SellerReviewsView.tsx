@@ -17,7 +17,7 @@ import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { useQueryClient } from "@tanstack/react-query";
-import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
+import { Alert, Badge, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";

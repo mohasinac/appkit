@@ -7,8 +7,7 @@ import { Div, FilterDrawer, Grid, ListingToolbar, Pagination, Row, Stack, Text, 
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { ROUTES } from "../../../next/routing/route-map";
-import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { sortBy } from "../../../constants/sort";
+
 import { PREORDER_PUBLIC_SORT_OPTIONS } from "../../products/constants/sieve";
 import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
@@ -77,7 +76,6 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
 
     AVAILABILITY_VALUES.AVAILABLE;
-
 
   const params = {
     q: table.get("q") || undefined,

@@ -7,7 +7,7 @@ import type { DocumentSnapshot } from "../../../providers/db-firebase";
 // which is the one `mapToHttpError` instanceof-checks to produce a 400. The
 // unrelated same-named class under `_internal/shared/errors` falls through every
 // classified branch to a generic 500 — Root Cause #53.
-import { DatabaseError, ValidationError } from "../../../errors";
+import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -164,7 +164,6 @@ function buildListingKindClause(
   const op = inverted ? "!=" : "==";
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
-
 
 /**
  * Fill an SEO template's slots from what the write actually carries.
@@ -955,7 +954,6 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       out.seoKeywords = merged;
     }
   }
-
 
   /**
    * The keys whose presence means a write could change the product's taxonomy.

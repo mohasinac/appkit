@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Heading, Main, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";

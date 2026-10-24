@@ -11,7 +11,7 @@ import { NotFoundError } from "../../../errors";
 import { filterTestDataForViewer, filterSingleTestData, type ViewerLike } from "../../../_internal/server/features/tester/visibility";
 
 const ERR_STORE_NOT_FOUND = "Store not found";
-import { maskPublicReview } from "../../../security";
+
 import { storeRepository } from "../repository/store.repository";
 import { STORE_FIELDS } from "../schemas";
 import { productRepository } from "../../products/repository/products.repository";

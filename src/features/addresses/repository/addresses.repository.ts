@@ -14,12 +14,7 @@ import type { JsonValue } from "../../../schemas/types";
 
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
-import {
-  BaseRepository,
-  getFirestoreCount,
-  prepareForFirestore,
-  type DocumentSnapshot,
-} from "../../../providers/db-firebase";
+import { BaseRepository, getFirestoreCount, prepareForFirestore } from "../../../providers/db-firebase";
 import {
   maskPii,
   revealPii,
@@ -41,7 +36,6 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
   constructor() {
     super(ADDRESSES_COLLECTION);
   }
-
 
   /**
    * Declared, not hand-rolled.

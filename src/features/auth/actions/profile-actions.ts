@@ -7,7 +7,6 @@
 
 import { cache } from "react";
 
-import { maskPublicReview } from "../../../security";
 import { safeRead } from "../../../errors/safe-read";
 import { finalizeStagedMediaField } from "../../media/finalize";
 import { userRepository } from "../repository/user.repository";

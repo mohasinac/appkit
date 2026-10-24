@@ -1,14 +1,10 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
-import { sortBy } from "../../../constants/sort";
-import { CATEGORY_FIELDS } from "../../../constants/field-names";
+
 import React from "react";
-import { categoriesRepository } from "../../../repositories";
+
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
-import type { CategoryItem } from "../types";
-import { safeRead } from "../../../errors/safe-read";
-import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 
 type SearchParams = Record<string, string | string[]>;
 

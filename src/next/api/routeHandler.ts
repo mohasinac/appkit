@@ -38,7 +38,7 @@ import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
 import { userRepository } from "../../repositories";
 import { SCHEMAS } from "../../schemas/registry";
-import type { RegisteredApiRouteKey } from "../../schemas/registry";
+
 import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";
 
 /** Minimal schema interface compatible with Zod v3 and v4. */

@@ -1,6 +1,6 @@
-import { Row } from "@mohasinac/appkit/ui";
+
 import React from "react";
-import { Anchor, RichText, SpecTable, Stack, Text } from "../../../ui";
+import { RichText, SpecTable, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 

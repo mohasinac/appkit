@@ -8,7 +8,7 @@ import { createResendProvider } from "../../../providers/email-resend/provider";
 import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
 import { enqueueJob } from "../../jobs/actions/enqueue-job";
 import { serverLogger } from "../../../monitoring";
-import { decryptPii } from "../../../security/index";
+
 import type { NotificationDocument, NotificationCreateInput } from "../schemas";
 import type { NotificationTypePrefs } from "../../account/types";
 import type { SiteSettingsCredentials } from "../schemas/firestore";
@@ -208,7 +208,6 @@ export interface SendNotificationInput extends NotificationCreateInput {
    */
   eligibilityOverride?: "staff_requested";
 }
-
 
 export interface SendNotificationResult {
   notification: NotificationDocument;

@@ -18,7 +18,7 @@
  * @tag sideEffects:none
  */
 
-import type { AddressDocument, AddressPlain } from "../features/addresses/schemas/firestore";
+import type { AddressPlain } from "../features/addresses/schemas/firestore";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);

@@ -308,13 +308,11 @@ export function RichText({
       {segments.map((seg, i) =>
         seg.type === "html" ? (
           <div
-            // eslint-disable-next-line react/no-array-index-key
             key={`h${i}`}
             className="appkit-rich-text__seg"
             dangerouslySetInnerHTML={{ __html: seg.html }}
           />
         ) : (
-          // eslint-disable-next-line react/no-array-index-key
           <ChartFromJson key={`c${i}`} json={seg.json} />
         ),
       )}

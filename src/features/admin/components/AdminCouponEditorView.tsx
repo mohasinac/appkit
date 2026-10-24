@@ -1,7 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";

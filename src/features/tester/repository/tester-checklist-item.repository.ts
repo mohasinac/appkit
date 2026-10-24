@@ -2,7 +2,7 @@ import { BaseRepository, parseSieveDateValue } from "../../../providers/db-fireb
 import { buildSearchTxt } from "../../../utils/search-txt";
 import type { FirebaseSieveFields, FirebaseSieveResult, SieveModel } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
-import { USER_COLLECTION } from "../../auth/schemas/firestore";
+
 import {
   TESTER_CHECKLIST_ITEM_COLLECTION,
   TESTER_CHECKLIST_ITEM_FIELDS,

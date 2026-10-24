@@ -48,7 +48,7 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { serverLogger } from "../../../../monitoring";
-import type { OrderRefundEvent, RefundType } from "../../../../features/orders/schemas";
+import type { OrderRefundEvent } from "../../../../features/orders/schemas";
 import {
   isFinalSaleExempt,
   RETURN_REASON_LABEL,
@@ -508,7 +508,6 @@ export async function processRefundAction(
       if (settledOrder && settledEvent) {
         await issueCreditNoteForRefund(settledOrder, settledEvent);
       }
-
 
       // SB-UNI-N — revoke any available (unclaimed) digital codes linked to this order.
       revokeAvailableDigitalCodes(input.orderId, digitalCodeItems);

@@ -10,7 +10,7 @@
 import { useState } from "react";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Form, FormActions, Input, Modal, useToast } from "../../../ui";
+import { Button, Form, FormActions, Modal, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { payoutMarkPaidSchema } from "../schemas/small-forms";

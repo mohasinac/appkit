@@ -21,7 +21,7 @@ import {
 import { sieveAnd, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import type { JsonValue } from "../../../schemas/types";
 import { maskPii, revealPii } from "../../../security/pii-accessors";
-import type { DocumentSnapshot } from "firebase-admin/firestore";
+
 import {
   SUPPORT_TICKET_COLLECTION,
   SUPPORT_TICKET_PII_FIELDS,

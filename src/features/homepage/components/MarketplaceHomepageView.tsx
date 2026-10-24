@@ -65,7 +65,7 @@ import type {
 } from "../schemas";
 import type { CarouselSlide } from "../types/index";
 import type { ProductItem } from "../../products/types";
-import type { StoreListItem } from "../../stores/types";
+
 import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";

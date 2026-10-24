@@ -23,23 +23,8 @@ import type { EmailOptions, IEmailProvider } from "../../contracts/email";
 import { createResendProvider } from "../../providers/email-resend/provider";
 import { siteSettingsRepository } from "../admin/repository/site-settings.repository";
 import { serverLogger } from "../../monitoring";
-import {
-  currentYear,
-  formatCurrency,
-  formatDateTime,
-  nowMs,
-} from "../../utils";
-import {
-  EmailBold,
-  EmailButton,
-  EmailContainer,
-  EmailDivider,
-  EmailDoc,
-  EmailFooter,
-  EmailHeader,
-  EmailLink,
-  EmailRow,
-} from "../email/primitives";
+import { currentYear, formatCurrency } from "../../utils";
+import { EmailBold, EmailButton, EmailContainer, EmailDivider, EmailDoc, EmailFooter, EmailHeader, EmailRow } from "../email/primitives";
 
 /*
  * Derived from the provider contract rather than re-declared beside it. The

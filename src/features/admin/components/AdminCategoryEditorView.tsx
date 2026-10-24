@@ -4,7 +4,7 @@ import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Button, Card, CardBody, ConfirmDeleteModal, Div, Input, PaginatedSelect, Select, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
+import { Card, CardBody, ConfirmDeleteModal, Div, Input, PaginatedSelect, Select, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
 import { usedPlaceholders } from "../../../_internal/shared/templating/placeholders";
 import type { CategoryProductDefaults, CategoryPriceGuidance } from "../../categories/schemas/category-content";
 import type { StackedViewShellProps } from "../../../ui";
@@ -1131,7 +1131,6 @@ export function AdminCategoryEditorView({
       />
     </FormShellContext.Provider>
   );
-
 
   if (embedded) {
     return <Div className={`${__O.yAuto} ${__P.p4}`}>{formContent}</Div>;

@@ -1,18 +1,5 @@
 import React from "react";
-import {
-  Users,
-  Package,
-  Store,
-  ShoppingBag,
-  FileText,
-  Settings,
-  Shield,
-  BarChart2,
-  AlertTriangle,
-  BookOpen,
-  MessageSquare,
-  CreditCard,
-} from "lucide-react";
+import { Users, Package, Store, ShoppingBag, FileText, Settings, Shield, BarChart2, AlertTriangle, BookOpen, CreditCard } from "lucide-react";
 import { Alert, Div, Grid, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 

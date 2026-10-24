@@ -1,5 +1,5 @@
-import type { DocumentSnapshot } from "firebase-admin/firestore";
-import { decryptPiiFields } from "../../../security/pii-encrypt";
+
+
 /**
  * Personal Catalogue Repository (Feature B).
  */
@@ -11,17 +11,7 @@ import {
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
-import {
-  CATALOGUE_COLLECTION,
-  CATALOGUE_FIELDS,
-  CATALOGUE_TRACKED_FIELDS,
-  CATALOGUE_HISTORY_PII_FIELDS,
-  createCatalogueItemId,
-  type CatalogueItemDocument,
-  type CatalogueItemPlain,
-  type CatalogueItemCreateInput,
-  type CatalogueItemUpdateInput,
-} from "../schemas/firestore";
+import { CATALOGUE_COLLECTION, CATALOGUE_FIELDS, CATALOGUE_TRACKED_FIELDS, CATALOGUE_HISTORY_PII_FIELDS, createCatalogueItemId, type CatalogueItemDocument, type CatalogueItemCreateInput, type CatalogueItemUpdateInput } from "../schemas/firestore";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import type { FirestoreDocument } from "../../../schemas/types";
 

@@ -9,7 +9,7 @@ import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, Text, Textarea, useToast } from "../../../ui";
+import { Button, Div, Label, SideDrawer, Stack, Text, Textarea, useToast } from "../../../ui";
 import { MediaImage } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

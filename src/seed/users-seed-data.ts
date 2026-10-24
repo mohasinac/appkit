@@ -20,7 +20,7 @@
  */
 
 import { getDefaultPhonePrefix } from "./seed-market-config";
-import type { UserDocument, UserPlain } from "../features/auth/schemas";
+import type { UserPlain } from "../features/auth/schemas";
 import { PERMISSION_GROUPS } from "../features/auth/permissions/constants";
 import { USER_FIELDS } from "../constants/field-names";
 import { seedPhoto } from "./_helpers/media";

@@ -3,7 +3,7 @@
 // a client-reference proxy and calling it throws during the server render
 // (Root Cause #18). That is exactly what took `section-prize-draws` down.
 import { sortBy } from "../../../constants/sort";
-import { Container, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
+import { Container, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";

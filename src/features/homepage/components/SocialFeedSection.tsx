@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { safeRead } from "../../../errors/safe-read";
-import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Row, Section, Stack, Text } from "../../../ui";
+import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Section, Stack, Text } from "../../../ui";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,

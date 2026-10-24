@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Alert, Button, Div, Heading, Row, SiteMark, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
-import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
+
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { loginSchema } from "../schemas";
 import { SocialAuthButtons } from "./SocialAuthButtons";

@@ -4,7 +4,6 @@ import { normalizeError } from "../../../errors/normalize";
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
 import { Badge, Button, Div, FilterChipGroup, RecordDetailModal, Span, Text, useToast } from "../../../ui";
 import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";

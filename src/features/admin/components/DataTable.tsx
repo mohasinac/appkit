@@ -6,8 +6,8 @@ import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { renderStatusBadge, renderThumbnail } from "../../../ui/columns/cell-renderers";
 import { resolveColumnPriority } from "../../../ui/columns/build-columns";
-import { COLUMN_PRIORITY_CLASS, COLUMN_PRIORITY_CLASS_BLOCK } from "../../../contracts/extend";
-import { MediaImage } from "../../media/MediaImage";
+import { COLUMN_PRIORITY_CLASS } from "../../../contracts/extend";
+
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {

@@ -14,7 +14,7 @@ import {
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ProductDraftFields } from "../../shipments/schemas/firestore";
-import type { Encrypted, Plaintext } from "../../../security/encrypted";
+import type { Plaintext } from "../../../security/encrypted";
 
 export const CATALOGUE_COLLECTION = "catalogueItems" as const;
 
@@ -97,7 +97,6 @@ export type CatalogueItemUpdateInput = Partial<
 export function createCatalogueItemId(input: GenerateCatalogueItemIdInput): string {
   return generateCatalogueItemId(input);
 }
-
 
 /** The fields whose changes earn a timeline entry. */
 export const CATALOGUE_TRACKED_FIELDS = [

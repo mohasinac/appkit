@@ -12,10 +12,7 @@
  * `scripts/audit-public-projection-parity.mjs`. Adding a field here without a
  * proven client reader is how the endpoint drifted in the first place.
  */
-import type {
-  NotificationChannelConfig,
-  SiteSettingsDocument,
-} from "../../../../features/admin/schemas/firestore";
+import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
 
 /** The only notification-channel facts a browser is given: is each channel on. */

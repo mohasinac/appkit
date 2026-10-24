@@ -28,7 +28,7 @@ import {
   addressesRepository,
   productRepository,
 } from "../../../../repositories";
-import { calculateGst, isIntraStateSupply } from "../../../shared/fees/calculator";
+import { isIntraStateSupply } from "../../../shared/fees/calculator";
 import { resolveStateKey, INDIA_STATES } from "../../../shared/fees/india-states";
 import {
   allocatePointsAcrossGroups,
@@ -145,9 +145,9 @@ import type { PhonePeCheckoutIntent } from "../../../../providers/payment-phonep
  */
 import { verifyPaymentSignature as verifyRazorpayPaymentSignature } from "../../../../providers/payment-razorpay/signature";
 import { resolveKeys } from "../../../../core/integration-keys";
-import { rupeesToPaise, paiseToRupees } from "../../../../core/money";
+import { paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
-import { checkEmiEligibility, computeBuyerEmiQuote, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
+import { type EmiSettings } from "../../../shared/features/emi/schedule";
 import { emiTenderFor, resolveEmiChoice } from "../../../shared/features/emi/choice";
 import {
   amountDueNow,
