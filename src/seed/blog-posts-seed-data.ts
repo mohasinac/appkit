@@ -1,19 +1,40 @@
 /*
  * WHY: Seeds 23 blog posts for LetItRip collectibles marketplace — content/SEO testing across all categories.
- * WHAT: 20 published + 2 draft + 1 archived. Mix of Beyblade-specific, broader collectibles (Pokémon, Hot Wheels,
- *       Gundam, Funko), marketplace guides, and community stories.
+ * WHAT: 16 published + 2 draft + 7 archived. Beyblade-specific, plus
+ *       marketplace guides and community stories.
  *
- * 🛑 The three shipping guides (volumetric-weight-explained,
- * india-post-vs-private-courier, importing-collectibles-from-japan) reference
- * SIX image slots that are not yet in either fetch manifest, so they resolve to
- * /media/<key> with no mediaAssets row and serve 404 — rendering as an ordinary
- * broken image, which is the failure mode that hid 504 orphaned covers for
- * three days. Register them in scripts/fetch-vertical-item-images.mjs (or the
- * editorial manifest) and run the push pipeline before treating these three as
- * publishable:
+ * 🛑 Six posts on categories with ZERO stock (Hot Wheels, Gundam x2, Funko,
+ * Pokémon, Tomica) were ARCHIVED 2026-10-24, not deleted. They averaged 131
+ * words and described merchandise this site does not sell, which dilutes the
+ * topical signal for a catalogue that is 100% Beyblade — the site ranks ~21st
+ * for "beyblade india" and every off-topic page spends crawl budget arguing
+ * it is something else. Archived rather than deleted so the copy survives if
+ * the catalogue ever widens.
+ *
+ * 🛑 RESOLVED 2026-10-24 — the three shipping guides no longer carry a cover.
+ *
+ * They referenced image slots with no `mediaAssets` row, so each resolved to
+ * /media/<key> and served 404, rendering as an ordinary broken image — the
+ * same failure mode that hid 504 orphaned covers for three days, and one that
+ * no audit or log can see because a broken image is not an error anywhere.
+ *
+ * The covers are REMOVED rather than remapped: a post with no image reads
+ * fine, a post with a broken image reads as neglected, and these three are
+ * the strongest content on the site (2,312 / 563 / 505 words, India-specific,
+ * on BIS, duty, volumetric weight and the 2027 EMS rise). Pointing them at an
+ * unrelated category cover to fill the slot would be worse than empty.
+ *
+ * To restore them, register the slug in the editorial manifest, run the push
+ * pipeline so a `mediaAssets` row exists, THEN re-add `coverImage` — in that
+ * order. The row is what makes `/media/<slug>` resolve; adding the field
+ * first just recreates the 404.
+ *
+ * Previously referenced, all still unregistered:
  *   blog-cover-volumetric-weight      blog-content-measuring-parcel
  *   blog-cover-india-post-vs-courier  blog-content-parcel-handover
  *   blog-cover-importing-from-japan   blog-content-customs-paperwork
+ * (only the three covers were ever actually used; the three content slots
+ * appear in this comment and nowhere else.)
  *
  * EXPORTS:
  *   blogPostsSeedData — Array of Partial<BlogPostDocument> for seed runner
@@ -167,7 +188,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "guides",
     tags: ["hot-wheels", "diecast", "collecting", "beginners", "treasure-hunt"],
     isFeatured: true,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(18),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
@@ -190,7 +211,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "guides",
     tags: ["gundam", "bandai", "model-kits", "hg", "mg", "rg", "pg"],
     isFeatured: false,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(12),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
@@ -230,7 +251,6 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     slug: "volumetric-weight-explained",
     excerpt: "Your parcel is billed on whichever is greater — its weight or its size. For collectibles, which are mostly air, that single rule decides the shipping bill more than any rate card does.",
     content: `<p>A boxed Beyblade stadium weighs about 1.5&nbsp;kg on a kitchen scale. Ship it with almost any private courier in India and you will be billed for <strong>7.3&nbsp;kg</strong>. Nothing is wrong with the scale, and nobody is overcharging you — you are being billed on <em>volumetric weight</em>, and for collectibles it is the single biggest factor in what shipping costs.</p><h2>How volumetric weight works</h2><p>Couriers sell space in a vehicle, not mass. A box full of foam and a box full of bolts take the same room, so carriers bill whichever is greater: the actual weight, or the volume converted into a weight using a fixed divisor.</p><p>The formula is length × width × height in centimetres, divided by a number — usually 5000:</p><p><strong>45 × 45 × 18 = 36,450 cm³ ÷ 5000 = 7.3&nbsp;kg</strong></p><figure data-chart='{"kind":"groupedBar","title":"Chargeable weight by parcel type","categories":["Single bey","Launcher set","Stadium","Bulk lot"],"series":[{"label":"India Post (actual)","values":[0.25,0.9,1.5,8]},{"label":"Private (volumetric)","values":[0.5,1.6,7.3,14]}],"unit":"kg","caption":"What each carrier bills you for, at a ÷5000 divisor. The stadium is the same box in both columns — only the rule for measuring it changes."}'></figure><h2>The divisor is the number to ask about</h2><p>It is not always 5000, and the difference is real money:</p><ul><li><strong>÷5000</strong> — the common standard for express and most surface services.</li><li><strong>÷4000</strong> — used by some Indian surface plans. On the same box that is a 25% higher bill, and it is almost never printed on the front of the rate card.</li><li><strong>÷6000</strong> — typical for air cargo, which means a very light bulky box can genuinely be <em>cheaper</em> to send by air than by surface.</li></ul><h2>India Post is the exception</h2><p>India Post Speed Post bills <strong>actual weight only</strong>. It does not apply a volumetric calculation at all. That is why a stadium that bills at 7.3&nbsp;kg with a private courier bills at 1.5&nbsp;kg with Speed Post — and no amount of negotiating with a courier closes that gap, because it is a difference in what gets measured, not in the price per kilo.</p><h2>The quick test: is your box mostly air?</h2><p>Work out the density. If your parcel comes in under roughly <strong>200&nbsp;kg per cubic metre</strong>, volumetric weight is what you will be billed on. For reference, a stadium box is around 40&nbsp;kg/m³ — about a fifth of the threshold.</p><p>A faster version of the same check: divide the volumetric weight by the actual weight. Under 1.5 and the two are close enough that the rate card decides. At 2 or above, the box is mostly air and it is worth asking for a postal service instead.</p><h2>What you can actually do about it</h2><ul><li><strong>Right-size the box.</strong> Dropping each dimension by 3&nbsp;cm on a 45&nbsp;cm cube removes nearly a third of the volume. Air inside the box is the most expensive thing in the parcel.</li><li><strong>Use fill, not a bigger box.</strong> Paper and air pillows weigh almost nothing and let you pack down a size.</li><li><strong>Ship flat where you can.</strong> Launchers, cards and sheets in a flat mailer beat the same contents in a cube.</li><li><strong>Combine orders.</strong> Two parcels each pay a first-slab charge; one slightly larger parcel pays it once.</li></ul><p>None of this is a trick — it is just that for collectibles, packing well is worth more than shopping for a cheaper per-kilo rate.</p>`,
-    coverImage: { type: "image", url: editorialImage("blog-cover-volumetric-weight"), alt: "A cardboard parcel being measured with a tape measure" },
     category: "guides",
     tags: ["shipping", "volumetric-weight", "packing", "india-post", "courier"],
     isFeatured: true,
@@ -253,7 +273,6 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     slug: "india-post-vs-private-courier",
     excerpt: "Neither one wins outright. Speed Post is usually cheaper for bulky items and reaches every pincode; private couriers are faster, better tracked, and insurable. Here is how to pick per parcel.",
     content: `<p>Sellers ask us this constantly, and the honest answer is that it depends on the parcel rather than on the carrier. The two services are good at different things, and the cheapest choice for a boxed stadium is the wrong choice for a sealed vintage top.</p><h2>Where India Post wins</h2><ul><li><strong>Bulky, light parcels.</strong> Speed Post bills actual weight and ignores volume entirely — see our <a href="/blog/volumetric-weight-explained">guide to volumetric weight</a>. On a stadium-sized box this is not a small saving.</li><li><strong>Reach.</strong> Every pincode in the country, with no out-of-delivery-area surcharge. Private carriers either add a remote-area fee or simply decline the address.</li><li><strong>Low-value orders.</strong> On a ₹300 parcel, an inexpensive postal service is proportionate. Paying for premium handling on a low-value item rarely makes sense for either side.</li></ul><h2>Where a private courier wins</h2><ul><li><strong>Predictability.</strong> The useful question is not average transit time but the <em>spread</em>. Private networks have narrower, more dependable windows and someone to escalate to when a parcel stalls.</li><li><strong>Tracking that updates.</strong> Scan-by-scan visibility, which matters when a buyer is waiting on something expensive.</li><li><strong>Insurance you can claim.</strong> Declared-value cover with a process that settles. For anything above a few thousand rupees this is the deciding factor, not the freight.</li><li><strong>Proof of delivery.</strong> Signature capture, which protects both sides if an order is disputed.</li><li><strong>Doorstep pickup.</strong> Scheduled collection rather than a trip to the counter.</li></ul><figure data-chart='{"kind":"groupedBar","title":"Indicative freight by parcel type","categories":["Single bey","Launcher set","Stadium","Bulk lot"],"series":[{"label":"India Post","values":[106,165,224,991]},{"label":"Private courier","values":[50,177,644,1197]}],"unit":"₹","caption":"Indicative only, at the longest distance band and GST included. Private wins the small dense parcel; India Post wins everything the volumetric rule touches. Your own negotiated card will move these numbers — the pattern is what holds."}'></figure><h2>A rough rule we use</h2><p>Two questions, in this order.</p><p><strong>First: is the box mostly air?</strong> Divide volumetric weight by actual weight. At 2 or above, a postal service will usually be substantially cheaper and it is worth the slower window.</p><p><strong>Second: what is the item worth?</strong> Past roughly ₹8,000, the choice stops being about shipping cost at all and becomes a question of insurance. The difference between services is a few hundred rupees; the exposure if the parcel is lost is the whole item. Buy the tracked, insured, signature service and stop optimising the rest.</p><h2>What this means when you order from us</h2><p>Sellers on LetItRip choose the carrier that suits the parcel, which is why your tracking link may point at India Post for a large, light item and a private courier for a small, valuable one. Both are tracked. If an item is fragile, bulky or high-value and you have a preference, say so in the order notes before it ships — once a label is generated it cannot be changed.</p>`,
-    coverImage: { type: "image", url: editorialImage("blog-cover-india-post-vs-courier"), alt: "Parcels sorted for dispatch at a delivery counter" },
     category: "guides",
     tags: ["shipping", "india-post", "courier", "delivery", "insurance"],
     isFeatured: false,
@@ -276,7 +295,6 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     slug: "importing-collectibles-from-japan",
     excerpt: "Shipping from Japan is the easy part. Indian import duty on toys, mandatory BIS certification, and an announced postal price rise are what actually decide whether a Japan order makes sense.",
     content: `<p>Japan is where most Beyblade releases land first, so importing directly is an obvious idea. It is also the place where new collectors most often get an unpleasant surprise — and the surprise is almost never the shipping cost.</p><h2>What shipping from Japan actually costs</h2><p>Japan Post's EMS service places India in its Second Zone. Indicative rates run from roughly ¥1,900 for 500&nbsp;g to about ¥3,150 for 1&nbsp;kg — very approximately ₹1,100 to ₹1,900 at current rates. EMS is tracked and reasonably quick. Private express from Japan is faster but materially more expensive.</p><p><strong>One date to know:</strong> Japan Post has announced an international mail revision effective <strong>February 2027</strong>, with EMS rising by roughly 37% on average and some rates reportedly doubling. If you have been budgeting from older numbers, re-check them.</p><h2>The part that catches people: duty</h2><p>Indian customs assesses duty on <strong>CIF</strong> — the cost of the goods <em>plus</em> insurance <em>plus</em> freight. Shipping is itself dutiable, which is why a cheap shipping option is worth more than its face value.</p><p>Toys are not lightly taxed. Under the relevant tariff heading the duty stack combines a high basic customs duty, a surcharge calculated on that duty, and then IGST applied on the duty-inclusive value. Indicative totals land well above the value of the goods themselves — it is entirely normal for the landed cost to be more than double what you paid the Japanese seller.</p><p>This is indicative, not advice: the exact rate depends on how your specific item is classified, and used or collectible goods may be treated differently from new retail toys. Before a large order, pay a customs broker for an hour of their time.</p><figure data-chart='{"kind":"line","title":"Japan Post EMS to India by weight","categories":["500 g","600 g","700 g","800 g","900 g","1 kg"],"series":[{"label":"EMS to India","values":[1140,1290,1440,1590,1740,1890]}],"unit":"₹","caption":"Second Zone rates converted at ¥1 ≈ ₹0.60, October 2026. Note the slope: roughly ₹150 per extra 100 g, which is why one consolidated parcel beats several small ones. A 37% average rise is announced for February 2027."}'></figure><h2>BIS certification — check this before you order</h2><p>Toy imports into India are subject to <strong>BIS certification</strong> requirements, along with packaging and labelling rules. Consignments that do not conform can be held or refused. This applies to commercial imports regardless of which carrier you use, and whether second-hand collectibles fall inside or outside the requirement is a question worth resolving <em>before</em> money moves — not after a parcel is sitting at a customs facility.</p><p>If you are importing one item for your own shelf, your situation is different from someone importing stock to resell. Do not take advice written for one as applying to the other.</p><h2>Practical advice if you still want to import</h2><ul><li><strong>Never import one item at a time.</strong> Duty applies to freight, clearance costs are per-consignment, and per-kilo shipping falls sharply with weight. One consolidated parcel beats several small ones comfortably.</li><li><strong>Mind the weight ceilings.</strong> Postal services cap out — international letter and packet services around 2&nbsp;kg, air parcel around 20&nbsp;kg, EMS around 30&nbsp;kg. Past those, you are into air cargo with a customs broker, which is a different process.</li><li><strong>Declare honestly.</strong> Under-declaring value to reduce duty is not a shortcut; it is a route to seizure and penalties, and it voids any insurance on the parcel.</li><li><strong>Compare against buying domestically.</strong> Once duty, freight and clearance are added, a Japanese order frequently lands above the Indian resale price for the same item. Do the arithmetic before you commit, and check our listings first.</li></ul><p>None of this means importing is a bad idea — it means the shipping quote is the smallest part of the decision, and the parts that matter are the ones you have to look up before you order.</p>`,
-    coverImage: { type: "image", url: editorialImage("blog-cover-importing-from-japan"), alt: "Air cargo parcels staged for international dispatch" },
     category: "guides",
     tags: ["importing", "japan", "customs", "duty", "shipping", "ems"],
     isFeatured: false,
@@ -344,7 +362,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "news",
     tags: ["pokemon", "prismatic-evolutions", "trading-cards", "pricing", "chase-cards"],
     isFeatured: true,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(7),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
@@ -366,7 +384,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "news",
     tags: ["funko", "pop", "india", "market-trends", "collecting"],
     isFeatured: false,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(14),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
@@ -388,7 +406,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "news",
     tags: ["tomica", "hot-wheels", "diecast", "comparison", "jdm"],
     isFeatured: false,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(22),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
@@ -525,7 +543,7 @@ const _rawblogPostsSeedData: Partial<BlogPostDocument>[] = [
     category: "community",
     tags: ["gundam", "spotlight", "mumbai", "gunpla", "community"],
     isFeatured: true,
-    status: "published",
+    status: "archived",
     publishedAt: daysAgo(3),
     authorId: "user-admin-letitrip",
     authorName: "Mock User 1",
