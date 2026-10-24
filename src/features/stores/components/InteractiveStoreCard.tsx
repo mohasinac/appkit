@@ -53,6 +53,14 @@ export function InteractiveStoreCard({
   const [logoBroken, setLogoBroken] = useState(false);
   const hasLogo = Boolean(store.storeLogoURL) && !logoBroken;
   const hasBanner = Boolean(store.storeBannerURL);
+  /*
+   * The rating badge used to live ONLY as an overlay on the banner, so making
+   * the banner conditional would have silently dropped the rating from every
+   * bannerless store — a hidden second effect of a layout change (Root Cause
+   * #57's family). It renders in the stats row instead when there is no banner
+   * to sit on, so the card never loses the number.
+   */
+  const hasRating = store.averageRating != null && store.averageRating > 0;
   const longPress = useLongPress(() => onSelect?.(store.id, !isSelected));
 
   const card = (
@@ -86,39 +94,45 @@ export function InteractiveStoreCard({
       )}
 
       <Link href={href} className="flex flex-col flex-1 min-h-0">
-        {/* ── Banner ──────────────────────────────────────────────────── */}
-        <Div surface="muted" className={`relative aspect-video w-full ${__O.hidden} flex-shrink-0`}>
-          {hasBanner ? (
+        {/* ── Banner — ONLY when the store actually has one ─────────────
+            🛑 No placeholder. This used to render the `aspect-video` box
+            unconditionally with a 20%-opacity 🏪 glyph inside it when
+            `storeBannerURL` was unset, so every bannerless store paid a
+            16:9 slab of empty surface at the top of its card — the single
+            largest element on a card whose actual content is the name, the
+            description and two counters. A card with nothing to put in that
+            space should not reserve it. */}
+        {hasBanner && (
+          <Div surface="muted" className={`relative aspect-video w-full ${__O.hidden} flex-shrink-0`}>
             <MediaImage
               src={store.storeBannerURL!}
               alt={`${store.storeName} banner`}
               size="banner"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-          ) : (
-            <Row className="absolute inset-0" align="center" justify="center">
-              <Span className="opacity-20 select-none" size="5xl" aria-hidden="true">🏪</Span>
-            </Row>
-          )}
-          {/* Dark gradient at bottom for logo legibility */}
-          <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-x-0 bottom-0 h-12" />
+            {/* Dark gradient at bottom for logo legibility */}
+            <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-x-0 bottom-0 h-12" />
 
-          {/* Rating badge — top right */}
-          {store.averageRating != null && store.averageRating > 0 && (
-            <Div className={CLS_RATING_BADGE}>
-              ★ {store.averageRating.toFixed(1)}
-            </Div>
-          )}
-        </Div>
+            {/* Rating badge — top right */}
+            {hasRating && (
+              <Div className={CLS_RATING_BADGE}>
+                ★ {store.averageRating!.toFixed(1)}
+              </Div>
+            )}
+          </Div>
+        )}
 
         {/* ── Info section ────────────────────────────────────────────── */}
         <Stack paddingY="b-md" className="flex-1" padding="x-md">
-          {/* Logo — overlaps banner bottom edge.
+          {/* Logo — overlaps the banner's bottom edge when there IS a banner.
+              🛑 The negative margin is conditional: with no banner above it
+              there is nothing to overlap, and `-mt-5` would instead pull the
+              logo up through the card's own top padding and clip it.
               Uses MediaImage's onError callback → state flip so a missing or
               broken storeLogoURL falls back to the initials circle below
               (matches the §5 plan fix: prevent the "tiny dot" artifact when
               MediaImage's generic emoji fallback gets clipped in a 40×40 box). */}
-          <Row className="-mt-5 mb-2" align="end" justify="between">
+          <Row className={hasBanner ? "-mt-5 mb-2" : "mt-3 mb-2"} align="end" justify="between">
             <Div className="flex-shrink-0">
               {hasLogo ? (
                 <Div className="relative h-10 w-10 border-2 border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]" rounded="lg" shadow="md" overflow="hidden">
@@ -171,6 +185,12 @@ export function InteractiveStoreCard({
 
           {/* Stats row */}
           <Row color="muted" textSize="xs" gap="sm" className="mt-2.5" wrap>
+            {/* Only when no banner carried it as an overlay — see `hasRating`. */}
+            {!hasBanner && hasRating && (
+              <Span layout="flex" gap="2xs" className="text-warning">
+                <Span aria-hidden="true">★</Span> {store.averageRating!.toFixed(1)}
+              </Span>
+            )}
             {store.totalProducts != null && store.totalProducts > 0 && (
               <Span layout="flex" gap="2xs">
                 <Span aria-hidden="true">📦</Span> {store.totalProducts} {labels.products ?? "products"}

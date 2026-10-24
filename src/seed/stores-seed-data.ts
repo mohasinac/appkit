@@ -52,11 +52,29 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
      * surface that inverts with the theme; a transparent gradient glyph would
      * otherwise read as two different logos in light and dark.
      *
-     * The banner is CC0, for the same reason as the carousel backgrounds: it
-     * is a wide strip with the store name over it and nowhere to print credit.
+     * 🛑 There is deliberately NO `storeBannerURL`, and the field is OMITTED
+     * rather than set to "".
+     *
+     * It used to point at `/media/store-banner-letitrip-official`, a CC0
+     * "dark concrete wall texture" chosen by the editorial-image manifest.
+     * What it actually resolved to is a FLAT MAROON RECTANGLE with a faint
+     * stock-library watermark near the middle — 7 KB of solid colour. Rendered
+     * at `h-40 md:h-56` it was the first and largest thing on every storefront,
+     * and it said nothing about the shop.
+     *
+     * Both renderers already gate on this field being present (`StoreHeader`,
+     * `InteractiveStoreCard`), so leaving it unset is the whole fix: the
+     * storefront opens on the logo and the store name, and a banner reappears
+     * the moment a real one is uploaded through /store/settings. That is the
+     * config this replaced a placeholder with — an image or nothing, never a
+     * stand-in.
+     *
+     * The media asset itself is left in `media-assets-editorial-seed-data.ts`
+     * and in Storage. Removing the row would orphan the object (CLAUDE.md
+     * § "Wiring a new seed collection"), and nothing is served by deleting a
+     * file no document references.
      */
     storeLogoURL: "/media/store-logo-letitrip-official",
-    storeBannerURL: "/media/store-banner-letitrip-official",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Curated by the LetItRip team. All items authenticated before listing. Fast dispatch, collector-grade packaging.",
     location: "Mumbai, Maharashtra, India",

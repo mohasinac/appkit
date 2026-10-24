@@ -36,7 +36,28 @@ export const usersSeedData: Partial<UserPlain>[] = [
     email: "admin@letitrip.in",
     phoneNumber: `${_ph}9999900000`,
     phoneVerified: true,
-    displayName: "Mock User 1",
+    /*
+     * 🛑 "LetItRip Official", NOT "Mock User 1" — this account is the only one
+     * in the seed whose display name is PUBLISHED.
+     *
+     * Every one of the 21 seeded blog posts carries `authorId:
+     * "user-admin-letitrip"` and denormalises this string into `authorName`,
+     * so the public /blog index rendered the byline "Mock User 1" 41 times,
+     * and each post's own page did the same. The other 18 personas are buyer
+     * fixtures whose names only ever surface on admin screens and inside
+     * seeded addresses, so they keep theirs — this is not a naming sweep, it
+     * is the one account a reader actually sees.
+     *
+     * It matches `store-letitrip-official`'s `storeName`, which this user
+     * owns (see `storeId` below): the platform's editorial voice and its shop
+     * are the same party, and a byline of "LetItRip Official" says so.
+     *
+     * 🛑 Changing this does NOT propagate to existing documents. `authorName`
+     * is a denormalised copy on each blog post and `appkit-seed load` is a
+     * MERGE write, so the live collection needs an explicit backfill —
+     * `scripts/backfill-official-author.mjs`.
+     */
+    displayName: "LetItRip Official",
     photoURL:
       seedPhoto("user-avatar-letitrip-admin-20260101", 400, 400),
     avatarMetadata: {
