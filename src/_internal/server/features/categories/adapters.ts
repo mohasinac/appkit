@@ -85,6 +85,19 @@ export const PUBLIC_CATEGORY_FIELDS = [
  * the reason — "it seemed unused" is how a field ends up public by accident.
  */
 export const PRIVATE_CATEGORY_FIELDS = [
+  /*
+   * The canonical path this category's page declares to crawlers.
+   *
+   * 🛑 Triaged PRIVATE as the default, because nothing emits it: it is
+   * consumed SERVER-side by the metadata builder, which reads the document
+   * rather than this projection, and `toCategoryListItem` does not carry it.
+   * A client reader would be a second place the canonical is decided, which
+   * is the drift `audit-seo-canonical-host` exists to prevent (Root Cause
+   * #81 — two owners of the canonical host cost the site its indexing).
+   *
+   * Move it to PUBLIC only alongside a named client reader.
+   */
+  "seoCanonicalPath",
   // Internal DFS coordinates. Useful only to `onCategoryWrite` and
   // `positionsReconcile`; publishing them invites a client to depend on an
   // ordering we renumber on every reseed.
