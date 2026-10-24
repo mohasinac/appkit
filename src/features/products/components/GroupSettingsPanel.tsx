@@ -770,7 +770,6 @@ function AddChildContent({
   setAddTab,
   createForm,
   setCreateForm,
-  productSlug,
   storeProductsEndpoint,
   linkTargets,
   setLinkTargets,

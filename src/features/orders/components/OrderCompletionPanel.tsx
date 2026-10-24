@@ -146,7 +146,6 @@ function StarRow({
 }
 
 export function OrderCompletionPanel({
-  orderId,
   endpoint,
   completedAt,
   completedBy,

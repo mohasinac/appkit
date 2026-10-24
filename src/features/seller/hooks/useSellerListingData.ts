@@ -80,15 +80,3 @@ export function toCurrency(value: unknown): string {
  * rewrite across both feature trees rather than a bug fix.
  */
 
-function parseDate(value: unknown): Date | null {
-  if (value instanceof Date) return value;
-  if (typeof value === "string") {
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
-  }
-  if (typeof value === "number") {
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
-  }
-  return null;
-}

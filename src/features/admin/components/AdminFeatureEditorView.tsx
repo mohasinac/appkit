@@ -255,7 +255,6 @@ export function AdminFeatureEditorView({
    * the productTypes minimum). The button now stays enabled and the schema
    * reports what is actually wrong, on the field itself.
    */
-  const isDisabled = isSubmitting;
 
   const sections = React.useMemo(
     () =>

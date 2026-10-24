@@ -68,10 +68,6 @@ function getSiteUrl(): string {
   return process.env.NEXTAUTH_URL?.trim() || "http://localhost:3000";
 }
 
-function getSupportEmail(): string {
-  return process.env.EMAIL_SUPPORT?.trim() || "support@example.com";
-}
-
 /**
  * Resolve an email provider that works in BOTH runtimes.
  *

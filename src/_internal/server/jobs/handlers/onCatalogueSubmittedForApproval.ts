@@ -11,7 +11,7 @@ import { adminNotificationsRepository } from "../../../../repositories";
 
 type Doc = Record<string, JsonValue>;
 
-export const onCatalogueSubmittedForApprovalHandler: FirestoreTriggerHandler<Doc, Doc> = async (event, ctx) => {
+export const onCatalogueSubmittedForApprovalHandler: FirestoreTriggerHandler<Doc, Doc> = async (event) => {
   const before = event.before?.listingStatus as string | undefined;
   const after = event.after?.listingStatus as string | undefined;
   if (before === "pending_admin_approval" || after !== "pending_admin_approval") return;

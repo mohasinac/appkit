@@ -131,7 +131,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications) ? (p.specifications as { name: string; value: string; unit?: string }[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
     safeRead(() => getSiteSettingsGlobal(), {

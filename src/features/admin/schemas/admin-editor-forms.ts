@@ -32,7 +32,6 @@ import { mediaUrlSchema } from "../../../validation/schemas";
 import { StoreStatusValues, type StoreStatus } from "../../stores/schemas/firestore";
 import { ALL_STORE_CAPABILITIES } from "../../auth/permissions/constants";
 
-const PHONE_RE = /^(\+?91[-\s]?)?[6-9]\d{9}$/;
 /*
  * `adminAddressFormSchema` is DELETED (W5 / D19).
  *

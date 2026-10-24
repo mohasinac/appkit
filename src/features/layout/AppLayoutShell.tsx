@@ -61,6 +61,25 @@ export interface AppLayoutShellSidebarSection {
   defaultOpen?: boolean;
 }
 
+/**
+ * Trailing control rendered beside a sidebar link — the seam for an admin's
+ * inline "hide this from the nav" toggle.
+ *
+ * 🛑 A SLOT, not a built-in toggle. appkit has no idea what `navConfig` is,
+ * which role may write it, or what a write costs; the consumer owns all three.
+ * Baking an admin control into a layout primitive would also put a write path
+ * inside a component every visitor renders.
+ *
+ * 🛑 Whatever it returns is rendered OUTSIDE the `<TextLink>`, as a sibling.
+ * A `<button>` inside an `<a>` is invalid HTML that browsers resolve by
+ * splitting the anchor — the same trap `InteractiveStoreCard` documents for
+ * its trust badges. That is why the row became a flex container rather than
+ * the control simply being appended to the link's children.
+ */
+export type SidebarItemActionRenderer = (
+  item: AppLayoutShellSidebarLink,
+) => React.ReactNode;
+
 export interface AppLayoutShellSidebarAction {
   href: string;
   label: string;
@@ -72,6 +91,12 @@ export interface AppLayoutShellProps {
   navItems: MainNavbarItem[];
   sidebarItems?: AppLayoutShellSidebarLink[];
   sidebarSections?: AppLayoutShellSidebarSection[];
+  /**
+   * Trailing control beside each sidebar link — the admin inline-toggle seam.
+   * See `SidebarItemActionRenderer`. Omitted for every non-admin viewer, so a
+   * normal visitor renders exactly what they rendered before.
+   */
+  renderSidebarItemAction?: SidebarItemActionRenderer;
   sidebarPrimaryActions?: AppLayoutShellSidebarAction[];
   sidebarTitle?: string;
   hiddenNavItems?: string[];
@@ -266,12 +291,14 @@ function SidebarParentLink({
   activeHref,
   navItemClass,
   navItemActiveClass,
+  renderItemAction,
 }: {
   item: AppLayoutShellSidebarLink;
   activeItem: AppLayoutShellSidebarLink | undefined;
   activeHref: string;
   navItemClass: string;
   navItemActiveClass: string;
+  renderItemAction?: SidebarItemActionRenderer;
 }) {
   const children = item.children ?? [];
   const containsActive =
@@ -321,6 +348,7 @@ function SidebarParentLink({
           navItemClass={navItemClass}
           navItemActiveClass={navItemActiveClass}
           nested
+          renderItemAction={renderItemAction}
         />
       )}
     </Li>
@@ -335,6 +363,7 @@ function SidebarSectionLinks({
   navItemClass,
   navItemActiveClass,
   nested = false,
+  renderItemAction,
 }: {
   items: AppLayoutShellSidebarLink[];
   activeHref: string;
@@ -342,6 +371,7 @@ function SidebarSectionLinks({
   navItemClass: string;
   navItemActiveClass: string;
   nested?: boolean;
+  renderItemAction?: SidebarItemActionRenderer;
 }) {
   return (
     <Ul spacing="2xs" className={nested ? "ps-[var(--appkit-space-6)]" : undefined}>
@@ -356,24 +386,32 @@ function SidebarSectionLinks({
               activeHref={activeHref}
               navItemClass={navItemClass}
               navItemActiveClass={navItemActiveClass}
+              renderItemAction={renderItemAction}
             />
           );
         }
+        const action = renderItemAction?.(item);
         return (
           <Li key={`${item.href}-${item.label}`}>
-            <TextLink
-              href={item.href}
-              variant="none"
-              className={isActive ? navItemActiveClass : navItemClass}
-              aria-current={isActive ? "page" : undefined}
-            >
-              {item.icon && (
-                <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
-                  {item.icon}
-                </Span>
-              )}
-              {item.label}
-            </TextLink>
+            {/* The control is a SIBLING of the link, never a child — see
+                `SidebarItemActionRenderer`. `min-w-0` lets the link truncate
+                instead of pushing the control off the edge. */}
+            <Row align="center" gap="xs" className={action ? "w-full" : undefined}>
+              <TextLink
+                href={item.href}
+                variant="none"
+                className={`${isActive ? navItemActiveClass : navItemClass}${action ? " min-w-0 flex-1" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.icon && (
+                  <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                    {item.icon}
+                  </Span>
+                )}
+                {item.label}
+              </TextLink>
+              {action}
+            </Row>
           </Li>
         );
       })}
@@ -386,11 +424,13 @@ function CollapsibleSidebarSection({
   navItemClass,
   navItemActiveClass,
   activeHref,
+  renderItemAction,
 }: {
   section: AppLayoutShellSidebarSection;
   navItemClass: string;
   navItemActiveClass: string;
   activeHref: string;
+  renderItemAction?: SidebarItemActionRenderer;
 }) {
   const activeItem = findActiveNavItem(flattenSidebarLinks(section.items), activeHref);
   const hasActive = !!activeItem;
@@ -410,6 +450,7 @@ function CollapsibleSidebarSection({
         activeItem={activeItem}
         navItemClass={navItemClass}
         navItemActiveClass={navItemActiveClass}
+        renderItemAction={renderItemAction}
       />
     );
   }
@@ -439,6 +480,7 @@ function CollapsibleSidebarSection({
           activeItem={activeItem}
           navItemClass={navItemClass}
           navItemActiveClass={navItemActiveClass}
+          renderItemAction={renderItemAction}
         />
       )}
     </Stack>
@@ -571,6 +613,13 @@ function SidebarGuestHeader({
 interface SidebarContentProps {
   sidebarItems: AppLayoutShellSidebarLink[];
   sidebarSections?: AppLayoutShellSidebarSection[];
+  /**
+   * Trailing control beside each sidebar link — the admin inline-toggle seam.
+   * See `SidebarItemActionRenderer`. Omitted for every non-admin viewer, so a
+   * normal visitor renders exactly what they rendered before.
+   */
+  renderSidebarItemAction?: SidebarItemActionRenderer;
+
   sidebarPrimaryActions?: Array<{ href: string; label: string; variant?: "primary" | "outline" }>;
   user?: BottomNavbarUser | null;
   /** Current pathname — drives active-item highlighting and auto-expand of the containing section. */
@@ -596,6 +645,7 @@ interface SidebarContentProps {
 function SidebarContent({
   sidebarItems,
   sidebarSections,
+  renderSidebarItemAction,
   sidebarPrimaryActions,
   user,
   activeHref,
@@ -832,6 +882,7 @@ function SidebarContent({
           navItemClass={navItemClass}
           navItemActiveClass={navItemActiveClass}
           activeHref={activeHref}
+          renderItemAction={renderSidebarItemAction}
         />
       ))}
 
@@ -870,6 +921,7 @@ export function AppLayoutShell({
   navItems,
   sidebarItems = [],
   sidebarSections,
+  renderSidebarItemAction,
   sidebarPrimaryActions,
   sidebarTitle = "Navigation",
   hiddenNavItems,
@@ -972,6 +1024,7 @@ export function AppLayoutShell({
     <SidebarContent
       sidebarItems={sidebarItems}
       sidebarSections={sidebarSections}
+      renderSidebarItemAction={renderSidebarItemAction}
       sidebarPrimaryActions={sidebarPrimaryActions}
       user={user}
       activeHref={pathname ?? ""}

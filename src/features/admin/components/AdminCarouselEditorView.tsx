@@ -25,7 +25,6 @@ const __P = {
 
 const CLS_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] space-y-3";
 const CLS_ROW_BETWEEN = "flex items-center justify-between";
-const CLS_SECTION_HEADING = "text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)]";
 
 import type {
   CarouselBackground,

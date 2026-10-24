@@ -510,7 +510,7 @@ export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider,
  * visible Buy/Checkout button. See `useCtaReveal`.
  */
 export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/index";
-export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
+export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, SidebarItemActionRenderer, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
 export { ListingLayout } from "./ui/components/ListingLayout";
 export type { ListingLayoutProps, ListingLayoutLabels } from "./ui/components/ListingLayout";
 export { Search } from "./features/search/components";

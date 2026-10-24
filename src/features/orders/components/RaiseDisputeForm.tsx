@@ -94,7 +94,7 @@ export function RaiseDisputeForm({
    * here, because a mismatched reason is refused by the server.
    */
   const loadReasons = useCallback(
-    async (query: string, page: number): Promise<AsyncPage<PaginatedSelectOption<string>>> => {
+    async (query: string): Promise<AsyncPage<PaginatedSelectOption<string>>> => {
       if (!kind) return { items: [], hasMore: false };
       /*
        * `apiClient`, not a bare `fetch` — it carries the credentials and the

@@ -213,19 +213,17 @@ const ACTION_ICON_SIZE: Record<"sm" | "md" | "lg", IconSizeKey> = {
 
 function ActionIcon({
   action,
-  confirmationBody,
   size,
 }: {
   action?: ActionDef;
-  /**
-   * Replace the confirmation dialog's BODY for this one render.
-   *
-   * Does not create a dialog: ignored unless `action.confirmation` exists, so
-   * the registry still decides whether an action is confirmed at all. This
-   * only substitutes the sentence, for the case where the consequence is data
-   * the registry should not hold a copy of. See the note at `confirmBody`.
+  /*
+   * 🛑 A `confirmationBody` prop was declared here, with `ButtonProps`' own
+   * nine-line docstring copied verbatim, and removed 2026-10-24. `ActionIcon`
+   * renders one glyph and owns no dialog, so the prop was meaningless on it —
+   * a reader of this type would reasonably conclude the icon participates in
+   * confirmation. The real one lives on `ButtonProps` and is read at
+   * `confirmBody`.
    */
-  confirmationBody?: React.ReactNode;
   size: "sm" | "md" | "lg";
 }) {
   const Glyph = resolveIcon(action?.iconKey);

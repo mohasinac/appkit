@@ -8,27 +8,6 @@ import { CategoriesIndexListing } from "./CategoriesIndexListing";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
 
-function buildCategoryFilters(params: SearchParamsRecord): string {
-  const parts: string[] = [];
-  const isFeatured = firstParam(params, "isFeatured");
-  if (isFeatured === "true") parts.push("isFeatured==true");
-  const isBrand = firstParam(params, "isBrand");
-  if (isBrand === "true") parts.push("isBrand==true");
-  const rootOnly = firstParam(params, "rootOnly");
-  if (rootOnly === "true") parts.push("tier==0");
-  const minItemCount = firstParam(params, "minItemCount");
-  const maxItemCount = firstParam(params, "maxItemCount");
-  if (minItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.GTE, minItemCount));
-  if (maxItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.LTE, maxItemCount));
-  const tier = firstParam(params, "tier");
-  if (tier) {
-    const values = tier.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(sieveFilter("tier", SIEVE_OP.EQ, values[0]));
-    else if (values.length > 1) parts.push(sieveFilter("tier", SIEVE_OP.EQ, values.join("|")));
-  }
-  return parts.join(",");
-}
-
 export interface CategoriesIndexPageViewProps {
   /**
    * @deprecated Accepted and ignored. Kept so the consumer page shim compiles

@@ -186,6 +186,12 @@ export interface OwnerQuickActionsProps {
    * `card` sits in a hero corner and uses a scrim so it reads on photography;
    * `detail` sits in a header row beside the title.
    */
+  /**
+   * 🛑 ACCEPTED AND NOT READ since `onMedia` took over the dark-surface
+   * decision — see the note at the `onMedia` branch below. 36 call sites still
+   * pass it, so it is declared rather than deleted; delete it WITH those call
+   * sites, not ahead of them.
+   */
   placement?: "card" | "detail";
   /**
    * 🛑 Set this whenever `placement="detail"` sits on a DARK cover hero.
@@ -215,7 +221,6 @@ export function OwnerQuickActions({
   ownerId,
   storeId,
   recordLabel,
-  placement = "card",
   onMedia = false,
   className = "",
 }: OwnerQuickActionsProps) {

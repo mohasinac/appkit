@@ -1698,7 +1698,7 @@ async function createOrderForGroup(
    */
   const pointsOptedIn = useAllPoints === true;
   const pointsAccepted = pointsOptedIn && acceptsPoints;
-  const { pointsApplied, amountDue } = resolvePointsTender({
+  const { pointsApplied } = resolvePointsTender({
     orderTotal,
     balance: pointsAccepted ? pointsBudget.remaining : 0,
     accepted: pointsAccepted,

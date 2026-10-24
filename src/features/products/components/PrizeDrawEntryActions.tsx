@@ -56,7 +56,6 @@ export interface PrizeDrawEntryActionsProps {
  */
 export function PrizeDrawEntryActions({
   productId,
-  productSlug,
   title,
   pricePerEntry,
   currency,

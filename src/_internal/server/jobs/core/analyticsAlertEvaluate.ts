@@ -191,19 +191,24 @@ function buildMetricCache(
   const since = (windowHours: number) =>
     new Date(now.getTime() - windowHours * 60 * 60 * 1000);
 
+
+  type Q = any;
+
   /** A bounded count, flagged when it hits the cap. */
-  const boundedCount = async (
-    build: () => ReturnType<typeof buildQuery>,
-  ): Promise<CountResult> => {
+  const boundedCount = async (build: () => Q): Promise<CountResult> => {
     const snap = await build().limit(QUERY_LIMIT).get();
     return { value: snap.size, saturated: snap.size >= QUERY_LIMIT };
   };
 
-   
-  type Q = any;
-  function buildQuery(): Q {
-    return ctx.db.collection(PRODUCT_COLLECTION);
-  }
+  /*
+   * 🛑 A `buildQuery()` helper used to sit here and was removed 2026-10-24. It
+   * was never CALLED — its only reference was `ReturnType<typeof buildQuery>` in
+   * the signature above, and since `Q` is declared one line up and the function
+   * returned `Q`, that resolved to `Q` anyway. So the whole function existed to
+   * name a type that already had a name, which is why it read as used to a human
+   * and as unused to eslint. Every caller builds its own query because each
+   * needs different `where` clauses.
+   */
 
   /** Seller metrics scope to the store; admin metrics span the platform. */
   const storeScoped = (q: Q): Q =>

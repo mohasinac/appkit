@@ -4,11 +4,6 @@ import { RichText, SpecTable, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 
-function renderFieldValue(f: CustomField): string {
-  if (f.type === "boolean") return f.value === "true" ? "Yes" : "No";
-  return f.value + (f.unit ? ` ${f.unit}` : "");
-}
-
 /**
  * Shape `ProductTabsShell` expects for `customTabs`. Duplicated here rather
  * than imported from `ProductTabsShell.tsx` — that file is `"use client"` and

@@ -1054,7 +1054,7 @@ export function AdminEventEditorView({
   // Replaces the hand-rolled fieldToStepIndex + goToStep pair. The hook owns
   // the expand-then-scroll ordering a raw setState cannot: a collapsed panel
   // must MOUNT before scrollIntoView and focus can reach the offending field.
-  const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
+  const { openIds, setOpenIds } =
     useSectionFormNav(sections, draft);
 
   const formContent = (

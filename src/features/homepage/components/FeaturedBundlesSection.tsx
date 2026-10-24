@@ -35,6 +35,11 @@ export interface FeaturedBundlesSectionProps {
   /** Cap the rendered bundles. Items are supplied pre-fetched, so this slices. */
   maxItems?: number;
   /** Show the "N% off" badge on each cover. Defaults to `true`. */
+  /**
+   * 🛑 ACCEPTED AND NOT READ — the savings badge renders unconditionally, so
+   * passing `false` has never hidden it. Declared because callers pass it;
+   * either wire it to the badge or delete it with its 7 call sites.
+   */
   showSavingsBadge?: boolean;
   /** "View all" link label. */
   viewMoreLabel?: string;
@@ -47,7 +52,6 @@ export function FeaturedBundlesSection({
   description,
   initialItems = [],
   maxItems,
-  showSavingsBadge = true,
   viewMoreLabel = BUNDLE_COPY.featured.viewAll,
   className = "",
   onBuyNow,
