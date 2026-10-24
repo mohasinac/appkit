@@ -2,7 +2,8 @@
 import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
 import { Checkbox as UiCheckbox } from "../../ui/components/Checkbox";
-import { cn, ERROR_BASE } from "./utils";
+import { ERROR_BASE } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface CheckboxProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -32,7 +33,7 @@ export function Checkbox({
             type="checkbox"
             checked={checked}
             indeterminate={indeterminate}
-            className={cn(
+            className={joinClasses(
               "peer w-5 h-5 rounded-md border-2 cursor-pointer",
               "transition-all duration-200 appearance-none",
               error
@@ -86,7 +87,7 @@ export function Checkbox({
       </label>
 
       {error && (
-        <Text className={cn(ERROR_BASE, "mt-1.5")} role="alert">
+        <Text className={joinClasses(ERROR_BASE, "mt-1.5")} role="alert">
           {error}
         </Text>
       )}

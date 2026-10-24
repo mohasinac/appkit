@@ -1,7 +1,8 @@
 "use client"
 import React from "react";
 import { Button, Row, Span } from "../../ui";
-import { cn } from "./utils";
+import { joinClasses } from "../../utils/classnames";
+
 
 export interface ToggleProps {
   checked?: boolean;
@@ -67,7 +68,7 @@ export function Toggle({
   const cfg = SIZE_CONFIG[size];
 
   return (
-    <Row className={cn("gap-3", className)}>
+    <Row className={joinClasses("gap-3", className)}>
       <Button
         type="button"
         role="switch"
@@ -75,7 +76,7 @@ export function Toggle({
         aria-checked={checked}
         disabled={disabled}
         onClick={handleChange}
-        className={cn(
+        className={joinClasses(
           "relative inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:focus:ring-secondary-400/30 focus:ring-offset-2 dark:focus:ring-offset-slate-900",
           cfg.track,
           checked
@@ -85,7 +86,7 @@ export function Toggle({
         )}
       >
         <Span
-          className={cn(
+          className={joinClasses(
             "inline-block rounded-full bg-[var(--appkit-color-surface)] shadow-sm transition-transform duration-200",
             cfg.thumb,
             checked ? cfg.translateOn : cfg.translateOff,
@@ -96,7 +97,7 @@ export function Toggle({
       {label && (
         <label
           htmlFor={toggleId}
-          className={cn(
+          className={joinClasses(
             "text-sm font-medium cursor-pointer select-none",
             checked
               ? "text-[var(--appkit-color-text)]"

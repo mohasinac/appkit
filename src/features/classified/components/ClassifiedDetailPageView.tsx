@@ -9,7 +9,7 @@ const CLS_CLASSIFIED_BADGE = "inline-block rounded-full bg-cyan-100 dark:bg-cyan
 import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import {
   Container,
@@ -75,12 +75,6 @@ export interface ClassifiedDetailPageViewProps {
      */
     listingStoreId?: string;
   }) => React.ReactNode;
-}
-
-function toDescriptionHtml(raw: unknown): string {
-  if (!raw) return "";
-  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
-  return normalizeRichTextHtml(s);
 }
 
 export async function ClassifiedDetailPageView({ slug, initialProduct, renderOfferAction }: ClassifiedDetailPageViewProps) {

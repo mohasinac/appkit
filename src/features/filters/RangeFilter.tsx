@@ -1,7 +1,8 @@
 "use client"
 import { useState } from "react";
 import { Button, Div, Input, Row, Slider, Span, Stack, Text } from "../../ui";
-import { cn } from "./filterUtils";
+import { joinClasses } from "../../utils/classnames";
+
 
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
 const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error rounded-full transition-colors";
@@ -195,7 +196,7 @@ export function RangeFilter({
     <Div
       role="group"
       aria-labelledby={`rf-${title}`}
-      className={cn(
+      className={joinClasses(
         "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
@@ -220,7 +221,7 @@ export function RangeFilter({
             )}
           </Span>
           <svg
-            className={cn(
+            className={joinClasses(
               "w-4 h-4 shrink-0 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
@@ -300,7 +301,7 @@ export function RangeFilter({
                   placeholder={
                     minPlaceholder ?? (type === "date" ? "From" : "Min")
                   }
-                  className={cn(inputClass, prefix ? "pl-5" : "")}
+                  className={joinClasses(inputClass, prefix ? "pl-5" : "")}
                 />
               </Div>
             </Div>
@@ -328,7 +329,7 @@ export function RangeFilter({
                   placeholder={
                     maxPlaceholder ?? (type === "date" ? "To" : "Max")
                   }
-                  className={cn(inputClass, prefix ? "pl-5" : "")}
+                  className={joinClasses(inputClass, prefix ? "pl-5" : "")}
                 />
               </Div>
             </Div>

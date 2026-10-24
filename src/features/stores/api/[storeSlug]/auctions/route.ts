@@ -29,23 +29,10 @@ interface StoreEntity {
 
 const SAFE_STORE_AUCTION_FILTER_FIELDS = new Set(["price", "category"]);
 
-function validateSieveFilters(
-  raw: string,
-  allowedFields: ReadonlySet<string>,
-): string {
-  return raw
-    .split(",")
-    .map((c) => c.trim())
-    .filter((c) => {
-      const m = c.match(/^([^<>=!@]+)\s*(?:==|!=|<=|>=|<|>|@=\*?)/);
-      return m ? allowedFields.has(m[1].trim()) : false;
-    })
-    .join(",");
-}
-
 import { parseListingParams } from "../../../../../utils/listing-params";
 import { SIEVE_OP, sieveFilter } from "../../../../../utils/sieve-builder";
 import { PRODUCT_FIELDS } from "../../../../../constants/field-names";
+import { validateSieveFilters } from "../../../../../utils/sieve-builder";
 
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 

@@ -205,3 +205,21 @@ export function normalizeRichTextHtml(value: string): string {
 
   return `<p>${escapeHtml(normalized).replace(/\r?\n/g, "<br />")}</p>`;
 }
+
+/**
+ * Normalize a description field of unknown shape into HTML, for a detail page.
+ *
+ * Every listing-type detail view reads `product.description`, which is typed loosely
+ * because the field holds a plain string on older documents and ProseMirror JSON on newer
+ * ones. Seven views had a byte-identical private copy of this before 2026-10-24.
+ *
+ * 🛑 `JSON.stringify` on a non-string is the fallback, not the intent — it exists so a
+ * document carrying an unexpected shape renders *something* legible instead of
+ * `[object Object]`. `normalizeRichTextHtml` then decides whether that is already markup.
+ */
+export function toDescriptionHtml(raw: unknown): string {
+  if (!raw) return "";
+  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
+  return normalizeRichTextHtml(s);
+}
+

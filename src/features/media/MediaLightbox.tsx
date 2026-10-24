@@ -15,6 +15,7 @@ import { Button } from "../../ui/components/Button";
 import { Div } from "../../ui/components/Div";
 import { Row } from "../../ui/components/Layout";
 import { Span } from "../../ui/components/Typography";
+import { joinClasses } from "../../utils/classnames";
 export interface LightboxItem {
   src: string;
   alt: string;
@@ -65,10 +66,6 @@ const DEFAULT_LABELS: Required<LightboxLabels> = {
   lightboxTitle: "Image viewer",
 };
 
-function cn(...classes: (string | undefined | false | null)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 // --- Small icon button used in the controls bar -------------------------------
 interface IconBtnProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -94,7 +91,7 @@ function IconBtn({
       disabled={disabled}
       aria-label={ariaLabel}
       aria-current={ariaCurrent as React.AriaAttributes["aria-current"]}
-      className={cn(
+      className={joinClasses(
         "inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/15 hover:bg-white/30 text-white border-0 active:scale-95 transition-colors disabled:opacity-30 disabled:cursor-not-allowed",
         className,
       )}
@@ -199,7 +196,7 @@ function LightboxThumbnailStrip({
           onClick={() => { onSelect(i); resetZoom(); }}
           aria-label={L.imageThumbnail(i + 1)}
           aria-current={i === index ? "true" : undefined}
-          className={cn(
+          className={joinClasses(
             "relative shrink-0 w-14 h-14 p-[var(--appkit-space-0)] overflow-hidden rounded-lg border-2 transition-all active:scale-95",
             i === index ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-75",
           )}

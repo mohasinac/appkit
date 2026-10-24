@@ -27,6 +27,8 @@ import { planSearchTxt } from "../../../utils/search-txt-query";
 import { matchesAllSearchTerms } from "../../../utils/search-txt";
 
 import { normalizeError } from "../../../errors/normalize";
+import { intParamOrNull, param } from "../../../utils/search-params";
+import { validateSieveFilters } from "../../../utils/sieve-builder";
 const CACHE_CONTROL_PUBLIC = "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
 
 /**
@@ -96,35 +98,10 @@ function buildTreeFromFlat(
   return roots.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(nest);
 }
 
-function param(url: URL, key: string): string | null {
-  return url.searchParams.get(key);
-}
-
-function numParam(url: URL, key: string): number | null {
-  const v = url.searchParams.get(key);
-  if (v === null) return null;
-  const n = Number.parseInt(v, 10);
-  return Number.isFinite(n) ? n : null;
-}
-
 const SAFE_CATEGORY_FILTER_FIELDS = new Set([
   "categoryType", "parentIds", "isFeatured", "showOnHomepage",
   "tier", "isActive", "isLeaf", "isBrand", "isSearchable",
 ]);
-
-function validateSieveFilters(
-  raw: string,
-  allowedFields: ReadonlySet<string>,
-): string {
-  return raw
-    .split(",")
-    .map((c) => c.trim())
-    .filter((c) => {
-      const m = c.match(/^([^<>=!@]+)\s*(?:==|!=|<=|>=|<|>|@=\*?)/);
-      return m ? allowedFields.has(m[1].trim()) : false;
-    })
-    .join(",");
-}
 
 // --- GET /api/categories ------------------------------------------------------
 
@@ -142,8 +119,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     const flat = param(url, "flat");
     const tree = param(url, "tree");
     const rawFilters = param(url, "filters");
-    const tier = numParam(url, "tier");
-    const pageSizeParam = numParam(url, "pageSize");
+    const tier = intParamOrNull(url, "tier");
+    const pageSizeParam = intParamOrNull(url, "pageSize");
     /*
      * 🛑 `?page=` MEANS "give me a paged flat list", and reading it fixes two
      * live bugs rather than adding a feature.
@@ -163,7 +140,7 @@ export async function GET(request: Request): Promise<NextResponse> {
      *     were permanently empty. Same shape as the `useCategoryTree` bug:
      *     `isFiltered` did not include the params real callers send.
      */
-    const pageParam = numParam(url, "page");
+    const pageParam = intParamOrNull(url, "page");
     const isPaged = pageParam !== null && pageParam > 0;
     /*
      * `?listingOnly=true` drops brand / bundle / sublisting rows.

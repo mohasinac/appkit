@@ -18,12 +18,7 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next/api/routeHandler";
 import { storeRepository } from "../../../stores/repository/store.repository";
 import type { JsonValue } from "../../../../schemas/types";
-
-function numParam(url: URL, key: string, fallback: number): number {
-  const v = url.searchParams.get(key);
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
+import { numParam } from "../../../../utils/search-params";
 
 export const GET = createRouteHandler({
   roles: ["seller", "admin", "moderator"],

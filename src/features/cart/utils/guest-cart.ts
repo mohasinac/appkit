@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { CART_MAX_ITEMS } from "../../../constants/limits";
+import { getDefaultStorage } from "../../../utils/browser-storage";
 
 const DEFAULT_GUEST_CART_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_cart`
@@ -46,11 +47,6 @@ export interface GuestCartStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
-}
-
-function getDefaultStorage(): GuestCartStorage | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage;
 }
 
 function readItems(

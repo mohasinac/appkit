@@ -2,7 +2,6 @@ import React from "react";
 import { Div, Span, Text } from "../../ui";
 import { Input as UiInput } from "../../ui/components/Input";
 import {
-  cn,
   INPUT_BASE,
   INPUT_ERROR,
   INPUT_SUCCESS,
@@ -12,6 +11,7 @@ import {
   HELPER_BASE,
   ERROR_BASE,
 } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -62,7 +62,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <Div className="relative group">
           {icon && (
             <Div
-              className={cn(
+              className={joinClasses(
                 "absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
                   ? "text-error"
@@ -77,7 +77,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <UiInput
             bare
             ref={ref}
-            className={cn(
+            className={joinClasses(
               "w-full",
               INPUT_BASE,
               icon ? INPUT_WITH_ICON : "",
@@ -99,7 +99,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {rightIcon && (
             <Div
-              className={cn(
+              className={joinClasses(
                 "absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
                   ? "text-error"

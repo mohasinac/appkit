@@ -27,7 +27,7 @@ export type {
   RangeDateConfig,
 } from "./FilterPanel";
 
-export { getFilterLabel, getFilterValue, cn } from "./filterUtils";
+export { getFilterLabel, getFilterValue } from "./filterUtils";
 export type { FilterOption } from "./filterUtils";
 
 export { usePendingFilters } from "./usePendingFilters";

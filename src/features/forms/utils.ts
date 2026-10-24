@@ -1,8 +1,4 @@
-/** Simple class-name concatenation utility. */
-export function cn(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(" ");
-}
-
+import { joinClasses } from "../../utils/classnames";
 // --- Shared style constants ---------------------------------------------------
 
 export const INPUT_BASE =

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { getDefaultStorage } from "../../../utils/browser-storage";
 const DEFAULT_GUEST_WISHLIST_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_wishlist`
   : "guest_wishlist";
@@ -26,11 +27,6 @@ export interface GuestWishlistStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
-}
-
-function getDefaultStorage(): GuestWishlistStorage | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage;
 }
 
 function readItems(

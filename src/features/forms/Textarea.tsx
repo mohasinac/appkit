@@ -2,13 +2,13 @@ import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
 import { Textarea as UiTextarea } from "../../ui/components/Textarea";
 import {
-  cn,
   INPUT_BASE,
   INPUT_ERROR,
   LABEL_BASE,
   HELPER_BASE,
   ERROR_BASE,
 } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -56,7 +56,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <UiTextarea
           bare
           ref={ref}
-          className={cn(
+          className={joinClasses(
             INPUT_BASE,
             "resize-y min-h-[80px]",
             error ? INPUT_ERROR : "",
@@ -82,7 +82,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           </Div>
           {showCharCount && maxLength && (
             <p
-              className={cn(
+              className={joinClasses(
                 "text-xs tabular-nums ml-2 flex-shrink-0",
                 charCount >= maxLength
                   ? "text-error"

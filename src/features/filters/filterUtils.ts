@@ -1,3 +1,4 @@
+import { joinClasses } from "../../utils/classnames";
 /**
  * Utility helpers for filter option arrays.
  */
@@ -18,7 +19,3 @@ export function getFilterValue(
   return options.find((o) => o.label === label)?.value;
 }
 
-/** Simple class-name concatenation. */
-export function cn(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(" ");
-}

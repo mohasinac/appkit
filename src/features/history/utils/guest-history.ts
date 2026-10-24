@@ -7,6 +7,7 @@
  */
 import { normalizeError } from "../../../errors/normalize";
 import { HISTORY_MAX } from "../../../constants/limits";
+import { getDefaultStorage } from "../../../utils/browser-storage";
 
 const DEFAULT_GUEST_HISTORY_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_history`
@@ -31,11 +32,6 @@ interface Storage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
-}
-
-function getDefaultStorage(): Storage | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage;
 }
 
 function read(storage: Storage | null, key: string): GuestHistoryItem[] {

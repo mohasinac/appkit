@@ -5,27 +5,22 @@ import React from "react";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
-type SearchParams = Record<string, string | string[]>;
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildCategoryFilters(params: SearchParams): string {
+function buildCategoryFilters(params: SearchParamsRecord): string {
   const parts: string[] = [];
-  const isFeatured = sp(params, "isFeatured");
+  const isFeatured = firstParam(params, "isFeatured");
   if (isFeatured === "true") parts.push("isFeatured==true");
-  const isBrand = sp(params, "isBrand");
+  const isBrand = firstParam(params, "isBrand");
   if (isBrand === "true") parts.push("isBrand==true");
-  const rootOnly = sp(params, "rootOnly");
+  const rootOnly = firstParam(params, "rootOnly");
   if (rootOnly === "true") parts.push("tier==0");
-  const minItemCount = sp(params, "minItemCount");
-  const maxItemCount = sp(params, "maxItemCount");
+  const minItemCount = firstParam(params, "minItemCount");
+  const maxItemCount = firstParam(params, "maxItemCount");
   if (minItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.GTE, minItemCount));
   if (maxItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.LTE, maxItemCount));
-  const tier = sp(params, "tier");
+  const tier = firstParam(params, "tier");
   if (tier) {
     const values = tier.split("|").filter(Boolean);
     if (values.length === 1) parts.push(sieveFilter("tier", SIEVE_OP.EQ, values[0]));
@@ -39,7 +34,7 @@ export interface CategoriesIndexPageViewProps {
    * @deprecated Accepted and ignored. Kept so the consumer page shim compiles
    * either way; remove once no caller passes it.
    */
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
 }
 
 /**

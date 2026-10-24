@@ -15,7 +15,7 @@ const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-war
 import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import {
@@ -97,12 +97,6 @@ export interface AuctionDetailPageViewProps {
   onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
-}
-
-function toDescriptionHtml(raw: JsonValue): string {
-  if (!raw) return "";
-  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
-  return normalizeRichTextHtml(s);
 }
 
 interface AuctionInfoPanelProps {

@@ -9,16 +9,11 @@ import { sortBy } from "../../../constants/sort";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { sortPinnedFirst } from "../utils/sort-pinned";
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
-type SearchParams = Record<string, string | string[]>;
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildEventFilters(params: SearchParams): string {
-  const statusRaw = sp(params, "status");
+function buildEventFilters(params: SearchParamsRecord): string {
+  const statusRaw = firstParam(params, "status");
   const parts: string[] = [];
 
   if (statusRaw) {
@@ -30,15 +25,15 @@ function buildEventFilters(params: SearchParams): string {
     parts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, EVENT_FIELDS.STATUS_VALUES.ACTIVE));
   }
 
-  const type = sp(params, "type");
+  const type = firstParam(params, "type");
   if (type) {
     const values = type.split("|").filter(Boolean);
     if (values.length === 1) parts.push(sieveFilter(EVENT_FIELDS.TYPE, SIEVE_OP.EQ, values[0]));
     else if (values.length > 1) parts.push(sieveMultiEq(EVENT_FIELDS.TYPE, values));
   }
 
-  const dateFrom = sp(params, "dateFrom");
-  const dateTo = sp(params, "dateTo");
+  const dateFrom = firstParam(params, "dateFrom");
+  const dateTo = firstParam(params, "dateTo");
   if (dateFrom) parts.push(sieveFilter(EVENT_FIELDS.STARTS_AT, SIEVE_OP.GTE, dateFrom));
   if (dateTo) parts.push(sieveFilter(EVENT_FIELDS.ENDS_AT, SIEVE_OP.LTE, dateTo));
 
@@ -46,13 +41,13 @@ function buildEventFilters(params: SearchParams): string {
 }
 
 export interface EventsListPageViewProps {
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
 }
 
 export async function EventsListPageView({ searchParams = {} }: EventsListPageViewProps) {
-  const sort = sp(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
-  const page = Number(sp(searchParams, "page")) || 1;
-  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const sort = firstParam(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
+  const page = Number(firstParam(searchParams, "page")) || 1;
+  const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
   const filters = buildEventFilters(searchParams);
 
   const [result, facetCounts] = await Promise.all([

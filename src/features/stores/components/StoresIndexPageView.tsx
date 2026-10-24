@@ -6,16 +6,11 @@ import { StoresIndexListing } from "./StoresIndexListing";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { STORE_FIELDS } from "../../../constants/field-names";
-
-type SearchParams = Record<string, string | string[]>;
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
 export interface StoresIndexPageViewProps {
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
   /**
    * Restrict to verified stores and retitle the page. This is what /sellers is.
    *
@@ -38,9 +33,9 @@ export async function StoresIndexPageView({
   verifiedOnly = false,
   heading = "Stores",
 }: StoresIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || "-createdAt";
-  const page = Number(sp(searchParams, "page")) || 1;
-  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const sort = firstParam(searchParams, "sort") || "-createdAt";
+  const page = Number(firstParam(searchParams, "page")) || 1;
+  const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
   /*
    * 🛑 `q` MUST be read here, and passed as the third argument exactly as
    * /api/stores does — `listStores(model, true, { search })`.
@@ -56,14 +51,14 @@ export async function StoresIndexPageView({
    * frozen for that query key. Root Cause #30 — the SSR builder has to compute
    * the same filters the client would, because it never gets a second chance.
    */
-  const q = sp(searchParams, "q").trim();
+  const q = firstParam(searchParams, "q").trim();
   /*
    * The rating facet must be applied HERE too, not only by the client. This
    * result is handed to <StoresIndexListing initialData=…>, and public listing
    * hooks set staleTime: Infinity when given SSR data — so an unfiltered first
    * paint is frozen for that query key and never self-corrects (Root Cause #30).
    */
-  const ratingRaw = sp(searchParams, "rating");
+  const ratingRaw = firstParam(searchParams, "rating");
   const minRating = ratingRaw
     ? Math.max(...ratingRaw.split("|").map(Number).filter((n) => Number.isFinite(n)))
     : undefined;

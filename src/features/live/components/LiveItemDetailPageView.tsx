@@ -12,7 +12,7 @@ const CLS_WARN_BODY = "mt-1 text-warning";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import {
   Div,
@@ -52,12 +52,6 @@ export interface LiveItemDetailPageViewProps {
   initialProduct?: ProductDocument | null;
   /** Render-prop for the add-to-cart CTA — wired by the page shim (carries the vendor-verification gate). */
   renderActions?: (product: ProductDocument) => React.ReactNode;
-}
-
-function toDescriptionHtml(raw: unknown): string {
-  if (!raw) return "";
-  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
-  return normalizeRichTextHtml(s);
 }
 
 export async function LiveItemDetailPageView({ slug, initialProduct, renderActions }: LiveItemDetailPageViewProps) {

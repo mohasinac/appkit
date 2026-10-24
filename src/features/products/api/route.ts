@@ -29,6 +29,7 @@ import {
 
 import { normalizeError } from "../../../errors/normalize";
 import type { JsonValue } from "../../../schemas/types";
+import { param } from "../../../utils/search-params";
 type ProductRecord = ProductItem & {
   sellerId?: string;
   sellerName?: string;
@@ -86,10 +87,6 @@ const productMutateSchema = z
   .passthrough();
 
 // --- Helpers ------------------------------------------------------------------
-
-function param(url: URL, key: string): string | null {
-  return url.searchParams.get(key);
-}
 
 // --- GET /api/products --------------------------------------------------------
 

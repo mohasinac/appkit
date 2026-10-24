@@ -15,16 +15,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import type { BidRecord, BidListResponse } from "../types/index";
 import { normalizeError } from "../../../errors/normalize";
-
-function param(url: URL, key: string): string | null {
-  return url.searchParams.get(key);
-}
-
-function numParam(url: URL, key: string, fallback: number): number {
-  const v = url.searchParams.get(key);
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
+import { numParam, param } from "../../../utils/search-params";
 
 // --- GET /api/bids ------------------------------------------------------------
 // Query params:

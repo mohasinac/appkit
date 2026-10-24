@@ -2,13 +2,13 @@ import React from "react";
 import { Div, Span, Text } from "../../ui";
 import { Select as UiSelect } from "../../ui/components/Select";
 import {
-  cn,
   INPUT_BASE,
   INPUT_ERROR,
   LABEL_BASE,
   HELPER_BASE,
   ERROR_BASE,
 } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface SelectOption {
   value: string;
@@ -53,7 +53,7 @@ export function Select({
           options={options}
           placeholder={placeholder}
           value={typeof value === "string" ? value : undefined}
-          className={cn(
+          className={joinClasses(
             INPUT_BASE,
             "pr-10 appearance-none cursor-pointer",
             error ? INPUT_ERROR : "",
@@ -66,7 +66,7 @@ export function Select({
         {/* Chevron icon */}
         <Div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-150">
           <svg
-            className={cn(
+            className={joinClasses(
               "w-5 h-5 transition-transform duration-200",
               error
                 ? "text-error"

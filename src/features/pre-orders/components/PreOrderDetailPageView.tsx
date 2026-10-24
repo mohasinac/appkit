@@ -17,7 +17,7 @@ const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-w
 import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
 import {
@@ -73,12 +73,6 @@ export interface PreOrderDetailPageViewProps {
   onReserveNow?: (productId: string) => Promise<void>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
-}
-
-function toDescriptionHtml(raw: unknown): string {
-  if (!raw) return "";
-  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
-  return normalizeRichTextHtml(s);
 }
 
 const PRODUCTION_STATUS_LABELS: Record<string, string> = {

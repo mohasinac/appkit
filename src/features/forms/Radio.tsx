@@ -1,6 +1,7 @@
 import React from "react";
 import { Checkbox, Div, Span, Text } from "../../ui";
-import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
+import { LABEL_BASE, ERROR_BASE } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface RadioOption {
   value: string;
@@ -35,7 +36,7 @@ export function RadioGroup({
       <Div className="w-full">
         {label && <Text className={LABEL_BASE}>{label}</Text>}
         <Div
-          className={cn(
+          className={joinClasses(
             "flex gap-3",
             orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
           )}
@@ -45,7 +46,7 @@ export function RadioGroup({
             return (
               <label
                 key={option.value}
-                className={cn(
+                className={joinClasses(
                   "flex items-center gap-2.5 cursor-pointer",
                   option.disabled && "opacity-50 cursor-not-allowed",
                 )}
@@ -81,7 +82,7 @@ export function RadioGroup({
     <Div className="w-full">
       {label && <Text className={LABEL_BASE}>{label}</Text>}
       <Div
-        className={cn(
+        className={joinClasses(
           "flex gap-2",
           orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
         )}
@@ -93,7 +94,7 @@ export function RadioGroup({
           return (
             <label
               key={option.value}
-              className={cn(
+              className={joinClasses(
                 "flex items-center justify-center px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all duration-200",
                 isSelected
                   ? "bg-primary-600 dark:bg-secondary-500 border-primary-600 dark:border-secondary-500 text-white shadow-sm"

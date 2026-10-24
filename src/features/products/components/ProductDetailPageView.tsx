@@ -56,7 +56,7 @@ import {
   SpecTable,
   Icon,
 } from "../../../ui";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";
 import { ProductDetailView } from "./ProductDetailView";
@@ -184,13 +184,6 @@ export interface ProductDetailPageViewProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function toDescriptionHtml(raw: unknown): string {
-  if (!raw) return "";
-  const s =
-    typeof raw === "string" ? raw : JSON.stringify(raw);
-  return normalizeRichTextHtml(s);
-}
 
 function StarRating({ value }: { value: number }) {
   const full = Math.floor(value);

@@ -5,18 +5,13 @@ import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
-
-type SearchParams = Record<string, string | string[]>;
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
 const DEFAULT_LIMIT = 200;
 
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
 export interface BundlesListViewProps {
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
   onBuyNow?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
 }
 
@@ -31,7 +26,7 @@ export async function BundlesListView({
   searchParams = {},
   onBuyNow,
 }: BundlesListViewProps) {
-  const storeId = sp(searchParams, "storeId");
+  const storeId = firstParam(searchParams, "storeId");
 
   const all = await safeRead(
     () =>

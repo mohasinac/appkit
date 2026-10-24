@@ -1,8 +1,9 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
 import { Button, Checkbox, Div, Input, Row, Span, Stack, Text } from "../../ui";
-import { cn } from "./filterUtils";
+
 import type { FilterOption } from "./filterUtils";
+import { joinClasses } from "../../utils/classnames";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -135,12 +136,12 @@ export function FilterFacetSection({
   // ── Dropdown variant ────────────────────────────────────────────────────
   if (displayAs === "dropdown") {
     return (
-      <Div ref={dropdownRef} className={cn("relative inline-block", className)}>
+      <Div ref={dropdownRef} className={joinClasses("relative inline-block", className)}>
         <Button
           type="button"
           onClick={() => setDropdownOpen((o) => !o)}
           variant="ghost"
-          className={cn(
+          className={joinClasses(
             "inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium transition-colors",
             hasValue
               ? CLS_OPTION_SELECTED
@@ -154,7 +155,7 @@ export function FilterFacetSection({
             </Span>
           )}
           <svg
-            className={cn("h-3.5 w-3.5 text-zinc-400 transition-transform", dropdownOpen ? "rotate-180" : "")}
+            className={joinClasses("h-3.5 w-3.5 text-zinc-400 transition-transform", dropdownOpen ? "rotate-180" : "")}
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -229,7 +230,7 @@ export function FilterFacetSection({
   // ── Accordion variant (default) ─────────────────────────────────────────
   return (
     <Div
-      className={cn(
+      className={joinClasses(
         "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
@@ -254,7 +255,7 @@ export function FilterFacetSection({
             )}
           </Row>
           <svg
-            className={cn(
+            className={joinClasses(
               "w-4 h-4 shrink-0 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
@@ -348,7 +349,7 @@ export function FilterFacetSection({
                     checked={isSelected}
                     onChange={() => toggle(option.value)}
                     aria-label={option.label}
-                    className={cn(
+                    className={joinClasses(
                       "flex-shrink-0 border-[var(--appkit-color-border)] cursor-pointer",
                       "w-4 h-4 rounded-full text-primary-600 dark:text-secondary-500",
                       "focus:ring-primary-500/30 dark:focus:ring-secondary-400/30",
@@ -361,7 +362,7 @@ export function FilterFacetSection({
                     checked={isSelected}
                     onChange={() => toggle(option.value)}
                     aria-label={option.label}
-                    className={cn(
+                    className={joinClasses(
                       "flex-shrink-0 border-[var(--appkit-color-border)] cursor-pointer",
                       "w-4 h-4 rounded text-primary-600 dark:text-secondary-500 checked:bg-primary-600 dark:checked:bg-secondary-500",
                       "focus:ring-primary-500/30 dark:focus:ring-secondary-400/30",

@@ -82,3 +82,29 @@ export function sieveAnd(
 }
 
 export { sortBy } from "../constants/sort";
+
+/**
+ * Keep only the Sieve clauses whose field is allow-listed, dropping the rest silently.
+ *
+ * 🛑 "Silently" is the correct behaviour here and is not Root Cause #59. `sieve.ts` sets
+ * `throwExceptions: false`, so an un-allowlisted field is *already* dropped one layer down —
+ * this function exists so the drop happens where the allow-list is declared rather than
+ * inside the query adapter, where Root Cause #62 showed it turns a scoped page into an
+ * unfiltered one. A raw `f=` is attacker-controlled input, so rejecting the request would
+ * also make a probe distinguishable from a valid query.
+ *
+ * Three route files carried a byte-identical private copy before 2026-10-24.
+ */
+export function validateSieveFilters(
+  raw: string,
+  allowedFields: ReadonlySet<string>,
+): string {
+  return raw
+    .split(",")
+    .map((c) => c.trim())
+    .filter((c) => {
+      const m = c.match(/^([^<>=!@]+)\s*(?:==|!=|<=|>=|<|>|@=\*?)/);
+      return m ? allowedFields.has(m[1].trim()) : false;
+    })
+    .join(",");
+}

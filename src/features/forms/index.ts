@@ -28,7 +28,6 @@ export type { SliderProps } from "./Slider";
 // Consumers should import from `@mohasinac/appkit/ui`.
 
 export {
-  cn,
   INPUT_BASE,
   INPUT_ERROR,
   INPUT_SUCCESS,

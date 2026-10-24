@@ -6,28 +6,23 @@ import type { ReviewListResponse } from "../types";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ReviewsIndexListing } from "./ReviewsIndexListing";
 import { safeRead } from "../../../errors/safe-read";
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
-type SearchParams = Record<string, string | string[]>;
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
-
-function buildReviewFilters(params: SearchParams): string {
+function buildReviewFilters(params: SearchParamsRecord): string {
   const parts: string[] = ["status==approved"];
-  const rating = sp(params, "rating");
+  const rating = firstParam(params, "rating");
   if (rating) {
     const values = rating.split("|").filter(Boolean);
     if (values.length === 1) parts.push(sieveFilter("rating", SIEVE_OP.EQ, values[0]));
     else if (values.length > 1) parts.push(sieveFilter("rating", SIEVE_OP.EQ, values.join("|")));
   }
-  const minVotes = sp(params, "minVotes");
+  const minVotes = firstParam(params, "minVotes");
   if (minVotes) parts.push(sieveFilter("helpfulCount", SIEVE_OP.GTE, minVotes));
-  const maxVotes = sp(params, "maxVotes");
+  const maxVotes = firstParam(params, "maxVotes");
   if (maxVotes) parts.push(sieveFilter("helpfulCount", SIEVE_OP.LTE, maxVotes));
-  const dateFrom = sp(params, "dateFrom");
-  const dateTo = sp(params, "dateTo");
+  const dateFrom = firstParam(params, "dateFrom");
+  const dateTo = firstParam(params, "dateTo");
   if (dateFrom) parts.push(sieveFilter("createdAt", SIEVE_OP.GTE, dateFrom));
   if (dateTo) parts.push(sieveFilter("createdAt", SIEVE_OP.LTE, dateTo));
   /*
@@ -53,14 +48,14 @@ function buildReviewFilters(params: SearchParams): string {
 }
 
 export interface ReviewsIndexPageViewProps {
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
 }
 
 export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || "-createdAt";
-  const page = Number(sp(searchParams, "page")) || 1;
+  const sort = firstParam(searchParams, "sort") || "-createdAt";
+  const page = Number(firstParam(searchParams, "page")) || 1;
   const filters = buildReviewFilters(searchParams);
-  const q = sp(searchParams, "q");
+  const q = firstParam(searchParams, "q");
 
   // audit-public-test-data-ok: `ReviewDocument` carries no `isTestData` field —
   // tsc rejects the filter outright, which is the honest signal that reviews

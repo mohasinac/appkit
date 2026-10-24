@@ -1,7 +1,8 @@
 "use client"
 import { useState } from "react";
 import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
-import { cn } from "./filterUtils";
+import { joinClasses } from "../../utils/classnames";
+
 
 const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error rounded-full transition-colors";
 
@@ -41,7 +42,7 @@ export function SwitchFilter({
     <Div
       role="group"
       aria-labelledby={`sf-${title}`}
-      className={cn(
+      className={joinClasses(
         "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
@@ -61,7 +62,7 @@ export function SwitchFilter({
             {title}
           </Text>
           <svg
-            className={cn(
+            className={joinClasses(
               "w-4 h-4 shrink-0 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}

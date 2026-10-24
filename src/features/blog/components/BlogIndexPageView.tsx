@@ -7,23 +7,18 @@ import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
 import type { BlogPostCategory, BlogListResponse } from "../types";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
-
-type SearchParams = Record<string, string | string[]>;
-
-function sp(params: SearchParams, key: string): string {
-  const v = params[key];
-  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
-}
+import { firstParam } from "../../../utils/search-params";
+import type { SearchParamsRecord } from "../../../utils/search-params";
 
 export interface BlogIndexPageViewProps {
-  searchParams?: SearchParams;
+  searchParams?: SearchParamsRecord;
 }
 
 export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
-  const page = Number(sp(searchParams, "page")) || 1;
-  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
-  const category = sp(searchParams, "category") as BlogPostCategory | undefined;
+  const sort = firstParam(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
+  const page = Number(firstParam(searchParams, "page")) || 1;
+  const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
+  const category = firstParam(searchParams, "category") as BlogPostCategory | undefined;
   /*
    * 🛑 `q` MUST be read and forwarded. Without it /blog?q=anything rendered the
    * FULL published list — the same failure the API route's own header records
@@ -32,7 +27,7 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
    * `initialData`, and the listing hook sets `staleTime: Infinity` when given
    * SSR data, so the unfiltered first paint is frozen for that query key.
    */
-  const q = sp(searchParams, "q").trim();
+  const q = firstParam(searchParams, "q").trim();
 
   const sieveResult = await safeRead(
     () =>

@@ -2,7 +2,8 @@
 import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
 import { Slider as UiSlider } from "../../ui/components/Slider";
-import { cn, ERROR_BASE } from "./utils";
+import { ERROR_BASE } from "./utils";
+import { joinClasses } from "../../utils/classnames";
 
 export interface SliderProps {
   value?: number;
@@ -54,7 +55,7 @@ export function Slider({
   const displayValue = formatValue ? formatValue(value) : String(value);
 
   return (
-    <Div className={cn("w-full space-y-2", className)}>
+    <Div className={joinClasses("w-full space-y-2", className)}>
       {(label || showValue) && (
         <Row justify="between">
           {label && (
