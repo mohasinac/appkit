@@ -1,4 +1,8 @@
 import type { ListingType } from "../../products/types";
+import type {
+  SellerTier,
+  SellerStandingCriterion,
+} from "../../../_internal/shared/features/seller-standing/config";
 
 // --- Store list item (public-facing, safe to send to client) -----------------
 
@@ -46,7 +50,49 @@ export interface StoreListItem {
    */
   sharedPurchaseHandlingFee?: number;
   sharedPurchaseExtraShippingPerDestination?: number;
+  /**
+   * Seller trust, as a buyer sees it.
+   *
+   * 🛑 Neither is optional, for the same reason as the flags above: the
+   * projection resolves absence (`?? false` / `?? "seller"`), so no client has
+   * to decide what `undefined` means. A badge component testing `!== "seller"`
+   * on an undefined value would render a TRUSTED badge on a store that has
+   * earned nothing.
+   *
+   * 🛑 There is deliberately no `trustedSeller` here and there must never be.
+   * That field means "we pay this store before delivery" — our risk posture,
+   * not an endorsement — and it is in `PRIVATE_STORE_FIELDS` for that reason.
+   */
+  isVerified: boolean;
+  sellerTier: SellerTier;
+  /**
+   * The cached standing metrics behind `sellerTier`, when they have ever been
+   * computed.
+   *
+   * OPTIONAL, unlike the two above, and that asymmetry is the point: absent
+   * means "never measured", which the seller's panel must render differently
+   * from a measured zero. Defaulting it would turn "we have not looked yet"
+   * into a confident "0 of 25".
+   */
+  standing?: SellerStandingSnapshot;
   createdAt?: string;
+}
+
+/**
+ * The public half of `StoreDocument.standing` — counts and a mean, nothing
+ * that identifies a buyer. The address criterion is counted from HMAC
+ * fingerprints and only the count is kept.
+ */
+export interface SellerStandingSnapshot {
+  computedAt: Date | string;
+  nextComputeAt?: Date | string;
+  windowDays: number;
+  deliveredOrders: number;
+  distinctBuyers: number;
+  distinctAddresses: number;
+  ratedOrders: number;
+  averageRating: number;
+  met: Record<SellerStandingCriterion, boolean>;
 }
 
 // --- Store detail (full public profile) --------------------------------------

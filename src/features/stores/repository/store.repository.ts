@@ -219,6 +219,29 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
           // Auto-set isPublic when approved
           ...(status === StoreStatusValues.ACTIVE && { isPublic: true }),
           ...(status !== StoreStatusValues.ACTIVE && { isPublic: false }),
+          /*
+           * 🛑 LEAVING `active` REVOKES TRUST IMMEDIATELY — and this cannot
+           * wait for the monthly recompute.
+           *
+           * `trustedSeller` means the store is paid at SHIPPING rather than at
+           * delivery, so a suspended store that kept the flag would go on
+           * being paid before parcels land for up to 31 days, on a decision
+           * the suspension has just reversed. `sellerStandingRollup` caches
+           * its verdict monthly; this is the one place that cache must not be
+           * trusted.
+           *
+           * Both fields are tracked, so the clear earns its own timeline
+           * entry alongside the status change. Re-granting is NOT automatic on
+           * re-activation: the next month-end run decides, which is the
+           * correct direction for a flag that moves money.
+           *
+           * `extra` is spread AFTER, so an admin explicitly setting a tier in
+           * the same request still wins — the override stays authoritative.
+           */
+          ...(status !== StoreStatusValues.ACTIVE && {
+            trustedSeller: false,
+            sellerTier: "seller" as const,
+          }),
           ...extra,
           updatedAt: new Date(),
         } as Partial<StoreDocument>,

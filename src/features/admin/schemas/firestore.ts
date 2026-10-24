@@ -991,6 +991,25 @@ export interface SiteSettingsDocument extends BaseDocument {
   returns: {
     windowDays: number;
   };
+  /*
+   * 🛑 There is deliberately NO `sellerStanding` threshold group here, and it
+   * was removed rather than triaged.
+   *
+   * It existed briefly as an admin-tunable override folded onto
+   * `SELLER_STANDING_DEFAULTS`. `audit-public-projection-parity` caught it
+   * untriaged, and triaging it exposed the real problem: `siteSettings` is
+   * projected through an allow-list, while `/seller-guide` and
+   * `/help/seller-badges` render their criteria tables from the CODE defaults.
+   * So an admin retuning the numbers would move what the job grants on and
+   * leave both public pages stating the old figures — the exact drift the
+   * seller-standing config module exists to prevent, reintroduced one layer
+   * out.
+   *
+   * The criteria are therefore a single constant, and every surface agrees by
+   * construction. Making them tunable again means threading the resolved
+   * thresholds into all three public surfaces in the SAME change, not adding
+   * a settings field and leaving the pages on defaults.
+   */
   /**
    * The support integration's on/off switch.
    *

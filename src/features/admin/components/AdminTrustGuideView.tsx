@@ -4,6 +4,8 @@ import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody,
 import { GC } from "../../_guide-cls";
 
 const STILL_ALLOWED = "✓ Still allowed";
+/** Named because it is used on three rows in the seller-trust table. */
+const ROW_BORDER = "border-b border-[var(--appkit-color-border)]";
 
 export function AdminTrustGuideView() {
   return (
@@ -20,6 +22,75 @@ export function AdminTrustGuideView() {
       </Section>
 
       {[
+        {
+          Icon: Shield, title: "Seller trust: three fields, two of them visible",
+          content: (
+            <>
+              <Div overflow="x-auto">
+                <Table size="sm">
+                  <Thead>
+                    <Tr className={ROW_BORDER}>
+                      {["Field", "Public?", "What it means", "Who sets it"].map((h) => (
+                        <Th key={h} align="left" paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
+                      ))}
+                    </Tr>
+                  </Thead>
+                  <Tbody size="sm" color="muted">
+                    {[
+                      ["isVerified", "Yes — badge", "We checked WHO they are (ID review). No volume threshold; does not expire.", "Admin, by hand"],
+                      ["sellerTier", "Yes — badge", "EARNED from the last 90 days of trading. Recomputed monthly.", "sellerStandingRollup, or an admin override that pins it"],
+                      ["trustedSeller", "NO — never", "We pay this store at SHIPPING, not at delivery. A risk transfer.", "The tier carries it; an admin can also set it alone"],
+                    ].map((row) => (
+                      <Tr key={row[0]} className={ROW_BORDER}>
+                        {row.map((cell, i) => (
+                          <Td key={i} paddingSide="pr-md" padding="xs-tall">
+                            {i === 0 ? <Code size="xs" padding="xs" rounded="default" surface="subtle">{cell}</Code> : cell}
+                          </Td>
+                        ))}
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Div>
+              <Alert variant="warning" title="trustedSeller moves money">
+                It means the platform pays before the parcel lands, so we carry a lost
+                parcel and a non-delivery dispute with the money already gone. It is
+                never shown to buyers — a store does not get to display that we trust
+                it. Every change writes a <Code size="xs" padding="xs" rounded="default" surface="subtle">STORE_TRUST_CHANGE</Code>{" "}
+                audit row naming who accepted the risk, including when the monthly job
+                is the one that decided.
+              </Alert>
+              <Ul spacing="tight" indent="lg">
+                <Li className={GC.listDiscMuted}>
+                  <Span weight="bold">Setting sellerTier by hand PINS it.</Span> It writes{" "}
+                  <Code size="xs" padding="xs" rounded="default" surface="subtle">tierLockedByAdmin</Code>, and the
+                  monthly job then skips that store entirely — it still refreshes their
+                  figures, it just stops moving the tier. Without the pin an override
+                  would silently revert at the next month-end.
+                </Li>
+                <Li className={GC.listDiscMuted}>
+                  <Span weight="bold">Suspending a store revokes trust immediately</Span>,
+                  not at month end. Monthly caching would otherwise keep paying a
+                  suspended store early for up to 31 days. Re-activating does NOT
+                  re-grant it; the next month-end decides.
+                </Li>
+                <Li className={GC.listDiscMuted}>
+                  <Span weight="bold">The criteria live in one place</Span> —{" "}
+                  <Code size="xs" padding="xs" rounded="default" surface="subtle">SELLER_STANDING_DEFAULTS</Code>, admin-tunable
+                  under Site Settings. The seller&apos;s dashboard panel, the public
+                  seller guide and the buyer-facing badge page all render from it, so
+                  they cannot state different numbers from the job that grants it.
+                </Li>
+                <Li className={GC.listDiscMuted}>
+                  <Span weight="bold">Self-bought and test orders do not count</Span>, and
+                  both a distinct-buyer and a distinct-address floor must be cleared —
+                  the tier releases money early, so buying from yourself 25 times is the
+                  attack it has to survive.
+                </Li>
+              </Ul>
+            </>
+          ),
+        },
         {
           Icon: Ban, title: "Soft Ban vs Hard Ban",
           content: (

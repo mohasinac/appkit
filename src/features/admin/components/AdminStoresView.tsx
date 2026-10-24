@@ -67,6 +67,38 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     },
   });
 
+  /*
+   * 🛑 Approve/reject — the step that had no affordance anywhere.
+   *
+   * A store is born `pending` + `isPublic: false`, and this view offered only
+   * verify and suspend, so a real applicant's store could never be published.
+   * Both mutations go through the same STORE PATCH the rest of this view uses,
+   * which dispatches to `storeRepository.setStatus` and is therefore the only
+   * path that keeps `status` and `isPublic` in step. Do not reach for
+   * `adminUpdateStoreStatus`: it writes the user-level `storeStatus` mirror
+   * and never touches the store, so it would report success and publish
+   * nothing.
+   */
+  const approveStore = useApiMutation({
+    errorMessage: "Failed to approve store.",
+    mutationFn: (storeId: string) =>
+      apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { storeStatus: "active" }),
+    onSuccess: () => {
+      toast.showToast("Store approved — it is now public.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
+    },
+  });
+
+  const rejectStore = useApiMutation({
+    errorMessage: "Failed to reject store.",
+    mutationFn: (storeId: string) =>
+      apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { storeStatus: "rejected" }),
+    onSuccess: () => {
+      toast.showToast("Store application rejected.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
+    },
+  });
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -146,7 +178,10 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
           },
         })),
     renderRowActions: (row) => {
-      const isSuspended = row.status?.toLowerCase() === "suspended";
+      const status = row.status?.toLowerCase();
+      const isSuspended = status === "suspended";
+      const isPending = status === "pending";
+      const isActive = status === "active";
       const isVerified = Boolean(row._raw?.isVerified);
       return (
         <RowActionMenu
@@ -158,6 +193,24 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
             {
               label: "Open full page",
               onClick: () => router.push(String(ROUTES.ADMIN.STORE_DETAIL(row.id))),
+            },
+            /*
+             * Approve is offered for anything not already active — that
+             * deliberately includes `rejected` and `suspended`, which is how a
+             * decision gets reversed without hunting for a second control.
+             * Reject is offered only while `pending`: rejecting a store that
+             * has been live and has orders is a suspension, not a rejection,
+             * and conflating them would lose that distinction in the audit log.
+             */
+            {
+              label: ACTIONS.ADMIN["approve-store"].label,
+              onClick: () => approveStore.mutate(row.id),
+              disabled: isActive || approveStore.isPending,
+            },
+            {
+              label: ACTIONS.ADMIN["reject-store"].label,
+              onClick: () => rejectStore.mutate(row.id),
+              disabled: !isPending || rejectStore.isPending,
             },
             {
               label: ACTIONS.ADMIN["verify-store"].label,
@@ -194,6 +247,17 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         currentStatus={editorRow?.status?.toLowerCase()}
         currentIsVerified={Boolean(editorRow?._raw?.isVerified)}
         currentIsFeatured={Boolean(editorRow?._raw?.isFeatured)}
+        /*
+         * Both now travel from the list route's serializer through to the
+         * editor. `trustedSeller` was ALREADY emitted by the route and simply
+         * never passed down — the API accepted the field, nothing could send
+         * it, and the control did not exist. Root Cause #38's shape at the
+         * prop, which is where it hides best.
+         */
+        currentSellerTier={
+          editorRow?._raw?.sellerTier === "trusted" ? "trusted" : "seller"
+        }
+        currentTrustedSeller={Boolean(editorRow?._raw?.trustedSeller)}
         currentCapabilities={
           Array.isArray(editorRow?._raw?.capabilities)
             ? (editorRow!._raw!.capabilities as string[])

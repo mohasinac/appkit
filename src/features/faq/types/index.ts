@@ -10,6 +10,25 @@ export type FAQCategory =
   | "general"
   | "scam_awareness"
   /**
+   * Questions asked by SELLERS, and the buyer-facing questions about them —
+   * how to open a store, what the badges mean, how standing is earned and
+   * lost.
+   *
+   * Kept out of `general` for the reason `fees_and_taxes` was: these have a
+   * distinct audience. A buyer browsing FAQs is not looking for "how do I
+   * list an item", and a seller looking for it should not have to read past
+   * twenty buyer questions to find it.
+   *
+   * 🛑 Adding a member here is FIVE coordinated edits, three of which are
+   * compile-checked and two of which are not: this union,
+   * `FAQ_CATEGORY_LABELS`, the `Record<FAQCategory, …>` in
+   * `constants/help-guides.ts` — and then the HARDCODED category arrays in
+   * `src/app/[locale]/faqs/page.tsx` and `faqs/[category]/page.tsx`, which
+   * nothing type-checks. A comment in those files records `fees_and_taxes`
+   * needing exactly this.
+   */
+  | "selling"
+  /**
    * D6b. Money questions, kept out of `orders_payment` on purpose: that
    * category is about an ORDER (where is it, how do I pay, can I cancel),
    * while these are about the PLATFORM'S economics (is GST included, what is

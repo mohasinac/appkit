@@ -84,6 +84,42 @@ export const adminStoreUpdateSchema = z
       section: "standing", order: 3, row: "quarter",
     }),
     /*
+     * The EARNED tier, overridable by hand.
+     *
+     * 🛑 Setting it here PINS it — the monthly `sellerStandingRollup` skips a
+     * store whose `standing.tierLockedByAdmin` is true. Without the pin an
+     * override would silently revert at the next month-end, which is worse
+     * than no override: an admin grants a tier, sees it work, and finds it
+     * undone weeks later with nothing saying why.
+     *
+     * 🛑 It carries EARLY PAYOUT with it (see `trustedSeller` below) — the
+     * owner's decision is that reaching the tier grants pay-at-shipping. This
+     * control therefore moves money, which is why the help text says so.
+     */
+    sellerTier: annotate(z.enum(["seller", "trusted"]).optional(), {
+      section: "standing", order: 5, row: "pair", kind: "select",
+      help:
+        "Normally earned automatically at each month-end. Setting it here pins it and also switches payouts to start at shipping.",
+    }),
+    /*
+     * 🛑 This field has existed and been accepted by the API since it was
+     * added, with NO control anywhere in the admin UI — so the only way to set
+     * it was a hand-written PATCH. A flag that moves money and cannot be
+     * operated is worse than one that does not exist, because the code reads
+     * as though an admin is in control of it.
+     *
+     * Separate from `sellerTier` on purpose: the tier is the public, earned
+     * thing, and this is the private risk posture. An admin occasionally needs
+     * one without the other — early payout for a high-volume store that has
+     * not met the rating bar, or a badge for the platform's own store without
+     * changing its payout timing.
+     */
+    trustedSeller: annotate(z.boolean().optional(), {
+      section: "standing", order: 6, row: "quarter",
+      help:
+        "Pay this store when it ships, not when the parcel is delivered. The platform carries a lost parcel with the money already gone. Never shown to buyers.",
+    }),
+    /*
      * `when` mirrors the superRefine below, which is what stops the two from
      * disagreeing. The page used to keep this textarea live at all times and
      * then drop its value unless the status was exactly "suspended" — choose

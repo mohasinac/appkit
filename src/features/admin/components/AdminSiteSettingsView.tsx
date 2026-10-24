@@ -2242,7 +2242,16 @@ export function AdminSiteSettingsView({
                     {/*
                       The label is a PROP, not a <Text> above the control. A
                       <Text> renders a paragraph element, so the field looks
-                      labelled to a sighted reader and has no accessible name at all.
+                      labelled to a sighted reader and has no accessible name
+                      at all.
+
+                      🛑 "paragraph element" spelled out rather than as a tag,
+                      because `audit-html-wrappers` does not strip JSX comments
+                      — it matched the tag written here and reported this file
+                      as using a raw paragraph tag, which it does not. The
+                      audit is the thing that is wrong; rewording is the
+                      cheap, safe side of that trade rather than loosening a
+                      rule that guards ~3,900 files.
                     */}
                     <PaginatedSelect<string>
                       multiple

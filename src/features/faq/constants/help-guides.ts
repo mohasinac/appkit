@@ -59,6 +59,15 @@ export const FAQ_CATEGORY_HELP_GUIDE: Record<
   // live.
   scam_awareness: { path: "/help/account", label: "Account & Safety guide" },
   fees_and_taxes: { path: "/help/shopping", label: "Shopping & Checkout guide" },
+  /*
+   * The BUYER-facing badge page, not `/seller-guide`.
+   *
+   * This map sits on the public FAQ page, so its audience is a visitor rather
+   * than a seller — and "what does Trusted Seller mean" is the question they
+   * are most likely to have arrived with. A seller reading these FAQs still
+   * gets there: the badge page links on to the seller guide.
+   */
+  selling: { path: "/help/seller-badges", label: "What seller badges mean" },
   technical_support: null,
   general: null,
 };

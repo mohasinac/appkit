@@ -28,6 +28,7 @@ import {
   prizeDrawExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
+  sellerStandingRollupHandler,
   priceIndexRollupHandler,
   marketPriceRollupHandler,
   searchIndexBuildHandler,
@@ -198,6 +199,29 @@ export const productStatsSync = defineFunction({
   description: "Recompute aggregated product statistics (daily 01:00 UTC).",
   trigger: { kind: "schedule", cron: "0 1 * * *", timeZone: "UTC" },
   handler: productStatsSyncHandler,
+  options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
+});
+
+/**
+ * Seller standing — MONTHLY, on the last day of the month.
+ *
+ * 🛑 `28-31`, never `31`. Cloud Scheduler is unix-cron with no `L` token, so
+ * `0 2 31 * *` **never fires in February, April, June, September or
+ * November** — it would silently skip 5 of 12 months and present as a tier
+ * that updates "sometimes". This fires on each candidate day and
+ * `isLastDayOfMonth` in the core keeps exactly the real one, so at most 3 of
+ * the 4 invocations are no-ops that return before reading anything.
+ *
+ * 540s because it scans a 90-day window of orders and reviews, then writes
+ * one document per store. `maxInstances: 1` because two concurrent runs would
+ * both compute a tier and race on the same store documents.
+ */
+export const sellerStandingRollup = defineFunction({
+  name: "sellerStandingRollup",
+  description:
+    "Recompute seller standing on the last day of each month and grant/revoke the Trusted Seller tier, which also sets trustedSeller (paid at shipping). Fires on days 28-31; the handler keeps only the real month-end.",
+  trigger: { kind: "schedule", cron: "0 2 28-31 * *", timeZone: "UTC" },
+  handler: sellerStandingRollupHandler,
   options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -585,6 +609,7 @@ export const SCHEDULED_FUNCTIONS = [
   reservationExpiry,
   productStatsSync,
   revenueRollup,
+  sellerStandingRollup,
   priceIndexRollup,
   marketPriceRollup,
   searchIndexBuild,

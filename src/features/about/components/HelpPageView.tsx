@@ -12,6 +12,7 @@ import {
   PackageCheck,
   UserCheck,
   Store,
+  ShieldCheck,
   ChevronRight,
 } from "lucide-react";
 
@@ -63,6 +64,14 @@ export async function HelpPageView({
       href: String(ROUTES.PUBLIC.HELP_ACCOUNT),
       color: "bg-violet-50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-700",
       iconColor: "text-violet-600 dark:text-violet-400",
+    },
+    {
+      icon: ShieldCheck,
+      title: t("topicSellerBadges"),
+      desc: t("topicSellerBadgesDesc"),
+      href: String(ROUTES.PUBLIC.HELP_SELLER_BADGES),
+      color: "bg-teal-50 border-teal-200 dark:bg-teal-900/20 dark:border-teal-700",
+      iconColor: "text-teal-600 dark:text-teal-400",
     },
     {
       icon: BookOpen,

@@ -23,8 +23,33 @@ export function AdminStoresGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">Creation</Span>: Seller registers → completes onboarding wizard → admin reviews → store goes <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code>.</Li>
-              <Li><Span weight="bold">Status values</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code> (visible and selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">suspended</Code> (hidden, not selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">pending_review</Code> (awaiting admin approval).</Li>
-              <Li><Span weight="bold">isVerified badge</Span>: Awarded when the store has a consistent track record (≥20 delivered orders, ≥4.0 rating, 3+ months active). Click the toggle in AdminStoreEditorView after reviewing the store&apos;s history.</Li>
+              {/*
+                🛑 `pending_review` is not a status this codebase has. The real
+                union is `pending | active | suspended | rejected`
+                (`StoreStatusValues`), and a documented value that does not
+                exist is the same defect as a filter chip naming one: it reads
+                as authoritative and matches nothing (Root Cause #33/#34).
+                `rejected` was also missing entirely.
+              */}
+              <Li><Span weight="bold">Status values</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">pending</Code> (awaiting approval, not public), <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code> (visible and selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">suspended</Code> (hidden, not selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">rejected</Code> (application refused). Only <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code> sets <Code size="xs" padding="xs" rounded="default" surface="subtle">isPublic</Code>, and leaving it clears any earned tier immediately.</Li>
+              {/*
+                🛑 CORRECTED 2026-10-24. This read: "Awarded when the store
+                has a consistent track record (>=20 delivered orders, >=4.0
+                rating, 3+ months active)."
+
+                Those numbers were read by NO code, ever. They were the only
+                written statement of seller-trust criteria in the repo, which
+                is why the whole feature was remembered as existing — and
+                `StoreCapabilitiesGuideView` simultaneously promised a
+                different set (6 months, 4.5 rating, 50 orders). Two guides,
+                two sets of promises, zero enforcement.
+
+                The earned tier now exists and is computed monthly; this flag
+                is the identity check, which is a different question and has
+                no volume threshold at all.
+              */}
+              <Li><Span weight="bold">isVerified badge</Span>: An IDENTITY check, not a performance one — grant it after reviewing the seller&apos;s submitted ID. There is no order-count or rating threshold, and it does not expire. Toggle it in AdminStoreEditorView.</Li>
+              <Li><Span weight="bold">sellerTier</Span>: The EARNED tier, computed by <Code size="xs">sellerStandingRollup</Code> on the last day of each month. Setting it by hand pins it (<Code size="xs">tierLockedByAdmin</Code>) so the job stops moving it — and it carries early payout with it. See the Trust guide.</Li>
             </Ul>
           ),
         },

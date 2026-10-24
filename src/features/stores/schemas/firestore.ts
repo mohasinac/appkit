@@ -6,6 +6,10 @@
  */
 
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
+import type {
+  SellerTier,
+  SellerStandingCriterion,
+} from "../../../_internal/shared/features/seller-standing/config";
 import { slugify } from "../../../utils/string.formatter";
 import type { StoreCapability } from "../../auth/permissions/constants";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
@@ -163,6 +167,61 @@ export interface StoreDocument extends BaseDocument {
    * payout.
    */
   trustedSeller?: boolean;
+  /**
+   * The EARNED, PUBLIC tier.
+   *
+   * 🛑 Deliberately a second field rather than reusing `trustedSeller`, which
+   * means "paid at shipping" and is private by design (see directly above —
+   * "A store does not get to display that we trust it"). The monthly rollup
+   * writes BOTH together on a transition: `sellerTier` is what a buyer sees,
+   * `trustedSeller` is what the payout sweep reads. Collapsing them into one
+   * field would either leak the risk posture into the public projection or
+   * make the badge unrenderable.
+   *
+   * Absent means `"seller"`. There is no `"pending"` — a store that has not
+   * earned the tier simply has the base one.
+   */
+  sellerTier?: SellerTier;
+  /**
+   * The cached standing computation behind `sellerTier`.
+   *
+   * 🛑 This IS the cache. It is recomputed by `sellerStandingRollup` on the
+   * last day of each month and read straight off the store document by the
+   * seller's progress panel, the badge and the admin view — none of which
+   * recompute anything. `computedAt` / `nextComputeAt` are rendered to the
+   * seller, because without them a seller who shipped twenty orders this week
+   * will read an unchanged panel as broken rather than as monthly.
+   *
+   * Metrics only — no buyer uids, no addresses, nothing that could make this
+   * a PII store. The address criterion is counted from HMAC fingerprints and
+   * only the COUNT is kept.
+   */
+  standing?: {
+    computedAt: Date | string;
+    nextComputeAt?: Date | string;
+    windowDays: number;
+    deliveredOrders: number;
+    distinctBuyers: number;
+    distinctAddresses: number;
+    ratedOrders: number;
+    averageRating: number;
+    met: Record<SellerStandingCriterion, boolean>;
+  };
+  /**
+   * An admin set `sellerTier` by hand; the monthly rollup must not move it.
+   *
+   * 🛑 TOP-LEVEL, not a key inside `standing`, and the distinction is the
+   * point: `standing` is a MEASUREMENT — every field in it is recomputed from
+   * scratch each month — while this is a DECISION that must outlive the
+   * measurement. Nesting it meant a store could not be pinned without also
+   * fabricating a metrics block, which is why the platform store's seed could
+   * not express "trusted, don't touch" without inventing figures nobody had
+   * measured.
+   *
+   * PRIVATE. It tells a buyer nothing about the goods or the seller; it is a
+   * note about how we administer this record.
+   */
+  tierLockedByAdmin?: boolean;
   /** Reason recorded when `status` is set to "suspended". */
   suspensionReason?: string;
 
@@ -472,6 +531,21 @@ export const STORE_TRACKED_FIELDS = [
   "isFeatured",
   "suspensionReason",
   "capabilities",
+  /*
+   * Both halves of the trust decision are tracked, and both matter for
+   * different reasons. `sellerTier` is what the seller and every buyer saw, so
+   * "when did I lose the badge" has an answer. `trustedSeller` moves MONEY —
+   * it is the flag that pays this store before delivery — so the timeline is
+   * the record of when the platform started and stopped carrying that risk,
+   * alongside the `STORE_TRUST_CHANGE` audit row that names who decided it.
+   *
+   * 🛑 `standing` is deliberately NOT tracked. It is recomputed in full every
+   * month, so every field inside it changes on every run; tracking it would
+   * write a diff of five numbers monthly and exhaust the 50-entry FIFO cap
+   * within four years while burying the two transitions anyone reads.
+   */
+  "sellerTier",
+  "trustedSeller",
 ] as const;
 
 /**
@@ -519,6 +593,9 @@ export const STORE_FIELDS = {
   IS_FEATURED: "isFeatured",
   IS_VERIFIED: "isVerified",
   TRUSTED_SELLER: "trustedSeller",
+  SELLER_TIER: "sellerTier",
+  STANDING: "standing",
+  TIER_LOCKED_BY_ADMIN: "tierLockedByAdmin",
   SUSPENSION_REASON: "suspensionReason",
   CAPABILITIES: "capabilities",
 

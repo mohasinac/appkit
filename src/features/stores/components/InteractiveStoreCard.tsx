@@ -6,6 +6,7 @@ import { BaseListingCard, Div, Heading, RichText, Row, Scrim, Span, Stack } from
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
+import { SellerTierBadge } from "./SellerTierBadge";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -143,6 +144,19 @@ export function InteractiveStoreCard({
           >
             {store.storeName}
           </Heading>
+
+          {/*
+            Trust badges, directly under the name.
+            🛑 No `href` — the whole card is already a link, and nesting an
+            anchor inside one is invalid HTML that browsers resolve by
+            splitting the outer link. The badges explain themselves on the
+            store page instead.
+          */}
+          <SellerTierBadge
+            isVerified={store.isVerified}
+            sellerTier={store.sellerTier}
+            size="xs"
+          />
 
           {/* Description */}
           {store.storeDescription ? (
