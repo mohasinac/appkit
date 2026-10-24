@@ -10,8 +10,11 @@ import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/cat
 import { isListingCategory } from "../../../../features/categories/constants/listing-categories";
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores/schemas/firestore";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
+import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
+import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/parts/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
+import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
 
 // Product field strings — matches consumer field-names.ts
 const PRODUCT_STATUS = "status";
@@ -162,10 +165,25 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.PRE_ORDERS), "daily", 0.7),
     page(String(ROUTES.PUBLIC.BUNDLES), "weekly", 0.6),
     page(String(ROUTES.PUBLIC.PRIZE_DRAWS), "daily", 0.7),
-    page(String(ROUTES.PUBLIC.CLASSIFIED), "daily", 0.6),
-    page(String(ROUTES.PUBLIC.DIGITAL_CODES), "daily", 0.6),
-    page(String(ROUTES.PUBLIC.LIVE), "hourly", 0.7),
+    /*
+     * 🛑 `/classified`, `/digital-codes` and `/live` are NOT listed, and must
+     * not be re-added. All three index pages were reduced to redirect stubs
+     * that export `robots: { index: false, follow: false }` and immediately
+     * `redirect()` to `/products?listingType=…`. Submitting a URL that
+     * declares itself noindex is a direct contradiction — we ask Google to
+     * crawl it and then tell it not to keep it. Their DETAIL pages are still
+     * submitted by `fetchClassifiedUrls`/`fetchDigitalCodeUrls`/`fetchLiveUrls`
+     * below; it is only the dead index that goes.
+     */
     page(String(ROUTES.PUBLIC.ART), "weekly", 0.6),
+    /*
+     * Hubs that exist, are linked, and were never submitted.
+     * `/franchise` is the index for a whole `categoryType`; `/parts` is the
+     * Beyblade parts gallery — both are real pages with real content and both
+     * were absent from the sitemap entirely (measured 2026-10-24).
+     */
+    page(String(ROUTES.PUBLIC.FRANCHISE), "weekly", 0.6),
+    page(String(ROUTES.PUBLIC.PARTS), "weekly", 0.6),
     /*
      * `daily`, matching the other one-of-a-kind types rather than `/art`'s
      * weekly: most spares are quantity 1, so the page turns over as fast as
@@ -187,17 +205,13 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
   ];
 }
 
-// "art" and "stickers" listing types render at the same PRODUCT_DETAIL route
-// as "standard" (see route-map.ts's ART comment) — no dedicated detail page.
-const PRODUCT_DETAIL_LISTING_TYPES = ["standard", "art", "stickers"];
-
 async function fetchProductUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
     const snap = await db
       .collection(PRODUCT_COLLECTION)
       .where(PRODUCT_STATUS, "==", PRODUCT_STATUS_PUBLISHED)
-      .where("listingType", "in", PRODUCT_DETAIL_LISTING_TYPES)
+      .where("listingType", "in", [...PRODUCT_DETAIL_LISTING_TYPES])
       .select(PRODUCT_SLUG, PRODUCT_UPDATED_AT, TEST_DATA_FIELD)
       .limit(5000)
       .get();
@@ -385,7 +399,51 @@ async function fetchCategoryTypeUrls(
  * row) and reject the three discriminated kinds in memory. `categoryType` must
  * stay in the `.select()` list or it comes back undefined and nothing is
  * rejected.
+ *
+ * ## 🛑 Only STOCKED categories and ROOTS are submitted
+ *
+ * Measured against production 2026-10-24: the taxonomy holds **4,698
+ * categories and exactly 20 of them have any item at all** (10 of those are
+ * leaves). The sitemap was submitting **4,658** of them — 97.6% of all 4,773
+ * URLs — and a random sample of 30 found **30 with zero product links and an
+ * empty-state message**. Google Search Console at that moment: **12 indexed
+ * pages, 249 not indexed**.
+ *
+ * Asking Google to crawl 4,658 empty pages is a site-level quality signal and
+ * a crawl-budget sink, and `next.config.js` already records the same set as
+ * ~95,000 uncached origin renders, roughly 43% of the billing cycle.
+ *
+ * The rule is therefore:
+ *   - **stocked** — the rollup says it or a descendant has something, OR
+ *   - **tier 0** — a root hub, which `CategoryDetailPageView` renders as a
+ *     tier-grouped index of its descendants, so it is a real page even with no
+ *     direct stock and it is the entry point a visitor drills down from.
+ *
+ * Ancestors of a stocked leaf come along automatically: `totalProductCount` is
+ * a ROLLUP, so every node on the path to stock is non-zero and the drill-down
+ * chain stays crawlable. That is the property that makes this safe — pruning
+ * by a per-node count instead would sever the path.
+ *
+ * Empty leaves are not orphaned by this. They stay reachable, and they
+ * canonicalise to their `/parts/…` or `/beys/…` entry in the parts database,
+ * which is where their actual content lives.
+ *
+ * 🛑 `metrics` must stay in the `.select()` list, and a row with NO counter is
+ * EXCLUDED rather than assumed stocked — 33 of 4,698 rows carry no numeric
+ * counter (the reconciler has never visited them). Treating "unknown" as
+ * "stocked" would quietly re-admit the empty pages this exists to remove, so
+ * the count is logged instead of being silently absorbed.
  */
+interface CategoryMetricsShape {
+  totalProductCount?: number;
+  totalAuctionCount?: number;
+}
+
+/** A rollup of zero, or no rollup at all, means nothing to show. */
+function hasStock(metrics: CategoryMetricsShape | undefined): boolean {
+  return (metrics?.totalProductCount ?? 0) + (metrics?.totalAuctionCount ?? 0) > 0;
+}
+
 async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
@@ -397,18 +455,37 @@ async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
           CATEGORY_FIELDS.SLUG,
           CATEGORY_FIELDS.UPDATED_AT,
           CATEGORY_FIELDS.CATEGORY_TYPE,
+          CATEGORY_FIELDS.TIER,
+          CATEGORY_FIELDS.METRICS,
           TEST_DATA_FIELD,
         ),
       "category",
     );
-    return docs
+    let uncounted = 0;
+    const kept = docs
       .filter((doc) => {
         const data = doc.data();
         if (isTestDoc(data)) return false;
-        return isListingCategory({
-          categoryType: data[CATEGORY_FIELDS.CATEGORY_TYPE] as string | undefined,
-        });
-      })
+        if (
+          !isListingCategory({
+            categoryType: data[CATEGORY_FIELDS.CATEGORY_TYPE] as string | undefined,
+          })
+        ) {
+          return false;
+        }
+        const metrics = data[CATEGORY_FIELDS.METRICS] as CategoryMetricsShape | undefined;
+        if (metrics?.totalProductCount === undefined && metrics?.totalAuctionCount === undefined) {
+          uncounted++;
+        }
+        return data[CATEGORY_FIELDS.TIER] === 0 || hasStock(metrics);
+      });
+    if (uncounted > 0) {
+      serverLogger.warn(
+        `sitemap: ${uncounted} active categories have no rollup counter and were judged empty`,
+        { section: "category", uncounted },
+      );
+    }
+    return kept
       .map((doc) => {
         const data = doc.data();
         const slug = (data[CATEGORY_FIELDS.SLUG] as string | undefined) ?? doc.id;
@@ -430,6 +507,21 @@ const fetchBrandUrls = (baseUrl: string) =>
 
 const fetchBundleUrls = (baseUrl: string) =>
   fetchCategoryTypeUrls(baseUrl, "bundle", (slug) => ROUTES.PUBLIC.BUNDLE_DETAIL(slug), "bundle");
+
+/**
+ * `/franchise/{slug}` — what a product is FROM, where a brand is who made it.
+ *
+ * `"franchise"` has been a real `CategoryType` with a real detail route since
+ * 2026-10-14, and this call simply did not exist: **zero** franchise URLs were
+ * ever submitted (measured 2026-10-24). `fetchCategoryTypeUrls` already filters
+ * on `isActive`, which is the behaviour wanted here rather than an accident —
+ * 7 of the 8 franchises are deliberately inactive because an unstocked facet
+ * "renders as a card in the grid that opens an empty page", so only the stocked
+ * one is advertised while the rest still resolve for the `/franchise/*` links
+ * `CharacterHotspot` ships.
+ */
+const fetchFranchiseUrls = (baseUrl: string) =>
+  fetchCategoryTypeUrls(baseUrl, "franchise", (slug) => ROUTES.PUBLIC.FRANCHISE_DETAIL(slug), "franchise");
 
 /**
  * `groupedListings` documents. `listSitemapGroupedListings` has existed since
@@ -545,11 +637,77 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
   }
 }
 
+/**
+ * `/beys/{slug}` — 1,988 model reference pages, and `/parts/{slot}/{code}` —
+ * 2,488 part pages. Both carry real measured data (type, system, weight, spin,
+ * release code, WBO legality, which models use a part) and both had **zero**
+ * sitemap URLs, while 4,658 empty category pages were submitted. The index was
+ * precisely inverted.
+ *
+ * They are submitted together with their prerendering (`static-params.ts`), not
+ * before it: a page whose `<title>` still streams into `<body>` is not ready to
+ * be advertised.
+ */
+async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const docs = await readAllDocs(
+      getAdminDb().collection(BEYS_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
+      "bey",
+    );
+    return docs
+      .filter((doc) => !isTestDoc(doc.data()))
+      .map((doc) => ({
+      url: `${baseUrl}${ROUTES.PUBLIC.BEY_DETAIL(doc.id)}`,
+      lastModified:
+        (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
+        new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    }));
+  } catch (err) {
+    void normalizeError(err);
+    return sitemapSectionFailed("bey", err);
+  }
+}
+
+async function fetchPartUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const docs = await readAllDocs(
+      getAdminDb().collection(PART_GLOSSARY_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
+      "part",
+    );
+    const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
+    return docs
+      .filter((doc) => !isTestDoc(doc.data()))
+      .map((doc) => {
+        // Document id is `{slot}--{tail}`, and the route segment IS the slot.
+        const sep = doc.id.indexOf("--");
+        if (sep === -1) return null;
+        const classification = doc.id.slice(0, sep);
+        const code = doc.id.slice(sep + 2);
+        if (!code || !slots.has(classification)) return null;
+        return {
+          url: `${baseUrl}${ROUTES.PUBLIC.PART_DETAIL(classification, code)}`,
+          lastModified:
+            (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
+            new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.4,
+        };
+      })
+      .filter((row): row is NonNullable<typeof row> => row !== null);
+  } catch (err) {
+    void normalizeError(err);
+    return sitemapSectionFailed("part", err);
+  }
+}
+
 export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
   const [
     productUrls,
     categoryUrls,
     brandUrls,
+    franchiseUrls,
     bundleUrls,
     groupedListingUrls,
     eventUrls,
@@ -562,10 +720,13 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     liveUrls,
     storeUrls,
     scammerUrls,
+    beyUrls,
+    partUrls,
   ] = await Promise.all([
     fetchProductUrls(baseUrl),
     fetchCategoryUrls(baseUrl),
     fetchBrandUrls(baseUrl),
+    fetchFranchiseUrls(baseUrl),
     fetchBundleUrls(baseUrl),
     fetchGroupedListingUrls(baseUrl),
     fetchEventUrls(baseUrl),
@@ -578,6 +739,8 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchLiveUrls(baseUrl),
     fetchStoreUrls(baseUrl),
     fetchScammerUrls(baseUrl),
+    fetchBeyUrls(baseUrl),
+    fetchPartUrls(baseUrl),
   ]);
   const staticUrls = staticPages(baseUrl);
 
@@ -593,6 +756,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     static: staticUrls.length,
     category: categoryUrls.length,
     brand: brandUrls.length,
+    franchise: franchiseUrls.length,
     bundle: bundleUrls.length,
     group: groupedListingUrls.length,
     blog: blogUrls.length,
@@ -606,6 +770,8 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     event: eventUrls.length,
     store: storeUrls.length,
     scammer: scammerUrls.length,
+    bey: beyUrls.length,
+    part: partUrls.length,
   };
   const empty = Object.entries(sections)
     .filter(([, n]) => n === 0)
@@ -622,6 +788,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...staticUrls,
     ...categoryUrls,
     ...brandUrls,
+    ...franchiseUrls,
     ...bundleUrls,
     ...groupedListingUrls,
     ...blogUrls,
@@ -635,5 +802,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...eventUrls,
     ...storeUrls,
     ...scammerUrls,
+    ...beyUrls,
+    ...partUrls,
   ];
 }

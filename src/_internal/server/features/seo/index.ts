@@ -6,3 +6,13 @@ export { buildSitemap } from "./sitemap";
 export type { SitemapOptions } from "./sitemap";
 export { buildDefaultOgImage, DEFAULT_OG_SIZE, resolveOgImageUrl } from "./og";
 export type { DefaultOgOptions } from "./og";
+export {
+  productDetailSlugs,
+  brandDetailSlugs,
+  franchiseDetailSlugs,
+  blogPostSlugs,
+  beyDetailSlugs,
+  partDetailParams,
+} from "./static-params";
+export { brandLinks, franchiseLinks, categoryRootLinks } from "./taxonomy-links";
+export type { TaxonomyLink } from "./taxonomy-links";

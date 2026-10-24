@@ -76,7 +76,18 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
   const initial = brand.name[0]?.toUpperCase() ?? "?";
   return (
     <Link
-      href={ROUTES.PUBLIC.CATEGORY_DETAIL(brand.slug)}
+      /*
+       * 🛑 BRAND_DETAIL, not CATEGORY_DETAIL.
+       *
+       * A brand IS a `categoryType: "brand"` row, so `/categories/brand-hasbro`
+       * resolves just as `/brands/brand-hasbro` does — and both are indexable.
+       * This component was the one surface linking brands by the category path
+       * while every other surface used `/brands/…`, so the homepage shipped two
+       * different URLs for the same entity and split its signals between them.
+       * `/brands/{slug}` is the one the sitemap advertises and the one the
+       * brand page declares canonical.
+       */
+      href={ROUTES.PUBLIC.BRAND_DETAIL(brand.slug)}
       className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
     >
       {iconSrc || coverImage ? (
