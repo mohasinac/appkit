@@ -40,7 +40,7 @@
  * @tag sideEffects:none
  */
 
-export type CategoryTabKey = "categories" | "brands" | "franchises" | "bundles";
+export type CategoryTabKey = "categories" | "brands" | "franchises" | "bundles" | "characters";
 
 export interface CategoryTabDef {
   key: CategoryTabKey;
@@ -56,6 +56,11 @@ export const CATEGORY_TABS: readonly CategoryTabDef[] = [
   { key: "categories", label: "Categories" },
   { key: "brands", label: "Brands" },
   { key: "franchises", label: "Franchises" },
+  /*
+   * Who USED the bey. Answers a question none of the others can and the one
+   * buyers actually ask — "Tyson's Dragoon", not "Attack Ring MA-04".
+   */
+  { key: "characters", label: "Characters" },
   { key: "bundles", label: "Bundles" },
 ];
 
@@ -83,6 +88,8 @@ export function matchesCategoryTab(c: TabbableCategory, tab: CategoryTabKey): bo
       return type === "brand";
     case "franchises":
       return type === "franchise";
+    case "characters":
+      return type === "character";
     case "bundles":
       return type === "bundle";
     case "categories":

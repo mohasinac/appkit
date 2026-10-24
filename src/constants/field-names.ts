@@ -770,6 +770,20 @@ export const CATEGORY_FIELDS = {
      * A brand is who MADE it (Takara-Tomy); a franchise is what it IS FROM.
      */
     FRANCHISE: "franchise",
+    /*
+     * WHO USED the bey in the story — Tyson Granger, Kai Hiwatari. The third
+     * sibling of BRAND and FRANCHISE and tier-0 for the same reason: a row the
+     * product points AT, never one it lives under. Who made it / what it is
+     * from / who used it.
+     *
+     * 🛑 Match on the SLUG, never the display name. `brand-rows.ts` trap 1
+     * records that brands match on display NAME, so renaming a brand silently
+     * orphans its whole catalogue; franchise was added later and deliberately
+     * took the stable key instead. Characters follow franchise — and it matters
+     * more here, because character names are routinely re-localised between
+     * the Japanese and English releases.
+     */
+    CHARACTER: "character",
   },
 
   BUNDLE_STOCK_STATUS_VALUES: {

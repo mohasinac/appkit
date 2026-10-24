@@ -35,6 +35,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem",
     "role": "chip"
   },
@@ -1886,8 +1887,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Devil is a Beyblade blade from the Dynamite Battle Layer System, weighing 5.5 g. Released July 17th, 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with Ultimate Valkyrie Legacy Variable'-9, Devil Belial Giga Mobius-3, Random Booster Vol. 27 and 2 other releases.",
+    "seoDescription": "Devil is a Beyblade blade from the Dynamite Battle Layer System, weighing 5.5 g. Released July 17th, 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with Devil Blade Get Campaign, Ultimate Valkyrie Legacy Variable'-9, Devil Belial Giga Mobius-3 and 3 other releases.",
     "shippedIn": [
+      "Devil Blade Get Campaign",
       "Ultimate Valkyrie Legacy Variable'-9",
       "Devil Belial Giga Mobius-3",
       "Random Booster Vol. 27",
@@ -1895,6 +1897,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 30"
     ],
     "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Devil Blade Get Campaign",
+        "colourway": "black and red"
+      },
       {
         "vendor": "Takara Tomy",
         "code": "B-193",
@@ -1920,6 +1928,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "black and red",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Devil Blade Get Campaign"
+      },
       {
         "colourway": "black and red",
         "vendor": "Takara Tomy",
@@ -2441,7 +2455,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Dynamite is a Beyblade blade from the Dynamite Battle Layer System, weighing 5.5 g. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It shipped with Dynamite Belial Nexus Venture-2, Beyblade Dynamite Battle Entry Set, Dynamite Ragnaruk Nexus Just-6 and 7 other releases.",
+    "seoDescription": "Dynamite is a Beyblade blade from the Dynamite Battle Layer System, weighing 5.5 g. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It shipped with Dynamite Belial Nexus Venture-2, Beyblade Dynamite Battle Entry Set, Dynamite Ragnaruk Nexus Just-6 and 8 other releases.",
     "shippedIn": [
       "Dynamite Belial Nexus Venture-2",
       "Beyblade Dynamite Battle Entry Set",
@@ -2452,7 +2466,8 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Dynamite Valkyrie Over Just-6",
       "Random Booster Vol. 27",
       "Dynamite Kerbeus Legacy Moment-9",
-      "Random Booster Vol. 29"
+      "Random Booster Vol. 29",
+      "Dynamite Perseus-6"
     ],
     "releases": [
       {
@@ -2492,6 +2507,15 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "code": "B-198",
         "bey": "Dynamite Kerbeus Legacy Moment-9",
         "set": "Random Booster Vol. 29"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Dynamite Perseus-6",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Rare Bey Get Battle"
+        ]
       }
     ],
     "colourways": [
@@ -2512,6 +2536,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-194",
         "inBey": "Dynamite Valkyrie Over Just-6"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Rare Bey Get Battle",
+        "inBey": "Dynamite Perseus-6"
       }
     ],
     "colourwaysDocumented": true,
@@ -3145,6 +3176,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GolemRock",
     "ratings": {
       "attack": 30,
@@ -4450,6 +4482,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Iron_Man",
     "ratings": {
       "attack": 17,
@@ -5409,6 +5442,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Luke_Skywalker",
     "ratings": {
       "attack": 23,
@@ -6438,6 +6472,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Primal",
     "ratings": {
       "attack": 60,
@@ -6559,6 +6594,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Optimus_Prime",
     "ratings": {
       "attack": 22,
@@ -6758,13 +6794,28 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "PhoenixFeather is a Beyblade blade from the Basic Line, weighing 33.3 g. Released December 15th, 2023 as BX-00 (Takara Tomy) and G2740 (Hasbro) for Beyblade X (Season 1). It shipped with PhoenixFeather 2-60N, Random Booster Vol. 5, Feather Phoenix 2-60N.",
+    "seoDescription": "PhoenixFeather is a Beyblade blade from the Basic Line, weighing 33.3 g. Released December 15th, 2023 as BX-00 (Takara Tomy) and G2740 (Hasbro) for Beyblade X (Season 1). It shipped with PhoenixFeather, PhoenixFeather 2-60N, Random Booster Vol. 5 and 1 other release.",
     "shippedIn": [
+      "PhoenixFeather",
       "PhoenixFeather 2-60N",
       "Random Booster Vol. 5",
       "Feather Phoenix 2-60N"
     ],
     "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "bey": "PhoenixFeather",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "bey": "PhoenixFeather",
+        "colourway": "Metal Coat: Orange"
+      },
       {
         "vendor": "Takara Tomy",
         "code": "UX-12",
@@ -6774,6 +6825,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Hasbro",
         "bey": "Feather Phoenix 2-60N"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Metal Coat: Orange",
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "inBey": "PhoenixFeather"
       }
     ],
     "colourwaysDocumented": true,
@@ -9533,6 +9592,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Steel_Samurai",
     "ratings": {
       "attack": 40,
@@ -10937,6 +10997,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Tusk_Mammoth",
     "ratings": {
       "attack": 33,
@@ -12418,7 +12479,18 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "bearing-base"
     ],
     "source": "fandom-infobox",
-    "seoDescription": "Bearing Base is a Beyblade blade base, weighing 8 g.",
+    "seoDescription": "Bearing Base is a Beyblade blade base, weighing 8 g. It shipped with Bearing Stinger.",
+    "shippedIn": [
+      "Bearing Stinger"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Bearing Stinger"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Bearing_Base",
     "role": "base"
   },
@@ -12731,6 +12803,10 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "bey": "Zeus"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Zeus"
       }
     ],
     "colourwaysDocumented": true,
@@ -12748,9 +12824,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "role": "base"
   },
   {
-    "id": "spin-gear--flame-change",
-    "classification": "Spin Gear",
-    "slot": "spin-gear",
+    "id": "blade-base--flame-change",
+    "classification": "Blade Base",
+    "slot": "blade-base",
     "code": null,
     "name": "Flame Change",
     "aliases": [
@@ -12767,7 +12843,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Spin Gear System"
       }
     ],
-    "seoDescription": "Flame Change is a Beyblade spin gear from the Spin Gear System. It shipped with Dranzer F, Black Dranzer, Bey Ultimate Stadium and 1 other release.",
+    "seoDescription": "Flame Change is a Beyblade blade base from the Spin Gear System. It shipped with Dranzer F, Black Dranzer, Bey Ultimate Stadium and 1 other release.",
     "shippedIn": [
       "Dranzer F",
       "Black Dranzer",
@@ -12828,7 +12904,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change",
     "system": "Spin Gear System",
-    "role": "gear"
+    "role": "base"
   },
   {
     "id": "blade-base--flat",
@@ -13090,7 +13166,17 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 1 · Defense 2 · Stamina 1"
       }
     ],
-    "seoDescription": "Hit Release (Draciel Version) is a Beyblade blade base from the Engine Gear System.",
+    "seoDescription": "Hit Release (Draciel Version) is a Beyblade blade base from the Engine Gear System. It shipped with Draciel G.",
+    "shippedIn": [
+      "Draciel G"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Draciel G"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Hit_Release_(Draciel_Version)",
     "ratings": {
       "attack": 1,
@@ -13165,9 +13251,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 2 · Stamina 1"
       }
     ],
-    "seoDescription": "Hit Release (Dranzer Version) is a Beyblade blade base from the Engine Gear System. It shipped with Dranzer G.",
+    "seoDescription": "Hit Release (Dranzer Version) is a Beyblade blade base from the Engine Gear System. It shipped with Dranzer G, Rapid Eagle G, Apollon G. One alternate colourway is recorded: Hasbro Metallic Red Ver..",
     "shippedIn": [
-      "Dranzer G"
+      "Dranzer G",
+      "Rapid Eagle G",
+      "Apollon G"
     ],
     "releases": [
       {
@@ -13175,8 +13263,36 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Dranzer G"
       },
       {
+        "vendor": "Takara Tomy",
+        "bey": "Rapid Eagle G"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Apollon G"
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Dranzer G"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dranzer G",
+        "colourway": "Hasbro Metallic Red Ver."
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Rapid Eagle G"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Apollon G"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Hasbro Metallic Red Ver.",
+        "vendor": "Hasbro",
+        "inBey": "Dranzer G"
       }
     ],
     "colourwaysDocumented": true,
@@ -13410,7 +13526,41 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 1 · Stamina 2"
       }
     ],
-    "seoDescription": "Instant Release (Driger G Version) is a Beyblade blade base from the Engine Gear System, weighing 7.3 g.",
+    "seoDescription": "Instant Release (Driger G Version) is a Beyblade blade base from the Engine Gear System, weighing 7.3 g. It shipped with Driger G, Driger G - Hasbro Customize Engine Gear Version – Comes with Right Customize Engine Gear and Metal Semi-Flat CEW., Driger G - Tournament Prize Versions.",
+    "shippedIn": [
+      "Driger G",
+      "Driger G - Hasbro Customize Engine Gear Version – Comes with Right Customize Engine Gear and Metal Semi-Flat CEW.",
+      "Driger G - Tournament Prize Versions"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Driger G"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Driger G - Hasbro Customize Engine Gear Version – Comes with Right Customize Engine Gear and Metal Semi-Flat CEW.",
+        "colourway": "Black"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Driger G - Tournament Prize Versions",
+        "colourway": "Gold, Silver and Bronze"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Black",
+        "vendor": "Unknown",
+        "inBey": "Driger G - Hasbro Customize Engine Gear Version – Comes with Right Customize Engine Gear and Metal Semi-Flat CEW."
+      },
+      {
+        "colourway": "Gold, Silver and Bronze",
+        "vendor": "Unknown",
+        "inBey": "Driger G - Tournament Prize Versions"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release_(Driger_G_Version)",
     "ratings": {
       "attack": 1,
@@ -13574,7 +13724,21 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 1 · Defense 2 · Stamina 3"
       }
     ],
-    "seoDescription": "Metal Sharp Base is a Beyblade blade base.",
+    "seoDescription": "Metal Sharp Base is a Beyblade blade base. It shipped with Flash Leopard 2.",
+    "shippedIn": [
+      "Flash Leopard 2"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Flash Leopard 2"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Flash Leopard 2"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Metal_Sharp_Base",
     "ratings": {
       "attack": 1,
@@ -16374,7 +16538,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "1D is a Beyblade chassis from the Superking Layer System, weighing 11.4 g. Released April 25th, 2020 as B-164 for Beyblade Burst Surge. It shipped with Curse Satan Hurricane Universe 1D, Random Booster Vol. 20, Glide Hyperion 7Bump Survive 1D and 12 other releases.",
+    "seoDescription": "1D is a Beyblade chassis from the Superking Layer System, weighing 11.4 g. Released April 25th, 2020 as B-164 for Beyblade Burst Surge. It shipped with Curse Satan Hurricane Universe 1D, Random Booster Vol. 20, Glide Hyperion 7Bump Survive 1D and 14 other releases.",
     "shippedIn": [
       "Curse Satan Hurricane Universe 1D",
       "Random Booster Vol. 20",
@@ -16390,7 +16554,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Jet Wyvern Around Just 1D",
       "First Uranus 00 Metal Accel 1D",
       "Random Booster Vol. 24",
-      "Zest Achilles Customize Set"
+      "Zest Achilles Customize Set",
+      "Brave Solomon 1D",
+      "1D"
     ],
     "releases": [
       {
@@ -16445,6 +16611,24 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-201",
         "bey": "Zest Achilles Customize Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Brave Solomon 1D",
+        "colourway": "Gold Version",
+        "distribution": [
+          "Rare Bey Get Battle"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "1D",
+        "colourway": "Black Version",
+        "distribution": [
+          "1D Chassis Get Campaign"
+        ]
       }
     ],
     "colourways": [
@@ -16453,6 +16637,20 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-178",
         "inBey": "First Uranus 00 Metal Accel 1D"
+      },
+      {
+        "colourway": "Gold Version",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Rare Bey Get Battle",
+        "inBey": "Brave Solomon 1D"
+      },
+      {
+        "colourway": "Black Version",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "1D Chassis Get Campaign",
+        "inBey": "1D"
       }
     ],
     "colourwaysDocumented": true,
@@ -16536,7 +16734,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "1S is a Beyblade chassis from the Superking Layer System, weighing 16.5 g. Released March 28th, 2020 as B-161 for Beyblade Burst Surge. It shipped with Glide Ragnaruk Wheel Revolve 1S, Curse Ragnaruk 0 Accel' 1S, Random Booster Vol. 20 and 13 other releases. 2 alternate colourways are recorded.",
+    "seoDescription": "1S is a Beyblade chassis from the Superking Layer System, weighing 16.5 g. Released March 28th, 2020 as B-161 for Beyblade Burst Surge. It shipped with Glide Ragnaruk Wheel Revolve 1S, Curse Ragnaruk 0 Accel' 1S, Random Booster Vol. 20 and 14 other releases. 3 alternate colourways are recorded.",
     "shippedIn": [
       "Glide Ragnaruk Wheel Revolve 1S",
       "Curse Ragnaruk 0 Accel' 1S",
@@ -16553,7 +16751,8 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Variant Spriggan Convert High Hold' 1S",
       "Random Booster Vol. 26",
       "King Helios Karma High Charge' 1S",
-      "Random Booster Vol. 28"
+      "Random Booster Vol. 28",
+      "1S"
     ],
     "releases": [
       {
@@ -16610,6 +16809,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "King Helios Karma High Charge' 1S",
         "set": "Random Booster Vol. 28",
         "colourway": "Demon King Color Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "1S",
+        "colourway": "G4 Black Ver."
       }
     ],
     "colourways": [
@@ -16624,6 +16829,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-196",
         "inBey": "King Helios Karma High Charge' 1S"
+      },
+      {
+        "colourway": "G4 Black Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "1S"
       }
     ],
     "colourwaysDocumented": true,
@@ -18169,6 +18380,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/DB_Core_-_Belial_2",
     "ratings": {
       "attack": 2,
@@ -20523,9 +20735,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "romaji": "Ōrumaito"
   },
   {
-    "id": "performance-tip--generate-h",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
+    "id": "disc-integrated-driver--generate-h",
+    "classification": "Disc-Integrated Driver",
+    "slot": "disc-integrated-driver",
     "code": null,
     "name": "Generate-H",
     "weightG": 28.9,
@@ -20568,7 +20780,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Generate-H is a Beyblade performance tip from the HyperSphere System, weighing 28.9 g. Released as E9239 for Beyblade Burst Rise. It shipped with Master Devolos D5 Generate-H, Master Devolos D5 and Emperor Forneus F5 Dual Pack.",
+    "seoDescription": "Generate-H is a Beyblade disc-integrated driver from the HyperSphere System, weighing 28.9 g. Released as E9239 for Beyblade Burst Rise. It shipped with Master Devolos D5 Generate-H, Master Devolos D5 and Emperor Forneus F5 Dual Pack.",
     "shippedIn": [
       "Master Devolos D5 Generate-H",
       "Master Devolos D5 and Emperor Forneus F5 Dual Pack"
@@ -20602,7 +20814,11 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "system": "HyperSphere System",
     "series": "Beyblade Burst Rise",
     "partType": "Balance",
-    "role": "tip"
+    "role": "tip",
+    "integratedRoles": [
+      "weight",
+      "tip"
+    ]
   },
   {
     "id": "disc-integrated-driver--generate",
@@ -23021,6 +23237,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 21",
       "Glide Ragnaruk 5 Trans 1S",
       "Random Booster Vol. 24",
+      "5",
       "Galaxy Pegasis 5Glaive Jolt'",
       "Metal Fight Beyblade 2020 Baku Set",
       "Blast Jinnius J3 5Glaive Guard",
@@ -23118,6 +23335,15 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "code": "B-00",
+        "bey": "5",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Cho-Z Bey Get Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
         "bey": "Galaxy Pegasis 5Glaive Jolt'",
         "set": "Metal Fight Beyblade 2020 Baku Set"
       },
@@ -23165,6 +23391,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Cho-Z Bey Get Campaign",
+        "inBey": "5"
+      },
       {
         "colourway": "Flame Ver.",
         "vendor": "Hasbro",
@@ -30855,7 +31088,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Wheel is a Beyblade disc from the Superking Layer System, weighing 30.6 g. Released March 28th, 2020 as B-161 for Beyblade Burst Surge. It shipped with Glide Ragnaruk Wheel Revolve 1S, Emperor Forneus Wheel Destroy, Random Booster Vol. 21 and 6 other releases.",
+    "seoDescription": "Wheel is a Beyblade disc from the Superking Layer System, weighing 30.6 g. Released March 28th, 2020 as B-161 for Beyblade Burst Surge. It shipped with Glide Ragnaruk Wheel Revolve 1S, Emperor Forneus Wheel Destroy, Random Booster Vol. 21 and 7 other releases.",
     "shippedIn": [
       "Glide Ragnaruk Wheel Revolve 1S",
       "Emperor Forneus Wheel Destroy",
@@ -30864,6 +31097,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 22",
       "Dragoon V2 Wheel Xceed'",
       "Random Booster Vol. 25",
+      "Wheel",
       "Dragoon V2 Wheel Xplosion'",
       "Bakuten Shoot Beyblade 2023 V2 Set"
     ],
@@ -30894,8 +31128,22 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "code": "B-00",
+        "bey": "Wheel",
+        "colourway": "Gold Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
         "bey": "Dragoon V2 Wheel Xplosion'",
         "set": "Bakuten Shoot Beyblade 2023 V2 Set"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Wheel"
       }
     ],
     "colourwaysDocumented": true,
@@ -31627,9 +31875,10 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Accel' is a Beyblade driver from the Cho-Z Layer System, weighing 5.8 g. Released November 24th, 2018 as B-00 for Beyblade Burst Turbo. It shipped with Archer Hercules 10Cross Accel', Revive Phoenix 8'Meteor Accel', Random Booster Vol. 16 and 7 other releases.",
+    "seoDescription": "Accel' is a Beyblade driver from the Cho-Z Layer System, weighing 5.8 g. Released November 24th, 2018 as B-00 for Beyblade Burst Turbo. It shipped with Archer Hercules 10Cross Accel', Accel', Revive Phoenix 8'Meteor Accel' and 8 other releases.",
     "shippedIn": [
       "Archer Hercules 10Cross Accel'",
+      "Accel'",
       "Revive Phoenix 8'Meteor Accel'",
       "Random Booster Vol. 16",
       "Curse Ragnaruk 0 Accel' 1S",
@@ -31647,6 +31896,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Archer Hercules 10Cross Accel'",
         "distribution": [
           "wbba. Store Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Accel'",
+        "distribution": [
+          "DB Driver Get Campaign"
         ]
       },
       {
@@ -32210,9 +32467,10 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Assault' is a Beyblade driver from the Gatinko Layer System. Released November 30th, 2019 as B-00 for Beyblade Burst Rise. It shipped with Zwei Bahamut Outer Assault' Zan, Burn Phoenix 00 Assault', Random Booster Vol. 21. One alternate colourway is recorded: Slashing Dragon Ver..",
+    "seoDescription": "Assault' is a Beyblade driver from the Gatinko Layer System. Released November 30th, 2019 as B-00 for Beyblade Burst Rise. It shipped with Zwei Bahamut Outer Assault' Zan, Assault', Burn Phoenix 00 Assault' and 1 other release. 2 alternate colourways are recorded.",
     "shippedIn": [
       "Zwei Bahamut Outer Assault' Zan",
+      "Assault'",
       "Burn Phoenix 00 Assault'",
       "Random Booster Vol. 21"
     ],
@@ -32228,6 +32486,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       },
       {
         "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Assault'",
+        "colourway": "Gold Driver Get Campaign"
+      },
+      {
+        "vendor": "Takara Tomy",
         "code": "B-170",
         "bey": "Burn Phoenix 00 Assault'",
         "set": "Random Booster Vol. 21"
@@ -32240,6 +32504,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "distribution": "wbba. Store Exclusive",
         "inBey": "Zwei Bahamut Outer Assault' Zan"
+      },
+      {
+        "colourway": "Gold Driver Get Campaign",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Assault'"
       }
     ],
     "colourwaysDocumented": true,
@@ -34053,7 +34323,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Claw is a Beyblade driver from the Burst System. Released September 19th, 2015 as B-15 (Takara Tomy) and C0602 (Hasbro) for Beyblade Burst. It shipped with Trident Heavy Claw, Random Booster Vol. 1 Trident Heavy Claw, Spriggan Wing Claw and 15 other releases.",
+    "seoDescription": "Claw is a Beyblade driver from the Burst System. Released September 19th, 2015 as B-15 (Takara Tomy) and C0602 (Hasbro) for Beyblade Burst. It shipped with Trident Heavy Claw, Random Booster Vol. 1 Trident Heavy Claw, Spriggan Wing Claw and 16 other releases.",
     "shippedIn": [
       "Trident Heavy Claw",
       "Random Booster Vol. 1 Trident Heavy Claw",
@@ -34066,6 +34336,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 5 Gigant Gaia.Q.F",
       "Flame Sagittario 8' Claw",
       "Metal Fight Beyblade Anime 10th Anniversary Set",
+      "Claw",
       "Hyper Horusood H2 Upper Claw",
       "Treptune Heavy Claw",
       "Custom Clash Pack",
@@ -34121,6 +34392,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "bey": "Flame Sagittario 8' Claw",
         "set": "Metal Fight Beyblade Anime 10th Anniversary Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Claw",
+        "distribution": [
+          "Limited Color"
+        ]
       },
       {
         "vendor": "Hasbro",
@@ -34584,7 +34863,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Defense is a Beyblade driver from the Burst System. Released July 18th, 2015 as B-04 (Takara Tomy) and B9492 (Hasbro) for Beyblade Burst. It shipped with Kerbeus Central Defense (Takara Tomy), Spriggan Heavy Defense, Ragnaruk Wing Defense and 17 other releases.",
+    "seoDescription": "Defense is a Beyblade driver from the Burst System. Released July 18th, 2015 as B-04 (Takara Tomy) and B9492 (Hasbro) for Beyblade Burst. It shipped with Kerbeus Central Defense (Takara Tomy), Spriggan Heavy Defense, Ragnaruk Wing Defense and 18 other releases. 3 alternate colourways are recorded.",
     "shippedIn": [
       "Kerbeus Central Defense (Takara Tomy)",
       "Spriggan Heavy Defense",
@@ -34598,6 +34877,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 11 Vise Leopard.12L.Ds",
       "King Fafnir 8' Defense 1S",
       "Random Booster Vol. 21",
+      "Defense",
       "Unicrest Ring Defense",
       "Valtryek and Unicrest Dual Pack",
       "Kerbeus Central Defense (Hasbro)",
@@ -34652,6 +34932,33 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "set": "Random Booster Vol. 21"
       },
       {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Defense",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Gold Driver Ticket Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Defense",
+        "colourway": "Red Ver.",
+        "distribution": [
+          "Red Driver Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Defense",
+        "colourway": "Silver Ver.",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Unicrest Ring Defense",
         "set": "Valtryek and Unicrest Dual Pack"
@@ -34680,6 +34987,29 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Hasbro",
         "bey": "Maximus Garuda G3 6Star Defense"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Gold Driver Ticket Campaign",
+        "inBey": "Defense"
+      },
+      {
+        "colourway": "Red Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Red Driver Campaign",
+        "inBey": "Defense"
+      },
+      {
+        "colourway": "Silver Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "CoroCoro Exclusive",
+        "inBey": "Defense"
       }
     ],
     "colourwaysDocumented": true,
@@ -34808,7 +35138,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Destroy' is a Beyblade driver from the Cho-Z Layer System. Released June 27th, 2020 as B-125 (Takara Tomy) and F2292 (Hasbro) for Beyblade Burst Turbo. It shipped with Shelter Regulus 8'Bump Destroy', Random Booster Vol. 12 Dead Hades.11T.Z', Shining Amaterios 0 Destroy' and 8 other releases.",
+    "seoDescription": "Destroy' is a Beyblade driver from the Cho-Z Layer System. Released June 27th, 2020 as B-125 (Takara Tomy) and F2292 (Hasbro) for Beyblade Burst Turbo. It shipped with Shelter Regulus 8'Bump Destroy', Random Booster Vol. 12 Dead Hades.11T.Z', Shining Amaterios 0 Destroy' and 9 other releases.",
     "shippedIn": [
       "Shelter Regulus 8'Bump Destroy'",
       "Random Booster Vol. 12 Dead Hades.11T.Z'",
@@ -34818,6 +35148,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Xiphoid Belial Karma Destroy'-10",
       "Random Booster Vol. 30",
       "Shining Amaterios 3 Destroy'",
+      "Destroy'",
       "Cho-Z Valtryek Zenith-P Destroy'",
       "Elite Champions Pro Set",
       "Rage Luinor Destroy' 3A"
@@ -34853,6 +35184,15 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Shining Amaterios 3 Destroy'"
       },
       {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Destroy'",
+        "colourway": "Blue Ver",
+        "distribution": [
+          "GT Point Get Battle Campaign"
+        ]
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Cho-Z Valtryek Zenith-P Destroy'",
         "set": "Elite Champions Pro Set",
@@ -34871,6 +35211,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-158",
         "inBey": "Shining Amaterios 0 Destroy'"
+      },
+      {
+        "colourway": "Blue Ver",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "GT Point Get Battle Campaign",
+        "inBey": "Destroy'"
       }
     ],
     "colourwaysDocumented": true,
@@ -35710,11 +36057,12 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Edge is a Beyblade driver from the Burst System, weighing 5.5 g. Released November 14th, 2015 as B-20 (Takara Tomy) and B9497 (Hasbro) for Beyblade Burst. It shipped with Horusood Spread Edge (Takara Tomy), Valkyrie 1Flow Edge, Random Booster Vol. 9 Beat Kukulcan.7U.Hn and 10 other releases.",
+    "seoDescription": "Edge is a Beyblade driver from the Burst System, weighing 5.5 g. Released November 14th, 2015 as B-20 (Takara Tomy) and B9497 (Hasbro) for Beyblade Burst. It shipped with Horusood Spread Edge (Takara Tomy), Valkyrie 1Flow Edge, Random Booster Vol. 9 Beat Kukulcan.7U.Hn and 11 other releases.",
     "shippedIn": [
       "Horusood Spread Edge (Takara Tomy)",
       "Valkyrie 1Flow Edge",
       "Random Booster Vol. 9 Beat Kukulcan.7U.Hn",
+      "Edge",
       "Horusood Spread Edge (Hasbro)",
       "Horusood and Kerbeus Dual Pack",
       "Yegdrion Ring Edge",
@@ -35741,6 +36089,24 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Valkyrie 1Flow Edge",
         "set": "Random Booster Vol. 9 Beat Kukulcan.7U.Hn",
         "colourway": "Evil God Ver.; Minor Change Version"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Edge",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Gold Driver Ticket Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Edge",
+        "colourway": "Red Ver.",
+        "distribution": [
+          "Cho-Z Driver Get Campaign"
+        ]
       },
       {
         "vendor": "Hasbro",
@@ -35790,6 +36156,20 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-101",
         "inBey": "Valkyrie 1Flow Edge"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Gold Driver Ticket Campaign",
+        "inBey": "Edge"
+      },
+      {
+        "colourway": "Red Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Cho-Z Driver Get Campaign",
+        "inBey": "Edge"
       }
     ],
     "colourwaysDocumented": true,
@@ -36675,6 +37055,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Grand Dragon Aero'Lift Flugel Gou",
       "Random Booster Vol. 19",
       "Premiere Set",
+      "Flugel",
       "Berserk Roktavor R3 4Cross Flugel",
       "Genesis Valtryek V3 4Glaive Flugel",
       "Maximus Garuda G3 8Flow Flugel",
@@ -36726,6 +37107,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "colourway": "Premium Red Ver.",
         "distribution": [
           "wbba. Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Flugel",
+        "distribution": [
+          "Limited Color"
         ]
       },
       {
@@ -37250,6 +37639,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Prominence Valkyrie Over Atomic'-0",
       "Burst Spriggan Spread' Fusion'-8",
       "Burst Ultimate VS Set",
+      "Fusion'",
       "Lord Spryzen Around-P Fusion'",
       "Mythic Beast Collection"
     ],
@@ -37291,6 +37681,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "code": "B-205",
         "bey": "Burst Spriggan Spread' Fusion'-8",
         "set": "Burst Ultimate VS Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Fusion'",
+        "distribution": [
+          "DB Driver Get Campaign"
+        ]
       },
       {
         "vendor": "Hasbro",
@@ -38177,7 +38575,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Gyro is a Beyblade driver from the Burst System. Released February 20th, 2016 as B-31 (Takara Tomy) and E1064 (Hasbro) for Beyblade Burst. It shipped with Yggdrasil Ring Gyro, Chaos Oval Gyro, Triple Booster Set and 9 other releases.",
+    "seoDescription": "Gyro is a Beyblade driver from the Burst System. Released February 20th, 2016 as B-31 (Takara Tomy) and E1064 (Hasbro) for Beyblade Burst. It shipped with Yggdrasil Ring Gyro, Chaos Oval Gyro, Triple Booster Set and 10 other releases.",
     "shippedIn": [
       "Yggdrasil Ring Gyro",
       "Chaos Oval Gyro",
@@ -38188,6 +38586,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Geist Fafnir Ratchet Gyro",
       "Random Booster Vol. 16",
       "Prominence Valkyrie Over Atomic'-0",
+      "Gyro",
       "Caynox Oval Gyro",
       "Caynox and Wild Wyvron W2 Dual Pack",
       "Epic Evipero E2 Nine Gyro"
@@ -38228,6 +38627,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Prominence Valkyrie Over Atomic'-0",
         "distribution": [
           "Valkyrie Set; Korea only"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Gyro",
+        "distribution": [
+          "DB Driver Get Campaign"
         ]
       },
       {
@@ -39041,11 +39448,20 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "High Massive is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.1 g. Released April 24th, 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with Prominence Valkyrie Over Atomic'-0.",
+    "seoDescription": "High Massive is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.1 g. Released April 24th, 2021 as B-00 for Beyblade Burst QuadDrive. It shipped with High Massive, Prominence Valkyrie Over Atomic'-0.",
     "shippedIn": [
+      "High Massive",
       "Prominence Valkyrie Over Atomic'-0"
     ],
     "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "High Massive",
+        "distribution": [
+          "DB Driver Get Campaign"
+        ]
+      },
       {
         "vendor": "Takara Tomy",
         "code": "B-195",
@@ -39131,7 +39547,27 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "High Revolve is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.2 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU.",
+    "seoDescription": "High Revolve is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.2 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU. It shipped with High Revolve. One alternate colourway is recorded: Gold Driver Get Campaign.",
+    "shippedIn": [
+      "High Revolve"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "High Revolve",
+        "colourway": "Gold Driver Get Campaign"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Driver Get Campaign",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "High Revolve"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_High_Revolve",
     "wboLegality": {
       "burst": true,
@@ -40662,7 +41098,27 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Just' is a Beyblade driver from the Dynamite Battle Layer System, weighing 8 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU.",
+    "seoDescription": "Just' is a Beyblade driver from the Dynamite Battle Layer System, weighing 8 g. Released July 16th, 2022 as B-00 for Beyblade Burst BU. It shipped with Just'. One alternate colourway is recorded: Gold Driver Get Campaign.",
+    "shippedIn": [
+      "Just'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Just'",
+        "colourway": "Gold Driver Get Campaign"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Driver Get Campaign",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Just'"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Just'",
     "ratings": {
       "attack": 2,
@@ -42119,13 +42575,14 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Massive is a Beyblade driver from the Burst System, weighing 5.34 g. Released September 19th, 2015 as B-14 (Takara Tomy) and B9507 (Hasbro) for Beyblade Burst. It shipped with Wyvern Armed Massive, Ragnaruk Central Massive, Beyblade Custom Set Defense & Stamina and 7 other releases.",
+    "seoDescription": "Massive is a Beyblade driver from the Burst System, weighing 5.34 g. Released September 19th, 2015 as B-14 (Takara Tomy) and B9507 (Hasbro) for Beyblade Burst. It shipped with Wyvern Armed Massive, Ragnaruk Central Massive, Beyblade Custom Set Defense & Stamina and 8 other releases.",
     "shippedIn": [
       "Wyvern Armed Massive",
       "Ragnaruk Central Massive",
       "Beyblade Custom Set Defense & Stamina",
       "Deathscyther Spread Massive",
       "Random Booster Vol. 2 Evil-eye Wing Needle",
+      "Massive",
       "Rock Leone 0 Massive",
       "Metal Fight Beyblade Anime 10th Anniversary Set",
       "Wyvron Armed Massive",
@@ -42152,6 +42609,23 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "Deathscyther Spread Massive",
         "set": "Random Booster Vol. 2 Evil-eye Wing Needle",
         "colourway": "translucent neon green"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Massive",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Gold Driver Ticket Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Massive",
+        "distribution": [
+          "Limited Color"
+        ]
       },
       {
         "vendor": "Takara Tomy",
@@ -42195,6 +42669,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-24",
         "inBey": "Deathscyther Spread Massive"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Gold Driver Ticket Campaign",
+        "inBey": "Massive"
       }
     ],
     "colourwaysDocumented": true,
@@ -42584,7 +43065,49 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Metal Bearing Drift is a Beyblade driver from the Dynamite Battle Layer System, weighing 12.3 g. Released August 20, 2022 as B-00 for Beyblade Burst BU.",
+    "seoDescription": "Metal Bearing Drift is a Beyblade driver from the Dynamite Battle Layer System, weighing 12.3 g. Released August 20, 2022 as B-00 for Beyblade Burst BU. It shipped with Metal Bearing Drift.",
+    "shippedIn": [
+      "Metal Bearing Drift"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Metal Bearing Drift",
+        "distribution": [
+          "Ultimate Driver Get Campaign",
+          "300 pieces"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Metal Bearing Drift",
+        "distribution": [
+          "Ultimate Driver Get Campaign rerun",
+          "300 pieces"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Metal Bearing Drift",
+        "distribution": [
+          "Ultimate Rare Bey Set GET Campaign, Special Set",
+          "10 pieces"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Metal Bearing Drift",
+        "distribution": [
+          "Ultimate Rare Bey Set GET Campaign, A Set",
+          "400 pieces"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Metal_Bearing_Drift",
     "ratings": {
       "attack": 1,
@@ -44201,7 +44724,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Needle is a Beyblade driver from the Dual Layer System. Released December 26th, 2015 as B-24 (Takara Tomy) and C0598 (Hasbro) for Beyblade Burst. It shipped with Evil-eye Wing Needle, Random Booster Vol. 2 Evil-eye Wing Needle, Wyvern Central Needle and 8 other releases.",
+    "seoDescription": "Needle is a Beyblade driver from the Dual Layer System. Released December 26th, 2015 as B-24 (Takara Tomy) and C0598 (Hasbro) for Beyblade Burst. It shipped with Evil-eye Wing Needle, Random Booster Vol. 2 Evil-eye Wing Needle, Wyvern Central Needle and 9 other releases.",
     "shippedIn": [
       "Evil-eye Wing Needle",
       "Random Booster Vol. 2 Evil-eye Wing Needle",
@@ -44210,6 +44733,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Unlock Unicorn Down Needle",
       "Nova Neptune Quarter Needle",
       "Random Booster Vol. 5 Gigant Gaia.Q.F",
+      "Needle",
       "Uber Unicrest U2 Down Needle",
       "Dark Doomscizor D2 and Uber Unicrest U2 Dual Pack",
       "Epic Evipero Wing Needle",
@@ -44249,6 +44773,15 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "set": "Random Booster Vol. 5 Gigant Gaia.Q.F"
       },
       {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Needle",
+        "colourway": "Red Ver.",
+        "distribution": [
+          "Cho-Z Driver Get Campaign"
+        ]
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Uber Unicrest U2 Down Needle",
         "set": "Dark Doomscizor D2 and Uber Unicrest U2 Dual Pack"
@@ -44284,6 +44817,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-24",
         "inBey": "Valkyrie Oval Needle"
+      },
+      {
+        "colourway": "Red Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Cho-Z Driver Get Campaign",
+        "inBey": "Needle"
       }
     ],
     "colourwaysDocumented": true,
@@ -47250,9 +47790,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "romaji": "Riboribu Dasshu"
   },
   {
-    "id": "performance-tip--revolve-h",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
+    "id": "driver--revolve-h",
+    "classification": "Driver",
+    "slot": "driver",
     "code": null,
     "name": "Revolve-H",
     "weightG": 8.1,
@@ -47296,7 +47836,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Revolve-H is a Beyblade performance tip from the HyperSphere System, weighing 8.1 g. Released as E7735 for Beyblade Burst Rise. It shipped with Galaxy Zeutron Z5 Lore Revolve-H, Zone Fafnir F5 Gravity Revolve-H, Extreme Challenger Battle Set.",
+    "seoDescription": "Revolve-H is a Beyblade driver from the HyperSphere System, weighing 8.1 g. Released as E7735 for Beyblade Burst Rise. It shipped with Galaxy Zeutron Z5 Lore Revolve-H, Zone Fafnir F5 Gravity Revolve-H, Extreme Challenger Battle Set.",
     "shippedIn": [
       "Galaxy Zeutron Z5 Lore Revolve-H",
       "Zone Fafnir F5 Gravity Revolve-H",
@@ -48363,7 +48903,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Survive is a Beyblade driver from the Burst System. Released July 18th, 2015 as B-03 (Takara Tomy) and B9496 (Hasbro) for Beyblade Burst. It shipped with Ragnaruk Heavy Survive, Valkyrie Spread Survive, Kerbeus Heavy Survive and 20 other releases. 3 alternate colourways are recorded.",
+    "seoDescription": "Survive is a Beyblade driver from the Burst System. Released July 18th, 2015 as B-03 (Takara Tomy) and B9496 (Hasbro) for Beyblade Burst. It shipped with Ragnaruk Heavy Survive, Valkyrie Spread Survive, Kerbeus Heavy Survive and 21 other releases. 5 alternate colourways are recorded.",
     "shippedIn": [
       "Ragnaruk Heavy Survive",
       "Valkyrie Spread Survive",
@@ -48379,6 +48919,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 20",
       "King Helios Survive 1B",
       "Random Booster Vol. 24",
+      "Survive",
       "Rising Ragnaruk Heavy Survive",
       "Roktavor Heavy Survive",
       "Roktavor and Nepstrius Dual Pack",
@@ -48440,6 +48981,24 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "code": "B-00",
+        "bey": "Survive",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Gold Driver Ticket Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Survive",
+        "colourway": "Red Ver.",
+        "distribution": [
+          "Red Driver Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
         "bey": "Rising Ragnaruk Heavy Survive",
         "colourway": "Dark Blue Ver."
       },
@@ -48479,6 +49038,20 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-178",
         "inBey": "King Helios Survive 1B"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Gold Driver Ticket Campaign",
+        "inBey": "Survive"
+      },
+      {
+        "colourway": "Red Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Red Driver Campaign",
+        "inBey": "Survive"
       },
       {
         "colourway": "Dark Blue Ver.",
@@ -51857,9 +52430,10 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Xtreme' is a Beyblade driver from the Cho-Z Layer System, weighing 5.6 g. Released August 2018 as B-00 (Takara Tomy) and F3319 (Hasbro) for Beyblade Burst Turbo. It shipped with Shadow Amaterios 0 Xtreme', Dead Hades 8'Expand Xtreme', Random Booster Vol. 15 and 6 other releases.",
+    "seoDescription": "Xtreme' is a Beyblade driver from the Cho-Z Layer System, weighing 5.6 g. Released August 2018 as B-00 (Takara Tomy) and F3319 (Hasbro) for Beyblade Burst Turbo. It shipped with Shadow Amaterios 0 Xtreme', Xtreme', Dead Hades 8'Expand Xtreme' and 7 other releases.",
     "shippedIn": [
       "Shadow Amaterios 0 Xtreme'",
+      "Xtreme'",
       "Dead Hades 8'Expand Xtreme'",
       "Random Booster Vol. 15",
       "Super Satan 6 Xtreme' 1S",
@@ -51877,6 +52451,15 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "colourway": "translucent dark grey, purple rubber",
         "distribution": [
           "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Xtreme'",
+        "colourway": "Clear Red Ver.",
+        "distribution": [
+          "translucent red, translucent yellow rubber"
         ]
       },
       {
@@ -51914,6 +52497,13 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "distribution": "CoroCoro Exclusive",
         "inBey": "Shadow Amaterios 0 Xtreme'"
+      },
+      {
+        "colourway": "Clear Red Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "translucent red, translucent yellow rubber",
+        "inBey": "Xtreme'"
       },
       {
         "colourway": "translucent purple, red rubber",
@@ -52953,9 +53543,9 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "romaji": "Zefā Dasshu"
   },
   {
-    "id": "performance-tip--zephyr-h",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
+    "id": "driver--zephyr-h",
+    "classification": "Driver",
+    "slot": "driver",
     "code": null,
     "name": "Zephyr-H",
     "weightG": 7.7,
@@ -52999,7 +53589,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Zephyr-H is a Beyblade performance tip from the HyperSphere System, weighing 7.7 g. Released as F0621 for Beyblade Burst Surge. It shipped with Tact Leviathan L5 7 Zephyr-H.",
+    "seoDescription": "Zephyr-H is a Beyblade driver from the HyperSphere System, weighing 7.7 g. Released as F0621 for Beyblade Burst Surge. It shipped with Tact Leviathan L5 7 Zephyr-H.",
     "shippedIn": [
       "Tact Leviathan L5 7 Zephyr-H"
     ],

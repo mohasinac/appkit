@@ -5,12 +5,24 @@
 // MADE it — Beyblade the franchise, Takara-Tomy the brand. Modelled on brand
 // rather than on category deliberately: both are tier-0 rows that live OUTSIDE
 // the forest's DFS numbering and are pointed at by a product, not lived under.
+// `character` (2026-10-24) is WHO USED a bey in the story — Tyson Granger,
+// Kai Hiwatari. A third sibling of brand and franchise, for the same structural
+// reason: a tier-0 row outside the forest's DFS numbering that a product points
+// AT rather than lives under. Who made it / what it is from / who used it.
+//
+// 🛑 It earns its own discriminator because it is the strongest buying signal
+// in the corpus and had nowhere to live. 495 character pages sit in the local
+// crawl and nothing in the catalogue referenced them, while the one place a
+// PART is tied to a character — `PartGlossaryDocument.owner` — is filled on 3
+// of 2,248 source pages. Nobody searches "Attack Ring MA-04"; they search
+// "Tyson's Dragoon".
 export type CategoryType =
   | "category"
   | "sublisting"
   | "brand"
   | "bundle"
-  | "franchise";
+  | "franchise"
+  | "character";
 
 export interface CategorySeo {
   title?: string;

@@ -3,7 +3,7 @@
  * Source: `docs/research/part-composition-2026-10/` (E4a/E4b), itself
  * extracted from the LOCAL corpus with no network crawl.
  *
- * The part glossary, keyed (slot, code|name) — 2437 rows.
+ * The part glossary, keyed (slot, code|name) — 2436 rows.
  *
  * 🛑 Facts only. Fandom is CC-BY-SA, so names, codes, weights and slot
  * structure are taken and the PROSE is not — our own descriptions come from

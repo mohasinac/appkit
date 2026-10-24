@@ -806,7 +806,226 @@ export interface PartGlossaryDocument extends BaseDocument, AdminEditableRecord 
    * The collection is declared `INDEX_ARTIFACT_ONLY` in that audit, whose
    * rule is precisely that a member must NOT declare this field.
    */
+
+  /**
+   * Hand-written analysis, read from the sources one page at a time.
+   *
+   * 🛑 ONE NESTED OBJECT, not twenty top-level fields, and the reason is the
+   * merge rather than tidiness. Everything else on this document is EXTRACTED
+   * and is regenerated wholesale by `generate-parts-seed.mjs`; this is
+   * AUTHORED and must survive that regeneration. Keeping it under one key
+   * makes the overlay merge a single assignment the generator cannot
+   * accidentally clobber field-by-field, and makes "is this ours or the
+   * wiki's?" answerable by position rather than by memory.
+   *
+   * 🛑 It also keeps `adminEditedFields` honest: an admin editing
+   * `authored.verdict` records one path, where twenty flattened fields would
+   * need twenty entries and the first missed one would be silently
+   * re-generated over.
+   */
+  authored?: PartAuthoredAnalysis;
 }
+
+/**
+ * What a human wrote about one part after reading its sources.
+ *
+ * ── 🛑 WHY THESE FIELDS AND NOT A FREE-TEXT BLOB ───────────────────────────
+ *
+ * Each one is a question a buyer or a game implementation actually asks, and
+ * each was being answered in passing inside prose where nothing could filter,
+ * sort or require it. `availability` is the worked example: 93 records carried
+ * "one bey, Takara Tomy only" and "widely shipped across six products" inside
+ * their competitive reasoning, so the single most commercially useful fact on
+ * the record was unqueryable until it became a field.
+ */
+export interface PartAuthoredAnalysis {
+  /** My own account of the shape, in my words, from the sources' facts. */
+  geometryNote: string;
+  /** 2-3 sentences. The thing a buyer reads first. */
+  verdict: string;
+
+  competitive: {
+    /** essential | useful | collector | outclassed. */
+    tier: PartCompetitiveTier;
+    /** 0-100 WITHIN its slot, so parts are comparable where they compete. */
+    score: number;
+    /** Where the judgement came from, so a reader can discount it. */
+    basis: "source-overall" | "ratings" | "mass" | "legality" | "combo-list" | "inference";
+    /**
+     * Per format or per role, because one part is often two parts.
+     *
+     * 🛑 Not decoration: `attack-ring--circle-upper` produces monstrous Smash
+     * ONLY in left spin and mingles all three attack types in right spin, from
+     * one fixed shape. A single tier for that part is a lie in one direction.
+     */
+    byFormat?: Record<string, string> | null;
+    reasoning: string;
+  };
+
+  designDifficulty: {
+    /** 0-100. How hard this part is to reproduce faithfully in a game. */
+    score: number;
+    /** From the CLOSED driver set in `terms.json`. */
+    drivers: string[];
+    reasoning: string;
+    /** The detail a naive implementation gets wrong. */
+    note?: string;
+  };
+
+  /* ── marketplace ───────────────────────────────────────────────────────── */
+
+  /**
+   * Which products it came in, and in what colour.
+   *
+   * 🛑 `beys` is what a RELEASE LIST says shipped it — a purchasing fact with
+   * codes and colourways attached. `beysFromOtherSources` is "a document
+   * describes this part inside this bey", LABELLED BY ORIGIN
+   * (`corpus:gen1-plastic-dranzer-v2`). Merging the two would make a corpus
+   * mention indistinguishable from a box you can buy, which is the one
+   * distinction a shopper needs. 306 parts have the second and not the first.
+   */
+  availability: {
+    beys: string[];
+    beysFromOtherSources?: string[];
+    usedByIds?: string[];
+    colourways: Array<{
+      colourway: string;
+      vendor?: string;
+      code?: string;
+      distribution?: string;
+      inBey?: string;
+    }>;
+    codes?: string[];
+    hasbroCode?: string;
+    moulds?: boolean;
+    /** Why `beys` is empty, when it is. An empty list is a finding, not a blank. */
+    note?: string | null;
+  };
+
+  /**
+   * The character who used it in the story.
+   *
+   * 🛑 The single biggest collector hook, and it does NOT live on the part
+   * pages: measured, the `Owner` infobox key is filled on 3 of 2,248 part
+   * pages. It comes from the bey and character pages. Nobody searches "Attack
+   * Ring MA-04"; they search "Tyson's Dragoon".
+   */
+  owner?: string;
+  /** "Bladebreakers", "Blitz Team" — a collecting set in its own right. */
+  team?: string;
+  /** Series plus episode of first appearance, as the source words it. */
+  animeDebut?: string;
+
+  /** How hard it is to get. A closed enum so it can be faceted. */
+  rarity?: PartRarity;
+  /** The vendor or region that gated it — "SH-03/04 Chinese exclusive". */
+  exclusiveTo?: string;
+
+  /**
+   * How to tell which copy you are buying.
+   *
+   * 🛑 The most actionable buying guidance in the whole corpus and it was
+   * buried in prose. Circle Upper's first mould has a 2.9 mm metal frame and
+   * weighs mid-19 g; its second has 3.6 mm and weighs upper-20 g, and they
+   * perform differently. Cross Griffon's Hasbro mould moves the figurine
+   * mounts to the top where they only add recoil, so the wiki says a Takara
+   * copy is "greatly preferred". That is a purchase decision.
+   */
+  mouldIdentification?: string;
+  /**
+   * What wears or breaks, and whether it matters — which is exactly what a
+   * USED-marketplace listing needs and what the sources keep volunteering:
+   * "spikes wear with use but do NOT affect usability", "very unlikely to
+   * break, even on Grip Base", "sharp wing tips can cause damage to Stadium
+   * walls".
+   */
+  conditionWatch?: string;
+  /** What else you must own for it to work — "needs a taller RC to clear the floor". */
+  needsToUse?: string;
+
+  /* ── game design ───────────────────────────────────────────────────────── */
+
+  /**
+   * Named finishing moves, with the character who performs them.
+   *
+   * Source: the bey corpus's own tables, e.g.
+   * `| Dark Wings | Phi | Layer-level impact at low spin | Burst Turbo |`.
+   * Nothing had ever joined them to a part or a bey.
+   */
+  specialMoves?: Array<{ name: string; character?: string; effect?: string; system?: string }>;
+  /** The spirit bound to the bey — a game entity in its own right. */
+  bitBeast?: string;
+
+  /**
+   * How it wins.
+   *
+   * 🛑 FOUR classes are already evidenced and most models carry two. Beyond
+   * knock-out and destabilise-then-outspin: Cross Griffon has "some of the
+   * most effective stopping power of any Attack Ring", interrupting rotation
+   * without moving the opponent, and Cross Spiker delivers "spike attack" in
+   * left spin. An implementation with only KO and topple has nowhere to put
+   * either, and would render the generation's best stopping-power ring as a
+   * mid-tier smash part.
+   */
+  winCondition?: string[];
+
+  /**
+   * What wear does to it.
+   *
+   * 🛑 WEAR CAN BE A POSITIVE, which a durability model that only degrades
+   * cannot express. hmsdb's best combo for Circle Upper wants "a Bearing Core
+   * 2 that is WORN ENOUGH to consistently flower pattern". Treating wear as
+   * monotonic damage contradicts the source.
+   */
+  wearBehaviour?: string;
+  /** Launcher or winder needed, and whether spin direction is chosen at launch. */
+  launcherRequirement?: string;
+  /** Where behaviour changes by stadium — range matters more in a wide one. */
+  stadiumDependence?: string;
+  /** Counters and countered-by, as the sources name them. */
+  matchups?: { strongAgainst?: string[]; weakAgainst?: string[]; note?: string };
+  /** Parts the sources pair it with, verbatim from their combo lists. */
+  comboPartners?: string[];
+
+  /* ── provenance of the record itself ───────────────────────────────────── */
+
+  /** Terms from `terms.json`, so the vocabulary stays closed. */
+  termsUsed?: string[];
+  /** Where a source was wrong or where two sources disagree. */
+  corrections?: Array<{ field: string; was: string; now: string; basis: string }>;
+  /** confirmed | probable | weak — and the gate checks it against the record. */
+  confidence: "confirmed" | "probable" | "weak";
+  confidenceNote?: string;
+  /** Which sources the record was written from. */
+  sourceUsed: string[];
+  sourceUrl?: string;
+  authoredAt: string;
+  /** Set when a record is re-read after new sources became reachable. */
+  reReadAt?: string;
+}
+
+/** How hard a part is to obtain. Faceted, so it is a closed set. */
+export const PartRarityValues = [
+  "mass-retail",
+  "booster",
+  "random-booster",
+  "set-only",
+  "prize",
+  "vendor-exclusive",
+  "regional-exclusive",
+] as const;
+export type PartRarity = (typeof PartRarityValues)[number];
+
+/**
+ * How much a part matters competitively.
+ *
+ * 🛑 `collector` is not a weak `useful`. It means "worth owning rather than
+ * playing" and it is the only tier assignable with NO performance evidence —
+ * which is what a part like `attack-ring--dark-spike`, whose every source is
+ * silent, honestly deserves.
+ */
+export const PartCompetitiveTierValues = ["essential", "useful", "collector", "outclassed"] as const;
+export type PartCompetitiveTier = (typeof PartCompetitiveTierValues)[number];
 
 /** One slot of one model's composition. */
 export interface ModelSlot {
@@ -885,6 +1104,38 @@ export interface ModelCompositionDocument extends BaseDocument {
   source?: string;
   /** The named-model category this composition describes, when one exists. */
   categoryId?: string;
+
+  /**
+   * The character who used this bey, as a `character-*` category id.
+   *
+   * 🛑 An ID, not a name. Character names are re-localised between the
+   * Japanese and English releases (Takao Kinomiya / Tyson Granger), so a name
+   * is the one key guaranteed to drift — the same trap `brand-rows.ts` records
+   * for brands matching on display name.
+   */
+  owner?: string;
+
+  /**
+   * ── 🛑 THE ANIME SUCCESSION CHAIN, NOT RELEASE ORDER ────────────────────
+   *
+   * `previousBey` is the bey this one replaced in the STORY; `nextBey` is the
+   * one that replaced it. Both are composition ids.
+   *
+   * 🛑 IT CANNOT BE DERIVED FROM PRODUCT CODES, and a generator must not try.
+   * Tyson's chain runs Dragoon -> Dragoon S -> Dragoon V -> Dragoon V2 ->
+   * Dragoon G -> Dragoon MS, crossing four part systems and three toy lines,
+   * and the codes do not order it. The sequence is a narrative fact stated in
+   * prose on the bey and character pages, so it is READ.
+   *
+   * 🛑 BOTH DIRECTIONS ARE STORED AND MUST AGREE. A one-way link makes "what
+   * came before this" unanswerable from the earlier bey's page, and a
+   * `character.lineup` that disagrees with these links is the denormalised-
+   * mirror trap (Root Cause #42) — here it would silently break a progression.
+   * `audit-lineup-symmetry` checks both.
+   */
+  previousBey?: string;
+  nextBey?: string;
+
   // 🛑 No `searchTxt` — see the note on PartGlossaryDocument above. 0 of 259
   // documents ever had one; compositions are reachable through the public
   // search artifact instead.

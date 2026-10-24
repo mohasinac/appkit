@@ -562,7 +562,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 3 · Defense 3 · Stamina 1"
       }
     ],
-    "seoDescription": "Poison is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.8 g. Released February 13th, 2010 as BB-69 for Beyblade: Metal Fusion. It shipped with Poison Serpent SW145SD, Poison Phoenix WA130SD, Random Booster Vol. 5 Grand Ketos and 12 other releases.",
+    "seoDescription": "Poison is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.8 g. Released February 13th, 2010 as BB-69 for Beyblade: Metal Fusion. It shipped with Poison Serpent SW145SD, Poison Phoenix WA130SD, Random Booster Vol. 5 Grand Ketos and 13 other releases.",
     "shippedIn": [
       "Poison Serpent SW145SD",
       "Poison Phoenix WA130SD",
@@ -570,6 +570,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Poison Unicorno 130HF",
       "Poison Giraffe S130MB",
       "Beyblade Deck Attack & Defense Set",
+      "Poison Serpent",
       "Poison Scorpio M145Q",
       "Burning Fire Strike 2-Pack",
       "Poison Pegasus ED145JB",
@@ -603,6 +604,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "BB-86",
         "bey": "Poison Giraffe S130MB",
         "set": "Beyblade Deck Attack & Defense Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Poison Serpent",
+        "colourway": "Black",
+        "distribution": [
+          "G4 Tournament Prize"
+        ]
       },
       {
         "vendor": "Hasbro",
@@ -642,6 +651,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-121A",
         "bey": "Poison Zurafa S130MB",
         "set": "Crushing Blast Barrage 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Black",
+        "vendor": "Takara Tomy",
+        "distribution": "G4 Tournament Prize",
+        "inBey": "Poison Serpent"
       }
     ],
     "colourwaysDocumented": true,
@@ -807,10 +824,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 4 · Defense 1 · Stamina 2"
       }
     ],
-    "seoDescription": "Ray is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1, 2010 as BB-71 for Beyblade: Metal Masters. It shipped with Ray Unicorno D125CS, Ray Gil 100RSF, Ray Striker D125CS and 8 other releases. 4 alternate colourways are recorded.",
+    "seoDescription": "Ray is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1, 2010 as BB-71 for Beyblade: Metal Masters. It shipped with Ray Unicorno D125CS, Ray Gil 100RSF, Ray and 9 other releases. 6 alternate colourways are recorded.",
     "shippedIn": [
       "Ray Unicorno D125CS",
       "Ray Gil 100RSF",
+      "Ray",
       "Ray Striker D125CS",
       "Lightning Sword Showdown 2-Pack",
       "Beyblade Metal Masters: Ultimate Gift Set",
@@ -865,6 +883,24 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "bey": "Ray Unicorno D125CS",
         "colourway": "Rainbow Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Ray",
+        "colourway": "Green Ver.",
+        "distribution": [
+          "[[WBBA]] Event Exclusive",
+          "green"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Ray",
+        "colourway": "Gunmetal Ver.",
+        "distribution": [
+          "[[WBBA]] Event Exclusive",
+          "black"
+        ]
       },
       {
         "vendor": "Hasbro",
@@ -941,6 +977,18 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "colourway": "Rainbow Ver.",
         "vendor": "Takara Tomy",
         "inBey": "Ray Unicorno D125CS"
+      },
+      {
+        "colourway": "Green Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "[[WBBA]] Event Exclusive · green",
+        "inBey": "Ray"
+      },
+      {
+        "colourway": "Gunmetal Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "[[WBBA]] Event Exclusive · black",
+        "inBey": "Ray"
       },
       {
         "colourway": "red",
@@ -1270,6 +1318,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Rock",
     "ratings": {
       "attack": 1,
@@ -2123,6 +2172,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Vulcan",
     "ratings": {
       "attack": 2,
@@ -3248,7 +3298,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "God Valkyrie is a Beyblade layer from the God Layer System, weighing 10.16 g. Released March 18th, 2017 as B-73 for Beyblade Burst Evolution. It shipped with God Valkyrie 6Vortex Reboot, Beyblade God Entry Set, God Valkyrie 2 Flugel and 4 other releases. 9 alternate colourways are recorded.",
+    "seoDescription": "God Valkyrie is a Beyblade layer from the God Layer System, weighing 10.16 g. Released March 18th, 2017 as B-73 for Beyblade Burst Evolution. It shipped with God Valkyrie 6Vortex Reboot, Beyblade God Entry Set, God Valkyrie 2 Flugel and 5 other releases. 11 alternate colourways are recorded.",
     "shippedIn": [
       "God Valkyrie 6Vortex Reboot",
       "Beyblade God Entry Set",
@@ -3256,6 +3306,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 7 Maximum Garuda.8F.Fl",
       "Mugen Beystadium DX Set",
       "Premiere Set",
+      "God Valkyrie",
       "Beyblade God Battle Set"
     ],
     "releases": [
@@ -3301,6 +3352,22 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "distribution": [
           "red, translucent red God Chip"
         ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "God Valkyrie",
+        "colourway": "Achilles Ver.",
+        "distribution": [
+          "TV Kun Exclusive",
+          "red, translucent blue God Chip"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "God Valkyrie",
+        "colourway": "Holy Knight Ver."
       },
       {
         "vendor": "Takara Tomy",
@@ -3363,6 +3430,19 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "distribution": "red, translucent red God Chip",
         "inBey": "God Valkyrie 6Vortex Reboot"
+      },
+      {
+        "colourway": "Achilles Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "TV Kun Exclusive · red, translucent blue God Chip",
+        "inBey": "God Valkyrie"
+      },
+      {
+        "colourway": "Holy Knight Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "God Valkyrie"
       },
       {
         "colourway": "Ice Knight Ver.",
@@ -3736,13 +3816,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Legend Spriggan is a Beyblade layer from the God Layer System, weighing 14.5 g. Released July 1st, 2017 as B-86 for Beyblade Burst Evolution. It shipped with Legend Spriggan 7 Merge, Legend Spriggan 0Under Nothing, Random Booster Vol. 10 Crash Ragnaruk.11R.Wd and 2 other releases.",
+    "seoDescription": "Legend Spriggan is a Beyblade layer from the God Layer System, weighing 14.5 g. Released July 1st, 2017 as B-86 for Beyblade Burst Evolution. It shipped with Legend Spriggan 7 Merge, Legend Spriggan 0Under Nothing, Random Booster Vol. 10 Crash Ragnaruk.11R.Wd and 3 other releases.",
     "shippedIn": [
       "Legend Spriggan 7 Merge",
       "Legend Spriggan 0Under Nothing",
       "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd",
       "Legend Spriggan 5Reach Eternal",
-      "Random Booster Vol. 14 Driger Fang.0.Xt"
+      "Random Booster Vol. 14 Driger Fang.0.Xt",
+      "Legend Spriggan"
     ],
     "releases": [
       {
@@ -3768,6 +3849,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "bey": "Legend Spriggan 7 Merge",
         "colourway": "Flame Axe Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Legend Spriggan",
+        "colourway": "Evil God Ver."
       }
     ],
     "colourways": [
@@ -3782,6 +3869,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Legend Spriggan 7 Merge"
+      },
+      {
+        "colourway": "Evil God Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Legend Spriggan"
       }
     ],
     "colourwaysDocumented": true,
@@ -4158,12 +4251,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Sieg Xcalibur is a Beyblade layer from the God Layer System, weighing 15.9 g. Released September 15th, 2017 as B-92 for Beyblade Burst Evolution. It shipped with Sieg Xcalibur 1 Iron, Sieg Xcalibur 5Bump Atomic, Random Booster Vol. 10 Crash Ragnaruk.11R.Wd and 1 other release.",
+    "seoDescription": "Sieg Xcalibur is a Beyblade layer from the God Layer System, weighing 15.9 g. Released September 15th, 2017 as B-92 for Beyblade Burst Evolution. It shipped with Sieg Xcalibur 1 Iron, Sieg Xcalibur 5Bump Atomic, Random Booster Vol. 10 Crash Ragnaruk.11R.Wd and 2 other releases.",
     "shippedIn": [
       "Sieg Xcalibur 1 Iron",
       "Sieg Xcalibur 5Bump Atomic",
       "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd",
-      "Random Layer Collection Vol. 9"
+      "Random Layer Collection Vol. 9",
+      "Sieg Xcalibur"
     ],
     "releases": [
       {
@@ -4188,6 +4282,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "bey": "Sieg Xcalibur 1 Iron",
         "colourway": "Golden Sword Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Sieg Xcalibur",
+        "colourway": "Valkyrie Color Ver.",
+        "distribution": [
+          "TV Kun Exclusive"
+        ]
       }
     ],
     "colourways": [
@@ -4202,6 +4305,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Sieg Xcalibur 1 Iron"
+      },
+      {
+        "colourway": "Valkyrie Color Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "TV Kun Exclusive",
+        "inBey": "Sieg Xcalibur"
       }
     ],
     "colourwaysDocumented": true,
@@ -4777,6 +4887,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valkyrie",
     "ratings": {
       "attack": 4,
@@ -5119,6 +5230,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalibur",
     "ratings": {
       "attack": 5,
@@ -8087,6 +8199,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 1
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
+    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -9978,7 +10096,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "3-80 is a Beyblade ratchet from the Basic Line, weighing 7.1 g. Released July 15th, 2023 as BX-04 (Takara Tomy) and F9581 (Hasbro) for Beyblade X (Season 1). It shipped with KnightShield 3-80N, HellsScythe 3-80B, 3on3 Deck Set and 38 other releases. 3 alternate colourways are recorded.",
+    "seoDescription": "3-80 is a Beyblade ratchet from the Basic Line, weighing 7.1 g. Released July 15th, 2023 as BX-04 (Takara Tomy) and F9581 (Hasbro) for Beyblade X (Season 1). It shipped with KnightShield 3-80N, HellsScythe 3-80B, 3on3 Deck Set and 39 other releases. 4 alternate colourways are recorded.",
     "shippedIn": [
       "KnightShield 3-80N",
       "HellsScythe 3-80B",
@@ -9997,6 +10115,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "All In One Set",
       "DranzerSpiral 3-80T",
       "HellsScythe 3-80F",
+      "3-80",
       "Venom 3-80N",
       "Spider-Man and Venom Multipack Set",
       "Moff Gideon 3-80N",
@@ -10098,6 +10217,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "BX-00",
         "bey": "HellsScythe 3-80F"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "bey": "3-80",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "[[Beyblade Battle Base|G3]] Tournament Prize"
+        ]
       },
       {
         "vendor": "Takara Tomy",
@@ -10216,6 +10344,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "BX-00",
         "distribution": "[[Rare Bey Get Battle]]",
         "inBey": "DranzerSpiral 3-80T"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "distribution": "[[Beyblade Battle Base|G3]] Tournament Prize",
+        "inBey": "3-80"
       },
       {
         "colourway": "Red Ver.",
@@ -11541,7 +11676,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "5-70 is a Beyblade ratchet from the Unique Line, weighing 6.7 g. Released March 30th, 2024 as UX-03 (Takara Tomy) and G1537 (Hasbro) for Beyblade X (Season 1). It shipped with ViperTail 5-70D, Random Booster Vol. 4, ShelterDrake 5-70O and 13 other releases.",
+    "seoDescription": "5-70 is a Beyblade ratchet from the Unique Line, weighing 6.7 g. Released March 30th, 2024 as UX-03 (Takara Tomy) and G1537 (Hasbro) for Beyblade X (Season 1). It shipped with ViperTail 5-70D, Random Booster Vol. 4, ShelterDrake 5-70O and 14 other releases. 2 alternate colourways are recorded.",
     "shippedIn": [
       "ViperTail 5-70D",
       "Random Booster Vol. 4",
@@ -11555,6 +11690,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Random Booster BrachioWhip Select",
       "WizardRod 5-70DB",
       "Battle Entry Set U",
+      "5-70",
       "Wand Wizard 5-70DB",
       "Buster Dran 5-70DB",
       "Shelter Drake 5-70O",
@@ -11620,6 +11756,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "colourway": "Special Ver."
       },
       {
+        "vendor": "Takara Tomy",
+        "code": "UX-00",
+        "bey": "5-70",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "[[Beyblade Battle Base|G3]] Tournament Prize"
+        ]
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Wand Wizard 5-70DB"
       },
@@ -11651,6 +11796,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "UX-04",
         "inBey": "WizardRod 5-70DB"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "UX-00",
+        "distribution": "[[Beyblade Battle Base|G3]] Tournament Prize",
+        "inBey": "5-70"
       }
     ],
     "colourwaysDocumented": true,
@@ -12320,11 +12472,17 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "source": "composition",
     "weightG": 4,
-    "seoDescription": "Bearing Core 2 is a Beyblade running core, weighing 4 g. It shipped with HMS Random Booster Act 5. One alternate colourway is recorded: Red.",
+    "seoDescription": "Bearing Core 2 is a Beyblade running core, weighing 4 g. It shipped with Jiraiya MS, HMS Random Booster Act 5. 2 alternate colourways are recorded.",
     "shippedIn": [
+      "Jiraiya MS",
       "HMS Random Booster Act 5"
     ],
     "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Jiraiya MS",
+        "colourway": "Black"
+      },
       {
         "vendor": "Unknown",
         "bey": "HMS Random Booster Act 5",
@@ -12332,6 +12490,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "Black",
+        "vendor": "Unknown",
+        "inBey": "Jiraiya MS"
+      },
       {
         "colourway": "Red",
         "vendor": "Unknown",
@@ -12516,12 +12679,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 3 · Defense 1 · Stamina 1"
       }
     ],
-    "seoDescription": "Grip Flat Core is a Beyblade running core from the Hard Metal System, weighing 1 g. Part of Beyblade: G-Revolution. It shipped with HMS Random Booster ACT 1, HMS Boosters#Beyblade Fukobako .28Lucky Box.29 2004. 2 alternate colourways are recorded.",
+    "seoDescription": "Grip Flat Core is a Beyblade running core from the Hard Metal System, weighing 1 g. Part of Beyblade: G-Revolution. It shipped with Dragoon MS - HMS Twin Battle Bey Double Shooter Set Version, HMS Random Booster ACT 1, Dragoon MS - Toys \"R\" Us Limited Fire Blood Version and 3 other releases.",
     "shippedIn": [
+      "Dragoon MS - HMS Twin Battle Bey Double Shooter Set Version",
       "HMS Random Booster ACT 1",
-      "HMS Boosters#Beyblade Fukobako .28Lucky Box.29 2004"
+      "Dragoon MS - Toys \"R\" Us Limited Fire Blood Version",
+      "Dragoon MS - Special stickers Version",
+      "HMS Boosters#Beyblade Fukobako .28Lucky Box.29 2004",
+      "Dragoon MS - Tournament Prize Versions Gold, Blue, etc."
     ],
     "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Dragoon MS - HMS Twin Battle Bey Double Shooter Set Version",
+        "colourway": "Blue"
+      },
       {
         "vendor": "Unknown",
         "bey": "HMS Random Booster ACT 1",
@@ -12529,11 +12701,30 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       },
       {
         "vendor": "Unknown",
+        "bey": "Dragoon MS - Toys \"R\" Us Limited Fire Blood Version",
+        "colourway": "Red"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Dragoon MS - Special stickers Version",
+        "colourway": "Red"
+      },
+      {
+        "vendor": "Unknown",
         "bey": "HMS Boosters#Beyblade Fukobako .28Lucky Box.29 2004",
         "colourway": "Black"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Dragoon MS - Tournament Prize Versions Gold, Blue, etc."
       }
     ],
     "colourways": [
+      {
+        "colourway": "Blue",
+        "vendor": "Unknown",
+        "inBey": "Dragoon MS - HMS Twin Battle Bey Double Shooter Set Version"
+      },
       {
         "colourway": "Red",
         "vendor": "Unknown",
@@ -13324,7 +13515,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 1 · Defense 1 · Stamina 1"
       }
     ],
-    "seoDescription": "Heavy Metal Core is a Beyblade spin gear from the Engine Gear System, weighing 9 g.",
+    "seoDescription": "Heavy Metal Core is a Beyblade spin gear from the Engine Gear System, weighing 9 g. It shipped with Metal Driger.",
+    "shippedIn": [
+      "Metal Driger"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Metal Driger"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Metal Driger"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Heavy_Metal_Core",
     "ratings": {
       "attack": 1,
@@ -13697,6 +13902,10 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "releases": [
       {
         "vendor": "Takara Tomy",
+        "bey": "Flash Leopard 2"
+      },
+      {
+        "vendor": "Hasbro",
         "bey": "Flash Leopard 2"
       }
     ],
@@ -17330,6 +17539,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 0
+    },
     "role": "track"
   },
   {
@@ -17979,8 +18194,104 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "unit": "mm",
         "source": "corpus-gen-glossary",
         "confidence": "estimated"
+      },
+      {
+        "label": "Classification",
+        "value": "Attack Ring"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: G-Revolution"
+      },
+      {
+        "label": "Product code",
+        "value": "A-123"
+      },
+      {
+        "label": "Japanese name",
+        "value": "サークルヘビィ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Sākuru Hebyi"
+      },
+      {
+        "label": "Toyline",
+        "value": "Gimmick Specialty Series"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 2003"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 2 · Stamina 1"
       }
-    ]
+    ],
+    "seoDescription": "Circle Heavy is a Beyblade weight disk from the Hard Metal System, weighing 16.3 g. Released August 2003 as A-123 for Beyblade: G-Revolution. It shipped with Strata Dragoon MS, Samurai Changer MS, Beyblade Lucky Box 2005. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Strata Dragoon MS",
+      "Samurai Changer MS",
+      "Beyblade Lucky Box 2005"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "code": "A-123",
+        "bey": "Strata Dragoon MS"
+      },
+      {
+        "vendor": "Takara",
+        "code": "MA-20",
+        "bey": "Samurai Changer MS"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Samurai Changer MS",
+        "set": "Beyblade Lucky Box 2005",
+        "colourway": "Limited Edition Black"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Samurai Changer MS",
+        "set": "Beyblade Lucky Box 2005",
+        "colourway": "Limited Edition Red"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Limited Edition Black",
+        "vendor": "Takara",
+        "inBey": "Samurai Changer MS"
+      },
+      {
+        "colourway": "Limited Edition Red",
+        "vendor": "Takara",
+        "inBey": "Samurai Changer MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Heavy",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
+    },
+    "system": "Hard Metal System",
+    "series": "Beyblade: G-Revolution",
+    "role": "weight",
+    "jpName": "サークルヘビィ",
+    "romaji": "Sākuru Hebyi"
   },
   {
     "id": "weight-disk--circle-wide",
@@ -18031,6 +18342,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Wide",
     "role": "weight"
   },
@@ -18138,11 +18450,17 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "cwd free cross"
     ],
     "source": "composition",
-    "seoDescription": "CWD Free Cross is a Beyblade weight disk. It shipped with HMS Random Booster Act 5. One alternate colourway is recorded: Red.",
+    "seoDescription": "CWD Free Cross is a Beyblade weight disk. It shipped with Jiraiya MS, HMS Random Booster Act 5. 2 alternate colourways are recorded.",
     "shippedIn": [
+      "Jiraiya MS",
       "HMS Random Booster Act 5"
     ],
     "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Jiraiya MS",
+        "colourway": "Black"
+      },
       {
         "vendor": "Unknown",
         "bey": "HMS Random Booster Act 5",
@@ -18150,6 +18468,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "Black",
+        "vendor": "Unknown",
+        "inBey": "Jiraiya MS"
+      },
       {
         "colourway": "Red",
         "vendor": "Unknown",
@@ -18414,7 +18737,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Spin Gear System"
       }
     ],
-    "seoDescription": "Eight Heavy is a Beyblade weight disk from the Spin Gear System, weighing 15 g.",
+    "seoDescription": "Eight Heavy is a Beyblade weight disk from the Spin Gear System, weighing 15 g. It shipped with Guardian Driger.",
+    "shippedIn": [
+      "Guardian Driger"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Guardian Driger"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Guardian Driger"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Heavy",
     "system": "Spin Gear System",
     "role": "weight"
@@ -18575,14 +18912,34 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Spin Gear System"
       }
     ],
-    "seoDescription": "Heavy Attack is a Beyblade weight disk. It shipped with Gaia Dragoon.",
+    "seoDescription": "Heavy Attack is a Beyblade weight disk. It shipped with Gaia Dragoon, Random Booster 1, Random Booster 4 and 2 other releases.",
     "shippedIn": [
-      "Gaia Dragoon"
+      "Gaia Dragoon",
+      "Random Booster 1",
+      "Random Booster 4",
+      "Random Booster 6",
+      "Random Booster 7"
     ],
     "releases": [
       {
         "vendor": "Unknown",
         "bey": "Gaia Dragoon"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Random Booster 1"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Random Booster 4"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Random Booster 6"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Random Booster 7"
       }
     ],
     "colourwaysDocumented": true,
@@ -18817,6 +19174,18 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       },
       {
         "vendor": "Takara Tomy",
+        "bey": "Dranzer G"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dranzer V2"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Driger G"
+      },
+      {
+        "vendor": "Hasbro",
         "bey": "Dranzer G"
       }
     ],
@@ -20052,7 +20421,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "6 is a Beyblade armour from the Dynamite Battle Layer System, weighing 13.4 g. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It shipped with Cyclone Ragnaruk Giga Never-6, Random Booster Vol. 25, Dragoon V2 Wheel Xceed' and 12 other releases. 2 alternate colourways are recorded.",
+    "seoDescription": "6 is a Beyblade armour from the Dynamite Battle Layer System, weighing 13.4 g. Released April 24th, 2021 as B-181 for Beyblade Burst QuadDrive. It shipped with Cyclone Ragnaruk Giga Never-6, Random Booster Vol. 25, Dragoon V2 Wheel Xceed' and 13 other releases. 3 alternate colourways are recorded.",
     "shippedIn": [
       "Cyclone Ragnaruk Giga Never-6",
       "Random Booster Vol. 25",
@@ -20068,7 +20437,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Wind Knight Moon Bounce-6",
       "Random Booster Vol. 30",
       "Divine Belial Nexus Adventure-6",
-      "Beyblade Burst Ultimate All-in-One Set"
+      "Beyblade Burst Ultimate All-in-One Set",
+      "Dynamite Perseus-6"
     ],
     "releases": [
       {
@@ -20120,6 +20490,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-204",
         "bey": "Divine Belial Nexus Adventure-6",
         "set": "Beyblade Burst Ultimate All-in-One Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Dynamite Perseus-6",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "Rare Bey Get Battle"
+        ]
       }
     ],
     "colourways": [
@@ -20134,6 +20513,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-190",
         "inBey": "Roar Bahamut Karma Metal Drift-6"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Rare Bey Get Battle",
+        "inBey": "Dynamite Perseus-6"
       }
     ],
     "colourwaysDocumented": true,
@@ -24576,12 +24962,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "Bumper is a Beyblade assist blade from the Custom Line, weighing 5.3 g. Released March 29th, 2025 as CX-03 (Takara Tomy) and G1680 (Hasbro) for Beyblade X. It shipped with CerberusReaper B0-80WB, Random Booster Vol. 11, PerseusDark B6-80W and 5 other releases.",
+    "seoDescription": "Bumper is a Beyblade assist blade from the Custom Line, weighing 5.3 g. Released March 29th, 2025 as CX-03 (Takara Tomy) and G1680 (Hasbro) for Beyblade X. It shipped with CerberusReaper B0-80WB, Random Booster Vol. 11, PerseusDark B6-80W and 6 other releases. 2 alternate colourways are recorded.",
     "shippedIn": [
       "CerberusReaper B0-80WB",
       "Random Booster Vol. 11",
       "PerseusDark B6-80W",
       "Battle Entry Set C",
+      "PerseusDark B",
       "EvaArc B0-70E",
       "Evangelion Deck Set",
       "Dark Perseus B 6-80W",
@@ -24608,6 +24995,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "code": "CX-00",
+        "bey": "PerseusDark B",
+        "colourway": "Metal Coat: Gold",
+        "distribution": [
+          "[[Beyblade Battle Base|G3]] Tournament Prize"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
         "bey": "EvaArc B0-70E",
         "set": "Evangelion Deck Set",
         "colourway": "Unit-00 Version"
@@ -24622,6 +25018,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "Metal Coat: Gold",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "distribution": "[[Beyblade Battle Base|G3]] Tournament Prize",
+        "inBey": "PerseusDark B"
+      },
       {
         "colourway": "Unit-00 Version",
         "vendor": "Takara Tomy",
@@ -25332,12 +25735,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "Jaggy is a Beyblade assist blade from the Custom Line, weighing 4.9 g. Released May 17th, 2025 as CX-06 (Takara Tomy) and G1681 (Hasbro) for Beyblade X (Season 2). It shipped with FoxBrush J9-70GR, Random Booster FoxBrush Select, FoxBrush J0-80DB and 4 other releases.",
+    "seoDescription": "Jaggy is a Beyblade assist blade from the Custom Line, weighing 4.9 g. Released May 17th, 2025 as CX-06 (Takara Tomy) and G1681 (Hasbro) for Beyblade X (Season 2). It shipped with FoxBrush J9-70GR, Random Booster FoxBrush Select, FoxBrush J0-80DB and 5 other releases.",
     "shippedIn": [
       "FoxBrush J9-70GR",
       "Random Booster FoxBrush Select",
       "FoxBrush J0-80DB",
       "FoxBrush J2-60U",
+      "Jaggy",
       "HellsBrave J3-60GF",
       "SharkScale Deck Set",
       "Brush Fox J 9-70GR"
@@ -25363,6 +25767,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       },
       {
         "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "Jaggy",
+        "colourway": "Pink Version"
+      },
+      {
+        "vendor": "Takara Tomy",
         "code": "UX-15",
         "bey": "HellsBrave J3-60GF",
         "set": "SharkScale Deck Set"
@@ -25370,6 +25780,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Hasbro",
         "bey": "Brush Fox J 9-70GR"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Pink Version",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "inBey": "Jaggy"
       }
     ],
     "colourwaysDocumented": true,
@@ -26726,13 +27144,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Magnacore System"
       }
     ],
-    "seoDescription": "Dark Wing is a Beyblade attack ring from the Magnacore System. It shipped with Dark Dragoon, Dark Dranzer, Dark Draciel and 2 other releases.",
+    "seoDescription": "Dark Wing is a Beyblade attack ring from the Magnacore System. It shipped with Dark Dragoon, Dark Dranzer, Dark Draciel and 3 other releases.",
     "shippedIn": [
       "Dark Dragoon",
       "Dark Dranzer",
       "Dark Draciel",
       "Dark Driger",
-      "Dark Gaia Dragoon"
+      "Dark Gaia Dragoon",
+      "Dark Strata Dragoon"
     ],
     "releases": [
       {
@@ -26754,6 +27173,26 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "bey": "Dark Gaia Dragoon"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Dragoon"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Dranzer"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Draciel"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Driger"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Strata Dragoon"
       }
     ],
     "colourwaysDocumented": true,
@@ -26785,7 +27224,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 1 · Defense 3 · Stamina 1"
       }
     ],
-    "seoDescription": "Delta Wave is a Beyblade attack ring from the Engine Gear System.",
+    "seoDescription": "Delta Wave is a Beyblade attack ring from the Engine Gear System. It shipped with Orca Diver.",
+    "shippedIn": [
+      "Orca Diver"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Orca Diver"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Orca Diver"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Delta_Wave",
     "ratings": {
       "attack": 1,
@@ -27449,7 +27902,30 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 2 · Defense 2 · Stamina 2"
       }
     ],
-    "seoDescription": "Smash Turtle is a Beyblade attack ring from the Spin Gear System.",
+    "seoDescription": "Smash Turtle is a Beyblade attack ring from the Spin Gear System. It shipped with Master Draciel, Kid Draciel.",
+    "shippedIn": [
+      "Master Draciel",
+      "Kid Draciel"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Master Draciel"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Kid Draciel"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Master Draciel"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Kid Draciel"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Turtle",
     "ratings": {
       "attack": 2,
@@ -27660,7 +28136,27 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Magnacore System"
       }
     ],
-    "seoDescription": "Twin Horn is a Beyblade attack ring from the Magnacore System, weighing 5 g.",
+    "seoDescription": "Twin Horn is a Beyblade attack ring from the Magnacore System, weighing 5 g. It shipped with Gabriel.",
+    "shippedIn": [
+      "Gabriel"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Gabriel",
+        "distribution": [
+          "Random Booster 7"
+        ]
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Gabriel",
+        "distribution": [
+          "Random Booster F"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Twin_Horn",
     "system": "Magnacore System",
     "role": "ring"
@@ -27998,7 +28494,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Ace is a Beyblade layer base from the Gatinko Layer System. Released March 16th, 2019 as B-133 (Takara Tomy) and F4549 (Hasbro) for Beyblade Burst Rise. It shipped with Ace Dragon Sting Charge Zan, Beyblade Gatinko Battle Set, Random Layer Vol. 1 Dread Bahamut Ten and 7 other releases.",
+    "seoDescription": "Ace is a Beyblade layer base from the Gatinko Layer System. Released March 16th, 2019 as B-133 (Takara Tomy) and F4549 (Hasbro) for Beyblade Burst Rise. It shipped with Ace Dragon Sting Charge Zan, Beyblade Gatinko Battle Set, Random Layer Vol. 1 Dread Bahamut Ten and 8 other releases.",
     "shippedIn": [
       "Ace Dragon Sting Charge Zan",
       "Beyblade Gatinko Battle Set",
@@ -28008,6 +28504,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 22",
       "Ace Dragon 0Glaive Zephyr' Ten",
       "Legend Star Bey Set",
+      "Ace",
       "Ace Ashura 00Meteor Variable' Retsu",
       "Ace Dragon Drake-P Reboot Zan"
     ],
@@ -28073,6 +28570,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Takara Tomy",
         "code": "B-00",
+        "bey": "Ace",
+        "colourway": "Gold Turbo Ver.",
+        "distribution": [
+          "GT Point Get Battle Campaign"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
         "bey": "Ace Ashura 00Meteor Variable' Retsu",
         "distribution": [
           "wbba. Store Exclusive"
@@ -28113,6 +28619,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Ace Dragon Sting Charge Zan"
+      },
+      {
+        "colourway": "Gold Turbo Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "GT Point Get Battle Campaign",
+        "inBey": "Ace"
       }
     ],
     "colourwaysDocumented": true,
@@ -28369,7 +28882,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Bushin (Takara Tomy) is a Beyblade layer base from the Gatinko Layer System, weighing 10.3 g. Released March 16th, 2019 as B-135 for Beyblade Burst Rise. It shipped with Bushin Ashura Hurricane Keep Ten, Bushin Dragon 7 Friction Retsu, Random Booster Vol. 15 and 5 other releases.",
+    "seoDescription": "Bushin (Takara Tomy) is a Beyblade layer base from the Gatinko Layer System, weighing 10.3 g. Released March 16th, 2019 as B-135 for Beyblade Burst Rise. It shipped with Bushin Ashura Hurricane Keep Ten, Bushin Dragon 7 Friction Retsu, Random Booster Vol. 15 and 6 other releases.",
     "shippedIn": [
       "Bushin Ashura Hurricane Keep Ten",
       "Bushin Dragon 7 Friction Retsu",
@@ -28378,7 +28891,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Bushin Valkyrie 0 Unite' Retsu",
       "Random Booster Vol. 17",
       "Bushin Ashura 13 Anchor Sen",
-      "Random Booster Vol. 19"
+      "Random Booster Vol. 19",
+      "Bushin"
     ],
     "releases": [
       {
@@ -28415,6 +28929,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "bey": "Bushin Ashura Hurricane Keep Ten",
         "colourway": "G4 Limited Color Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Bushin",
+        "colourway": "Gold Turbo Ver.",
+        "distribution": [
+          "CoroTour 2019 Defeat Diabolos Campaign"
+        ]
       }
     ],
     "colourways": [
@@ -28429,6 +28952,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Bushin Ashura Hurricane Keep Ten"
+      },
+      {
+        "colourway": "Gold Turbo Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "CoroTour 2019 Defeat Diabolos Campaign",
+        "inBey": "Bushin"
       }
     ],
     "colourwaysDocumented": true,
@@ -30003,11 +30533,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Imperial is a Beyblade layer base from the Gatinko Layer System. Released November 16th, 2019 as B-154 (Takara Tomy) and F2332 (Hasbro) for Beyblade Burst Rise. It shipped with Imperial Dragon Ignition', Imperial Dragon 7 Eternal, Random Booster Vol. 24 and 2 other releases.",
+    "seoDescription": "Imperial is a Beyblade layer base from the Gatinko Layer System. Released November 16th, 2019 as B-154 (Takara Tomy) and F2332 (Hasbro) for Beyblade Burst Rise. It shipped with Imperial Dragon Ignition', Imperial Dragon 7 Eternal, Random Booster Vol. 24 and 3 other releases.",
     "shippedIn": [
       "Imperial Dragon Ignition'",
       "Imperial Dragon 7 Eternal",
       "Random Booster Vol. 24",
+      "Imperial Dragon",
       "Command Dragon Vanguard-P Quick'",
       "Mythic Beast Collection"
     ],
@@ -30038,6 +30569,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "distribution": [
           "CoroCoro Exclusive"
         ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Imperial Dragon",
+        "colourway": "Black Dragon Ver."
       },
       {
         "vendor": "Hasbro",
@@ -30074,6 +30611,12 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "B-00",
         "distribution": "CoroCoro Exclusive",
         "inBey": "Imperial Dragon Ignition'"
+      },
+      {
+        "colourway": "Black Dragon Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Imperial Dragon"
       }
     ],
     "colourwaysDocumented": true,
@@ -32084,7 +32627,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
       }
     ],
-    "seoDescription": "Slash is a Beyblade layer base from the Gatinko Layer System. Released March 16th, 2019 as B-134 (Takara Tomy) and F3319 (Hasbro) for Beyblade Burst Rise. It shipped with Slash Valkyrie Blitz Power Retsu, Beyblade Gatinko Battle Set, Slash Ashura 5 Quest Zan and 9 other releases.",
+    "seoDescription": "Slash is a Beyblade layer base from the Gatinko Layer System. Released March 16th, 2019 as B-134 (Takara Tomy) and F3319 (Hasbro) for Beyblade Burst Rise. It shipped with Slash Valkyrie Blitz Power Retsu, Beyblade Gatinko Battle Set, Slash Ashura 5 Quest Zan and 10 other releases.",
     "shippedIn": [
       "Slash Valkyrie Blitz Power Retsu",
       "Beyblade Gatinko Battle Set",
@@ -32096,6 +32639,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "GT Triple Booster Set",
       "Slash Valkyrie 8'Cross Revolve Retsu",
       "Legend Star Bey Set",
+      "Slash Valkyrie Goku",
       "Sword Valtryek Sting-P Xtreme' Retsu",
       "Evo Elite Champions Pro Set"
     ],
@@ -32137,6 +32681,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "set": "Legend Star Bey Set"
       },
       {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Slash Valkyrie Goku",
+        "colourway": "Gold Turbo Ver.",
+        "distribution": [
+          "Rare Bey Get Battle"
+        ]
+      },
+      {
         "vendor": "Hasbro",
         "bey": "Sword Valtryek Sting-P Xtreme' Retsu",
         "set": "Evo Elite Champions Pro Set"
@@ -32148,6 +32701,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-136",
         "inBey": "Slash Valkyrie Blitz Power Retsu"
+      },
+      {
+        "colourway": "Gold Turbo Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "Rare Bey Get Battle",
+        "inBey": "Slash Valkyrie Goku"
       }
     ],
     "colourwaysDocumented": true,
@@ -37919,7 +38479,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "Needle is a Beyblade bit from the Basic Line, weighing 2 g. Released July 15th, 2023 as BX-04 (Takara Tomy) and F9581 (Hasbro) for Beyblade X (Season 1). It shipped with KnightShield 3-80N, WizardArrow 4-60N, 3on3 Deck Set and 28 other releases. 2 alternate colourways are recorded.",
+    "seoDescription": "Needle is a Beyblade bit from the Basic Line, weighing 2 g. Released July 15th, 2023 as BX-04 (Takara Tomy) and F9581 (Hasbro) for Beyblade X (Season 1). It shipped with KnightShield 3-80N, WizardArrow 4-60N, 3on3 Deck Set and 29 other releases. 3 alternate colourways are recorded.",
     "shippedIn": [
       "KnightShield 3-80N",
       "WizardArrow 4-60N",
@@ -37928,6 +38488,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Random Booster Vol. 1",
       "HellsChain Deck Set",
       "All In One Set",
+      "Needle",
       "Bit - Ball",
       "Bit - Flat",
       "Venom 3-80N",
@@ -37987,6 +38548,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "BX-53",
         "bey": "KnightShield 3-80N",
         "set": "All In One Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "bey": "Needle",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "[[Beyblade Battle Base|G3]] Tournament Prize"
+        ]
       },
       {
         "vendor": "Takara Tomy",
@@ -38083,6 +38653,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourways": [
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "BX-00",
+        "distribution": "[[Beyblade Battle Base|G3]] Tournament Prize",
+        "inBey": "Needle"
+      },
       {
         "colourway": "Black×Gold",
         "vendor": "Takara Tomy",
@@ -39830,10 +40407,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "X Standard: legal"
       }
     ],
-    "seoDescription": "Wedge is a Beyblade bit from the Custom Line, weighing 1.8 g. Released March 29th, 2025 as CX-03 (Takara Tomy) and G1680 (Hasbro) for Beyblade X. It shipped with PerseusDark B6-80W, Battle Entry Set C, MummyCurse 7-55W and 6 other releases.",
+    "seoDescription": "Wedge is a Beyblade bit from the Custom Line, weighing 1.8 g. Released March 29th, 2025 as CX-03 (Takara Tomy) and G1680 (Hasbro) for Beyblade X. It shipped with PerseusDark B6-80W, Battle Entry Set C, Wedge and 7 other releases. One alternate colourway is recorded: Gold Ver..",
     "shippedIn": [
       "PerseusDark B6-80W",
       "Battle Entry Set C",
+      "Wedge",
       "MummyCurse 7-55W",
       "Random Booster Vol. 8",
       "PegasusBrush M3-85W",
@@ -39853,6 +40431,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "CX-04",
         "bey": "PerseusDark B6-80W",
         "set": "Battle Entry Set C"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "bey": "Wedge",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "[[Beyblade Battle Base|G3]] Tournament Prize"
+        ]
       },
       {
         "vendor": "Takara Tomy",
@@ -39878,6 +40465,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "vendor": "Hasbro",
         "bey": "Bumblebee 1-60W",
         "set": "Optimus Prime and Bumblebee Multipack Set"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "CX-00",
+        "distribution": "[[Beyblade Battle Base|G3]] Tournament Prize",
+        "inBey": "Wedge"
       }
     ],
     "colourwaysDocumented": true,
@@ -40367,7 +40963,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Magnacore System"
       }
     ],
-    "seoDescription": "Dark Dragoon is a Beyblade bit chip from the Magnacore System.",
+    "seoDescription": "Dark Dragoon is a Beyblade bit chip from the Magnacore System. It shipped with Dark Dragoon.",
+    "shippedIn": [
+      "Dark Dragoon"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Dark Dragoon"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dark Dragoon"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dark_Dragoon",
     "system": "Magnacore System",
     "role": "chip"
@@ -40577,7 +41187,22 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Beyblade V-Force"
       }
     ],
-    "seoDescription": "Gabriel is a Beyblade bit chip from the Magnacore System. Part of Beyblade V-Force.",
+    "seoDescription": "Gabriel is a Beyblade bit chip from the Magnacore System. Part of Beyblade V-Force. It shipped with Gabriel, White Gabriel G.",
+    "shippedIn": [
+      "Gabriel",
+      "White Gabriel G"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Gabriel"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "White Gabriel G"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gabriel",
     "system": "Magnacore System",
     "series": "Beyblade V-Force",
@@ -40744,7 +41369,17 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Fire"
       }
     ],
-    "seoDescription": "Knight Dranzer is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000.",
+    "seoDescription": "Knight Dranzer is a Beyblade bit chip from the Spin Gear System. Part of Beyblade: 2000. It shipped with Knight Dranzer.",
+    "shippedIn": [
+      "Knight Dranzer"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Knight Dranzer"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Knight_Dranzer",
     "system": "Spin Gear System",
     "series": "Beyblade: 2000",
@@ -41094,7 +41729,21 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Spin Gear System"
       }
     ],
-    "seoDescription": "Polta is a Beyblade bit chip from the Spin Gear System.",
+    "seoDescription": "Polta is a Beyblade bit chip from the Spin Gear System. It shipped with Polta.",
+    "shippedIn": [
+      "Polta"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Polta"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Polta"
+      }
+    ],
+    "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Polta",
     "system": "Spin Gear System",
     "role": "chip"
@@ -41543,6 +42192,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Bloody_Devil_Emblem",
     "role": "chip"
   },
@@ -41573,6 +42223,10 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "releases": [
       {
         "vendor": "Takara Tomy",
+        "bey": "Draciel MS"
+      },
+      {
+        "vendor": "Hasbro",
         "bey": "Draciel MS"
       }
     ],
@@ -41610,12 +42264,16 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Hard Metal System"
       }
     ],
-    "seoDescription": "Dragoon Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Dragoon MS Ultimate Version, Dragoon MS.",
+    "seoDescription": "Dragoon Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Dragoon MS, Dragoon MS Ultimate Version.",
     "shippedIn": [
-      "Dragoon MS Ultimate Version",
-      "Dragoon MS"
+      "Dragoon MS",
+      "Dragoon MS Ultimate Version"
     ],
     "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Dragoon MS"
+      },
       {
         "vendor": "Takara Tomy",
         "bey": "Dragoon MS Ultimate Version"
@@ -41623,9 +42281,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "vendor": "Hasbro",
         "bey": "Dragoon MS"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dragoon MS Ultimate Version"
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dragoon_Emblem",
     "system": "Hard Metal System",
     "role": "chip"
@@ -41744,6 +42407,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_God_Emblem",
     "role": "chip"
   },
@@ -41772,6 +42436,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "seoDescription": "Hard Metal Emblem is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Hard_Metal_Emblem",
     "system": "Hard Metal System",
     "series": "Beyblade: G-Revolution",
@@ -41824,6 +42489,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Jiraiya_Emblem",
     "role": "chip"
   },
@@ -41909,6 +42575,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Samurai_Emblem",
     "system": "Hard Metal System",
     "series": "New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle",
@@ -41943,6 +42610,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Sea_Dragon_Emblem",
     "role": "chip"
   },
@@ -41970,7 +42638,18 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Beyblade: G-Revolution"
       }
     ],
-    "seoDescription": "Strata Dragoon is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
+    "seoDescription": "Strata Dragoon is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution. It shipped with Strata Dragoon MS.",
+    "shippedIn": [
+      "Strata Dragoon MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Strata Dragoon MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon",
     "system": "Hard Metal System",
     "series": "Beyblade: G-Revolution",
@@ -42007,6 +42686,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon_Emblem",
     "system": "Hard Metal System",
     "role": "chip"
@@ -42039,6 +42719,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       }
     ],
     "colourwaysDocumented": true,
+    "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Turtle_Emblem",
     "role": "chip"
   }
