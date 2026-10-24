@@ -556,6 +556,32 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
        */
       bundle: true,
     },
+    /*
+     * Every browse section CLOSED, as of 2026-10-24 — `/categories`,
+     * `/brands`, `/franchise` and `/stores` (+ `/sellers`) return Not Found
+     * and disappear from the navbar, sidebar, mobile sheet, footer and
+     * sitemap.
+     *
+     * 🛑 Spelled out rather than omitted. `isBrowsePageEnabled` treats an
+     * absent key as OPEN, so leaving these out would publish all four on a
+     * fresh seed — the opposite of the decision this block records.
+     *
+     * Nothing is deleted and nothing is unreachable internally: brand and
+     * category rows still tag the catalogue and still drive every query that
+     * reads them. Re-opening a section is one toggle in Site Settings ->
+     * Listings -> Browse sections.
+     *
+     * 🛑 A seed change does NOT reach a live document. `appkit-seed load`
+     * writes `set(merge: true)`, so this block only lands on a collection that
+     * has never been written. The live `siteSettings/global` is set by
+     * `scripts/set-browse-page-flags.mjs`.
+     */
+    browsePages: {
+      categories: false,
+      brands: false,
+      franchise: false,
+      stores: false,
+    },
   },
   credentials: {
     phonepeClientId: "PGTESTPAYUAT_PLACEHOLDER",

@@ -41,7 +41,7 @@ import type { PublicSiteSettings } from "../../../shared/features/site-settings/
 export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "contact", // user/orders/[id]/payment — contact.whatsappNumber (narrowed: no address/upiVpa)
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
-  "listings", // useListingTypeFlags — narrowed to listings.listingTypes; categoryTypes has no client reader
+  "listings", // useListingTypeFlags + LayoutShellClient nav filter — narrowed to listings.{listingTypes,browsePages}; categoryTypes has no client reader
   "notificationChannels", // NARROWED: only {email,whatsapp,sms}.enabled — see the projection below
   "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
   /*
@@ -186,6 +186,9 @@ export function toPublicSiteSettings(
     },
     listings: {
       listingTypes: doc.listings?.listingTypes,
+      // Read by LayoutShellClient to drop nav/footer links into a closed
+      // section. `categoryTypes` is still withheld — it has no client reader.
+      browsePages: doc.listings?.browsePages,
     },
     /*
      * 🛑 Narrowed to the three booleans a client reads, not the group by

@@ -943,6 +943,25 @@ export interface SiteSettingsDocument extends BaseDocument {
       brand?: boolean;
       bundle?: boolean;
     };
+    /**
+     * Which public BROWSE SECTIONS are open — `/categories`, `/brands`,
+     * `/franchise`, `/stores` (+ `/sellers`).
+     *
+     * A third axis, not a rename of the two above: `listingTypes` says what the
+     * marketplace sells, `categoryTypes` says what a taxonomy row may be, and
+     * this says whether a public entry point is open. Closing `/brands` does
+     * not untag a single product — `BrandDetailPageView`'s query is unchanged
+     * and brand rows keep driving it. It withdraws the front door.
+     *
+     * ⚠️ Same absent-means-enabled contract as its siblings, and the same
+     * warning applies: `BrowsePageKey` and `ALL_BROWSE_PAGES_MAP`
+     * (`_internal/shared/listing-types/feature-flags.ts`) are the authority.
+     * That Record makes a missing member a compile error; this interface does
+     * not, and the `listingTypes` field above is the record of what happens
+     * when the two drift (it listed 8 types after the union reached 10).
+     * Add a new section THERE, not here.
+     */
+    browsePages?: Partial<Record<string, boolean>>;
   };
   /**
    * Admin-authored HTML overrides for the public policy pages. When a key holds
@@ -1342,6 +1361,26 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       sublisting: true,
       brand: true,
       bundle: false,
+    },
+    /*
+     * Every browse section CLOSED, as of 2026-10-24.
+     *
+     * Spelled out rather than left absent even though absent means open: this
+     * block is the "never configured" baseline, and the whole point of the
+     * setting is that these four are not ready to show. Relying on the
+     * permissive default would open all four on a fresh install, which is the
+     * opposite of the decision.
+     *
+     * Re-opening one is a single toggle in Site Settings -> Listings -> Browse
+     * sections. Nothing else has to change: the routes, the nav entries, the
+     * footer links and the sitemap rows all come back on their own, because
+     * all four read this same flag rather than having been deleted.
+     */
+    browsePages: {
+      categories: false,
+      brands: false,
+      franchise: false,
+      stores: false,
     },
   },
   shipping: {

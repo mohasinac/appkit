@@ -776,6 +776,13 @@ export type {
   ListingTypeFlags,
   ListingTypeFlagsShape,
 } from "./react/hooks/useListingTypeFlags";
+// [CLIENT-ONLY] useBrowsePageFlags: read listings.browsePages from
+// siteSettings; drop nav/sidebar/footer links into a closed browse section.
+export { useBrowsePageFlags } from "./react/hooks/useBrowsePageFlags";
+export type {
+  BrowsePageFlags,
+  BrowsePageFlagsShape,
+} from "./react/hooks/useBrowsePageFlags";
 // Action dispatch hook + panel store
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
@@ -959,7 +966,15 @@ export {
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
   isListingType,
+  // Browse-section gates. Client-safe and genuinely needed here: the nav,
+  // sidebar, mobile sheet and footer all filter on them, and a link into a
+  // closed section is a 404 on every page of the site.
+  isBrowsePageEnabled,
+  enabledBrowsePages,
+  ALL_BROWSE_PAGES,
+  isBrowsePageKey,
 } from "./_internal/shared/listing-types/feature-flags";
+export type { BrowsePageKey } from "./_internal/shared/listing-types/feature-flags";
 // Basic/advanced listing-type split. Client-safe: the nav filter and any
 // seller-facing picker need the same rule the server enforces, and deriving it
 // twice is how the ten hand-written copies of the union happened.

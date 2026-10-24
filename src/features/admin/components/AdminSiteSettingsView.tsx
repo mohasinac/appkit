@@ -21,7 +21,10 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
-import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import {
+  ALL_LISTING_TYPES,
+  ALL_BROWSE_PAGES,
+} from "../../../_internal/shared/listing-types/feature-flags";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import {
   SITE_SETTINGS_TABS,
@@ -435,6 +438,7 @@ export function AdminSiteSettingsView({
   // Per-listing-type / per-category-type visibility flags.
   const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
   const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
+  const [browsePageFlags, setBrowsePageFlags] = React.useState<Record<string, boolean>>({});
   // Per-channel notification-type allowlists — empty array means "all types".
   const [notifEmailTypes, setNotifEmailTypes] = React.useState<string[]>([]);
   const [notifWhatsappTypes, setNotifWhatsappTypes] = React.useState<string[]>([]);
@@ -707,6 +711,7 @@ export function AdminSiteSettingsView({
 
     setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
     setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
+    setBrowsePageFlags((s.listings?.browsePages as Record<string, boolean> | undefined) ?? {});
     setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
     setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
@@ -956,7 +961,11 @@ export function AdminSiteSettingsView({
       // wholesale, so omitting one here would wipe it. The load-time spread this
       // used to carry existed to preserve `adminCheckoutBypass`, which is now a
       // permission rather than a stored flag.
-      listings: { listingTypes: listingTypeFlags, categoryTypes: categoryTypeFlags },
+      listings: {
+        listingTypes: listingTypeFlags,
+        categoryTypes: categoryTypeFlags,
+        browsePages: browsePageFlags,
+      },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },
         email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority, types: notifEmailTypes },
@@ -1027,6 +1036,16 @@ export function AdminSiteSettingsView({
    */
   const LISTING_TYPE_KEYS = ALL_LISTING_TYPES;
   const CATEGORY_TYPE_KEYS = ["category", "sublisting", "brand", "bundle"] as const;
+  /* Derived for the same reason LISTING_TYPE_KEYS is — a hand-written copy of
+   * a union in this file has already drifted once, in both directions. */
+  const BROWSE_PAGE_KEYS = ALL_BROWSE_PAGES;
+  /** What each section actually withdraws, in the admin's own vocabulary. */
+  const BROWSE_PAGE_META: Record<string, { label: string; hint: string }> = {
+    categories: { label: "Categories", hint: "/categories and every category page" },
+    brands: { label: "Brands", hint: "/brands and every brand page" },
+    franchise: { label: "Franchises", hint: "/franchise and every franchise page" },
+    stores: { label: "Stores & Sellers", hint: "/stores, /sellers and every storefront" },
+  };
   const NOTIF_TYPE_OPTIONS = NOTIFICATION_TYPE_TABS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label }));
 
   /*
@@ -1795,6 +1814,39 @@ export function AdminSiteSettingsView({
                       checked={categoryTypeFlags[key] ?? true}
                       onChange={(v) => setCategoryTypeFlags((prev) => ({ ...prev, [key]: v }))}
                     />
+                  ))}
+                </Grid>
+              </Stack>
+
+              {/*
+                A THIRD axis, and the copy says so, because the three read as
+                near-synonyms to anyone who has not been told otherwise:
+                listing types are what we SELL, category types are what a
+                taxonomy ROW may be, and these are whether a public ENTRY POINT
+                is open. Switching "Brands" off here does not untag one product
+                — brand rows keep driving every brand query. It closes the door.
+              */}
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">Browse sections</Text>
+                <Text size="xs" color="muted">
+                  A closed section returns Not Found and disappears from the navbar, the sidebar,
+                  the mobile menu, the footer and the sitemap. Products, categories and stores are
+                  untouched — only the public way in is withdrawn, and re-opening restores it.
+                </Text>
+                <Grid cols={2} gap="sm">
+                  {/* The hint sits BESIDE the toggle rather than inside its
+                      `label`: Toggle has no `description` prop, and widening a
+                      primitive used on ~70 surfaces to carry a hint for four
+                      rows is the wrong trade. */}
+                  {BROWSE_PAGE_KEYS.map((key) => (
+                    <Stack key={key} gap="xs">
+                      <Toggle
+                        label={BROWSE_PAGE_META[key]?.label ?? key}
+                        checked={browsePageFlags[key] ?? true}
+                        onChange={(v) => setBrowsePageFlags((prev) => ({ ...prev, [key]: v }))}
+                      />
+                      <Text size="xs" color="muted">{BROWSE_PAGE_META[key]?.hint}</Text>
+                    </Stack>
                   ))}
                 </Grid>
               </Stack>

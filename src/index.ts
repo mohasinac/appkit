@@ -7026,7 +7026,17 @@ export {
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
   isListingType,
+  // Browse-section gates — /categories, /brands, /franchise, /stores.
+  // Exported HERE rather than from server.ts for the reason given in that
+  // file's ALL_LISTING_TYPES note: `server-entry.ts` re-exports index, so a
+  // Server Component already reaches these from the bare specifier and a
+  // second path would leak an `_internal/` symbol through a third barrel.
+  isBrowsePageEnabled,
+  enabledBrowsePages,
+  ALL_BROWSE_PAGES,
+  isBrowsePageKey,
 } from "./_internal/shared/listing-types/feature-flags";
+export type { BrowsePageKey } from "./_internal/shared/listing-types/feature-flags";
 // Basic/advanced listing-type split — which types a store may create.
 // Pure (no firebase-admin in its import chain), so it is safe in index.ts.
 export {

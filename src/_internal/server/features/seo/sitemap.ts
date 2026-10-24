@@ -15,6 +15,13 @@ import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/p
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
+import { safeRead } from "../../../../errors/safe-read";
+import { siteSettingsRepository } from "../../../../repositories";
+import {
+  ALL_BROWSE_PAGES,
+  browsePageForPath,
+  isBrowsePageEnabled,
+} from "../../../shared/listing-types/feature-flags";
 
 // Product field strings — matches consumer field-names.ts
 const PRODUCT_STATUS = "status";
@@ -773,18 +780,45 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     bey: beyUrls.length,
     part: partUrls.length,
   };
-  const empty = Object.entries(sections)
-    .filter(([, n]) => n === 0)
-    .map(([name]) => name);
-  const total = Object.values(sections).reduce((a, b) => a + b, 0);
+  /*
+   * Drop every URL belonging to a CLOSED browse section.
+   *
+   * 🛑 A single filter over the assembled list, not a condition threaded
+   * through the eighteen fetchers above. Section URLs are emitted from several
+   * of them plus `staticPages`, so gating from the inside is five edits and
+   * five chances to miss the sixth — and `browsePageForPath` is the same rule
+   * the navbar and the footer use, so the sitemap cannot end up disagreeing
+   * with the chrome about which sections exist.
+   *
+   * Advertising a URL that answers 404 is worse than omitting it: it is Root
+   * Cause #81's host/sitemap disagreement in miniature, and it spends crawl
+   * budget on pages we have deliberately withdrawn.
+   *
+   * 🛑 Applied BEFORE the per-section digest below. The digest is what
+   * `scripts/deploy.mjs` asserts against, so counting pre-filter would log
+   * URLs the response does not carry.
+   */
+  const settings = await safeRead(() => siteSettingsRepository.findById("global"), {
+    route: "sitemap.xml",
+    key: "sitemap.siteSettings",
+    // Fails OPEN: an unreadable settings document is not evidence that a
+    // section was closed, and silently dropping the catalogue from the sitemap
+    // on a transient Firestore error is the expensive direction of this guess.
+    fallback: null,
+  });
+  const closed = new Set(
+    ALL_BROWSE_PAGES.filter((p) => !isBrowsePageEnabled(p, settings)),
+  );
+  const keep = (entry: MetadataRoute.Sitemap[number]) => {
+    if (closed.size === 0) return true;
+    const path = entry.url.startsWith("http")
+      ? new URL(entry.url).pathname
+      : entry.url;
+    const page = browsePageForPath(path);
+    return page === null || !closed.has(page);
+  };
 
-  if (empty.length > 0) {
-    serverLogger.warn(`sitemap: ${empty.length} section(s) produced 0 URLs`, { empty, sections, total });
-  } else {
-    serverLogger.info("sitemap: built", { sections, total });
-  }
-
-  return [
+  const all = [
     ...staticUrls,
     ...categoryUrls,
     ...brandUrls,
@@ -804,5 +838,43 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...scammerUrls,
     ...beyUrls,
     ...partUrls,
-  ];
+  ].filter(keep);
+
+  /*
+   * Recount AFTER the filter, and exclude a deliberately-closed section from
+   * the "produced 0 URLs" alarm.
+   *
+   * 🛑 Without this the feature would make its own monitoring cry wolf: the
+   * warning exists because `category: 0` once survived unnoticed for months,
+   * and a warning that fires every build for a reason everyone knows about is
+   * how the next real zero gets ignored. "Closed on purpose" and "broken" must
+   * not look the same in the log.
+   */
+  const sectionPage: Record<string, string | null> = {
+    category: "categories",
+    brand: "brands",
+    franchise: "franchise",
+    store: "stores",
+  };
+  for (const name of Object.keys(sections)) {
+    const page = sectionPage[name];
+    if (page && closed.has(page as (typeof ALL_BROWSE_PAGES)[number])) sections[name] = 0;
+  }
+  const empty = Object.entries(sections)
+    .filter(([name, n]) => n === 0 && !closed.has(sectionPage[name] as never))
+    .map(([name]) => name);
+  const total = all.length;
+
+  if (closed.size > 0) {
+    serverLogger.info("sitemap: browse section(s) closed, URLs withheld", {
+      closed: [...closed],
+    });
+  }
+  if (empty.length > 0) {
+    serverLogger.warn(`sitemap: ${empty.length} section(s) produced 0 URLs`, { empty, sections, total });
+  } else {
+    serverLogger.info("sitemap: built", { sections, total });
+  }
+
+  return all;
 }

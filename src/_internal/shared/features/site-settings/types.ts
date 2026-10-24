@@ -34,17 +34,25 @@ export interface PublicSiteSettings {
     otpCheckoutThreshold?: number;
   };
   /**
-   * Which listing types the site offers — the client needs this to avoid
-   * rendering a browse tab for a type nothing will return.
+   * Which listing types the site offers, and which browse sections are open —
+   * the client needs both to avoid rendering a nav entry or a browse tab that
+   * leads somewhere nothing will return.
    *
    * Deliberately NOT the whole `listings` block: `categoryTypes` has no client
    * reader. This was `featureFlags.listingTypes` until that group was deleted
    * on 2026-08-29; the projection stayed narrow for the same reason it always
    * was — a public payload carries what a client demonstrably reads, nothing
    * more (Root Cause #70).
+   *
+   * `browsePages` HAS a client reader and must be published: `LayoutShellClient`
+   * filters the navbar, the sidebar, the mobile sheet and the footer from it.
+   * Withholding it would leave every link to a closed section in the chrome,
+   * pointing at a route that now 404s — a dead-end CTA on every page of the
+   * site, which is a worse outcome than not having the flag at all.
    */
   listings: {
     listingTypes?: NonNullable<SiteSettingsDocument["listings"]>["listingTypes"];
+    browsePages?: NonNullable<SiteSettingsDocument["listings"]>["browsePages"];
   };
   /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
   chat?: { enabled: boolean };
