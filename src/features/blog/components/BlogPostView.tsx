@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Div, Grid, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
 import { Iframe } from "../../../ui/components/Iframe";
 import { MediaImage } from "../../media/MediaImage";
+import { blogCategoryBadge } from "../constants/category-badge";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
@@ -172,20 +173,65 @@ export function BlogPostView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      {/* Cover image */}
+      {/*
+        * 🛑 THE SCRIM NOW HAS SOMETHING TO DARKEN.
+        *
+        * This cover has always painted a bottom-up Scrim and overlaid
+        * NOTHING on it — the title sat below, in a 768px column, while the
+        * scrim dimmed an empty band of photograph for no reason. A scrim is
+        * a legibility device; with no text over it it is just a smudge.
+        *
+        * `intensity="strong"` rather than subtle, because inverse ink now
+        * has to stay readable over an arbitrary photograph rather than
+        * merely looking tidy.
+        */}
       {coverImageUrl && (
-        <Div className={`relative h-72 md:h-96 ${__O.hidden}`}>
+        <Div className={`relative h-72 md:h-[28rem] ${__O.hidden}`}>
           {renderImage ? (
             renderImage(post)
           ) : (
-            <MediaImage src={coverImageUrl} alt={post.title} size="hero" />
+            <MediaImage src={coverImageUrl} alt={post.title} size="hero" objectFit="cover" />
           )}
-          <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-0" />
+          <Scrim direction="bottom-up" intensity="strong" className="absolute inset-0" />
+          <Div className="absolute inset-x-0 bottom-0">
+            <Stack className="mx-auto max-w-3xl" gap="sm" paddingX="x-md" paddingY="y-xl">
+              <Row gap="sm" wrap>
+                <Span size="xs" weight="medium" className={`inline-block capitalize ${blogCategoryBadge(post.category)}`} rounded="full" padding="pill-xs">
+                  {post.category}
+                </Span>
+                {post.isFeatured && (
+                  <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>
+                    {labels?.featured ?? "Featured"}
+                  </Span>
+                )}
+              </Row>
+              <Heading level={1} size="3xl" mdSize="4xl" weight="bold" color="inverse" shadow="lg">
+                {post.title}
+              </Heading>
+              {/* Row's color union is narrower than Typography's — it has no
+                  `inverse-muted`, so the second tier is inverse ink at reduced
+                  opacity, the same way HeroCarousel does it. */}
+              <Row color="inverse" textSize="sm" wrap gap="md" className="opacity-90">
+                {post.authorName && (
+                  <Span>{labels?.author ?? "By"} <Span weight="medium">{post.authorName}</Span></Span>
+                )}
+                {post.readTimeMinutes != null && (
+                  <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>
+                )}
+                {date && <Span>{date}</Span>}
+              </Row>
+            </Stack>
+          </Div>
         </Div>
       )}
 
       <Div className="max-w-3xl mx-auto" paddingY="y-3xl" paddingX="x-md">
-        {renderBlogPostHeader(post, date, labels)}
+        {/*
+          * Only when there is NO cover — the hero above already carries the
+          * category, title and byline, and rendering both would print the
+          * headline twice on the same screen.
+          */}
+        {!coverImageUrl && renderBlogPostHeader(post, date, labels)}
 
         {/* Optional YouTube video embed — 11-char id, whitelisted before interpolation into the iframe src */}
         {post.youtubeId && /^[A-Za-z0-9_-]{6,20}$/.test(post.youtubeId) && (
@@ -224,14 +270,25 @@ export function BlogPostView({
           )}
         </Div>
 
+        {/* Back button */}
+        {renderBackButton && <Div border="default" className="mt-10 border-t" padding="t-xl">{renderBackButton()}</Div>}
+      </Div>
+
+      {/*
+        * 🛑 THE RELATED RAILS LEFT THE PROSE COLUMN.
+        *
+        * All three sat inside `max-w-3xl` — a 768px gutter — so a
+        * `Grid cols="cards"` that is designed to run `auto-fill` above the
+        * lg breakpoint was permanently squeezed to one or two columns. The
+        * measure that makes body text readable is the wrong measure for a
+        * card grid, and nothing here needs them to share one.
+        */}
+      <Div className="mx-auto max-w-6xl" paddingX="x-md" paddingY="y-2xl">
         <Stack gap="xl">
           {renderBlogPostRelated(related, labels?.relatedTitle ?? "Related Posts", renderRelatedCard)}
           {renderBlogPostRelated(relatedByTags, labels?.relatedByTagsTitle ?? "You might also like", renderRelatedCard)}
           {renderBlogPostRelated(relatedByAuthor, labels?.relatedByAuthorTitle ?? `More from ${post.authorName}`, renderRelatedCard)}
         </Stack>
-
-        {/* Back button */}
-        {renderBackButton && <Div border="default" className="mt-10 border-t" padding="t-xl">{renderBackButton()}</Div>}
       </Div>
     </Div>
   );
