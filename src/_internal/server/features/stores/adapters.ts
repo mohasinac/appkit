@@ -153,6 +153,16 @@ export const PRIVATE_STORE_FIELDS = [
   // it has no client reader and would bloat every store payload with a few
   // hundred tokens.
   "searchTxt",
+  /*
+   * A BILLING RELATIONSHIP between the seller and the platform: whether this
+   * store pays the monthly add-on that sends its buyers WhatsApp order
+   * updates. The buyer learns about it where it is actually decided — the
+   * per-store add-on picker at checkout, which reads the pricing preview, not
+   * this projection. Publishing it here would expose which sellers pay us for
+   * what, which is commercial terms (same reason `customCommissionRate` is
+   * below), and it has no reader on any public store surface.
+   */
+  "whatsappNotifySubscribed",
   "updatedAt", // bookkeeping; no public reader
   "whatsappConfig", // Meta access token + WABA/catalog ids — secret
   "adminNotes", // schema comment: never shown to the owner or the public
