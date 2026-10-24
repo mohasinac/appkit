@@ -162,7 +162,22 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
         content: {
           eyebrow: "Buy now",
           title: "Ready to ship",
-          description: "In-stock listings from verified sellers.",
+          /*
+           * 🛑 Keep this specific — it is load-bearing copy, not filler.
+           *
+           * It read "In-stock listings from verified sellers." here while the
+           * LIVE Firestore document (written by scripts/push-editorial-content.mjs)
+           * said "In-stock Beyblade X tops, spares and stickers, dispatched
+           * from India." The two had drifted, and a reseed would have replaced
+           * the better wording with the vaguer one.
+           *
+           * The live version is the one to keep: measured 2026-10-24, Google
+           * discarded the homepage meta description and built its search
+           * snippet out of THIS card's text instead. That makes it real
+           * user-facing SEO copy, and "listings from verified sellers" says
+           * nothing about what is being sold.
+           */
+          description: "In-stock Beyblade X tops, spares and stickers, dispatched from India.",
         },
         buttons: [{ id: "card-hero-shop-now-cta", text: "Shop products", href: String(ROUTES.PUBLIC.PRODUCTS), variant: "primary" }],
         hover: { effect: "scale" },

@@ -218,6 +218,31 @@ export interface CategoryDocument extends BaseDocument {
    * ranking mechanism; no Shopify competitor in the crawl has any.
    */
   contentBody?: string;
+  /**
+   * Where this category's SEO signals belong, when that is NOT its own URL.
+   *
+   * A part-leaf category and a `/parts/{slot}/{code}` page are the same
+   * entity seen twice: the leaf is a (usually empty) shopping surface, the
+   * parts page is the reference entry with the weight, code, aliases, WBO
+   * legality and the models that use it. Measured 2026-10-24 the taxonomy
+   * held 4,698 categories of which exactly **20** had any stock, so for the
+   * overwhelming majority the parts page is the only one with content.
+   *
+   * Setting this makes the category page declare the parts page canonical, so
+   * the two stop competing and the signals consolidate onto the one a visitor
+   * actually wants.
+   *
+   * 🛑 Written by `scripts/gen-category-parts.mjs`, which is the ONLY place
+   * that knows both ids — it assigns the category id and the glossary id in
+   * the same loop (the pairing `PART_CATEGORY_TO_GLOSSARY_ID` records). Do not
+   * re-derive it at a call site from the slug: the id schemes differ by
+   * construction and the collision-qualification rule is not invertible.
+   *
+   * 🛑 A root-relative path (`/parts/disc/0-0wall`), never absolute — the
+   * canonical HOST has exactly one definition (appkit.config.js `seo.siteUrl`)
+   * and a second one here is Root Cause #81 waiting to happen.
+   */
+  seoCanonicalPath?: string;
   /** Condition-keyed description bodies. A SET, because WHS reuses two per category. */
   descriptionTemplates?: CategoryDescriptionTemplate[];
   /** What this category hands down to a product filed under it. */
