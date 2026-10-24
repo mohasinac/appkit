@@ -422,34 +422,64 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "romaji": "Surasshu"
   },
   {
-    "id": "attack-ring--advance-attacker-dm",
+    "id": "attack-ring--advance-attacker",
     "classification": "Attack Ring",
     "slot": "attack-ring",
     "code": null,
-    "name": "Advance Attacker DM",
+    "name": "Advance Attacker",
     "weightG": 21,
     "usedBy": [
       "gen1-hms-advance-striker"
     ],
     "aliases": [
-      "advance attacker dm"
+      "advance attacker"
     ],
     "source": "composition"
   },
   {
-    "id": "attack-ring--advance-balancer-s-t",
+    "id": "attack-ring--advance-balancer",
     "classification": "Attack Ring",
     "slot": "attack-ring",
     "code": null,
-    "name": "Advance Balancer S-T",
+    "name": "Advance Balancer",
     "weightG": 15,
     "usedBy": [
       "gen1-hms-advance-averazer"
     ],
     "aliases": [
-      "advance balancer s-t"
+      "advance balancer"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Attack Ring"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: G-Revolution"
+      }
+    ],
+    "seoDescription": "Advance Balancer is a Beyblade attack ring from the Hard Metal System, weighing 15 g. Part of Beyblade: G-Revolution. It shipped with Advance Averazer.",
+    "shippedIn": [
+      "Advance Averazer"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "code": "MA-09",
+        "bey": "Advance Averazer"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Balancer",
+    "system": "Hard Metal System",
+    "series": "Beyblade: G-Revolution",
+    "role": "ring"
   },
   {
     "id": "attack-ring--advance-defenser",
@@ -467,19 +497,39 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "attack-ring--advance-survivor-s-t",
+    "id": "attack-ring--advance-survivor",
     "classification": "Attack Ring",
     "slot": "attack-ring",
     "code": null,
-    "name": "Advance Survivor S-T",
+    "name": "Advance Survivor",
     "weightG": 18,
     "usedBy": [
       "gen1-hms-advance-eterner"
     ],
     "aliases": [
-      "advance survivor s-t"
+      "advance survivor"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Advance Survivor is a Beyblade attack ring, weighing 18 g. It shipped with Advance Eterner.",
+    "shippedIn": [
+      "Advance Eterner"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "code": "MA-14",
+        "bey": "Advance Eterner"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Survivor",
+    "role": "ring"
   },
   {
     "id": "attack-ring--circle-upper",
@@ -4198,32 +4248,100 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "role": "ring"
   },
   {
-    "id": "attack-ring--triple-tiger-s-tier",
+    "id": "attack-ring--triple-tiger",
     "classification": "Attack Ring",
     "slot": "attack-ring",
     "code": null,
-    "name": "Triple Tiger S-tier",
+    "name": "Triple Tiger",
     "usedBy": [
       "gen1-plastic-driger-g"
     ],
     "aliases": [
-      "triple tiger s-tier"
+      "triple tiger"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Attack Ring"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 1 · Stamina 1"
+      }
+    ],
+    "seoDescription": "Triple Tiger is a Beyblade attack ring from the Engine Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Tiger",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 17,
+      "stamina": 17
+    },
+    "system": "Engine Gear System",
+    "role": "ring"
   },
   {
-    "id": "attack-ring--triple-wing-s-tier",
+    "id": "attack-ring--triple-wing",
     "classification": "Attack Ring",
     "slot": "attack-ring",
     "code": null,
-    "name": "Triple Wing S-tier",
+    "name": "Triple Wing",
     "usedBy": [
       "gen1-plastic-trygle"
     ],
     "aliases": [
-      "triple wing s-tier"
+      "triple wing"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Attack Ring"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 2 · Stamina 1"
+      }
+    ],
+    "seoDescription": "Triple Wing is a Beyblade attack ring from the Spin Gear System. It shipped with Trygle.",
+    "shippedIn": [
+      "Trygle"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Trygle"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Wing",
+    "ratings": {
+      "attack": 2,
+      "defense": 2,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 33,
+      "stamina": 17
+    },
+    "system": "Spin Gear System",
+    "role": "ring"
   },
   {
     "id": "attack-ring--turtle-crusher",
@@ -16650,16 +16768,16 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "chrome-wheel--ronin-dragoon-left-spin",
+    "id": "chrome-wheel--ronin-dragoon",
     "classification": "Chrome Wheel",
     "slot": "chrome-wheel",
     "code": null,
-    "name": "Ronin Dragoon LEFT-SPIN",
+    "name": "Ronin Dragoon",
     "usedBy": [
       "gen3-gt-ronin-dragoon"
     ],
     "aliases": [
-      "ronin dragoon left-spin"
+      "ronin dragoon"
     ],
     "source": "composition"
   },
@@ -28333,18 +28451,156 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "romaji": "Fenikkusu"
   },
   {
-    "id": "energy-ring--gemios-dual-orientation-gimmick",
+    "id": "energy-ring--gemios",
     "classification": "Energy Ring",
     "slot": "energy-ring",
     "code": null,
-    "name": "Gemios DUAL-ORIENTATION GIMMICK",
+    "name": "Gemios",
     "usedBy": [
       "gen2-mfb-evil-gemios-df145fs"
     ],
     "aliases": [
-      "gemios dual-orientation gimmick"
+      "gemios"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 2.3,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Energy Ring"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fusion"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ジェミオス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Jemiosu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "November 21, 2009"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2010"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 3 · Stamina 1"
+      }
+    ],
+    "seoDescription": "Gemios is a Beyblade energy ring from the Hybrid Wheel System, weighing 2.3 g. Released November 21, 2009 for Beyblade: Metal Fusion. It shipped with Killer Gemios DF145FS, Hybrid Wheel Custom Set Attack & Balance Type, Flame Gemios 105CS and 10 other releases.",
+    "shippedIn": [
+      "Killer Gemios DF145FS",
+      "Hybrid Wheel Custom Set Attack & Balance Type",
+      "Flame Gemios 105CS",
+      "Random Booster Vol. 6 Killer Beafowl",
+      "Cloud Gemios T125SF",
+      "Random Booster Vol. 9 Fusion Hades",
+      "Evil Gemios DF145FS",
+      "Metal Fusion 3-Pack",
+      "Beylocker (Metal Saga)",
+      "Thermal Gemios T125S",
+      "Thermal Gemios VS Poison Virgo 2-Pack",
+      "Torch Gemios W105CS",
+      "Crushing Blast 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-56",
+        "bey": "Killer Gemios DF145FS",
+        "set": "Hybrid Wheel Custom Set Attack & Balance Type"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-100",
+        "bey": "Flame Gemios 105CS",
+        "set": "Random Booster Vol. 6 Killer Beafowl"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-123",
+        "bey": "Cloud Gemios T125SF",
+        "set": "Random Booster Vol. 9 Fusion Hades",
+        "colourway": "Translucent pink"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-56",
+        "bey": "Evil Gemios DF145FS"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-56",
+        "bey": "Evil Gemios DF145FS",
+        "set": "Metal Fusion 3-Pack",
+        "distribution": [
+          "Balance Set"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-56",
+        "bey": "Evil Gemios DF145FS",
+        "set": "Beylocker (Metal Saga)",
+        "distribution": [
+          "Metal Saga"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-119",
+        "bey": "Thermal Gemios T125S"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-119",
+        "bey": "Thermal Gemios T125S",
+        "set": "Thermal Gemios VS Poison Virgo 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-131",
+        "bey": "Torch Gemios W105CS",
+        "set": "Crushing Blast 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Translucent pink",
+        "vendor": "Takara Tomy",
+        "code": "BB-123",
+        "inBey": "Cloud Gemios T125SF"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gemios",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 50,
+      "stamina": 17
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
+    "role": "ring",
+    "jpName": "ジェミオス",
+    "romaji": "Jemiosu"
   },
   {
     "id": "energy-ring--gladiator",
@@ -30378,100 +30634,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "stamina": 1
     },
     "role": "ring"
-  },
-  {
-    "id": "engine-gear--gyro-engine-gear",
-    "classification": "Engine Gear",
-    "slot": "engine-gear",
-    "code": null,
-    "name": "Gyro Engine Gear",
-    "usedBy": [
-      "gen1-plastic-thunder-pegasus"
-    ],
-    "aliases": [
-      "gyro engine gear"
-    ],
-    "source": "composition",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Engine Gear"
-      },
-      {
-        "label": "System",
-        "value": "Engine Gear System"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Stamina 3"
-      }
-    ],
-    "seoDescription": "Gyro Engine Gear is a Beyblade engine gear from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Gyro_Engine_Gear",
-    "ratings": {
-      "attack": 1,
-      "stamina": 3
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 17,
-      "stamina": 50
-    },
-    "system": "Engine Gear System",
-    "role": "gear"
-  },
-  {
-    "id": "engine-gear--left-engine-gear",
-    "classification": "Engine Gear",
-    "slot": "engine-gear",
-    "code": null,
-    "name": "Left Engine Gear",
-    "usedBy": [
-      "gen1-plastic-dragoon-g"
-    ],
-    "aliases": [
-      "left engine gear"
-    ],
-    "source": "composition",
-    "weightG": 11,
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Engine Gear"
-      },
-      {
-        "label": "System",
-        "value": "Engine Gear System"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Stamina 2"
-      }
-    ],
-    "seoDescription": "Left Engine Gear is a Beyblade engine gear from the Engine Gear System, weighing 11 g. It shipped with Dragoon G.",
-    "shippedIn": [
-      "Dragoon G"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "code": "A-89",
-        "bey": "Dragoon G"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear",
-    "ratings": {
-      "attack": 3,
-      "stamina": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 50,
-      "stamina": 33
-    },
-    "system": "Engine Gear System",
-    "role": "gear"
   },
   {
     "id": "engine-gear--left-engine-gear-turbo",
@@ -32784,18 +32946,82 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "romaji": "Rinkusu"
   },
   {
-    "id": "face-bolt--nemesis-x-hasbro-original-design",
+    "id": "face-bolt--nemesis-x",
     "classification": "Face Bolt",
     "slot": "face-bolt",
     "code": null,
-    "name": "Nemesis X HASBRO ORIGINAL DESIGN",
+    "name": "Nemesis X",
     "usedBy": [
       "gen2-mfb-proto-nemesis-ad145d"
     ],
     "aliases": [
-      "nemesis x hasbro original design"
+      "nemesis x"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Face Bolt"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fury"
+      },
+      {
+        "label": "Product code",
+        "value": "B-156"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ネメシスX"
+      },
+      {
+        "label": "Romaji",
+        "value": "Nemeshisu X"
+      },
+      {
+        "label": "Released (US)",
+        "value": "September 2012"
+      }
+    ],
+    "seoDescription": "Nemesis X is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Released as B-156 for Beyblade: Metal Fury. It shipped with Proto Nemesis AD145D, Legendary Bladers: Nemesis Crisis.",
+    "shippedIn": [
+      "Proto Nemesis AD145D",
+      "Legendary Bladers: Nemesis Crisis"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "code": "B-156",
+        "bey": "Proto Nemesis AD145D"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-156",
+        "bey": "Proto Nemesis AD145D",
+        "set": "Legendary Bladers: Nemesis Crisis"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-156A",
+        "bey": "Proto Nemesis AD145D",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Nemesis_X",
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fury",
+    "role": "chip",
+    "jpName": "ネメシスX",
+    "romaji": "Nemeshisu X"
   },
   {
     "id": "face-bolt--orochi",
@@ -33959,6 +34185,20 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
+    "id": "fusion-wheel--basalt",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Basalt",
+    "usedBy": [
+      "gen2-mfb-basalt-horogium"
+    ],
+    "aliases": [
+      "basalt"
+    ],
+    "source": "composition"
+  },
+  {
     "id": "fusion-wheel--basalt-twisted",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -33973,59 +34213,214 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "fusion-wheel--basalt-heaviest-mfb-wheel",
+    "id": "fusion-wheel--beat",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Basalt HEAVIEST MFB WHEEL",
-    "usedBy": [
-      "gen2-mfb-basalt-horogium"
-    ],
-    "aliases": [
-      "basalt heaviest mfb wheel"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--beat-smash-attack-wings",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Beat SMASH ATTACK WINGS",
+    "name": "Beat",
     "usedBy": [
       "gen2-mfb-beat-lynx-ad145wd"
     ],
     "aliases": [
-      "beat smash attack wings"
+      "beat"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 38.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "4D System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fury"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-109"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ビート"
+      },
+      {
+        "label": "Romaji",
+        "value": "Bīto"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "April 23rd, 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2.5 · Defense 2.5 · Stamina 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Beat is a Beyblade fusion wheel from the 4D System, weighing 38.6 g. Released April 23rd, 2011 as BB-109 for Beyblade: Metal Fury. It shipped with Beat Lynx TH170WD, Random Booster Vol. 7 Beat Lynx.",
+    "shippedIn": [
+      "Beat Lynx TH170WD",
+      "Random Booster Vol. 7 Beat Lynx"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Beat Lynx TH170WD",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat",
+    "ratings": {
+      "attack": 2.5,
+      "defense": 2.5,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 42,
+      "defense": 42,
+      "stamina": 33
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": false,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
+    "role": "wheel",
+    "jpName": "ビート",
+    "romaji": "Bīto"
   },
   {
-    "id": "fusion-wheel--blitz-dual-mode-4d-attack-wheel",
+    "id": "fusion-wheel--blitz",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Blitz DUAL-MODE 4D ATTACK WHEEL",
+    "name": "Blitz",
     "usedBy": [
       "gen2-mfb-blitz-striker-100rsf"
     ],
     "aliases": [
-      "blitz dual-mode 4d attack wheel"
+      "blitz",
+      "Blitz I (Hasbro)"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 43.7,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "4D System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fury"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-117"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ブリッツ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Burittsu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 6, 2011"
+      },
+      {
+        "label": "Released (US)",
+        "value": "February 2013"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 6 · Defense 1 · Stamina 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Blitz is a Beyblade fusion wheel from the 4D System, weighing 43.7 g. Released August 6, 2011 as BB-117 for Beyblade: Metal Fury. It shipped with Blitz Unicorno 100RSF, Strongest Blader Set, Blitz Striker 100RSF.",
+    "shippedIn": [
+      "Blitz Unicorno 100RSF",
+      "Strongest Blader Set",
+      "Blitz Striker 100RSF"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-117",
+        "bey": "Blitz Unicorno 100RSF",
+        "set": "Strongest Blader Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-117",
+        "bey": "Blitz Striker 100RSF",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": false,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "aka": [
+      "Blitz I (Hasbro)"
+    ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
+    "role": "wheel",
+    "jpName": "ブリッツ",
+    "romaji": "Burittsu"
   },
   {
-    "id": "fusion-wheel--bull-misleading-design",
+    "id": "fusion-wheel--bull",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Bull MISLEADING DESIGN",
+    "name": "Bull",
     "weightG": 36,
     "usedBy": [
       "gen2-mfb-bull-145s"
     ],
     "aliases": [
-      "bull misleading design"
+      "bull"
     ],
     "source": "composition"
   },
@@ -34520,6 +34915,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "Earth",
     "usedBy": [
+      "gen2-mfb-earth-aquila-145wd",
       "gen2-mfb-earth-eagle"
     ],
     "aliases": [
@@ -34643,20 +35039,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Earth",
     "role": "wheel"
-  },
-  {
-    "id": "fusion-wheel--earth-top-tier-stamina-defense-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Earth TOP-TIER STAMINA/DEFENSE WHEEL",
-    "usedBy": [
-      "gen2-mfb-earth-aquila-145wd"
-    ],
-    "aliases": [
-      "earth top-tier stamina/defense wheel"
-    ],
-    "source": "composition"
   },
   {
     "id": "fusion-wheel--evil",
@@ -34830,14 +35212,16 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "fusion-wheel",
     "code": null,
     "name": "Flame",
+    "weightG": 32.5,
     "usedBy": [
-      "gen2-mfb-flame-byxis"
+      "gen2-mfb-flame-aries-h145fs",
+      "gen2-mfb-flame-byxis",
+      "gen2-mfb-flame-sagittario-c145s"
     ],
     "aliases": [
       "flame"
     ],
     "source": "composition",
-    "weightG": 32.5,
     "specs": [
       {
         "label": "Full width",
@@ -35068,35 +35452,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "role": "wheel"
   },
   {
-    "id": "fusion-wheel--flame-shared-with-flame-sagittario",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Flame SHARED WITH FLAME SAGITTARIO",
-    "weightG": 32.5,
-    "usedBy": [
-      "gen2-mfb-flame-aries-h145fs"
-    ],
-    "aliases": [
-      "flame shared with flame sagittario"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--flame-stamina-class-fw",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Flame STAMINA-CLASS FW",
-    "usedBy": [
-      "gen2-mfb-flame-sagittario-c145s"
-    ],
-    "aliases": [
-      "flame stamina-class fw"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "fusion-wheel--flash-4d-metal-wheel",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -35253,18 +35608,236 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "fusion-wheel--galaxy-high-spin-generator",
+    "id": "fusion-wheel--galaxy",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Galaxy HIGH-SPIN GENERATOR",
+    "name": "Galaxy",
     "usedBy": [
       "gen2-mfb-galaxy-pegasus"
     ],
     "aliases": [
-      "galaxy high-spin generator"
+      "galaxy"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 29.4,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-70"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ギャラクシー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Gyarakusi"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "April 1st, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "May 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 6 · Defense 1 · Stamina 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: legal"
+      }
+    ],
+    "seoDescription": "Galaxy is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1st, 2010 as BB-70 for Beyblade: Metal Masters. It shipped with Galaxy Pegasis W105R²F, Beyblade Deck Entry Set, Galaxy Pegasis DX Set and 12 other releases. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Galaxy Pegasis W105R²F",
+      "Beyblade Deck Entry Set",
+      "Galaxy Pegasis DX Set",
+      "Galaxy Cancer D125HF",
+      "Random Booster Vol. 6 Killer Beafowl",
+      "Galaxy Sagittario 145CS",
+      "Galaxy Pegasis GB145MS",
+      "Galaxy Pegasus W105R2F",
+      "Pegasus Battle Set",
+      "Triple Battle Set",
+      "Beyblade Metal Masters: Ultimate Gift Set",
+      "Rapid Deploy Case",
+      "Starbooster Attack 2-Pack",
+      "Metal Fury 3-Pack",
+      "Galaxy Pegasus GB145MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-70",
+        "bey": "Galaxy Pegasis W105R²F",
+        "distribution": [
+          "Starter"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-75",
+        "bey": "Galaxy Pegasis W105R²F",
+        "set": "Beyblade Deck Entry Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-76",
+        "bey": "Galaxy Pegasis W105R²F",
+        "set": "Galaxy Pegasis DX Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-92",
+        "bey": "Galaxy Pegasis W105R²F",
+        "distribution": [
+          "Booster"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-100",
+        "bey": "Galaxy Cancer D125HF",
+        "set": "Random Booster Vol. 6 Killer Beafowl"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-100",
+        "bey": "Galaxy Sagittario 145CS",
+        "set": "Random Booster Vol. 6 Killer Beafowl"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Galaxy Pegasis GB145MS",
+        "colourway": "Black Hole Ver.",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Galaxy Pegasis GB145MS",
+        "colourway": "Black Hole Ver.",
+        "distribution": [
+          "[[Mani Limited]] Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70",
+        "bey": "Galaxy Pegasus W105R2F"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Pegasus Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70",
+        "bey": "Galaxy Pegasus W105R2F",
+        "distribution": [
+          "''[[Beyblade Legends]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Pegasus Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70A",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Triple Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70B",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Beyblade Metal Masters: Ultimate Gift Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70B",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Rapid Deploy Case"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70B",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Starbooster Attack 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-70C",
+        "bey": "Galaxy Pegasus W105R2F",
+        "set": "Metal Fury 3-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-133",
+        "bey": "Galaxy Pegasus GB145MS",
+        "distribution": [
+          "Mail Order Prize Exclusive"
+        ]
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Black Hole Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "CoroCoro Exclusive",
+        "inBey": "Galaxy Pegasis GB145MS"
+      },
+      {
+        "colourway": "Black Hole Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "[[Mani Limited]] Exclusive",
+        "inBey": "Galaxy Pegasis GB145MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Galaxy",
+    "ratings": {
+      "attack": 6,
+      "defense": 1,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 100,
+      "defense": 17,
+      "stamina": 0
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": true
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "ギャラクシー",
+    "romaji": "Gyarakusi"
   },
   {
     "id": "fusion-wheel--galaxy-metal-wheel",
@@ -35279,16 +35852,16 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "fusion-wheel--gemios-key-attack-part",
+    "id": "fusion-wheel--gemios",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Gemios KEY ATTACK PART",
+    "name": "Gemios",
     "usedBy": [
       "gen2-mfb-gemios-df145fs"
     ],
     "aliases": [
-      "gemios key attack part"
+      "gemios"
     ],
     "source": "composition"
   },
@@ -35428,17 +36001,760 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "fusion-wheel--gravity-counter-attack-fw",
+    "id": "fusion-wheel--gravity",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Gravity COUNTER-ATTACK FW",
+    "name": "Gravity",
     "usedBy": [
       "gen2-mfb-gravity-destroyer"
     ],
     "aliases": [
-      "gravity counter-attack fw"
+      "gravity"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 33.8,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-80"
+      },
+      {
+        "label": "Japanese name",
+        "value": "グラビティ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Gurabiti"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "June 26, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "May 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 5 · Stamina 0"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Gravity is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.8 g. Released June 26, 2010 as BB-80 for Beyblade: Metal Masters. It shipped with Gravity Perseus AD145WD, Beyblade Ultimate Custom Set Perseus Ver., Gravity Perseus Attack Ver. BD145XF and 13 other releases.",
+    "shippedIn": [
+      "Gravity Perseus AD145WD",
+      "Beyblade Ultimate Custom Set Perseus Ver.",
+      "Gravity Perseus Attack Ver. BD145XF",
+      "Random Booster Vol. 7 Beat Lynx",
+      "Gravity Perseus Stamina Ver. 85DS",
+      "Gravity Perseus Stamina Ver. S130MB",
+      "Gravity Destroyer AD145WD",
+      "Gravity Demolition 2-Pack",
+      "String Launcher 2-Pack",
+      "Super Vortex Battle Set (Beyblade Legends)",
+      "Max Stampede Stadium Set",
+      "Ultimate Gravity Destroyer Attack 105F",
+      "Ultimate Gravity Destroyer Attack 130F",
+      "Ultimate Gravity Destroyer Stamina GB145S",
+      "Beyblade: Metal Masters (video game)",
+      "Gravity Brave Attack 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-80",
+        "bey": "Gravity Perseus AD145WD"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-97",
+        "bey": "Beyblade Ultimate Custom Set Perseus Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Gravity Perseus Attack Ver. BD145XF",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Gravity Perseus Stamina Ver. 85DS",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Gravity Perseus Stamina Ver. S130MB",
+        "colourway": "White Knight Ver.",
+        "distribution": [
+          "[[Mani Limited]] Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-80",
+        "bey": "Gravity Destroyer AD145WD"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-80A",
+        "bey": "Gravity Destroyer AD145WD",
+        "set": "Gravity Demolition 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-80B",
+        "bey": "Gravity Destroyer AD145WD",
+        "set": "String Launcher 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-80C",
+        "bey": "Gravity Destroyer AD145WD",
+        "set": "Super Vortex Battle Set (Beyblade Legends)",
+        "distribution": [
+          "Beyblade Legends",
+          "''[[Beyblade Legends]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97",
+        "bey": "Gravity Destroyer AD145WD"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97",
+        "bey": "Gravity Destroyer AD145WD",
+        "set": "Max Stampede Stadium Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97A",
+        "bey": "Ultimate Gravity Destroyer Attack 105F"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97A",
+        "bey": "Ultimate Gravity Destroyer Attack 105F",
+        "set": "Max Stampede Stadium Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97A",
+        "bey": "Ultimate Gravity Destroyer Attack 130F"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97B",
+        "bey": "Ultimate Gravity Destroyer Stamina GB145S"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97B",
+        "bey": "Ultimate Gravity Destroyer Stamina GB145S",
+        "set": "Beyblade: Metal Masters (video game)",
+        "distribution": [
+          "video game"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-97B",
+        "bey": "Ultimate Gravity Destroyer Stamina GB145S",
+        "set": "Gravity Brave Attack 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "White Knight Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "[[Mani Limited]] Exclusive",
+        "inBey": "Gravity Perseus Stamina Ver. S130MB"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Gravity",
+    "ratings": {
+      "attack": 2,
+      "defense": 5,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 83,
+      "stamina": 0
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": false,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "グラビティ",
+    "romaji": "Gurabiti"
+  },
+  {
+    "id": "fusion-wheel--hades",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Hades",
+    "weightG": 39.6,
+    "usedBy": [
+      "gen2-mfb-hades-kerbecs",
+      "gen2-mfb-hell-kerbecs-bd145ds"
+    ],
+    "aliases": [
+      "hades",
+      "Hell (Takara Tomy)"
+    ],
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-99"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ヘル"
+      },
+      {
+        "label": "Romaji",
+        "value": "Heru"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "December 28, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "November 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 0 · Stamina 4"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Hades is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 39.6 g. Released December 28, 2010 as BB-99 for Beyblade: Metal Masters. It shipped with Hell Kerbecs BD145DS, Hell Herculeo 100XF, Random Booster Vol. 7 Beat Lynx and 10 other releases. 3 alternate colourways are recorded.",
+    "shippedIn": [
+      "Hell Kerbecs BD145DS",
+      "Hell Herculeo 100XF",
+      "Random Booster Vol. 7 Beat Lynx",
+      "Hell Horuseus 85RS",
+      "Hell Crown 130FB",
+      "Random Booster Vol. 8 Jade Jupiter",
+      "Hell Beelzeb 125XF",
+      "Random Booster Vol. 9 Fusion Hades",
+      "Hell Kerbecs BD145EWD",
+      "Hades Kerbecs BD145DS",
+      "Team Star Breaker Set",
+      "Hades Gil 100R2F",
+      "Mystic Zone 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-99",
+        "bey": "Hell Kerbecs BD145DS"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Hell Herculeo 100XF",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Hell Horuseus 85RS",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-116",
+        "bey": "Hell Crown 130FB",
+        "set": "Random Booster Vol. 8 Jade Jupiter"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-123",
+        "bey": "Hell Beelzeb 125XF",
+        "set": "Random Booster Vol. 9 Fusion Hades"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Hell Kerbecs BD145DS",
+        "colourway": "Inferno Ver.",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Hell Kerbecs BD145DS",
+        "colourway": "Inferno Ver.",
+        "distribution": [
+          "[[Mani Limited]] Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Hell Kerbecs BD145EWD",
+        "colourway": "Blue Inferno Ver.",
+        "distribution": [
+          "Maximum Bakuten Campaign"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-99",
+        "bey": "Hades Kerbecs BD145DS"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-99",
+        "bey": "Hades Kerbecs BD145DS",
+        "distribution": [
+          "''[[Beyblade Legends]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-99",
+        "bey": "Hades Kerbecs BD145DS",
+        "set": "Team Star Breaker Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-128",
+        "bey": "Hades Gil 100R2F",
+        "set": "Mystic Zone 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Inferno Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "CoroCoro Exclusive",
+        "inBey": "Hell Kerbecs BD145DS"
+      },
+      {
+        "colourway": "Inferno Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "[[Mani Limited]] Exclusive",
+        "inBey": "Hell Kerbecs BD145DS"
+      },
+      {
+        "colourway": "Blue Inferno Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "Maximum Bakuten Campaign",
+        "inBey": "Hell Kerbecs BD145EWD"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hades",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 67
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": false,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "aka": [
+      "Hell (Takara Tomy)"
+    ],
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "ヘル",
+    "romaji": "Heru"
+  },
+  {
+    "id": "fusion-wheel--hell-metal-wheel",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Hell Metal Wheel",
+    "weightG": 39.6,
+    "aliases": [
+      "hell metal wheel"
+    ],
+    "source": "case-study"
+  },
+  {
+    "id": "fusion-wheel--inferno",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Inferno",
+    "usedBy": [
+      "gen2-mfb-inferno-sagittario-145s"
+    ],
+    "aliases": [
+      "inferno"
+    ],
+    "source": "composition",
+    "weightG": 29.5,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fusion"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-03"
+      },
+      {
+        "label": "Released (US)",
+        "value": "January 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 0 · Stamina 4"
+      }
+    ],
+    "seoDescription": "Inferno is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.5 g. Released as BB-03 for Beyblade: Metal Fusion. It shipped with Inferno Sagittario 145S, Inferno Gasher SW145SF, Lightning Sword Showdown 2-Pack and 2 other releases.",
+    "shippedIn": [
+      "Inferno Sagittario 145S",
+      "Inferno Gasher SW145SF",
+      "Lightning Sword Showdown 2-Pack",
+      "Inferno Byxis CH120RS",
+      "Gravity Demolition 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "code": "BB-03",
+        "bey": "Inferno Sagittario 145S",
+        "distribution": [
+          "''[[Beyblade: Metal Fusion]]''",
+          "Starter Pack"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-03",
+        "bey": "Inferno Sagittario 145S",
+        "distribution": [
+          "''[[Beyblade: Metal Masters]]''",
+          "Booster Pack"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-114",
+        "bey": "Inferno Gasher SW145SF",
+        "set": "Lightning Sword Showdown 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-121",
+        "bey": "Inferno Byxis CH120RS",
+        "set": "Gravity Demolition 2-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno",
+    "ratings": {
+      "attack": 2,
+      "defense": 0,
+      "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 0,
+      "stamina": 67
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
+    "role": "wheel"
+  },
+  {
+    "id": "fusion-wheel--jade",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Jade",
+    "usedBy": [
+      "gen2-mfb-jade-jupiter"
+    ],
+    "aliases": [
+      "jade",
+      "Jade I (Hasbro)"
+    ],
+    "source": "composition",
+    "weightG": 22.28,
+    "specs": [
+      {
+        "label": "Full width",
+        "value": "~45mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Material",
+        "value": "Metal Frame + Core",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Maximum height",
+        "value": "~10.0mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Spin direction",
+        "value": "R",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "4D System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fury"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-116 (Takara Tomy) · BB-116-FX (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ジェイド"
+      },
+      {
+        "label": "Romaji",
+        "value": "Jeido"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 6, 2011"
+      },
+      {
+        "label": "Released (US)",
+        "value": "February 2013"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 5 · Stamina 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: legal · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Jade is a Beyblade fusion wheel from the 4D System, weighing 39.2 g. Released August 6, 2011 as BB-116 (Takara Tomy) and BB-116-FX (Hasbro) for Beyblade: Metal Fury. It shipped with Jade Jupiter S130RB, Random Booster Vol. 8 Jade Jupiter.",
+    "shippedIn": [
+      "Jade Jupiter S130RB",
+      "Random Booster Vol. 8 Jade Jupiter"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-116",
+        "bey": "Jade Jupiter S130RB",
+        "set": "Random Booster Vol. 8 Jade Jupiter"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-116",
+        "bey": "Jade Jupiter S130RB",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 83,
+      "stamina": 33
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": true,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "aka": [
+      "Jade I (Hasbro)"
+    ],
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
+    "role": "wheel",
+    "jpName": "ジェイド",
+    "romaji": "Jeido"
+  },
+  {
+    "id": "fusion-wheel--kreis",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Kreis",
+    "usedBy": [
+      "gen2-mfb-kreis-cygnus-145wd"
+    ],
+    "aliases": [
+      "kreis"
+    ],
+    "source": "composition",
+    "weightG": 42.9,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "4D System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fury"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-113"
+      },
+      {
+        "label": "Japanese name",
+        "value": "クライス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Kuraisu"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "January 21st, 2012"
+      },
+      {
+        "label": "Released (US)",
+        "value": "January 2013"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 5 · Stamina 1"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Kreis is a Beyblade fusion wheel from the 4D System, weighing 42.9 g. Released January 21st, 2012 as BB-113 for Beyblade: Metal Fury. It shipped with Kreis Cygnus 145WD.",
+    "shippedIn": [
+      "Kreis Cygnus 145WD"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-124",
+        "bey": "Kreis Cygnus 145WD"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-124",
+        "bey": "Kreis Cygnus 145WD",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Kreis",
+    "ratings": {
+      "attack": 1,
+      "defense": 5,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 83,
+      "stamina": 17
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": false,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "system": "4D System",
+    "series": "Beyblade: Metal Fury",
+    "role": "wheel",
+    "jpName": "クライス",
+    "romaji": "Kuraisu"
   }
 ];

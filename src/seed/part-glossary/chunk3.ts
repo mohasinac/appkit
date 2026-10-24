@@ -9,3484 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "driver--venture",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Venture",
-    "aliases": [
-      "venture",
-      "Vn"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "B-180"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ベンチャー"
-      },
-      {
-        "label": "Romaji",
-        "value": "Benchā"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "April 24th, 2021"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 0 · Stamina 1 · Weight 0 · Speed 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Venture is a Beyblade driver from the Dynamite Battle Layer System. Released April 24th, 2021 as B-180 for Beyblade Burst QuadDrive. It shipped with Dynamite Belial Nexus Venture-2, Beyblade Dynamite Battle Entry Set, Dynamite Belial Nexus Venture-3 and 3 other releases.",
-    "shippedIn": [
-      "Dynamite Belial Nexus Venture-2",
-      "Beyblade Dynamite Battle Entry Set",
-      "Dynamite Belial Nexus Venture-3",
-      "Beyblade Dynamite Battle All-in-One Set",
-      "Astral Fafnir Karma Venture-0",
-      "Random Booster Vol. 27"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-180",
-        "bey": "Dynamite Belial Nexus Venture-2"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-182",
-        "bey": "Dynamite Belial Nexus Venture-2",
-        "set": "Beyblade Dynamite Battle Entry Set",
-        "colourway": "Special Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-190",
-        "bey": "Dynamite Belial Nexus Venture-3",
-        "set": "Beyblade Dynamite Battle All-in-One Set",
-        "colourway": "Gold Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-194",
-        "bey": "Astral Fafnir Karma Venture-0",
-        "set": "Random Booster Vol. 27",
-        "colourway": "Holy King Ver."
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Special Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-182",
-        "inBey": "Dynamite Belial Nexus Venture-2"
-      },
-      {
-        "colourway": "Gold Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-190",
-        "inBey": "Dynamite Belial Nexus Venture-3"
-      },
-      {
-        "colourway": "Holy King Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-194",
-        "inBey": "Astral Fafnir Karma Venture-0"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Venture",
-    "ratings": {
-      "attack": 3,
-      "defense": 0,
-      "stamina": 1,
-      "weight": 0,
-      "speed": 3
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 38,
-      "defense": 0,
-      "stamina": 13,
-      "weight": 0,
-      "speed": 38
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Vn"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "ベンチャー",
-    "romaji": "Benchā"
-  },
-  {
-    "id": "driver--volcanic",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Volcanic'",
-    "weightG": 6.5,
-    "aliases": [
-      "volcanic-dash",
-      "Vl'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Cho-Z Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "B-128"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ボルカニックダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Borukanikku Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "November 17th, 2018"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 1 · Stamina 0 · Weight 0 · Speed 4"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Volcanic' is a Beyblade driver from the Cho-Z Layer System, weighing 6.5 g. Released November 17th, 2018 as B-128 for Beyblade Burst Turbo. It shipped with Crash Ragnaruk 5Cross Volcanic', Cho-Z Customize Set, Poison Dragon 11 Volcanic' Zan and 1 other release.",
-    "shippedIn": [
-      "Crash Ragnaruk 5Cross Volcanic'",
-      "Cho-Z Customize Set",
-      "Poison Dragon 11 Volcanic' Zan",
-      "Random Booster Vol. 18"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-128",
-        "bey": "Crash Ragnaruk 5Cross Volcanic'",
-        "set": "Cho-Z Customize Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-156",
-        "bey": "Poison Dragon 11 Volcanic' Zan",
-        "set": "Random Booster Vol. 18"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic'",
-    "ratings": {
-      "attack": 2,
-      "defense": 1,
-      "stamina": 0,
-      "weight": 0,
-      "speed": 4
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 25,
-      "defense": 13,
-      "stamina": 0,
-      "weight": 0,
-      "speed": 50
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Vl'"
-    ],
-    "system": "Cho-Z Layer System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "ボルカニックダッシュ",
-    "romaji": "Borukanikku Dasshu"
-  },
-  {
-    "id": "driver--volcanic-s",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Volcanic-S",
-    "weightG": 5.9,
-    "aliases": [
-      "volcanic-s",
-      "Volcanic-SlingShock"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E3629"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TA15-S"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Stats",
-        "value": "Speed 6 · Power 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Volcanic-S is a Beyblade driver from the SlingShock System, weighing 5.9 g. Released as E3629 for Beyblade Burst Turbo. It shipped with Wonder Valtryek V4 12 Volcanic-S, Rail Rush Battle Set, Championship Clash.",
-    "shippedIn": [
-      "Wonder Valtryek V4 12 Volcanic-S",
-      "Rail Rush Battle Set",
-      "Championship Clash"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Wonder Valtryek V4 12 Volcanic-S",
-        "set": "Rail Rush Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Wonder Valtryek V4 12 Volcanic-S"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Wonder Valtryek V4 12 Volcanic-S",
-        "set": "Championship Clash"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Volcanic-S",
-    "ratings": {
-      "speed": 6,
-      "power": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "speed": 100,
-      "power": 0
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Volcanic-SlingShock"
-    ],
-    "hasbroCode": "TA15-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Attack",
-    "role": "tip"
-  },
-  {
-    "id": "driver--wave",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Wave'",
-    "weightG": 8.6,
-    "aliases": [
-      "wave-dash",
-      "Wv'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "B-188"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ウェーブダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Uēbu Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 7th, 2021"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 1 · Stamina 2 · Weight 1 · Speed 2"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Wave' is a Beyblade driver from the Dynamite Battle Layer System, weighing 8.6 g. Released August 7th, 2021 as B-188 for Beyblade Burst QuadDrive. It shipped with Astral Spriggan Customize Set.",
-    "shippedIn": [
-      "Astral Spriggan Customize Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-188",
-        "bey": "Astral Spriggan Customize Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wave'",
-    "ratings": {
-      "attack": 1,
-      "defense": 1,
-      "stamina": 2,
-      "weight": 1,
-      "speed": 2
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 13,
-      "defense": 13,
-      "stamina": 25,
-      "weight": 13,
-      "speed": 25
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Wv'"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ウェーブダッシュ",
-    "romaji": "Uēbu Dasshu"
-  },
-  {
-    "id": "driver--wedge",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Wedge'",
-    "weightG": 7.3,
-    "aliases": [
-      "wedge-dash",
-      "Wd'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst BU"
-      },
-      {
-        "label": "Product code",
-        "value": "B-198"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ウェッジダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Wejji Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "System (also)",
-        "value": "Burst Ultimate Layer Series"
-      },
-      {
-        "label": "Series (also)",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "May 28th, 2022"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 1 · Stamina 3 · Weight 3 · Speed 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Wedge' is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.3 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Driger V2 Over Wedge', Random Booster Vol. 29, Driger V2 Illegal Wedge' and 1 other release.",
-    "shippedIn": [
-      "Driger V2 Over Wedge'",
-      "Random Booster Vol. 29",
-      "Driger V2 Illegal Wedge'",
-      "Bakuten Shoot Beyblade 2023 V2 Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-198",
-        "bey": "Driger V2 Over Wedge'",
-        "set": "Random Booster Vol. 29"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Driger V2 Illegal Wedge'",
-        "set": "Bakuten Shoot Beyblade 2023 V2 Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge'",
-    "ratings": {
-      "attack": 1,
-      "defense": 1,
-      "stamina": 3,
-      "weight": 3,
-      "speed": 0
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 13,
-      "defense": 13,
-      "stamina": 38,
-      "weight": 38,
-      "speed": 0
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Wd'"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst BU",
-    "partType": "Stamina",
-    "role": "tip",
-    "jpName": "ウェッジダッシュ",
-    "romaji": "Wejji Dasshu"
-  },
-  {
-    "id": "driver--wedge-s",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Wedge-S",
-    "weightG": 7.6,
-    "aliases": [
-      "wedge-s",
-      "Wedge-SlingShock"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E4743"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TS13-S"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Stats",
-        "value": "Speed 1 · Power 5"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Wedge-S is a Beyblade driver from the SlingShock System, weighing 7.6 g. Released as E4743 for Beyblade Burst Turbo. It shipped with Crash Roktavor R4 11 Wedge-S, Crash Roktavor R4 and Thorns-X Mad Minoboros M4 Dual Pack, Spiral Treptune T4 8 Wedge-S and 2 other releases.",
-    "shippedIn": [
-      "Crash Roktavor R4 11 Wedge-S",
-      "Crash Roktavor R4 and Thorns-X Mad Minoboros M4 Dual Pack",
-      "Spiral Treptune T4 8 Wedge-S",
-      "Spiral Treptune T4 and Lava-X Atlas Anubion A4 Dual Pack",
-      "Championship Clash"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Crash Roktavor R4 11 Wedge-S",
-        "set": "Crash Roktavor R4 and Thorns-X Mad Minoboros M4 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Spiral Treptune T4 8 Wedge-S",
-        "set": "Spiral Treptune T4 and Lava-X Atlas Anubion A4 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Crash Roktavor R4 11 Wedge-S",
-        "set": "Championship Clash"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Wedge-S",
-    "ratings": {
-      "speed": 1,
-      "power": 5
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "speed": 17,
-      "power": 83
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Wedge-SlingShock"
-    ],
-    "hasbroCode": "TS13-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Stamina",
-    "role": "tip"
-  },
-  {
-    "id": "driver--weight",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Weight",
-    "weightG": 6.7,
-    "aliases": [
-      "weight",
-      "W"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dual Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst"
-      },
-      {
-        "label": "Product code",
-        "value": "B-59 (Takara Tomy) · C3182 (Hasbro)"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ウエイト"
-      },
-      {
-        "label": "Romaji",
-        "value": "Ueito"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TS09"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "September 17th, 2016"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 0 · Defense 0 · Stamina 3 · Weight 3 · Speed 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Weight is a Beyblade driver from the Dual Layer System, weighing 6.7 g. Released September 17th, 2016 as B-59 (Takara Tomy) and C3182 (Hasbro) for Beyblade Burst. It shipped with Zillion Zeus Infinity Weight, Psychic Phantom Polish Weight, Beyblade Super Custom Set Speed Ver. and 6 other releases.",
-    "shippedIn": [
-      "Zillion Zeus Infinity Weight",
-      "Psychic Phantom Polish Weight",
-      "Beyblade Super Custom Set Speed Ver.",
-      "Exceed Evil-eye 2Glaive Weight",
-      "Random Booster Vol. 6 Tornado Wyvern.4G.At",
-      "Beast Behemoth 4Cross Weight",
-      "Driger Vulcan 10Reach Weight",
-      "Bakuten Shoot Beyblade 2020 V Set",
-      "Zillion Zeutron Z2 Infinity Weight"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-59",
-        "bey": "Zillion Zeus Infinity Weight",
-        "colourway": "translucent yellow orange"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-65",
-        "bey": "Psychic Phantom Polish Weight",
-        "set": "Beyblade Super Custom Set Speed Ver.",
-        "colourway": "translucent yellow"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-80",
-        "bey": "Exceed Evil-eye 2Glaive Weight",
-        "set": "Random Booster Vol. 6 Tornado Wyvern.4G.At",
-        "colourway": "translucent orange"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-80",
-        "bey": "Beast Behemoth 4Cross Weight",
-        "set": "Random Booster Vol. 6 Tornado Wyvern.4G.At",
-        "colourway": "translucent brown"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Zillion Zeus Infinity Weight",
-        "colourway": "Saint Thunder Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Driger Vulcan 10Reach Weight",
-        "set": "Bakuten Shoot Beyblade 2020 V Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Zillion Zeutron Z2 Infinity Weight"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "translucent yellow orange",
-        "vendor": "Takara Tomy",
-        "code": "B-59",
-        "inBey": "Zillion Zeus Infinity Weight"
-      },
-      {
-        "colourway": "translucent yellow",
-        "vendor": "Takara Tomy",
-        "code": "B-65",
-        "inBey": "Psychic Phantom Polish Weight"
-      },
-      {
-        "colourway": "translucent orange",
-        "vendor": "Takara Tomy",
-        "code": "B-80",
-        "inBey": "Exceed Evil-eye 2Glaive Weight"
-      },
-      {
-        "colourway": "translucent brown",
-        "vendor": "Takara Tomy",
-        "code": "B-80",
-        "inBey": "Beast Behemoth 4Cross Weight"
-      },
-      {
-        "colourway": "Saint Thunder Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "inBey": "Zillion Zeus Infinity Weight"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Weight",
-    "ratings": {
-      "attack": 0,
-      "defense": 0,
-      "stamina": 3,
-      "weight": 3,
-      "speed": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 0,
-      "stamina": 50,
-      "weight": 50,
-      "speed": 0
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "W"
-    ],
-    "hasbroCode": "TS09",
-    "system": "Dual Layer System",
-    "series": "Beyblade Burst",
-    "partType": "Stamina",
-    "role": "tip",
-    "jpName": "ウエイト",
-    "romaji": "Ueito"
-  },
-  {
-    "id": "driver--xceed-z",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xceed'+Z",
-    "weightG": 9,
-    "aliases": [
-      "xceed-z",
-      "Xc'+Z"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "B-196"
-      },
-      {
-        "label": "Japanese name",
-        "value": "エクシードダッシュゼット"
-      },
-      {
-        "label": "Romaji",
-        "value": "Ekushīdo Dasshu Zetto"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "March 19th, 2022"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xceed'+Z is a Beyblade driver from the Dynamite Battle Layer System, weighing 9 g. Released March 19th, 2022 as B-196 for Beyblade Burst QuadDrive. It shipped with Tempest Achilles Xceed'+Z 1B, Random Booster Vol. 28. One alternate colourway is recorded: Demon King Color Ver..",
-    "shippedIn": [
-      "Tempest Achilles Xceed'+Z 1B",
-      "Random Booster Vol. 28"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "bey": "Tempest Achilles Xceed'+Z 1B",
-        "set": "Random Booster Vol. 28",
-        "colourway": "Demon King Color Ver."
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Demon King Color Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "inBey": "Tempest Achilles Xceed'+Z 1B"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BZ",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xc'+Z"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "エクシードダッシュゼット",
-    "romaji": "Ekushīdo Dasshu Zetto"
-  },
-  {
-    "id": "driver--xceed",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xceed'",
-    "weightG": 6.2,
-    "aliases": [
-      "xceed-dash",
-      "Xc'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Superking Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "B-174"
-      },
-      {
-        "label": "Japanese name",
-        "value": "エクシードダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Ekushīdo Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "November 14th, 2020"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xceed' is a Beyblade driver from the Superking Layer System, weighing 6.2 g. Released November 14th, 2020 as B-174 for Beyblade Burst Surge. It shipped with Hyperion Burn Cho Xceed'+X, Beyblade Limit Break DX Set, Dragoon V2 Wheel Xceed' and 3 other releases.",
-    "shippedIn": [
-      "Hyperion Burn Cho Xceed'+X",
-      "Beyblade Limit Break DX Set",
-      "Dragoon V2 Wheel Xceed'",
-      "Random Booster Vol. 25",
-      "Tempest Achilles Xceed'+Z 1B",
-      "Random Booster Vol. 28"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-174",
-        "bey": "Hyperion Burn Cho Xceed'+X",
-        "set": "Beyblade Limit Break DX Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-181",
-        "bey": "Dragoon V2 Wheel Xceed'",
-        "set": "Random Booster Vol. 25"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "bey": "Tempest Achilles Xceed'+Z 1B",
-        "set": "Random Booster Vol. 28",
-        "colourway": "Demon King Color Ver."
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Demon King Color Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "inBey": "Tempest Achilles Xceed'+Z 1B"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xc'"
-    ],
-    "system": "Superking Layer System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "エクシードダッシュ",
-    "romaji": "Ekushīdo Dasshu"
-  },
-  {
-    "id": "driver--xceed-x-sp",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xceed+X-SP",
-    "weightG": 6.8,
-    "aliases": [
-      "xceed-x-sp",
-      "Xc+X-SP"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SpeedStorm System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "F0578"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TSP21"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xceed+X-SP is a Beyblade driver from the SpeedStorm System, weighing 6.8 g. Released as F0578 for Beyblade Burst Surge. It shipped with Evo Hyperion Flamebringer H6 6 Xceed+X-SP, Motor Strike Battle Set.",
-    "shippedIn": [
-      "Evo Hyperion Flamebringer H6 6 Xceed+X-SP",
-      "Motor Strike Battle Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Evo Hyperion Flamebringer H6 6 Xceed+X-SP",
-        "set": "Motor Strike Battle Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed%2BX-SP",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xc+X-SP"
-    ],
-    "hasbroCode": "TSP21",
-    "system": "SpeedStorm System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Attack",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xceed-sp",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xceed-SP",
-    "weightG": 6.2,
-    "aliases": [
-      "xceed-sp",
-      "Xc-SP"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SpeedStorm System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "F0525"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TSP07"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "Released (US)",
-        "value": "November 2020"
-      },
-      {
-        "label": "Released (CA)",
-        "value": "December 2020"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xceed-SP is a Beyblade driver from the SpeedStorm System, weighing 6.2 g. Released as F0525 for Beyblade Burst Surge. It shipped with Super Hyperion H6 7 Xceed-SP, Volt Knockout Battle Set, Hollow Doomscizor D6 12 Xceed-SP and 2 other releases.",
-    "shippedIn": [
-      "Super Hyperion H6 7 Xceed-SP",
-      "Volt Knockout Battle Set",
-      "Hollow Doomscizor D6 12 Xceed-SP",
-      "Mirage Luinor L6 Heavy Xceed-SP",
-      "Slayer Showdown Battle Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Super Hyperion H6 7 Xceed-SP",
-        "set": "Volt Knockout Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Hollow Doomscizor D6 12 Xceed-SP"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Mirage Luinor L6 Heavy Xceed-SP",
-        "set": "Slayer Showdown Battle Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SP",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xc-SP"
-    ],
-    "hasbroCode": "TSP07",
-    "system": "SpeedStorm System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Attack",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xceed-spm",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xceed-SPM",
-    "weightG": 14.6,
-    "aliases": [
-      "xceed-spm",
-      "Xc-SPM"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SpeedStorm System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "F0563"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TSP07-M"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xceed-SPM is a Beyblade driver from the SpeedStorm System, weighing 14.6 g. Released as F0563 for Beyblade Burst Surge. It shipped with Super Hyperion H6 1A-D Xceed-SPM, Origin Achilles A6 Convert Xceed-SPM, Origin Achilles A6 and Tyros T6 Dual Pack.",
-    "shippedIn": [
-      "Super Hyperion H6 1A-D Xceed-SPM",
-      "Origin Achilles A6 Convert Xceed-SPM",
-      "Origin Achilles A6 and Tyros T6 Dual Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Super Hyperion H6 1A-D Xceed-SPM"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Origin Achilles A6 Convert Xceed-SPM",
-        "set": "Origin Achilles A6 and Tyros T6 Dual Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed-SPM",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xc-SPM"
-    ],
-    "hasbroCode": "TSP07-M",
-    "system": "SpeedStorm System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Attack",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xplosion",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xplosion'",
-    "weightG": 6.4,
-    "aliases": [
-      "xplosion-dash",
-      "Xp'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst BU"
-      },
-      {
-        "label": "Product code",
-        "value": "B-00"
-      },
-      {
-        "label": "Japanese name",
-        "value": "エクスプロージョンダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Ekusupurōjon Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "System (also)",
-        "value": "Burst Ultimate Layer Series"
-      },
-      {
-        "label": "Series (also)",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "February 2023"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 5 · Defense 1 · Stamina 0 · Weight 1 · Speed 2"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xplosion' is a Beyblade driver from the Dynamite Battle Layer System, weighing 6.4 g. Released February 2023 as B-00 for Beyblade Burst BU. It shipped with Dragoon V2 Wheel Xplosion', Bakuten Shoot Beyblade 2023 V2 Set.",
-    "shippedIn": [
-      "Dragoon V2 Wheel Xplosion'",
-      "Bakuten Shoot Beyblade 2023 V2 Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Dragoon V2 Wheel Xplosion'",
-        "set": "Bakuten Shoot Beyblade 2023 V2 Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xplosion'",
-    "ratings": {
-      "attack": 5,
-      "defense": 1,
-      "stamina": 0,
-      "weight": 1,
-      "speed": 2
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 63,
-      "defense": 13,
-      "stamina": 0,
-      "weight": 13,
-      "speed": 25
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xp'"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst BU",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "エクスプロージョンダッシュ",
-    "romaji": "Ekusupurōjon Dasshu"
-  },
-  {
-    "id": "driver--xtend-h",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xtend+-H",
-    "weightG": 8.9,
-    "aliases": [
-      "xtend-h",
-      "Xtend+-HyperSphere",
-      "Xtender-H"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "HyperSphere System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Rise"
-      },
-      {
-        "label": "Product code",
-        "value": "E7714"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TH12"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (US)",
-        "value": "June 2020"
-      },
-      {
-        "label": "Stats",
-        "value": "Run time 2"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xtend+-H is a Beyblade driver from the HyperSphere System, weighing 8.9 g. Released as E7714 for Beyblade Burst Rise. It shipped with Union Achilles A5 Convert Xtend+-H, Master Kerbeus K5 Vanguard Xtend+-H, Master Kerbeus K5 and Vice Leopard L4 Dual Pack and 1 other release.",
-    "shippedIn": [
-      "Union Achilles A5 Convert Xtend+-H",
-      "Master Kerbeus K5 Vanguard Xtend+-H",
-      "Master Kerbeus K5 and Vice Leopard L4 Dual Pack",
-      "Premium Collection"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Union Achilles A5 Convert Xtend+-H",
-        "colourway": "red"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Master Kerbeus K5 Vanguard Xtend+-H",
-        "set": "Master Kerbeus K5 and Vice Leopard L4 Dual Pack",
-        "colourway": "gray"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Union Achilles A5 Convert Xtend+-H",
-        "set": "Premium Collection",
-        "colourway": "red"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "red",
-        "vendor": "Hasbro",
-        "inBey": "Union Achilles A5 Convert Xtend+-H"
-      },
-      {
-        "colourway": "gray",
-        "vendor": "Hasbro",
-        "inBey": "Master Kerbeus K5 Vanguard Xtend+-H"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-H",
-    "ratings": {
-      "runTime": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "runTime": 33
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xtend+-HyperSphere",
-      "Xtender-H"
-    ],
-    "hasbroCode": "TH12",
-    "system": "HyperSphere System",
-    "series": "Beyblade Burst Rise",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xtend-q",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xtend+-Q",
-    "weightG": 5.6,
-    "aliases": [
-      "xtend-q",
-      "Xt+-Q",
-      "Xtend+-QuadDrive"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "QuadDrive System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "F3966"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TB13-Q"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (EU)",
-        "value": "January 2022"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2022"
-      },
-      {
-        "label": "Released (CA)",
-        "value": "February 2022"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xtend+-Q is a Beyblade driver from the QuadDrive System, weighing 5.6 g. Released as F3966 for Beyblade Burst QuadDrive. It shipped with Vanish Cobra C7 Giga-Q Xtend+-Q+Blow-3, Galaxy Orbit Battle Set, Magma Roktavor R7 Fyquor-Q Xtend+-Q+Venture-3 and 4 other releases.",
-    "shippedIn": [
-      "Vanish Cobra C7 Giga-Q Xtend+-Q+Blow-3",
-      "Galaxy Orbit Battle Set",
-      "Magma Roktavor R7 Fyquor-Q Xtend+-Q+Venture-3",
-      "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack",
-      "Vanish Fafnir F7 Tapered-Q Xtend+-Q+Kick-3",
-      "Xiphoid Xcalius X8 Xanthus-Q Xtend+-Q+Sword-1",
-      "Xcalius Power Speed Launcher Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Vanish Cobra C7 Giga-Q Xtend+-Q+Blow-3",
-        "set": "Galaxy Orbit Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Magma Roktavor R7 Fyquor-Q Xtend+-Q+Venture-3",
-        "set": "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Vanish Fafnir F7 Tapered-Q Xtend+-Q+Kick-3"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Xiphoid Xcalius X8 Xanthus-Q Xtend+-Q+Sword-1",
-        "set": "Xcalius Power Speed Launcher Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend%2B-Q",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xt+-Q",
-      "Xtend+-QuadDrive"
-    ],
-    "hasbroCode": "TB13-Q",
-    "system": "QuadDrive System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xtend-s",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xtend-S",
-    "weightG": 6.5,
-    "aliases": [
-      "xtend-s",
-      "Xtend-SlingShock"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E3629"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TB09-S"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Stats",
-        "value": "Speed 2 · Power 4"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xtend-S is a Beyblade driver from the SlingShock System, weighing 6.5 g. Released as E3629 for Beyblade Burst Turbo. It shipped with Z Achilles A4 11 Xtend-S, Rail Rush Battle Set.",
-    "shippedIn": [
-      "Z Achilles A4 11 Xtend-S",
-      "Rail Rush Battle Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Z Achilles A4 11 Xtend-S",
-        "set": "Rail Rush Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Z Achilles A4 11 Xtend-S"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-S",
-    "ratings": {
-      "speed": 2,
-      "power": 4
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "speed": 33,
-      "power": 67
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Xtend-SlingShock"
-    ],
-    "hasbroCode": "TB09-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xtend-sl",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xtend-SL",
-    "aliases": [
-      "xtend-sl",
-      "Xt-SL"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E5951"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TB09L-S"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: banned · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
-      }
-    ],
-    "seoDescription": "Xtend-SL is a Beyblade driver from the SlingShock System. Released as E5951 for Beyblade Burst Turbo. It shipped with Z Achilles A4 Boost-L Xtend-SL, Z Achilles A4 Rip Fire Pack.",
-    "shippedIn": [
-      "Z Achilles A4 Boost-L Xtend-SL",
-      "Z Achilles A4 Rip Fire Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Z Achilles A4 Boost-L Xtend-SL",
-        "set": "Z Achilles A4 Rip Fire Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtend-SL",
-    "wboLegality": {
-      "burst": false,
-      "burstGt": false,
-      "burstLimited": false,
-      "burstClassic": false
-    },
-    "aka": [
-      "Xt-SL"
-    ],
-    "hasbroCode": "TB09L-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--xtreme",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Xtreme'",
-    "weightG": 5.6,
-    "aliases": [
-      "xtreme-dash",
-      "X'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Cho-Z Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "B-00 (Takara Tomy) · F3319 (Hasbro)"
-      },
-      {
-        "label": "Japanese name",
-        "value": "エクストリームダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Ekusutorīmu Dasshu"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "PR-13"
-      },
-      {
-        "label": "Type",
-        "value": "Attack"
-      },
-      {
-        "label": "System (also)",
-        "value": "Pro Series System"
-      },
-      {
-        "label": "Series (also)",
-        "value": "Beyblade Burst: Pro Series"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 2018"
-      },
-      {
-        "label": "Released (US)",
-        "value": "November 2021"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 0 · Stamina 0 · Weight 0 · Speed 4"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Xtreme' is a Beyblade driver from the Cho-Z Layer System, weighing 5.6 g. Released August 2018 as B-00 (Takara Tomy) and F3319 (Hasbro) for Beyblade Burst Turbo. It shipped with Shadow Amaterios 0 Xtreme', Dead Hades 8'Expand Xtreme', Random Booster Vol. 15 and 6 other releases.",
-    "shippedIn": [
-      "Shadow Amaterios 0 Xtreme'",
-      "Dead Hades 8'Expand Xtreme'",
-      "Random Booster Vol. 15",
-      "Super Satan 6 Xtreme' 1S",
-      "Random Booster Vol. 22",
-      "Galaxy Pegasis Legacy Xtreme'",
-      "Random Booster Vol. 27",
-      "Sword Valtryek Sting-P Xtreme' Retsu",
-      "Evo Elite Champions Pro Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Shadow Amaterios 0 Xtreme'",
-        "colourway": "translucent dark grey, purple rubber",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-140",
-        "bey": "Dead Hades 8'Expand Xtreme'",
-        "set": "Random Booster Vol. 15",
-        "colourway": "translucent purple, red rubber"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-173",
-        "bey": "Super Satan 6 Xtreme' 1S",
-        "set": "Random Booster Vol. 22",
-        "colourway": "silver, translucent white rubber"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-194",
-        "bey": "Galaxy Pegasis Legacy Xtreme'",
-        "set": "Random Booster Vol. 27",
-        "colourway": "translucent blue, red rubber"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Sword Valtryek Sting-P Xtreme' Retsu",
-        "set": "Evo Elite Champions Pro Set",
-        "colourway": "translucent purple, red rubber"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "translucent dark grey, purple rubber",
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "distribution": "CoroCoro Exclusive",
-        "inBey": "Shadow Amaterios 0 Xtreme'"
-      },
-      {
-        "colourway": "translucent purple, red rubber",
-        "vendor": "Takara Tomy",
-        "code": "B-140",
-        "inBey": "Dead Hades 8'Expand Xtreme'"
-      },
-      {
-        "colourway": "silver, translucent white rubber",
-        "vendor": "Takara Tomy",
-        "code": "B-173",
-        "inBey": "Super Satan 6 Xtreme' 1S"
-      },
-      {
-        "colourway": "translucent blue, red rubber",
-        "vendor": "Takara Tomy",
-        "code": "B-194",
-        "inBey": "Galaxy Pegasis Legacy Xtreme'"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xtreme'",
-    "ratings": {
-      "attack": 3,
-      "defense": 0,
-      "stamina": 0,
-      "weight": 0,
-      "speed": 4
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 38,
-      "defense": 0,
-      "stamina": 0,
-      "weight": 0,
-      "speed": 50
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "X'"
-    ],
-    "hasbroCode": "PR-13",
-    "system": "Cho-Z Layer System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Attack",
-    "role": "tip",
-    "jpName": "エクストリームダッシュ",
-    "romaji": "Ekusutorīmu Dasshu"
-  },
-  {
-    "id": "driver--yard",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yard'",
-    "weightG": 7.4,
-    "aliases": [
-      "yard-dash",
-      "Yd'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst BU"
-      },
-      {
-        "label": "Product code",
-        "value": "B-198"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ヤードダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Yādo Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Defense"
-      },
-      {
-        "label": "System (also)",
-        "value": "Burst Ultimate Layer Series"
-      },
-      {
-        "label": "Series (also)",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "May 28th, 2022"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 4 · Stamina 0 · Weight 2 · Speed 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yard' is a Beyblade driver from the Dynamite Battle Layer System, weighing 7.4 g. Released May 28th, 2022 as B-198 for Beyblade Burst BU. It shipped with Chain Kerbeus Fortress Yard'-6, Random Booster Vol. 29.",
-    "shippedIn": [
-      "Chain Kerbeus Fortress Yard'-6",
-      "Random Booster Vol. 29"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-198",
-        "bey": "Chain Kerbeus Fortress Yard'-6",
-        "set": "Random Booster Vol. 29"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard'",
-    "ratings": {
-      "attack": 1,
-      "defense": 4,
-      "stamina": 0,
-      "weight": 2,
-      "speed": 0
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 13,
-      "defense": 50,
-      "stamina": 0,
-      "weight": 25,
-      "speed": 0
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Yd'"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst BU",
-    "partType": "Defense",
-    "role": "tip",
-    "jpName": "ヤードダッシュ",
-    "romaji": "Yādo Dasshu"
-  },
-  {
-    "id": "driver--yard-h",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yard-H",
-    "weightG": 8.7,
-    "aliases": [
-      "yard-h",
-      "Yard-HyperSphere",
-      "Yardage-H"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "HyperSphere System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Rise"
-      },
-      {
-        "label": "Product code",
-        "value": "E9236"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TH25"
-      },
-      {
-        "label": "Type",
-        "value": "Defense"
-      },
-      {
-        "label": "Stats",
-        "value": "Run time 4"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yard-H is a Beyblade driver from the HyperSphere System, weighing 8.7 g. Released as E9236 for Beyblade Burst Rise. It shipped with Typhon T5 Infinity Yard-H, Glyph Pegasus P5 Oval Yard-H, Extreme Challenger Battle Set.",
-    "shippedIn": [
-      "Typhon T5 Infinity Yard-H",
-      "Glyph Pegasus P5 Oval Yard-H",
-      "Extreme Challenger Battle Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Typhon T5 Infinity Yard-H"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Glyph Pegasus P5 Oval Yard-H",
-        "set": "Extreme Challenger Battle Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-H",
-    "ratings": {
-      "runTime": 4
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "runTime": 67
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Yard-HyperSphere",
-      "Yardage-H"
-    ],
-    "hasbroCode": "TH25",
-    "system": "HyperSphere System",
-    "series": "Beyblade Burst Rise",
-    "partType": "Defense",
-    "role": "tip"
-  },
-  {
-    "id": "driver--yard-s",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yard-S",
-    "aliases": [
-      "yard-s",
-      "Yard-SlingShock"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E4729"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TD11-S"
-      },
-      {
-        "label": "Type",
-        "value": "Defense"
-      },
-      {
-        "label": "Stats",
-        "value": "Speed 5 · Power 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yard-S is a Beyblade driver from the SlingShock System. Released as E4729 for Beyblade Burst Turbo. It shipped with Emperor Forneus F4 0 Yard-S, Riptide Blast Set, Archer Hercules H4 5 Yard-S and 3 other releases.",
-    "shippedIn": [
-      "Emperor Forneus F4 0 Yard-S",
-      "Riptide Blast Set",
-      "Archer Hercules H4 5 Yard-S",
-      "Master Set",
-      "Perfect Phoenix P4 0 Yard-S",
-      "Myth Evo Dragon D5 and Perfect Phoenix P4 Dual Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Emperor Forneus F4 0 Yard-S"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Emperor Forneus F4 0 Yard-S",
-        "set": "Riptide Blast Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Archer Hercules H4 5 Yard-S",
-        "set": "Master Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Perfect Phoenix P4 0 Yard-S",
-        "set": "Myth Evo Dragon D5 and Perfect Phoenix P4 Dual Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-S",
-    "ratings": {
-      "speed": 5,
-      "power": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "speed": 83,
-      "power": 17
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Yard-SlingShock"
-    ],
-    "hasbroCode": "TD11-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Defense",
-    "role": "tip"
-  },
-  {
-    "id": "driver--yard-sl",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yard-SL",
-    "aliases": [
-      "yard-sl",
-      "Yr-SL"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E5952"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TD11L-S"
-      },
-      {
-        "label": "Type",
-        "value": "Defense"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: banned · Burst GT: banned · Burst Limited: banned · Burst Classic: banned"
-      }
-    ],
-    "seoDescription": "Yard-SL is a Beyblade driver from the SlingShock System. Released as E5952 for Beyblade Burst Turbo. It shipped with Emperor Forneus F4 Vertical-L Yard-SL, Emperor Forneus F4 Rip Fire Pack.",
-    "shippedIn": [
-      "Emperor Forneus F4 Vertical-L Yard-SL",
-      "Emperor Forneus F4 Rip Fire Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Emperor Forneus F4 Vertical-L Yard-SL",
-        "set": "Emperor Forneus F4 Rip Fire Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard-SL",
-    "wboLegality": {
-      "burst": false,
-      "burstGt": false,
-      "burstLimited": false,
-      "burstClassic": false
-    },
-    "aka": [
-      "Yr-SL"
-    ],
-    "hasbroCode": "TD11L-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Defense",
-    "role": "tip"
-  },
-  {
-    "id": "driver--yard-metal",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yard Metal",
-    "aliases": [
-      "yard-metal",
-      "Ym"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Gatinko Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Rise"
-      },
-      {
-        "label": "Product code",
-        "value": "B-157"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ヤードメタル"
-      },
-      {
-        "label": "Romaji",
-        "value": "Yādo Metaru"
-      },
-      {
-        "label": "Type",
-        "value": "Defense"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "January 25th, 2020"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 0 · Defense 4 · Stamina 0 · Weight 3 · Speed 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yard Metal is a Beyblade driver from the Gatinko Layer System. Released January 25th, 2020 as B-157 for Beyblade Burst Rise. It shipped with Bigbang Genesis 0 Yard Metal.",
-    "shippedIn": [
-      "Bigbang Genesis 0 Yard Metal"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-157",
-        "bey": "Bigbang Genesis 0 Yard Metal"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yard_Metal",
-    "ratings": {
-      "attack": 0,
-      "defense": 4,
-      "stamina": 0,
-      "weight": 3,
-      "speed": 0
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 50,
-      "stamina": 0,
-      "weight": 38,
-      "speed": 0
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Ym"
-    ],
-    "system": "Gatinko Layer System",
-    "series": "Beyblade Burst Rise",
-    "partType": "Defense",
-    "role": "tip",
-    "jpName": "ヤードメタル",
-    "romaji": "Yādo Metaru"
-  },
-  {
-    "id": "driver--yielding-q",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yielding-Q",
-    "weightG": 5.8,
-    "aliases": [
-      "yielding-q",
-      "Y-Q",
-      "Yielding-QuadDrive"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "QuadDrive System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "F3334"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TS18-Q"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2022"
-      },
-      {
-        "label": "Released (CA)",
-        "value": "January 2022"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yielding-Q is a Beyblade driver from the QuadDrive System, weighing 5.8 g. Released as F3334 for Beyblade Burst QuadDrive. It shipped with Destruction Belfyre B7 Nexus-Q Yielding-Q+Venture-2, Cosmic Vector Battle Set, Cyclone Valtryek V7 Aquilon-Q Yielding-Q+Defense-10 and 3 other releases.",
-    "shippedIn": [
-      "Destruction Belfyre B7 Nexus-Q Yielding-Q+Venture-2",
-      "Cosmic Vector Battle Set",
-      "Cyclone Valtryek V7 Aquilon-Q Yielding-Q+Defense-10",
-      "Galaxy Orbit Battle Set",
-      "Salvage Valtryek Rashad V7 Nexus-Q Yielding-Q+Quake-7",
-      "Salvage Valtryek Rashad V7 and Gilded Nemesis N7 Dual Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Destruction Belfyre B7 Nexus-Q Yielding-Q+Venture-2",
-        "set": "Cosmic Vector Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Cyclone Valtryek V7 Aquilon-Q Yielding-Q+Defense-10",
-        "set": "Galaxy Orbit Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Salvage Valtryek Rashad V7 Nexus-Q Yielding-Q+Quake-7",
-        "set": "Salvage Valtryek Rashad V7 and Gilded Nemesis N7 Dual Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding-Q",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Y-Q",
-      "Yielding-QuadDrive"
-    ],
-    "hasbroCode": "TS18-Q",
-    "system": "QuadDrive System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Stamina",
-    "role": "tip"
-  },
-  {
-    "id": "driver--yielding",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Yielding",
-    "weightG": 5.6,
-    "aliases": [
-      "yielding",
-      "Y"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dual Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst"
-      },
-      {
-        "label": "Product code",
-        "value": "B-49 · C0597 (Canceled)"
-      },
-      {
-        "label": "Japanese name",
-        "value": "イールディング"
-      },
-      {
-        "label": "Romaji",
-        "value": "Īrudingu"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "July 16th, 2016"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2017 (Canceled)"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 0 · Defense 1 · Stamina 4 · Weight 0 · Speed 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Yielding is a Beyblade driver from the Dual Layer System, weighing 5.6 g. Released July 16th, 2016 as B-49 and C0597 (Canceled) for Beyblade Burst. It shipped with Yaeger Yggdrasil Gravity Yielding, Random Booster Vol. 3 Yaeger Yggdrasil.G.Y, Storm Spriggan Boost Yielding and 13 other releases.",
-    "shippedIn": [
-      "Yaeger Yggdrasil Gravity Yielding",
-      "Random Booster Vol. 3 Yaeger Yggdrasil.G.Y",
-      "Storm Spriggan Boost Yielding",
-      "Rising Ragnaruk Knuckle Yielding",
-      "Wild Wyvern Infinity Yielding",
-      "Beyblade Super Custom Set Speed Ver.",
-      "Winning Valkyrie 3 Yielding",
-      "Random Booster Vol. 11 Vise Leopard.12L.Ds",
-      "Hell Salamander Gravity Yielding",
-      "Random Booster Vol. 12 Dead Hades.11T.Z'",
-      "Earth Aquila 2 Yielding",
-      "Metal Fight Beyblade Anime 10th Anniversary Set",
-      "Gravity Perseus 00Bump Yielding",
-      "Metal Fight Beyblade 2020 Baku Set",
-      "Yugen Yegdrion Y2 Gravity Survive",
-      "King Kerbeus K2 and Yugen Yegdrion Y2 Dual Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-49",
-        "bey": "Yaeger Yggdrasil Gravity Yielding",
-        "set": "Random Booster Vol. 3 Yaeger Yggdrasil.G.Y",
-        "colourway": "translucent yellow, pink POM"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-49",
-        "bey": "Storm Spriggan Boost Yielding",
-        "set": "Random Booster Vol. 3 Yaeger Yggdrasil.G.Y"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-49",
-        "bey": "Rising Ragnaruk Knuckle Yielding",
-        "set": "Random Booster Vol. 3 Yaeger Yggdrasil.G.Y"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-65",
-        "bey": "Wild Wyvern Infinity Yielding",
-        "set": "Beyblade Super Custom Set Speed Ver.",
-        "colourway": "translucent orange, black POM"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-118",
-        "bey": "Winning Valkyrie 3 Yielding",
-        "set": "Random Booster Vol. 11 Vise Leopard.12L.Ds"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-125",
-        "bey": "Hell Salamander Gravity Yielding",
-        "set": "Random Booster Vol. 12 Dead Hades.11T.Z'"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Earth Aquila 2 Yielding",
-        "set": "Metal Fight Beyblade Anime 10th Anniversary Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Gravity Perseus 00Bump Yielding",
-        "set": "Metal Fight Beyblade 2020 Baku Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Yugen Yegdrion Y2 Gravity Survive",
-        "set": "King Kerbeus K2 and Yugen Yegdrion Y2 Dual Pack",
-        "distribution": [
-          "Canceled, replaced with [[Driver - Survive|Survive]]"
-        ]
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "translucent yellow, pink POM",
-        "vendor": "Takara Tomy",
-        "code": "B-49",
-        "inBey": "Yaeger Yggdrasil Gravity Yielding"
-      },
-      {
-        "colourway": "translucent orange, black POM",
-        "vendor": "Takara Tomy",
-        "code": "B-65",
-        "inBey": "Wild Wyvern Infinity Yielding"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Yielding",
-    "ratings": {
-      "attack": 0,
-      "defense": 1,
-      "stamina": 4,
-      "weight": 0,
-      "speed": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 17,
-      "stamina": 67,
-      "weight": 0,
-      "speed": 17
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Y"
-    ],
-    "system": "Dual Layer System",
-    "series": "Beyblade Burst",
-    "partType": "Stamina",
-    "role": "tip",
-    "jpName": "イールディング",
-    "romaji": "Īrudingu"
-  },
-  {
-    "id": "driver--zeal",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zeal",
-    "weightG": 6.6,
-    "aliases": [
-      "zeal",
-      "Zl"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst BU"
-      },
-      {
-        "label": "Product code",
-        "value": "B-203"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ジール"
-      },
-      {
-        "label": "Romaji",
-        "value": "Jīru"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "System (also)",
-        "value": "Burst Ultimate Layer Series"
-      },
-      {
-        "label": "Series (also)",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "October 8th, 2022"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 3 · Stamina 2 · Weight 1 · Speed 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zeal is a Beyblade driver from the Dynamite Battle Layer System, weighing 6.6 g. Released October 8th, 2022 as B-203 for Beyblade Burst BU. It shipped with King Helios MR Giga Zeal-10, Ultimate Fusion DX Set.",
-    "shippedIn": [
-      "King Helios MR Giga Zeal-10",
-      "Ultimate Fusion DX Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-203",
-        "bey": "King Helios MR Giga Zeal-10",
-        "set": "Ultimate Fusion DX Set"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeal",
-    "ratings": {
-      "attack": 1,
-      "defense": 3,
-      "stamina": 2,
-      "weight": 1,
-      "speed": 1
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 13,
-      "defense": 38,
-      "stamina": 25,
-      "weight": 13,
-      "speed": 13
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zl"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst BU",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ジール",
-    "romaji": "Jīru"
-  },
-  {
-    "id": "driver--zephyr",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zephyr'",
-    "weightG": 5.8,
-    "aliases": [
-      "zephyr-dash",
-      "Z'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Cho-Z Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "B-125"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ゼファーダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Zefā Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "October 20th, 2018"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 0 · Stamina 1 · Weight 0 · Speed 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zephyr' is a Beyblade driver from the Cho-Z Layer System, weighing 5.8 g. Released October 20th, 2018 as B-125 for Beyblade Burst Turbo. It shipped with Dead Hades 11Turn Zephyr', Random Booster Vol. 12 Dead Hades.11T.Z', Lightning L-Drago 10Reach Zephyr' and 4 other releases.",
-    "shippedIn": [
-      "Dead Hades 11Turn Zephyr'",
-      "Random Booster Vol. 12 Dead Hades.11T.Z'",
-      "Lightning L-Drago 10Reach Zephyr'",
-      "Random Booster Vol. 17",
-      "Ace Dragon 0Glaive Zephyr' Ten",
-      "Legend Star Bey Set",
-      "Metal Fight Beyblade Anime 10th Anniversary Set"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-125",
-        "bey": "Dead Hades 11Turn Zephyr'",
-        "set": "Random Booster Vol. 12 Dead Hades.11T.Z'"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-151",
-        "bey": "Lightning L-Drago 10Reach Zephyr'",
-        "set": "Random Booster Vol. 17",
-        "colourway": "Kyokuryu Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Ace Dragon 0Glaive Zephyr' Ten",
-        "set": "Legend Star Bey Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Lightning L-Drago 10Reach Zephyr'",
-        "set": "Metal Fight Beyblade Anime 10th Anniversary Set"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Kyokuryu Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-151",
-        "inBey": "Lightning L-Drago 10Reach Zephyr'"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr'",
-    "ratings": {
-      "attack": 2,
-      "defense": 0,
-      "stamina": 1,
-      "weight": 0,
-      "speed": 3
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 25,
-      "defense": 0,
-      "stamina": 13,
-      "weight": 0,
-      "speed": 38
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Z'"
-    ],
-    "system": "Cho-Z Layer System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ゼファーダッシュ",
-    "romaji": "Zefā Dasshu"
-  },
-  {
-    "id": "performance-tip--zephyr-h",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "Zephyr-H",
-    "weightG": 7.7,
-    "aliases": [
-      "zephyr-h",
-      "Zephyr-HyperSphere",
-      "Zephyrus-H (Beyblade Burst App)"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Performance Tip"
-      },
-      {
-        "label": "System",
-        "value": "HyperSphere System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "F0621"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TH29"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Stats",
-        "value": "Run time 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zephyr-H is a Beyblade performance tip from the HyperSphere System, weighing 7.7 g. Released as F0621 for Beyblade Burst Surge. It shipped with Tact Leviathan L5 7 Zephyr-H.",
-    "shippedIn": [
-      "Tact Leviathan L5 7 Zephyr-H"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Tact Leviathan L5 7 Zephyr-H"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-H",
-    "ratings": {
-      "runTime": 3
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "runTime": 50
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zephyr-HyperSphere",
-      "Zephyrus-H (Beyblade Burst App)"
-    ],
-    "hasbroCode": "TH29",
-    "system": "HyperSphere System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--zephyr-q",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zephyr-Q",
-    "weightG": 5.4,
-    "aliases": [
-      "zephyr-q",
-      "Z-Q",
-      "Zephyr-QuadDrive"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "QuadDrive System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "F3963"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TB14-Q"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2022"
-      },
-      {
-        "label": "Released (CA)",
-        "value": "February 2022"
-      },
-      {
-        "label": "Released (AU)",
-        "value": "February 2022"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zephyr-Q is a Beyblade driver from the QuadDrive System, weighing 5.4 g. Released as F3963 for Beyblade Burst QuadDrive. It shipped with Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6', Quantum Pulse 3-Pack, Magma Roktavor R7 and Gilded Balderov B7 Dual Pack and 4 other releases.",
-    "shippedIn": [
-      "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
-      "Quantum Pulse 3-Pack",
-      "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack",
-      "Stone Linwyrm L7 Fyquor-Q Zephyr-Q+Never-2'",
-      "Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4'",
-      "Gambit Dragon D8 and Ambush Achilles A8 Dual Pack",
-      "Fierce Achilles A8 Aquilon'-Q Zephyr-Q+Flap-0"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
-        "set": "Quantum Pulse 3-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Gilded Balderov B7 Diagron-Q Zephyr-Q+Press-6'",
-        "set": "Magma Roktavor R7 and Gilded Balderov B7 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Stone Linwyrm L7 Fyquor-Q Zephyr-Q+Never-2'"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Gambit Dragon D8 Karma-Q Zephyr-Q+Eruption-4'",
-        "set": "Gambit Dragon D8 and Ambush Achilles A8 Dual Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Fierce Achilles A8 Aquilon'-Q Zephyr-Q+Flap-0"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-Q",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Z-Q",
-      "Zephyr-QuadDrive"
-    ],
-    "hasbroCode": "TB14-Q",
-    "system": "QuadDrive System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--zephyr-sp",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zephyr-SP",
-    "weightG": 5.5,
-    "aliases": [
-      "zephyr-sp",
-      "Z-SP",
-      "Zephyry-SP (Beyblade Burst App)"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SpeedStorm System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "F0569"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TSP18"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zephyr-SP is a Beyblade driver from the SpeedStorm System, weighing 5.5 g. Released as F0569 for Beyblade Burst Surge. It shipped with Curse Devolos D6 1A-D Zephyr-SP.",
-    "shippedIn": [
-      "Curse Devolos D6 1A-D Zephyr-SP"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Curse Devolos D6 1A-D Zephyr-SP"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zephyr-SP",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Z-SP",
-      "Zephyry-SP (Beyblade Burst App)"
-    ],
-    "hasbroCode": "TSP18",
-    "system": "SpeedStorm System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--zeta",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zeta'",
-    "weightG": 6.4,
-    "aliases": [
-      "zeta-dash",
-      "Zt'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Cho-Z Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "B-128"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ゼータダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Zēta Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "November 17th, 2018"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 0 · Stamina 0 · Weight 1 · Speed 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zeta' is a Beyblade driver from the Cho-Z Layer System, weighing 6.4 g. Released November 17th, 2018 as B-128 for Beyblade Burst Turbo. It shipped with Cho-Z Spriggan 0Wall Zeta', Cho-Z Customize Set, Erase Bahamut 1'Star Zeta' Sou and 3 other releases.",
-    "shippedIn": [
-      "Cho-Z Spriggan 0Wall Zeta'",
-      "Cho-Z Customize Set",
-      "Erase Bahamut 1'Star Zeta' Sou",
-      "Random Booster Vol. 18",
-      "Curse Deathscyther 8' Zeta' 1S",
-      "Random Booster Vol. 23"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-128",
-        "bey": "Cho-Z Spriggan 0Wall Zeta'",
-        "set": "Cho-Z Customize Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-156",
-        "bey": "Erase Bahamut 1'Star Zeta' Sou",
-        "set": "Random Booster Vol. 18"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-176",
-        "bey": "Curse Deathscyther 8' Zeta' 1S",
-        "set": "Random Booster Vol. 23"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta'",
-    "ratings": {
-      "attack": 3,
-      "defense": 0,
-      "stamina": 0,
-      "weight": 1,
-      "speed": 3
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 38,
-      "defense": 0,
-      "stamina": 0,
-      "weight": 13,
-      "speed": 38
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zt'"
-    ],
-    "system": "Cho-Z Layer System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ゼータダッシュ",
-    "romaji": "Zēta Dasshu"
-  },
-  {
-    "id": "driver--zeta-s",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zeta-S",
-    "weightG": 6.5,
-    "aliases": [
-      "zeta-s",
-      "Zeta-SlingShock"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "SlingShock System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Turbo"
-      },
-      {
-        "label": "Product code",
-        "value": "E4739"
-      },
-      {
-        "label": "Hasbro code",
-        "value": "TB12-S"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (US)",
-        "value": "August 2019"
-      },
-      {
-        "label": "Stats",
-        "value": "Speed 3 · Power 3"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zeta-S is a Beyblade driver from the SlingShock System, weighing 6.5 g. Released as E4739 for Beyblade Burst Turbo. It shipped with Turbo Spryzen S4 0Wall Zeta-S, Phantom Driger Slash 2 Zeta-S.",
-    "shippedIn": [
-      "Turbo Spryzen S4 0Wall Zeta-S",
-      "Phantom Driger Slash 2 Zeta-S"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "bey": "Turbo Spryzen S4 0Wall Zeta-S"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Phantom Driger Slash 2 Zeta-S"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zeta-S",
-    "ratings": {
-      "speed": 3,
-      "power": 3
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "speed": 50,
-      "power": 50
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zeta-SlingShock"
-    ],
-    "hasbroCode": "TB12-S",
-    "system": "SlingShock System",
-    "series": "Beyblade Burst Turbo",
-    "partType": "Balance",
-    "role": "tip"
-  },
-  {
-    "id": "driver--zone-x",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zone'+X",
-    "weightG": 10.3,
-    "aliases": [
-      "zone-x",
-      "Zn'+X"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Dynamite Battle Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst QuadDrive"
-      },
-      {
-        "label": "Product code",
-        "value": "B-196"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ゾーンダッシュエックス"
-      },
-      {
-        "label": "Romaji",
-        "value": "Zōn Dasshu Ekkusu"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "March 19th, 2022"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zone'+X is a Beyblade driver from the Dynamite Battle Layer System, weighing 10.3 g. Released March 19th, 2022 as B-196 for Beyblade Burst QuadDrive. It shipped with Infinite Dragon Zone'+X 1A, Random Booster Vol. 28. One alternate colourway is recorded: Demon King Color Ver..",
-    "shippedIn": [
-      "Infinite Dragon Zone'+X 1A",
-      "Random Booster Vol. 28"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "bey": "Infinite Dragon Zone'+X 1A",
-        "set": "Random Booster Vol. 28",
-        "colourway": "Demon King Color Ver."
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Demon King Color Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "inBey": "Infinite Dragon Zone'+X 1A"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BX",
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zn'+X"
-    ],
-    "system": "Dynamite Battle Layer System",
-    "series": "Beyblade Burst QuadDrive",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ゾーンダッシュエックス",
-    "romaji": "Zōn Dasshu Ekkusu"
-  },
-  {
     "id": "driver--zone",
     "classification": "Driver",
     "slot": "driver",
@@ -8204,155 +4726,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "romaji": "Kyansā"
   },
   {
-    "id": "energy-ring--gemios",
-    "classification": "Energy Ring",
-    "slot": "energy-ring",
-    "code": null,
-    "name": "Gemios",
-    "weightG": 2.3,
-    "aliases": [
-      "gemios"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Energy Ring"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fusion"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ジェミオス"
-      },
-      {
-        "label": "Romaji",
-        "value": "Jemiosu"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "November 21, 2009"
-      },
-      {
-        "label": "Released (US)",
-        "value": "August 2010"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 3 · Stamina 1"
-      }
-    ],
-    "seoDescription": "Gemios is a Beyblade energy ring from the Hybrid Wheel System, weighing 2.3 g. Released November 21, 2009 for Beyblade: Metal Fusion. It shipped with Killer Gemios DF145FS, Hybrid Wheel Custom Set Attack & Balance Type, Flame Gemios 105CS and 10 other releases.",
-    "shippedIn": [
-      "Killer Gemios DF145FS",
-      "Hybrid Wheel Custom Set Attack & Balance Type",
-      "Flame Gemios 105CS",
-      "Random Booster Vol. 6 Killer Beafowl",
-      "Cloud Gemios T125SF",
-      "Random Booster Vol. 9 Fusion Hades",
-      "Evil Gemios DF145FS",
-      "Metal Fusion 3-Pack",
-      "Beylocker (Metal Saga)",
-      "Thermal Gemios T125S",
-      "Thermal Gemios VS Poison Virgo 2-Pack",
-      "Torch Gemios W105CS",
-      "Crushing Blast 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-56",
-        "bey": "Killer Gemios DF145FS",
-        "set": "Hybrid Wheel Custom Set Attack & Balance Type"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-100",
-        "bey": "Flame Gemios 105CS",
-        "set": "Random Booster Vol. 6 Killer Beafowl"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-123",
-        "bey": "Cloud Gemios T125SF",
-        "set": "Random Booster Vol. 9 Fusion Hades",
-        "colourway": "Translucent pink"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-56",
-        "bey": "Evil Gemios DF145FS"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-56",
-        "bey": "Evil Gemios DF145FS",
-        "set": "Metal Fusion 3-Pack",
-        "distribution": [
-          "Balance Set"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-56",
-        "bey": "Evil Gemios DF145FS",
-        "set": "Beylocker (Metal Saga)",
-        "distribution": [
-          "Metal Saga"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-119",
-        "bey": "Thermal Gemios T125S"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-119",
-        "bey": "Thermal Gemios T125S",
-        "set": "Thermal Gemios VS Poison Virgo 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-131",
-        "bey": "Torch Gemios W105CS",
-        "set": "Crushing Blast 2-Pack"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Translucent pink",
-        "vendor": "Takara Tomy",
-        "code": "BB-123",
-        "inBey": "Cloud Gemios T125SF"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Gemios",
-    "ratings": {
-      "attack": 3,
-      "defense": 3,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 50,
-      "defense": 50,
-      "stamina": 17
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fusion",
-    "role": "ring",
-    "jpName": "ジェミオス",
-    "romaji": "Jemiosu"
-  },
-  {
     "id": "energy-ring--gil",
     "classification": "Energy Ring",
     "slot": "energy-ring",
@@ -12423,6 +8796,44 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "romaji": "Horogiumu"
   },
   {
+    "id": "engine-gear--gyro-engine-gear",
+    "classification": "Engine Gear",
+    "slot": "engine-gear",
+    "code": null,
+    "name": "Gyro Engine Gear",
+    "aliases": [
+      "gyro-engine-gear"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Engine Gear"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Stamina 3"
+      }
+    ],
+    "seoDescription": "Gyro Engine Gear is a Beyblade engine gear from the Engine Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Gyro_Engine_Gear",
+    "ratings": {
+      "attack": 1,
+      "stamina": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "stamina": 50
+    },
+    "system": "Engine Gear System",
+    "role": "gear"
+  },
+  {
     "id": "engine-gear--left-eg-turbo",
     "classification": "Engine Gear",
     "slot": "engine-gear",
@@ -12456,6 +8867,56 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_EG_(Turbo)",
+    "role": "gear"
+  },
+  {
+    "id": "engine-gear--left-engine-gear",
+    "classification": "Engine Gear",
+    "slot": "engine-gear",
+    "code": null,
+    "name": "Left Engine Gear",
+    "weightG": 11,
+    "aliases": [
+      "left-engine-gear"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Engine Gear"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Stamina 2"
+      }
+    ],
+    "seoDescription": "Left Engine Gear is a Beyblade engine gear from the Engine Gear System, weighing 11 g. It shipped with Dragoon G.",
+    "shippedIn": [
+      "Dragoon G"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "code": "A-89",
+        "bey": "Dragoon G"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear",
+    "ratings": {
+      "attack": 3,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "stamina": 33
+    },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -16372,81 +12833,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "chip",
     "jpName": "ネメシス",
     "romaji": "Nemeshisu"
-  },
-  {
-    "id": "face-bolt--nemesis-x",
-    "classification": "Face Bolt",
-    "slot": "face-bolt",
-    "code": null,
-    "name": "Nemesis X",
-    "weightG": 1,
-    "aliases": [
-      "nemesis-x"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Face Bolt"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fury"
-      },
-      {
-        "label": "Product code",
-        "value": "B-156"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ネメシスX"
-      },
-      {
-        "label": "Romaji",
-        "value": "Nemeshisu X"
-      },
-      {
-        "label": "Released (US)",
-        "value": "September 2012"
-      }
-    ],
-    "seoDescription": "Nemesis X is a Beyblade face bolt from the Hybrid Wheel System, weighing 1 g. Released as B-156 for Beyblade: Metal Fury. It shipped with Proto Nemesis AD145D, Legendary Bladers: Nemesis Crisis.",
-    "shippedIn": [
-      "Proto Nemesis AD145D",
-      "Legendary Bladers: Nemesis Crisis"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "code": "B-156",
-        "bey": "Proto Nemesis AD145D"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-156",
-        "bey": "Proto Nemesis AD145D",
-        "set": "Legendary Bladers: Nemesis Crisis"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-156A",
-        "bey": "Proto Nemesis AD145D",
-        "distribution": [
-          "''[[Spark FX]]''"
-        ]
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Nemesis_X",
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fury",
-    "role": "chip",
-    "jpName": "ネメシスX",
-    "romaji": "Nemeshisu X"
   },
   {
     "id": "face-bolt--northern-cross",
@@ -22232,93 +18618,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "romaji": "Bakushin"
   },
   {
-    "id": "fusion-wheel--beat",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Beat",
-    "weightG": 38.6,
-    "aliases": [
-      "beat"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "4D System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fury"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-109"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ビート"
-      },
-      {
-        "label": "Romaji",
-        "value": "Bīto"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "April 23rd, 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2.5 · Defense 2.5 · Stamina 2"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Beat is a Beyblade fusion wheel from the 4D System, weighing 38.6 g. Released April 23rd, 2011 as BB-109 for Beyblade: Metal Fury. It shipped with Beat Lynx TH170WD, Random Booster Vol. 7 Beat Lynx.",
-    "shippedIn": [
-      "Beat Lynx TH170WD",
-      "Random Booster Vol. 7 Beat Lynx"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Beat Lynx TH170WD",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Beat",
-    "ratings": {
-      "attack": 2.5,
-      "defense": 2.5,
-      "stamina": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 42,
-      "defense": 42,
-      "stamina": 33
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": false,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "system": "4D System",
-    "series": "Beyblade: Metal Fury",
-    "role": "wheel",
-    "jpName": "ビート",
-    "romaji": "Bīto"
-  },
-  {
     "id": "fusion-wheel--beat-hasbro",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -22412,110 +18711,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "system": "Hybrid Wheel System",
     "series": "Beyblade: Metal Fury",
     "role": "wheel"
-  },
-  {
-    "id": "fusion-wheel--blitz",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Blitz",
-    "weightG": 43.7,
-    "aliases": [
-      "blitz",
-      "Blitz I (Hasbro)"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "4D System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fury"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-117"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ブリッツ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Burittsu"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 6, 2011"
-      },
-      {
-        "label": "Released (US)",
-        "value": "February 2013"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 6 · Defense 1 · Stamina 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Blitz is a Beyblade fusion wheel from the 4D System, weighing 43.7 g. Released August 6, 2011 as BB-117 for Beyblade: Metal Fury. It shipped with Blitz Unicorno 100RSF, Strongest Blader Set, Blitz Striker 100RSF.",
-    "shippedIn": [
-      "Blitz Unicorno 100RSF",
-      "Strongest Blader Set",
-      "Blitz Striker 100RSF"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-117",
-        "bey": "Blitz Unicorno 100RSF",
-        "set": "Strongest Blader Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-117",
-        "bey": "Blitz Striker 100RSF",
-        "distribution": [
-          "''[[Spark FX]]''"
-        ]
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Blitz",
-    "ratings": {
-      "attack": 6,
-      "defense": 1,
-      "stamina": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 100,
-      "defense": 17,
-      "stamina": 0
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": false,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "aka": [
-      "Blitz I (Hasbro)"
-    ],
-    "system": "4D System",
-    "series": "Beyblade: Metal Fury",
-    "role": "wheel",
-    "jpName": "ブリッツ",
-    "romaji": "Burittsu"
   },
   {
     "id": "fusion-wheel--blitz-hasbro",
@@ -24655,446 +20850,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "wheel"
   },
   {
-    "id": "fusion-wheel--galaxy",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Galaxy",
-    "weightG": 29.4,
-    "aliases": [
-      "galaxy"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-70"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ギャラクシー"
-      },
-      {
-        "label": "Romaji",
-        "value": "Gyarakusi"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "April 1st, 2010"
-      },
-      {
-        "label": "Released (US)",
-        "value": "May 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 6 · Defense 1 · Stamina 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: legal"
-      }
-    ],
-    "seoDescription": "Galaxy is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1st, 2010 as BB-70 for Beyblade: Metal Masters. It shipped with Galaxy Pegasis W105R²F, Beyblade Deck Entry Set, Galaxy Pegasis DX Set and 12 other releases. 2 alternate colourways are recorded.",
-    "shippedIn": [
-      "Galaxy Pegasis W105R²F",
-      "Beyblade Deck Entry Set",
-      "Galaxy Pegasis DX Set",
-      "Galaxy Cancer D125HF",
-      "Random Booster Vol. 6 Killer Beafowl",
-      "Galaxy Sagittario 145CS",
-      "Galaxy Pegasis GB145MS",
-      "Galaxy Pegasus W105R2F",
-      "Pegasus Battle Set",
-      "Triple Battle Set",
-      "Beyblade Metal Masters: Ultimate Gift Set",
-      "Rapid Deploy Case",
-      "Starbooster Attack 2-Pack",
-      "Metal Fury 3-Pack",
-      "Galaxy Pegasus GB145MS"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-70",
-        "bey": "Galaxy Pegasis W105R²F",
-        "distribution": [
-          "Starter"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-75",
-        "bey": "Galaxy Pegasis W105R²F",
-        "set": "Beyblade Deck Entry Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-76",
-        "bey": "Galaxy Pegasis W105R²F",
-        "set": "Galaxy Pegasis DX Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-92",
-        "bey": "Galaxy Pegasis W105R²F",
-        "distribution": [
-          "Booster"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-100",
-        "bey": "Galaxy Cancer D125HF",
-        "set": "Random Booster Vol. 6 Killer Beafowl"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-100",
-        "bey": "Galaxy Sagittario 145CS",
-        "set": "Random Booster Vol. 6 Killer Beafowl"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Galaxy Pegasis GB145MS",
-        "colourway": "Black Hole Ver.",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Galaxy Pegasis GB145MS",
-        "colourway": "Black Hole Ver.",
-        "distribution": [
-          "[[Mani Limited]] Exclusive"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70",
-        "bey": "Galaxy Pegasus W105R2F"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Pegasus Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70",
-        "bey": "Galaxy Pegasus W105R2F",
-        "distribution": [
-          "''[[Beyblade Legends]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Pegasus Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70A",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Triple Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70B",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Beyblade Metal Masters: Ultimate Gift Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70B",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Rapid Deploy Case"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70B",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Starbooster Attack 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-70C",
-        "bey": "Galaxy Pegasus W105R2F",
-        "set": "Metal Fury 3-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-133",
-        "bey": "Galaxy Pegasus GB145MS",
-        "distribution": [
-          "Mail Order Prize Exclusive"
-        ]
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Black Hole Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "CoroCoro Exclusive",
-        "inBey": "Galaxy Pegasis GB145MS"
-      },
-      {
-        "colourway": "Black Hole Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "[[Mani Limited]] Exclusive",
-        "inBey": "Galaxy Pegasis GB145MS"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Galaxy",
-    "ratings": {
-      "attack": 6,
-      "defense": 1,
-      "stamina": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 100,
-      "defense": 17,
-      "stamina": 0
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": true
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel",
-    "jpName": "ギャラクシー",
-    "romaji": "Gyarakusi"
-  },
-  {
-    "id": "fusion-wheel--gravity",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Gravity",
-    "weightG": 33.8,
-    "aliases": [
-      "gravity"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-80"
-      },
-      {
-        "label": "Japanese name",
-        "value": "グラビティ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Gurabiti"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "June 26, 2010"
-      },
-      {
-        "label": "Released (US)",
-        "value": "May 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 5 · Stamina 0"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Gravity is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.8 g. Released June 26, 2010 as BB-80 for Beyblade: Metal Masters. It shipped with Gravity Perseus AD145WD, Beyblade Ultimate Custom Set Perseus Ver., Gravity Perseus Attack Ver. BD145XF and 13 other releases.",
-    "shippedIn": [
-      "Gravity Perseus AD145WD",
-      "Beyblade Ultimate Custom Set Perseus Ver.",
-      "Gravity Perseus Attack Ver. BD145XF",
-      "Random Booster Vol. 7 Beat Lynx",
-      "Gravity Perseus Stamina Ver. 85DS",
-      "Gravity Perseus Stamina Ver. S130MB",
-      "Gravity Destroyer AD145WD",
-      "Gravity Demolition 2-Pack",
-      "String Launcher 2-Pack",
-      "Super Vortex Battle Set (Beyblade Legends)",
-      "Max Stampede Stadium Set",
-      "Ultimate Gravity Destroyer Attack 105F",
-      "Ultimate Gravity Destroyer Attack 130F",
-      "Ultimate Gravity Destroyer Stamina GB145S",
-      "Beyblade: Metal Masters (video game)",
-      "Gravity Brave Attack 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-80",
-        "bey": "Gravity Perseus AD145WD"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-97",
-        "bey": "Beyblade Ultimate Custom Set Perseus Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Gravity Perseus Attack Ver. BD145XF",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Gravity Perseus Stamina Ver. 85DS",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Gravity Perseus Stamina Ver. S130MB",
-        "colourway": "White Knight Ver.",
-        "distribution": [
-          "[[Mani Limited]] Exclusive"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-80",
-        "bey": "Gravity Destroyer AD145WD"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-80A",
-        "bey": "Gravity Destroyer AD145WD",
-        "set": "Gravity Demolition 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-80B",
-        "bey": "Gravity Destroyer AD145WD",
-        "set": "String Launcher 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-80C",
-        "bey": "Gravity Destroyer AD145WD",
-        "set": "Super Vortex Battle Set (Beyblade Legends)",
-        "distribution": [
-          "Beyblade Legends",
-          "''[[Beyblade Legends]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97",
-        "bey": "Gravity Destroyer AD145WD"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97",
-        "bey": "Gravity Destroyer AD145WD",
-        "set": "Max Stampede Stadium Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97A",
-        "bey": "Ultimate Gravity Destroyer Attack 105F"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97A",
-        "bey": "Ultimate Gravity Destroyer Attack 105F",
-        "set": "Max Stampede Stadium Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97A",
-        "bey": "Ultimate Gravity Destroyer Attack 130F"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97B",
-        "bey": "Ultimate Gravity Destroyer Stamina GB145S"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97B",
-        "bey": "Ultimate Gravity Destroyer Stamina GB145S",
-        "set": "Beyblade: Metal Masters (video game)",
-        "distribution": [
-          "video game"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-97B",
-        "bey": "Ultimate Gravity Destroyer Stamina GB145S",
-        "set": "Gravity Brave Attack 2-Pack"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "White Knight Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "[[Mani Limited]] Exclusive",
-        "inBey": "Gravity Perseus Stamina Ver. S130MB"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Gravity",
-    "ratings": {
-      "attack": 2,
-      "defense": 5,
-      "stamina": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 83,
-      "stamina": 0
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": false,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel",
-    "jpName": "グラビティ",
-    "romaji": "Gurabiti"
-  },
-  {
     "id": "fusion-wheel--hyper",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -25172,100 +20927,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "defense": 33,
       "stamina": 17
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fusion",
-    "role": "wheel"
-  },
-  {
-    "id": "fusion-wheel--inferno",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Inferno",
-    "weightG": 29.5,
-    "aliases": [
-      "inferno"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fusion"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-03"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 0 · Stamina 4"
-      }
-    ],
-    "seoDescription": "Inferno is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.5 g. Released as BB-03 for Beyblade: Metal Fusion. It shipped with Inferno Sagittario 145S, Inferno Gasher SW145SF, Lightning Sword Showdown 2-Pack and 2 other releases.",
-    "shippedIn": [
-      "Inferno Sagittario 145S",
-      "Inferno Gasher SW145SF",
-      "Lightning Sword Showdown 2-Pack",
-      "Inferno Byxis CH120RS",
-      "Gravity Demolition 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "code": "BB-03",
-        "bey": "Inferno Sagittario 145S",
-        "distribution": [
-          "''[[Beyblade: Metal Fusion]]''",
-          "Starter Pack"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-03",
-        "bey": "Inferno Sagittario 145S",
-        "distribution": [
-          "''[[Beyblade: Metal Masters]]''",
-          "Booster Pack"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-114",
-        "bey": "Inferno Gasher SW145SF",
-        "set": "Lightning Sword Showdown 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-121",
-        "bey": "Inferno Byxis CH120RS",
-        "set": "Gravity Demolition 2-Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Inferno",
-    "ratings": {
-      "attack": 2,
-      "defense": 0,
-      "stamina": 4
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 0,
-      "stamina": 67
     },
     "system": "Hybrid Wheel System",
     "series": "Beyblade: Metal Fusion",
@@ -25367,103 +21028,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "system": "Hybrid Wheel System",
     "series": "Beyblade: Metal Fury",
     "role": "wheel"
-  },
-  {
-    "id": "fusion-wheel--kreis",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Kreis",
-    "weightG": 42.9,
-    "aliases": [
-      "kreis"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "4D System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fury"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-113"
-      },
-      {
-        "label": "Japanese name",
-        "value": "クライス"
-      },
-      {
-        "label": "Romaji",
-        "value": "Kuraisu"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "January 21st, 2012"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2013"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 5 · Stamina 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Kreis is a Beyblade fusion wheel from the 4D System, weighing 42.9 g. Released January 21st, 2012 as BB-113 for Beyblade: Metal Fury. It shipped with Kreis Cygnus 145WD.",
-    "shippedIn": [
-      "Kreis Cygnus 145WD"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-124",
-        "bey": "Kreis Cygnus 145WD"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-124",
-        "bey": "Kreis Cygnus 145WD",
-        "distribution": [
-          "''[[Spark FX]]''"
-        ]
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Kreis",
-    "ratings": {
-      "attack": 1,
-      "defense": 5,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 17,
-      "defense": 83,
-      "stamina": 17
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": false,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "system": "4D System",
-    "series": "Beyblade: Metal Fury",
-    "role": "wheel",
-    "jpName": "クライス",
-    "romaji": "Kuraisu"
   },
   {
     "id": "fusion-wheel--l-drago-destructor",
@@ -25852,147 +21416,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "fusion-wheel--lightning",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Lightning",
-    "weightG": 30,
-    "aliases": [
-      "lightning"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fusion"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-43"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ライトニング"
-      },
-      {
-        "label": "Romaji",
-        "value": "Raitoningu"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "July 18, 2009"
-      },
-      {
-        "label": "Released (US)",
-        "value": "August 2010"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 6 · Defense 0.5 · Stamina 0.5"
-      }
-    ],
-    "seoDescription": "Lightning is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 30 g. Released July 18, 2009 as BB-43 for Beyblade: Metal Fusion. It shipped with Lightning L-Drago 100HF, L-Drago Battle Set, Super Vortex Battle Set and 1 other release.",
-    "shippedIn": [
-      "Lightning L-Drago 100HF",
-      "L-Drago Battle Set",
-      "Super Vortex Battle Set",
-      "Dragon Bite Strike 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-43",
-        "bey": "Lightning L-Drago 100HF"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Lightning L-Drago 100HF",
-        "colourway": "Supreme Dragon Ver.",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43",
-        "bey": "Lightning L-Drago 100HF"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43",
-        "bey": "Lightning L-Drago 100HF",
-        "set": "L-Drago Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43",
-        "bey": "Lightning L-Drago 100HF",
-        "distribution": [
-          "''[[Beyblade Legends]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43B",
-        "bey": "Lightning L-Drago 100HF",
-        "set": "Super Vortex Battle Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43C",
-        "bey": "Lightning L-Drago 100HF",
-        "set": "Dragon Bite Strike 2-Pack",
-        "distribution": [
-          "''[[Beyblade: Metal Fusion]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-43C",
-        "bey": "Lightning L-Drago 100HF",
-        "set": "Dragon Bite Strike 2-Pack",
-        "distribution": [
-          "''[[Beyblade: Metal Masters]]''"
-        ]
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Supreme Dragon Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "CoroCoro Exclusive",
-        "inBey": "Lightning L-Drago 100HF"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Lightning",
-    "ratings": {
-      "attack": 6,
-      "defense": 0.5,
-      "stamina": 0.5
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 100,
-      "defense": 8,
-      "stamina": 8
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fusion",
-    "role": "wheel",
-    "jpName": "ライトニング",
-    "romaji": "Raitoningu"
-  },
-  {
     "id": "fusion-wheel--mercury",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -26130,232 +21553,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "romaji": "Mākyurī"
   },
   {
-    "id": "fusion-wheel--meteo",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Meteo",
-    "weightG": 28.3,
-    "aliases": [
-      "meteo"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-88 (Takara Tomy) · BB-88A (Hasbro)"
-      },
-      {
-        "label": "Japanese name",
-        "value": "メテオ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Meteo"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "September 18, 2010"
-      },
-      {
-        "label": "Released (US)",
-        "value": "May 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 5 · Defense 1 · Stamina 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: legal · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Meteo is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 28.3 g. Released September 18, 2010 as BB-88 (Takara Tomy) and BB-88A (Hasbro) for Beyblade: Metal Masters.",
-    "shippedIn": [
-      "Meteo L-Drago LW105LF",
-      "Beyblade Ultimate Custom Set L-Drago Ver.",
-      "Meteo L-Drago Assault LW105JB",
-      "Random Booster Vol. 9 Fusion Hades",
-      "Meteo L-Drago Rush 85LF",
-      "L-Drago Battle Set",
-      "Triple Battle Set",
-      "Meteor Shower Attack 2-Pack",
-      "Ultimate Meteo L-Drago Assault 85XF",
-      "Ultimate Meteo L-Drago Absorb DF105LRF",
-      "Ultimate Meteo L-Drago Rush 125SF"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-88",
-        "bey": "Meteo L-Drago LW105LF",
-        "colourway": "Silver and Orange"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-98",
-        "bey": "Beyblade Ultimate Custom Set L-Drago Ver.",
-        "colourway": "Silver and Blue, Red and Black"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-123",
-        "bey": "Meteo L-Drago Assault LW105JB",
-        "set": "Random Booster Vol. 9 Fusion Hades"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-123",
-        "bey": "Meteo L-Drago Rush 85LF",
-        "set": "Random Booster Vol. 9 Fusion Hades"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Meteo L-Drago LW105LF",
-        "colourway": "Dark Flare Ver.",
-        "distribution": [
-          "CoroCoro Exclusive",
-          "Gold"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-88",
-        "bey": "Meteo L-Drago LW105LF",
-        "colourway": "Silver and Orange"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-88",
-        "bey": "Meteo L-Drago LW105LF",
-        "colourway": "Silver and Orange",
-        "distribution": [
-          "''[[Beyblade Legends]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-88",
-        "bey": "Meteo L-Drago LW105LF",
-        "set": "L-Drago Battle Set",
-        "colourway": "Silver and Orange"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-88A",
-        "bey": "Meteo L-Drago LW105LF",
-        "set": "Triple Battle Set",
-        "colourway": "Brownish Gold"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-88B",
-        "bey": "Meteo L-Drago LW105LF",
-        "set": "Meteor Shower Attack 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-98A",
-        "bey": "Ultimate Meteo L-Drago Assault 85XF",
-        "colourway": "Silver and Blue"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-98B",
-        "bey": "Ultimate Meteo L-Drago Absorb DF105LRF",
-        "colourway": "Silver and Blue"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-98C",
-        "bey": "Ultimate Meteo L-Drago Rush 125SF",
-        "set": "L-Drago Battle Set",
-        "colourway": "Red and Black"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Silver and Orange",
-        "vendor": "Takara Tomy",
-        "code": "BB-88",
-        "inBey": "Meteo L-Drago LW105LF"
-      },
-      {
-        "colourway": "Silver and Blue, Red and Black",
-        "vendor": "Takara Tomy",
-        "code": "BB-98",
-        "inBey": "Beyblade Ultimate Custom Set L-Drago Ver."
-      },
-      {
-        "colourway": "Dark Flare Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "CoroCoro Exclusive · Gold",
-        "inBey": "Meteo L-Drago LW105LF"
-      },
-      {
-        "colourway": "Silver and Orange",
-        "vendor": "Hasbro",
-        "code": "BB-88",
-        "distribution": "''[[Beyblade Legends]]''",
-        "inBey": "Meteo L-Drago LW105LF"
-      },
-      {
-        "colourway": "Brownish Gold",
-        "vendor": "Hasbro",
-        "code": "BB-88A",
-        "inBey": "Meteo L-Drago LW105LF"
-      },
-      {
-        "colourway": "Silver and Blue",
-        "vendor": "Hasbro",
-        "code": "BB-98A",
-        "inBey": "Ultimate Meteo L-Drago Assault 85XF"
-      },
-      {
-        "colourway": "Red and Black",
-        "vendor": "Hasbro",
-        "code": "BB-98C",
-        "inBey": "Ultimate Meteo L-Drago Rush 125SF"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Meteo",
-    "ratings": {
-      "attack": 5,
-      "defense": 1,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 83,
-      "defense": 17,
-      "stamina": 17
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": true,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel",
-    "jpName": "メテオ",
-    "romaji": "Meteo"
-  },
-  {
     "id": "fusion-wheel--midnight",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -26458,71 +21655,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "wheel",
     "jpName": "クラッシュ",
     "romaji": "Kurasshu"
-  },
-  {
-    "id": "fusion-wheel--night",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Night",
-    "weightG": 28.6,
-    "aliases": [
-      "night"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fusion"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-22"
-      },
-      {
-        "label": "Released (US)",
-        "value": "January 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 0 · Defense 2 · Stamina 4"
-      }
-    ],
-    "seoDescription": "Night is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 28.6 g. Released as BB-22 for Beyblade: Metal Fusion. It shipped with Night Virgo DF145BS.",
-    "shippedIn": [
-      "Night Virgo DF145BS"
-    ],
-    "releases": [
-      {
-        "vendor": "Hasbro",
-        "code": "BB-22",
-        "bey": "Night Virgo DF145BS"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Night",
-    "ratings": {
-      "attack": 0,
-      "defense": 2,
-      "stamina": 4
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 33,
-      "stamina": 67
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fusion",
-    "role": "wheel"
   },
   {
     "id": "fusion-wheel--nightmare",
@@ -26990,217 +22122,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "wheel"
   },
   {
-    "id": "fusion-wheel--ray",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Ray",
-    "weightG": 29.4,
-    "aliases": [
-      "ray"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-71"
-      },
-      {
-        "label": "Japanese name",
-        "value": "レイ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Rei"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "April 1, 2010"
-      },
-      {
-        "label": "Released (US)",
-        "value": "May 2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 4 · Defense 1 · Stamina 2"
-      }
-    ],
-    "seoDescription": "Ray is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1, 2010 as BB-71 for Beyblade: Metal Masters. It shipped with Ray Unicorno D125CS, Ray Gil 100RSF, Ray Striker D125CS and 8 other releases. 4 alternate colourways are recorded.",
-    "shippedIn": [
-      "Ray Unicorno D125CS",
-      "Ray Gil 100RSF",
-      "Ray Striker D125CS",
-      "Lightning Sword Showdown 2-Pack",
-      "Beyblade Metal Masters: Ultimate Gift Set",
-      "Super Vortex Battle Set (Beyblade Legends)",
-      "Keel Crusher 2-Pack",
-      "String Launcher 2-Pack",
-      "Beyblade Legends Attack 2-Pack",
-      "Ray Serpent M145MS",
-      "Shadow Strike Standoff 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-71",
-        "bey": "Ray Unicorno D125CS",
-        "distribution": [
-          "Starter"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-91",
-        "bey": "Ray Gil 100RSF"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-93",
-        "bey": "Ray Unicorno D125CS",
-        "distribution": [
-          "Booster"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Ray Unicorno D125CS",
-        "colourway": "Aurora Ver.",
-        "distribution": [
-          "CoroCoro Exclusive",
-          "purple"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Ray Unicorno D125CS",
-        "colourway": "Gunmetallic Ver.",
-        "distribution": [
-          "Tournament Prize, Canceled",
-          "gunmetal gray"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Ray Unicorno D125CS",
-        "colourway": "Rainbow Ver."
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-71",
-        "bey": "Ray Striker D125CS"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-71A",
-        "bey": "Ray Striker D125CS",
-        "set": "Lightning Sword Showdown 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-71B",
-        "bey": "Ray Striker D125CS",
-        "set": "Beyblade Metal Masters: Ultimate Gift Set"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-71B",
-        "bey": "Ray Striker D125CS",
-        "set": "Super Vortex Battle Set (Beyblade Legends)",
-        "colourway": "red",
-        "distribution": [
-          "Beyblade Legends",
-          "''[[Beyblade Legends]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-91",
-        "bey": "Ray Gil 100RSF"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-91A",
-        "bey": "Ray Gil 100RSF",
-        "set": "Keel Crusher 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-91B",
-        "bey": "Ray Gil 100RSF",
-        "set": "String Launcher 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-91C",
-        "bey": "Ray Gil 100RSF",
-        "set": "Beyblade Legends Attack 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-113",
-        "bey": "Ray Serpent M145MS",
-        "set": "Shadow Strike Standoff 2-Pack"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Aurora Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "CoroCoro Exclusive · purple",
-        "inBey": "Ray Unicorno D125CS"
-      },
-      {
-        "colourway": "Gunmetallic Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "Tournament Prize, Canceled · gunmetal gray",
-        "inBey": "Ray Unicorno D125CS"
-      },
-      {
-        "colourway": "Rainbow Ver.",
-        "vendor": "Takara Tomy",
-        "inBey": "Ray Unicorno D125CS"
-      },
-      {
-        "colourway": "red",
-        "vendor": "Hasbro",
-        "code": "BB-71B",
-        "distribution": "Beyblade Legends · ''[[Beyblade Legends]]''",
-        "inBey": "Ray Striker D125CS"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Ray",
-    "ratings": {
-      "attack": 4,
-      "defense": 1,
-      "stamina": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 67,
-      "defense": 17,
-      "stamina": 33
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel",
-    "jpName": "レイ",
-    "romaji": "Rei"
-  },
-  {
     "id": "fusion-wheel--scythe",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -27387,113 +22308,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "wheel"
   },
   {
-    "id": "fusion-wheel--sol",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Sol",
-    "weightG": 33.6,
-    "aliases": [
-      "sol"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ソル"
-      },
-      {
-        "label": "Romaji",
-        "value": "Soru"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 2010"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 4 · Defense 3 · Stamina 0"
-      }
-    ],
-    "seoDescription": "Sol is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.6 g. Released August 2010 for Beyblade: Metal Masters. It shipped with Sol Blaze V145AS, Sol Pegasis V145R²F. 3 alternate colourways are recorded.",
-    "shippedIn": [
-      "Sol Blaze V145AS",
-      "Sol Pegasis V145R²F"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Sol Blaze V145AS"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Sol Blaze V145AS",
-        "colourway": "Eclipse Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Sol Blaze V145AS",
-        "colourway": "Gold Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Sol Pegasis V145R²F",
-        "colourway": "Gold Ver.",
-        "distribution": [
-          "CoroCoro Exclusive"
-        ]
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Eclipse Ver.",
-        "vendor": "Takara Tomy",
-        "inBey": "Sol Blaze V145AS"
-      },
-      {
-        "colourway": "Gold Ver.",
-        "vendor": "Takara Tomy",
-        "inBey": "Sol Blaze V145AS"
-      },
-      {
-        "colourway": "Gold Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "CoroCoro Exclusive",
-        "inBey": "Sol Pegasis V145R²F"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Sol",
-    "ratings": {
-      "attack": 4,
-      "defense": 3,
-      "stamina": 0
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 67,
-      "defense": 50,
-      "stamina": 0
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel",
-    "jpName": "ソル",
-    "romaji": "Soru"
-  },
-  {
     "id": "fusion-wheel--thermal",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -27587,110 +22401,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thermal",
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Fusion",
-    "role": "wheel"
-  },
-  {
-    "id": "fusion-wheel--thunder",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Thunder",
-    "weightG": 29.7,
-    "aliases": [
-      "thunder"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fusion"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-18 (Hasbro)"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "2010"
-      },
-      {
-        "label": "Released (US)",
-        "value": "2011"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 1 · Defense 1 · Stamina 4"
-      }
-    ],
-    "seoDescription": "Thunder is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.7 g. Released 2010 as BB-18 (Hasbro) for Beyblade: Metal Fusion. It shipped with Infinity Libra GB145S, Thunder Libra DF145BS, Super Vortex Battle Set (Sonic Series) and 4 other releases.",
-    "shippedIn": [
-      "Infinity Libra GB145S",
-      "Thunder Libra DF145BS",
-      "Super Vortex Battle Set (Sonic Series)",
-      "Thunder Leone GB145BS",
-      "Solid Iron Showdown 2-Pack",
-      "Thunder Lacerta WA130ES",
-      "Starbooster Attack 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Infinity Libra GB145S",
-        "distribution": [
-          "Bey Ta 1 Exclusive"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-18",
-        "bey": "Thunder Libra DF145BS"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-18A",
-        "bey": "Thunder Libra DF145BS",
-        "set": "Super Vortex Battle Set (Sonic Series)",
-        "distribution": [
-          "Sonic Series",
-          "''[[Sonic Series]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-115",
-        "bey": "Thunder Leone GB145BS",
-        "set": "Solid Iron Showdown 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-123",
-        "bey": "Thunder Lacerta WA130ES",
-        "set": "Starbooster Attack 2-Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thunder",
-    "ratings": {
-      "attack": 1,
-      "defense": 1,
-      "stamina": 4
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 17,
-      "defense": 17,
-      "stamina": 67
-    },
     "system": "Hybrid Wheel System",
     "series": "Beyblade: Metal Fusion",
     "role": "wheel"
@@ -28229,118 +22939,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "ring",
       "wheel"
     ]
-  },
-  {
-    "id": "fusion-wheel--vulcan",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Vulcan",
-    "weightG": 33.1,
-    "aliases": [
-      "vulcan"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "Hybrid Wheel System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Masters"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "October 21st, 2010"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 4 · Stamina 1"
-      }
-    ],
-    "seoDescription": "Vulcan is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.1 g. Released October 21st, 2010 for Beyblade: Metal Masters. It shipped with Vulcan Horuseus 145D, Vulcan Herculeo 130DS, Random Booster Vol. 7 Beat Lynx and 5 other releases.",
-    "shippedIn": [
-      "Vulcan Horuseus 145D",
-      "Vulcan Herculeo 130DS",
-      "Random Booster Vol. 7 Beat Lynx",
-      "Vulcan Horogium BD145RS",
-      "Mystic Zone 2-Pack",
-      "Beyblade: Metal Masters (video game)",
-      "Vulcan Cetus R145DS",
-      "Keel Crusher 2-Pack"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Vulcan Horuseus 145D"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Vulcan Herculeo 130DS",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Vulcan Horogium BD145RS",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Vulcan Horuseus 145D",
-        "distribution": [
-          "''[[Beyblade: Metal Masters]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Vulcan Horuseus 145D",
-        "distribution": [
-          "''[[Beyblade: Metal Fury]]''"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Vulcan Horuseus 145D",
-        "set": "Mystic Zone 2-Pack"
-      },
-      {
-        "vendor": "Hasbro",
-        "bey": "Vulcan Horuseus 145D",
-        "set": "Beyblade: Metal Masters (video game)",
-        "distribution": [
-          "video game"
-        ]
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "B-143",
-        "bey": "Vulcan Cetus R145DS",
-        "set": "Keel Crusher 2-Pack"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Vulcan",
-    "ratings": {
-      "attack": 2,
-      "defense": 4,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 67,
-      "stamina": 17
-    },
-    "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
-    "role": "wheel"
   },
   {
     "id": "fusion-wheel--wing",
@@ -53336,5 +47934,4733 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "ring",
     "jpName": "シャドウ・オリハルコン",
     "romaji": "Shadō Oriharukon"
+  },
+  {
+    "id": "layer--shelter-regulus",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shelter Regulus",
+    "weightG": 13.4,
+    "aliases": [
+      "shelter-regulus",
+      "sR"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "B-95"
+      },
+      {
+        "label": "Japanese name",
+        "value": "シェルターレグルス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Sherutā Regurusu"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "October 21st, 2017"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 3 · Stamina 1 · Weight 3 · Speed 1 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shelter Regulus is a Beyblade layer from the God Layer System, weighing 13.4 g. Released October 21st, 2017 as B-95 for Beyblade Burst Evolution. It shipped with Shelter Regulus 5Star Tower, Random Booster Vol. 8 Shelter Regulus.5S.Tw, Shelter Regulus 8'Bump Destroy' and 2 other releases.",
+    "shippedIn": [
+      "Shelter Regulus 5Star Tower",
+      "Random Booster Vol. 8 Shelter Regulus.5S.Tw",
+      "Shelter Regulus 8'Bump Destroy'",
+      "Random Booster Vol. 12 Dead Hades.11T.Z'",
+      "Random Layer Collection Vol. 9"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-95",
+        "bey": "Shelter Regulus 5Star Tower",
+        "set": "Random Booster Vol. 8 Shelter Regulus.5S.Tw"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-125",
+        "bey": "Shelter Regulus 8'Bump Destroy'",
+        "set": "Random Booster Vol. 12 Dead Hades.11T.Z'"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-09",
+        "bey": "Random Layer Collection Vol. 9"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus",
+    "ratings": {
+      "attack": 2,
+      "defense": 3,
+      "stamina": 1,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 25,
+      "defense": 38,
+      "stamina": 13,
+      "weight": 38,
+      "speed": 13,
+      "burst": 25
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "sR"
+    ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "シェルターレグルス",
+    "romaji": "Sherutā Regurusu"
+  },
+  {
+    "id": "layer--shelter-regulus-r3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shelter Regulus R3",
+    "weightG": 12.4,
+    "aliases": [
+      "shelter-regulus-r3",
+      "Shelter Regulus",
+      "Shelter Regulus R6 (SpeedStorm)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E1040"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "June 2018"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "June 2018"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shelter Regulus R3 is a Beyblade layer from the SwitchStrike System, weighing 12.4 g. Released as E1040 for Beyblade Burst Evolution. It shipped with Shelter Regulus R3 5Star Tower, Shelter Regulus R3 6 Destroy, Shelter Regulus R6 Swipe Survive-SP and 1 other release.",
+    "shippedIn": [
+      "Shelter Regulus R3 5Star Tower",
+      "Shelter Regulus R3 6 Destroy",
+      "Shelter Regulus R6 Swipe Survive-SP",
+      "Spear Valtryek V6 and Shelter Regulus R6 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Shelter Regulus R3 5Star Tower"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Shelter Regulus R3 6 Destroy"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Shelter Regulus R6 Swipe Survive-SP",
+        "set": "Spear Valtryek V6 and Shelter Regulus R6 Dual Pack",
+        "distribution": [
+          "as '''Shelter Regulus R6'''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shelter_Regulus_R3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Shelter Regulus",
+      "Shelter Regulus R6 (SpeedStorm)"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--shining-amaterios",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shining Amaterios",
+    "weightG": 18.4,
+    "aliases": [
+      "shining-amaterios",
+      "sα",
+      "Burning Amateriosアマテリオス|Bāningu Amateriosu}} (B-158)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-00"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アマテリオス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Shainingu Amateriosu"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "September 21st, 2018"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 6 · Defense 0 · Stamina 0 · Weight 5 · Speed 1 · Burst 6"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shining Amaterios is a Beyblade layer from the Cho-Z Layer System, weighing 18.4 g. Released September 21st, 2018 as B-00 for Beyblade Burst Turbo. It shipped with Shining Amaterios Aero'Angle Anchor, Shining Amaterios 3 Destroy', Shining Amaterios 0 Destroy' and 1 other release.",
+    "shippedIn": [
+      "Shining Amaterios Aero'Angle Anchor",
+      "Shining Amaterios 3 Destroy'",
+      "Shining Amaterios 0 Destroy'",
+      "Random Booster Vol. 19"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Shining Amaterios Aero'Angle Anchor",
+        "distribution": [
+          "[[Rare Bey Get Battle (Burst)|Rare Bey Get Battle]]"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Shining Amaterios 3 Destroy'"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-158",
+        "bey": "Shining Amaterios 0 Destroy'",
+        "set": "Random Booster Vol. 19",
+        "colourway": "Burning Ver.; Minor Change Version"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Burning Ver.; Minor Change Version",
+        "vendor": "Takara Tomy",
+        "code": "B-158",
+        "inBey": "Shining Amaterios 0 Destroy'"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios",
+    "ratings": {
+      "attack": 6,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 6
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 75,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 75
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "sα",
+      "Burning Amateriosアマテリオス|Bāningu Amateriosu}} (B-158)"
+    ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "アマテリオス",
+    "romaji": "Shainingu Amateriosu"
+  },
+  {
+    "id": "layer--shining-amaterios-a3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Shining Amaterios A3",
+    "weightG": 9.2,
+    "aliases": [
+      "shining-amaterios-a3",
+      "Shining Amaterios"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E5954"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Shining Amaterios A3 is a Beyblade layer from the SwitchStrike System, weighing 9.2 g. Released as E5954 for Beyblade Burst Turbo. It shipped with Shining Amaterios A3 Aero'Angle Anchor.",
+    "shippedIn": [
+      "Shining Amaterios A3 Aero'Angle Anchor"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Shining Amaterios A3 Aero'Angle Anchor"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Shining_Amaterios_A3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Shining Amaterios"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--sky-falcon",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Sky Falcon",
+    "weightG": 14.7,
+    "aliases": [
+      "sky-falcon",
+      "Dranzer V2"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadDrive"
+      },
+      {
+        "label": "Product code",
+        "value": "B-186"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (KR)",
+        "value": "2021"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 4 · Defense 1 · Stamina 2 · Weight 2 · Speed 3 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Sky Falcon is a Beyblade layer from the Burst System, weighing 14.7 g. Released as B-186 for Beyblade Burst QuadDrive. It shipped with Sky Falcon 0Cross Reboot', Random Booster Vol. 26.",
+    "shippedIn": [
+      "Sky Falcon 0Cross Reboot'",
+      "Random Booster Vol. 26"
+    ],
+    "releases": [
+      {
+        "vendor": "Youngtoys",
+        "code": "B-186",
+        "bey": "Sky Falcon 0Cross Reboot'",
+        "set": "Random Booster Vol. 26"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sky_Falcon",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Dranzer V2"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst QuadDrive",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--spark-sleipnir",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Spark Sleipnir",
+    "aliases": [
+      "spark-sleipnir"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst QuadDrive"
+      },
+      {
+        "label": "Product code",
+        "value": "B-194"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Spark Sleipnir is a Beyblade layer from the Burst System. Released as B-194 for Beyblade Burst QuadDrive. It shipped with Spark Sleipnir Legacy Xtreme', Random Booster Vol. 27.",
+    "shippedIn": [
+      "Spark Sleipnir Legacy Xtreme'",
+      "Random Booster Vol. 27"
+    ],
+    "releases": [
+      {
+        "vendor": "Youngtoys",
+        "code": "B-194",
+        "bey": "Spark Sleipnir Legacy Xtreme'",
+        "set": "Random Booster Vol. 27"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spark_Sleipnir",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "system": "Burst System",
+    "series": "Beyblade Burst QuadDrive",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--sphinx-s4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Sphinx S4",
+    "weightG": 8.7,
+    "aliases": [
+      "sphinx-s4"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E4733"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Sphinx S4 is a Beyblade layer from the SlingShock System, weighing 8.7 g. Released as E4733 for Beyblade Burst Turbo. It shipped with Sphinx S4 6 Accel-S, Sphinx S4 Blitz Keep-S, Eclipse Evo Devolos D5 and Sphinx S4 Dual Pack.",
+    "shippedIn": [
+      "Sphinx S4 6 Accel-S",
+      "Sphinx S4 Blitz Keep-S",
+      "Eclipse Evo Devolos D5 and Sphinx S4 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Sphinx S4 6 Accel-S"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Sphinx S4 Blitz Keep-S",
+        "set": "Eclipse Evo Devolos D5 and Sphinx S4 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sphinx_S4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--spiral-treptune-t4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Spiral Treptune T4",
+    "weightG": 10.5,
+    "aliases": [
+      "spiral-treptune-t4",
+      "Spiral Treptune",
+      "Aqua-X Spiral Treptune T4 (Element-X Version)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E4744"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Spiral Treptune T4 is a Beyblade layer from the SlingShock System, weighing 10.5 g. Released as E4744 for Beyblade Burst Turbo. It shipped with Spiral Treptune T4 8 Wedge-S, Spiral Treptune T4 and Lava-X Atlas Anubion A4 Dual Pack, Aqua-X Spiral Treptune T4 7 Accel-S and 4 other releases.",
+    "shippedIn": [
+      "Spiral Treptune T4 8 Wedge-S",
+      "Spiral Treptune T4 and Lava-X Atlas Anubion A4 Dual Pack",
+      "Aqua-X Spiral Treptune T4 7 Accel-S",
+      "Element-X Pack",
+      "Spiral Treptune T4 Nine Keep-S",
+      "Spiral Treptune T4 13 Survive-S",
+      "Lord Hydrax H5 and Spiral Treptune T4 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Spiral Treptune T4 8 Wedge-S",
+        "set": "Spiral Treptune T4 and Lava-X Atlas Anubion A4 Dual Pack",
+        "colourway": "translucent yellow"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Aqua-X Spiral Treptune T4 7 Accel-S",
+        "set": "Element-X Pack",
+        "colourway": "translucent blue",
+        "distribution": [
+          "as '''Aqua-X Spiral Treptune T4'''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Spiral Treptune T4 Nine Keep-S",
+        "colourway": "translucent dark green",
+        "distribution": [
+          "Canceled"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Spiral Treptune T4 13 Survive-S",
+        "set": "Lord Hydrax H5 and Spiral Treptune T4 Dual Pack",
+        "colourway": "white"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "translucent yellow",
+        "vendor": "Hasbro",
+        "inBey": "Spiral Treptune T4 8 Wedge-S"
+      },
+      {
+        "colourway": "translucent blue",
+        "vendor": "Hasbro",
+        "distribution": "as '''Aqua-X Spiral Treptune T4'''",
+        "inBey": "Aqua-X Spiral Treptune T4 7 Accel-S"
+      },
+      {
+        "colourway": "translucent dark green",
+        "vendor": "Hasbro",
+        "distribution": "Canceled",
+        "inBey": "Spiral Treptune T4 Nine Keep-S"
+      },
+      {
+        "colourway": "white",
+        "vendor": "Hasbro",
+        "inBey": "Spiral Treptune T4 13 Survive-S"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spiral_Treptune_T4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Spiral Treptune",
+      "Aqua-X Spiral Treptune T4 (Element-X Version)"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--spriggan",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Spriggan",
+    "weightG": 7.7,
+    "aliases": [
+      "spriggan",
+      "S"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B-02"
+      },
+      {
+        "label": "Japanese name",
+        "value": "スプリガン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Supurigan"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 18th, 2015"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 2 · Stamina 1 · Weight 1 · Speed 3 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Spriggan is a Beyblade layer from the Burst System, weighing 7.7 g. Released July 18th, 2015 as B-02 for Beyblade Burst. It shipped with Spriggan Spread Fusion, Spriggan Heavy Defense, Spriggan Wing Claw and 7 other releases. One alternate colourway is recorded: wbba. Limited Ver..",
+    "shippedIn": [
+      "Spriggan Spread Fusion",
+      "Spriggan Heavy Defense",
+      "Spriggan Wing Claw",
+      "Random Booster Vol. 1 Trident Heavy Claw",
+      "Spriggan Central Accel",
+      "Beyblade VS Battle Set",
+      "Spriggan Spread Blow",
+      "Beyblade Custom Set Attack & Balance",
+      "Spriggan Spread Fusion Entry Package",
+      "Random Layer Collection Vol. 1"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-02",
+        "bey": "Spriggan Spread Fusion"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-05",
+        "bey": "Spriggan Heavy Defense"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-15",
+        "bey": "Spriggan Wing Claw",
+        "set": "Random Booster Vol. 1 Trident Heavy Claw"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-15",
+        "bey": "Spriggan Central Accel",
+        "set": "Random Booster Vol. 1 Trident Heavy Claw"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-18",
+        "bey": "Spriggan Spread Fusion",
+        "set": "Beyblade VS Battle Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-21",
+        "bey": "Spriggan Spread Blow",
+        "set": "Beyblade Custom Set Attack & Balance"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-30",
+        "bey": "Spriggan Spread Fusion",
+        "set": "Spriggan Spread Fusion Entry Package"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Spriggan Spread Fusion",
+        "colourway": "wbba. Limited Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-01",
+        "bey": "Random Layer Collection Vol. 1"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "wbba. Limited Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Spriggan Spread Fusion"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan",
+    "ratings": {
+      "attack": 1,
+      "defense": 2,
+      "stamina": 1,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33,
+      "stamina": 17,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "S"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "スプリガン",
+    "romaji": "Supurigan"
+  },
+  {
+    "id": "layer--spriggan-requiem",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Spriggan Requiem",
+    "weightG": 16.05,
+    "aliases": [
+      "spriggan-requiem",
+      "Sr",
+      "God Slayer"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "B-100"
+      },
+      {
+        "label": "Japanese name",
+        "value": "スプリガンレクイエム"
+      },
+      {
+        "label": "Romaji",
+        "value": "Supurigan Rekuiemu"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Dual-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "December 28th, 2017"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 3 · Stamina 3 · Weight 4 · Speed 0 · Burst 1"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Spriggan Requiem is a Beyblade layer from the God Layer System, weighing 16.05 g. Released December 28th, 2017 as B-100 for Beyblade Burst Evolution. It shipped with Spriggan Requiem 0 Zeta, Spriggan Requiem 6Meteor Iron, Random Booster Vol. 10 Crash Ragnaruk.11R.Wd and 2 other releases.",
+    "shippedIn": [
+      "Spriggan Requiem 0 Zeta",
+      "Spriggan Requiem 6Meteor Iron",
+      "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd",
+      "Spriggan Requiem 7 Absorb",
+      "Random Booster Vol. 14 Driger Fang.0.Xt"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-100",
+        "bey": "Spriggan Requiem 0 Zeta",
+        "colourway": "red and gold, white rubber, blue god chip"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-100",
+        "bey": "Spriggan Requiem 0 Zeta",
+        "colourway": "Super Rare Color Ver.",
+        "distribution": [
+          "black and gold, white rubber, red god chip"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-111",
+        "bey": "Spriggan Requiem 6Meteor Iron",
+        "set": "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-132",
+        "bey": "Spriggan Requiem 7 Absorb",
+        "set": "Random Booster Vol. 14 Driger Fang.0.Xt",
+        "colourway": "Super Rare Color Ver.; Minor Change Version"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Spriggan Requiem 0 Zeta",
+        "colourway": "Flame Axe Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Spriggan Requiem 0 Zeta",
+        "colourway": "Golden Axe Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Spriggan Requiem 0 Zeta",
+        "colourway": "Silver Axe Ver."
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "red and gold, white rubber, blue god chip",
+        "vendor": "Takara Tomy",
+        "code": "B-100",
+        "inBey": "Spriggan Requiem 0 Zeta"
+      },
+      {
+        "colourway": "Super Rare Color Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-100",
+        "distribution": "black and gold, white rubber, red god chip",
+        "inBey": "Spriggan Requiem 0 Zeta"
+      },
+      {
+        "colourway": "Super Rare Color Ver.; Minor Change Version",
+        "vendor": "Takara Tomy",
+        "code": "B-132",
+        "inBey": "Spriggan Requiem 7 Absorb"
+      },
+      {
+        "colourway": "Flame Axe Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Spriggan Requiem 0 Zeta"
+      },
+      {
+        "colourway": "Golden Axe Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Spriggan Requiem 0 Zeta"
+      },
+      {
+        "colourway": "Silver Axe Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Spriggan Requiem 0 Zeta"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spriggan_Requiem",
+    "ratings": {
+      "attack": 3,
+      "defense": 3,
+      "stamina": 3,
+      "weight": 4,
+      "speed": 0,
+      "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 38,
+      "stamina": 38,
+      "weight": 50,
+      "speed": 0,
+      "burst": 13
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "Sr",
+      "God Slayer"
+    ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Balance",
+    "spinDirection": "Dual-Spin",
+    "role": "ring",
+    "jpName": "スプリガンレクイエム",
+    "romaji": "Supurigan Rekuiemu"
+  },
+  {
+    "id": "layer--spryzen",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Spryzen",
+    "weightG": 7,
+    "aliases": [
+      "spryzen",
+      "S"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B9493"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Spryzen is a Beyblade layer from the Burst System, weighing 7 g. Released as B9493 for Beyblade Burst. It shipped with Spryzen Spread Fusion, Spryzen and Odax Dual Pack, Spryzen Heavy Defense.",
+    "shippedIn": [
+      "Spryzen Spread Fusion",
+      "Spryzen and Odax Dual Pack",
+      "Spryzen Heavy Defense"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Spryzen Spread Fusion",
+        "set": "Spryzen and Odax Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Spryzen Heavy Defense"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "S"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--storm-pegasis",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Storm Pegasis",
+    "weightG": 19.3,
+    "aliases": [
+      "storm-pegasis",
+      "SP"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Rise"
+      },
+      {
+        "label": "Product code",
+        "value": "B-140"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ストームペガシス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Sutōmu Pegashisu"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "April 27th, 2019"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 4 · Defense 0 · Stamina 0 · Weight 2 · Speed 3 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Storm Pegasis is a Beyblade layer from the Burst System, weighing 19.3 g. Released April 27th, 2019 as B-140 for Beyblade Burst Rise. It shipped with Storm Pegasis 10Glaive Quick', Random Booster Vol. 15, Storm Pegasis Hurricane Atomic and 6 other releases. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Storm Pegasis 10Glaive Quick'",
+      "Random Booster Vol. 15",
+      "Storm Pegasis Hurricane Atomic",
+      "Random Booster Vol. 17",
+      "Storm Pegasis Drake High Survive",
+      "Random Booster Vol. 23",
+      "Storm Pegasis Hurricane Liner'",
+      "Legend Star Bey Set",
+      "Metal Fight Beyblade Anime 10th Anniversary Set"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-140",
+        "bey": "Storm Pegasis 10Glaive Quick'",
+        "set": "Random Booster Vol. 15"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-151",
+        "bey": "Storm Pegasis Hurricane Atomic",
+        "set": "Random Booster Vol. 17",
+        "colourway": "Stardust Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-176",
+        "bey": "Storm Pegasis Drake High Survive",
+        "set": "Random Booster Vol. 23"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Storm Pegasis Hurricane Liner'",
+        "set": "Legend Star Bey Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Storm Pegasis 10Glaive Quick'",
+        "colourway": "Crimson Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Storm Pegasis 10Glaive Quick'",
+        "set": "Metal Fight Beyblade Anime 10th Anniversary Set"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Stardust Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-151",
+        "inBey": "Storm Pegasis Hurricane Atomic"
+      },
+      {
+        "colourway": "Crimson Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Storm Pegasis 10Glaive Quick'"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Pegasis",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 3,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 50,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "SP"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ストームペガシス",
+    "romaji": "Sutōmu Pegashisu"
+  },
+  {
+    "id": "layer--storm-spryzen-s2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Storm Spryzen S2",
+    "weightG": 7.4,
+    "aliases": [
+      "storm-spryzen-s2",
+      "S2",
+      "Storm Spryzen"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B9488"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Storm Spryzen S2 is a Beyblade layer from the Dual Layer System, weighing 7.4 g. Released as B9488 for Beyblade Burst. It shipped with Storm Spryzen S2 Knuckle Unite, Epic Rivals Battle Set, Storm Spryzen S2 Knuckle-L Unite-L and 3 other releases.",
+    "shippedIn": [
+      "Storm Spryzen S2 Knuckle Unite",
+      "Epic Rivals Battle Set",
+      "Storm Spryzen S2 Knuckle-L Unite-L",
+      "Storm Spryzen S2 Rip Fire Pack",
+      "Storm Spryzen S2 Limited Variable",
+      "Evolution Trio Spryzen 3-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Storm Spryzen S2 Knuckle Unite"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Storm Spryzen S2 Knuckle Unite",
+        "set": "Epic Rivals Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Storm Spryzen S2 Knuckle-L Unite-L",
+        "set": "Storm Spryzen S2 Rip Fire Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Storm Spryzen S2 Limited Variable"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Storm Spryzen S2 Knuckle Unite",
+        "set": "Evolution Trio Spryzen 3-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spryzen_S2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "S2",
+      "Storm Spryzen"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--storm-tiger",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Storm Tiger",
+    "aliases": [
+      "storm-tiger"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Product code",
+        "value": "B-198"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Series (also)",
+        "value": "Beyblade Burst QuadDrive"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Storm Tiger is a Beyblade layer from the Burst System. Released as B-198. It shipped with Storm Tiger Over Wedge', Random Booster Vol. 29.",
+    "shippedIn": [
+      "Storm Tiger Over Wedge'",
+      "Random Booster Vol. 29"
+    ],
+    "releases": [
+      {
+        "vendor": "Youngtoys",
+        "code": "B-198",
+        "bey": "Storm Tiger Over Wedge'",
+        "set": "Random Booster Vol. 29"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Tiger",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "system": "Burst System",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--strike-god-valkyrie",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Strike God Valkyrie",
+    "weightG": 11.6,
+    "aliases": [
+      "strike-god-valkyrie",
+      "SgV"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "B-96"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ストライクゴッドヴァルキリー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Sutoraiku Goddo Varukirī"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "October 21st, 2017"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 4 · Defense 0 · Stamina 0 · Weight 2 · Speed 2 · Burst 5"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Strike God Valkyrie is a Beyblade layer from the God Layer System, weighing 11.6 g. Released October 21st, 2017 as B-96 for Beyblade Burst Evolution. It shipped with Strike God Valkyrie Mugen, Mugen Beystadium DX Set, Strike God Valkyrie 6Vortex Ultimate Reboot.",
+    "shippedIn": [
+      "Strike God Valkyrie Mugen",
+      "Mugen Beystadium DX Set",
+      "Strike God Valkyrie 6Vortex Ultimate Reboot"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-96",
+        "bey": "Strike God Valkyrie Mugen",
+        "set": "Mugen Beystadium DX Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Strike God Valkyrie 6Vortex Ultimate Reboot",
+        "distribution": [
+          "Mr. Strongest Custom",
+          "CoroCoro Exclusive"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_God_Valkyrie",
+    "ratings": {
+      "attack": 4,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 25,
+      "speed": 25,
+      "burst": 63
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "SgV"
+    ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ストライクゴッドヴァルキリー",
+    "romaji": "Sutoraiku Goddo Varukirī"
+  },
+  {
+    "id": "layer--strike-valtryek-v3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Strike Valtryek V3",
+    "weightG": 9.7,
+    "aliases": [
+      "strike-valtryek-v3",
+      "Strike Valtryek"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E2393"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Strike Valtryek V3 is a Beyblade layer from the SwitchStrike System, weighing 9.7 g. Released as E2393 for Beyblade Burst Evolution. It shipped with Strike Valtryek V3 6Vortex Reboot, Battle Tower.",
+    "shippedIn": [
+      "Strike Valtryek V3 6Vortex Reboot",
+      "Battle Tower"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Strike Valtryek V3 6Vortex Reboot",
+        "set": "Battle Tower"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Strike_Valtryek_V3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Strike Valtryek"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--surge-xcalius-x3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Surge Xcalius X3",
+    "weightG": 15.4,
+    "aliases": [
+      "surge-xcalius-x3"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E1035"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "February 2018"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "January 2018"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Surge Xcalius X3 is a Beyblade layer from the SwitchStrike System, weighing 15.4 g. Released as E1035 for Beyblade Burst Evolution. It shipped with Surge Xcalius X3 1 Iron, Xcalius Set.",
+    "shippedIn": [
+      "Surge Xcalius X3 1 Iron",
+      "Xcalius Set"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Surge Xcalius X3 1 Iron"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Surge Xcalius X3 1 Iron",
+        "set": "Xcalius Set"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surge_Xcalius_X3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--surtr-s2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Surtr S2",
+    "weightG": 8,
+    "aliases": [
+      "surtr-s2",
+      "S2",
+      "Iron-X Surtr S4 (SlingShock)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E3882"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Surtr S2 is a Beyblade layer from the Dual Layer System, weighing 8 g. Released as E3882 for Beyblade Burst Evolution. It shipped with Surtr S2 Spread Quake, Surtr S2 and Omni Odax O2 Dual Pack, Iron-X Surtr S4 2 Fusion-S.",
+    "shippedIn": [
+      "Surtr S2 Spread Quake",
+      "Surtr S2 and Omni Odax O2 Dual Pack",
+      "Iron-X Surtr S4 2 Fusion-S"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Surtr S2 Spread Quake",
+        "set": "Surtr S2 and Omni Odax O2 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Iron-X Surtr S4 2 Fusion-S",
+        "distribution": [
+          "as '''Iron-X Surtr S4'''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Surtr_S2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "S2",
+      "Iron-X Surtr S4 (SlingShock)"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--tempest-wyvron-w3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Tempest Wyvron W3",
+    "aliases": [
+      "tempest-wyvron-w3",
+      "Tempest Wyvron"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E1028"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "December 2017"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "December 2017"
+      },
+      {
+        "label": "Released (AU)",
+        "value": "November 2017"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Tempest Wyvron W3 is a Beyblade layer from the SwitchStrike System. Released as E1028 for Beyblade Burst Evolution. It shipped with Tempest Wyvron W3 4Glaive Atomic, Tempest Wyvron W3 2Glaive Trans, Spin Shifter Pack.",
+    "shippedIn": [
+      "Tempest Wyvron W3 4Glaive Atomic",
+      "Tempest Wyvron W3 2Glaive Trans",
+      "Spin Shifter Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Tempest Wyvron W3 4Glaive Atomic"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Tempest Wyvron W3 2Glaive Trans",
+        "set": "Spin Shifter Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tempest_Wyvron_W3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Tempest Wyvron"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--tide-treptune-t3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Tide Treptune T3",
+    "weightG": 12.5,
+    "aliases": [
+      "tide-treptune-t3",
+      "Tide Treptune"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E5956"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Tide Treptune T3 is a Beyblade layer from the SwitchStrike System, weighing 12.5 g. Released as E5956 for Beyblade Burst Turbo. It shipped with Tide Treptune T3 8Bump Edge.",
+    "shippedIn": [
+      "Tide Treptune T3 8Bump Edge"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Tide Treptune T3 8Bump Edge"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tide_Treptune_T3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Tide Treptune"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--tornado-wyvern",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Tornado Wyvern",
+    "weightG": 9.2,
+    "aliases": [
+      "tornado-wyvern",
+      "tW"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "B-80"
+      },
+      {
+        "label": "Japanese name",
+        "value": "トルネードワイバーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Torunēdo Waibān"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "April 29th, 2017"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 5 · Stamina 2 · Weight 3 · Speed 1 · Burst 1"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Tornado Wyvern is a Beyblade layer from the God Layer System, weighing 9.2 g. Released April 29th, 2017 as B-80 for Beyblade Burst Evolution. It shipped with Tornado Wyvern 4Glaive Atomic, Random Booster Vol. 6 Tornado Wyvern.4G.At, Tornado Wyvern 1Meteor Spiral and 1 other release.",
+    "shippedIn": [
+      "Tornado Wyvern 4Glaive Atomic",
+      "Random Booster Vol. 6 Tornado Wyvern.4G.At",
+      "Tornado Wyvern 1Meteor Spiral",
+      "God Customize Set"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-80",
+        "bey": "Tornado Wyvern 4Glaive Atomic",
+        "set": "Random Booster Vol. 6 Tornado Wyvern.4G.At",
+        "colourway": "translucent purple"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-98",
+        "bey": "Tornado Wyvern 1Meteor Spiral",
+        "set": "God Customize Set"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "translucent purple",
+        "vendor": "Takara Tomy",
+        "code": "B-80",
+        "inBey": "Tornado Wyvern 4Glaive Atomic"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tornado_Wyvern",
+    "ratings": {
+      "attack": 0,
+      "defense": 5,
+      "stamina": 2,
+      "weight": 3,
+      "speed": 1,
+      "burst": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 63,
+      "stamina": 25,
+      "weight": 38,
+      "speed": 13,
+      "burst": 13
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "tW"
+    ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "トルネードワイバーン",
+    "romaji": "Torunēdo Waibān"
+  },
+  {
+    "id": "layer--treptune",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Treptune",
+    "weightG": 8,
+    "aliases": [
+      "treptune",
+      "T"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "C0707"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Treptune is a Beyblade layer from the Burst System, weighing 8 g. Released as C0707 for Beyblade Burst. It shipped with Treptune Heavy Claw, Custom Clash Pack, Treptune and Nova Nepstrius N2 Dual Pack.",
+    "shippedIn": [
+      "Treptune Heavy Claw",
+      "Custom Clash Pack",
+      "Treptune and Nova Nepstrius N2 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Treptune Heavy Claw",
+        "set": "Custom Clash Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Treptune Heavy Claw",
+        "set": "Treptune and Nova Nepstrius N2 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Treptune",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "T"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--trident",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Trident",
+    "weightG": 9,
+    "aliases": [
+      "trident",
+      "T"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B-15"
+      },
+      {
+        "label": "Japanese name",
+        "value": "トライデント"
+      },
+      {
+        "label": "Romaji",
+        "value": "Toraidento"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "September 19th, 2015"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 1 · Stamina 3 · Weight 3 · Speed 1 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Trident is a Beyblade layer from the Burst System, weighing 9 g. Released September 19th, 2015 as B-15 for Beyblade Burst. It shipped with Trident Heavy Claw, Random Booster Vol. 1 Trident Heavy Claw, Random Layer Collection Vol. 2. One alternate colourway is recorded: Rare Bey Lottery Ver..",
+    "shippedIn": [
+      "Trident Heavy Claw",
+      "Random Booster Vol. 1 Trident Heavy Claw",
+      "Random Layer Collection Vol. 2"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-15",
+        "bey": "Trident Heavy Claw",
+        "set": "Random Booster Vol. 1 Trident Heavy Claw"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Trident Heavy Claw",
+        "colourway": "Rare Bey Lottery Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-02",
+        "bey": "Random Layer Collection Vol. 2"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Rare Bey Lottery Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Trident Heavy Claw"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Trident",
+    "ratings": {
+      "attack": 0,
+      "defense": 1,
+      "stamina": 3,
+      "weight": 3,
+      "speed": 1,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 17,
+      "stamina": 50,
+      "weight": 50,
+      "speed": 17,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "T"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "トライデント",
+    "romaji": "Toraidento"
+  },
+  {
+    "id": "layer--turbo-achilles-a4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Turbo Achilles A4",
+    "weightG": 17.4,
+    "aliases": [
+      "turbo-achilles-a4",
+      "Turbo Achilles"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E6167"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "July 2019"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Turbo Achilles A4 is a Beyblade layer from the SlingShock System, weighing 17.4 g. Released as E6167 for Beyblade Burst Turbo. It shipped with Turbo Achilles A4 00 Dimension-S, Championship Clash.",
+    "shippedIn": [
+      "Turbo Achilles A4 00 Dimension-S",
+      "Championship Clash"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Turbo Achilles A4 00 Dimension-S"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Turbo Achilles A4 00 Dimension-S",
+        "set": "Championship Clash"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Achilles_A4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Turbo Achilles"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--turbo-spryzen-s4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Turbo Spryzen S4",
+    "weightG": 16.2,
+    "aliases": [
+      "turbo-spryzen-s4",
+      "Turbo Spryzen"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E4739"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Dual-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "August 2019"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Turbo Spryzen S4 is a Beyblade layer from the SlingShock System, weighing 16.2 g. Released as E4739 for Beyblade Burst Turbo. It shipped with Turbo Spryzen S4 0Wall Zeta-S.",
+    "shippedIn": [
+      "Turbo Spryzen S4 0Wall Zeta-S"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Turbo Spryzen S4 0Wall Zeta-S"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Spryzen_S4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "Turbo Spryzen"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Balance",
+    "spinDirection": "Dual-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--turbo-valtryek-v3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Turbo Valtryek V3",
+    "weightG": 15.6,
+    "aliases": [
+      "turbo-valtryek-v3",
+      "Turbo Valtryek"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E6704"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "July 2019"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "September 2019"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Turbo Valtryek V3 is a Beyblade layer from the SwitchStrike System, weighing 15.6 g. Released as E6704 for Beyblade Burst Turbo. It shipped with Turbo Valtryek V3 Zenith Evolution.",
+    "shippedIn": [
+      "Turbo Valtryek V3 Zenith Evolution"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Turbo Valtryek V3 Zenith Evolution"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Turbo_Valtryek_V3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Turbo Valtryek"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--twin-nemesis",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Twin Nemesis",
+    "weightG": 13.1,
+    "aliases": [
+      "twin-nemesis",
+      "tN"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "God Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "BG-07"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ツインネメシス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Tsuin Nemeshisu"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "September 2017"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 2 · Stamina 0 · Weight 1 · Speed 1 · Burst 5"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Twin Nemesis is a Beyblade layer from the God Layer System, weighing 13.1 g. Released September 2017 as BG-07 for Beyblade Burst Evolution. It shipped with Random Layer Collection Vol. 7, Twin Nemesis 3Hit Ultimate Reboot, Twin Nemesis 1'Hit Wedge and 1 other release.",
+    "shippedIn": [
+      "Random Layer Collection Vol. 7",
+      "Twin Nemesis 3Hit Ultimate Reboot",
+      "Twin Nemesis 1'Hit Wedge",
+      "Random Booster Vol. 12 Dead Hades.11T.Z'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-07",
+        "bey": "Random Layer Collection Vol. 7"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-102",
+        "bey": "Twin Nemesis 3Hit Ultimate Reboot"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-125",
+        "bey": "Twin Nemesis 1'Hit Wedge",
+        "set": "Random Booster Vol. 12 Dead Hades.11T.Z'"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Nemesis",
+    "ratings": {
+      "attack": 3,
+      "defense": 2,
+      "stamina": 0,
+      "weight": 1,
+      "speed": 1,
+      "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 25,
+      "stamina": 0,
+      "weight": 13,
+      "speed": 13,
+      "burst": 63
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "tN"
+    ],
+    "system": "God Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ツインネメシス",
+    "romaji": "Tsuin Nemeshisu"
+  },
+  {
+    "id": "layer--twin-noctemis-n3",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Twin Noctemis N3",
+    "aliases": [
+      "twin-noctemis-n3",
+      "Twin Noctemis"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SwitchStrike System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E2393"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Twin Noctemis N3 is a Beyblade layer from the SwitchStrike System. Released as E2393 for Beyblade Burst Evolution. It shipped with Twin Noctemis N3 2 Jaggy, Battle Tower.",
+    "shippedIn": [
+      "Twin Noctemis N3 2 Jaggy",
+      "Battle Tower"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Twin Noctemis N3 2 Jaggy",
+        "set": "Battle Tower"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Twin_Noctemis_N3",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Twin Noctemis"
+    ],
+    "system": "SwitchStrike System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--typhon-t4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Typhon T4",
+    "weightG": 10.5,
+    "aliases": [
+      "typhon-t4",
+      "Typhon T5 (HyperSphere)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E4734"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Typhon T4 is a Beyblade layer from the SlingShock System, weighing 10.5 g. Released as E4734 for Beyblade Burst Turbo. It shipped with Typhon T4 4 Defense-S, Typhon T5 Infinity Yard-H.",
+    "shippedIn": [
+      "Typhon T4 4 Defense-S",
+      "Typhon T5 Infinity Yard-H"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Typhon T4 4 Defense-S"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Typhon T5 Infinity Yard-H",
+        "distribution": [
+          "as '''Typhon T5'''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Typhon_T4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Typhon T5 (HyperSphere)"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--tyros-t2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Tyros T2",
+    "weightG": 8.7,
+    "aliases": [
+      "tyros-t2",
+      "T2",
+      "Tyros T6 (SpeedStorm)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Evolution"
+      },
+      {
+        "label": "Product code",
+        "value": "E1067"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "June 2018"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Tyros T2 is a Beyblade layer from the Dual Layer System, weighing 8.7 g. Released as E1067 for Beyblade Burst Evolution. It shipped with Tyros T2 Infinity Zephyr, Tyros T2 and Dark Doomscizor D2 Dual Pack, Tyros T6 Magnum Dimension-SP and 1 other release.",
+    "shippedIn": [
+      "Tyros T2 Infinity Zephyr",
+      "Tyros T2 and Dark Doomscizor D2 Dual Pack",
+      "Tyros T6 Magnum Dimension-SP",
+      "Origin Achilles A6 and Tyros T6 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Tyros T2 Infinity Zephyr",
+        "set": "Tyros T2 and Dark Doomscizor D2 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Tyros T6 Magnum Dimension-SP",
+        "set": "Origin Achilles A6 and Tyros T6 Dual Pack",
+        "distribution": [
+          "as '''Tyros T6'''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Tyros_T2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "T2",
+      "Tyros T6 (SpeedStorm)"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst Evolution",
+    "partType": "Balance",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--uber-unicrest-u2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Uber Unicrest U2",
+    "weightG": 6.9,
+    "aliases": [
+      "uber-unicrest-u2",
+      "U2",
+      "Über Unicrest (official stylization)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "C0598"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Uber Unicrest U2 is a Beyblade layer from the Dual Layer System, weighing 6.9 g. Released as C0598 for Beyblade Burst. It shipped with Uber Unicrest U2 Down Needle, Dark Doomscizor D2 and Uber Unicrest U2 Dual Pack, Uber Unicrest U2 Upper Jaggy and 1 other release.",
+    "shippedIn": [
+      "Uber Unicrest U2 Down Needle",
+      "Dark Doomscizor D2 and Uber Unicrest U2 Dual Pack",
+      "Uber Unicrest U2 Upper Jaggy",
+      "Orpheus O2 and Uber Unicrest U2 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Uber Unicrest U2 Down Needle",
+        "set": "Dark Doomscizor D2 and Uber Unicrest U2 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Uber Unicrest U2 Down Needle"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Uber Unicrest U2 Upper Jaggy",
+        "set": "Orpheus O2 and Uber Unicrest U2 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Uber_Unicrest_U2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "U2",
+      "Über Unicrest (official stylization)"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--unicorn",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Unicorn",
+    "weightG": 8.3,
+    "aliases": [
+      "unicorn",
+      "U"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B-22"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ユニコーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Yunikōn"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "November 14th, 2015"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 4 · Stamina 2 · Weight 2 · Speed 0 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Unicorn is a Beyblade layer from the Burst System, weighing 8.3 g. Released November 14th, 2015 as B-22 for Beyblade Burst. It shipped with Unicorn Ring Defense, Beyblade Custom Set Defense & Stamina, Random Layer Collection Vol. 2. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Unicorn Ring Defense",
+      "Beyblade Custom Set Defense & Stamina",
+      "Random Layer Collection Vol. 2"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-22",
+        "bey": "Unicorn Ring Defense",
+        "set": "Beyblade Custom Set Defense & Stamina",
+        "colourway": "white"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-02",
+        "bey": "Random Layer Collection Vol. 2",
+        "colourway": "black"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "white",
+        "vendor": "Takara Tomy",
+        "code": "B-22",
+        "inBey": "Unicorn Ring Defense"
+      },
+      {
+        "colourway": "black",
+        "vendor": "Takara Tomy",
+        "code": "BG-02",
+        "inBey": "Random Layer Collection Vol. 2"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicorn",
+    "ratings": {
+      "attack": 0,
+      "defense": 4,
+      "stamina": 2,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 67,
+      "stamina": 33,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "U"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ユニコーン",
+    "romaji": "Yunikōn"
+  },
+  {
+    "id": "layer--unicrest",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Unicrest",
+    "weightG": 8.2,
+    "aliases": [
+      "unicrest",
+      "U"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B9492"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Unicrest is a Beyblade layer from the Burst System, weighing 8.2 g. Released as B9492 for Beyblade Burst. It shipped with Unicrest Ring Defense, Valtryek and Unicrest Dual Pack.",
+    "shippedIn": [
+      "Unicrest Ring Defense",
+      "Valtryek and Unicrest Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Unicrest Ring Defense",
+        "set": "Valtryek and Unicrest Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Unicrest Ring Defense"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unicrest",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "U"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--unlock-unicorn",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Unlock Unicorn",
+    "weightG": 7.5,
+    "aliases": [
+      "unlock-unicorn",
+      "U2"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B-56"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アンロックユニコーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Anrokku Yunikōn"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 6th, 2016"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 4 · Stamina 1 · Weight 2 · Speed 0 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Unlock Unicorn is a Beyblade layer from the Dual Layer System, weighing 7.5 g. Released August 6th, 2016 as B-56 for Beyblade Burst. It shipped with Unlock Unicorn Down Needle, Unlock Unicorn Quarter Accel, Random Booster Vol. 5 Gigant Gaia.Q.F and 2 other releases.",
+    "shippedIn": [
+      "Unlock Unicorn Down Needle",
+      "Unlock Unicorn Quarter Accel",
+      "Random Booster Vol. 5 Gigant Gaia.Q.F",
+      "Unlock Unicorn Upper Trans",
+      "Random Layer Collection Vol. 5"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-56",
+        "bey": "Unlock Unicorn Down Needle",
+        "colourway": "white"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-67",
+        "bey": "Unlock Unicorn Quarter Accel",
+        "set": "Random Booster Vol. 5 Gigant Gaia.Q.F",
+        "colourway": "translucent red"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-67",
+        "bey": "Unlock Unicorn Upper Trans",
+        "set": "Random Booster Vol. 5 Gigant Gaia.Q.F",
+        "colourway": "translucent black"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-05",
+        "bey": "Random Layer Collection Vol. 5",
+        "colourway": "translucent light blue"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "white",
+        "vendor": "Takara Tomy",
+        "code": "B-56",
+        "inBey": "Unlock Unicorn Down Needle"
+      },
+      {
+        "colourway": "translucent red",
+        "vendor": "Takara Tomy",
+        "code": "B-67",
+        "inBey": "Unlock Unicorn Quarter Accel"
+      },
+      {
+        "colourway": "translucent black",
+        "vendor": "Takara Tomy",
+        "code": "B-67",
+        "inBey": "Unlock Unicorn Upper Trans"
+      },
+      {
+        "colourway": "translucent light blue",
+        "vendor": "Takara Tomy",
+        "code": "BG-05",
+        "inBey": "Random Layer Collection Vol. 5"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unlock_Unicorn",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1,
+      "weight": 2,
+      "speed": 0,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17,
+      "weight": 33,
+      "speed": 0,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "U2"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "アンロックユニコーン",
+    "romaji": "Anrokku Yunikōn"
+  },
+  {
+    "id": "layer--unperfect-phoenix",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Unperfect Phoenix",
+    "weightG": 17.9,
+    "aliases": [
+      "unperfect-phoenix",
+      "uP"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アンパーフェクトフェニックス"
+      },
+      {
+        "label": "Romaji",
+        "value": "Anpāfekuto Fenikkusu"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Unperfect Phoenix is a Beyblade layer from the Cho-Z Layer System, weighing 17.9 g. Part of Beyblade Burst Turbo.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "uP"
+    ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "アンパーフェクトフェニックス",
+    "romaji": "Anpāfekuto Fenikkusu"
+  },
+  {
+    "id": "layer--unperfect-phoenix-p4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Unperfect Phoenix P4",
+    "weightG": 11.6,
+    "aliases": [
+      "unperfect-phoenix-p4",
+      "Unperfect Phoenix"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Unperfect Phoenix P4 is a Beyblade layer from the SlingShock System, weighing 11.6 g. Part of Beyblade Burst Turbo.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Unperfect_Phoenix_P4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Unperfect Phoenix"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--valkyrie",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Valkyrie",
+    "weightG": 7.9,
+    "aliases": [
+      "valkyrie",
+      "V"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B-01"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ヴァルキリー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Varukirī"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 18th, 2015"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 0 · Stamina 0 · Weight 2 · Speed 2 · Burst 3"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Valkyrie is a Beyblade layer from the Burst System, weighing 7.9 g. Released July 18th, 2015 as B-01 for Beyblade Burst. It shipped with Valkyrie Wing Accel, Beyblade Start Dash Set (Burst), Valkyrie Spread Survive and 9 other releases. 8 alternate colourways are recorded.",
+    "shippedIn": [
+      "Valkyrie Wing Accel",
+      "Beyblade Start Dash Set (Burst)",
+      "Valkyrie Spread Survive",
+      "Valkyrie Central Fusion",
+      "Random Booster Vol. 1 Trident Heavy Claw",
+      "Beyblade VS Battle Set",
+      "Valkyrie Oval Needle",
+      "Random Booster Vol. 2 Evil-eye Wing Needle",
+      "Valkyrie Wing Accel Entry Package",
+      "Valkyrie 1Flow Edge",
+      "Random Booster Vol. 9 Beat Kukulcan.7U.Hn",
+      "Random Layer Collection Vol. 1"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-01",
+        "bey": "Valkyrie Wing Accel",
+        "colourway": "blue"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-08",
+        "bey": "Valkyrie Wing Accel",
+        "set": "Beyblade Start Dash Set (Burst)",
+        "colourway": "blue",
+        "distribution": [
+          "Burst"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-13",
+        "bey": "Valkyrie Spread Survive",
+        "distribution": [
+          "vermilion"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-15",
+        "bey": "Valkyrie Central Fusion",
+        "set": "Random Booster Vol. 1 Trident Heavy Claw",
+        "colourway": "magenta"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-18",
+        "bey": "Valkyrie Wing Accel",
+        "set": "Beyblade VS Battle Set",
+        "colourway": "red"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-24",
+        "bey": "Valkyrie Oval Needle",
+        "set": "Random Booster Vol. 2 Evil-eye Wing Needle",
+        "colourway": "clear yellow"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-29",
+        "bey": "Valkyrie Wing Accel",
+        "set": "Valkyrie Wing Accel Entry Package",
+        "colourway": "blue"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-101",
+        "bey": "Valkyrie 1Flow Edge",
+        "set": "Random Booster Vol. 9 Beat Kukulcan.7U.Hn",
+        "colourway": "Evil God Ver.; Minor Change Version",
+        "distribution": [
+          "clear gray"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Valkyrie Wing Accel",
+        "colourway": "Black Knight Ver.",
+        "distribution": [
+          "CoroCoro Exclusive",
+          "black"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BG-01",
+        "bey": "Random Layer Collection Vol. 1",
+        "colourway": "white"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "blue",
+        "vendor": "Takara Tomy",
+        "code": "B-01",
+        "inBey": "Valkyrie Wing Accel"
+      },
+      {
+        "colourway": "blue",
+        "vendor": "Takara Tomy",
+        "code": "B-08",
+        "distribution": "Burst",
+        "inBey": "Valkyrie Wing Accel"
+      },
+      {
+        "colourway": "magenta",
+        "vendor": "Takara Tomy",
+        "code": "B-15",
+        "inBey": "Valkyrie Central Fusion"
+      },
+      {
+        "colourway": "red",
+        "vendor": "Takara Tomy",
+        "code": "B-18",
+        "inBey": "Valkyrie Wing Accel"
+      },
+      {
+        "colourway": "clear yellow",
+        "vendor": "Takara Tomy",
+        "code": "B-24",
+        "inBey": "Valkyrie Oval Needle"
+      },
+      {
+        "colourway": "Evil God Ver.; Minor Change Version",
+        "vendor": "Takara Tomy",
+        "code": "B-101",
+        "distribution": "clear gray",
+        "inBey": "Valkyrie 1Flow Edge"
+      },
+      {
+        "colourway": "Black Knight Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "CoroCoro Exclusive · black",
+        "inBey": "Valkyrie Wing Accel"
+      },
+      {
+        "colourway": "white",
+        "vendor": "Takara Tomy",
+        "code": "BG-01",
+        "inBey": "Random Layer Collection Vol. 1"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valkyrie",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 2,
+      "speed": 2,
+      "burst": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 50,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 33,
+      "speed": 33,
+      "burst": 50
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "V"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ヴァルキリー",
+    "romaji": "Varukirī"
+  },
+  {
+    "id": "layer--valtryek",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Valtryek",
+    "weightG": 8.1,
+    "aliases": [
+      "valtryek",
+      "V"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B9492"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Valtryek is a Beyblade layer from the Burst System, weighing 8.1 g. Released as B9492 for Beyblade Burst. It shipped with Valtryek Wing Accel, Valtryek and Unicrest Dual Pack, Valtryek Spread Survive and 1 other release.",
+    "shippedIn": [
+      "Valtryek Wing Accel",
+      "Valtryek and Unicrest Dual Pack",
+      "Valtryek Spread Survive",
+      "Beylocker (Burst)"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Valtryek Wing Accel",
+        "set": "Valtryek and Unicrest Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Valtryek Spread Survive"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Valtryek Wing Accel",
+        "set": "Beylocker (Burst)",
+        "distribution": [
+          "Burst"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Valtryek",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "V"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--vice-leopard-l4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Vice Leopard L4",
+    "weightG": 11.8,
+    "aliases": [
+      "vice-leopard-l4",
+      "Vice Leopard"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E4748"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Vice Leopard L4 is a Beyblade layer from the SlingShock System, weighing 11.8 g. Released as E4748 for Beyblade Burst Turbo. It shipped with Vice Leopard L4 12Lift Destroy-S, Vice Leopard L4 and Silver-X Jumbo Jormuntor J4 Dual Pack, Vice Leopard L4 Drake Accel-S and 1 other release.",
+    "shippedIn": [
+      "Vice Leopard L4 12Lift Destroy-S",
+      "Vice Leopard L4 and Silver-X Jumbo Jormuntor J4 Dual Pack",
+      "Vice Leopard L4 Drake Accel-S",
+      "Master Kerbeus K5 and Vice Leopard L4 Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Vice Leopard L4 12Lift Destroy-S",
+        "set": "Vice Leopard L4 and Silver-X Jumbo Jormuntor J4 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Vice Leopard L4 Drake Accel-S",
+        "set": "Master Kerbeus K5 and Vice Leopard L4 Dual Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vice_Leopard_L4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Vice Leopard"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--victory-valtryek-v2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Victory Valtryek V2",
+    "weightG": 8.6,
+    "aliases": [
+      "victory-valtryek-v2",
+      "V2",
+      "Victory Valtryek"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "B9487"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (US)",
+        "value": "December 2016"
+      },
+      {
+        "label": "Released (CA)",
+        "value": "September 2016"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Victory Valtryek V2 is a Beyblade layer from the Dual Layer System, weighing 8.6 g. Released as B9487 for Beyblade Burst. It shipped with Victory Valtryek V2 Boost Variable, Epic Rivals Battle Set, Avatar Attack Battle Set and 5 other releases.",
+    "shippedIn": [
+      "Victory Valtryek V2 Boost Variable",
+      "Epic Rivals Battle Set",
+      "Avatar Attack Battle Set",
+      "Victory Valtryek V2 Boost-L Variable-L",
+      "Victory Valtryek V2 Rip Fire Pack",
+      "Apex Attack Pack",
+      "Victory Valtryek V2 Limited Unite",
+      "Evolution Trio Valtryek 3-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost Variable"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost Variable",
+        "set": "Epic Rivals Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost Variable",
+        "set": "Avatar Attack Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost-L Variable-L",
+        "set": "Victory Valtryek V2 Rip Fire Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost Variable",
+        "set": "Apex Attack Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Limited Unite"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Victory Valtryek V2 Boost Variable",
+        "set": "Evolution Trio Valtryek 3-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valtryek_V2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "V2",
+      "Victory Valtryek"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--vise-leopard",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Vise Leopard",
+    "weightG": 18.9,
+    "aliases": [
+      "vise-leopard",
+      "vL"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-118"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ヴァイスレオパルド"
+      },
+      {
+        "label": "Romaji",
+        "value": "Vuaisu Reoparudo"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 14th, 2018"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 0 · Stamina 0 · Weight 5 · Speed 2 · Burst 5"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Vise Leopard is a Beyblade layer from the Cho-Z Layer System, weighing 18.9 g. Released July 14th, 2018 as B-118 for Beyblade Burst Turbo. It shipped with Vise Leopard 12Lift Destroy, Random Booster Vol. 11 Vise Leopard.12L.Ds, Vise Leopard 4 Yard and 2 other releases.",
+    "shippedIn": [
+      "Vise Leopard 12Lift Destroy",
+      "Random Booster Vol. 11 Vise Leopard.12L.Ds",
+      "Vise Leopard 4 Yard",
+      "Vise Leopard 1'Proof Operate",
+      "Random Booster Vol. 15"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-118",
+        "bey": "Vise Leopard 12Lift Destroy",
+        "set": "Random Booster Vol. 11 Vise Leopard.12L.Ds"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-118",
+        "bey": "Vise Leopard 4 Yard",
+        "set": "Random Booster Vol. 11 Vise Leopard.12L.Ds"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-140",
+        "bey": "Vise Leopard 1'Proof Operate",
+        "set": "Random Booster Vol. 15"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Vise_Leopard",
+    "ratings": {
+      "attack": 3,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 2,
+      "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 25,
+      "burst": 63
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "vL"
+    ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ヴァイスレオパルド",
+    "romaji": "Vuaisu Reoparudo"
+  },
+  {
+    "id": "layer--wild-wyvron-w2",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Wild Wyvron W2",
+    "weightG": 7.7,
+    "aliases": [
+      "wild-wyvron-w2",
+      "W2",
+      "Wild Wyvron",
+      "Wild Wyvron W6 (SpeedStorm)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Dual Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst"
+      },
+      {
+        "label": "Product code",
+        "value": "C0599"
+      },
+      {
+        "label": "Type",
+        "value": "Defense"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Wild Wyvron W2 is a Beyblade layer from the Dual Layer System, weighing 7.7 g. Released as C0599 for Beyblade Burst. It shipped with Wild Wyvron W2 Vertical Massive, Wild Wyvron W2 and Omni Odax O2 Dual Pack, Wild Wyvron W2 Boost Jaggy and 4 other releases. 3 alternate colourways are recorded.",
+    "shippedIn": [
+      "Wild Wyvron W2 Vertical Massive",
+      "Wild Wyvron W2 and Omni Odax O2 Dual Pack",
+      "Wild Wyvron W2 Boost Jaggy",
+      "Caynox and Wild Wyvron W2 Dual Pack",
+      "Wild Wyvron W2 Vertical-L Orbit-L",
+      "Wild Wyvron W2 Rip Fire Pack",
+      "Wild Wyvron W6 Yell Needle-SP"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W2 Vertical Massive",
+        "set": "Wild Wyvron W2 and Omni Odax O2 Dual Pack",
+        "colourway": "Red"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W2 Vertical Massive",
+        "colourway": "Purple"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W2 Vertical Massive",
+        "colourway": "Emerald Green"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W2 Boost Jaggy",
+        "set": "Caynox and Wild Wyvron W2 Dual Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W2 Vertical-L Orbit-L",
+        "set": "Wild Wyvron W2 Rip Fire Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wild Wyvron W6 Yell Needle-SP",
+        "distribution": [
+          "as '''Wild Wyvron W6'''"
+        ]
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Red",
+        "vendor": "Hasbro",
+        "inBey": "Wild Wyvron W2 Vertical Massive"
+      },
+      {
+        "colourway": "Purple",
+        "vendor": "Hasbro",
+        "inBey": "Wild Wyvron W2 Vertical Massive"
+      },
+      {
+        "colourway": "Emerald Green",
+        "vendor": "Hasbro",
+        "inBey": "Wild Wyvron W2 Vertical Massive"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvron_W2",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "W2",
+      "Wild Wyvron",
+      "Wild Wyvron W6 (SpeedStorm)"
+    ],
+    "system": "Dual Layer System",
+    "series": "Beyblade Burst",
+    "partType": "Defense",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--wing-falcon",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Wing Falcon",
+    "aliases": [
+      "wing-falcon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-130"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (KR)",
+        "value": "January 2019"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Wing Falcon is a Beyblade layer from the Burst System. Released as B-130 for Beyblade Burst Turbo. It shipped with Wing Falcon 10Turn Sword, Random Booster Vol. 13 Air Knight.12E.Et.",
+    "shippedIn": [
+      "Wing Falcon 10Turn Sword",
+      "Random Booster Vol. 13 Air Knight.12E.Et"
+    ],
+    "releases": [
+      {
+        "vendor": "Youngtoys",
+        "code": "B-130",
+        "bey": "Wing Falcon 10Turn Sword",
+        "set": "Random Booster Vol. 13 Air Knight.12E.Et"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wing_Falcon",
+    "wboLegality": {
+      "burst": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "system": "Burst System",
+    "series": "Beyblade Burst Turbo",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--winning-valkyrie",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Winning Valkyrie",
+    "weightG": 19.9,
+    "aliases": [
+      "winning-valkyrie",
+      "wV"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Cho-Z Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-104"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ウイニングヴァルキリー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Uiningu Varukirī"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "March 17th, 2018"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 5 · Defense 0 · Stamina 0 · Weight 5 · Speed 1 · Burst 5"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: banned · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Winning Valkyrie is a Beyblade layer from the Cho-Z Layer System, weighing 19.9 g. Released March 17th, 2018 as B-104 for Beyblade Burst Turbo. It shipped with Winning Valkyrie 12 Volcanic, Beyblade Cho-Z Battle Set, Winning Valkyrie 8 Guard and 6 other releases. 3 alternate colourways are recorded.",
+    "shippedIn": [
+      "Winning Valkyrie 12 Volcanic",
+      "Beyblade Cho-Z Battle Set",
+      "Winning Valkyrie 8 Guard",
+      "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd",
+      "Winning Valkyrie 3 Yielding",
+      "Random Booster Vol. 11 Vise Leopard.12L.Ds",
+      "Winning Valkyrie 1' Operate",
+      "Random Booster Vol. 14 Driger Fang.0.Xt",
+      "Cho-Z Customize Set CoroCoro Ver."
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-104",
+        "bey": "Winning Valkyrie 12 Volcanic"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-107",
+        "bey": "Winning Valkyrie 12 Volcanic",
+        "set": "Beyblade Cho-Z Battle Set",
+        "colourway": "Special Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-111",
+        "bey": "Winning Valkyrie 8 Guard",
+        "set": "Random Booster Vol. 10 Crash Ragnaruk.11R.Wd"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-118",
+        "bey": "Winning Valkyrie 3 Yielding",
+        "set": "Random Booster Vol. 11 Vise Leopard.12L.Ds"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-132",
+        "bey": "Winning Valkyrie 1' Operate",
+        "set": "Random Booster Vol. 14 Driger Fang.0.Xt",
+        "colourway": "Gold Ver.; Minor Change Version"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Winning Valkyrie 12 Volcanic",
+        "set": "Cho-Z Customize Set CoroCoro Ver.",
+        "colourway": "Cho-Z Gold Ver."
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Special Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-107",
+        "inBey": "Winning Valkyrie 12 Volcanic"
+      },
+      {
+        "colourway": "Gold Ver.; Minor Change Version",
+        "vendor": "Takara Tomy",
+        "code": "B-132",
+        "inBey": "Winning Valkyrie 1' Operate"
+      },
+      {
+        "colourway": "Cho-Z Gold Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Winning Valkyrie 12 Volcanic"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Winning_Valkyrie",
+    "ratings": {
+      "attack": 5,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 5,
+      "speed": 1,
+      "burst": 5
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 63,
+      "defense": 0,
+      "stamina": 0,
+      "weight": 63,
+      "speed": 13,
+      "burst": 63
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": false,
+      "burstClassic": false
+    },
+    "aka": [
+      "wV"
+    ],
+    "system": "Cho-Z Layer System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ウイニングヴァルキリー",
+    "romaji": "Uiningu Varukirī"
+  },
+  {
+    "id": "layer--wolborg-hasbro",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Wolborg (Hasbro)",
+    "weightG": 6.4,
+    "aliases": [
+      "wolborg-hasbro",
+      "Force Wolborg (F0610)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Rise"
+      },
+      {
+        "label": "Product code",
+        "value": "F0610"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Wolborg (Hasbro) is a Beyblade layer from the Burst System, weighing 6.4 g. Released as F0610 for Beyblade Burst Rise. It shipped with Wolborg Ring Prevail-S, Force Wolborg 12 Flugel-S, Dusk Spryzen S5 and Force Wolborg Dual Pack. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Wolborg Ring Prevail-S",
+      "Force Wolborg 12 Flugel-S",
+      "Dusk Spryzen S5 and Force Wolborg Dual Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Wolborg Ring Prevail-S",
+        "colourway": "gray",
+        "distribution": [
+          "Canceled"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Force Wolborg 12 Flugel-S",
+        "set": "Dusk Spryzen S5 and Force Wolborg Dual Pack",
+        "colourway": "translucent orange",
+        "distribution": [
+          "as '''Force Wolborg'''"
+        ]
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "gray",
+        "vendor": "Hasbro",
+        "distribution": "Canceled",
+        "inBey": "Wolborg Ring Prevail-S"
+      },
+      {
+        "colourway": "translucent orange",
+        "vendor": "Hasbro",
+        "distribution": "as '''Force Wolborg'''",
+        "inBey": "Force Wolborg 12 Flugel-S"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Hasbro)",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "Force Wolborg (F0610)"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Rise",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
+  },
+  {
+    "id": "layer--wolborg-takara-tomy",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Wolborg (Takara Tomy)",
+    "weightG": 7.4,
+    "aliases": [
+      "wolborg-takara-tomy",
+      "WB"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "Burst System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "B-121"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ウルボーグ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Urubōgu"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 11th, 2018"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 0 · Stamina 4 · Weight 1 · Speed 3 · Burst 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Wolborg (Takara Tomy) is a Beyblade layer from the Burst System, weighing 7.4 g. Released August 11th, 2018 as B-121 for Beyblade Burst Turbo. It shipped with Wolborg 8 Bearing, Cho-Z Triple Booster Set, Wolborg 0Expand Atomic and 2 other releases.",
+    "shippedIn": [
+      "Wolborg 8 Bearing",
+      "Cho-Z Triple Booster Set",
+      "Wolborg 0Expand Atomic",
+      "Random Booster Vol. 13 Air Knight.12E.Et",
+      "Bakuten Shoot Beyblade 20th Anniversary Set"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-121",
+        "bey": "Wolborg 8 Bearing",
+        "set": "Cho-Z Triple Booster Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-130",
+        "bey": "Wolborg 0Expand Atomic",
+        "set": "Random Booster Vol. 13 Air Knight.12E.Et"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Wolborg 8 Bearing",
+        "colourway": "Blue Wolf Ver.",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Wolborg 8 Bearing",
+        "set": "Bakuten Shoot Beyblade 20th Anniversary Set"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Blue Wolf Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "distribution": "CoroCoro Exclusive",
+        "inBey": "Wolborg 8 Bearing"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wolborg_(Takara_Tomy)",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 4,
+      "weight": 1,
+      "speed": 3,
+      "burst": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 67,
+      "weight": 17,
+      "speed": 50,
+      "burst": 33
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "WB"
+    ],
+    "system": "Burst System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Stamina",
+    "spinDirection": "Right-Spin",
+    "role": "ring",
+    "jpName": "ウルボーグ",
+    "romaji": "Urubōgu"
   }
 ];

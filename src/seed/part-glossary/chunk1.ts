@@ -9,20 +9,34 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "fusion-wheel--hades",
+    "id": "fusion-wheel--libra",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Hades",
+    "name": "Libra",
+    "weightG": 40.5,
     "usedBy": [
-      "gen2-mfb-hades-kerbecs"
+      "gen2-mfb-libra-df145bs"
     ],
     "aliases": [
-      "hades",
-      "Hell (Takara Tomy)"
+      "libra"
+    ],
+    "source": "composition"
+  },
+  {
+    "id": "fusion-wheel--lightning",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Lightning",
+    "usedBy": [
+      "gen2-mfb-lightning-l-drago"
+    ],
+    "aliases": [
+      "lightning"
     ],
     "source": "composition",
-    "weightG": 39.6,
+    "weightG": 30,
     "specs": [
       {
         "label": "Classification",
@@ -34,396 +48,124 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       },
       {
         "label": "Series",
-        "value": "Beyblade: Metal Masters"
+        "value": "Beyblade: Metal Fusion"
       },
       {
         "label": "Product code",
-        "value": "BB-99"
+        "value": "BB-43"
       },
       {
         "label": "Japanese name",
-        "value": "ヘル"
+        "value": "ライトニング"
       },
       {
         "label": "Romaji",
-        "value": "Heru"
+        "value": "Raitoningu"
       },
       {
         "label": "Released (JP)",
-        "value": "December 28, 2010"
+        "value": "July 18, 2009"
       },
       {
         "label": "Released (US)",
-        "value": "November 2011"
+        "value": "August 2010"
       },
       {
         "label": "Stats",
-        "value": "Attack 3 · Defense 0 · Stamina 4"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: banned · MFB Zero-G: legal · MFB 4D: legal"
+        "value": "Attack 6 · Defense 0.5 · Stamina 0.5"
       }
     ],
-    "seoDescription": "Hades is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 39.6 g. Released December 28, 2010 as BB-99 for Beyblade: Metal Masters. It shipped with Hell Kerbecs BD145DS, Hell Herculeo 100XF, Random Booster Vol. 7 Beat Lynx and 10 other releases. 3 alternate colourways are recorded.",
+    "seoDescription": "Lightning is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 30 g. Released July 18, 2009 as BB-43 for Beyblade: Metal Fusion. It shipped with Lightning L-Drago 100HF, L-Drago Battle Set, Super Vortex Battle Set and 1 other release.",
     "shippedIn": [
-      "Hell Kerbecs BD145DS",
-      "Hell Herculeo 100XF",
-      "Random Booster Vol. 7 Beat Lynx",
-      "Hell Horuseus 85RS",
-      "Hell Crown 130FB",
-      "Random Booster Vol. 8 Jade Jupiter",
-      "Hell Beelzeb 125XF",
-      "Random Booster Vol. 9 Fusion Hades",
-      "Hell Kerbecs BD145EWD",
-      "Hades Kerbecs BD145DS",
-      "Team Star Breaker Set",
-      "Hades Gil 100R2F",
-      "Mystic Zone 2-Pack"
+      "Lightning L-Drago 100HF",
+      "L-Drago Battle Set",
+      "Super Vortex Battle Set",
+      "Dragon Bite Strike 2-Pack"
     ],
     "releases": [
       {
         "vendor": "Takara Tomy",
-        "code": "BB-99",
-        "bey": "Hell Kerbecs BD145DS"
+        "code": "BB-43",
+        "bey": "Lightning L-Drago 100HF"
       },
       {
         "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Hell Herculeo 100XF",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-109",
-        "bey": "Hell Horuseus 85RS",
-        "set": "Random Booster Vol. 7 Beat Lynx"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-116",
-        "bey": "Hell Crown 130FB",
-        "set": "Random Booster Vol. 8 Jade Jupiter"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-123",
-        "bey": "Hell Beelzeb 125XF",
-        "set": "Random Booster Vol. 9 Fusion Hades"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Hell Kerbecs BD145DS",
-        "colourway": "Inferno Ver.",
+        "bey": "Lightning L-Drago 100HF",
+        "colourway": "Supreme Dragon Ver.",
         "distribution": [
           "CoroCoro Exclusive"
         ]
       },
       {
-        "vendor": "Takara Tomy",
-        "bey": "Hell Kerbecs BD145DS",
-        "colourway": "Inferno Ver.",
-        "distribution": [
-          "[[Mani Limited]] Exclusive"
-        ]
-      },
-      {
-        "vendor": "Takara Tomy",
-        "bey": "Hell Kerbecs BD145EWD",
-        "colourway": "Blue Inferno Ver.",
-        "distribution": [
-          "Maximum Bakuten Campaign"
-        ]
+        "vendor": "Hasbro",
+        "code": "BB-43",
+        "bey": "Lightning L-Drago 100HF"
       },
       {
         "vendor": "Hasbro",
-        "code": "BB-99",
-        "bey": "Hades Kerbecs BD145DS"
+        "code": "BB-43",
+        "bey": "Lightning L-Drago 100HF",
+        "set": "L-Drago Battle Set"
       },
       {
         "vendor": "Hasbro",
-        "code": "BB-99",
-        "bey": "Hades Kerbecs BD145DS",
+        "code": "BB-43",
+        "bey": "Lightning L-Drago 100HF",
         "distribution": [
           "''[[Beyblade Legends]]''"
         ]
       },
       {
         "vendor": "Hasbro",
-        "code": "BB-99",
-        "bey": "Hades Kerbecs BD145DS",
-        "set": "Team Star Breaker Set"
+        "code": "BB-43B",
+        "bey": "Lightning L-Drago 100HF",
+        "set": "Super Vortex Battle Set"
       },
       {
         "vendor": "Hasbro",
-        "code": "B-128",
-        "bey": "Hades Gil 100R2F",
-        "set": "Mystic Zone 2-Pack"
+        "code": "BB-43C",
+        "bey": "Lightning L-Drago 100HF",
+        "set": "Dragon Bite Strike 2-Pack",
+        "distribution": [
+          "''[[Beyblade: Metal Fusion]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-43C",
+        "bey": "Lightning L-Drago 100HF",
+        "set": "Dragon Bite Strike 2-Pack",
+        "distribution": [
+          "''[[Beyblade: Metal Masters]]''"
+        ]
       }
     ],
     "colourways": [
       {
-        "colourway": "Inferno Ver.",
+        "colourway": "Supreme Dragon Ver.",
         "vendor": "Takara Tomy",
         "distribution": "CoroCoro Exclusive",
-        "inBey": "Hell Kerbecs BD145DS"
-      },
-      {
-        "colourway": "Inferno Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "[[Mani Limited]] Exclusive",
-        "inBey": "Hell Kerbecs BD145DS"
-      },
-      {
-        "colourway": "Blue Inferno Ver.",
-        "vendor": "Takara Tomy",
-        "distribution": "Maximum Bakuten Campaign",
-        "inBey": "Hell Kerbecs BD145EWD"
+        "inBey": "Lightning L-Drago 100HF"
       }
     ],
     "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Hades",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Lightning",
     "ratings": {
-      "attack": 3,
-      "defense": 0,
-      "stamina": 4
+      "attack": 6,
+      "defense": 0.5,
+      "stamina": 0.5
     },
     "ratingScale": 6,
     "ratingsNormalised": {
-      "attack": 50,
-      "defense": 0,
-      "stamina": 67
+      "attack": 100,
+      "defense": 8,
+      "stamina": 8
     },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": false,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "aka": [
-      "Hell (Takara Tomy)"
-    ],
     "system": "Hybrid Wheel System",
-    "series": "Beyblade: Metal Masters",
+    "series": "Beyblade: Metal Fusion",
     "role": "wheel",
-    "jpName": "ヘル",
-    "romaji": "Heru"
-  },
-  {
-    "id": "fusion-wheel--hades-maximum-series-wide-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Hades MAXIMUM SERIES WIDE WHEEL",
-    "weightG": 39.6,
-    "usedBy": [
-      "gen2-mfb-hell-kerbecs-bd145ds"
-    ],
-    "aliases": [
-      "hades maximum series wide wheel"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--hell-metal-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Hell Metal Wheel",
-    "weightG": 39.6,
-    "aliases": [
-      "hell metal wheel"
-    ],
-    "source": "case-study"
-  },
-  {
-    "id": "fusion-wheel--inferno-smash-recoil-fw",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Inferno SMASH RECOIL FW",
-    "usedBy": [
-      "gen2-mfb-inferno-sagittario-145s"
-    ],
-    "aliases": [
-      "inferno smash recoil fw"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--jade",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Jade",
-    "usedBy": [
-      "gen2-mfb-jade-jupiter"
-    ],
-    "aliases": [
-      "jade",
-      "Jade I (Hasbro)"
-    ],
-    "source": "composition",
-    "weightG": 22.28,
-    "specs": [
-      {
-        "label": "Full width",
-        "value": "~45mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Material",
-        "value": "Metal Frame + Core",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Maximum height",
-        "value": "~10.0mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Spin direction",
-        "value": "R",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Classification",
-        "value": "Fusion Wheel"
-      },
-      {
-        "label": "System",
-        "value": "4D System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: Metal Fury"
-      },
-      {
-        "label": "Product code",
-        "value": "BB-116 (Takara Tomy) · BB-116-FX (Hasbro)"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ジェイド"
-      },
-      {
-        "label": "Romaji",
-        "value": "Jeido"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "August 6, 2011"
-      },
-      {
-        "label": "Released (US)",
-        "value": "February 2013"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 0 · Defense 5 · Stamina 2"
-      },
-      {
-        "label": "WBO legality",
-        "value": "MFB Standard: legal · MFB Limited: legal · MFB Zero-G: legal · MFB 4D: legal"
-      }
-    ],
-    "seoDescription": "Jade is a Beyblade fusion wheel from the 4D System, weighing 39.2 g. Released August 6, 2011 as BB-116 (Takara Tomy) and BB-116-FX (Hasbro) for Beyblade: Metal Fury. It shipped with Jade Jupiter S130RB, Random Booster Vol. 8 Jade Jupiter.",
-    "shippedIn": [
-      "Jade Jupiter S130RB",
-      "Random Booster Vol. 8 Jade Jupiter"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "BB-116",
-        "bey": "Jade Jupiter S130RB",
-        "set": "Random Booster Vol. 8 Jade Jupiter"
-      },
-      {
-        "vendor": "Hasbro",
-        "code": "BB-116",
-        "bey": "Jade Jupiter S130RB",
-        "distribution": [
-          "''[[Spark FX]]''"
-        ]
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Jade",
-    "ratings": {
-      "attack": 0,
-      "defense": 5,
-      "stamina": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 83,
-      "stamina": 33
-    },
-    "wboLegality": {
-      "mfbStandard": true,
-      "mfbLimited": true,
-      "mfbZeroG": true,
-      "mfb4d": true
-    },
-    "aka": [
-      "Jade I (Hasbro)"
-    ],
-    "system": "4D System",
-    "series": "Beyblade: Metal Fury",
-    "role": "wheel",
-    "jpName": "ジェイド",
-    "romaji": "Jeido"
-  },
-  {
-    "id": "fusion-wheel--kreis-dual-mode-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Kreis DUAL-MODE WHEEL",
-    "usedBy": [
-      "gen2-mfb-kreis-cygnus-145wd"
-    ],
-    "aliases": [
-      "kreis dual-mode wheel"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--libra-metagame-defining-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Libra METAGAME-DEFINING WHEEL",
-    "weightG": 40.5,
-    "usedBy": [
-      "gen2-mfb-libra-df145bs"
-    ],
-    "aliases": [
-      "libra metagame-defining wheel"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--lightning-left-spin-attacker",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Lightning LEFT-SPIN ATTACKER",
-    "usedBy": [
-      "gen2-mfb-lightning-l-drago"
-    ],
-    "aliases": [
-      "lightning left-spin attacker"
-    ],
-    "source": "composition"
+    "jpName": "ライトニング",
+    "romaji": "Raitoningu"
   },
   {
     "id": "fusion-wheel--lightning-metal-wheel",
@@ -450,32 +192,301 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "fusion-wheel--meteo-3-section-spin-steal",
+    "id": "fusion-wheel--meteo",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Meteo 3-SECTION SPIN-STEAL",
+    "name": "Meteo",
     "usedBy": [
       "gen2-mfb-meteo-l-drago"
     ],
     "aliases": [
-      "meteo 3-section spin-steal"
+      "meteo"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 28.3,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-88 (Takara Tomy) · BB-88A (Hasbro)"
+      },
+      {
+        "label": "Japanese name",
+        "value": "メテオ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Meteo"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "September 18, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "May 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 5 · Defense 1 · Stamina 1"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: legal · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Meteo is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 28.3 g. Released September 18, 2010 as BB-88 (Takara Tomy) and BB-88A (Hasbro) for Beyblade: Metal Masters.",
+    "shippedIn": [
+      "Meteo L-Drago LW105LF",
+      "Beyblade Ultimate Custom Set L-Drago Ver.",
+      "Meteo L-Drago Assault LW105JB",
+      "Random Booster Vol. 9 Fusion Hades",
+      "Meteo L-Drago Rush 85LF",
+      "L-Drago Battle Set",
+      "Triple Battle Set",
+      "Meteor Shower Attack 2-Pack",
+      "Ultimate Meteo L-Drago Assault 85XF",
+      "Ultimate Meteo L-Drago Absorb DF105LRF",
+      "Ultimate Meteo L-Drago Rush 125SF"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-88",
+        "bey": "Meteo L-Drago LW105LF",
+        "colourway": "Silver and Orange"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-98",
+        "bey": "Beyblade Ultimate Custom Set L-Drago Ver.",
+        "colourway": "Silver and Blue, Red and Black"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-123",
+        "bey": "Meteo L-Drago Assault LW105JB",
+        "set": "Random Booster Vol. 9 Fusion Hades"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-123",
+        "bey": "Meteo L-Drago Rush 85LF",
+        "set": "Random Booster Vol. 9 Fusion Hades"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Meteo L-Drago LW105LF",
+        "colourway": "Dark Flare Ver.",
+        "distribution": [
+          "CoroCoro Exclusive",
+          "Gold"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-88",
+        "bey": "Meteo L-Drago LW105LF",
+        "colourway": "Silver and Orange"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-88",
+        "bey": "Meteo L-Drago LW105LF",
+        "colourway": "Silver and Orange",
+        "distribution": [
+          "''[[Beyblade Legends]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-88",
+        "bey": "Meteo L-Drago LW105LF",
+        "set": "L-Drago Battle Set",
+        "colourway": "Silver and Orange"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-88A",
+        "bey": "Meteo L-Drago LW105LF",
+        "set": "Triple Battle Set",
+        "colourway": "Brownish Gold"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-88B",
+        "bey": "Meteo L-Drago LW105LF",
+        "set": "Meteor Shower Attack 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-98A",
+        "bey": "Ultimate Meteo L-Drago Assault 85XF",
+        "colourway": "Silver and Blue"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-98B",
+        "bey": "Ultimate Meteo L-Drago Absorb DF105LRF",
+        "colourway": "Silver and Blue"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-98C",
+        "bey": "Ultimate Meteo L-Drago Rush 125SF",
+        "set": "L-Drago Battle Set",
+        "colourway": "Red and Black"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Silver and Orange",
+        "vendor": "Takara Tomy",
+        "code": "BB-88",
+        "inBey": "Meteo L-Drago LW105LF"
+      },
+      {
+        "colourway": "Silver and Blue, Red and Black",
+        "vendor": "Takara Tomy",
+        "code": "BB-98",
+        "inBey": "Beyblade Ultimate Custom Set L-Drago Ver."
+      },
+      {
+        "colourway": "Dark Flare Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "CoroCoro Exclusive · Gold",
+        "inBey": "Meteo L-Drago LW105LF"
+      },
+      {
+        "colourway": "Silver and Orange",
+        "vendor": "Hasbro",
+        "code": "BB-88",
+        "distribution": "''[[Beyblade Legends]]''",
+        "inBey": "Meteo L-Drago LW105LF"
+      },
+      {
+        "colourway": "Brownish Gold",
+        "vendor": "Hasbro",
+        "code": "BB-88A",
+        "inBey": "Meteo L-Drago LW105LF"
+      },
+      {
+        "colourway": "Silver and Blue",
+        "vendor": "Hasbro",
+        "code": "BB-98A",
+        "inBey": "Ultimate Meteo L-Drago Assault 85XF"
+      },
+      {
+        "colourway": "Red and Black",
+        "vendor": "Hasbro",
+        "code": "BB-98C",
+        "inBey": "Ultimate Meteo L-Drago Rush 125SF"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Meteo",
+    "ratings": {
+      "attack": 5,
+      "defense": 1,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 83,
+      "defense": 17,
+      "stamina": 17
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": true,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "メテオ",
+    "romaji": "Meteo"
   },
   {
-    "id": "fusion-wheel--night-circular-stamina-wheel",
+    "id": "fusion-wheel--night",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Night CIRCULAR STAMINA WHEEL",
+    "name": "Night",
     "usedBy": [
       "gen2-mfb-night-virgo-df145bs"
     ],
     "aliases": [
-      "night circular stamina wheel"
+      "night"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 28.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fusion"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-22"
+      },
+      {
+        "label": "Released (US)",
+        "value": "January 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 2 · Stamina 4"
+      }
+    ],
+    "seoDescription": "Night is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 28.6 g. Released as BB-22 for Beyblade: Metal Fusion. It shipped with Night Virgo DF145BS.",
+    "shippedIn": [
+      "Night Virgo DF145BS"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "code": "BB-22",
+        "bey": "Night Virgo DF145BS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Night",
+    "ratings": {
+      "attack": 0,
+      "defense": 2,
+      "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 33,
+      "stamina": 67
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
+    "role": "wheel"
   },
   {
     "id": "fusion-wheel--poison",
@@ -745,18 +756,218 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "romaji": "Puroto"
   },
   {
-    "id": "fusion-wheel--ray-counter-smash",
+    "id": "fusion-wheel--ray",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Ray COUNTER SMASH",
+    "name": "Ray",
     "usedBy": [
       "gen2-mfb-ray-striker"
     ],
     "aliases": [
-      "ray counter smash"
+      "ray"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 29.4,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-71"
+      },
+      {
+        "label": "Japanese name",
+        "value": "レイ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Rei"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "April 1, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "May 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 4 · Defense 1 · Stamina 2"
+      }
+    ],
+    "seoDescription": "Ray is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.4 g. Released April 1, 2010 as BB-71 for Beyblade: Metal Masters. It shipped with Ray Unicorno D125CS, Ray Gil 100RSF, Ray Striker D125CS and 8 other releases. 4 alternate colourways are recorded.",
+    "shippedIn": [
+      "Ray Unicorno D125CS",
+      "Ray Gil 100RSF",
+      "Ray Striker D125CS",
+      "Lightning Sword Showdown 2-Pack",
+      "Beyblade Metal Masters: Ultimate Gift Set",
+      "Super Vortex Battle Set (Beyblade Legends)",
+      "Keel Crusher 2-Pack",
+      "String Launcher 2-Pack",
+      "Beyblade Legends Attack 2-Pack",
+      "Ray Serpent M145MS",
+      "Shadow Strike Standoff 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-71",
+        "bey": "Ray Unicorno D125CS",
+        "distribution": [
+          "Starter"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-91",
+        "bey": "Ray Gil 100RSF"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-93",
+        "bey": "Ray Unicorno D125CS",
+        "distribution": [
+          "Booster"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Ray Unicorno D125CS",
+        "colourway": "Aurora Ver.",
+        "distribution": [
+          "CoroCoro Exclusive",
+          "purple"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Ray Unicorno D125CS",
+        "colourway": "Gunmetallic Ver.",
+        "distribution": [
+          "Tournament Prize, Canceled",
+          "gunmetal gray"
+        ]
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Ray Unicorno D125CS",
+        "colourway": "Rainbow Ver."
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-71",
+        "bey": "Ray Striker D125CS"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-71A",
+        "bey": "Ray Striker D125CS",
+        "set": "Lightning Sword Showdown 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-71B",
+        "bey": "Ray Striker D125CS",
+        "set": "Beyblade Metal Masters: Ultimate Gift Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-71B",
+        "bey": "Ray Striker D125CS",
+        "set": "Super Vortex Battle Set (Beyblade Legends)",
+        "colourway": "red",
+        "distribution": [
+          "Beyblade Legends",
+          "''[[Beyblade Legends]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-91",
+        "bey": "Ray Gil 100RSF"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-91A",
+        "bey": "Ray Gil 100RSF",
+        "set": "Keel Crusher 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-91B",
+        "bey": "Ray Gil 100RSF",
+        "set": "String Launcher 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-91C",
+        "bey": "Ray Gil 100RSF",
+        "set": "Beyblade Legends Attack 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-113",
+        "bey": "Ray Serpent M145MS",
+        "set": "Shadow Strike Standoff 2-Pack"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Aurora Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "CoroCoro Exclusive · purple",
+        "inBey": "Ray Unicorno D125CS"
+      },
+      {
+        "colourway": "Gunmetallic Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "Tournament Prize, Canceled · gunmetal gray",
+        "inBey": "Ray Unicorno D125CS"
+      },
+      {
+        "colourway": "Rainbow Ver.",
+        "vendor": "Takara Tomy",
+        "inBey": "Ray Unicorno D125CS"
+      },
+      {
+        "colourway": "red",
+        "vendor": "Hasbro",
+        "code": "BB-71B",
+        "distribution": "Beyblade Legends · ''[[Beyblade Legends]]''",
+        "inBey": "Ray Striker D125CS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Ray",
+    "ratings": {
+      "attack": 4,
+      "defense": 1,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 17,
+      "stamina": 33
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "レイ",
+    "romaji": "Rei"
   },
   {
     "id": "fusion-wheel--rock",
@@ -765,6 +976,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "Rock",
     "usedBy": [
+      "gen2-mfb-rock-aries-ed145b",
+      "gen2-mfb-rock-leone",
       "gen2-mfb-rock-zurafa-r145wb"
     ],
     "aliases": [
@@ -1076,34 +1289,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "romaji": "Rokku"
   },
   {
-    "id": "fusion-wheel--rock-heaviest-early-fw",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Rock HEAVIEST EARLY FW",
-    "usedBy": [
-      "gen2-mfb-rock-leone"
-    ],
-    "aliases": [
-      "rock heaviest early fw"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--rock-heavy-defensive-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Rock HEAVY DEFENSIVE WHEEL",
-    "usedBy": [
-      "gen2-mfb-rock-aries-ed145b"
-    ],
-    "aliases": [
-      "rock heavy defensive wheel"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "fusion-wheel--sagittario",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -1147,18 +1332,114 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "fusion-wheel--sol-solar-fusion",
+    "id": "fusion-wheel--sol",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Sol SOLAR FUSION",
+    "name": "Sol",
     "usedBy": [
       "gen2-mfb-sol-blaze"
     ],
     "aliases": [
-      "sol solar fusion"
+      "sol"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 33.6,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ソル"
+      },
+      {
+        "label": "Romaji",
+        "value": "Soru"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 2010"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 4 · Defense 3 · Stamina 0"
+      }
+    ],
+    "seoDescription": "Sol is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.6 g. Released August 2010 for Beyblade: Metal Masters. It shipped with Sol Blaze V145AS, Sol Pegasis V145R²F. 3 alternate colourways are recorded.",
+    "shippedIn": [
+      "Sol Blaze V145AS",
+      "Sol Pegasis V145R²F"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Sol Blaze V145AS"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Sol Blaze V145AS",
+        "colourway": "Eclipse Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Sol Blaze V145AS",
+        "colourway": "Gold Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Sol Pegasis V145R²F",
+        "colourway": "Gold Ver.",
+        "distribution": [
+          "CoroCoro Exclusive"
+        ]
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Eclipse Ver.",
+        "vendor": "Takara Tomy",
+        "inBey": "Sol Blaze V145AS"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "inBey": "Sol Blaze V145AS"
+      },
+      {
+        "colourway": "Gold Ver.",
+        "vendor": "Takara Tomy",
+        "distribution": "CoroCoro Exclusive",
+        "inBey": "Sol Pegasis V145R²F"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Sol",
+    "ratings": {
+      "attack": 4,
+      "defense": 3,
+      "stamina": 0
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 67,
+      "defense": 50,
+      "stamina": 0
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel",
+    "jpName": "ソル",
+    "romaji": "Soru"
   },
   {
     "id": "fusion-wheel--spiral",
@@ -1305,7 +1586,9 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "Storm",
     "usedBy": [
-      "gen2-mfb-storm-aquario"
+      "gen2-mfb-storm-aquario",
+      "gen2-mfb-storm-capricorne-m145q",
+      "gen2-mfb-storm-pegasus"
     ],
     "aliases": [
       "storm"
@@ -1635,60 +1918,226 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "romaji": "Sutōmu"
   },
   {
-    "id": "fusion-wheel--storm-core-metal",
+    "id": "fusion-wheel--thunder",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Storm CORE METAL",
-    "usedBy": [
-      "gen2-mfb-storm-pegasus"
-    ],
-    "aliases": [
-      "storm core metal"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--storm-primary-attack-wheel",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Storm PRIMARY ATTACK WHEEL",
-    "usedBy": [
-      "gen2-mfb-storm-capricorne-m145q"
-    ],
-    "aliases": [
-      "storm primary attack wheel"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "fusion-wheel--thunder-hws-reimagining",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Thunder HWS reimagining",
+    "name": "Thunder",
     "usedBy": [
       "gen2-mfb-thunder-libra-df145bs"
     ],
     "aliases": [
-      "thunder hws reimagining"
+      "thunder"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 29.7,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Fusion"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-18 (Hasbro)"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 1 · Stamina 4"
+      }
+    ],
+    "seoDescription": "Thunder is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 29.7 g. Released 2010 as BB-18 (Hasbro) for Beyblade: Metal Fusion. It shipped with Infinity Libra GB145S, Thunder Libra DF145BS, Super Vortex Battle Set (Sonic Series) and 4 other releases.",
+    "shippedIn": [
+      "Infinity Libra GB145S",
+      "Thunder Libra DF145BS",
+      "Super Vortex Battle Set (Sonic Series)",
+      "Thunder Leone GB145BS",
+      "Solid Iron Showdown 2-Pack",
+      "Thunder Lacerta WA130ES",
+      "Starbooster Attack 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Infinity Libra GB145S",
+        "distribution": [
+          "Bey Ta 1 Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-18",
+        "bey": "Thunder Libra DF145BS"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-18A",
+        "bey": "Thunder Libra DF145BS",
+        "set": "Super Vortex Battle Set (Sonic Series)",
+        "distribution": [
+          "Sonic Series",
+          "''[[Sonic Series]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-115",
+        "bey": "Thunder Leone GB145BS",
+        "set": "Solid Iron Showdown 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-123",
+        "bey": "Thunder Lacerta WA130ES",
+        "set": "Starbooster Attack 2-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Thunder",
+    "ratings": {
+      "attack": 1,
+      "defense": 1,
+      "stamina": 4
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 17,
+      "stamina": 67
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Fusion",
+    "role": "wheel"
   },
   {
-    "id": "fusion-wheel--vulcan-attack-gimmick",
+    "id": "fusion-wheel--vulcan",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
     "code": null,
-    "name": "Vulcan ATTACK GIMMICK",
+    "name": "Vulcan",
     "usedBy": [
       "gen2-mfb-vulcan-horuseus-145d"
     ],
     "aliases": [
-      "vulcan attack gimmick"
+      "vulcan"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 33.1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Fusion Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "October 21st, 2010"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 2 · Defense 4 · Stamina 1"
+      }
+    ],
+    "seoDescription": "Vulcan is a Beyblade fusion wheel from the Hybrid Wheel System, weighing 33.1 g. Released October 21st, 2010 for Beyblade: Metal Masters. It shipped with Vulcan Horuseus 145D, Vulcan Herculeo 130DS, Random Booster Vol. 7 Beat Lynx and 5 other releases.",
+    "shippedIn": [
+      "Vulcan Horuseus 145D",
+      "Vulcan Herculeo 130DS",
+      "Random Booster Vol. 7 Beat Lynx",
+      "Vulcan Horogium BD145RS",
+      "Mystic Zone 2-Pack",
+      "Beyblade: Metal Masters (video game)",
+      "Vulcan Cetus R145DS",
+      "Keel Crusher 2-Pack"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Vulcan Horuseus 145D"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Vulcan Herculeo 130DS",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-109",
+        "bey": "Vulcan Horogium BD145RS",
+        "set": "Random Booster Vol. 7 Beat Lynx"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Vulcan Horuseus 145D",
+        "distribution": [
+          "''[[Beyblade: Metal Masters]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Vulcan Horuseus 145D",
+        "distribution": [
+          "''[[Beyblade: Metal Fury]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Vulcan Horuseus 145D",
+        "set": "Mystic Zone 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Vulcan Horuseus 145D",
+        "set": "Beyblade: Metal Masters (video game)",
+        "distribution": [
+          "video game"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-143",
+        "bey": "Vulcan Cetus R145DS",
+        "set": "Keel Crusher 2-Pack"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Vulcan",
+    "ratings": {
+      "attack": 2,
+      "defense": 4,
+      "stamina": 1
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 33,
+      "defense": 67,
+      "stamina": 17
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "wheel"
   },
   {
     "id": "gatinko-chip--diabolos-1",
@@ -2489,6 +2938,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "ENGINE GEAR",
     "usedBy": [
+      "gen1-plastic-dragoon-g",
+      "gen1-plastic-thunder-pegasus",
       "gen1-plastic-torch-pegasus"
     ],
     "aliases": [
@@ -5794,190 +6245,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--ms",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "MS",
-    "name": "Bottom: Metal Sharp",
-    "weightG": 1.3,
-    "aliases": [
-      "ms",
-      "bottom: metal sharp"
-    ],
-    "source": "case-study",
-    "specs": [
-      {
-        "label": "Full width",
-        "value": "15.76mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Height",
-        "value": "11.03mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Material",
-        "value": "Metal",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip angle",
-        "value": "45°",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip height",
-        "value": "8.58mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip shape",
-        "value": "Cone",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip width",
-        "value": "4.82mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Type",
-        "value": "Stamina",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      }
-    ]
-  },
-  {
-    "id": "performance-tip--rb",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "RB",
-    "name": "Bottom: Rubber Ball",
-    "weightG": 0.82,
-    "aliases": [
-      "rb",
-      "rubber",
-      "bottom: rubber ball"
-    ],
-    "source": "case-study",
-    "specs": [
-      {
-        "label": "Full width",
-        "value": "~15.75mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Height",
-        "value": "~9.2mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Material",
-        "value": "Rubber",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip angle",
-        "value": "~30°",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Tip height",
-        "value": "~6.5mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      },
-      {
-        "label": "Tip shape",
-        "value": "Wide hemisphere",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip width",
-        "value": "~9.0mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "estimated"
-      }
-    ]
-  },
-  {
-    "id": "performance-tip--sd",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "SD",
-    "name": "Bottom: Semi-Defense",
-    "weightG": 0.6,
-    "aliases": [
-      "sd",
-      "semi defense",
-      "bottom: semi-defense"
-    ],
-    "source": "case-study",
-    "specs": [
-      {
-        "label": "Full width",
-        "value": "15.71mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Height",
-        "value": "8.78mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Material",
-        "value": "Plastic",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip angle",
-        "value": "30°",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip shape",
-        "value": "Narrower cone",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip width",
-        "value": "5.64mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      }
-    ]
-  },
-  {
     "id": "performance-tip--swd",
     "classification": "Performance Tip",
     "slot": "performance-tip",
@@ -6034,60 +6301,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       {
         "label": "Type",
         "value": "Balance",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      }
-    ]
-  },
-  {
-    "id": "performance-tip--wb",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "WB",
-    "name": "Bottom: Wide Ball",
-    "weightG": 0.7,
-    "aliases": [
-      "wb",
-      "bottom: wide ball"
-    ],
-    "source": "case-study",
-    "specs": [
-      {
-        "label": "Full width",
-        "value": "15.73mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Height",
-        "value": "9.05mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Material",
-        "value": "Plastic",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip shape",
-        "value": "Wide hemisphere",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
-      },
-      {
-        "label": "Tip width",
-        "value": "8.95mm",
-        "unit": "mm",
-        "source": "corpus-gen-glossary",
-        "confidence": "fact"
-      },
-      {
-        "label": "Type",
-        "value": "Defense",
         "source": "corpus-parts-table",
         "confidence": "fact"
       }
@@ -6220,7 +6433,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "name": "BSF",
     "usedBy": [
       "gen2-zerog-killerken-dragooon",
-      "gen2-zerog-ronin-dragoon-lw160bsf"
+      "gen2-zerog-ronin-dragoon-lw160bsf",
+      "gen3-gt-ronin-dragoon"
     ],
     "aliases": [
       "bsf"
@@ -6281,20 +6495,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "confidence": "fact"
       }
     ]
-  },
-  {
-    "id": "performance-tip--bsf-blade-semi-flat",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "BSF BLADE SEMI-FLAT",
-    "usedBy": [
-      "gen3-gt-ronin-dragoon"
-    ],
-    "aliases": [
-      "bsf blade semi-flat"
-    ],
-    "source": "composition"
   },
   {
     "id": "performance-tip--bullet",
@@ -6456,14 +6656,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "id": "performance-tip--cs",
     "classification": "Performance Tip",
     "slot": "performance-tip",
-    "code": "CS",
-    "name": "Coat Sharp",
-    "aliases": [
-      "cs",
-      "coat",
-      "coat sharp"
+    "code": null,
+    "name": "CS",
+    "usedBy": [
+      "gen2-mfb-ray-striker"
     ],
-    "source": "bottom-parts",
+    "aliases": [
+      "cs"
+    ],
+    "source": "composition",
     "weightG": 0.8,
     "specs": [
       {
@@ -6521,27 +6722,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--cs-counter-sharp",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "CS COUNTER SHARP",
-    "usedBy": [
-      "gen2-mfb-ray-striker"
-    ],
-    "aliases": [
-      "cs counter sharp"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "performance-tip--d",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
     "name": "D",
     "usedBy": [
+      "gen2-mfb-leone-145d",
       "gen2-mfb-proto-nemesis-ad145d",
+      "gen2-mfb-vulcan-horuseus-145d",
       "gen2-zerog-pirate-leviathan"
     ],
     "aliases": [
@@ -6603,21 +6792,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "confidence": "fact"
       }
     ]
-  },
-  {
-    "id": "performance-tip--d-defense",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "D DEFENSE",
-    "usedBy": [
-      "gen2-mfb-leone-145d",
-      "gen2-mfb-vulcan-horuseus-145d"
-    ],
-    "aliases": [
-      "d defense"
-    ],
-    "source": "composition"
   },
   {
     "id": "performance-tip--dimension-dash",
@@ -6726,18 +6900,33 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
+    "id": "performance-tip--evolution",
+    "classification": "Performance Tip",
+    "slot": "performance-tip",
+    "code": null,
+    "name": "Evolution",
+    "usedBy": [
+      "gen3-choz-cho-z-valkyrie-ze"
+    ],
+    "aliases": [
+      "evolution"
+    ],
+    "source": "composition"
+  },
+  {
     "id": "performance-tip--ewd",
     "classification": "Performance Tip",
     "slot": "performance-tip",
-    "code": "EWD",
-    "name": "Eternal Wide Defense",
-    "weightG": 1.2,
-    "aliases": [
-      "ewd",
-      "defense",
-      "eternal wide defense"
+    "code": null,
+    "name": "EWD",
+    "usedBy": [
+      "gen2-mfb-evil-befall"
     ],
-    "source": "case-study",
+    "aliases": [
+      "ewd"
+    ],
+    "source": "composition",
+    "weightG": 1.2,
     "specs": [
       {
         "label": "Full width",
@@ -6788,34 +6977,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--evolution",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "Evolution",
-    "usedBy": [
-      "gen3-choz-cho-z-valkyrie-ze"
-    ],
-    "aliases": [
-      "evolution"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "performance-tip--ewd-eternal-wide-defense",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "EWD ETERNAL WIDE DEFENSE",
-    "usedBy": [
-      "gen2-mfb-evil-befall"
-    ],
-    "aliases": [
-      "ewd eternal wide defense"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "performance-tip--friction",
     "classification": "Performance Tip",
     "slot": "performance-tip",
@@ -6836,6 +6997,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "FS",
     "usedBy": [
+      "gen2-mfb-dark-wolf-df145fs",
       "gen2-mfb-evil-gemios-df145fs",
       "gen2-mfb-flame-aries-h145fs",
       "gen2-mfb-gemios-df145fs"
@@ -6899,20 +7061,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "confidence": "fact"
       }
     ]
-  },
-  {
-    "id": "performance-tip--fs-flat-spike",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "FS Flat Spike",
-    "usedBy": [
-      "gen2-mfb-dark-wolf-df145fs"
-    ],
-    "aliases": [
-      "fs flat spike"
-    ],
-    "source": "composition"
   },
   {
     "id": "performance-tip--gcf",
@@ -7102,16 +7250,16 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--hf-s-hole-flat-sharp",
+    "id": "performance-tip--hf-s",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "HF/S HOLE FLAT / SHARP",
+    "name": "HF/S",
     "usedBy": [
       "gen2-mfb-storm-aquario"
     ],
     "aliases": [
-      "hf/s hole flat / sharp"
+      "hf/s"
     ],
     "source": "composition"
   },
@@ -7315,18 +7463,73 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--ms-metal-sharp",
+    "id": "performance-tip--ms",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "MS METAL SHARP",
+    "name": "MS",
     "usedBy": [
       "gen2-mfb-burn-fireblaze"
     ],
     "aliases": [
-      "ms metal sharp"
+      "ms"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 1.3,
+    "specs": [
+      {
+        "label": "Full width",
+        "value": "15.76mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Height",
+        "value": "11.03mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Material",
+        "value": "Metal",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip angle",
+        "value": "45°",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip height",
+        "value": "8.58mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip shape",
+        "value": "Cone",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip width",
+        "value": "4.82mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Type",
+        "value": "Stamina",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      }
+    ]
   },
   {
     "id": "performance-tip--power",
@@ -7343,30 +7546,18 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--q-gimmick-tip",
+    "id": "performance-tip--q",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "Q GIMMICK TIP",
+    "name": "Q",
     "usedBy": [
       "gen2-mfb-storm-capricorne-m145q"
     ],
     "aliases": [
-      "q gimmick tip"
+      "q"
     ],
-    "source": "composition"
-  },
-  {
-    "id": "performance-tip--q",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "Q",
-    "name": "Quake",
-    "aliases": [
-      "q",
-      "quake"
-    ],
-    "source": "bottom-parts",
+    "source": "composition",
     "weightG": 0.6,
     "specs": [
       {
@@ -7442,6 +7633,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "R²F",
     "usedBy": [
+      "gen2-mfb-galaxy-pegasus",
       "gen2-zerog-samurai-pegasis-w105r2f"
     ],
     "aliases": [
@@ -7462,32 +7654,67 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "performance-tip--r-f-double-rubber-flat",
+    "id": "performance-tip--rb",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "R²F DOUBLE RUBBER FLAT",
-    "usedBy": [
-      "gen2-mfb-galaxy-pegasus"
-    ],
-    "aliases": [
-      "r²f double rubber flat"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "performance-tip--rb-rubber-ball",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "RB RUBBER BALL",
+    "name": "RB",
     "usedBy": [
       "gen2-mfb-jade-jupiter"
     ],
     "aliases": [
-      "rb rubber ball"
+      "rb"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 0.82,
+    "specs": [
+      {
+        "label": "Full width",
+        "value": "~15.75mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Height",
+        "value": "~9.2mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Material",
+        "value": "Rubber",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip angle",
+        "value": "~30°",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Tip height",
+        "value": "~6.5mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      },
+      {
+        "label": "Tip shape",
+        "value": "Wide hemisphere",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip width",
+        "value": "~9.0mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "estimated"
+      }
+    ]
   },
   {
     "id": "performance-tip--rdf",
@@ -7547,44 +7774,18 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--rf-key-gimmick",
+    "id": "performance-tip--rf",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "RF KEY GIMMICK",
+    "name": "RF",
     "usedBy": [
       "gen2-mfb-storm-pegasus"
     ],
     "aliases": [
-      "rf key gimmick"
+      "rf"
     ],
-    "source": "composition"
-  },
-  {
-    "id": "performance-tip--rsf-rubber-semi-flat",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "RSF RUBBER SEMI-FLAT",
-    "usedBy": [
-      "gen2-mfb-blitz-striker-100rsf"
-    ],
-    "aliases": [
-      "rsf rubber semi-flat"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "performance-tip--rf",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": "RF",
-    "name": "Rubber Flat",
-    "aliases": [
-      "rf",
-      "rubber flat"
-    ],
-    "source": "bottom-parts",
+    "source": "composition",
     "weightG": 0.8,
     "specs": [
       {
@@ -7639,14 +7840,15 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "id": "performance-tip--rsf",
     "classification": "Performance Tip",
     "slot": "performance-tip",
-    "code": "RSF",
-    "name": "Rubber Semi Flat",
-    "aliases": [
-      "rsf",
-      "flat",
-      "rubber semi flat"
+    "code": null,
+    "name": "RSF",
+    "usedBy": [
+      "gen2-mfb-blitz-striker-100rsf"
     ],
-    "source": "bottom-parts",
+    "aliases": [
+      "rsf"
+    ],
+    "source": "composition",
     "weightG": 0.7,
     "specs": [
       {
@@ -8029,11 +8231,11 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "performance-tip--sd-semi-defense",
+    "id": "performance-tip--sd",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "SD Semi-Defense",
+    "name": "SD",
     "weightG": 0.5,
     "usedBy": [
       "gen2-mfb-dark-bull",
@@ -8041,9 +8243,50 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "gen2-mfb-poison-serpent-sw145sd"
     ],
     "aliases": [
-      "sd semi-defense"
+      "sd"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Full width",
+        "value": "15.71mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Height",
+        "value": "8.78mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Material",
+        "value": "Plastic",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip angle",
+        "value": "30°",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip shape",
+        "value": "Narrower cone",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip width",
+        "value": "5.64mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      }
+    ]
   },
   {
     "id": "performance-tip--sf",
@@ -8247,19 +8490,61 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "performance-tip--wb-wide-ball",
+    "id": "performance-tip--wb",
     "classification": "Performance Tip",
     "slot": "performance-tip",
     "code": null,
-    "name": "WB Wide Ball",
+    "name": "WB",
     "usedBy": [
       "gen2-mfb-rock-leone",
       "gen2-mfb-rock-zurafa-r145wb"
     ],
     "aliases": [
-      "wb wide ball"
+      "wb"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 0.7,
+    "specs": [
+      {
+        "label": "Full width",
+        "value": "15.73mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Height",
+        "value": "9.05mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Material",
+        "value": "Plastic",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip shape",
+        "value": "Wide hemisphere",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      },
+      {
+        "label": "Tip width",
+        "value": "8.95mm",
+        "unit": "mm",
+        "source": "corpus-gen-glossary",
+        "confidence": "fact"
+      },
+      {
+        "label": "Type",
+        "value": "Defense",
+        "source": "corpus-parts-table",
+        "confidence": "fact"
+      }
+    ]
   },
   {
     "id": "performance-tip--wd",
@@ -8270,9 +8555,13 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "weightG": 0.7,
     "usedBy": [
       "gen2-mfb-basalt-horogium",
+      "gen2-mfb-beat-lynx-ad145wd",
+      "gen2-mfb-earth-aquila-145wd",
+      "gen2-mfb-earth-eagle",
       "gen2-mfb-flame-byxis",
       "gen2-mfb-flash-sagittario",
       "gen2-mfb-gravity-destroyer",
+      "gen2-mfb-kreis-cygnus-145wd",
       "gen2-mfb-twisted-tempo-145wd",
       "gen3-choz-zero-artemis"
     ],
@@ -8334,24 +8623,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "confidence": "fact"
       }
     ]
-  },
-  {
-    "id": "performance-tip--wd-wide-defense",
-    "classification": "Performance Tip",
-    "slot": "performance-tip",
-    "code": null,
-    "name": "WD WIDE DEFENSE",
-    "weightG": 0.7,
-    "usedBy": [
-      "gen2-mfb-beat-lynx-ad145wd",
-      "gen2-mfb-earth-aquila-145wd",
-      "gen2-mfb-earth-eagle",
-      "gen2-mfb-kreis-cygnus-145wd"
-    ],
-    "aliases": [
-      "wd wide defense"
-    ],
-    "source": "composition"
   },
   {
     "id": "performance-tip--wsf",
@@ -12022,47 +12293,80 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "romaji": "Batoru Chenji Koa"
   },
   {
-    "id": "running-core--bearing-core-2-top",
+    "id": "running-core--bearing-core",
     "classification": "Running Core",
     "slot": "running-core",
     "code": null,
-    "name": "Bearing Core 2 TOP",
-    "usedBy": [
-      "gen1-hms-jiraiya-ms"
-    ],
-    "aliases": [
-      "bearing core 2 top"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "running-core--bearing-core-s-tier",
-    "classification": "Running Core",
-    "slot": "running-core",
-    "code": null,
-    "name": "Bearing Core S-tier",
+    "name": "Bearing Core",
     "usedBy": [
       "gen1-hms-wolborg-ms"
     ],
     "aliases": [
-      "bearing core s-tier"
+      "bearing core"
     ],
     "source": "composition"
   },
   {
-    "id": "running-core--bunshin-core-split",
+    "id": "running-core--bearing-core-2",
     "classification": "Running Core",
     "slot": "running-core",
     "code": null,
-    "name": "Bunshin Core SPLIT",
+    "name": "Bearing Core 2",
+    "usedBy": [
+      "gen1-hms-jiraiya-ms"
+    ],
+    "aliases": [
+      "bearing core 2"
+    ],
+    "source": "composition",
+    "weightG": 4,
+    "seoDescription": "Bearing Core 2 is a Beyblade running core, weighing 4 g. It shipped with HMS Random Booster Act 5. One alternate colourway is recorded: Red.",
+    "shippedIn": [
+      "HMS Random Booster Act 5"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "HMS Random Booster Act 5",
+        "colourway": "Red"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Red",
+        "vendor": "Unknown",
+        "inBey": "HMS Random Booster Act 5"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bearing_Core_2",
+    "role": "tip",
+    "integratedRoles": [
+      "base",
+      "gear"
+    ]
+  },
+  {
+    "id": "running-core--bunshin-core",
+    "classification": "Running Core",
+    "slot": "running-core",
+    "code": null,
+    "name": "Bunshin Core",
     "weightG": 8,
     "usedBy": [
       "gen1-hms-phantom-fox-ms"
     ],
     "aliases": [
-      "bunshin core split"
+      "bunshin core"
     ],
-    "source": "composition"
+    "source": "composition",
+    "seoDescription": "Bunshin Core is a Beyblade running core.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bunshin_Core",
+    "role": "tip",
+    "integratedRoles": [
+      "base",
+      "gear"
+    ]
   },
   {
     "id": "running-core--flat-core",
@@ -12072,6 +12376,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "name": "Flat Core",
     "usedBy": [
       "gen1-hms-gaia-dragoon-ms",
+      "gen1-hms-magical-ape-ms",
       "gen1-hms-strata-dragoon-ms"
     ],
     "aliases": [
@@ -12117,20 +12422,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "base",
       "gear"
     ]
-  },
-  {
-    "id": "running-core--flat-core-gyro-mode",
-    "classification": "Running Core",
-    "slot": "running-core",
-    "code": null,
-    "name": "Flat Core GYRO MODE",
-    "usedBy": [
-      "gen1-hms-magical-ape-ms"
-    ],
-    "aliases": [
-      "flat core gyro mode"
-    ],
-    "source": "composition"
   },
   {
     "id": "running-core--free-shaft-core",
@@ -12741,18 +13032,42 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "running-core--spring-core-gimmick",
+    "id": "running-core--spring-core",
     "classification": "Running Core",
     "slot": "running-core",
     "code": null,
-    "name": "Spring Core GIMMICK",
+    "name": "Spring Core",
     "usedBy": [
       "gen1-hms-einstein-ms"
     ],
     "aliases": [
-      "spring core gimmick"
+      "spring core"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 3,
+    "specs": [
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: G-Revolution"
+      },
+      {
+        "label": "Toyline",
+        "value": "Beyblade: G-Revolution"
+      }
+    ],
+    "seoDescription": "Spring Core is a Beyblade running core from the Hard Metal System, weighing 3 g. Part of Beyblade: G-Revolution.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Spring_Core",
+    "system": "Hard Metal System",
+    "series": "Beyblade: G-Revolution",
+    "role": "tip",
+    "integratedRoles": [
+      "base",
+      "gear"
+    ]
   },
   {
     "id": "running-core--tornado-change-core",
@@ -16028,45 +16343,169 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "role": "track"
   },
   {
-    "id": "spin-track--230-key-defense",
+    "id": "spin-track--230",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "230 KEY DEFENSE",
+    "name": "230",
     "weightG": 4.1,
     "usedBy": [
+      "gen2-mfb-flame-byxis",
       "gen2-mfb-flash-sagittario"
     ],
     "aliases": [
-      "230 key defense"
+      "230"
     ],
-    "source": "composition"
+    "source": "composition",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Spin Track"
+      },
+      {
+        "label": "System",
+        "value": "Hybrid Wheel System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: Metal Masters"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-95"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "December 28, 2010"
+      },
+      {
+        "label": "Released (US)",
+        "value": "November 2011"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 0 · Defense 0 · Stamina 2"
+      }
+    ],
+    "seoDescription": "230 is a Beyblade spin track from the Hybrid Wheel System, weighing 4.1 g. Released December 28, 2010 as BB-95 for Beyblade: Metal Masters. It shipped with Flame Byxis 230WD, Duo Uranus 230WD, Beyblade Ultimate DX Set and 10 other releases.",
+    "shippedIn": [
+      "Flame Byxis 230WD",
+      "Duo Uranus 230WD",
+      "Beyblade Ultimate DX Set",
+      "Flash Sagittario 230WD",
+      "Shinobi Ifraid 230WD",
+      "Zero-G Random Booster Vol. 1 Thief Phoenic E230GCF",
+      "Thief Saramanda 230WB",
+      "Beyblade Zero-G Ultimate Synchrom DX Set Attack & Balance Type",
+      "Phantom Orion Customization Parts Set",
+      "Team Star Breaker Set",
+      "Evil Kerbecs 230XF",
+      "Rex Wreck Attack 2-Pack",
+      "Duo Ice-Titan 230WD"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-95",
+        "bey": "Flame Byxis 230WD"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-121",
+        "bey": "Duo Uranus 230WD",
+        "set": "Beyblade Ultimate DX Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-126",
+        "bey": "Flash Sagittario 230WD"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-09",
+        "bey": "Shinobi Ifraid 230WD",
+        "set": "Zero-G Random Booster Vol. 1 Thief Phoenic E230GCF"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-09",
+        "bey": "Thief Saramanda 230WB",
+        "set": "Zero-G Random Booster Vol. 1 Thief Phoenic E230GCF"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BBG-24",
+        "bey": "Beyblade Zero-G Ultimate Synchrom DX Set Attack & Balance Type"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Phantom Orion Customization Parts Set",
+        "distribution": [
+          "[[WBBA]] Event Exclusive"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-95",
+        "bey": "Flame Byxis 230WD"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-95",
+        "bey": "Flame Byxis 230WD",
+        "set": "Team Star Breaker Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "BB-126",
+        "bey": "Flash Sagittario 230WD",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-140",
+        "bey": "Evil Kerbecs 230XF",
+        "set": "Rex Wreck Attack 2-Pack"
+      },
+      {
+        "vendor": "Hasbro",
+        "code": "B-160",
+        "bey": "Duo Ice-Titan 230WD",
+        "distribution": [
+          "''[[Spark FX]]''"
+        ]
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_230",
+    "ratings": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 0,
+      "defense": 0,
+      "stamina": 33
+    },
+    "system": "Hybrid Wheel System",
+    "series": "Beyblade: Metal Masters",
+    "role": "track"
   },
   {
-    "id": "spin-track--230-tallest-track-ever",
+    "id": "spin-track--500",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "230 TALLEST TRACK EVER",
-    "usedBy": [
-      "gen2-mfb-flame-byxis"
-    ],
-    "aliases": [
-      "230 tallest track ever"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "spin-track--500-extreme-height-500",
-    "classification": "Spin Track",
-    "slot": "spin-track",
-    "code": null,
-    "name": "500 EXTREME HEIGHT 500",
+    "name": "500",
     "usedBy": [
       "gen2-zerog-pirate-orochi"
     ],
     "aliases": [
-      "500 extreme height 500"
+      "500"
     ],
     "source": "composition"
   },
@@ -16085,48 +16524,48 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "spin-track--ad145-armor-defense-145",
+    "id": "spin-track--ad145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "AD145 ARMOR DEFENSE 145",
+    "name": "AD145",
     "usedBy": [
       "gen2-mfb-beat-lynx-ad145wd",
       "gen2-mfb-gravity-destroyer",
       "gen2-mfb-proto-nemesis-ad145d"
     ],
     "aliases": [
-      "ad145 armor defense 145"
+      "ad145"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--bd145-boost-disk-145",
+    "id": "spin-track--bd145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "BD145 BOOST DISK 145",
+    "name": "BD145",
     "weightG": 8,
     "usedBy": [
       "gen2-mfb-hades-kerbecs",
       "gen2-mfb-hell-kerbecs-bd145ds"
     ],
     "aliases": [
-      "bd145 boost disk 145"
+      "bd145"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--c145-claw-145-gimmick-track",
+    "id": "spin-track--c145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "C145 CLAW 145 GIMMICK TRACK",
+    "name": "C145",
     "usedBy": [
       "gen2-mfb-flame-sagittario-c145s"
     ],
     "aliases": [
-      "c145 claw 145 gimmick track"
+      "c145"
     ],
     "source": "composition"
   },
@@ -16200,6 +16639,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "name": "DF145",
     "weightG": 1.5,
     "usedBy": [
+      "gen2-mfb-dark-wolf-df145fs",
       "gen2-mfb-evil-gemios-df145fs",
       "gen2-mfb-gemios-df145fs",
       "gen2-mfb-libra-df145bs",
@@ -16212,87 +16652,60 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "spin-track--df145-down-force-145",
+    "id": "spin-track--e230",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "DF145 Down Force 145",
-    "usedBy": [
-      "gen2-mfb-dark-wolf-df145fs"
-    ],
-    "aliases": [
-      "df145 down force 145"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "spin-track--e230-elevator-230",
-    "classification": "Spin Track",
-    "slot": "spin-track",
-    "code": null,
-    "name": "E230 ELEVATOR 230",
+    "name": "E230",
     "usedBy": [
       "gen2-zerog-thief-phoenic"
     ],
     "aliases": [
-      "e230 elevator 230"
+      "e230"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--ed145-eternal-defense-145",
+    "id": "spin-track--ed145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "ED145 Eternal Defense 145",
+    "name": "ED145",
     "usedBy": [
       "gen2-mfb-dark-libra-ed145sd",
       "gen2-mfb-rock-aries-ed145b"
     ],
     "aliases": [
-      "ed145 eternal defense 145"
+      "ed145"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--f230-fusion-230",
+    "id": "spin-track--f230",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "F230 FUSION 230",
+    "name": "F230",
     "usedBy": [
       "gen2-zerog-bandid-genbull"
     ],
     "aliases": [
-      "f230 fusion 230"
+      "f230"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--h145-gimmick-height",
+    "id": "spin-track--h145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "H145 GIMMICK HEIGHT",
+    "name": "H145",
     "usedBy": [
-      "gen2-mfb-dark-bull"
-    ],
-    "aliases": [
-      "h145 gimmick height"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "spin-track--h145-hole-145",
-    "classification": "Spin Track",
-    "slot": "spin-track",
-    "code": null,
-    "name": "H145 Hole 145",
-    "usedBy": [
+      "gen2-mfb-dark-bull",
       "gen2-mfb-flame-aries-h145fs"
     ],
     "aliases": [
-      "h145 hole 145"
+      "h145"
     ],
     "source": "composition"
   },
@@ -16469,44 +16882,44 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "spin-track--m145-gimmick-track",
+    "id": "spin-track--m145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "M145 GIMMICK TRACK",
+    "name": "M145",
     "usedBy": [
       "gen2-mfb-storm-capricorne-m145q"
     ],
     "aliases": [
-      "m145 gimmick track"
+      "m145"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--r145-rubber-145",
+    "id": "spin-track--r145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "R145 RUBBER 145",
+    "name": "R145",
     "usedBy": [
       "gen2-mfb-rock-zurafa-r145wb"
     ],
     "aliases": [
-      "r145 rubber 145"
+      "r145"
     ],
     "source": "composition"
   },
   {
-    "id": "spin-track--s130-shield-130",
+    "id": "spin-track--s130",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "S130 SHIELD 130",
+    "name": "S130",
     "usedBy": [
       "gen2-mfb-jade-jupiter"
     ],
     "aliases": [
-      "s130 shield 130"
+      "s130"
     ],
     "source": "composition"
   },
@@ -16579,7 +16992,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "code": null,
     "name": "SR200",
     "usedBy": [
-      "gen2-zerog-berserker-begirados-sr200bwd"
+      "gen2-zerog-berserker-begirados-sr200bwd",
+      "gen2-zerog-berserker-behemoth"
     ],
     "aliases": [
       "sr200"
@@ -16604,31 +17018,17 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ]
   },
   {
-    "id": "spin-track--sr200-slide-ride-200",
+    "id": "spin-track--sw145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "SR200 SLIDE-RIDE 200",
-    "usedBy": [
-      "gen2-zerog-berserker-behemoth"
-    ],
-    "aliases": [
-      "sr200 slide-ride 200"
-    ],
-    "source": "composition"
-  },
-  {
-    "id": "spin-track--sw145-switch-145-gimmick-track",
-    "classification": "Spin Track",
-    "slot": "spin-track",
-    "code": null,
-    "name": "SW145 Switch 145 GIMMICK TRACK",
+    "name": "SW145",
     "weightG": 4.2,
     "usedBy": [
       "gen2-mfb-poison-serpent-sw145sd"
     ],
     "aliases": [
-      "sw145 switch 145 gimmick track"
+      "sw145"
     ],
     "source": "composition"
   },
@@ -16974,16 +17374,16 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "case-study"
   },
   {
-    "id": "spin-track--uw145-upper-wing-145",
+    "id": "spin-track--uw145",
     "classification": "Spin Track",
     "slot": "spin-track",
     "code": null,
-    "name": "UW145 UPPER WING 145",
+    "name": "UW145",
     "usedBy": [
       "gen2-mfb-evil-befall"
     ],
     "aliases": [
-      "uw145 upper wing 145"
+      "uw145"
     ],
     "source": "composition"
   },
@@ -18657,18 +19057,114 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition"
   },
   {
-    "id": "wheel--leone-first-defense-type-wheel",
+    "id": "wheel--leone",
     "classification": "Wheel",
     "slot": "wheel",
     "code": null,
-    "name": "Leone FIRST DEFENSE-TYPE WHEEL",
+    "name": "Leone",
     "usedBy": [
       "gen2-mfb-leone-145d"
     ],
     "aliases": [
-      "leone first defense-type wheel"
+      "leone"
     ],
-    "source": "composition"
+    "source": "composition",
+    "weightG": 37.1,
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Wheel"
+      },
+      {
+        "label": "System",
+        "value": "Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Metal Fight Beyblade"
+      },
+      {
+        "label": "Product code",
+        "value": "BB-04"
+      },
+      {
+        "label": "Japanese name",
+        "value": "レオーネ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Reōne"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "August 9, 2008"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 4 · Stamina 2"
+      },
+      {
+        "label": "WBO legality",
+        "value": "MFB Standard: legal · MFB Limited: legal · MFB Zero-G: legal · MFB 4D: legal"
+      }
+    ],
+    "seoDescription": "Leone is a Beyblade wheel from the Metal System, weighing 37.1 g. Released August 9, 2008 as BB-04 for Metal Fight Beyblade. It shipped with Leone 145D, Leone 105F, Leone 125S and 3 other releases.",
+    "shippedIn": [
+      "Leone 145D",
+      "Leone 105F",
+      "Leone 125S",
+      "Random Booster Vol. 1 Secret Aries",
+      "Leone D125B",
+      "Bey Custom Set Stamina & Defense Type"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-04",
+        "bey": "Leone 145D"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-08",
+        "bey": "Leone 105F"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-13",
+        "bey": "Leone 125S",
+        "set": "Random Booster Vol. 1 Secret Aries"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "BB-22",
+        "bey": "Leone D125B",
+        "set": "Bey Custom Set Stamina & Defense Type"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Wheel_-_Leone",
+    "ratings": {
+      "attack": 1,
+      "defense": 4,
+      "stamina": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 67,
+      "stamina": 33
+    },
+    "wboLegality": {
+      "mfbStandard": true,
+      "mfbLimited": true,
+      "mfbZeroG": true,
+      "mfb4d": true
+    },
+    "system": "Metal System",
+    "series": "Metal Fight Beyblade",
+    "role": "wheel",
+    "jpName": "レオーネ",
+    "romaji": "Reōne"
   },
   {
     "id": "armour--0",
@@ -26011,80 +26507,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "romaji": "Jirion"
   },
   {
-    "id": "attack-ring--advance-balancer",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
-    "code": null,
-    "name": "Advance Balancer",
-    "weightG": 15,
-    "aliases": [
-      "advance-balancer"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Attack Ring"
-      },
-      {
-        "label": "System",
-        "value": "Hard Metal System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade: G-Revolution"
-      }
-    ],
-    "seoDescription": "Advance Balancer is a Beyblade attack ring from the Hard Metal System, weighing 15 g. Part of Beyblade: G-Revolution. It shipped with Advance Averazer.",
-    "shippedIn": [
-      "Advance Averazer"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "code": "MA-09",
-        "bey": "Advance Averazer"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Balancer",
-    "system": "Hard Metal System",
-    "series": "Beyblade: G-Revolution",
-    "role": "ring"
-  },
-  {
-    "id": "attack-ring--advance-survivor",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
-    "code": null,
-    "name": "Advance Survivor",
-    "weightG": 18,
-    "aliases": [
-      "advance-survivor"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Part family",
-        "value": "Hard Metal System"
-      }
-    ],
-    "seoDescription": "Advance Survivor is a Beyblade attack ring, weighing 18 g. It shipped with Advance Eterner.",
-    "shippedIn": [
-      "Advance Eterner"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "code": "MA-14",
-        "bey": "Advance Eterner"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Survivor",
-    "role": "ring"
-  },
-  {
     "id": "attack-ring--ark-pyramid",
     "classification": "Attack Ring",
     "slot": "attack-ring",
@@ -27216,96 +27638,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "role": "ring",
     "jpName": "トリプルアタッカー",
     "romaji": "Toripuru Atakkā"
-  },
-  {
-    "id": "attack-ring--triple-tiger",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
-    "code": null,
-    "name": "Triple Tiger",
-    "aliases": [
-      "triple-tiger"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Attack Ring"
-      },
-      {
-        "label": "System",
-        "value": "Engine Gear System"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 1 · Stamina 1"
-      }
-    ],
-    "seoDescription": "Triple Tiger is a Beyblade attack ring from the Engine Gear System.",
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Tiger",
-    "ratings": {
-      "attack": 3,
-      "defense": 1,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 50,
-      "defense": 17,
-      "stamina": 17
-    },
-    "system": "Engine Gear System",
-    "role": "ring"
-  },
-  {
-    "id": "attack-ring--triple-wing",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
-    "code": null,
-    "name": "Triple Wing",
-    "aliases": [
-      "triple-wing"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Attack Ring"
-      },
-      {
-        "label": "System",
-        "value": "Spin Gear System"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 2 · Defense 2 · Stamina 1"
-      }
-    ],
-    "seoDescription": "Triple Wing is a Beyblade attack ring from the Spin Gear System. It shipped with Trygle.",
-    "shippedIn": [
-      "Trygle"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "bey": "Trygle"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Wing",
-    "ratings": {
-      "attack": 2,
-      "defense": 2,
-      "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 33,
-      "stamina": 17
-    },
-    "system": "Spin Gear System",
-    "role": "ring"
   },
   {
     "id": "attack-ring--twin-horn",
@@ -40492,6 +40824,1222 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Draciel",
     "system": "Spin Gear System",
     "series": "Beyblade: 2000",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--master-dragoon",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Master Dragoon",
+    "aliases": [
+      "master-dragoon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Master Dragoon is a Beyblade bit chip from the Spin Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Dragoon",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--master-driger",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Master Driger",
+    "aliases": [
+      "master-driger"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Master Driger is a Beyblade bit chip from the Spin Gear System. It shipped with Master Driger.",
+    "shippedIn": [
+      "Master Driger"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Master Driger"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Master_Driger",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--megaro-arm",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Megaro Arm",
+    "aliases": [
+      "megaro-arm"
+    ],
+    "source": "fandom-infobox",
+    "seoDescription": "Megaro Arm is a Beyblade bit chip.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Megaro_Arm",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--metal-dragoon",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Metal Dragoon",
+    "aliases": [
+      "metal-dragoon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Metal Dragoon is a Beyblade bit chip from the Spin Gear System. It shipped with Metal Dragoon.",
+    "shippedIn": [
+      "Metal Dragoon"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Metal Dragoon"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dragoon",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--metal-dranzer",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Metal Dranzer",
+    "aliases": [
+      "metal-dranzer"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: V-Force"
+      }
+    ],
+    "seoDescription": "Metal Dranzer is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force. It shipped with Metal Dranzer.",
+    "shippedIn": [
+      "Metal Dranzer"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Metal Dranzer"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Dranzer",
+    "system": "Magnacore System",
+    "series": "Beyblade: V-Force",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--orthrus",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Orthrus",
+    "aliases": [
+      "orthrus",
+      "Blizzard Orthrus (Takara)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: V-Force"
+      }
+    ],
+    "seoDescription": "Orthrus is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force. It shipped with Blizzard Orthrus, Orthros G.",
+    "shippedIn": [
+      "Blizzard Orthrus",
+      "Orthros G"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Blizzard Orthrus"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Orthros G"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Orthrus",
+    "aka": [
+      "Blizzard Orthrus (Takara)"
+    ],
+    "system": "Magnacore System",
+    "series": "Beyblade: V-Force",
+    "appearAnime": "Kai's Royal Flush",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--pegasion",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Pegasion",
+    "aliases": [
+      "pegasion"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      }
+    ],
+    "seoDescription": "Pegasion is a Beyblade bit chip.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Pegasion",
+    "owner": "Kaoru Amou",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--pierce-hedgehog",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Pierce Hedgehog",
+    "aliases": [
+      "pierce-hedgehog"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade GRevolution"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ピアスへッジホッグ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Piasu Hejjihoggu"
+      }
+    ],
+    "seoDescription": "Pierce Hedgehog is a Beyblade bit chip from the Engine Gear System. Part of Beyblade GRevolution.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Pierce_Hedgehog",
+    "system": "Engine Gear System",
+    "series": "Beyblade GRevolution",
+    "role": "chip",
+    "jpName": "ピアスへッジホッグ",
+    "romaji": "Piasu Hejjihoggu"
+  },
+  {
+    "id": "bit-chip--polta",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Polta",
+    "aliases": [
+      "polta"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Polta is a Beyblade bit chip from the Spin Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Polta",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--poseidon",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Poseidon",
+    "aliases": [
+      "poseidon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      }
+    ],
+    "seoDescription": "Poseidon is a Beyblade bit chip from the Engine Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Poseidon",
+    "system": "Engine Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--saizo",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Saizo",
+    "aliases": [
+      "saizo"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      },
+      {
+        "label": "Japanese name",
+        "value": "サイゾー"
+      },
+      {
+        "label": "Romaji",
+        "value": "Saizo"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 17th, 1999"
+      }
+    ],
+    "seoDescription": "Saizo is a Beyblade bit chip from the Spin Gear System. Released July 17th, 1999.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Saizo",
+    "system": "Spin Gear System",
+    "role": "chip",
+    "jpName": "サイゾー",
+    "romaji": "Saizo"
+  },
+  {
+    "id": "bit-chip--spark-knight",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Spark Knight",
+    "aliases": [
+      "spark-knight"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Spark Knight is a Beyblade bit chip from the Spin Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spark_Knight",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--spike-lizard",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Spike Lizard",
+    "aliases": [
+      "spike-lizard"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "June 2002"
+      }
+    ],
+    "seoDescription": "Spike Lizard is a Beyblade bit chip from the Magnacore System. Released June 2002.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Spike_Lizard",
+    "system": "Magnacore System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--trygator",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Trygator",
+    "aliases": [
+      "trygator"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      }
+    ],
+    "seoDescription": "Trygator is a Beyblade bit chip from the Engine Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygator",
+    "system": "Engine Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--ultimate-dragoon",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Ultimate Dragoon",
+    "aliases": [
+      "ultimate-dragoon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      },
+      {
+        "label": "Japanese name",
+        "value": "アルティメットドラグーン"
+      },
+      {
+        "label": "Romaji",
+        "value": "Arutimetto Doragūn"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "July 17th, 1999"
+      }
+    ],
+    "seoDescription": "Ultimate Dragoon is a Beyblade bit chip from the Spin Gear System. Released July 17th, 1999. It shipped with Spin Dragoon.",
+    "shippedIn": [
+      "Spin Dragoon"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Spin Dragoon"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Ultimate_Dragoon",
+    "system": "Spin Gear System",
+    "owner": "Tyson Granger",
+    "role": "chip",
+    "jpName": "アルティメットドラグーン",
+    "romaji": "Arutimetto Doragūn"
+  },
+  {
+    "id": "bit-chip--unicolyon",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Unicolyon",
+    "aliases": [
+      "unicolyon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Spin Gear System"
+      }
+    ],
+    "seoDescription": "Unicolyon is a Beyblade bit chip from the Spin Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Unicolyon",
+    "system": "Spin Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--uriel",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Uriel",
+    "aliases": [
+      "uriel"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: V-Force"
+      }
+    ],
+    "seoDescription": "Uriel is a Beyblade bit chip from the Magnacore System. Part of Beyblade: V-Force. It shipped with Uriel, Uriel 2, Capricorn Strike G.",
+    "shippedIn": [
+      "Uriel",
+      "Uriel 2",
+      "Capricorn Strike G"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Uriel"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Uriel 2"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Capricorn Strike G"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Uriel",
+    "system": "Magnacore System",
+    "series": "Beyblade: V-Force",
+    "owner": "King (Original Series)",
+    "appearAnime": "Beyblade: V-Force - Episode 42",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--venus",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Venus",
+    "aliases": [
+      "venus"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      }
+    ],
+    "seoDescription": "Venus is a Beyblade bit chip from the Engine Gear System. It shipped with Venus, Venusian G.",
+    "shippedIn": [
+      "Venus",
+      "Venusian G"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Venus"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "Venusian G"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus",
+    "system": "Engine Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--venus-bit-beast",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Venus (Bit-Beast)",
+    "aliases": [
+      "venus-bit-beast"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Engine Gear System"
+      }
+    ],
+    "seoDescription": "Venus (Bit-Beast) is a Beyblade bit chip from the Engine Gear System.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Venus_(Bit-Beast)",
+    "system": "Engine Gear System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-chip--vulpes",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Vulpes",
+    "aliases": [
+      "vulpes"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Japanese name",
+        "value": "ウルペース"
+      }
+    ],
+    "seoDescription": "Vulpes is a Beyblade bit chip.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vulpes",
+    "role": "chip",
+    "jpName": "ウルペース"
+  },
+  {
+    "id": "bit-chip--wolborg-3",
+    "classification": "Bit Chip",
+    "slot": "bit-chip",
+    "code": null,
+    "name": "Wolborg 3",
+    "aliases": [
+      "wolborg-3",
+      "Wolborg 03 (Takara)"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Chip"
+      },
+      {
+        "label": "System",
+        "value": "Magnacore System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade VForce · Beyblade GRevolution"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ウルボーグ03"
+      },
+      {
+        "label": "Romaji",
+        "value": "Urubōgu 03"
+      },
+      {
+        "label": "Element",
+        "value": "Ice"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "February 2002"
+      },
+      {
+        "label": "Released (US)",
+        "value": "2003"
+      }
+    ],
+    "seoDescription": "Wolborg 3 is a Beyblade bit chip from the Magnacore System. Released February 2002 for Beyblade VForce · Beyblade GRevolution. It shipped with Wolborg 03, Wolborg 3.",
+    "shippedIn": [
+      "Wolborg 03",
+      "Wolborg 3"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "bey": "Wolborg 03"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wolborg 3"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Wolborg_3",
+    "aka": [
+      "Wolborg 03 (Takara)"
+    ],
+    "system": "Magnacore System",
+    "series": "Beyblade VForce · Beyblade GRevolution",
+    "element": "Ice",
+    "role": "chip",
+    "jpName": "ウルボーグ03",
+    "romaji": "Urubōgu 03"
+  },
+  {
+    "id": "bit-protector--bloody-devil-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Bloody Devil Emblem",
+    "aliases": [
+      "bloody-devil-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Bloody Devil Emblem is a Beyblade bit protector. It shipped with Bloody Devil MS.",
+    "shippedIn": [
+      "Bloody Devil MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "code": "MA-23",
+        "bey": "Bloody Devil MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Bloody_Devil_Emblem",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--draciel-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Draciel Emblem",
+    "aliases": [
+      "draciel-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 3"
+      }
+    ],
+    "seoDescription": "Draciel Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Draciel MS.",
+    "shippedIn": [
+      "Draciel MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Draciel MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Draciel_Emblem",
+    "ratings": {
+      "attack": 1,
+      "defense": 3
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 50
+    },
+    "system": "Hard Metal System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--dragoon-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Dragoon Emblem",
+    "aliases": [
+      "dragoon-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Protector"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Dragoon Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Dragoon MS Ultimate Version, Dragoon MS.",
+    "shippedIn": [
+      "Dragoon MS Ultimate Version",
+      "Dragoon MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Dragoon MS Ultimate Version"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Dragoon MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dragoon_Emblem",
+    "system": "Hard Metal System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--dranzer-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Dranzer Emblem",
+    "aliases": [
+      "dranzer-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 1 · Defense 2"
+      }
+    ],
+    "seoDescription": "Dranzer Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Dranzer MF, HMS Random Booster Act 4. 4 alternate colourways are recorded.",
+    "shippedIn": [
+      "Dranzer MF",
+      "HMS Random Booster Act 4"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "bey": "Dranzer MF",
+        "set": "HMS Random Booster Act 4",
+        "colourway": "Limited Blue"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Dranzer MF",
+        "set": "HMS Random Booster Act 4",
+        "colourway": "Limited Light Orange"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Dranzer MF",
+        "set": "HMS Random Booster Act 4",
+        "colourway": "Limited Purple"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Dranzer MF",
+        "set": "HMS Random Booster Act 4",
+        "colourway": "Secret Black"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Limited Blue",
+        "vendor": "Takara",
+        "inBey": "Dranzer MF"
+      },
+      {
+        "colourway": "Limited Light Orange",
+        "vendor": "Takara",
+        "inBey": "Dranzer MF"
+      },
+      {
+        "colourway": "Limited Purple",
+        "vendor": "Takara",
+        "inBey": "Dranzer MF"
+      },
+      {
+        "colourway": "Secret Black",
+        "vendor": "Takara",
+        "inBey": "Dranzer MF"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Dranzer_Emblem",
+    "ratings": {
+      "attack": 1,
+      "defense": 2
+    },
+    "ratingScale": 6,
+    "ratingsNormalised": {
+      "attack": 17,
+      "defense": 33
+    },
+    "system": "Hard Metal System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--god-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "God Emblem",
+    "aliases": [
+      "god-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "God Emblem is a Beyblade bit protector. It shipped with Shining God MS.",
+    "shippedIn": [
+      "Shining God MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Shining God MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_God_Emblem",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--hard-metal-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Hard Metal Emblem",
+    "aliases": [
+      "hard-metal-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Protector"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: G-Revolution"
+      }
+    ],
+    "seoDescription": "Hard Metal Emblem is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Hard_Metal_Emblem",
+    "system": "Hard Metal System",
+    "series": "Beyblade: G-Revolution",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--jiraiya-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Jiraiya Emblem",
+    "aliases": [
+      "jiraiya-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Jiraiya Emblem is a Beyblade bit protector. It shipped with Jiraiya MS, HMS Random Booster Act 5. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Jiraiya MS",
+      "HMS Random Booster Act 5"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Jiraiya MS",
+        "colourway": "Black"
+      },
+      {
+        "vendor": "Unknown",
+        "bey": "HMS Random Booster Act 5",
+        "set": "Jiraiya MS",
+        "colourway": "Red"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Black",
+        "vendor": "Unknown",
+        "inBey": "Jiraiya MS"
+      },
+      {
+        "colourway": "Red",
+        "vendor": "Unknown",
+        "inBey": "HMS Random Booster Act 5"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Jiraiya_Emblem",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--samurai-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Samurai Emblem",
+    "weightG": 0.7,
+    "aliases": [
+      "samurai-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Protector"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle"
+      },
+      {
+        "label": "Product code",
+        "value": "MA-20"
+      },
+      {
+        "label": "Japanese name",
+        "value": "サムライエンブレム"
+      },
+      {
+        "label": "Romaji",
+        "value": "Samurai Enburemu"
+      },
+      {
+        "label": "Toyline",
+        "value": "Gimmick Specialty Series"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "October 23rd, 2004"
+      }
+    ],
+    "seoDescription": "Samurai Emblem is a Beyblade bit protector from the Hard Metal System, weighing 0.7 g. Released October 23rd, 2004 as MA-20 for New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle. It shipped with Samurai Changer MS, Beyblade Lucky Box 2005. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Samurai Changer MS",
+      "Beyblade Lucky Box 2005"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara",
+        "code": "MA-20",
+        "bey": "Samurai Changer MS"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Samurai Changer MS",
+        "set": "Beyblade Lucky Box 2005",
+        "colourway": "Limited Edition Black"
+      },
+      {
+        "vendor": "Takara",
+        "bey": "Samurai Changer MS",
+        "set": "Beyblade Lucky Box 2005",
+        "colourway": "Limited Edition Red"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Limited Edition Black",
+        "vendor": "Takara",
+        "inBey": "Samurai Changer MS"
+      },
+      {
+        "colourway": "Limited Edition Red",
+        "vendor": "Takara",
+        "inBey": "Samurai Changer MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Samurai_Emblem",
+    "system": "Hard Metal System",
+    "series": "New Generation Custom Beigoma - Beyblade: HMS Heavy Metal Battle",
+    "role": "chip",
+    "jpName": "サムライエンブレム",
+    "romaji": "Samurai Enburemu"
+  },
+  {
+    "id": "bit-protector--sea-dragon-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Sea Dragon Emblem",
+    "aliases": [
+      "sea-dragon-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Sea Dragon Emblem is a Beyblade bit protector. It shipped with Sea Drake.",
+    "shippedIn": [
+      "Sea Drake"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Sea Drake"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Sea_Dragon_Emblem",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--strata-dragoon",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Strata Dragoon",
+    "aliases": [
+      "strata-dragoon"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Bit Protector"
+      },
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade: G-Revolution"
+      }
+    ],
+    "seoDescription": "Strata Dragoon is a Beyblade bit protector from the Hard Metal System. Part of Beyblade: G-Revolution.",
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon",
+    "system": "Hard Metal System",
+    "series": "Beyblade: G-Revolution",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--strata-dragoon-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Strata Dragoon Emblem",
+    "aliases": [
+      "strata-dragoon-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "System",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Strata Dragoon Emblem is a Beyblade bit protector from the Hard Metal System. It shipped with Strata Dragoon MS.",
+    "shippedIn": [
+      "Strata Dragoon MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "bey": "Strata Dragoon MS"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Strata Dragoon MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Strata_Dragoon_Emblem",
+    "system": "Hard Metal System",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--turtle-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Turtle Emblem",
+    "aliases": [
+      "turtle-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Turtle Emblem is a Beyblade bit protector. It shipped with Round Shell MS.",
+    "shippedIn": [
+      "Round Shell MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "code": "MA-19",
+        "bey": "Round Shell MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Turtle_Emblem",
     "role": "chip"
   }
 ];

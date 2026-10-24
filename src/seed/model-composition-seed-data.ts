@@ -31,9 +31,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "Advance Balancer S-T",
+        "partName": "Advance Balancer",
         "weightG": 15,
-        "partId": "attack-ring--advance-balancer-s-t"
+        "partId": "attack-ring--advance-balancer"
       },
       {
         "slotKey": "weight-disk",
@@ -68,9 +68,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "Advance Survivor S-T",
+        "partName": "Advance Survivor",
         "weightG": 18,
-        "partId": "attack-ring--advance-survivor-s-t"
+        "partId": "attack-ring--advance-survivor"
       },
       {
         "slotKey": "weight-disk",
@@ -143,9 +143,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "Advance Attacker DM",
+        "partName": "Advance Attacker",
         "weightG": 21,
-        "partId": "attack-ring--advance-attacker-dm"
+        "partId": "attack-ring--advance-attacker"
       },
       {
         "slotKey": "weight-disk",
@@ -643,8 +643,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
-        "partName": "Spring Core GIMMICK",
-        "partId": "running-core--spring-core-gimmick"
+        "partName": "Spring Core",
+        "partId": "running-core--spring-core"
       }
     ],
     "slotMerges": [
@@ -724,8 +724,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
-        "partName": "Bearing Core 2 TOP",
-        "partId": "running-core--bearing-core-2-top"
+        "partName": "Bearing Core 2",
+        "partId": "running-core--bearing-core-2"
       }
     ],
     "slotMerges": [
@@ -769,8 +769,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
-        "partName": "Flat Core GYRO MODE",
-        "partId": "running-core--flat-core-gyro-mode"
+        "partName": "Flat Core",
+        "partId": "running-core--flat-core"
       }
     ],
     "slotMerges": [
@@ -816,9 +816,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
-        "partName": "Bunshin Core SPLIT",
+        "partName": "Bunshin Core",
         "weightG": 8,
-        "partId": "running-core--bunshin-core-split"
+        "partId": "running-core--bunshin-core"
       }
     ],
     "slotMerges": [
@@ -1149,8 +1149,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
-        "partName": "Bearing Core S-tier",
-        "partId": "running-core--bearing-core-s-tier"
+        "partName": "Bearing Core",
+        "partId": "running-core--bearing-core"
       }
     ],
     "source": "gen1/hms/wolborg-ms.md",
@@ -1818,10 +1818,10 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "weight-disk--wide-series"
       },
       {
-        "slotKey": "engine-gear",
+        "slotKey": "layer",
         "slotLabel": "LAYER 4",
-        "partName": "Left Engine Gear",
-        "partId": "engine-gear--left-engine-gear"
+        "partName": "ENGINE GEAR",
+        "partId": "layer--engine-gear"
       },
       {
         "slotKey": "blade-base",
@@ -2348,8 +2348,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "Triple Tiger S-tier",
-        "partId": "attack-ring--triple-tiger-s-tier"
+        "partName": "Triple Tiger",
+        "partId": "attack-ring--triple-tiger"
       },
       {
         "slotKey": "weight-disk",
@@ -3500,10 +3500,10 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "attack-ring--wing-upper"
       },
       {
-        "slotKey": "engine-gear",
+        "slotKey": "layer",
         "slotLabel": "LAYER 4",
-        "partName": "Gyro Engine Gear",
-        "partId": "engine-gear--gyro-engine-gear"
+        "partName": "ENGINE GEAR",
+        "partId": "layer--engine-gear"
       },
       {
         "slotKey": "blade-base",
@@ -3614,8 +3614,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "Triple Wing S-tier",
-        "partId": "attack-ring--triple-wing-s-tier"
+        "partName": "Triple Wing",
+        "partId": "attack-ring--triple-wing"
       },
       {
         "slotKey": "weight-disk",
@@ -4139,8 +4139,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Basalt HEAVIEST MFB WHEEL",
-        "partId": "fusion-wheel--basalt-heaviest-mfb-wheel"
+        "partName": "Basalt",
+        "partId": "fusion-wheel--basalt"
       },
       {
         "slotKey": "spin-track",
@@ -4181,20 +4181,20 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Beat SMASH ATTACK WINGS",
-        "partId": "fusion-wheel--beat-smash-attack-wings"
+        "partName": "Beat",
+        "partId": "fusion-wheel--beat"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "AD145 ARMOR DEFENSE 145",
-        "partId": "spin-track--ad145-armor-defense-145"
+        "partName": "AD145",
+        "partId": "spin-track--ad145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WD WIDE DEFENSE",
-        "partId": "performance-tip--wd-wide-defense"
+        "partName": "WD",
+        "partId": "performance-tip--wd"
       }
     ],
     "source": "gen2/mfb/beat-lynx-ad145wd.md",
@@ -4241,8 +4241,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Blitz DUAL-MODE 4D ATTACK WHEEL",
-        "partId": "fusion-wheel--blitz-dual-mode-4d-attack-wheel"
+        "partName": "Blitz",
+        "partId": "fusion-wheel--blitz"
       },
       {
         "slotKey": "spin-track",
@@ -4253,8 +4253,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "RSF RUBBER SEMI-FLAT",
-        "partId": "performance-tip--rsf-rubber-semi-flat"
+        "partName": "RSF",
+        "partId": "performance-tip--rsf"
       }
     ],
     "source": "gen2/mfb/blitz-striker-100rsf.md",
@@ -4283,9 +4283,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "L3",
-        "partName": "Bull MISLEADING DESIGN",
+        "partName": "Bull",
         "weightG": 36,
-        "partId": "fusion-wheel--bull-misleading-design"
+        "partId": "fusion-wheel--bull"
       },
       {
         "slotKey": "spin-track",
@@ -4338,8 +4338,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "MS METAL SHARP",
-        "partId": "performance-tip--ms-metal-sharp"
+        "partName": "MS",
+        "partId": "performance-tip--ms"
       }
     ],
     "source": "gen2/mfb/burn-fireblaze.md",
@@ -4392,14 +4392,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "H145 GIMMICK HEIGHT",
-        "partId": "spin-track--h145-gimmick-height"
+        "partName": "H145",
+        "partId": "spin-track--h145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "SD Semi-Defense",
-        "partId": "performance-tip--sd-semi-defense"
+        "partName": "SD",
+        "partId": "performance-tip--sd"
       }
     ],
     "source": "gen2/mfb/dark-bull.md",
@@ -4434,14 +4434,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "ED145 Eternal Defense 145",
-        "partId": "spin-track--ed145-eternal-defense-145"
+        "partName": "ED145",
+        "partId": "spin-track--ed145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "SD Semi-Defense",
-        "partId": "performance-tip--sd-semi-defense"
+        "partName": "SD",
+        "partId": "performance-tip--sd"
       }
     ],
     "source": "gen2/mfb/dark-libra-ed145sd.md",
@@ -4476,14 +4476,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "DF145 Down Force 145",
-        "partId": "spin-track--df145-down-force-145"
+        "partName": "DF145",
+        "partId": "spin-track--df145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "FS Flat Spike",
-        "partId": "performance-tip--fs-flat-spike"
+        "partName": "FS",
+        "partId": "performance-tip--fs"
       }
     ],
     "source": "gen2/mfb/dark-wolf-df145fs.md",
@@ -4551,8 +4551,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Earth TOP-TIER STAMINA/DEFENSE WHEEL",
-        "partId": "fusion-wheel--earth-top-tier-stamina-defense-wheel"
+        "partName": "Earth",
+        "partId": "fusion-wheel--earth"
       },
       {
         "slotKey": "spin-track",
@@ -4563,8 +4563,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WD WIDE DEFENSE",
-        "partId": "performance-tip--wd-wide-defense"
+        "partName": "WD",
+        "partId": "performance-tip--wd"
       }
     ],
     "source": "gen2/mfb/earth-aquila-145wd.md",
@@ -4605,8 +4605,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WD WIDE DEFENSE",
-        "partId": "performance-tip--wd-wide-defense"
+        "partName": "WD",
+        "partId": "performance-tip--wd"
       }
     ],
     "source": "gen2/mfb/earth-eagle.md",
@@ -4641,14 +4641,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "UW145 UPPER WING 145",
-        "partId": "spin-track--uw145-upper-wing-145"
+        "partName": "UW145",
+        "partId": "spin-track--uw145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "EWD ETERNAL WIDE DEFENSE",
-        "partId": "performance-tip--ewd-eternal-wide-defense"
+        "partName": "EWD",
+        "partId": "performance-tip--ewd"
       }
     ],
     "source": "gen2/mfb/evil-befall.md",
@@ -4671,8 +4671,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "energy-ring",
         "slotLabel": "ENERGY RING",
-        "partName": "Gemios DUAL-ORIENTATION GIMMICK",
-        "partId": "energy-ring--gemios-dual-orientation-gimmick"
+        "partName": "Gemios",
+        "partId": "energy-ring--gemios"
       },
       {
         "slotKey": "fusion-wheel",
@@ -4755,15 +4755,15 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Flame SHARED WITH FLAME SAGITTARIO",
+        "partName": "Flame",
         "weightG": 32.5,
-        "partId": "fusion-wheel--flame-shared-with-flame-sagittario"
+        "partId": "fusion-wheel--flame"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "H145 Hole 145",
-        "partId": "spin-track--h145-hole-145"
+        "partName": "H145",
+        "partId": "spin-track--h145"
       },
       {
         "slotKey": "performance-tip",
@@ -4804,8 +4804,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "230 TALLEST TRACK EVER",
-        "partId": "spin-track--230-tallest-track-ever"
+        "partName": "230",
+        "partId": "spin-track--230"
       },
       {
         "slotKey": "performance-tip",
@@ -4840,14 +4840,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Flame STAMINA-CLASS FW",
-        "partId": "fusion-wheel--flame-stamina-class-fw"
+        "partName": "Flame",
+        "partId": "fusion-wheel--flame"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "C145 CLAW 145 GIMMICK TRACK",
-        "partId": "spin-track--c145-claw-145-gimmick-track"
+        "partName": "C145",
+        "partId": "spin-track--c145"
       },
       {
         "slotKey": "performance-tip",
@@ -4883,9 +4883,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "230 KEY DEFENSE",
+        "partName": "230",
         "weightG": 4.1,
-        "partId": "spin-track--230-key-defense"
+        "partId": "spin-track--230"
       },
       {
         "slotKey": "performance-tip",
@@ -4921,8 +4921,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Galaxy HIGH-SPIN GENERATOR",
-        "partId": "fusion-wheel--galaxy-high-spin-generator"
+        "partName": "Galaxy",
+        "partId": "fusion-wheel--galaxy"
       },
       {
         "slotKey": "spin-track",
@@ -4933,8 +4933,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "R²F DOUBLE RUBBER FLAT",
-        "partId": "performance-tip--r-f-double-rubber-flat"
+        "partName": "R²F",
+        "partId": "performance-tip--r-f"
       }
     ],
     "source": "gen2/mfb/galaxy-pegasus.md",
@@ -4951,8 +4951,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "METAL WHEEL",
-        "partName": "Gemios KEY ATTACK PART",
-        "partId": "fusion-wheel--gemios-key-attack-part"
+        "partName": "Gemios",
+        "partId": "fusion-wheel--gemios"
       },
       {
         "slotKey": "spin-track",
@@ -4993,14 +4993,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Gravity COUNTER-ATTACK FW",
-        "partId": "fusion-wheel--gravity-counter-attack-fw"
+        "partName": "Gravity",
+        "partId": "fusion-wheel--gravity"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "AD145 ARMOR DEFENSE 145",
-        "partId": "spin-track--ad145-armor-defense-145"
+        "partName": "AD145",
+        "partId": "spin-track--ad145"
       },
       {
         "slotKey": "performance-tip",
@@ -5041,8 +5041,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "BD145 BOOST DISK 145",
-        "partId": "spin-track--bd145-boost-disk-145"
+        "partName": "BD145",
+        "partId": "spin-track--bd145"
       },
       {
         "slotKey": "performance-tip",
@@ -5078,16 +5078,16 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Hades MAXIMUM SERIES WIDE WHEEL",
+        "partName": "Hades",
         "weightG": 39.6,
-        "partId": "fusion-wheel--hades-maximum-series-wide-wheel"
+        "partId": "fusion-wheel--hades"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "BD145 BOOST DISK 145",
+        "partName": "BD145",
         "weightG": 8,
-        "partId": "spin-track--bd145-boost-disk-145"
+        "partId": "spin-track--bd145"
       },
       {
         "slotKey": "performance-tip",
@@ -5123,8 +5123,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Inferno SMASH RECOIL FW",
-        "partId": "fusion-wheel--inferno-smash-recoil-fw"
+        "partName": "Inferno",
+        "partId": "fusion-wheel--inferno"
       },
       {
         "slotKey": "spin-track",
@@ -5171,14 +5171,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "S130 SHIELD 130",
-        "partId": "spin-track--s130-shield-130"
+        "partName": "S130",
+        "partId": "spin-track--s130"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "RB RUBBER BALL",
-        "partId": "performance-tip--rb-rubber-ball"
+        "partName": "RB",
+        "partId": "performance-tip--rb"
       }
     ],
     "source": "gen2/mfb/jade-jupiter.md",
@@ -5208,8 +5208,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL (4D)",
-        "partName": "Kreis DUAL-MODE WHEEL",
-        "partId": "fusion-wheel--kreis-dual-mode-wheel"
+        "partName": "Kreis",
+        "partId": "fusion-wheel--kreis"
       },
       {
         "slotKey": "spin-track",
@@ -5220,9 +5220,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WD WIDE DEFENSE",
+        "partName": "WD",
         "weightG": 0.7,
-        "partId": "performance-tip--wd-wide-defense"
+        "partId": "performance-tip--wd"
       }
     ],
     "source": "gen2/mfb/kreis-cygnus-145wd.md",
@@ -5263,8 +5263,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "wheel",
         "slotLabel": "WHEEL",
-        "partName": "Leone FIRST DEFENSE-TYPE WHEEL",
-        "partId": "wheel--leone-first-defense-type-wheel"
+        "partName": "Leone",
+        "partId": "wheel--leone"
       },
       {
         "slotKey": "spin-track",
@@ -5275,8 +5275,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "D DEFENSE",
-        "partId": "performance-tip--d-defense"
+        "partName": "D",
+        "partId": "performance-tip--d"
       }
     ],
     "source": "gen2/mfb/leone-145d.md",
@@ -5305,9 +5305,9 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "METAL WHEEL",
-        "partName": "Libra METAGAME-DEFINING WHEEL",
+        "partName": "Libra",
         "weightG": 40.5,
-        "partId": "fusion-wheel--libra-metagame-defining-wheel"
+        "partId": "fusion-wheel--libra"
       },
       {
         "slotKey": "spin-track",
@@ -5350,8 +5350,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Lightning LEFT-SPIN ATTACKER",
-        "partId": "fusion-wheel--lightning-left-spin-attacker"
+        "partName": "Lightning",
+        "partId": "fusion-wheel--lightning"
       },
       {
         "slotKey": "spin-track",
@@ -5392,8 +5392,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Meteo 3-SECTION SPIN-STEAL",
-        "partId": "fusion-wheel--meteo-3-section-spin-steal"
+        "partName": "Meteo",
+        "partId": "fusion-wheel--meteo"
       },
       {
         "slotKey": "spin-track",
@@ -5435,8 +5435,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Night CIRCULAR STAMINA WHEEL",
-        "partId": "fusion-wheel--night-circular-stamina-wheel"
+        "partName": "Night",
+        "partId": "fusion-wheel--night"
       },
       {
         "slotKey": "spin-track",
@@ -5511,16 +5511,16 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "SW145 Switch 145 GIMMICK TRACK",
+        "partName": "SW145",
         "weightG": 4.2,
-        "partId": "spin-track--sw145-switch-145-gimmick-track"
+        "partId": "spin-track--sw145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "SD Semi-Defense",
+        "partName": "SD",
         "weightG": 0.5,
-        "partId": "performance-tip--sd-semi-defense"
+        "partId": "performance-tip--sd"
       }
     ],
     "source": "gen2/mfb/poison-serpent-sw145sd.md",
@@ -5537,8 +5537,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "face-bolt",
         "slotLabel": "FACE BOLT",
-        "partName": "Nemesis X HASBRO ORIGINAL DESIGN",
-        "partId": "face-bolt--nemesis-x-hasbro-original-design"
+        "partName": "Nemesis X",
+        "partId": "face-bolt--nemesis-x"
       },
       {
         "slotKey": "energy-ring",
@@ -5555,8 +5555,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "AD145 ARMOR DEFENSE 145",
-        "partId": "spin-track--ad145-armor-defense-145"
+        "partName": "AD145",
+        "partId": "spin-track--ad145"
       },
       {
         "slotKey": "performance-tip",
@@ -5591,8 +5591,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Ray COUNTER SMASH",
-        "partId": "fusion-wheel--ray-counter-smash"
+        "partName": "Ray",
+        "partId": "fusion-wheel--ray"
       },
       {
         "slotKey": "spin-track",
@@ -5603,8 +5603,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "CS COUNTER SHARP",
-        "partId": "performance-tip--cs-counter-sharp"
+        "partName": "CS",
+        "partId": "performance-tip--cs"
       }
     ],
     "source": "gen2/mfb/ray-striker.md",
@@ -5633,14 +5633,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Rock HEAVY DEFENSIVE WHEEL",
-        "partId": "fusion-wheel--rock-heavy-defensive-wheel"
+        "partName": "Rock",
+        "partId": "fusion-wheel--rock"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "ED145 Eternal Defense 145",
-        "partId": "spin-track--ed145-eternal-defense-145"
+        "partName": "ED145",
+        "partId": "spin-track--ed145"
       },
       {
         "slotKey": "performance-tip",
@@ -5675,8 +5675,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Rock HEAVIEST EARLY FW",
-        "partId": "fusion-wheel--rock-heaviest-early-fw"
+        "partName": "Rock",
+        "partId": "fusion-wheel--rock"
       },
       {
         "slotKey": "spin-track",
@@ -5687,8 +5687,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WB Wide Ball",
-        "partId": "performance-tip--wb-wide-ball"
+        "partName": "WB",
+        "partId": "performance-tip--wb"
       }
     ],
     "source": "gen2/mfb/rock-leone.md",
@@ -5723,14 +5723,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "R145 RUBBER 145",
-        "partId": "spin-track--r145-rubber-145"
+        "partName": "R145",
+        "partId": "spin-track--r145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "WB WIDE BALL",
-        "partId": "performance-tip--wb-wide-ball"
+        "partName": "WB",
+        "partId": "performance-tip--wb"
       }
     ],
     "source": "gen2/mfb/rock-zurafa-r145wb.md",
@@ -5837,8 +5837,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Sol SOLAR FUSION",
-        "partId": "fusion-wheel--sol-solar-fusion"
+        "partName": "Sol",
+        "partId": "fusion-wheel--sol"
       },
       {
         "slotKey": "spin-track",
@@ -5891,8 +5891,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "HF/S HOLE FLAT / SHARP",
-        "partId": "performance-tip--hf-s-hole-flat-sharp"
+        "partName": "HF/S",
+        "partId": "performance-tip--hf-s"
       }
     ],
     "source": "gen2/mfb/storm-aquario.md",
@@ -5921,20 +5921,20 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Storm PRIMARY ATTACK WHEEL",
-        "partId": "fusion-wheel--storm-primary-attack-wheel"
+        "partName": "Storm",
+        "partId": "fusion-wheel--storm"
       },
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "M145 GIMMICK TRACK",
-        "partId": "spin-track--m145-gimmick-track"
+        "partName": "M145",
+        "partId": "spin-track--m145"
       },
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "Q GIMMICK TIP",
-        "partId": "performance-tip--q-gimmick-tip"
+        "partName": "Q",
+        "partId": "performance-tip--q"
       }
     ],
     "source": "gen2/mfb/storm-capricorne-m145q.md",
@@ -5963,8 +5963,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL (FW)",
-        "partName": "Storm CORE METAL",
-        "partId": "fusion-wheel--storm-core-metal"
+        "partName": "Storm",
+        "partId": "fusion-wheel--storm"
       },
       {
         "slotKey": "spin-track",
@@ -5975,8 +5975,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP (PT)",
-        "partName": "RF KEY GIMMICK",
-        "partId": "performance-tip--rf-key-gimmick"
+        "partName": "RF",
+        "partId": "performance-tip--rf"
       }
     ],
     "source": "gen2/mfb/storm-pegasus.md",
@@ -6005,8 +6005,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Thunder HWS reimagining",
-        "partId": "fusion-wheel--thunder-hws-reimagining"
+        "partName": "Thunder",
+        "partId": "fusion-wheel--thunder"
       },
       {
         "slotKey": "spin-track",
@@ -6109,8 +6109,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "fusion-wheel",
         "slotLabel": "FUSION WHEEL",
-        "partName": "Vulcan ATTACK GIMMICK",
-        "partId": "fusion-wheel--vulcan-attack-gimmick"
+        "partName": "Vulcan",
+        "partId": "fusion-wheel--vulcan"
       },
       {
         "slotKey": "spin-track",
@@ -6121,8 +6121,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "D DEFENSE",
-        "partId": "performance-tip--d-defense"
+        "partName": "D",
+        "partId": "performance-tip--d"
       }
     ],
     "source": "gen2/mfb/vulcan-horuseus-145d.md",
@@ -6193,8 +6193,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "F230 FUSION 230",
-        "partId": "spin-track--f230-fusion-230"
+        "partName": "F230",
+        "partId": "spin-track--f230"
       },
       {
         "slotKey": "performance-tip",
@@ -6265,8 +6265,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "SR200 SLIDE-RIDE 200",
-        "partId": "spin-track--sr200-slide-ride-200"
+        "partName": "SR200",
+        "partId": "spin-track--sr200"
       },
       {
         "slotKey": "performance-tip",
@@ -6453,8 +6453,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "500 EXTREME HEIGHT 500",
-        "partId": "spin-track--500-extreme-height-500"
+        "partName": "500",
+        "partId": "spin-track--500"
       },
       {
         "slotKey": "performance-tip",
@@ -6609,8 +6609,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "spin-track",
         "slotLabel": "SPIN TRACK",
-        "partName": "E230 ELEVATOR 230",
-        "partId": "spin-track--e230-elevator-230"
+        "partName": "E230",
+        "partId": "spin-track--e230"
       },
       {
         "slotKey": "performance-tip",
@@ -7973,8 +7973,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "chrome-wheel",
         "slotLabel": "CHROME WHEEL",
-        "partName": "Ronin Dragoon LEFT-SPIN",
-        "partId": "chrome-wheel--ronin-dragoon-left-spin"
+        "partName": "Ronin Dragoon",
+        "partId": "chrome-wheel--ronin-dragoon"
       },
       {
         "slotKey": "spin-track",
@@ -7985,8 +7985,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "performance-tip",
         "slotLabel": "PERFORMANCE TIP",
-        "partName": "BSF BLADE SEMI-FLAT",
-        "partId": "performance-tip--bsf-blade-semi-flat"
+        "partName": "BSF",
+        "partId": "performance-tip--bsf"
       }
     ],
     "source": "gen3/gt/ronin-dragoon.md",
