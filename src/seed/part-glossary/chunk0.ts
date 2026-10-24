@@ -544,6 +544,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "circle upper"
     ],
     "source": "composition",
+    "image": "/media/category-circle-upper-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Circle_Upper",
     "weightG": 20,
     "specs": [
       {
@@ -709,6 +711,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross attacker"
     ],
     "source": "composition",
+    "image": "/media/category-cross-attacker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Attacker",
     "specs": [
       {
         "label": "Contact geometry",
@@ -776,6 +780,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross dranzer"
     ],
     "source": "composition",
+    "image": "/media/category-cross-dranzer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Dranzer",
     "weightG": 5,
     "specs": [
       {
@@ -845,6 +851,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross fang"
     ],
     "source": "composition",
+    "image": "/media/category-cross-fang-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Fang",
     "specs": [
       {
         "label": "Contact geometry",
@@ -897,6 +905,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross griffon"
     ],
     "source": "composition",
+    "image": "/media/category-cross-griffon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Griffon",
     "weightG": 6,
     "specs": [
       {
@@ -1014,6 +1024,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross spike"
     ],
     "source": "composition",
+    "image": "/media/category-cross-spike-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spike",
     "specs": [
       {
         "label": "Contact geometry",
@@ -1081,6 +1093,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross spiker"
     ],
     "source": "composition",
+    "image": "/media/category-cross-spiker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cross_Spiker",
     "weightG": 6,
     "specs": [
       {
@@ -1172,6 +1186,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cybernetic dragon"
     ],
     "source": "composition",
+    "image": "/media/category-cybernetic-dragon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Cybernetic_Dragon",
     "specs": [
       {
         "label": "Contact geometry",
@@ -1271,6 +1287,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "devil crusher"
     ],
     "source": "composition",
+    "image": "/media/category-devil-crusher-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Devil_Crusher",
     "weightG": 19,
     "specs": [
       {
@@ -1330,6 +1348,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "double horn"
     ],
     "source": "composition",
+    "image": "/media/category-double-horn-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Horn",
     "specs": [
       {
         "label": "Contact geometry",
@@ -1412,6 +1432,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "double wing"
     ],
     "source": "composition",
+    "image": "/media/category-double-wing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Double_Wing",
     "specs": [
       {
         "label": "Contact geometry",
@@ -1483,6 +1505,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dragon breaker"
     ],
     "source": "composition",
+    "image": "/media/category-dragon-breaker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Breaker",
     "weightG": 8,
     "specs": [
       {
@@ -1562,6 +1586,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dragon saucer"
     ],
     "source": "composition",
+    "image": "/media/category-dragon-saucer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Saucer",
     "weightG": 8,
     "specs": [
       {
@@ -1753,6 +1779,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "eight attacker"
     ],
     "source": "composition",
+    "image": "/media/category-eight-attacker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Attacker",
     "weightG": 4.1,
     "specs": [
       {
@@ -1836,6 +1864,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "eight spike"
     ],
     "source": "composition",
+    "image": "/media/category-eight-spike-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Eight_Spike",
     "specs": [
       {
         "label": "Contact geometry",
@@ -1959,6 +1989,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flame wing"
     ],
     "source": "composition",
+    "image": "/media/category-flame-wing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flame_Wing",
     "specs": [
       {
         "label": "Contact geometry",
@@ -2109,6 +2141,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "g-upper"
     ],
     "source": "composition",
+    "image": "/media/category-g-upper-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_G-Upper",
     "weightG": 7,
     "specs": [
       {
@@ -2185,6 +2219,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "genocide circle"
     ],
     "source": "composition",
+    "image": "/media/category-genocide-circle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Genocide_Circle",
     "weightG": 5.9,
     "specs": [
       {
@@ -2234,6 +2270,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "gigantic claw"
     ],
     "source": "composition",
+    "image": "/media/category-gigantic-claw-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Gigantic_Claw",
     "specs": [
       {
         "label": "Contact geometry",
@@ -2325,6 +2363,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "great dragon"
     ],
     "source": "composition",
+    "image": "/media/category-great-dragon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Dragon",
     "specs": [
       {
         "label": "Contact geometry",
@@ -2389,6 +2429,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "hammer tusk"
     ],
     "source": "composition",
+    "image": "/media/category-hammer-tusk-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Hammer_Tusk",
     "weightG": 4.7,
     "specs": [
       {
@@ -2505,6 +2547,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "howling leo"
     ],
     "source": "composition",
+    "image": "/media/category-howling-leo-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Howling_Leo",
     "specs": [
       {
         "label": "Contact geometry",
@@ -2557,6 +2601,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "jiraiya blade"
     ],
     "source": "composition",
+    "image": "/media/category-jiraiya-blade-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jiraiya_Blade",
     "weightG": 22,
     "specs": [
       {
@@ -2710,6 +2756,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal ape"
     ],
     "source": "composition",
+    "image": "/media/category-metal-ape-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Ape",
     "weightG": 20,
     "specs": [
       {
@@ -2744,6 +2792,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal attacker"
     ],
     "source": "composition",
+    "image": "/media/category-metal-attacker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Attacker",
     "weightG": 14,
     "specs": [
       {
@@ -2890,6 +2940,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal saucer"
     ],
     "source": "composition",
+    "image": "/media/category-metal-saucer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Saucer",
     "weightG": 15,
     "specs": [
       {
@@ -2955,6 +3007,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "mountain hammer"
     ],
     "source": "composition",
+    "image": "/media/category-mountain-hammer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Mountain_Hammer",
     "specs": [
       {
         "label": "Contact geometry",
@@ -3043,6 +3097,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "panther claw"
     ],
     "source": "composition",
+    "image": "/media/category-panther-claw-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Claw",
     "weightG": 4.5,
     "specs": [
       {
@@ -3111,6 +3167,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "panther head"
     ],
     "source": "composition",
+    "image": "/media/category-panther-head-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Panther_Head",
     "specs": [
       {
         "label": "Contact geometry",
@@ -3196,6 +3254,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "penta wing"
     ],
     "source": "composition",
+    "image": "/media/category-penta-wing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Penta_Wing",
     "specs": [
       {
         "label": "Contact geometry",
@@ -3274,6 +3334,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "reverse dragon"
     ],
     "source": "composition",
+    "image": "/media/category-reverse-dragon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Dragon",
     "specs": [
       {
         "label": "Contact geometry",
@@ -3573,7 +3635,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "sharkrash"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-attack-ring-sharkrash-image"
   },
   {
     "id": "attack-ring--shield-hammer",
@@ -3589,6 +3652,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "shield hammer"
     ],
     "source": "composition",
+    "image": "/media/category-shield-hammer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Shield_Hammer",
     "specs": [
       {
         "label": "Contact geometry",
@@ -3728,6 +3793,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sonic tiger"
     ],
     "source": "composition",
+    "image": "/media/category-sonic-tiger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Sonic_Tiger",
     "weightG": 5,
     "specs": [
       {
@@ -3844,6 +3911,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "spike dragon"
     ],
     "source": "composition",
+    "image": "/media/category-spike-dragon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spike_Dragon",
     "weightG": 4.9,
     "specs": [
       {
@@ -3926,6 +3995,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "spiral upper"
     ],
     "source": "composition",
+    "image": "/media/category-spiral-upper-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spiral_Upper",
     "weightG": 20,
     "specs": [
       {
@@ -4048,6 +4119,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "star wolf"
     ],
     "source": "composition",
+    "image": "/media/category-star-wolf-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Star_Wolf",
     "weightG": 5,
     "specs": [
       {
@@ -4122,6 +4195,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "strike turtle"
     ],
     "source": "composition",
+    "image": "/media/category-strike-turtle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Strike_Turtle",
     "weightG": 4.8,
     "specs": [
       {
@@ -4190,6 +4265,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "ten spike"
     ],
     "source": "composition",
+    "image": "/media/category-ten-spike-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ten_Spike",
     "weightG": 4.1,
     "specs": [
       {
@@ -4268,6 +4345,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "tiger defenser"
     ],
     "source": "composition",
+    "image": "/media/category-tiger-defenser-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Tiger_Defenser",
     "weightG": 3.6,
     "specs": [
       {
@@ -4335,6 +4414,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "triangle wing"
     ],
     "source": "composition",
+    "image": "/media/category-triangle-wing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triangle_Wing",
     "specs": [
       {
         "label": "Contact geometry",
@@ -4403,6 +4484,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "triple beak"
     ],
     "source": "composition",
+    "image": "/media/category-triple-beak-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Triple_Beak",
     "specs": [
       {
         "label": "Contact geometry",
@@ -4651,6 +4734,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "turtle survivor"
     ],
     "source": "composition",
+    "image": "/media/category-turtle-survivor-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Turtle_Survivor",
     "specs": [
       {
         "label": "Contact geometry",
@@ -4733,6 +4818,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "ultimate attacker"
     ],
     "source": "composition",
+    "image": "/media/category-ultimate-attacker-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Ultimate_Attacker",
     "weightG": 14,
     "specs": [
       {
@@ -4768,6 +4855,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "upper claw"
     ],
     "source": "composition",
+    "image": "/media/category-upper-claw-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Claw",
     "specs": [
       {
         "label": "Contact geometry",
@@ -4904,6 +4993,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "upper dragon"
     ],
     "source": "composition",
+    "image": "/media/category-upper-dragon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Dragon",
     "specs": [
       {
         "label": "Part family",
@@ -5015,7 +5106,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "vanishing moot"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-attack-ring-vanishing-moot-image"
   },
   {
     "id": "attack-ring--war-bear",
@@ -5084,6 +5176,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "war lion"
     ],
     "source": "composition",
+    "image": "/media/category-war-lion-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Lion",
     "specs": [
       {
         "label": "Contact geometry",
@@ -5147,6 +5241,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "war monkey"
     ],
     "source": "composition",
+    "image": "/media/category-war-monkey-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_War_Monkey",
     "specs": [
       {
         "label": "Contact geometry",
@@ -5247,6 +5343,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wing survivor"
     ],
     "source": "composition",
+    "image": "/media/category-wing-survivor-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Survivor",
     "weightG": 4.7,
     "specs": [
       {
@@ -5307,6 +5405,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wing upper"
     ],
     "source": "composition",
+    "image": "/media/category-wing-upper-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wing_Upper",
     "weightG": 6,
     "specs": [
       {
@@ -5375,6 +5475,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wolf crusher"
     ],
     "source": "composition",
+    "image": "/media/category-wolf-crusher-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Wolf_Crusher",
     "weightG": 20,
     "specs": [
       {
@@ -5732,6 +5834,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "DB"
     ],
     "source": "composition",
+    "image": "/media/category-disk-ball-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Disk_Ball",
     "weightG": 3.2,
     "specs": [
       {
@@ -6441,6 +6545,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "FB"
     ],
     "source": "composition",
+    "image": "/media/category-free-ball-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Free_Ball",
     "weightG": 1.9,
     "specs": [
       {
@@ -6605,6 +6711,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "GB"
     ],
     "source": "composition",
+    "image": "/media/category-gear-ball-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Gear_Ball",
     "weightG": 2,
     "specs": [
       {
@@ -6914,6 +7022,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "H"
     ],
     "source": "composition",
+    "image": "/media/category-hexa-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Hexa",
     "weightG": 2.6,
     "specs": [
       {
@@ -7176,6 +7286,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "P"
     ],
     "source": "composition",
+    "image": "/media/category-point-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Point",
     "weightG": 2.2,
     "specs": [
       {
@@ -7457,6 +7569,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "source": "composition",
+    "image": "/media/category-taper-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Taper",
     "weightG": 2.2,
     "specs": [
       {
@@ -7764,6 +7878,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "TP"
     ],
     "source": "composition",
+    "image": "/media/category-trans-point-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_-_Trans_Point",
     "weightG": 2.2,
     "specs": [
       {
@@ -8111,6 +8227,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "apollon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-apollon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Apollon",
     "specs": [
       {
         "label": "System",
@@ -8300,6 +8418,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cyber dranzer"
     ],
     "source": "composition",
+    "image": "/media/category-cyber-dranzer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Dranzer",
     "specs": [
       {
         "label": "Classification",
@@ -8333,6 +8453,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cyber driger"
     ],
     "source": "composition",
+    "image": "/media/category-cyber-driger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Cyber_Driger",
     "specs": [
       {
         "label": "System",
@@ -8422,6 +8544,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "draciel"
     ],
     "source": "composition",
+    "image": "/media/category-draciel-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Draciel",
     "specs": [
       {
         "label": "System",
@@ -8507,6 +8631,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dragoon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-dragoon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dragoon",
     "specs": [
       {
         "label": "System",
@@ -8609,6 +8735,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "dranzer"
     ],
     "source": "composition",
+    "image": "/media/category-dranzer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Dranzer",
     "specs": [
       {
         "label": "Classification",
@@ -8694,6 +8822,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "driger"
     ],
     "source": "composition",
+    "image": "/media/category-driger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Driger",
     "specs": [
       {
         "label": "System",
@@ -8775,6 +8905,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flash leopard"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-flash-leopard-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Flash_Leopard",
     "specs": [
       {
         "label": "System",
@@ -8822,6 +8954,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "galeon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-galeon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galeon",
     "specs": [
       {
         "label": "System",
@@ -8882,6 +9016,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "galman"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-galman-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galman",
     "specs": [
       {
         "label": "Classification",
@@ -8935,6 +9071,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "galzzly"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-galzzly-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Galzzly",
     "specs": [
       {
         "label": "System",
@@ -8974,6 +9112,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "gigars"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-gigars-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gigars",
     "specs": [
       {
         "label": "Classification",
@@ -9021,6 +9161,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "griffolyon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-griffolyon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon",
     "seoDescription": "Griffolyon is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon",
     "role": "chip"
@@ -9222,6 +9364,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal draciel"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-metal-draciel-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Draciel",
     "specs": [
       {
         "label": "Classification",
@@ -9260,6 +9404,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal driger"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-metal-driger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger",
     "seoDescription": "Metal Driger is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger",
     "role": "chip"
@@ -9319,6 +9465,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "rapid eagle"
     ],
     "source": "composition",
+    "image": "/media/category-rapid-eagle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Rapid_Eagle",
     "specs": [
       {
         "label": "System",
@@ -9373,6 +9521,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "rock bison"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-rock-bison-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Rock_Bison",
     "specs": [
       {
         "label": "System",
@@ -9467,6 +9617,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "salamalyon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-salamalyon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Salamalyon",
     "specs": [
       {
         "label": "System",
@@ -9578,6 +9730,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "shadow driger"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-shadow-driger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Shadow_Driger",
     "specs": [
       {
         "label": "System",
@@ -9602,6 +9756,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sharkrash"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-sharkrash-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Sharkrash",
     "specs": [
       {
         "label": "Classification",
@@ -9640,6 +9796,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "strata dragoon"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-strata-dragoon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Strata_Dragoon",
     "specs": [
       {
         "label": "Classification",
@@ -9728,6 +9886,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "thunder pegasus"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-thunder-pegasus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Thunder_Pegasus",
     "specs": [
       {
         "label": "System",
@@ -9752,6 +9912,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "torch pegasus"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-torch-pegasus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Torch_Pegasus",
     "specs": [
       {
         "label": "Classification",
@@ -9801,6 +9963,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "trygle"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-trygle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trygle",
     "specs": [
       {
         "label": "System",
@@ -9879,6 +10043,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "trypio"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-trypio-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Trypio",
     "specs": [
       {
         "label": "System",
@@ -9962,6 +10128,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "vanishing moot"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-vanishing-moot-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vanishing_Moot",
     "specs": [
       {
         "label": "System",
@@ -9993,6 +10161,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "vortex ape"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-vortex-ape-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Vortex_Ape",
     "weightG": 0.7,
     "specs": [
       {
@@ -10039,6 +10209,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wolborg"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-wolborg-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Wolborg",
     "specs": [
       {
         "label": "Classification",
@@ -10117,6 +10289,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wyborg"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-wyborg-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Wyborg",
     "specs": [
       {
         "label": "System",
@@ -10186,6 +10360,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "zeus"
     ],
     "source": "composition",
+    "image": "/media/category-bit-chip-zeus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Zeus",
     "specs": [
       {
         "label": "System",
@@ -10229,6 +10405,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "aeropegasus"
     ],
     "source": "composition",
+    "image": "/media/category-aeropegasus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_AeroPegasus",
     "specs": [
       {
         "label": "Material",
@@ -10372,6 +10550,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Cobalt Dragoon (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-cobaltdragoon-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDragoon",
     "weightG": 37.8,
     "specs": [
       {
@@ -10554,6 +10734,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Cobalt Drake (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-cobaltdrake-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CobaltDrake",
     "specs": [
       {
         "label": "Material",
@@ -10715,6 +10897,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Scarlet Garuda (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-crimsongaruda-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_CrimsonGaruda",
     "weightG": 35,
     "specs": [
       {
@@ -10843,6 +11027,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Buster Dran (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-dranbuster-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranBuster",
     "weightG": 36.5,
     "specs": [
       {
@@ -11078,6 +11264,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Dagger Dran (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-drandagger-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranDagger",
     "specs": [
       {
         "label": "Material",
@@ -11292,6 +11480,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sword Dran (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-dransword-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranSword",
     "specs": [
       {
         "label": "Material",
@@ -11636,6 +11826,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Dranzer Spiral (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-dranzerspiral-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DranzerSpiral",
     "weightG": 27.7,
     "specs": [
       {
@@ -11802,6 +11994,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Driger Slash (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-drigerslash-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_DrigerSlash",
     "weightG": 28.6,
     "specs": [
       {
@@ -11926,6 +12120,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Circle Ghost (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-ghostcircle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_GhostCircle",
     "weightG": 26.7,
     "specs": [
       {
@@ -12068,6 +12264,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "hellshammer"
     ],
     "source": "composition",
+    "image": "/media/category-hellshammer-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsHammer",
     "weightG": 33,
     "specs": [
       {
@@ -12234,6 +12432,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Scythe Incendio (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-hellsscythe-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_HellsScythe",
     "specs": [
       {
         "label": "Material",
@@ -12475,6 +12675,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Helm Knight (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-knightshield-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_KnightShield",
     "specs": [
       {
         "label": "Material",
@@ -12708,6 +12910,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Claw Leon (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-leonclaw-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_LeonClaw",
     "weightG": 31,
     "specs": [
       {
@@ -12860,6 +13064,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Soar Phoenix (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-phoenixwing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_PhoenixWing",
     "specs": [
       {
         "label": "Material",
@@ -13079,6 +13285,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "S"
     ],
     "source": "composition",
+    "image": "/media/category-savior-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_Savior",
     "weightG": 11.2,
     "specs": [
       {
@@ -13205,6 +13413,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Keel Shark (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-sharkedge-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SharkEdge",
     "weightG": 34.5,
     "specs": [
       {
@@ -13446,6 +13656,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sterling Wolf (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-silverwolf-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_SilverWolf",
     "weightG": 36.8,
     "specs": [
       {
@@ -13599,6 +13811,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Beat Tyranno (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-tyrannobeat-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_TyrannoBeat",
     "weightG": 37,
     "specs": [
       {
@@ -13774,6 +13988,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sting Unicorn (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-unicornsting-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_UnicornSting",
     "specs": [
       {
         "label": "Material",
@@ -13931,6 +14147,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Tail Viper (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-vipertail-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_ViperTail",
     "weightG": 34.7,
     "specs": [
       {
@@ -14103,6 +14321,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Arrow Wizard (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-wizardarrow-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardArrow",
     "weightG": 31.8,
     "specs": [
       {
@@ -14353,6 +14573,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Wand Wizard (Hasbro)"
     ],
     "source": "composition",
+    "image": "/media/category-wizardrod-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_-_WizardRod",
     "weightG": 35.3,
     "specs": [
       {
@@ -14546,6 +14768,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "customize clutch base"
     ],
     "source": "composition",
+    "image": "/media/category-customize-clutch-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Clutch_Base",
     "weightG": 5.8,
     "specs": [
       {
@@ -14604,6 +14828,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "customize grip base"
     ],
     "source": "composition",
+    "image": "/media/category-customize-grip-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Grip_Base",
     "weightG": 5.1,
     "specs": [
       {
@@ -14680,6 +14906,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "customize metal sharp"
     ],
     "source": "composition",
+    "image": "/media/category-customize-metal-sharp-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Customize_Metal_Sharp",
     "specs": [
       {
         "label": "Classification",
@@ -14799,6 +15027,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "engine stopper base"
     ],
     "source": "composition",
+    "image": "/media/category-engine-stopper-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Engine_Stopper_Base",
     "specs": [
       {
         "label": "Body material",
@@ -14936,6 +15166,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "first clutch base"
     ],
     "source": "composition",
+    "image": "/media/category-first-clutch-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_First_Clutch_Base",
     "specs": [
       {
         "label": "Classification",
@@ -15031,6 +15263,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flame change base"
     ],
     "source": "composition",
+    "image": "/media/category-flame-change-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Flame_Change_Base",
     "specs": [
       {
         "label": "Body material",
@@ -15086,6 +15320,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "fortress base"
     ],
     "source": "composition",
+    "image": "/media/category-fortress-base-image",
     "specs": [
       {
         "label": "Body material",
@@ -15139,6 +15374,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "full auto clutch base"
     ],
     "source": "composition",
+    "image": "/media/category-full-auto-clutch-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Full_Auto_Clutch_Base",
     "specs": [
       {
         "label": "Body material",
@@ -15235,6 +15472,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "griffolyon base"
     ],
     "source": "composition",
+    "image": "/media/category-griffolyon-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Griffolyon_Base",
     "specs": [
       {
         "label": "Body material",
@@ -15388,6 +15627,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "instant release"
     ],
     "source": "composition",
+    "image": "/media/category-instant-release-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Instant_Release",
     "specs": [
       {
         "label": "System",
@@ -15552,6 +15793,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "magne flat base"
     ],
     "source": "composition",
+    "image": "/media/category-magne-flat-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Magne_Flat_Base",
     "specs": [
       {
         "label": "Body material",
@@ -15684,6 +15927,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "metal change base"
     ],
     "source": "composition",
+    "image": "/media/category-metal-change-base-image",
     "specs": [
       {
         "label": "Body material",
@@ -15729,7 +15973,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "metal sharp base"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-metal-sharp-base-image"
   },
   {
     "id": "blade-base--metal-sting-base",
@@ -15933,7 +16178,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "sg flat"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-sg-flat-image"
   },
   {
     "id": "blade-base--sg-flat-base",
@@ -15951,6 +16197,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg flat base"
     ],
     "source": "composition",
+    "image": "/media/category-sg-flat-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Flat_Base",
     "specs": [
       {
         "label": "Key feature",
@@ -16096,6 +16344,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg jumping base 2"
     ],
     "source": "composition",
+    "image": "/media/category-sg-jumping-base-2-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Jumping_Base_2",
     "specs": [
       {
         "label": "Classification",
@@ -16140,6 +16390,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg metal ball"
     ],
     "source": "composition",
+    "image": "/media/category-sg-metal-ball-image",
     "specs": [
       {
         "label": "Tip type",
@@ -16162,6 +16413,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg metal flat 2"
     ],
     "source": "composition",
+    "image": "/media/category-sg-metal-flat-2-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_2",
     "weightG": 5,
     "specs": [
       {
@@ -16210,6 +16463,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg metal flat base"
     ],
     "source": "composition",
+    "image": "/media/category-sg-metal-flat-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Metal_Flat_Base",
     "weightG": 6.2,
     "specs": [
       {
@@ -16595,6 +16850,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "viper metal ball base"
     ],
     "source": "composition",
+    "image": "/media/category-viper-metal-ball-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Viper_Metal_Ball_Base",
     "specs": [
       {
         "label": "Body material",
@@ -16683,6 +16940,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "volcano change base"
     ],
     "source": "composition",
+    "image": "/media/category-volcano-change-base-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Volcano_Change_Base",
     "specs": [
       {
         "label": "Body material",
@@ -16915,7 +17174,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "dragoon"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-chrome-wheel-dragoon-image"
   },
   {
     "id": "chrome-wheel--gargole",
@@ -18066,6 +18326,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Pronounced Double O"
     ],
     "source": "composition",
+    "image": "/media/category-00-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_00",
     "weightG": 25,
     "specs": [
       {
@@ -18406,6 +18668,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Pronounced One Dash"
     ],
     "source": "composition",
+    "image": "/media/category-disc-1-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_1'",
     "weightG": 14,
     "specs": [
       {
@@ -18997,6 +19261,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "11"
     ],
     "source": "composition",
+    "image": "/media/category-11-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_11",
     "weightG": 18.5,
     "specs": [
       {
@@ -19352,6 +19618,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "7"
     ],
     "source": "composition",
+    "image": "/media/category-disc-7-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_7",
     "weightG": 19,
     "specs": [
       {
@@ -20023,6 +20291,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Aquilon Dash-QuadDrive"
     ],
     "source": "composition",
+    "image": "/media/category-aquilon-q-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Aquilon'-Q",
     "weightG": 24.5,
     "specs": [
       {
@@ -20131,6 +20401,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Around-P (Pro Series)"
     ],
     "source": "composition",
+    "image": "/media/category-around-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Around",
     "weightG": 20,
     "specs": [
       {
@@ -20538,6 +20810,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "B"
     ],
     "source": "composition",
+    "image": "/media/category-boost-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Boost",
     "weightG": 20,
     "specs": [
       {
@@ -21168,6 +21442,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Kr"
     ],
     "source": "composition",
+    "image": "/media/category-karma-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Karma",
     "weightG": 29.2,
     "specs": [
       {
@@ -21503,6 +21779,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Lg"
     ],
     "source": "composition",
+    "image": "/media/category-legacy-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Legacy",
     "weightG": 22,
     "specs": [
       {
@@ -21660,6 +21938,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "L"
     ],
     "source": "composition",
+    "image": "/media/category-limited-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Limited",
     "weightG": 19.5,
     "specs": [
       {
@@ -21872,6 +22152,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Nx"
     ],
     "source": "composition",
+    "image": "/media/category-nexus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nexus",
     "weightG": 20,
     "specs": [
       {
@@ -22055,6 +22337,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "N"
     ],
     "source": "composition",
+    "image": "/media/category-nine-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Nine",
     "weightG": 20.4,
     "specs": [
       {
@@ -22247,6 +22531,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Ov"
     ],
     "source": "composition",
+    "image": "/media/category-over-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Over",
     "weightG": 33.7,
     "specs": [
       {
@@ -22391,6 +22677,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sting-P (Pro Series)"
     ],
     "source": "composition",
+    "image": "/media/category-sting-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Sting",
     "weightG": 28.7,
     "specs": [
       {
@@ -22622,6 +22910,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Tp"
     ],
     "source": "composition",
+    "image": "/media/category-tapered-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Tapered",
     "weightG": 29.3,
     "specs": [
       {
@@ -22775,6 +23065,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "T"
     ],
     "source": "composition",
+    "image": "/media/category-triple-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Triple",
     "weightG": 18,
     "specs": [
       {
@@ -22979,6 +23271,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Vanguard-P (Pro Series)"
     ],
     "source": "composition",
+    "image": "/media/category-vanguard-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Vanguard",
     "weightG": 19,
     "specs": [
       {
@@ -23371,6 +23665,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Y"
     ],
     "source": "composition",
+    "image": "/media/category-disc-yell-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Yell",
     "weightG": 21.2,
     "specs": [
       {
@@ -23562,6 +23858,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Zenith-P (Pro Series)"
     ],
     "source": "composition",
+    "image": "/media/category-zenith-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Disc_-_Zenith",
     "weightG": 21,
     "specs": [
       {
@@ -23786,6 +24084,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "At'"
     ],
     "source": "composition",
+    "image": "/media/category-driver-atomic-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Atomic'",
     "weightG": 7,
     "specs": [
       {
@@ -23905,6 +24205,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Bl"
     ],
     "source": "composition",
+    "image": "/media/category-driver-bullet-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Bullet",
     "weightG": 15.4,
     "specs": [
       {
@@ -24044,6 +24346,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Ch'"
     ],
     "source": "composition",
+    "image": "/media/category-driver-charge-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Charge'",
     "weightG": 15.2,
     "specs": [
       {
@@ -24188,7 +24492,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "destroy'"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-destroy-dash-image"
   },
   {
     "id": "driver--dimension",
@@ -24204,6 +24509,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Dm'"
     ],
     "source": "composition",
+    "image": "/media/category-dimension-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Dimension'",
     "weightG": 7.4,
     "specs": [
       {
@@ -24338,7 +24645,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "dimension'"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-driver-dimension-dash-image"
   },
   {
     "id": "driver--drift",
@@ -24471,7 +24779,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "evolution'"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-evolution-dash-image"
   },
   {
     "id": "driver--ignition-dash",
@@ -24501,6 +24810,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Ir"
     ],
     "source": "composition",
+    "image": "/media/category-iron-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Iron",
     "weightG": 6.7,
     "specs": [
       {
@@ -24932,6 +25243,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Lp"
     ],
     "source": "composition",
+    "image": "/media/category-loop-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Loop",
     "weightG": 4,
     "specs": [
       {
@@ -25308,6 +25621,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Mb"
     ],
     "source": "composition",
+    "image": "/media/category-driver-mobius-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Mobius",
     "weightG": 9,
     "specs": [
       {
@@ -25501,6 +25816,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Nt"
     ],
     "source": "composition",
+    "image": "/media/category-nothing-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Nothing",
     "weightG": 6,
     "specs": [
       {
@@ -26015,6 +26332,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Rb'"
     ],
     "source": "composition",
+    "image": "/media/category-reboot-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Reboot'",
     "weightG": 7,
     "specs": [
       {
@@ -26171,6 +26490,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "R-Q"
     ],
     "source": "composition",
+    "image": "/media/category-revolve-q-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Revolve-Q",
     "weightG": 5.5,
     "specs": [
       {
@@ -26285,6 +26606,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Sp'"
     ],
     "source": "composition",
+    "image": "/media/category-driver-spiral-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Spiral'",
     "weightG": 5,
     "specs": [
       {
@@ -26535,7 +26858,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "unite'"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-unite-dash-image"
   },
   {
     "id": "driver--universe-10",
@@ -26754,7 +27078,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "variable'"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-variable-dash-image"
   },
   {
     "id": "driver--venture-2",
@@ -26805,6 +27130,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Xc'+X"
     ],
     "source": "composition",
+    "image": "/media/category-xceed-x-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Xceed'%2BX",
     "weightG": 10.4,
     "specs": [
       {
@@ -27119,6 +27446,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Zn'+Z"
     ],
     "source": "composition",
+    "image": "/media/category-zone-z-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'%2BZ",
     "specs": [
       {
         "label": "Classification",
@@ -27232,7 +27561,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "4d clear wheel: orion"
     ],
-    "source": "case-study"
+    "source": "case-study",
+    "image": "/media/category-energy-ring-4d-clear-wheel-orion-image"
   },
   {
     "id": "energy-ring--aquario",
@@ -27801,6 +28131,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "blaze"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-blaze-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Blaze",
     "weightG": 2.8,
     "specs": [
       {
@@ -27919,6 +28251,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "bull"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-bull-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Bull",
     "weightG": 3.3,
     "specs": [
       {
@@ -28354,6 +28688,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "capricorne"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-capricorne-image",
     "weightG": 2.9,
     "specs": [
       {
@@ -28410,7 +28745,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "clear wheel: wolf"
     ],
-    "source": "case-study"
+    "source": "case-study",
+    "image": "/media/category-clear-wheel-wolf-image"
   },
   {
     "id": "energy-ring--crystal-wheel-archer",
@@ -30326,6 +30662,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sagittario"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-sagittario-image",
     "weightG": 2.8,
     "specs": [
       {
@@ -30361,6 +30698,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sagittario i"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-sagittario-i-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Sagittario_I",
     "weightG": 2.8,
     "specs": [
       {
@@ -30671,6 +31010,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Unicorno II (Takara Tomy)"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-striker-ii-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Striker_II",
     "weightG": 3.3,
     "specs": [
       {
@@ -30954,6 +31295,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "wolf"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-wolf-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Wolf",
     "weightG": 3,
     "specs": [
       {
@@ -31205,6 +31548,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "zurafa"
     ],
     "source": "composition",
+    "image": "/media/category-energy-ring-zurafa-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Zurafa",
     "weightG": 2.9,
     "specs": [
       {
@@ -31479,6 +31824,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "aquario"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-aquario-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Aquario",
     "weightG": 1,
     "specs": [
       {
@@ -31673,6 +32020,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "aries"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-aries-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Aries",
     "weightG": 1,
     "specs": [
       {
@@ -31858,6 +32207,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Beafowl (Takara Tomy)"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-befall-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Befall",
     "weightG": 1,
     "specs": [
       {
@@ -31985,6 +32336,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "blaze"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-blaze-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Blaze",
     "specs": [
       {
         "label": "Classification",
@@ -32105,6 +32458,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "bull"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-bull-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Bull",
     "weightG": 1,
     "specs": [
       {
@@ -32287,6 +32642,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "byxis"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-byxis-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Byxis",
     "seoDescription": "Byxis is a Beyblade face bolt. It shipped with Flame Byxis 230WD, Inferno Byxis CH120RS, Gravity Demolition 2-Pack and 1 other release.",
     "shippedIn": [
       "Flame Byxis 230WD",
@@ -32348,6 +32705,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cygnus"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-cygnus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Cygnus",
     "weightG": 1,
     "specs": [
       {
@@ -32422,7 +32781,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "dragoon"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-face-bolt-dragoon-image"
   },
   {
     "id": "face-bolt--eagle",
@@ -32438,6 +32798,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Aquila"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-eagle-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Eagle",
     "specs": [
       {
         "label": "Classification",
@@ -33082,6 +33444,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "jupiter"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-jupiter-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Jupiter",
     "weightG": 1,
     "specs": [
       {
@@ -33320,7 +33684,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "l-drago"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-face-bolt-l-drago-image"
   },
   {
     "id": "face-bolt--leone",
@@ -33754,7 +34119,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "pegasus"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-face-bolt-pegasus-image"
   },
   {
     "id": "face-bolt--perseus-destroyer",
@@ -34082,6 +34448,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Unicorno II (Takara Tomy)"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-striker-ii-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Striker_II",
     "weightG": 1,
     "specs": [
       {
@@ -34537,6 +34905,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "Giraffe (Takara Tomy)"
     ],
     "source": "composition",
+    "image": "/media/category-face-bolt-zurafa-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Zurafa",
     "weightG": 1,
     "specs": [
       {
@@ -34884,7 +35254,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "4d metal wheel: phantom"
     ],
-    "source": "case-study"
+    "source": "case-study",
+    "image": "/media/category-4d-metal-wheel-phantom-image"
   },
   {
     "id": "fusion-wheel--basalt",
@@ -35669,6 +36040,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "earth"
     ],
     "source": "composition",
+    "image": "/media/category-earth-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Earth",
     "weightG": 30.8,
     "specs": [
       {
@@ -36238,6 +36611,8 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "forbidden"
     ],
     "source": "case-study",
+    "image": "/media/category-forbidden-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Forbidden",
     "specs": [
       {
         "label": "Full width",

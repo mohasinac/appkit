@@ -189,7 +189,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "metal wheel: mercury"
     ],
-    "source": "case-study"
+    "source": "case-study",
+    "image": "/media/category-metal-wheel-mercury-image"
   },
   {
     "id": "fusion-wheel--meteo",
@@ -692,6 +693,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "proto"
     ],
     "source": "composition",
+    "image": "/media/category-proto-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Proto",
     "weightG": 3.3,
     "specs": [
       {
@@ -1032,6 +1035,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "rock"
     ],
     "source": "composition",
+    "image": "/media/category-rock-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Rock",
     "weightG": 32.7,
     "specs": [
       {
@@ -2605,6 +2610,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "D2"
     ],
     "source": "composition",
+    "image": "/media/category-dark-deathscyther-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Dark_Deathscyther",
     "weightG": 7,
     "specs": [
       {
@@ -2797,7 +2804,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "draciel fortress"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-layer-draciel-fortress-image"
   },
   {
     "id": "layer--drain-fafnir",
@@ -2813,6 +2821,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "dF"
     ],
     "source": "composition",
+    "image": "/media/category-drain-fafnir-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Drain_Fafnir",
     "weightG": 12.7,
     "specs": [
       {
@@ -2979,7 +2989,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "dranzer flame"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-dranzer-flame-image"
   },
   {
     "id": "layer--engine-gear",
@@ -2995,7 +3006,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "engine gear"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-engine-gear-image"
   },
   {
     "id": "layer--gaia-dragoon",
@@ -3135,6 +3147,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Genesis Valtryek"
     ],
     "source": "composition",
+    "image": "/media/category-genesis-valtryek-v3-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Genesis_Valtryek_V3",
     "weightG": 9.4,
     "specs": [
       {
@@ -3251,6 +3265,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "gV"
     ],
     "source": "composition",
+    "image": "/media/category-god-valkyrie-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_God_Valkyrie",
     "weightG": 10.16,
     "specs": [
       {
@@ -3526,6 +3542,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "K2"
     ],
     "source": "composition",
+    "image": "/media/category-kaiser-kerbeus-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Kaiser_Kerbeus",
     "weightG": 7,
     "specs": [
       {
@@ -3674,6 +3692,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "King Kerbeus"
     ],
     "source": "composition",
+    "image": "/media/category-king-kerbeus-k2-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_King_Kerbeus_K2",
     "specs": [
       {
         "label": "Classification",
@@ -3769,6 +3789,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "lS"
     ],
     "source": "composition",
+    "image": "/media/category-legend-spriggan-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Legend_Spriggan",
     "weightG": 14.5,
     "specs": [
       {
@@ -3942,6 +3964,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mG"
     ],
     "source": "composition",
+    "image": "/media/category-maximum-garuda-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Maximum_Garuda",
     "weightG": 9.8,
     "specs": [
       {
@@ -4082,6 +4106,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "O2"
     ],
     "source": "composition",
+    "image": "/media/category-obelisk-odin-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Obelisk_Odin",
     "weightG": 9.02,
     "specs": [
       {
@@ -4204,6 +4230,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "sX"
     ],
     "source": "composition",
+    "image": "/media/category-sieg-xcalibur-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Sieg_Xcalibur",
     "weightG": 15.9,
     "specs": [
       {
@@ -4364,6 +4392,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "Spryzen Requiem"
     ],
     "source": "composition",
+    "image": "/media/category-spryzen-requiem-s3-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Spryzen_Requiem_S3",
     "specs": [
       {
         "label": "Classification",
@@ -4449,6 +4479,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "S2"
     ],
     "source": "composition",
+    "image": "/media/category-storm-spriggan-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Storm_Spriggan",
     "weightG": 8.8,
     "specs": [
       {
@@ -4621,6 +4653,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "V2"
     ],
     "source": "composition",
+    "image": "/media/category-victory-valkyrie-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Victory_Valkyrie",
     "weightG": 8.9,
     "specs": [
       {
@@ -4937,6 +4971,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "W2"
     ],
     "source": "composition",
+    "image": "/media/category-wild-wyvern-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wild_Wyvern",
     "weightG": 8.3,
     "specs": [
       {
@@ -5107,7 +5143,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "wolborg"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-layer-wolborg-image"
   },
   {
     "id": "layer--xeno-xcalibur",
@@ -5123,6 +5160,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "X2"
     ],
     "source": "composition",
+    "image": "/media/category-xeno-xcalibur-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Xeno_Xcalibur",
     "weightG": 9.3,
     "specs": [
       {
@@ -5695,6 +5734,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "4d bottom: final drive"
     ],
     "source": "case-study",
+    "image": "/media/category-f-d-image",
     "specs": [
       {
         "label": "Height",
@@ -5766,7 +5806,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "as"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-as-image"
   },
   {
     "id": "performance-tip--atomic",
@@ -6189,6 +6230,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "bottom: flat"
     ],
     "source": "case-study",
+    "image": "/media/category-performance-tip-f-image",
     "specs": [
       {
         "label": "Full width",
@@ -6489,6 +6531,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "bs"
     ],
     "source": "composition",
+    "image": "/media/category-bs-image",
     "specs": [
       {
         "label": "Full width",
@@ -6722,6 +6765,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "cf"
     ],
     "source": "composition",
+    "image": "/media/category-cf-image",
     "weightG": 2.5,
     "specs": [
       {
@@ -6777,6 +6821,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "cs"
     ],
     "source": "composition",
+    "image": "/media/category-cs-image",
     "weightG": 0.8,
     "specs": [
       {
@@ -7038,6 +7083,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ewd"
     ],
     "source": "composition",
+    "image": "/media/category-ewd-image",
     "weightG": 1.2,
     "specs": [
       {
@@ -7236,6 +7282,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "gf"
     ],
     "source": "composition",
+    "image": "/media/category-performance-tip-gf-image",
     "weightG": 0.75,
     "specs": [
       {
@@ -7587,6 +7634,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ms"
     ],
     "source": "composition",
+    "image": "/media/category-ms-image",
     "weightG": 1.3,
     "specs": [
       {
@@ -7751,7 +7799,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "aliases": [
       "r²f"
     ],
-    "source": "composition"
+    "source": "composition",
+    "image": "/media/category-r-f-image"
   },
   {
     "id": "performance-tip--r-f-bottom",
@@ -7778,6 +7827,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "rb"
     ],
     "source": "composition",
+    "image": "/media/category-rb-image",
     "weightG": 0.82,
     "specs": [
       {
@@ -7898,6 +7948,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "rf"
     ],
     "source": "composition",
+    "image": "/media/category-rf-image",
     "weightG": 0.8,
     "specs": [
       {
@@ -8417,6 +8468,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "semi-flat"
     ],
     "source": "bottom-parts",
+    "image": "/media/category-sf-image",
     "weightG": 0.6,
     "specs": [
       {
@@ -8508,6 +8560,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "tb"
     ],
     "source": "composition",
+    "image": "/media/category-tb-image",
     "weightG": 1,
     "specs": [
       {
@@ -8621,6 +8674,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "wb"
     ],
     "source": "composition",
+    "image": "/media/category-wb-image",
     "weightG": 0.7,
     "specs": [
       {
@@ -8755,6 +8809,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "wsf"
     ],
     "source": "composition",
+    "image": "/media/category-wsf-image",
     "weightG": 0.8,
     "specs": [
       {
@@ -8930,6 +8985,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "0-80"
     ],
     "source": "composition",
+    "image": "/media/category-0-80-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_0-80",
     "weightG": 8,
     "specs": [
       {
@@ -9101,6 +9158,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "1-60"
     ],
     "source": "composition",
+    "image": "/media/category-1-60-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_1-60",
     "weightG": 6,
     "specs": [
       {
@@ -9378,6 +9437,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "3-60"
     ],
     "source": "composition",
+    "image": "/media/category-3-60-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-60",
     "weightG": 7,
     "specs": [
       {
@@ -9816,6 +9877,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "3-70"
     ],
     "source": "composition",
+    "image": "/media/category-3-70-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-70",
     "weightG": 7,
     "specs": [
       {
@@ -10030,6 +10093,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "3-80"
     ],
     "source": "composition",
+    "image": "/media/category-3-80-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_3-80",
     "weightG": 8,
     "specs": [
       {
@@ -10405,6 +10470,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "4-60"
     ],
     "source": "composition",
+    "image": "/media/category-4-60-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-60",
     "weightG": 7,
     "specs": [
       {
@@ -10789,6 +10856,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "4-70"
     ],
     "source": "composition",
+    "image": "/media/category-4-70-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-70",
     "weightG": 7,
     "specs": [
       {
@@ -11031,6 +11100,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "4-80"
     ],
     "source": "composition",
+    "image": "/media/category-4-80-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_4-80",
     "weightG": 8,
     "specs": [
       {
@@ -11358,6 +11429,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "5-60"
     ],
     "source": "composition",
+    "image": "/media/category-5-60-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-60",
     "weightG": 7,
     "specs": [
       {
@@ -11614,6 +11687,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "5-70"
     ],
     "source": "composition",
+    "image": "/media/category-5-70-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-70",
     "weightG": 8,
     "specs": [
       {
@@ -11840,6 +11915,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "5-80"
     ],
     "source": "composition",
+    "image": "/media/category-5-80-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_5-80",
     "weightG": 8,
     "specs": [
       {
@@ -12077,6 +12154,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "9-60"
     ],
     "source": "composition",
+    "image": "/media/category-9-60-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Ratchet_-_9-60",
     "weightG": 8,
     "specs": [
       {
@@ -12546,6 +12625,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "flat core"
     ],
     "source": "composition",
+    "image": "/media/category-flat-core-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Flat_Core",
     "specs": [
       {
         "label": "Tip material",
@@ -12628,6 +12709,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "grip flat core"
     ],
     "source": "composition",
+    "image": "/media/category-grip-flat-core-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Grip_Flat_Core",
     "weightG": 1,
     "specs": [
       {
@@ -12786,6 +12869,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "manual change core"
     ],
     "source": "composition",
+    "image": "/media/category-manual-change-core-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Manual_Change_Core",
     "specs": [
       {
         "label": "Tip material",
@@ -13065,6 +13150,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "semi-flat core"
     ],
     "source": "composition",
+    "image": "/media/category-semi-flat-core-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Semi-Flat_Core",
     "weightG": 2,
     "specs": [
       {
@@ -13142,6 +13229,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "sharp core"
     ],
     "source": "composition",
+    "image": "/media/category-sharp-core-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Sharp_Core",
     "weightG": 2,
     "specs": [
       {
@@ -13764,6 +13853,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "neo right sg"
     ],
     "source": "composition",
+    "image": "/media/category-neo-right-sg-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_NEO_Right_SG",
     "specs": [
       {
         "label": "Classification",
@@ -15766,6 +15857,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "135"
     ],
     "source": "composition",
+    "image": "/media/category-135-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_135",
     "weightG": 1.2,
     "specs": [
       {
@@ -17145,6 +17238,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "sa165"
     ],
     "source": "composition",
+    "image": "/media/category-sa165-image",
     "weightG": 1.8,
     "specs": [
       {
@@ -17176,6 +17270,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "sp230"
     ],
     "source": "composition",
+    "image": "/media/category-sp230-image",
     "weightG": 4.3,
     "specs": [
       {
@@ -17254,6 +17349,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "t125"
     ],
     "source": "composition",
+    "image": "/media/category-t125-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Spin_Track_-_Tornado_125",
     "weightG": 1.5,
     "specs": [
       {
@@ -17559,6 +17656,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "track: armor 230"
     ],
     "source": "case-study",
+    "image": "/media/category-a230-image",
     "specs": [
       {
         "label": "Full width",
@@ -17615,6 +17713,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "v145"
     ],
     "source": "composition",
+    "image": "/media/category-v145-image",
     "weightG": 1.5,
     "specs": [
       {
@@ -17647,6 +17746,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "w105"
     ],
     "source": "composition",
+    "image": "/media/category-w105-image",
     "weightG": 1.2,
     "specs": [
       {
@@ -18139,6 +18239,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "circle balance"
     ],
     "source": "composition",
+    "image": "/media/category-circle-balance-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Balance",
     "specs": [
       {
         "label": "Part family",
@@ -18708,6 +18810,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "eight heavy"
     ],
     "source": "composition",
+    "image": "/media/category-eight-heavy-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Eight_Heavy",
     "specs": [
       {
         "label": "Material",
@@ -18905,6 +19009,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "heavy attack"
     ],
     "source": "composition",
+    "image": "/media/category-heavy-attack-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Heavy_Attack",
     "weightG": 16,
     "specs": [
       {
@@ -18961,6 +19067,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "magne weight disk"
     ],
     "source": "composition",
+    "image": "/media/category-magne-weight-disk-image",
     "specs": [
       {
         "label": "Material",
@@ -19062,6 +19169,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "star attack"
     ],
     "source": "composition",
+    "image": "/media/category-star-attack-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Star_Attack",
     "weightG": 15.6,
     "specs": [
       {
@@ -19130,6 +19239,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten balance"
     ],
     "source": "composition",
+    "image": "/media/category-ten-balance-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Balance",
     "specs": [
       {
         "label": "Material",
@@ -19225,6 +19336,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten heavy"
     ],
     "source": "composition",
+    "image": "/media/category-ten-heavy-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Heavy",
     "specs": [
       {
         "label": "Material",
@@ -19303,6 +19416,8 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten wide"
     ],
     "source": "composition",
+    "image": "/media/category-ten-wide-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Ten_Wide",
     "specs": [
       {
         "label": "Material",

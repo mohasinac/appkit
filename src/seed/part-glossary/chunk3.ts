@@ -9111,6 +9111,8 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "left-engine-gear"
     ],
     "source": "fandom-infobox",
+    "image": "/media/category-left-engine-gear-image",
+    "imageSourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_Engine_Gear",
     "specs": [
       {
         "label": "Classification",
