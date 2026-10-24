@@ -651,10 +651,12 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
 async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const docs = await readAllDocs(
-      getAdminDb().collection(BEYS_COLLECTION).select(PRODUCT_UPDATED_AT),
+      getAdminDb().collection(BEYS_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
       "bey",
     );
-    return docs.map((doc) => ({
+    return docs
+      .filter((doc) => !isTestDoc(doc.data()))
+      .map((doc) => ({
       url: `${baseUrl}${ROUTES.PUBLIC.BEY_DETAIL(doc.id)}`,
       lastModified:
         (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
@@ -671,11 +673,12 @@ async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
 async function fetchPartUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const docs = await readAllDocs(
-      getAdminDb().collection(PART_GLOSSARY_COLLECTION).select(PRODUCT_UPDATED_AT),
+      getAdminDb().collection(PART_GLOSSARY_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
       "part",
     );
     const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
     return docs
+      .filter((doc) => !isTestDoc(doc.data()))
       .map((doc) => {
         // Document id is `{slot}--{tail}`, and the route segment IS the slot.
         const sep = doc.id.indexOf("--");
