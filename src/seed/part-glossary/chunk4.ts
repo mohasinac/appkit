@@ -40608,9 +40608,9 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "romaji": "Varukirī"
   },
   {
-    "id": "attack-ring--defense-ring",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
+    "id": "support-parts--defense-ring",
+    "classification": "Support Part",
+    "slot": "support-parts",
     "code": null,
     "name": "Defense Ring",
     "aliases": [
@@ -40627,10 +40627,10 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Magnacore System"
       }
     ],
-    "seoDescription": "Defense Ring is a Beyblade attack ring from the Magnacore System.",
+    "seoDescription": "Defense Ring is a Beyblade support part from the Magnacore System.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Defense_Ring",
     "system": "Magnacore System",
-    "role": "ring"
+    "role": "support"
   },
   {
     "id": "support-parts--upper-attack-sp",
@@ -40649,7 +40649,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "value": "Support Part"
       }
     ],
-    "seoDescription": "Upper Attack SP is a Beyblade support parts, weighing 4 g.",
+    "seoDescription": "Upper Attack SP is a Beyblade support part, weighing 4 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Support_Part_-_Upper_Attack_SP",
     "role": "support"
   },

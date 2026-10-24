@@ -18078,7 +18078,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "value": "Attack 2 · Defense 0 · Stamina 2"
       }
     ],
-    "seoDescription": "Cross Survivor is a Beyblade support parts from the Magnacore System, weighing 2.6 g. It shipped with Dranzer V2.",
+    "seoDescription": "Cross Survivor is a Beyblade support part from the Magnacore System, weighing 2.6 g. It shipped with Dranzer V2.",
     "shippedIn": [
       "Dranzer V2"
     ],
