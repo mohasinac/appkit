@@ -34,7 +34,6 @@ function renderCategoryGrid(props: {
   activeSearch: string; activeTab: string; brandsOnly: boolean;
 }) {
   const { isLoading, categories, view, activeSearch, activeTab, brandsOnly } = props;
-  const isBrandView = activeTab === "brands" || brandsOnly;
   /* The empty state names the tab the visitor is actually on. It said
    * "categories" on all five, so an empty Parts tab reported the wrong thing. */
   const noun = brandsOnly
