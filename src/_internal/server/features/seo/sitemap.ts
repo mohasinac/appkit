@@ -10,6 +10,8 @@ import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/cat
 import { isListingCategory } from "../../../../features/categories/constants/listing-categories";
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores/schemas/firestore";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
+import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
+import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/parts/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -635,6 +637,68 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
   }
 }
 
+/**
+ * `/beys/{slug}` — 1,988 model reference pages, and `/parts/{slot}/{code}` —
+ * 2,488 part pages. Both carry real measured data (type, system, weight, spin,
+ * release code, WBO legality, which models use a part) and both had **zero**
+ * sitemap URLs, while 4,658 empty category pages were submitted. The index was
+ * precisely inverted.
+ *
+ * They are submitted together with their prerendering (`static-params.ts`), not
+ * before it: a page whose `<title>` still streams into `<body>` is not ready to
+ * be advertised.
+ */
+async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const docs = await readAllDocs(
+      getAdminDb().collection(BEYS_COLLECTION).select(PRODUCT_UPDATED_AT),
+      "bey",
+    );
+    return docs.map((doc) => ({
+      url: `${baseUrl}${ROUTES.PUBLIC.BEY_DETAIL(doc.id)}`,
+      lastModified:
+        (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
+        new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    }));
+  } catch (err) {
+    void normalizeError(err);
+    return sitemapSectionFailed("bey", err);
+  }
+}
+
+async function fetchPartUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+  try {
+    const docs = await readAllDocs(
+      getAdminDb().collection(PART_GLOSSARY_COLLECTION).select(PRODUCT_UPDATED_AT),
+      "part",
+    );
+    const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
+    return docs
+      .map((doc) => {
+        // Document id is `{slot}--{tail}`, and the route segment IS the slot.
+        const sep = doc.id.indexOf("--");
+        if (sep === -1) return null;
+        const classification = doc.id.slice(0, sep);
+        const code = doc.id.slice(sep + 2);
+        if (!code || !slots.has(classification)) return null;
+        return {
+          url: `${baseUrl}${ROUTES.PUBLIC.PART_DETAIL(classification, code)}`,
+          lastModified:
+            (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
+            new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.4,
+        };
+      })
+      .filter((row): row is NonNullable<typeof row> => row !== null);
+  } catch (err) {
+    void normalizeError(err);
+    return sitemapSectionFailed("part", err);
+  }
+}
+
 export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
   const [
     productUrls,
@@ -653,6 +717,8 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     liveUrls,
     storeUrls,
     scammerUrls,
+    beyUrls,
+    partUrls,
   ] = await Promise.all([
     fetchProductUrls(baseUrl),
     fetchCategoryUrls(baseUrl),
@@ -670,6 +736,8 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchLiveUrls(baseUrl),
     fetchStoreUrls(baseUrl),
     fetchScammerUrls(baseUrl),
+    fetchBeyUrls(baseUrl),
+    fetchPartUrls(baseUrl),
   ]);
   const staticUrls = staticPages(baseUrl);
 
@@ -699,6 +767,8 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     event: eventUrls.length,
     store: storeUrls.length,
     scammer: scammerUrls.length,
+    bey: beyUrls.length,
+    part: partUrls.length,
   };
   const empty = Object.entries(sections)
     .filter(([, n]) => n === 0)
@@ -729,5 +799,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...eventUrls,
     ...storeUrls,
     ...scammerUrls,
+    ...beyUrls,
+    ...partUrls,
   ];
 }

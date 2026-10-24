@@ -52,6 +52,8 @@ import { getAdminDb } from "../../../../providers/db-firebase";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog/schemas/firestore";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories/schemas/firestore";
+import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
+import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/parts/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -64,14 +66,23 @@ const TEST_DATA_FIELD = PRODUCT_FIELDS.IS_TEST_DATA;
 /**
  * A prerender budget, not a correctness bound — see property 2 above.
  *
- * Deliberately well above today's real counts (14 products, 28 brands, 22
- * posts, 8 franchises, measured 2026-10-24) so growth is covered, and well
- * below the point where build time becomes the concern. The parts (2,488) and
- * beys (1,988) corpora are an order of magnitude larger and are NOT wired here
- * yet: they need a build-memory measurement first, because a cold build on this
- * repo already peaks near 8,100 MB against Hobby's 8,192 MB ceiling.
+ * Sized to clear today's real counts with room: 15 products, 28 brands, 22
+ * posts, 1 active franchise, **1,988 beys and 2,488 parts** (measured
+ * 2026-10-24). The two reference corpora are what set this number.
+ *
+ * 🛑 Hitting the budget TRUNCATES silently in SEO terms — the remainder still
+ * render on demand and still work, they just go back to streaming their
+ * metadata. Both call sites therefore log when they saturate it, because
+ * "some pages quietly stopped being prerendered" is exactly the kind of
+ * regression that reads as normal.
+ *
+ * 🛑 Prerendering ~4,500 extra pages has a real build cost, and a cold build
+ * on this repo already peaks near 8,100 MB against Hobby's 8,192 MB ceiling.
+ * Measure before and after with
+ * `node scripts/probe-build-docker.mjs --peak --memory 7g --cpus 2 --runs 3`
+ * rather than assuming it fits.
  */
-const MAX_PRERENDER = 2000;
+const MAX_PRERENDER = 5000;
 
 interface MaybeTestDataDoc {
   isTestData?: boolean;
@@ -179,4 +190,72 @@ export function blogPostSlugs(): Promise<string[]> {
   return slugsFrom("blog", (db) =>
     db.collection(BLOG_POSTS_COLLECTION).where(BLOG_POST_FIELDS.STATUS, "==", "published"),
   );
+}
+
+/**
+ * `/beys/[slug]` — 1,988 model reference pages.
+ *
+ * These carry real data (type, system, weight, spin, release code, parts) and
+ * were invisible to search: zero in the sitemap, and no `<title>` in `<head>`
+ * because the route is dynamic. The id IS the slug here, so the shared
+ * `slugsFrom` projection applies unchanged.
+ */
+export function beyDetailSlugs(): Promise<string[]> {
+  return slugsFrom("bey", (db) => db.collection(BEYS_COLLECTION));
+}
+
+/**
+ * `/parts/[classification]/[code]` — 2,488 part reference pages.
+ *
+ * Two params, so this cannot use `slugsFrom`: the document id is
+ * `{slot}--{tail}` and the route splits it across both segments. The URL
+ * segment IS the slot (`partSlotFromSegment` is an identity lookup against
+ * `ALL_PART_SLOTS`), so the split is the whole derivation.
+ *
+ * 🛑 Ids carrying no `--`, or an unrecognised slot, are SKIPPED rather than
+ * guessed at — a prerendered param that does not resolve is a build-time 404
+ * baked into the output. The count of skips is logged so a generator change
+ * that breaks the id shape is visible rather than silently halving the set.
+ */
+export async function partDetailParams(): Promise<{ classification: string; code: string }[]> {
+  try {
+    const snap = await getAdminDb()
+      .collection(PART_GLOSSARY_COLLECTION)
+      .select()
+      .limit(MAX_PRERENDER)
+      .get();
+    const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
+    let skipped = 0;
+    const params: { classification: string; code: string }[] = [];
+    for (const doc of snap.docs) {
+      const sep = doc.id.indexOf("--");
+      const classification = sep === -1 ? "" : doc.id.slice(0, sep);
+      const code = sep === -1 ? "" : doc.id.slice(sep + 2);
+      if (!code || !slots.has(classification)) {
+        skipped++;
+        continue;
+      }
+      params.push({ classification, code });
+    }
+    if (skipped > 0) {
+      serverLogger.warn(
+        `generateStaticParams: "part" skipped ${skipped} glossary id(s) that are not {slot}--{tail}`,
+        { section: "part", skipped },
+      );
+    }
+    if (snap.size >= MAX_PRERENDER) {
+      serverLogger.warn(
+        `generateStaticParams: "part" hit the ${MAX_PRERENDER}-document prerender budget; the remainder render on demand`,
+        { section: "part" },
+      );
+    }
+    return params;
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.error('generateStaticParams: "part" failed and prerendered 0 pages', {
+      section: "part",
+      error: err,
+    });
+    return [];
+  }
 }

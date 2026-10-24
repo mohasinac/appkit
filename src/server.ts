@@ -2011,6 +2011,8 @@ export {
   brandDetailSlugs,
   franchiseDetailSlugs,
   blogPostSlugs,
+  beyDetailSlugs,
+  partDetailParams,
 } from "./_internal/server/features/seo";
 
 // -- Taxonomy hub link indexes --
