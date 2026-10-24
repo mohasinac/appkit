@@ -1,11 +1,9 @@
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 
 import React from "react";
 
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
-import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
 
 export interface CategoriesIndexPageViewProps {

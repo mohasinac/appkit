@@ -45,7 +45,13 @@ export function getAdminAppLite(): App {
   let app: App;
 
   if (nodeFs().existsSync(keyPath)) {
-    const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
+    /*
+     * 🛑 A `const sa = JSON.parse(readFileSync(keyPath))` sat here and was removed
+     * 2026-10-24: the parsed object was never used, because `cert(keyPath)` below
+     * takes the PATH and reads and validates the file itself. The only thing the
+     * extra parse bought was a second read of a service-account key on every
+     * cold start.
+     */
     const dbUrl = resolveRtdbUrl();
 
     app = initializeApp({ credential: cert(keyPath), databaseURL: dbUrl, ...(storageBucket && { storageBucket }) });
@@ -84,8 +90,13 @@ export function getAdminAppLite(): App {
           databaseURL?: string;
         })
       : {};
-    const projectId =
-      firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
+    /*
+     * 🛑 A `projectId` was computed here from FIREBASE_CONFIG/GCLOUD_PROJECT and
+     * never passed, which was CORRECT but dead: this is the ADC branch, and
+     * `initializeApp()` with no credential is exactly what makes the SDK resolve
+     * both credential and project from the metadata server. Removed 2026-10-24
+     * rather than wired, because passing it would override that resolution.
+     */
     const dbUrl =
       firebaseConfig.databaseURL ??
       resolveRtdbUrl();

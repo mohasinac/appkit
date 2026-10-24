@@ -42,6 +42,7 @@
 import type { SearchIndexType } from "../../../../shared/search/index-record";
 import type { FirestoreValue } from "../../../../../schemas/types";
 import { pluginFor } from "../../../../shared/listing-types/_registry";
+import { ROUTES } from "../../../../../next/routing/route-map";
 // Defined here, not in `_registry` — imported from the DEFINING module
 // (Root Cause #18).
 import { ALL_LISTING_TYPES } from "../../../../shared/listing-types/feature-flags";
@@ -139,15 +140,29 @@ export const INDEX_TYPES: readonly SearchIndexType[] = [
       weight: t === "standard" ? 1.0 : 0.98,
     };
   }),
-  { key: "category", hrefTemplate: "/categories/{s}", moreHref: "/categories", weight: 0.95 },
-  { key: "brand", hrefTemplate: "/brands/{s}", moreHref: "/brands", weight: 0.9 },
-  { key: "part", hrefTemplate: "/parts/{s}", moreHref: "/parts", weight: 0.9 },
-  { key: "model", hrefTemplate: "/categories/{s}", moreHref: "/categories", weight: 0.85 },
-  { key: "store", hrefTemplate: "/stores/{s}", moreHref: "/stores", weight: 0.8 },
-  { key: "blog", hrefTemplate: "/blog/{s}", moreHref: "/blog", weight: 0.7 },
-  { key: "event", hrefTemplate: "/events/{s}", moreHref: "/events", weight: 0.7 },
-  { key: "faq", hrefTemplate: "/faqs/{s}", moreHref: "/faqs", weight: 0.6 },
-  { key: "review", hrefTemplate: "/reviews/{s}", moreHref: "/reviews", weight: 0.5 },
+  /*
+   * 🛑 Built from ROUTES, exactly as the listing-type entries above are built
+   * from `pluginFor`. These ten were hand-written path literals until
+   * 2026-10-24 — sitting directly beside a block whose own comment says "One
+   * source of truth, no second mapping" and cites Root Cause #48 for the
+   * version of this bug that shipped. A renamed segment would have moved every
+   * real page and left the search index pointing at the old one, with each
+   * result rendering correctly and navigating to a 404.
+   *
+   * `{s}` is the placeholder the template engine substitutes, so the builder
+   * functions are handed it directly — the same trick `detailRoute("{s}")` uses
+   * above rather than re-deriving the shape.
+   */
+  { key: "category", hrefTemplate: ROUTES.PUBLIC.CATEGORY_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.CATEGORIES), weight: 0.95 },
+  { key: "brand", hrefTemplate: ROUTES.PUBLIC.BRAND_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.BRANDS), weight: 0.9 },
+  { key: "part", hrefTemplate: ROUTES.PUBLIC.PART_CLASSIFICATION("{s}"), moreHref: String(ROUTES.PUBLIC.PARTS), weight: 0.9 },
+  /* A model IS a category row, which is why it shares the category route. */
+  { key: "model", hrefTemplate: ROUTES.PUBLIC.CATEGORY_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.CATEGORIES), weight: 0.85 },
+  { key: "store", hrefTemplate: ROUTES.PUBLIC.STORE_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.STORES), weight: 0.8 },
+  { key: "blog", hrefTemplate: ROUTES.BLOG.ARTICLE("{s}"), moreHref: String(ROUTES.BLOG.LIST), weight: 0.7 },
+  { key: "event", hrefTemplate: ROUTES.PUBLIC.EVENT_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.EVENTS), weight: 0.7 },
+  { key: "faq", hrefTemplate: ROUTES.PUBLIC.FAQ_CATEGORY("{s}"), moreHref: String(ROUTES.PUBLIC.FAQS), weight: 0.6 },
+  { key: "review", hrefTemplate: ROUTES.PUBLIC.REVIEW_DETAIL("{s}"), moreHref: String(ROUTES.PUBLIC.REVIEWS), weight: 0.5 },
   { key: "group", hrefTemplate: "/groups/{s}", moreHref: "/products", weight: 0.5 },
   { key: "scammer", hrefTemplate: "/scams/{s}", moreHref: "/scams", weight: 0.5 },
   /* `/promotions` has no per-coupon page, so `{s}` is absent on purpose and

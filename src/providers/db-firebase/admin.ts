@@ -145,7 +145,10 @@ export function getAdminApp(): App {
 
   try {
     if (nodeFs().existsSync(keyPath)) {
-      const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
+      /*
+       * 🛑 Removed 2026-10-24 — see the matching note in admin-app-lite.ts. The
+       * parsed service account was never used; `cert(keyPath)` reads the file.
+       */
       // Was NEXT_PUBLIC-only here while the other two branches honoured
       // FIREBASE_ADMIN_DATABASE_URL, so setting it had no effect on this path.
       const dbUrl = resolveRtdbUrl();
@@ -186,8 +189,10 @@ export function getAdminApp(): App {
             databaseURL?: string;
           })
         : {};
-      const projectId =
-        firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
+      /*
+       * 🛑 Removed 2026-10-24 — see admin-app-lite.ts. Computed, never passed, and
+       * passing it would defeat ADC's own project resolution.
+       */
       // FIREBASE_CONFIG is injected by the Functions runtime and is
       // authoritative there; env vars are the fallback for other runtimes.
       const dbUrl = firebaseConfig.databaseURL || resolveRtdbUrl();

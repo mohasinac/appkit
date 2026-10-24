@@ -2,7 +2,7 @@
 import React from "react";
 import { RichText, SpecTable, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import type { CustomField, CustomSection } from "../schemas/firestore";
+import type { CustomSection } from "../schemas/firestore";
 
 /**
  * Shape `ProductTabsShell` expects for `customTabs`. Duplicated here rather
