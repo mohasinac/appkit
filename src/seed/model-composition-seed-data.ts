@@ -26,13 +26,13 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "bit-chip",
         "slotLabel": "BIT PROTECTOR",
         "partName": "Hard Metal Emblem",
-        "weightG": 15,
         "partId": "bit-chip--hard-metal-emblem"
       },
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Advance Balancer S-T",
+        "weightG": 15,
         "partId": "attack-ring--advance-balancer-s-t"
       },
       {
@@ -63,13 +63,13 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "bit-chip",
         "slotLabel": "BIT PROTECTOR",
         "partName": "Hard Metal Emblem",
-        "weightG": 18,
         "partId": "bit-chip--hard-metal-emblem"
       },
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Advance Survivor S-T",
+        "weightG": 18,
         "partId": "attack-ring--advance-survivor-s-t"
       },
       {
@@ -82,6 +82,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Metal Sharp Core",
+        "weightG": 4,
         "partId": "running-core--metal-sharp-core"
       }
     ],
@@ -100,13 +101,13 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "bit-chip",
         "slotLabel": "BIT PROTECTOR",
         "partName": "Hard Metal Emblem",
-        "weightG": 18,
         "partId": "bit-chip--hard-metal-emblem"
       },
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Advance Defenser",
+        "weightG": 18,
         "partId": "attack-ring--advance-defenser"
       },
       {
@@ -137,25 +138,27 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "bit-chip",
         "slotLabel": "BIT PROTECTOR",
         "partName": "Hard Metal Emblem",
-        "weightG": 21,
         "partId": "bit-chip--hard-metal-emblem"
       },
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Advance Attacker DM",
+        "weightG": 21,
         "partId": "attack-ring--advance-attacker-dm"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Circle Heavy",
+        "weightG": 16,
         "partId": "weight-disk--circle-heavy"
       },
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Metal Flat Core",
+        "weightG": 3,
         "partId": "running-core--metal-flat-core"
       }
     ],
@@ -180,18 +183,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "Knight Crusher",
+        "weightG": 19,
         "partId": "attack-ring--knight-crusher"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "CIRCLE WEIGHT DISK (CWD)",
         "partName": "Circle Wide",
+        "weightG": 14,
         "partId": "weight-disk--circle-wide"
       },
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Aero Wing + Aero Core",
+        "weightG": 3,
         "partId": "running-core--aero-wing-aero-core"
       }
     ],
@@ -270,6 +276,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "Smash Leopard",
+        "weightG": 18,
         "partId": "attack-ring--smash-leopard"
       },
       {
@@ -283,6 +290,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Tornado Change Core",
+        "weightG": 3,
         "partId": "running-core--tornado-change-core"
       }
     ],
@@ -388,12 +396,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "Upper Dragon",
+        "weightG": 19,
         "partId": "attack-ring--upper-dragon"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "CIRCLE WEIGHT DISK (CWD)",
         "partName": "CWD Chain",
+        "weightG": 17,
         "partId": "weight-disk--cwd-chain"
       },
       {
@@ -793,18 +803,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "Upper Fox",
+        "weightG": 19,
         "partId": "attack-ring--upper-fox"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "CIRCLE WEIGHT DISK (CWD)",
         "partName": "CWD Circle",
+        "weightG": 17,
         "partId": "weight-disk--cwd-circle"
       },
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Bunshin Core SPLIT",
+        "weightG": 8,
         "partId": "running-core--bunshin-core-split"
       }
     ],
@@ -877,6 +890,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "Samurai Upper",
+        "weightG": 22,
         "partId": "attack-ring--samurai-upper"
       },
       {
@@ -928,6 +942,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (CWD)",
         "partName": "CWD Defense Ring",
+        "weightG": 17,
         "partId": "weight-disk--cwd-defense-ring"
       },
       {
@@ -958,18 +973,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "METAL ATTACK RING (MAR)",
         "partName": "God Smasher",
+        "weightG": 18,
         "partId": "attack-ring--god-smasher"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "CIRCLE WEIGHT DISK (CWD)",
         "partName": "CWD God Ring",
+        "weightG": 18,
         "partId": "weight-disk--cwd-god-ring"
       },
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Shooter Change Core",
+        "weightG": 6,
         "partId": "running-core--shooter-change-core"
       }
     ],
@@ -1156,18 +1174,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "DJ Spiker",
+        "weightG": 18,
         "partId": "attack-ring--dj-spiker"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Circle Balance",
+        "weightG": 15.13,
         "partId": "weight-disk--circle-balance"
       },
       {
         "slotKey": "running-core",
         "slotLabel": "RUNNING CORE (RC)",
         "partName": "Metal Sharp Core",
+        "weightG": 4,
         "partId": "running-core--metal-sharp-core"
       }
     ],
@@ -1204,12 +1225,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 4,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Semi Flat Base",
+        "weightG": 7,
         "partId": "blade-base--sg-semi-flat-base"
       }
     ],
@@ -1234,6 +1257,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Flame Wing",
+        "weightG": 5,
         "partId": "attack-ring--flame-wing"
       },
       {
@@ -1246,17 +1270,19 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG",
+        "weightG": 5,
         "partId": "spin-gear--right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Flame Change Base",
+        "weightG": 9,
         "partId": "blade-base--flame-change-base"
       }
     ],
     "source": "gen1/plastic/black-dranzer.md",
-    "categoryId": "category-black-dranzer"
+    "categoryId": "category-bit-chip-black-dranzer"
   },
   {
     "id": "gen1-plastic-cyber-draciel",
@@ -1279,7 +1305,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/cyber-draciel.md",
-    "categoryId": "category-cyber-draciel"
+    "categoryId": "category-bit-chip-cyber-draciel"
   },
   {
     "id": "gen1-plastic-cyber-dragoon",
@@ -1305,12 +1331,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG",
+        "weightG": 6,
         "partId": "spin-gear--right-sg"
       },
       {
@@ -1321,7 +1349,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/cyber-dragoon.md",
-    "categoryId": "category-cyber-dragoon"
+    "categoryId": "category-bit-chip-cyber-dragoon"
   },
   {
     "id": "gen1-plastic-cyber-dranzer",
@@ -1395,18 +1423,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "NEO Right SG",
+        "weightG": 5,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Flat Base",
+        "weightG": 5,
         "partId": "blade-base--sg-flat-base"
       }
     ],
@@ -1449,6 +1480,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Sharp Base",
+        "weightG": 7,
         "partId": "blade-base--sg-sharp-base"
       }
     ],
@@ -1473,12 +1505,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Eight Spike",
+        "weightG": 4.2,
         "partId": "attack-ring--eight-spike"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -1491,6 +1525,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Fortress Base",
+        "weightG": 12,
         "partId": "blade-base--fortress-base"
       }
     ],
@@ -1515,12 +1550,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Shield Hammer",
+        "weightG": 6,
         "partId": "attack-ring--shield-hammer"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
@@ -1557,12 +1594,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Max Shield",
+        "weightG": 5,
         "partId": "attack-ring--max-shield"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Six Heavy",
+        "weightG": 16,
         "partId": "weight-disk--six-heavy"
       },
       {
@@ -1598,12 +1637,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Cross Spike",
+        "weightG": 5,
         "partId": "attack-ring--cross-spike"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -1616,10 +1657,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Metal Ball",
+        "weightG": 8,
         "partId": "blade-base--sg-metal-ball"
       }
     ],
-    "source": "gen1/plastic/draciel-s.md"
+    "source": "gen1/plastic/draciel-s.md",
+    "categoryId": "category-draciel-s"
   },
   {
     "id": "gen1-plastic-draciel-v",
@@ -1645,6 +1688,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Balance",
+        "weightG": 15,
         "partId": "weight-disk--ten-balance"
       },
       {
@@ -1703,7 +1747,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/draciel-v2.md",
-    "categoryId": "category-draciel-v2"
+    "categoryId": "category-layer-draciel-v2"
   },
   {
     "id": "gen1-plastic-dragoon-f",
@@ -1813,6 +1857,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
@@ -1855,12 +1900,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Reverse Dragon",
+        "weightG": 5,
         "partId": "attack-ring--reverse-dragon"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Wide",
+        "weightG": 13,
         "partId": "weight-disk--eight-wide"
       },
       {
@@ -1877,7 +1924,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/dragoon-s.md",
-    "categoryId": "category-dragoon-storm"
+    "categoryId": "category-dragoonstorm"
   },
   {
     "id": "gen1-plastic-dragoon-v",
@@ -1903,12 +1950,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Left Spin Gear",
+        "weightG": 4,
         "partId": "spin-gear--neo-left-spin-gear"
       },
       {
@@ -1967,7 +2016,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/dragoon-v2.md",
-    "categoryId": "category-dragoon-v2"
+    "categoryId": "category-layer-dragoon-v2"
   },
   {
     "id": "gen1-plastic-dranzer-f",
@@ -2077,6 +2126,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Balance",
+        "weightG": 15,
         "partId": "weight-disk--ten-balance"
       },
       {
@@ -2113,24 +2163,28 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Double Wing",
+        "weightG": 4,
         "partId": "attack-ring--double-wing"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG",
+        "weightG": 6,
         "partId": "spin-gear--right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Spiral Change Base",
+        "weightG": 7,
         "partId": "blade-base--spiral-change-base"
       }
     ],
@@ -2155,24 +2209,28 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Cross Attacker",
+        "weightG": 5.6,
         "partId": "attack-ring--cross-attacker"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Balance",
+        "weightG": 14.9,
         "partId": "weight-disk--ten-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 5.6,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Volcano Change Base",
+        "weightG": 6.6,
         "partId": "blade-base--volcano-change-base"
       }
     ],
@@ -2225,7 +2283,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/dranzer-v2.md",
-    "categoryId": "category-dranzer-v2"
+    "categoryId": "category-layer-dranzer-v2"
   },
   {
     "id": "gen1-plastic-driger-f",
@@ -2245,24 +2303,28 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Cross Fang",
+        "weightG": 5,
         "partId": "attack-ring--cross-fang"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG (Full Auto",
+        "weightG": 7,
         "partId": "spin-gear--right-sg-full-auto"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Full Auto Clutch Base",
+        "weightG": 15,
         "partId": "blade-base--full-auto-clutch-base"
       }
     ],
@@ -2392,7 +2454,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "blade-base--metal-change-base"
       }
     ],
-    "source": "gen1/plastic/driger-s.md"
+    "source": "gen1/plastic/driger-s.md",
+    "categoryId": "category-driger-s"
   },
   {
     "id": "gen1-plastic-driger-v",
@@ -2418,6 +2481,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Balance",
+        "weightG": 15,
         "partId": "weight-disk--ten-balance"
       },
       {
@@ -2448,29 +2512,33 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Upper Claw",
+        "weightG": 7,
         "partId": "attack-ring--upper-claw"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Balance",
+        "weightG": 15,
         "partId": "weight-disk--ten-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo-Right (Metal Weight",
+        "weightG": 4,
         "partId": "spin-gear--neo-right-metal-weight"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Custom Metal Change",
+        "weightG": 7,
         "partId": "blade-base--custom-metal-change"
       }
     ],
     "source": "gen1/plastic/driger-v2.md",
-    "categoryId": "category-driger-v2"
+    "categoryId": "category-layer-driger-v2"
   },
   {
     "id": "gen1-plastic-flash-leopard-2",
@@ -2670,6 +2738,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 5,
         "partId": "spin-gear--neo-right-sg"
       },
       {
@@ -2700,12 +2769,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "War Lion",
+        "weightG": 6,
         "partId": "attack-ring--war-lion"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Heavy",
+        "weightG": 15,
         "partId": "weight-disk--eight-heavy"
       },
       {
@@ -2718,6 +2789,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Semi-Flat",
+        "weightG": 5,
         "partId": "blade-base--sg-semi-flat"
       }
     ],
@@ -2862,6 +2934,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -2920,7 +2993,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/hopper.md",
-    "categoryId": "category-hopper"
+    "categoryId": "category-bit-chip-hopper"
   },
   {
     "id": "gen1-plastic-keel-shark",
@@ -2974,6 +3047,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -2990,7 +3064,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/master-dranzer.md",
-    "categoryId": "category-master-dranzer"
+    "categoryId": "category-bit-chip-master-dranzer"
   },
   {
     "id": "gen1-plastic-metal-draciel",
@@ -3016,6 +3090,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -3100,18 +3175,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 4,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Flat Base",
+        "weightG": 7,
         "partId": "blade-base--sg-flat-base"
       }
     ],
@@ -3142,6 +3220,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Heavy",
+        "weightG": 17,
         "partId": "weight-disk--ten-heavy"
       }
     ],
@@ -3172,23 +3251,26 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 4,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Sharp Base",
+        "weightG": 7,
         "partId": "blade-base--sg-sharp-base"
       }
     ],
     "source": "gen1/plastic/rushing-boar.md",
-    "categoryId": "category-rushing-boar"
+    "categoryId": "category-bit-chip-rushing-boar"
   },
   {
     "id": "gen1-plastic-salamalyon",
@@ -3214,6 +3296,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Wide",
+        "weightG": 13,
         "partId": "weight-disk--eight-wide"
       },
       {
@@ -3243,12 +3326,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Whale Crusher",
+        "weightG": 8,
         "partId": "attack-ring--whale-crusher"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Wide",
+        "weightG": 13,
         "partId": "weight-disk--eight-wide"
       },
       {
@@ -3261,6 +3346,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Flat",
+        "weightG": 5,
         "partId": "blade-base--sg-flat"
       }
     ],
@@ -3391,7 +3477,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/strata-dragoon.md",
-    "categoryId": "category-bit-chip-strata-dragoon"
+    "categoryId": "category-bit-protector-strata-dragoon"
   },
   {
     "id": "gen1-plastic-thunder-pegasus",
@@ -3423,6 +3509,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "Engine Stopper Base",
+        "weightG": 5,
         "partId": "blade-base--engine-stopper-base"
       },
       {
@@ -3483,6 +3570,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Triple Beak",
+        "weightG": 5,
         "partId": "attack-ring--triple-beak"
       },
       {
@@ -3495,12 +3583,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Neo Right SG",
+        "weightG": 4,
         "partId": "spin-gear--neo-right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Sharp",
+        "weightG": 7,
         "partId": "blade-base--sg-sharp"
       }
     ],
@@ -3531,18 +3621,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Wide",
+        "weightG": 13,
         "partId": "weight-disk--eight-wide"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG",
+        "weightG": 6,
         "partId": "spin-gear--right-sg"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Jumping Base",
+        "weightG": 7,
         "partId": "blade-base--sg-jumping-base"
       }
     ],
@@ -3589,7 +3682,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen1/plastic/tryhorn.md",
-    "categoryId": "category-tryhorn"
+    "categoryId": "category-bit-chip-tryhorn"
   },
   {
     "id": "gen1-plastic-trypio-g",
@@ -3651,12 +3744,14 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Flying Defense",
+        "weightG": 7,
         "partId": "attack-ring--flying-defense"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
@@ -3669,11 +3764,12 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Sharp Base",
+        "weightG": 7,
         "partId": "blade-base--sg-sharp-base"
       }
     ],
     "source": "gen1/plastic/trypio.md",
-    "categoryId": "category-bit-chip-trypio"
+    "categoryId": "category-blade-trypio"
   },
   {
     "id": "gen1-plastic-vanishing-moot",
@@ -3777,6 +3873,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Mountain Hammer",
+        "weightG": 7,
         "partId": "attack-ring--mountain-hammer"
       },
       {
@@ -3819,18 +3916,21 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Upper Wolf",
+        "weightG": 4.9,
         "partId": "attack-ring--upper-wolf"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG (Bearing",
+        "weightG": 5.5,
         "partId": "spin-gear--right-sg-bearing"
       },
       {
@@ -3903,24 +4003,28 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
         "partName": "Reverse Wolf",
+        "weightG": 5,
         "partId": "attack-ring--reverse-wolf"
       },
       {
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Eight Balance",
+        "weightG": 14,
         "partId": "weight-disk--eight-balance"
       },
       {
         "slotKey": "spin-gear",
         "slotLabel": "SPIN GEAR (SG)",
         "partName": "Right SG (Bearing",
+        "weightG": 6,
         "partId": "spin-gear--right-sg-bearing"
       },
       {
         "slotKey": "blade-base",
         "slotLabel": "BLADE BASE (BB)",
         "partName": "SG Bearing Base",
+        "weightG": 10,
         "partId": "blade-base--sg-bearing-base"
       }
     ],
@@ -3993,6 +4097,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "slotKey": "weight-disk",
         "slotLabel": "WEIGHT DISK (WD)",
         "partName": "Ten Wide",
+        "weightG": 14,
         "partId": "weight-disk--ten-wide"
       },
       {
@@ -4420,7 +4525,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--rdf"
       }
     ],
-    "source": "gen2/mfb/death-quetzalcoatl.md"
+    "source": "gen2/mfb/death-quetzalcoatl.md",
+    "categoryId": "category-death-quetzalcoatl-125rdf"
   },
   {
     "id": "gen2-mfb-earth-aquila-145wd",
@@ -6399,7 +6505,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bsf"
       }
     ],
-    "source": "gen2/zerog/ronin-dragoon-lw160bsf.md"
+    "source": "gen2/zerog/ronin-dragoon-lw160bsf.md",
+    "categoryId": "category-ronin-dragoon-lw160bsf"
   },
   {
     "id": "gen2-zerog-samurai-ifraid",
@@ -6758,7 +6865,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--shot"
       }
     ],
-    "source": "gen3/bu/savior-valkyrie-s7.md"
+    "source": "gen3/bu/savior-valkyrie-s7.md",
+    "categoryId": "category-savior-valkyrie-shot-7"
   },
   {
     "id": "gen3-bu-wolborg-tt",
@@ -7062,7 +7170,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--evolution"
       }
     ],
-    "source": "gen3/choz/cho-z-valkyrie-ze.md"
+    "source": "gen3/choz/cho-z-valkyrie-ze.md",
+    "categoryId": "category-cho-z-valkyrie-zenith-evolution"
   },
   {
     "id": "gen3-choz-cho-z-valtryek",
@@ -7083,7 +7192,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--evolution-eternal"
       }
     ],
-    "source": "gen3/choz/cho-z-valtryek.md"
+    "source": "gen3/choz/cho-z-valtryek.md",
+    "categoryId": "category-cho-z-valkyrie-zenith-evolution"
   },
   {
     "id": "gen3-choz-dead-phoenix-0a",
@@ -7106,7 +7216,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--atomic"
       }
     ],
-    "source": "gen3/choz/dead-phoenix-0a.md"
+    "source": "gen3/choz/dead-phoenix-0a.md",
+    "categoryId": "category-dead-phoenix-0-atomic"
   },
   {
     "id": "gen3-choz-kaiser-kerbeus-lp",
@@ -7133,7 +7244,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--press"
       }
     ],
-    "source": "gen3/choz/kaiser-kerbeus-lp.md"
+    "source": "gen3/choz/kaiser-kerbeus-lp.md",
+    "categoryId": "category-kaiser-kerbeus-limited-press"
   },
   {
     "id": "gen3-choz-revive-phoenix-10f",
@@ -7224,7 +7336,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--mobius"
       }
     ],
-    "source": "gen3/choz/variant-bael.md"
+    "source": "gen3/choz/variant-bael.md",
+    "categoryId": "category-variant-lucifer-mobius-2d"
   },
   {
     "id": "gen3-choz-z-achilles",
@@ -7304,7 +7417,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--venture-2"
       }
     ],
-    "source": "gen3/db/dynamite-belial.md"
+    "source": "gen3/db/dynamite-belial.md",
+    "categoryId": "category-dynamite-belial-nexus-venture-2"
   },
   {
     "id": "gen3-db-guilty-longinus-db",
@@ -7325,7 +7439,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--metal-destroy-2"
       }
     ],
-    "source": "gen3/db/guilty-longinus-db.md"
+    "source": "gen3/db/guilty-longinus-db.md",
+    "categoryId": "category-guilty-longinus-karma-metal-destroy-2"
   },
   {
     "id": "gen3-db-imperial-dragon",
@@ -7370,7 +7485,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--dimension-dash"
       }
     ],
-    "source": "gen3/db/infinite-achilles-d1b.md"
+    "source": "gen3/db/infinite-achilles-d1b.md",
+    "categoryId": "category-infinite-achilles-dimension-1b"
   },
   {
     "id": "gen3-db-mirage-fafnir",
@@ -7431,7 +7547,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--destroy"
       }
     ],
-    "source": "gen3/db/rage-longinus-s5.md"
+    "source": "gen3/db/rage-longinus-s5.md",
+    "categoryId": "category-rage-longinus-destroy-3a"
   },
   {
     "id": "gen3-db-tact-longinus",
@@ -7761,7 +7878,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       }
     ],
     "source": "gen3/gt/harmony-pegasus.md",
-    "categoryId": "category-heaven-pegasus-10-proof-low-sen"
+    "categoryId": "category-heaven-pegasus-10proof-low-sen"
   },
   {
     "id": "gen3-gt-judgment-joker-00tt",
@@ -7872,7 +7989,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "performance-tip--bsf-blade-semi-flat"
       }
     ],
-    "source": "gen3/gt/ronin-dragoon.md"
+    "source": "gen3/gt/ronin-dragoon.md",
+    "categoryId": "category-ronin-dragoon-lw160bsf"
   },
   {
     "id": "gen3-gt-wild-wyvern-vm",
@@ -7941,7 +8059,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--evolution"
       }
     ],
-    "source": "gen3/superking/brave-valtryek.md"
+    "source": "gen3/superking/brave-valtryek.md",
+    "categoryId": "category-brave-valkyrie-evolution-2a"
   },
   {
     "id": "gen3-superking-cyclone-ragnaruk",
@@ -7973,7 +8092,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--dimension-dash"
       }
     ],
-    "source": "gen3/superking/infinity-achilles.md"
+    "source": "gen3/superking/infinity-achilles.md",
+    "categoryId": "category-infinite-achilles-dimension-1b"
   },
   {
     "id": "gen3-superking-rage-longinus-d3a",
@@ -7988,7 +8108,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--destroy"
       }
     ],
-    "source": "gen3/superking/rage-longinus-d3a.md"
+    "source": "gen3/superking/rage-longinus-d3a.md",
+    "categoryId": "category-rage-longinus-destroy-3a"
   },
   {
     "id": "gen3-superking-triumph-dragon",
@@ -8060,7 +8181,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--2d"
       }
     ],
-    "source": "gen3/superking/variant-lucifer-m2d.md"
+    "source": "gen3/superking/variant-lucifer-m2d.md",
+    "categoryId": "category-variant-lucifer-mobius-2d"
   },
   {
     "id": "gen3-superking-venom-diabolos-vb",
@@ -8119,7 +8241,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--jolt"
       }
     ],
-    "source": "gen3/superking/world-spriggan.md"
+    "source": "gen3/superking/world-spriggan.md",
+    "categoryId": "category-world-spriggan-unite-2b"
   },
   {
     "id": "gen3-superking-world-spryzen",
@@ -8134,7 +8257,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "driver--unite-dash"
       }
     ],
-    "source": "gen3/superking/world-spryzen.md"
+    "source": "gen3/superking/world-spryzen.md",
+    "categoryId": "category-world-spriggan-unite-2b"
   },
   {
     "id": "gen4-bx-aeropegasus-3-70a",
@@ -8239,7 +8363,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--f-aggressive-xtreme-line-tip"
       }
     ],
-    "source": "gen4/bx/cobalt-drake.md"
+    "source": "gen4/bx/cobalt-drake.md",
+    "categoryId": "category-cobaltdrake-4-60f"
   },
   {
     "id": "gen4-bx-cobaltdrake-4-60f",
@@ -8267,7 +8392,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--flat"
       }
     ],
-    "source": "gen4/bx/cobaltdrake-4-60f.md"
+    "source": "gen4/bx/cobaltdrake-4-60f.md",
+    "categoryId": "category-cobaltdrake-4-60f"
   },
   {
     "id": "gen4-bx-crimsongaruda-4-70tp",
@@ -8319,7 +8445,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--60a"
       }
     ],
-    "source": "gen4/bx/dran-buster.md"
+    "source": "gen4/bx/dran-buster.md",
+    "categoryId": "category-dranbuster-1-60a"
   },
   {
     "id": "gen4-bx-dran-sword",
@@ -8376,7 +8503,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--a"
       }
     ],
-    "source": "gen4/bx/dranbuster-1-60a.md"
+    "source": "gen4/bx/dranbuster-1-60a.md",
+    "categoryId": "category-dranbuster-1-60a"
   },
   {
     "id": "gen4-bx-drandagger-4-60r",
@@ -8741,7 +8869,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--60gf"
       }
     ],
-    "source": "gen4/bx/phoenix-wing.md"
+    "source": "gen4/bx/phoenix-wing.md",
+    "categoryId": "category-phoenixwing-9-60gf"
   },
   {
     "id": "gen4-bx-phoenixwing-9-60gf",
@@ -8769,7 +8898,8 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
         "partId": "bit--gf"
       }
     ],
-    "source": "gen4/bx/phoenixwing-9-60gf.md"
+    "source": "gen4/bx/phoenixwing-9-60gf.md",
+    "categoryId": "category-phoenixwing-9-60gf"
   },
   {
     "id": "gen4-bx-scythe-incendio",

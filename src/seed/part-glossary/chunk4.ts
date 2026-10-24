@@ -36258,12 +36258,6 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 0,
       "stamina": 3
     },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 0,
-      "stamina": 50
-    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -38029,12 +38023,6 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "attack": 0,
       "defense": 2,
       "stamina": 2
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 33,
-      "stamina": 33
     },
     "role": "track"
   },

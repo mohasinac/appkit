@@ -427,6 +427,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Advance Attacker DM",
+    "weightG": 21,
     "usedBy": [
       "gen1-hms-advance-striker"
     ],
@@ -441,6 +442,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Advance Balancer S-T",
+    "weightG": 15,
     "usedBy": [
       "gen1-hms-advance-averazer"
     ],
@@ -455,6 +457,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Advance Defenser",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-advance-guardian"
     ],
@@ -469,6 +472,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Advance Survivor S-T",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-advance-eterner"
     ],
@@ -646,6 +650,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Cross Attacker",
+    "weightG": 5.6,
     "usedBy": [
       "gen1-plastic-dranzer-v"
     ],
@@ -653,7 +658,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross attacker"
     ],
     "source": "composition",
-    "weightG": 5.6,
     "specs": [
       {
         "label": "Contact geometry",
@@ -782,6 +786,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Cross Fang",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-driger-f"
     ],
@@ -789,7 +794,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross fang"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Contact geometry",
@@ -907,6 +911,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Cross Spike",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-draciel-s"
     ],
@@ -914,7 +919,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "cross spike"
     ],
     "source": "composition",
-    "weightG": 4.1,
     "specs": [
       {
         "label": "Contact geometry",
@@ -1159,6 +1163,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "DJ Spiker",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-wyvern-dj"
     ],
@@ -1259,6 +1264,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Double Wing",
+    "weightG": 4,
     "usedBy": [
       "gen1-plastic-dranzer-s"
     ],
@@ -1266,7 +1272,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "double wing"
     ],
     "source": "composition",
-    "weightG": 4,
     "specs": [
       {
         "label": "Contact geometry",
@@ -1631,6 +1636,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Eight Spike",
+    "weightG": 4.2,
     "usedBy": [
       "gen1-plastic-draciel-f"
     ],
@@ -1638,7 +1644,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "eight spike"
     ],
     "source": "composition",
-    "weightG": 4.2,
     "specs": [
       {
         "label": "Contact geometry",
@@ -1753,6 +1758,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Flame Wing",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-black-dranzer",
       "gen1-plastic-dranzer-f"
@@ -1761,7 +1767,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flame wing"
     ],
     "source": "composition",
-    "weightG": 3.8,
     "specs": [
       {
         "label": "Contact geometry",
@@ -1856,6 +1861,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Flying Defense",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-trypio"
     ],
@@ -1863,7 +1869,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flying defense"
     ],
     "source": "composition",
-    "weightG": 7,
     "specs": [
       {
         "label": "Contact geometry",
@@ -2096,6 +2101,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "God Smasher",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-shining-god-ms"
     ],
@@ -2103,7 +2109,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "god smasher"
     ],
     "source": "composition",
-    "weightG": 18,
     "specs": [
       {
         "label": "Part family",
@@ -2394,6 +2399,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Knight Crusher",
+    "weightG": 19,
     "usedBy": [
       "gen1-hms-aero-knight-ms"
     ],
@@ -2401,7 +2407,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "knight crusher"
     ],
     "source": "composition",
-    "weightG": 19,
     "specs": [
       {
         "label": "Classification",
@@ -2446,6 +2451,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Max Shield",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-draciel-mbd"
     ],
@@ -2453,7 +2459,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "max shield"
     ],
     "source": "composition",
-    "weightG": 3.5,
     "specs": [
       {
         "label": "Contact geometry",
@@ -2715,6 +2720,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Mountain Hammer",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-vortex-ape",
       "gen1-plastic-vortex-ape-2"
@@ -2723,7 +2729,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "mountain hammer"
     ],
     "source": "composition",
-    "weightG": 5.9,
     "specs": [
       {
         "label": "Contact geometry",
@@ -3000,6 +3005,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Reverse Dragon",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-dragoon-s"
     ],
@@ -3007,7 +3013,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "reverse dragon"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Contact geometry",
@@ -3095,6 +3100,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Reverse Wolf",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-wolborg"
     ],
@@ -3102,7 +3108,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "reverse wolf"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Contact geometry",
@@ -3156,6 +3161,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Samurai Upper",
+    "weightG": 22,
     "usedBy": [
       "gen1-hms-samurai-changer-ms"
     ],
@@ -3163,7 +3169,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "samurai upper"
     ],
     "source": "composition",
-    "weightG": 21.7,
     "specs": [
       {
         "label": "Classification",
@@ -3315,6 +3320,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Shield Hammer",
+    "weightG": 6,
     "usedBy": [
       "gen1-plastic-draciel-g"
     ],
@@ -3322,7 +3328,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "shield hammer"
     ],
     "source": "composition",
-    "weightG": 6.3,
     "specs": [
       {
         "label": "Contact geometry",
@@ -3407,6 +3412,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Smash Leopard",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-dark-leopard-ms"
     ],
@@ -3414,7 +3420,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "smash leopard"
     ],
     "source": "composition",
-    "weightG": 18,
     "specs": [
       {
         "label": "Part family",
@@ -4115,6 +4120,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Triple Beak",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-trygle-2"
     ],
@@ -4122,7 +4128,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "triple beak"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Contact geometry",
@@ -4378,6 +4383,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Upper Claw",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-driger-v2"
     ],
@@ -4415,13 +4421,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
         "value": "Upper Attack",
         "source": "corpus-gen-glossary",
         "confidence": "fact"
-      },
-      {
-        "label": "Weight",
-        "value": "5.0g (Mold 1) / 5.5g (Mold 2)",
-        "unit": "g",
-        "source": "corpus-parts-table",
-        "confidence": "confirmed"
       },
       {
         "label": "Classification",
@@ -4520,6 +4519,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Upper Dragon",
+    "weightG": 19,
     "usedBy": [
       "gen1-hms-dragoon-mf"
     ],
@@ -4527,7 +4527,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "upper dragon"
     ],
     "source": "composition",
-    "weightG": 19,
     "specs": [
       {
         "label": "Part family",
@@ -4544,6 +4543,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Upper Fox",
+    "weightG": 19,
     "usedBy": [
       "gen1-hms-phantom-fox-ms"
     ],
@@ -4551,7 +4551,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "upper fox"
     ],
     "source": "composition",
-    "weightG": 19,
     "specs": [
       {
         "label": "Part family",
@@ -4568,6 +4567,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Upper Wolf",
+    "weightG": 4.9,
     "usedBy": [
       "gen1-plastic-wolborg-2"
     ],
@@ -4575,7 +4575,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "upper wolf"
     ],
     "source": "composition",
-    "weightG": 5.2,
     "specs": [
       {
         "label": "Contact geometry",
@@ -4699,6 +4698,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "War Lion",
+    "weightG": 6,
     "usedBy": [
       "gen1-plastic-galeon"
     ],
@@ -4706,7 +4706,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "war lion"
     ],
     "source": "composition",
-    "weightG": 6,
     "specs": [
       {
         "label": "Contact geometry",
@@ -4815,6 +4814,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "attack-ring",
     "code": null,
     "name": "Whale Crusher",
+    "weightG": 8,
     "usedBy": [
       "gen1-plastic-seaborg-2"
     ],
@@ -4822,7 +4822,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "whale crusher"
     ],
     "source": "composition",
-    "weightG": 8,
     "specs": [
       {
         "label": "Contact geometry",
@@ -8623,7 +8622,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "bit-chip",
     "code": null,
     "name": "Hard Metal Emblem",
-    "weightG": 15,
     "usedBy": [
       "gen1-hms-advance-averazer",
       "gen1-hms-advance-eterner",
@@ -14013,6 +14011,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Custom Metal Change",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-driger-v2"
     ],
@@ -14279,6 +14278,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Engine Stopper Base",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-thunder-pegasus"
     ],
@@ -14286,7 +14286,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "engine stopper base"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Body material",
@@ -14474,6 +14473,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Flame Change Base",
+    "weightG": 9,
     "usedBy": [
       "gen1-plastic-black-dranzer",
       "gen1-plastic-dranzer-f"
@@ -14482,7 +14482,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "flame change base"
     ],
     "source": "composition",
-    "weightG": 9,
     "specs": [
       {
         "label": "Body material",
@@ -14530,6 +14529,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Fortress Base",
+    "weightG": 12,
     "usedBy": [
       "gen1-plastic-draciel-f"
     ],
@@ -14582,6 +14582,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Full Auto Clutch Base",
+    "weightG": 15,
     "usedBy": [
       "gen1-plastic-driger-f"
     ],
@@ -14589,7 +14590,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "full auto clutch base"
     ],
     "source": "composition",
-    "weightG": 15,
     "specs": [
       {
         "label": "Body material",
@@ -15338,6 +15338,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Bearing Base",
+    "weightG": 10,
     "usedBy": [
       "gen1-plastic-wolborg"
     ],
@@ -15352,6 +15353,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Flat",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-seaborg-2"
     ],
@@ -15366,6 +15368,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Flat Base",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-dark-gargoyle",
       "gen1-plastic-galzzly",
@@ -15375,7 +15378,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg flat base"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Key feature",
@@ -15452,6 +15454,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Jumping Base",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-trygle"
     ],
@@ -15459,7 +15462,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg jumping base"
     ],
     "source": "composition",
-    "weightG": 7,
     "specs": [
       {
         "label": "Part family",
@@ -15547,6 +15549,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Metal Ball",
+    "weightG": 8,
     "usedBy": [
       "gen1-plastic-draciel-s"
     ],
@@ -15662,6 +15665,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Semi-Flat Base",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-apollon",
       "gen1-plastic-galeon-2",
@@ -15673,7 +15677,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "SG Semi-Flat Base"
     ],
     "source": "composition",
-    "weightG": 4.7,
     "specs": [
       {
         "label": "Tip type",
@@ -15734,6 +15737,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Semi-Flat",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-galeon"
     ],
@@ -15748,6 +15752,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Sharp",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-galman",
       "gen1-plastic-trygle-2"
@@ -15756,7 +15761,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "sg sharp"
     ],
     "source": "composition",
-    "weightG": 7,
     "specs": [
       {
         "label": "System",
@@ -15844,6 +15848,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "SG Sharp Base",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-death-driger",
       "gen1-plastic-rushing-boar",
@@ -15875,6 +15880,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Spiral Change Base",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-dranzer-s"
     ],
@@ -15882,7 +15888,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "spiral change base"
     ],
     "source": "composition",
-    "weightG": 7,
     "specs": [
       {
         "label": "Body material",
@@ -16073,6 +16078,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "slot": "blade-base",
     "code": null,
     "name": "Volcano Change Base",
+    "weightG": 6.6,
     "usedBy": [
       "gen1-plastic-dranzer-v"
     ],
@@ -16080,7 +16086,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "volcano change base"
     ],
     "source": "composition",
-    "weightG": 6.6,
     "specs": [
       {
         "label": "Body material",
@@ -29112,12 +29117,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 4
     },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 17,
-      "stamina": 67
-    },
     "role": "ring"
   },
   {
@@ -30377,12 +30376,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 1,
       "defense": 5,
       "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 17,
-      "defense": 83,
-      "stamina": 17
     },
     "role": "ring"
   },
@@ -35419,12 +35412,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "attack": 2,
       "defense": 4,
       "stamina": 1
-    },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 67,
-      "stamina": 17
     },
     "role": "wheel"
   },

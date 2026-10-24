@@ -11919,12 +11919,6 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 1
     },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 33,
-      "defense": 83,
-      "stamina": 17
-    },
     "series": "Metal Saga",
     "role": "ring"
   },

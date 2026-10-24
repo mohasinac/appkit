@@ -7885,12 +7885,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 5,
       "stamina": 1
     },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 17,
-      "defense": 83,
-      "stamina": 17
-    },
     "wboLegality": {
       "mfbStandard": true,
       "mfbLimited": true,
@@ -11884,6 +11878,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Aero Wing + Aero Core",
+    "weightG": 3,
     "usedBy": [
       "gen1-hms-aero-knight-ms"
     ],
@@ -12060,6 +12055,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Bunshin Core SPLIT",
+    "weightG": 8,
     "usedBy": [
       "gen1-hms-phantom-fox-ms"
     ],
@@ -12403,6 +12399,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Metal Flat Core",
+    "weightG": 3,
     "usedBy": [
       "gen1-hms-advance-striker"
     ],
@@ -12450,6 +12447,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Metal Sharp Core",
+    "weightG": 4,
     "usedBy": [
       "gen1-hms-advance-eterner",
       "gen1-hms-wyvern-dj"
@@ -12458,7 +12456,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "metal sharp core"
     ],
     "source": "composition",
-    "weightG": 4,
     "specs": [
       {
         "label": "Movement",
@@ -12733,6 +12730,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Shooter Change Core",
+    "weightG": 6,
     "usedBy": [
       "gen1-hms-bloody-devil-ms",
       "gen1-hms-shining-god-ms"
@@ -12762,6 +12760,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "running-core",
     "code": null,
     "name": "Tornado Change Core",
+    "weightG": 3,
     "usedBy": [
       "gen1-hms-dark-leopard-ms"
     ],
@@ -13175,6 +13174,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Neo Left Spin Gear",
+    "weightG": 4,
     "usedBy": [
       "gen1-plastic-dragoon-v"
     ],
@@ -13221,6 +13221,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Neo Right SG",
+    "weightG": 4,
     "usedBy": [
       "gen1-plastic-apollon",
       "gen1-plastic-dark-gargoyle",
@@ -13243,7 +13244,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "neo right sg"
     ],
     "source": "composition",
-    "weightG": 5.6,
     "specs": [
       {
         "label": "Classification",
@@ -13315,6 +13315,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Neo-Right (Metal Weight)",
+    "weightG": 4,
     "usedBy": [
       "gen1-plastic-driger-v2"
     ],
@@ -13406,6 +13407,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Right SG",
+    "weightG": 5,
     "usedBy": [
       "gen1-plastic-black-dranzer",
       "gen1-plastic-cyber-dragoon",
@@ -13552,6 +13554,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Right SG (Bearing)",
+    "weightG": 5.5,
     "usedBy": [
       "gen1-plastic-wolborg",
       "gen1-plastic-wolborg-2"
@@ -13567,6 +13570,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "spin-gear",
     "code": null,
     "name": "Right SG (Full Auto)",
+    "weightG": 7,
     "usedBy": [
       "gen1-plastic-driger-f"
     ],
@@ -16926,12 +16930,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 1,
       "stamina": 0
     },
-    "ratingScale": 6,
-    "ratingsNormalised": {
-      "attack": 0,
-      "defense": 17,
-      "stamina": 0
-    },
     "role": "track"
   },
   {
@@ -17515,6 +17513,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Circle Balance",
+    "weightG": 15.13,
     "usedBy": [
       "gen1-hms-advance-averazer",
       "gen1-hms-dranzer-ms",
@@ -17525,7 +17524,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "circle balance"
     ],
     "source": "composition",
-    "weightG": 15,
     "specs": [
       {
         "label": "Part family",
@@ -17553,6 +17551,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Circle Heavy",
+    "weightG": 16,
     "usedBy": [
       "gen1-hms-advance-guardian",
       "gen1-hms-advance-striker",
@@ -17567,7 +17566,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "circle heavy"
     ],
     "source": "composition",
-    "weightG": 16,
     "specs": [
       {
         "label": "Material",
@@ -17590,6 +17588,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Circle Wide",
+    "weightG": 14,
     "usedBy": [
       "gen1-hms-advance-eterner",
       "gen1-hms-aero-knight-ms",
@@ -17602,7 +17601,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "circle wide"
     ],
     "source": "composition",
-    "weightG": 14,
     "specs": [
       {
         "label": "Material",
@@ -17642,6 +17640,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "CWD Chain",
+    "weightG": 17,
     "usedBy": [
       "gen1-hms-dragoon-mf"
     ],
@@ -17656,6 +17655,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "CWD Circle",
+    "weightG": 17,
     "usedBy": [
       "gen1-hms-phantom-fox-ms"
     ],
@@ -17670,6 +17670,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "CWD Defense Ring",
+    "weightG": 17,
     "usedBy": [
       "gen1-hms-sea-dragon"
     ],
@@ -17677,7 +17678,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "cwd defense ring"
     ],
     "source": "composition",
-    "weightG": 6,
     "specs": [
       {
         "label": "Material",
@@ -17783,6 +17783,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "CWD God Ring",
+    "weightG": 18,
     "usedBy": [
       "gen1-hms-shining-god-ms"
     ],
@@ -17790,7 +17791,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "cwd god ring"
     ],
     "source": "composition",
-    "weightG": 5,
     "specs": [
       {
         "label": "Material",
@@ -17830,6 +17830,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Eight Balance",
+    "weightG": 14,
     "usedBy": [
       "gen1-plastic-death-driger",
       "gen1-plastic-draciel-f",
@@ -17848,7 +17849,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "eight balance"
     ],
     "source": "composition",
-    "weightG": 14.1,
     "specs": [
       {
         "label": "Material",
@@ -17973,6 +17973,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Eight Heavy",
+    "weightG": 15,
     "usedBy": [
       "gen1-plastic-black-dranzer",
       "gen1-plastic-dranzer-f",
@@ -17984,7 +17985,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "eight heavy"
     ],
     "source": "composition",
-    "weightG": 15,
     "specs": [
       {
         "label": "Material",
@@ -18025,6 +18025,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Eight Wide",
+    "weightG": 13,
     "usedBy": [
       "gen1-plastic-dragoon-f",
       "gen1-plastic-dragoon-s",
@@ -18057,13 +18058,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "unit": "mm",
         "source": "corpus-gen-glossary",
         "confidence": "estimated"
-      },
-      {
-        "label": "Weight",
-        "value": "12.7g (hard edge) / 12.2g (soft edge)",
-        "unit": "g",
-        "source": "corpus-parts-table",
-        "confidence": "fact"
       },
       {
         "label": "Classification",
@@ -18274,6 +18268,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Six Heavy",
+    "weightG": 16,
     "usedBy": [
       "gen1-plastic-draciel-mbd"
     ],
@@ -18281,7 +18276,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "six heavy"
     ],
     "source": "composition",
-    "weightG": 9,
     "specs": [
       {
         "label": "Material",
@@ -18359,6 +18353,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Ten Balance",
+    "weightG": 15,
     "usedBy": [
       "gen1-plastic-draciel-v",
       "gen1-plastic-dranzer-g",
@@ -18378,7 +18373,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten balance"
     ],
     "source": "composition",
-    "weightG": 15,
     "specs": [
       {
         "label": "Material",
@@ -18448,6 +18442,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Ten Heavy",
+    "weightG": 17,
     "usedBy": [
       "gen1-plastic-draciel-v2",
       "gen1-plastic-flash-leopard",
@@ -18461,7 +18456,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten heavy"
     ],
     "source": "composition",
-    "weightG": 16.4,
     "specs": [
       {
         "label": "Material",
@@ -18522,6 +18516,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "slot": "weight-disk",
     "code": null,
     "name": "Ten Wide",
+    "weightG": 14,
     "usedBy": [
       "gen1-plastic-cyber-dragoon",
       "gen1-plastic-dark-gargoyle",
@@ -18539,7 +18534,6 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "ten wide"
     ],
     "source": "composition",
-    "weightG": 14,
     "specs": [
       {
         "label": "Material",
