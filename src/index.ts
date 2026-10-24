@@ -9040,6 +9040,29 @@ export type {
 } from "./features/tax-codes/schemas/firestore";
 export { taxCodeFormSchema, GST_RATE_OPTIONS, HSN_CHAPTER_OPTIONS } from "./features/tax-codes/schemas/tax-code-form";
 export type { TaxCodeFormValues } from "./features/tax-codes/schemas/tax-code-form";
+
+/*
+ * 🛑 THE SEED LOADER DESTRUCTURES THESE TWO OFF THE BARREL, so an unexported
+ * collection name is not a tidiness issue — it is a collection that can
+ * never load.
+ *
+ * `seed-cli.mjs` reads `COLLECTION_MAP` from one big destructure of
+ * `@mohasinac/appkit`. A name missing there is `undefined`, which Firestore
+ * rejects as `Value for argument "collectionPath" is not a valid resource
+ * path` — so `appkit-seed status` and `load` both error on that row alone
+ * while every other collection succeeds. Measured 2026-10-24: eventLikes
+ * (23 rows) and disputeReasons (11 rows) were both stuck at 0 in the
+ * database for exactly this reason, and the error names the path, never the
+ * missing export.
+ *
+ * Exported straight from the defining schema module rather than through a
+ * feature index (Root Cause #18). Both files carry ONLY `import type`, which
+ * the compiler erases, so neither drags a runtime chain into the client
+ * bundle — the check that matters before adding anything here.
+ */
+export { EVENT_LIKES_COLLECTION } from "./features/events/schemas/likes";
+export { DISPUTE_REASON_COLLECTION } from "./features/dispute-reasons/schemas/firestore";
+
 // Wire contracts for /api/admin/tax-codes. BOTH are .strict(): z.object()
 // strips unknown keys (a PATCH returning 200 having written nothing),
 // .passthrough() writes whatever arrives.
