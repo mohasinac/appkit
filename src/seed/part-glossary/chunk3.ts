@@ -9,144 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "driver--zone",
-    "classification": "Driver",
-    "slot": "driver",
-    "code": null,
-    "name": "Zone'",
-    "weightG": 6.1,
-    "aliases": [
-      "zone-dash",
-      "Zn'"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Classification",
-        "value": "Driver"
-      },
-      {
-        "label": "System",
-        "value": "Superking Layer System"
-      },
-      {
-        "label": "Series",
-        "value": "Beyblade Burst Surge"
-      },
-      {
-        "label": "Product code",
-        "value": "B-174"
-      },
-      {
-        "label": "Japanese name",
-        "value": "ゾーンダッシュ"
-      },
-      {
-        "label": "Romaji",
-        "value": "Zōn Dasshu"
-      },
-      {
-        "label": "Type",
-        "value": "Balance"
-      },
-      {
-        "label": "Released (JP)",
-        "value": "November 14th, 2020"
-      },
-      {
-        "label": "Stats",
-        "value": "Attack 3 · Defense 1 · Stamina 2 · Weight 0 · Speed 1"
-      },
-      {
-        "label": "WBO legality",
-        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
-      }
-    ],
-    "seoDescription": "Zone' is a Beyblade driver from the Superking Layer System, weighing 6.1 g. Released November 14th, 2020 as B-174 for Beyblade Burst Surge. It shipped with Helios Volcano Ou Zone'+Z, Beyblade Limit Break DX Set, Dragoon V2 Tapered Zone' and 4 other releases. 2 alternate colourways are recorded.",
-    "shippedIn": [
-      "Helios Volcano Ou Zone'+Z",
-      "Beyblade Limit Break DX Set",
-      "Dragoon V2 Tapered Zone'",
-      "Random Booster Vol. 27",
-      "Infinite Dragon Zone'+X 1A",
-      "Random Booster Vol. 28",
-      "Zone'"
-    ],
-    "releases": [
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-174",
-        "bey": "Helios Volcano Ou Zone'+Z",
-        "set": "Beyblade Limit Break DX Set"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-194",
-        "bey": "Dragoon V2 Tapered Zone'",
-        "set": "Random Booster Vol. 27"
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "bey": "Infinite Dragon Zone'+X 1A",
-        "set": "Random Booster Vol. 28",
-        "colourway": "Demon King Color Ver."
-      },
-      {
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "bey": "Zone'",
-        "colourway": "Gold Driver Get Campaign"
-      }
-    ],
-    "colourways": [
-      {
-        "colourway": "Demon King Color Ver.",
-        "vendor": "Takara Tomy",
-        "code": "B-196",
-        "inBey": "Infinite Dragon Zone'+X 1A"
-      },
-      {
-        "colourway": "Gold Driver Get Campaign",
-        "vendor": "Takara Tomy",
-        "code": "B-00",
-        "inBey": "Zone'"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'",
-    "ratings": {
-      "attack": 3,
-      "defense": 1,
-      "stamina": 2,
-      "weight": 0,
-      "speed": 1
-    },
-    "ratingScale": 8,
-    "ratingsNormalised": {
-      "attack": 38,
-      "defense": 13,
-      "stamina": 25,
-      "weight": 0,
-      "speed": 13
-    },
-    "wboLegality": {
-      "burst": true,
-      "burstGt": true,
-      "burstLimited": true,
-      "burstClassic": true
-    },
-    "aka": [
-      "Zn'"
-    ],
-    "system": "Superking Layer System",
-    "series": "Beyblade Burst Surge",
-    "partType": "Balance",
-    "role": "tip",
-    "jpName": "ゾーンダッシュ",
-    "romaji": "Zōn Dasshu"
-  },
-  {
     "id": "driver--zone-z-spm",
     "classification": "Driver",
     "slot": "driver",
@@ -53598,5 +53460,86 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     "role": "ring",
     "jpName": "ウルボーグ",
     "romaji": "Urubōgu"
+  },
+  {
+    "id": "layer--wonder-valtryek-v4",
+    "classification": "Layer",
+    "slot": "layer",
+    "code": null,
+    "name": "Wonder Valtryek V4",
+    "weightG": 9.6,
+    "aliases": [
+      "wonder-valtryek-v4",
+      "Wonder Valtryek"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Layer"
+      },
+      {
+        "label": "System",
+        "value": "SlingShock System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Turbo"
+      },
+      {
+        "label": "Product code",
+        "value": "E3629"
+      },
+      {
+        "label": "Type",
+        "value": "Attack"
+      },
+      {
+        "label": "Spin direction",
+        "value": "Right-Spin"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: banned"
+      }
+    ],
+    "seoDescription": "Wonder Valtryek V4 is a Beyblade layer from the SlingShock System, weighing 9.6 g. Released as E3629 for Beyblade Burst Turbo. It shipped with Wonder Valtryek V4 12 Volcanic-S, Rail Rush Battle Set, Championship Clash.",
+    "shippedIn": [
+      "Wonder Valtryek V4 12 Volcanic-S",
+      "Rail Rush Battle Set",
+      "Championship Clash"
+    ],
+    "releases": [
+      {
+        "vendor": "Hasbro",
+        "bey": "Wonder Valtryek V4 12 Volcanic-S",
+        "set": "Rail Rush Battle Set"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wonder Valtryek V4 12 Volcanic-S"
+      },
+      {
+        "vendor": "Hasbro",
+        "bey": "Wonder Valtryek V4 12 Volcanic-S",
+        "set": "Championship Clash"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Layer_-_Wonder_Valtryek_V4",
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": false
+    },
+    "aka": [
+      "Wonder Valtryek"
+    ],
+    "system": "SlingShock System",
+    "series": "Beyblade Burst Turbo",
+    "partType": "Attack",
+    "spinDirection": "Right-Spin",
+    "role": "ring"
   }
 ];

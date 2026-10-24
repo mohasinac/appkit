@@ -2193,20 +2193,6 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "role": "ring"
   },
   {
-    "id": "attack-ring--g-upper-attack-profile",
-    "classification": "Attack Ring",
-    "slot": "attack-ring",
-    "code": null,
-    "name": "G-Upper Attack profile",
-    "usedBy": [
-      "gen1-plastic-dragoon-g"
-    ],
-    "aliases": [
-      "g-upper attack profile"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "attack-ring--genocide-circle",
     "classification": "Attack Ring",
     "slot": "attack-ring",
@@ -37926,5 +37912,20 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "role": "wheel",
     "jpName": "クライス",
     "romaji": "Kuraisu"
+  },
+  {
+    "id": "fusion-wheel--libra",
+    "classification": "Fusion Wheel",
+    "slot": "fusion-wheel",
+    "code": null,
+    "name": "Libra",
+    "weightG": 40.5,
+    "usedBy": [
+      "gen2-mfb-libra-df145bs"
+    ],
+    "aliases": [
+      "libra"
+    ],
+    "source": "composition"
   }
 ];

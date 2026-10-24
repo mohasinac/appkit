@@ -9,37 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "bit-protector--wolborg-emblem",
-    "classification": "Bit Protector",
-    "slot": "bit-protector",
-    "code": null,
-    "name": "Wolborg Emblem",
-    "aliases": [
-      "wolborg-emblem"
-    ],
-    "source": "fandom-infobox",
-    "specs": [
-      {
-        "label": "Part family",
-        "value": "Hard Metal System"
-      }
-    ],
-    "seoDescription": "Wolborg Emblem is a Beyblade bit protector. It shipped with Wolborg MS.",
-    "shippedIn": [
-      "Wolborg MS"
-    ],
-    "releases": [
-      {
-        "vendor": "Unknown",
-        "bey": "Wolborg MS"
-      }
-    ],
-    "colourwaysDocumented": true,
-    "hasMoldVariations": true,
-    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem",
-    "role": "chip"
-  },
-  {
     "id": "bit-protector--wyvern-emblem",
     "classification": "Bit Protector",
     "slot": "bit-protector",
@@ -54099,5 +54068,143 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "role": "tip",
     "jpName": "ゾーンダッシュエックス",
     "romaji": "Zōn Dasshu Ekkusu"
+  },
+  {
+    "id": "driver--zone",
+    "classification": "Driver",
+    "slot": "driver",
+    "code": null,
+    "name": "Zone'",
+    "weightG": 6.1,
+    "aliases": [
+      "zone-dash",
+      "Zn'"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Classification",
+        "value": "Driver"
+      },
+      {
+        "label": "System",
+        "value": "Superking Layer System"
+      },
+      {
+        "label": "Series",
+        "value": "Beyblade Burst Surge"
+      },
+      {
+        "label": "Product code",
+        "value": "B-174"
+      },
+      {
+        "label": "Japanese name",
+        "value": "ゾーンダッシュ"
+      },
+      {
+        "label": "Romaji",
+        "value": "Zōn Dasshu"
+      },
+      {
+        "label": "Type",
+        "value": "Balance"
+      },
+      {
+        "label": "Released (JP)",
+        "value": "November 14th, 2020"
+      },
+      {
+        "label": "Stats",
+        "value": "Attack 3 · Defense 1 · Stamina 2 · Weight 0 · Speed 1"
+      },
+      {
+        "label": "WBO legality",
+        "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
+      }
+    ],
+    "seoDescription": "Zone' is a Beyblade driver from the Superking Layer System, weighing 6.1 g. Released November 14th, 2020 as B-174 for Beyblade Burst Surge. It shipped with Helios Volcano Ou Zone'+Z, Beyblade Limit Break DX Set, Dragoon V2 Tapered Zone' and 4 other releases. 2 alternate colourways are recorded.",
+    "shippedIn": [
+      "Helios Volcano Ou Zone'+Z",
+      "Beyblade Limit Break DX Set",
+      "Dragoon V2 Tapered Zone'",
+      "Random Booster Vol. 27",
+      "Infinite Dragon Zone'+X 1A",
+      "Random Booster Vol. 28",
+      "Zone'"
+    ],
+    "releases": [
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-174",
+        "bey": "Helios Volcano Ou Zone'+Z",
+        "set": "Beyblade Limit Break DX Set"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-194",
+        "bey": "Dragoon V2 Tapered Zone'",
+        "set": "Random Booster Vol. 27"
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-196",
+        "bey": "Infinite Dragon Zone'+X 1A",
+        "set": "Random Booster Vol. 28",
+        "colourway": "Demon King Color Ver."
+      },
+      {
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "bey": "Zone'",
+        "colourway": "Gold Driver Get Campaign"
+      }
+    ],
+    "colourways": [
+      {
+        "colourway": "Demon King Color Ver.",
+        "vendor": "Takara Tomy",
+        "code": "B-196",
+        "inBey": "Infinite Dragon Zone'+X 1A"
+      },
+      {
+        "colourway": "Gold Driver Get Campaign",
+        "vendor": "Takara Tomy",
+        "code": "B-00",
+        "inBey": "Zone'"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Driver_-_Zone'",
+    "ratings": {
+      "attack": 3,
+      "defense": 1,
+      "stamina": 2,
+      "weight": 0,
+      "speed": 1
+    },
+    "ratingScale": 8,
+    "ratingsNormalised": {
+      "attack": 38,
+      "defense": 13,
+      "stamina": 25,
+      "weight": 0,
+      "speed": 13
+    },
+    "wboLegality": {
+      "burst": true,
+      "burstGt": true,
+      "burstLimited": true,
+      "burstClassic": true
+    },
+    "aka": [
+      "Zn'"
+    ],
+    "system": "Superking Layer System",
+    "series": "Beyblade Burst Surge",
+    "partType": "Balance",
+    "role": "tip",
+    "jpName": "ゾーンダッシュ",
+    "romaji": "Zōn Dasshu"
   }
 ];

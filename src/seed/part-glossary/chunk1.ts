@@ -9,21 +9,6 @@ import type { PartGlossaryDocument } from "../../features/parts/schemas/firestor
 
 export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
   {
-    "id": "fusion-wheel--libra",
-    "classification": "Fusion Wheel",
-    "slot": "fusion-wheel",
-    "code": null,
-    "name": "Libra",
-    "weightG": 40.5,
-    "usedBy": [
-      "gen2-mfb-libra-df145bs"
-    ],
-    "aliases": [
-      "libra"
-    ],
-    "source": "composition"
-  },
-  {
     "id": "fusion-wheel--lightning",
     "classification": "Fusion Wheel",
     "slot": "fusion-wheel",
@@ -42836,6 +42821,37 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Turtle_Emblem",
+    "role": "chip"
+  },
+  {
+    "id": "bit-protector--wolborg-emblem",
+    "classification": "Bit Protector",
+    "slot": "bit-protector",
+    "code": null,
+    "name": "Wolborg Emblem",
+    "aliases": [
+      "wolborg-emblem"
+    ],
+    "source": "fandom-infobox",
+    "specs": [
+      {
+        "label": "Part family",
+        "value": "Hard Metal System"
+      }
+    ],
+    "seoDescription": "Wolborg Emblem is a Beyblade bit protector. It shipped with Wolborg MS.",
+    "shippedIn": [
+      "Wolborg MS"
+    ],
+    "releases": [
+      {
+        "vendor": "Unknown",
+        "bey": "Wolborg MS"
+      }
+    ],
+    "colourwaysDocumented": true,
+    "hasMoldVariations": true,
+    "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem",
     "role": "chip"
   }
 ];
