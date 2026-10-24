@@ -970,6 +970,47 @@ export interface PartAuthoredAnalysis {
   winCondition?: string[];
 
   /**
+   * Every photograph of this part that a source carries, with its caption.
+   *
+   * 🛑 THE CAPTION IS THE DATA. "Advance Attacker with Metal Frame detached" is
+   * not a label for a picture — it is the statement that a photograph exists of
+   * the one feature the part is built around, and looking at it corrected the
+   * prose: every source calls the metal frame a "Metal Frame" that "separates
+   * from the ABS Caul", and the photograph shows it is a single die-cast
+   * triskelion — a central annulus, three radial arms, three tangential claws,
+   * with three registration pegs at 120° that are what permit the flip. No
+   * source says any of that.
+   *
+   * 🛑 `image` above is ONE `/media/<slug>` for the card. This is the gallery,
+   * and it holds SOURCE urls deliberately: routing them through `/media`
+   * requires uploading ~1,600 objects to live Storage, which is a separate,
+   * explicitly-authorised step. Recording what exists is free and reversible;
+   * publishing it is neither. Nothing renders these directly — Root Cause #27
+   * and the media rules still apply at the point of use.
+   *
+   * 🛑 Fetching needs `Referer: https://beyblade.fandom.com/`.
+   * `static.wikia.nocookie.net` hotlink-protects on the REFERER, not the
+   * User-Agent: a browser UA alone returns 403 `text/html`, which reads as "the
+   * image is gone" and sends you hunting for a replacement that does not exist.
+   *
+   * 🛑 fandom and WBO are ONE lineage here, not two sources. Both serve
+   * `1AdvanceStriker.JPG` under the same name. Dedupe on `name`, never on
+   * `url`, or one photograph is counted as corroboration of itself.
+   */
+  photos?: Array<{
+    /** The source's own caption. Empty on WBO, which usually gives none. */
+    caption?: string;
+    /** Original upload filename — the dedupe key across hosts. */
+    name?: string;
+    /** Full-size URL, with the host's thumbnail scaling undone. */
+    url: string;
+    /** `fandom` | `wbo` — which crawl it came from, for attribution. */
+    host?: string;
+    /** What this photo PROVES that the prose does not say. */
+    shows?: string;
+  }>;
+
+  /**
    * What wear does to it.
    *
    * 🛑 WEAR CAN BE A POSITIVE, which a durability model that only degrades
