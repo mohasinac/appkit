@@ -165,7 +165,6 @@ const _raweventsSeedData: EventDocument[] = [
     description:
       `<p><strong>Our festive season opens on Dhanteras — Friday 6 November 2026 — and the offers below run right through to 5 February 2027.</strong></p>` +
       `<p>You picked these. We ran a community poll asking which offers to run from Diwali to New Year, and <strong>Buy 3, Get 1 Free</strong> won with 28 of the 33 votes. We are running the other three as well.</p>` +
-      `<img src="${editorialImage("event-content-diwali-fireworks")}" alt="Fireworks over a city skyline at night" />` +
       `<h2>The offers</h2>` +
       `<ul>` +
       `<li><strong>BUY3GET1</strong> — Buy 3, get 1 free on items priced ₹2,000 or under. <strong>Add four qualifying items and the cheapest of the four comes off.</strong> Items above ₹2,000 do not count towards it.</li>` +
@@ -194,8 +193,8 @@ const _raweventsSeedData: EventDocument[] = [
     isPinned: true,
     coverImage: {
       type: "image",
-      url: editorialImage("event-cover-diwali-fireworks"),
-      alt: "Fireworks over a city skyline at night",
+      url: editorialImage("event-cover-diwali-diyas"),
+      alt: "A large, brightly coloured rangoli laid out on the floor for Diwali",
     },
     tags: ["offer", "cashback", "diwali", "festive", "new-year", "bogo", "free-shipping"],
     /*

@@ -525,6 +525,16 @@ export const mediaAssetsEditorialSeedData: Partial<MediaAssetDocument>[] = [
     contextType: "event-image",
   },
   {
+    id: "event-cover-diwali-diyas",
+    storagePath: "media/editorial/event-cover-diwali-diyas.webp",
+    uploadedBy: "user-admin-letitrip",
+    contentType: "image/webp",
+    size: 289058,
+    isPublic: true,
+    status: "finalized",
+    contextType: "event-image",
+  },
+  {
     id: "event-cover-diwali-fireworks",
     storagePath: "media/editorial/event-cover-diwali-fireworks.webp",
     uploadedBy: "user-admin-letitrip",

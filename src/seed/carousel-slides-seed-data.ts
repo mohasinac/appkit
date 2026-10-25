@@ -122,7 +122,7 @@ const MEDIA = {
    */
   bgHero: "/media/carousel-bg-hero",
   bgCashback: "/media/carousel-bg-cashback",
-  eventDiwali: "/media/event-cover-diwali-fireworks",
+  eventDiwali: "/media/event-cover-diwali-diyas",
   bgBundles: "/media/carousel-bg-bundles",
   bgPreorders: "/media/carousel-bg-preorders",
   bgAuthenticity: "/media/carousel-bg-authenticity",
