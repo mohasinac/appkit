@@ -106,6 +106,29 @@ const resolves = (sub) =>
     return f && existsSync(join(APPKIT, f));
   });
 
+/*
+ * The modules an existing key already TARGETS.
+ *
+ * 🛑 `resolves()` is the wrong question for an `_internal` module and asking it
+ * produced duplicate keys. A key for `_internal/shared/fees/calculator` is
+ * spelled `./fees/calculator` — the subpath deliberately does NOT contain
+ * `_internal`, that being the whole point of naming a key for what the module
+ * IS. So `resolves("_internal/shared/fees/calculator")` is false even though the
+ * module is fully reachable, and six modules that already had a key were
+ * re-proposed under tier-qualified aliases (`./shared/fees/calculator`). Two
+ * public paths to one module is the dual-instance hazard of Root Cause #19
+ * wearing a different hat: a consumer importing each gets two module records
+ * under some resolver conditions.
+ *
+ * Reverse the map instead, and compare dist TARGETS.
+ */
+const alreadyKeyed = new Set();
+for (const v of Object.values(exp)) {
+  const t = typeof v === "string" ? v : (v?.import ?? v?.default);
+  if (!t || t.includes("*") || !t.includes("/_internal/")) continue;
+  alreadyKeyed.add(t.replace(/^\.\/dist\//, "").replace(/(\/index)?\.js$/, ""));
+}
+
 /* ── which _internal modules the consumer reaches through a barrel ─────────── */
 function walk(d, o = []) {
   let es;
@@ -147,7 +170,8 @@ for (const entry of ENTRIES) {
         const t = raw.trim().replace(/^type\s+/, "");
         if (!t) continue;
         const mod = target.get(t.split(/\s+as\s+/)[0].trim());
-        if (!mod || !mod.startsWith("_internal/") || resolves(mod)) continue;
+        if (!mod || !mod.startsWith("_internal/")) continue;
+        if (resolves(mod) || alreadyKeyed.has(mod.replace(/\/index$/, ""))) continue;
         if (!needed.has(mod)) needed.set(mod, new Set());
         needed.get(mod).add(f.slice(ROOT.length + 1).replace(/\\/g, "/"));
       }
@@ -159,7 +183,10 @@ for (const entry of ENTRIES) {
 function keyFor(mod, taken) {
   const m = /^_internal\/(shared|server|client)\/(.*)$/.exec(mod);
   const tier = m ? m[1] : "";
-  let tail = (m ? m[2] : mod).replace(/^features\//, "");
+  /* Drop a trailing `/index`: the module `.../features/products/index` IS the
+   * products module, so `./products` reads correctly and `./products/index`
+   * reads like a file inside it. 13 keys were shaped that way. */
+  let tail = (m ? m[2] : mod).replace(/^features\//, "").replace(/\/index$/, "");
   for (const cand of [`./${tail}`, `./${tier}/${tail}`, `./_internal/${mod.slice("_internal/".length)}`]) {
     if (!taken.has(cand) && !exp[cand]) return cand;
   }
@@ -184,10 +211,10 @@ console.log(
   `[derive-internal-export-keys] ${APPLY ? "adding" : "would add"} ${additions.length} key(s)` +
   ` for ${new Set(additions.flatMap((a) => [...(needed.get(a.mod) ?? [])])).size} consumer file(s)`,
 );
-for (const a of additions.slice(0, 12)) {
+for (const a of additions.slice(0, 200)) {
   console.log(`   ${String(a.freed).padStart(3)}f  ${a.key.padEnd(40)} -> ${a.mod}`);
 }
-if (additions.length > 12) console.log(`   … +${additions.length - 12} more`);
+if (additions.length > 200) console.log(`   … +${additions.length - 12} more`);
 
 if (!APPLY) {
   console.log("  (dry run — pass --apply)");
