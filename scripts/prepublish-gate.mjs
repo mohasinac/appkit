@@ -55,9 +55,31 @@ if (!existsSync(runner)) {
   process.exit(0);
 }
 
+/*
+ * 🛑 Two audits are excluded, and only these two. Both assert that the
+ * CONSUMER'S INSTALLED copy of appkit matches the built one — which is false by
+ * construction during a publish:
+ *
+ *   appkit-dist-sync            dist's build stamp vs appkit HEAD, and
+ *                               appkit/dist vs node_modules/@mohasinac/appkit/dist
+ *   functions-bundle-freshness  functions/lib (a tsup snapshot that inlines
+ *                               appkit) vs appkit/dist
+ *
+ * A publish bumps the version — moving HEAD — then builds; the installed copy
+ * and the Functions bundle are resynced AFTER the publish (documented step 7).
+ * So these cannot pass here no matter what, and leaving them in would make the
+ * gate permanently red and immediately bypassed.
+ *
+ * They are NOT weakened: both still run on every `npm run check` and every
+ * `node scripts/deploy.mjs`, which is where "is the installed copy correct"
+ * actually matters. fast-gate prints both names in its denominator line, so
+ * this run cannot be mistaken for a clean full suite.
+ */
+const EXCLUDED = ["appkit-dist-sync", "functions-bundle-freshness"];
+
 console.log("[prepublish-gate] running the consumer's audit suite before publish …");
 try {
-  execFileSync(process.execPath, [runner], {
+  execFileSync(process.execPath, [runner, "--except", EXCLUDED.join(",")], {
     cwd: consumerRoot,
     stdio: "inherit",
   });
