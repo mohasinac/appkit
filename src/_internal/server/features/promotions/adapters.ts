@@ -42,5 +42,15 @@ export function toAttachedCoupon(doc: CouponDocument): AttachedCoupon {
      * missing `endsAt` as expired hides every open-ended coupon.
      */
     endsAt: doc.validity.endDate ? new Date(doc.validity.endDate).toISOString() : undefined,
+    /*
+     * Emitted ONLY when it is in the future, so the renderer never has to
+     * re-ask the question. A start date in the past is the ordinary case and
+     * says nothing worth printing — carrying it anyway would invite a card to
+     * announce "Opens 6 Nov" for the rest of time.
+     */
+    startsAt:
+      doc.validity.startDate && new Date(doc.validity.startDate) > new Date()
+        ? new Date(doc.validity.startDate).toISOString()
+        : undefined,
   };
 }

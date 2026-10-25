@@ -153,6 +153,32 @@ export function AttachedCouponsSection({
                       <Badge variant="primary">{summary}</Badge>
                     </Div>
                   ) : null}
+                  {/*
+                    🛑 A CODE THAT IS NOT LIVE YET MUST SAY SO.
+
+                    Display surfaces deliberately keep codes published ahead of
+                    their opening date — the Diwali event publishes four weeks
+                    early so readers can save them, and hiding them is the bug
+                    this was reported as. But a card that shows a code with no
+                    hint it is dormant just relocates the lie: the reader
+                    copies it, tries it at checkout, and is refused with no
+                    explanation.
+
+                    `startsAt` is emitted by `toAttachedCoupon` ONLY when it is
+                    in the future, so the mere presence of the field is the
+                    condition — the renderer never re-asks.
+
+                    `variant="warning"`, never a `bg-*`/`text-*` className
+                    pair: a status tint with literal ink is invisible in
+                    exactly one theme (Root Cause #67).
+                  */}
+                  {coupon.startsAt ? (
+                    <Div>
+                      <Badge variant="warning">
+                        {`Opens ${new Date(coupon.startsAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}`}
+                      </Badge>
+                    </Div>
+                  ) : null}
                   <Text weight="semibold">{coupon.name}</Text>
                   {coupon.description ? (
                     <Text size="sm" color="muted">

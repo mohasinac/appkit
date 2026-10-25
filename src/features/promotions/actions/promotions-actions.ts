@@ -10,6 +10,7 @@ import { couponsRepository } from "../repository/coupons.repository";
 import type { ProductDocument } from "../../../features/products/schemas";
 import { ProductStatusValues } from "../../../features/products/schemas";
 import type { CouponDocument } from "../schemas";
+import { isCouponDisplayable } from "../schemas";
 
 export interface PromotionsResult {
   promotedProducts: ProductDocument[];
@@ -38,12 +39,22 @@ export async function getPromotions(): Promise<PromotionsResult> {
     .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 8);
 
-  const validCoupons = activeCoupons.filter((c) => {
-    const startOk =
-      !c.validity.startDate || new Date(c.validity.startDate) <= now;
-    const endOk = !c.validity.endDate || new Date(c.validity.endDate) >= now;
-    return startOk && endOk;
-  });
+  /*
+   * 🛑 A HAND-INLINED COPY OF THE VALIDITY RULE, AND IT DISAGREED WITH THE
+   * PAGE IT FEEDS.
+   *
+   * This required `startDate <= now`, so every code published ahead of its
+   * opening date was dropped — while `/api/coupons`, which the page's own
+   * `CouponsIndexListing` fetches from client-side, has never applied that
+   * clause. The result was a page whose server half swore there were no
+   * coupons and whose client half rendered three, and a Coupons tab counted
+   * from the half that was wrong.
+   *
+   * `isCouponDisplayable` is the shared predicate — expired and inactive are
+   * still dropped, not-yet-open is kept. Root Cause #75: one money predicate,
+   * hand-written in several places, is how the copies silently diverge.
+   */
+  const validCoupons = activeCoupons.filter(isCouponDisplayable);
 
   return {
     promotedProducts,

@@ -54,4 +54,18 @@ export interface AttachedCoupon {
   minPurchase?: number;
   /** ISO string — `undefined` means no end date, NOT "expired". */
   endsAt?: string;
+  /**
+   * ISO string — when the code becomes spendable.
+   *
+   * 🛑 CARRIED SO THE CARD CAN SAY "OPENS 6 NOV". Display surfaces now keep
+   * codes that have been published ahead of their opening date
+   * (`isCouponDisplayable`), which is deliberate — the Diwali event publishes
+   * four codes weeks early so readers can save them. But showing a code with
+   * no hint that it is not yet live just relocates the lie: the reader copies
+   * it, tries it, and is refused with no explanation.
+   *
+   * Only meaningful when it is in the FUTURE. A past start date is the normal
+   * case and the renderer says nothing about it.
+   */
+  startsAt?: string;
 }

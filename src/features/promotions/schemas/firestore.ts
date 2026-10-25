@@ -340,6 +340,54 @@ export function isCouponValid(coupon: CouponDocument): boolean {
   );
 }
 
+/**
+ * Is this coupon worth SHOWING to a reader? (As distinct from `isCouponValid`,
+ * which asks whether the till will honour it right now.)
+ *
+ * 🛑 THE DIFFERENCE IS ONE CLAUSE — `startDate <= now` — AND IT WAS A REAL,
+ * USER-REPORTED BUG. The Diwali event attaches four codes that open on
+ * Dhanteras. Every display surface filtered them with `isCouponValid`, so
+ * through all of October the event page rendered ONE coupon (its `offerConfig`
+ * headline, which is not filtered) where the event carries five, the homepage
+ * rail would have been empty, and the `/promotions` Coupons tab counted zero
+ * while its own client-side listing happily fetched and rendered them from
+ * `/api/coupons` — which has never applied the start-date clause.
+ *
+ * So three server surfaces disagreed with the one client surface about whether
+ * a published-ahead code exists.
+ *
+ * The event's own copy settles which side is right: *"The code is published now
+ * so you can save it ahead of time."* Publishing a code before it opens is the
+ * intended behaviour, not an accident, and a page that hides it is breaking the
+ * promise the page itself makes.
+ *
+ * 🛑 EXPIRED AND INACTIVE ARE STILL DROPPED, and that half must not be relaxed.
+ * A reader who copies a dead code does the work and is refused at the till —
+ * strictly worse than seeing nothing. "Not yet" is a fact a card can state;
+ * "no longer" is a card that wastes someone's time.
+ *
+ * Use `isCouponValid` wherever the question is "may this be redeemed" —
+ * checkout, validation, `canUserUseCoupon`. Use this one wherever the question
+ * is "should a human see this".
+ */
+export function isCouponDisplayable(coupon: CouponDocument): boolean {
+  const now = new Date();
+  const endDate = coupon.validity.endDate
+    ? new Date(coupon.validity.endDate)
+    : null;
+  return (
+    coupon.validity.isActive &&
+    (!endDate || endDate >= now) &&
+    (coupon.usage.totalLimit === undefined ||
+      coupon.usage.currentUsage < coupon.usage.totalLimit)
+  );
+}
+
+/** Has this coupon been published ahead of its opening date? */
+export function isCouponUpcoming(coupon: CouponDocument): boolean {
+  return new Date(coupon.validity.startDate) > new Date();
+}
+
 export function canUserUseCoupon(
   coupon: CouponDocument,
   userUsageCount: number,

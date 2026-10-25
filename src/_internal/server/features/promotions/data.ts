@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { couponsRepository } from "../../../../repositories";
-import { isCouponValid } from "../../../../features/promotions/schemas";
+import { isCouponDisplayable } from "../../../../features/promotions/schemas";
 import type { AttachedCoupon } from "../../../../features/promotions/constants/attached-coupons";
 import { toAttachedCoupon } from "./adapters";
 import { safeRead } from "../../../../errors/safe-read";
@@ -26,9 +26,14 @@ export const getCouponByCode = cache(
  * 🛑 EXPIRED AND INACTIVE COUPONS ARE DROPPED HERE, not in the renderer.
  * A blog post from March that still advertises a code which now errors at
  * checkout is worse than one that advertises nothing: the reader does the
- * work of copying it and is refused at the till. `isCouponValid` is the same
- * predicate checkout applies (active + inside its window + under its total
- * limit), so the page cannot promise what the till will decline.
+ * work of copying it and is refused at the till.
+ *
+ * 🛑 BUT A NOT-YET-OPEN CODE IS KEPT — `isCouponDisplayable`, not
+ * `isCouponValid`. This used to be the checkout predicate, which also requires
+ * `startDate <= now`, and that single clause is why the Diwali event rendered
+ * ONE coupon where it carries five: all four attached codes open on Dhanteras.
+ * Publishing a code ahead of time is deliberate ("save it ahead of time," says
+ * the event's own copy); hiding it breaks the page's own promise.
  *
  * It does NOT check `perUserLimit` — that is per-reader and unknowable on a
  * cached public page. A reader who has personally exhausted a still-valid
@@ -38,13 +43,14 @@ export const getCouponByCode = cache(
 /**
  * Every live coupon, for the homepage `coupons` rail.
  *
- * 🛑 SAME VALIDITY PREDICATE AS `/promotions`, deliberately. The homepage rail
- * and the promotions page it links to are the same claim made twice; a code
- * visible on one and absent from the other reads as a broken link, and a code
- * the homepage shows but the till refuses is worse than showing none. One
- * `isCouponValid` call is what keeps them from drifting — this codebase has
- * paid for two hand-written copies of a money predicate before (Root Cause
- * #75).
+ * 🛑 SAME DISPLAY PREDICATE AS `/promotions` AND THE EVENT PAGE, deliberately.
+ * These are the same claim made in three places; a code visible on one and
+ * absent from another reads as a broken link. One `isCouponDisplayable` call
+ * is what keeps them from drifting — this codebase has paid for hand-written
+ * copies of a money predicate before (Root Cause #75), and these three had in
+ * fact already drifted from `/api/coupons`, which never applied the
+ * start-date clause and so rendered codes the server surfaces swore did not
+ * exist.
  *
  * `limit` is applied LAST, after filtering, so an expired code can never
  * occupy one of the rail's slots and silently push a live one off the end.
@@ -63,7 +69,7 @@ export const getHomepageCoupons = cache(
       key: "promotions.getActiveCoupons",
       fallback: [],
     });
-    return docs.filter(isCouponValid).map(toAttachedCoupon).slice(0, limit);
+    return docs.filter(isCouponDisplayable).map(toAttachedCoupon).slice(0, limit);
   },
 );
 
@@ -83,6 +89,6 @@ export const getAttachedCoupons = cache(
       key: "promotions.findByIds",
       fallback: [],
     });
-    return docs.filter(isCouponValid).map(toAttachedCoupon);
+    return docs.filter(isCouponDisplayable).map(toAttachedCoupon);
   },
 );
