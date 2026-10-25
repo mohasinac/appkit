@@ -17,7 +17,7 @@ export { PaymentProviderUnreachableError } from "./errors/payment-provider-unrea
 // Re-exported from the public utils barrel to keep the _internal/ boundary
 // audit clean. Same symbols, no behavioral change.
 export type { ActionResult } from "./_internal/shared/types/action-result";
-export { isOk, unwrap } from "./_internal/shared/types/action-result";
+export { isOk, unwrap } from "./utils/action-result";
 
 // [CLIENT-SAFE] Client error class + surface-error router + reporter primitives.
 // Used by useApiMutation / useApiQuery and Button's async-onclick catch.
@@ -99,8 +99,7 @@ export {
 // when the user picks `"auto"` mode. Built-in themes ship via `./tokens/themes`.
 // Re-exported through the public `./theme` barrel to keep audit-appkit-reexports
 // clean (no `_internal/` symbols may surface through public barrels).
-export { ThemeProvider, useTheme } from "./_internal/client/theme/ThemeProvider";
-export { buildThemeRegistry } from "./_internal/client/theme/buildRegistry";
+export { ThemeProvider, useTheme, buildThemeRegistry } from "./theme";
 export type {
   ModePreference,
   SiteSettingsThemeInput,
@@ -114,7 +113,7 @@ export type {
 // close-buttons/floating CTAs flip which screen edge they dock to.
 // Re-exported through the public `./hand-mode` barrel to keep
 // audit-appkit-reexports clean (no `_internal/` symbols in public barrels).
-export { HandModeProvider, useHandMode } from "./_internal/client/hand-mode/HandModeProvider";
+export { HandModeProvider, useHandMode } from "./hand-mode";
 export type {
   HandMode,
   HandModeContextValue,

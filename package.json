@@ -193,6 +193,94 @@
     "./features/sticker-trace/server": {
       "types": "./dist/features/sticker-trace/server.d.ts",
       "import": "./dist/features/sticker-trace/server.js"
+    },
+    "./checkout/lanes": {
+      "types": "./dist/_internal/shared/checkout/lanes.d.ts",
+      "import": "./dist/_internal/shared/checkout/lanes.js"
+    },
+    "./checkout/line-members": {
+      "types": "./dist/_internal/shared/checkout/line-members.d.ts",
+      "import": "./dist/_internal/shared/checkout/line-members.js"
+    },
+    "./fees/explain": {
+      "types": "./dist/_internal/shared/fees/explain.d.ts",
+      "import": "./dist/_internal/shared/fees/explain.js"
+    },
+    "./fees/buyer-facing": {
+      "types": "./dist/_internal/shared/features/site-settings/fees.d.ts",
+      "import": "./dist/_internal/shared/features/site-settings/fees.js"
+    },
+    "./emi/schedule": {
+      "types": "./dist/_internal/shared/features/emi/schedule.d.ts",
+      "import": "./dist/_internal/shared/features/emi/schedule.js"
+    },
+    "./listing-types/registry": {
+      "types": "./dist/_internal/shared/listing-types/_registry.d.ts",
+      "import": "./dist/_internal/shared/listing-types/_registry.js"
+    },
+    "./actions/registry": {
+      "types": "./dist/_internal/shared/actions/action-registry.d.ts",
+      "import": "./dist/_internal/shared/actions/action-registry.js"
+    },
+    "./history/types": {
+      "types": "./dist/_internal/shared/history/types.d.ts",
+      "import": "./dist/_internal/shared/history/types.js"
+    },
+    "./orders/config": {
+      "types": "./dist/_internal/shared/features/orders/config.d.ts",
+      "import": "./dist/_internal/shared/features/orders/config.js"
+    },
+    "./media/limits": {
+      "types": "./dist/_internal/shared/media/limits.d.ts",
+      "import": "./dist/_internal/shared/media/limits.js"
+    },
+    "./site-settings/public": {
+      "types": "./dist/_internal/shared/features/site-settings/types.d.ts",
+      "import": "./dist/_internal/shared/features/site-settings/types.js"
+    },
+    "./categories/bundle-copy": {
+      "types": "./dist/_internal/shared/features/categories/bundle-copy.d.ts",
+      "import": "./dist/_internal/shared/features/categories/bundle-copy.js"
+    },
+    "./admin/integrations": {
+      "types": "./dist/_internal/shared/features/admin/integrations.d.ts",
+      "import": "./dist/_internal/shared/features/admin/integrations.js"
+    },
+    "./layout/nav-types": {
+      "types": "./dist/_internal/shared/features/layout/index.d.ts",
+      "import": "./dist/_internal/shared/features/layout/index.js"
+    },
+    "./views/maintenance": {
+      "types": "./dist/_internal/client/features/maintenance/index.d.ts",
+      "import": "./dist/_internal/client/features/maintenance/index.js"
+    },
+    "./views/digital-code-reveal": {
+      "types": "./dist/_internal/client/features/digital-code/CodeRevealPanel.d.ts",
+      "import": "./dist/_internal/client/features/digital-code/CodeRevealPanel.js"
+    },
+    "./views/dashboard-layout": {
+      "types": "./dist/_internal/client/features/layout/DashboardLayoutClient.d.ts",
+      "import": "./dist/_internal/client/features/layout/DashboardLayoutClient.js"
+    },
+    "./views/role-guard": {
+      "types": "./dist/_internal/client/features/layout/RoleGuard.d.ts",
+      "import": "./dist/_internal/client/features/layout/RoleGuard.js"
+    },
+    "./views/lottery-admin-edit": {
+      "types": "./dist/_internal/client/features/lottery/LotteryAdminEditView.d.ts",
+      "import": "./dist/_internal/client/features/lottery/LotteryAdminEditView.js"
+    },
+    "./views/lottery-admin-slot": {
+      "types": "./dist/_internal/client/features/lottery/LotteryAdminSlotView.d.ts",
+      "import": "./dist/_internal/client/features/lottery/LotteryAdminSlotView.js"
+    },
+    "./views/lottery-pull-form": {
+      "types": "./dist/_internal/client/features/lottery/LotteryPullForm.d.ts",
+      "import": "./dist/_internal/client/features/lottery/LotteryPullForm.js"
+    },
+    "./views/tour-provider": {
+      "types": "./dist/_internal/client/features/tour/TourProvider.d.ts",
+      "import": "./dist/_internal/client/features/tour/TourProvider.js"
     }
   },
   "files": [

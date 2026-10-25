@@ -196,6 +196,23 @@ for (const entryRel of ENTRIES) {
       const def = definingModule(target, exposedName);
       if (!def) { failed = true; break; }
       if (!reallyExports(def.file, def.original)) { failed = true; break; }
+      /*
+       * 🛑 NEVER RESOLVE INTO `_internal/`. That boundary is enforced by
+       * scripts/audit-appkit-reexports.mjs (INTERNAL_REEXPORT) and
+       * scripts/audit-violations.mjs: "_internal/ symbols must not leak
+       * through public barrels."
+       *
+       * The entry legitimately says `export { ThemeProvider } from
+       * "./theme/index"`, and `theme/index` re-exports from
+       * `_internal/client/theme/ThemeProvider`. Following that chain to its
+       * END emits the _internal path into a PUBLIC entry, which is exactly
+       * what the audit forbids — and it blocked the 4.66.0 publish.
+       *
+       * The public re-export is the seam, not an accident: `_internal` has no
+       * export key in package.json, so a consumer could not import the deep
+       * path even if we named it. Leave the line alone.
+       */
+      if (norm(def.file).includes("/_internal/")) { bump("internal-boundary"); failed = true; break; }
       let rel = norm(relative(dirname(entry), def.file)).replace(/\.tsx?$/, "");
       if (!rel.startsWith(".")) rel = "./" + rel;
       /* Re-emit the rename when the defining module names it differently, so
