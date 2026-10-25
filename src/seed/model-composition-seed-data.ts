@@ -1808,8 +1808,7 @@ export const modelCompositionSeedData: Partial<ModelCompositionDocument>[] = [
       {
         "slotKey": "attack-ring",
         "slotLabel": "ATTACK RING (AR)",
-        "partName": "G-Upper Attack profile",
-        "partId": "attack-ring--g-upper-attack-profile"
+        "partName": "G-Upper Attack profile"
       },
       {
         "slotKey": "weight-disk",
