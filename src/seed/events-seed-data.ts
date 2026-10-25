@@ -193,8 +193,8 @@ const _raweventsSeedData: EventDocument[] = [
     isPinned: true,
     coverImage: {
       type: "image",
-      url: editorialImage("event-cover-diwali-diyas"),
-      alt: "A large, brightly coloured rangoli laid out on the floor for Diwali",
+      url: editorialImage("event-cover-diwali-lamps"),
+      alt: "Lit clay diya lamps glowing in a row at night for Diwali",
     },
     tags: ["offer", "cashback", "diwali", "festive", "new-year", "bogo", "free-shipping"],
     /*
