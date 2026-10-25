@@ -31,6 +31,7 @@ import {
   CouponCreateInput,
   isValidCouponCode,
   isCouponValid,
+  isCouponDisplayable,
   canUserUseCoupon,
   calculateDiscount,
   createCouponId,
@@ -167,9 +168,39 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         .orderBy(COUPON_FIELDS.VALIDITY.END_DATE, "asc")
         .get();
 
+      /*
+       * 🛑 `isCouponDisplayable`, NOT `isCouponValid` — this line used to carry
+       * the comment "still checks startDate + usage" and that start-date check
+       * was the deepest of FOUR copies of the same rule.
+       *
+       * Both callers of this method are DISPLAY surfaces — `getPromotions()`
+       * for the promotions page and `getHomepageCoupons()` for the homepage
+       * rail. No redemption path reads it (checkout goes through
+       * `validateCouponForCart` / `canUserUseCoupon`, which apply the full
+       * `isCouponValid` themselves). So the repository was enforcing a
+       * checkout rule on behalf of two callers that never redeem anything.
+       *
+       * The effect: the Diwali event's five codes all open on Dhanteras, so
+       * every one was stripped HERE, before the callers could decide. Fixing
+       * the two call sites alone changed nothing, because the rows never
+       * reached them — Root Cause #75, one money predicate hand-written in
+       * several layers until the copies disagree.
+       *
+       * Expired, inactive and exhausted are still dropped. Only "has not
+       * opened yet" is now the caller's business.
+       *
+       * 🛑 KNOWN LATENT GAP, deliberately not changed here: the query above
+       * requires `END_DATE >= now`, and a Firestore inequality EXCLUDES every
+       * document that lacks the field (Root Cause #100). An open-ended coupon
+       * — `validity.endDate` absent, which `isCouponDisplayable` explicitly
+       * treats as "no end date, not expired" — can therefore never appear in
+       * this result at all. Every coupon in the corpus currently carries an
+       * end date, so nothing is missing today; closing it means a second
+       * query or a stored sentinel, not a tweak to this filter.
+       */
       return snapshot.docs
         .map((doc) => this.mapDoc<CouponDocument>(doc))
-        .filter((coupon) => isCouponValid(coupon)); // still checks startDate + usage
+        .filter((coupon) => isCouponDisplayable(coupon));
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(
