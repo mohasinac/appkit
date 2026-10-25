@@ -3563,6 +3563,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Energy_Ring_-_Cetus",
+    "system": "Hybrid Wheel System",
     "role": "ring"
   },
   {
@@ -8960,6 +8961,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Left_EG_(Turbo)",
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -9151,6 +9153,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "stamina": 50,
       "power": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -9239,6 +9242,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Engine_Gear_-_Right_EG_(Metal_Flat)",
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {
@@ -9336,6 +9340,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
       "attack": 50,
       "stamina": 33
     },
+    "system": "Engine Gear System",
     "role": "gear"
   },
   {

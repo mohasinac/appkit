@@ -26387,6 +26387,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Free Wing Cross is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Free_Wing_Cross",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -26467,6 +26468,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Metal Weight Flat Core is a Beyblade running core.",
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Weight_Flat_Core",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -26522,6 +26524,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Alpha",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -26540,6 +26543,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Shooter Change Core Gamma is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Shooter_Change_Core_Gamma",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -29018,6 +29022,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Right SG (Bearing Version 2) is a Beyblade spin gear.",
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Bearing_Version_2)",
+    "system": "Spin Gear System",
     "role": "gear"
   },
   {
@@ -29235,6 +29240,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Right SG (Jumping Version) is a Beyblade spin gear.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Spin_Gear_-_Right_SG_(Jumping_Version)",
+    "system": "Spin Gear System",
     "role": "gear"
   },
   {
@@ -44700,6 +44706,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Chain_Attacker",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -44714,6 +44721,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "CWD Circle Attacker is a Beyblade weight disk.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Circle_Attacker",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -44740,6 +44748,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Devil_Saucer",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -44754,6 +44763,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "CWD Free Crusher is a Beyblade weight disk.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Crusher",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -44976,6 +44986,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Revolver_Attacker",
+    "system": "Magnacore System",
     "role": "weight"
   },
   {
@@ -45150,6 +45161,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "system": "Spin Gear System",
     "role": "weight"
   },
   {
@@ -45180,6 +45192,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Wide Survivor is a Beyblade weight disk, weighing 12 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Wide_Survivor",
+    "system": "Engine Gear System",
     "role": "weight"
   },
   {

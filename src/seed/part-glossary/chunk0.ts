@@ -529,6 +529,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Advance_Survivor",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -1309,6 +1310,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Devil_Crusher",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -1333,6 +1335,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "DJ Spiker is a Beyblade attack ring.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_DJ_Spiker",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -2077,6 +2080,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flame_Wing",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -2126,6 +2130,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "seoDescription": "Flying Defense is a Beyblade attack ring, weighing 7 g.",
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Flying_Defense",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -2334,6 +2339,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "God Smasher is a Beyblade attack ring, weighing 18 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_God_Smasher",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -2400,6 +2406,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Great_Dragon",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -2621,6 +2628,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Jiraiya_Blade",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -2727,6 +2735,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Max_Shield",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -2910,6 +2919,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -2948,6 +2958,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Metal_Saucer",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -3462,6 +3473,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Reverse_Wolf",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -3607,6 +3619,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Seagon Attacker is a Beyblade attack ring, weighing 22 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Seagon_Attacker",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -3716,6 +3729,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Slash Upper is a Beyblade attack ring, weighing 18 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Slash_Upper",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -3750,6 +3764,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Smash_Leopard",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -3882,6 +3897,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Spark_Dragon",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -4166,6 +4182,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Engine Gear System",
     "role": "ring"
   },
   {
@@ -4385,6 +4402,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 50,
       "stamina": 33
     },
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -4989,6 +5007,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Upper Dragon is a Beyblade attack ring, weighing 19 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Dragon",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -5013,6 +5032,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Upper Fox is a Beyblade attack ring, weighing 19 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Fox",
+    "system": "Hard Metal System",
     "role": "ring"
   },
   {
@@ -5078,6 +5098,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Upper_Wolf",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -5314,6 +5335,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Whale Crusher is a Beyblade attack ring, weighing 8 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Whale_Crusher",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -5375,6 +5397,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 50
     },
+    "system": "Engine Gear System",
     "role": "ring"
   },
   {
@@ -9151,6 +9174,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon",
     "seoDescription": "Griffolyon is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Griffolyon",
+    "system": "Spin Gear System",
     "role": "chip"
   },
   {
@@ -9394,6 +9418,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "imageSourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger",
     "seoDescription": "Metal Driger is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Metal_Driger",
+    "system": "Engine Gear System",
     "role": "chip"
   },
   {
@@ -15834,6 +15859,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Magnacore System",
     "role": "base"
   },
   {
@@ -16263,6 +16289,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Flat_Base",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -16315,6 +16342,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -30311,6 +30339,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "system": "Hybrid Wheel System",
     "role": "ring"
   },
   {
@@ -31635,6 +31664,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 83,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
     "role": "ring"
   },
   {
@@ -32662,6 +32692,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Byxis",
+    "system": "Hybrid Wheel System",
     "role": "chip"
   },
   {
@@ -33401,6 +33432,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Horuseus",
+    "system": "Hybrid Wheel System",
     "role": "chip"
   },
   {
@@ -34404,6 +34436,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Face_Bolt_-_Serpent",
+    "system": "Hybrid Wheel System",
     "role": "chip"
   },
   {
@@ -36161,6 +36194,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Fusion_Wheel_-_Earth",
+    "system": "Hybrid Wheel System",
     "role": "wheel"
   },
   {
@@ -37142,6 +37176,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
       "defense": 67,
       "stamina": 17
     },
+    "system": "Hybrid Wheel System",
     "role": "wheel"
   },
   {

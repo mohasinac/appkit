@@ -36,6 +36,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wyvern_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   },
   {
@@ -12461,6 +12462,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Bearing_Base",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -12630,6 +12632,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Defense Grip 2 is a Beyblade blade base, weighing 5.7 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_2",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -12650,6 +12653,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Defense Grip Base is a Beyblade blade base.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Defense_Grip_Base",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -12983,6 +12987,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -13054,6 +13059,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_Grip",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -13109,6 +13115,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_G_Special_Base",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -13194,6 +13201,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 33
     },
+    "system": "Engine Gear System",
     "role": "base"
   },
   {
@@ -13322,6 +13330,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 17
     },
+    "system": "Engine Gear System",
     "role": "base"
   },
   {
@@ -13720,6 +13729,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 50
     },
+    "system": "Magnacore System",
     "role": "base"
   },
   {
@@ -13846,6 +13856,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 17
     },
+    "system": "Engine Gear System",
     "role": "base"
   },
   {
@@ -13905,6 +13916,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Bearing",
+    "system": "Spin Gear System",
     "role": "base"
   },
   {
@@ -14058,6 +14070,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Blade_Base_-_SG_Wing_Base",
+    "system": "Magnacore System",
     "role": "base"
   },
   {

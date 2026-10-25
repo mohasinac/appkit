@@ -8247,6 +8247,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "mfbZeroG": true,
       "mfb4d": true
     },
+    "system": "Hybrid Wheel System",
     "role": "tip"
   },
   {
@@ -12567,6 +12568,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Bearing_Core_2",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -12925,6 +12927,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition",
     "seoDescription": "Metal Ball Core is a Beyblade running core.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Ball_Core",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -12987,6 +12990,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Semi-Flat_Core",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -13055,6 +13059,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Metal_Sharp_Core",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "base",
@@ -13116,6 +13121,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Running_Core_-_Rubber_Weight_Core",
+    "system": "Hard Metal System",
     "role": "tip",
     "integratedRoles": [
       "weight",
@@ -17627,6 +17633,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 0
     },
+    "system": "Hybrid Wheel System",
     "role": "track"
   },
   {
@@ -18245,6 +18252,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Balance",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -18431,6 +18439,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Circle_Wide",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -18494,6 +18503,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "CWD Defense Ring is a Beyblade weight disk.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Defense_Ring",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -18568,6 +18578,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Cross",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -18585,6 +18596,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "composition",
     "seoDescription": "CWD Free Survivor is a Beyblade weight disk.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_Free_Survivor",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -18618,6 +18630,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "CWD God Ring is a Beyblade weight disk.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_CWD_God_Ring",
+    "system": "Hard Metal System",
     "role": "weight"
   },
   {
@@ -19035,6 +19048,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Weight_Disk_-_Heavy_Attack",
+    "system": "Spin Gear System",
     "role": "weight"
   },
   {
@@ -19495,6 +19509,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 33,
       "stamina": 67
     },
+    "system": "Engine Gear System",
     "role": "weight"
   },
   {
@@ -27107,6 +27122,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Bound Defense Ring is a Beyblade attack ring.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Bound_Defense_Ring",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -27514,6 +27530,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Dragon Head is a Beyblade attack ring, weighing 4 g.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Dragon_Head",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -27796,6 +27813,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "seoDescription": "Lizard Blocker is a Beyblade attack ring.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Lizard_Blocker",
+    "system": "Magnacore System",
     "role": "ring"
   },
   {
@@ -27976,6 +27994,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Attack_Ring_-_Scissor_Cutter",
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -28350,6 +28369,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
       "defense": 17,
       "stamina": 67
     },
+    "system": "Spin Gear System",
     "role": "ring"
   },
   {
@@ -40965,6 +40985,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     ],
     "colourwaysDocumented": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Bump_King",
+    "system": "Spin Gear System",
     "role": "chip"
   },
   {
@@ -41347,6 +41368,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Gekiryu-Oh is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Gekiryu-Oh",
+    "system": "Spin Gear System",
     "role": "chip"
   },
   {
@@ -41625,6 +41647,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "source": "fandom-infobox",
     "seoDescription": "Megaro Arm is a Beyblade bit chip.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Chip_-_Megaro_Arm",
+    "system": "Spin Gear System",
     "role": "chip"
   },
   {
@@ -42294,6 +42317,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Bloody_Devil_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   },
   {
@@ -42509,6 +42533,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_God_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   },
   {
@@ -42591,6 +42616,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Jiraiya_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   },
   {
@@ -42712,6 +42738,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Sea_Dragon_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   },
   {
@@ -42852,6 +42879,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
     "colourwaysDocumented": true,
     "hasMoldVariations": true,
     "sourceUrl": "https://beyblade.fandom.com/wiki/Bit_Protector_-_Wolborg_Emblem",
+    "system": "Hard Metal System",
     "role": "chip"
   }
 ];
