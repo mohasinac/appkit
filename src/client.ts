@@ -16,8 +16,8 @@ export { PaymentProviderUnreachableError } from "./errors/payment-provider-unrea
 // [CLIENT-SAFE] ActionResult envelope type — for typing server-action call sites.
 // Re-exported from the public utils barrel to keep the _internal/ boundary
 // audit clean. Same symbols, no behavioral change.
-export type { ActionResult } from "./utils/action-result";
-export { isOk, unwrap } from "./utils/action-result";
+export type { ActionResult } from "./_internal/shared/types/action-result";
+export { isOk, unwrap } from "./_internal/shared/types/action-result";
 
 // [CLIENT-SAFE] Client error class + surface-error router + reporter primitives.
 // Used by useApiMutation / useApiQuery and Button's async-onclick catch.
@@ -99,7 +99,8 @@ export {
 // when the user picks `"auto"` mode. Built-in themes ship via `./tokens/themes`.
 // Re-exported through the public `./theme` barrel to keep audit-appkit-reexports
 // clean (no `_internal/` symbols may surface through public barrels).
-export { ThemeProvider, useTheme, buildThemeRegistry } from "./theme";
+export { ThemeProvider, useTheme } from "./_internal/client/theme/ThemeProvider";
+export { buildThemeRegistry } from "./_internal/client/theme/buildRegistry";
 export type {
   ModePreference,
   SiteSettingsThemeInput,
@@ -113,7 +114,7 @@ export type {
 // close-buttons/floating CTAs flip which screen edge they dock to.
 // Re-exported through the public `./hand-mode` barrel to keep
 // audit-appkit-reexports clean (no `_internal/` symbols in public barrels).
-export { HandModeProvider, useHandMode } from "./hand-mode";
+export { HandModeProvider, useHandMode } from "./_internal/client/hand-mode/HandModeProvider";
 export type {
   HandMode,
   HandModeContextValue,
@@ -207,7 +208,7 @@ export type { GatedPriceProps } from "./ui/components/GatedPrice";
 export { useCanSeePrices } from "./react/hooks/useCanSeePrices";
 export type { CanSeePricesState } from "./react/hooks/useCanSeePrices";
 // isAuthError - Detects auth/authorization errors from server actions or fetch responses.
-export { isAuthError } from "./utils/auth-error";
+export { isAuthError } from "./errors/normalize";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useToast - React hook for use toast.
 export { useToast } from "./ui/components/Toast";
@@ -262,19 +263,21 @@ export type {
 export { useUnsavedChanges } from "./react/hooks/useUnsavedChanges";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // FirebaseClientAuthProvider - Component for firebase client auth provider.
-export { FirebaseClientAuthProvider } from "./providers/firebase-client/index";
+export { FirebaseClientAuthProvider } from "./providers/firebase-client/auth";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // FirebaseClientRealtimeProvider - Component for firebase client realtime provider.
-export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/index";
+export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/realtime";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // EventFormDrawer - Component for event form drawer.
-export { EventFormDrawer, EventParticipateView, EventPollWidget } from "./features/events/index";
-export type { EventParticipateViewProps } from "./features/events/index";
+export { EventFormDrawer } from "./features/events/components/EventFormDrawer";
+export { EventParticipateView } from "./features/events/components/EventParticipateView";
+export { EventPollWidget } from "./features/events/components/EventPollWidget";
+export type { EventParticipateViewProps } from "./features/events/components/EventParticipateView";
 // useBulkEvent - subscribes to an enqueued async job's RTDB progress channel (Async Job Primitive).
-export { useBulkEvent } from "./features/events/index";
+export { useBulkEvent } from "./features/events/hooks/useBulkEvent";
 export type { UseBulkEventOptions, UseBulkEventReturn, BulkEventStatus } from "./features/events/index";
 // RTDB_PATHS - realtime database path constants (e.g. RTDB_PATHS.BULK_EVENTS for useBulkEvent).
-export { RTDB_PATHS } from "./providers/db-firebase/index";
+export { RTDB_PATHS } from "./providers/db-firebase/rtdb-paths";
 // Lottery feature — client components (safe for client bundles — no server imports)
 export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
 export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
@@ -305,34 +308,35 @@ export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/
 export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
-export { BottomSheet } from "./features/layout/index";
+export { BottomSheet } from "./features/layout/BottomSheet";
 export { PageTabs } from "./features/layout/PageTabs";
 export type { PageTabDef, PageTabsProps } from "./features/layout/PageTabs";
-export { ImageUpload } from "./features/media/index";
-export type { ImageUploadProps } from "./features/media/index";
-export { AvatarUpload } from "./features/media/index";
-export type { AvatarUploadProps, ImageCropData } from "./features/media/index";
+export { ImageUpload } from "./features/media/upload/ImageUpload";
+export type { ImageUploadProps } from "./features/media/upload/ImageUpload";
+export { AvatarUpload } from "./features/media/AvatarUpload";
+export type { AvatarUploadProps } from "./features/media/AvatarUpload";
+export type { ImageCropData } from "./features/media/modals/ImageCropModal";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ImageCropModal - Component for image crop modal.
-export { ImageCropModal } from "./features/media/index";
+export { ImageCropModal } from "./features/media/modals/ImageCropModal";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // VideoTrimModal - Component for video trim modal.
-export { VideoTrimModal } from "./features/media/index";
+export { VideoTrimModal } from "./features/media/modals/VideoTrimModal";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaAbort - React hook for use media abort.
-export { useMediaAbort } from "./features/media/index";
+export { useMediaAbort } from "./features/media/hooks/useMedia";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaCleanup - React hook for use media cleanup.
-export { useMediaCleanup } from "./features/media/index";
+export { useMediaCleanup } from "./features/media/hooks/useMedia";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaCrop - React hook for use media crop.
-export { useMediaCrop } from "./features/media/index";
+export { useMediaCrop } from "./features/media/hooks/useMedia";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaTrim - React hook for use media trim.
-export { useMediaTrim } from "./features/media/index";
+export { useMediaTrim } from "./features/media/hooks/useMedia";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaUpload - React hook for use media upload.
-export { useMediaUpload } from "./features/media/index";
+export { useMediaUpload } from "./features/media/hooks/useMedia";
 
 // Client-side context providers
 export { SessionProvider, useSession } from "./react/contexts/SessionContext";
@@ -433,7 +437,7 @@ export {
   type ListingTemplateFormValues,
 } from "./features/store-extensions/schemas/listing-template-form";
 
-export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
+export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./next/routing/route-map";
 export { SORT_DIR, sortBy } from "./constants/sort";
 export { SIEVE_OP, sieveFilter, sieveAnd, sieveMultiEq } from "./utils/sieve-builder";
 export { formatCurrency } from "./utils/number.formatter";
@@ -468,26 +472,27 @@ export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateIn
 // was dead code (no real JSX callers) and previously shadowed the real
 // wizard component whenever imported from `@mohasinac/appkit/client`
 // specifically; deleted 2026-08-09.
-export type { FormShellProviderProps, FormShellStep, FormShellNav, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
-export { FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./ui/forms";
-export type { FieldInputProps } from "./ui/forms";
-export { FieldInput } from "./ui/forms";
-export type { FieldSelectProps } from "./ui/forms";
-export { FieldSelect } from "./ui/forms";
-export type { FieldCheckboxProps } from "./ui/forms";
-export { FieldCheckbox } from "./ui/forms";
-export type { FieldTextareaProps } from "./ui/forms";
-export { FieldTextarea } from "./ui/forms";
-export type { ColorPickerFieldProps } from "./ui/forms";
-export { ColorPickerField } from "./ui/forms";
-export type { FormErrorSummaryProps } from "./ui/forms";
-export { FormErrorSummary } from "./ui/forms";
-export { RecordStatusTimeline } from "./features/status-history/index";
+export type { FormShellProviderProps, FormShellStep, FormShellNav, FormShellContextValue, UseFormShellStateResult } from "./ui/forms/FormShell";
+export { FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./ui/forms/FormShell";
+export { applyZodIssues } from "./ui/forms/apply-zod-issues";
+export type { FieldInputProps } from "./ui/forms/FieldInput";
+export { FieldInput } from "./ui/forms/FieldInput";
+export type { FieldSelectProps } from "./ui/forms/FieldSelect";
+export { FieldSelect } from "./ui/forms/FieldSelect";
+export type { FieldCheckboxProps } from "./ui/forms/FieldCheckbox";
+export { FieldCheckbox } from "./ui/forms/FieldCheckbox";
+export type { FieldTextareaProps } from "./ui/forms/FieldTextarea";
+export { FieldTextarea } from "./ui/forms/FieldTextarea";
+export type { ColorPickerFieldProps } from "./ui/forms/ColorPickerField";
+export { ColorPickerField } from "./ui/forms/ColorPickerField";
+export type { FormErrorSummaryProps } from "./ui/forms/FormErrorSummary";
+export { FormErrorSummary } from "./ui/forms/FormErrorSummary";
+export { RecordStatusTimeline } from "./features/status-history/components/RecordStatusTimeline";
 export type { SerialisedStatusChangeEntry } from "./_internal/shared/history/types";
-export type { FormErrorListProps } from "./ui/forms";
-export { FormErrorList } from "./ui/forms";
-export { useFormBottomActions } from "./features/layout/index";
-export type { UseFormBottomActionsOptions } from "./features/layout/index";
+export type { FormErrorListProps } from "./ui/forms/FormErrorList";
+export { FormErrorList } from "./ui/forms/FormErrorList";
+export { useFormBottomActions } from "./features/layout/hooks/useFormBottomActions";
+export type { UseFormBottomActionsOptions } from "./features/layout/hooks/useFormBottomActions";
 export { OverlayContext, useIsInsideOverlay } from "./ui/components/overlay-context";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
@@ -496,12 +501,17 @@ export { Label, Text, Span, Caption } from "./ui/components/Typography";
 export { TextLink } from "./ui/components/TextLink";
 export type { TextLinkProps } from "./ui/components/TextLink";
 export { Anchor } from "./ui/components/Anchor";
-export { IconButton } from "./ui/index";
+export { IconButton } from "./ui/components/IconButton";
 export { ActionRow } from "./ui/components/ActionRow";
 export type { ActionRowProps, ActionRowAlign } from "./ui/components/ActionRow";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
-export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient } from "./features/layout/index";
+export { AppLayoutShell } from "./features/layout/AppLayoutShell";
+export { LocaleSwitcher } from "./features/layout/LocaleSwitcher";
+export { useDashboardNav, DashboardNavProvider } from "./features/layout/DashboardNavContext";
+export { BottomActionsProvider } from "./features/layout/BottomActionsContext";
+export { useBottomActions } from "./features/layout/hooks/useBottomActions";
+export { LayoutClient } from "./features/layout/LayoutClient";
 /**
  * A page declares its own inline primary CTA so the floating action control
  * stays out of its way until that button has been seen and scrolled past. A
@@ -509,20 +519,39 @@ export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider,
  * which is right for a bulk-selection screen and wrong for anything with a
  * visible Buy/Checkout button. See `useCtaReveal`.
  */
-export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/index";
-export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, SidebarItemActionRenderer, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
+export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/cta-anchor";
+export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, SidebarItemActionRenderer } from "./features/layout/AppLayoutShell";
+export type { DashboardNavState } from "./features/layout/DashboardNavContext";
+export type { MainNavbarItem } from "./features/layout/MainNavbar";
+export type { LayoutClientProps } from "./features/layout/LayoutClient";
 export { ListingLayout } from "./ui/components/ListingLayout";
 export type { ListingLayoutProps, ListingLayoutLabels } from "./ui/components/ListingLayout";
-export { Search } from "./features/search/components";
-export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter, SearchResourceType, SearchResourceTypeOption } from "./features/search/components";
-export { ToastProvider, SkipToMain, NavigationLoader } from "./ui/index";
-export type { NavigationLoaderProps } from "./ui/index";
+export { Search } from "./features/search/components/Search";
+export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter, SearchResourceType, SearchResourceTypeOption } from "./features/search/components/Search";
+export { ToastProvider } from "./ui/components/Toast";
+export { SkipToMain } from "./ui/components/SkipToMain";
+export { NavigationLoader } from "./ui/components/NavigationLoader";
+export type { NavigationLoaderProps } from "./ui/components/NavigationLoader";
 export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
-export { AdminDashboardView, AdminAnalyticsView, AdminPageViewsReportView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, AdminFulfillmentView, DataTable, DataListingView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate } from "./features/admin/index";
-export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
+export { AdminDashboardView } from "./features/admin/components/AdminDashboardView";
+export { AdminAnalyticsView } from "./features/admin/components/AdminAnalyticsView";
+export { AdminPageViewsReportView } from "./features/admin/components/analytics/AdminPageViewsReportView";
+export { AdminPrizeDrawsView } from "./features/admin/components/AdminPrizeDrawsView";
+export { AdminCarouselView } from "./features/admin/components/AdminCarouselView";
+export { AdminSublistingCategoriesView } from "./features/admin/components/AdminSublistingCategoriesView";
+export { AdminFulfillmentView } from "./features/admin/components/AdminFulfillmentView";
+export { DataTable } from "./features/admin/components/DataTable";
+export { DataListingView } from "./features/admin/components/DataListingView";
+export { useAdminListingData, toRecordArray, toStringValue, toRelativeDate } from "./features/admin/hooks/useAdminListingData";
+export type { AdminDashboardViewProps } from "./features/admin/components/AdminDashboardView";
+export type { AdminAnalyticsViewProps, AdminAnalyticsViewLabels } from "./features/admin/components/AdminAnalyticsView";
+export type { AdminPrizeDrawsViewProps } from "./features/admin/components/AdminPrizeDrawsView";
+export type { AdminCarouselViewProps } from "./features/admin/components/AdminCarouselView";
+export type { AdminFulfillmentViewProps } from "./features/admin/components/AdminFulfillmentView";
+export type { AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/components/DataListingView";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 // S-ADMIN-7 — permission catalog data, shared by AdminEmployeeEditorView and the read-only /admin/permissions page.
 export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatPermLabel } from "./features/auth/permissions/constants";
@@ -534,8 +563,8 @@ export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatP
  * leak (Root Cause #6).
  */
 export { Details, Summary } from "./ui/components/Details";
-export { ADMIN_ENDPOINTS } from "./constants/index";
-export { SELLER_ENDPOINTS } from "./constants/index";
+export { ADMIN_ENDPOINTS } from "./constants/api-endpoints";
+export { SELLER_ENDPOINTS } from "./constants/api-endpoints";
 /**
  * The buyer-portal endpoint map. Its admin and seller siblings were already
  * here; this one was reachable only from `index.ts`, so a Client Component
@@ -544,12 +573,12 @@ export { SELLER_ENDPOINTS } from "./constants/index";
  * client-bundle leak audit-client-server-only-leak blocks). Added for
  * BidDetailPageClient — checklist-page-wiring-detail-pages-detail-page-matches-list-modal.
  */
-export { ACCOUNT_ENDPOINTS } from "./constants/index";
-export { REVIEW_ENDPOINTS } from "./constants/index";
+export { ACCOUNT_ENDPOINTS } from "./constants/api-endpoints";
+export { REVIEW_ENDPOINTS } from "./constants/api-endpoints";
 // P-16 — Tour system (driver.js-backed onboarding walkthrough).
 export { TourProvider, useTour } from "./_internal/client/features/tour/TourProvider";
 export type { TourContextValue, TourRole } from "./_internal/client/features/tour/TourProvider";
-export { apiClient, ApiClientError } from "./http/index";
+export { apiClient, ApiClientError } from "./http/ApiClient";
 export { UserSidebar } from "./features/account/components/UserSidebar";
 export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/account/components/UserSidebar";
 export { CouponsIndexListing } from "./features/promotions/components/CouponsIndexListing";
@@ -588,7 +617,12 @@ export { buildEventEntryDetailFields } from "./features/events/components/event-
 export type { EntryFieldRow } from "./features/events/components/event-entry-detail-fields";
 export type { BidDetailViewer } from "./features/auctions/components/bid-detail-fields";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
-export { ProtectedRoute, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
+export { ProtectedRoute } from "./features/auth/components/Guards";
+export { ForgotPasswordView } from "./features/auth/components/ForgotPasswordView";
+export { LoginForm } from "./features/auth/components/LoginForm";
+export { RegisterForm } from "./features/auth/components/RegisterForm";
+export { ResetPasswordView } from "./features/auth/components/ResetPasswordView";
+export { VerifyEmailView } from "./features/auth/components/VerifyEmailView";
 export type {
 	AuthGuardUser,
 	ForgotPasswordViewProps,
@@ -599,24 +633,40 @@ export type {
 	ResetPasswordViewProps,
 	VerifyEmailViewProps,
 } from "./features/auth/index";
-export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/index";
-export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/index";
-export { CartView, CartItemRow, CartGroupLineRow, CartSummary, CartPriceBreakdown, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
-export { StoreAddonsPicker, hasAnyStoreAddon } from "./features/cart/index";
+export { useLogout } from "./features/auth/hooks/useLogout";
+export { useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangeEmail } from "./features/auth/hooks/useAuth";
+export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangeEmailData } from "./features/auth/hooks/useAuth";
+export { CartView } from "./features/cart/components/CartView";
+export { CartItemRow, CartDrawer } from "./features/cart/components/CartDrawer";
+export { CartGroupLineRow } from "./features/cart/components/CartGroupLineRow";
+export { CartSummary } from "./features/cart/components/CartSummary";
+export { CartPriceBreakdown } from "./features/cart/components/CartPriceBreakdown";
+export { CheckoutView } from "./features/cart/components/CheckoutView";
+export { CheckoutSuccessView } from "./features/cart/components/CheckoutSuccessView";
+export { CheckoutAddressStep } from "./features/cart/components/CheckoutAddressStep";
+export { useGuestCart } from "./features/cart/hooks/useGuestCart";
+export { useCartCount } from "./features/cart/hooks/useCartCount";
+export { useAddToCart } from "./features/cart/hooks/useAddToCart";
+export { useCart } from "./features/cart/hooks/useCart";
+export { useGuestCartMerge } from "./features/cart/hooks/useGuestCartMerge";
+export { useCartQuery } from "./features/cart/hooks/useCartQuery";
+export { StoreAddonsPicker, hasAnyStoreAddon } from "./features/cart/components/StoreAddonsPicker";
 // D46/D47 — the cart's single "pay with my points" control. One per CART, not
 // per store, unlike the add-ons picker above it: points are the buyer's balance
 // rather than something bought from a seller.
-export { PointsTenderPicker } from "./features/cart/index";
-export type { PointsTenderPickerProps } from "./features/cart/index";
+export { PointsTenderPicker } from "./features/cart/components/PointsTenderPicker";
+export type { PointsTenderPickerProps } from "./features/cart/components/PointsTenderPicker";
 export { clientLineTotal } from "./features/cart/utils/line-total";
 export type { PricedCartLine } from "./features/cart/utils/line-total";
-export type { CartPriceBreakdownData, CartPriceBreakdownStore, StoreAddonsValue, StoreAddonsRates } from "./features/cart/index";
+export type { CartPriceBreakdownData, CartPriceBreakdownStore } from "./features/cart/components/CartPriceBreakdown";
+export type { StoreAddonsValue, StoreAddonsRates } from "./features/cart/components/StoreAddonsPicker";
 // `clearCartOps` / `removeCartOpsFor` are exported because the cart page has to
 // drain the queue after a removal succeeds server-side — without them a cleared
 // row is re-layered onto the next render and re-POSTed by useSyncManager 30s later.
 export { getCartOps, clearCartOps, removeCartOpsFor, CART_OPS_CHANGE_EVENT } from "./features/cart/utils/pending-ops";
 export type { CartOp } from "./features/cart/utils/pending-ops";
-export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
+export type { CartItem, CartItemMeta, CartData } from "./features/cart/types/index";
+export type { GuestCartItem } from "./features/cart/utils/guest-cart";
 // Multi-member cart lines — the client needs these to render a bundle's or a
 // grouped selection's contents. See the quantity invariant on CartLineMember.
 export type {
@@ -625,18 +675,21 @@ export type {
   CartLineMember,
 } from "./features/cart/schemas/firestore";
 export type { CartGroupLineRowProps } from "./features/cart/components/CartGroupLineRow";
-export { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress, useSetDefaultAddress, useAddress } from "./features/account/index";
-export type { Address, AddressFormData } from "./features/account/index";
-export { AddressBook, AddressCard, AddressForm } from "./features/account/index";
-export type { AddressCardAddress, AddressCardProps } from "./features/account/index";
-export { useProfile, useUpdateProfile } from "./features/account/index";
-export { updateProfileSchema } from "./features/account/index";
-export type { CategoryItem } from "./features/categories/index";
-export { MediaImage } from "./features/media/index";
+export { useAddresses, useCreateAddress, useUpdateAddress, useDeleteAddress, useSetDefaultAddress, useAddress } from "./features/account/hooks/useAddresses";
+export type { Address, AddressFormData } from "./features/account/hooks/useAddresses";
+export { AddressBook, AddressCard } from "./features/account/components/AddressBook";
+export { AddressForm } from "./features/account/components/AddressForm";
+export type { AddressCardAddress, AddressCardProps } from "./features/account/components/AddressBook";
+export { useCurrentProfile as useProfile, useUpdateCurrentProfile as useUpdateProfile } from "./features/account/hooks/useProfile";
+export { updateProfileSchema } from "./features/account/schemas/index";
+export type { CategoryItem } from "./features/categories/types/index";
+export { MediaImage } from "./features/media/MediaImage";
 export { StoreSidebar } from "./features/seller/components/SellerSidebar";
 export type { StoreNavItem, StoreNavGroup } from "./features/seller/components/SellerSidebar";
-export { StoreProductsView, StoreAboutView } from "./features/stores/index";
-export type { StoreProductItem, StoreAboutViewProps, StoreDetail } from "./features/stores/index";
+export { StoreProductsView } from "./features/stores/components/StoreProductsView";
+export { StoreAboutView } from "./features/stores/components/StoreAboutView";
+export type { StoreProductItem, StoreDetail } from "./features/stores/types/index";
+export type { StoreAboutViewProps } from "./features/stores/components/StoreAboutView";
 /*
  * The browser-side search index. Exported from its DEFINING module rather
  * than through `features/search/index` (Root Cause #18) — `ensureSearchIndex`
@@ -687,8 +740,12 @@ export {
   useUnreadMessageCount,
 } from "./features/messages/hooks/useMessages";
 export type { PendingMessage } from "./features/messages/hooks/useMessages";
-export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
-export type { WishlistViewProps, GuestWishlistItem, WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/index";
+export { WishlistView } from "./features/wishlist/components/WishlistView";
+export { useGuestWishlist } from "./features/wishlist/hooks/useGuestWishlist";
+export { useWishlistWithGuest } from "./features/wishlist/hooks/useWishlistWithGuest";
+export type { WishlistViewProps } from "./features/wishlist/components/WishlistView";
+export type { GuestWishlistItem } from "./features/wishlist/utils/guest-wishlist";
+export type { WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/types/index";
 export { WishlistCapWatcher } from "./features/wishlist/components/WishlistCapWatcher";
 // The single wishlist heart. Exported here too because it is a "use client"
 // UI component and consumer client code imports from this entry.
@@ -709,8 +766,8 @@ export {
   getGuestWishlistCount,
   getGuestWishlistByType,
 } from "./features/wishlist/utils/guest-wishlist";
-export { InteractiveProductCard } from "./features/products/index";
-export type { InteractiveProductCardProps } from "./features/products/index";
+export { InteractiveProductCard } from "./features/products/components/InteractiveProductCard";
+export type { InteractiveProductCardProps } from "./features/products/components/InteractiveProductCard";
 export { GroupedListingEditorView } from "./features/grouped/components/GroupedListingEditorView";
 export type { GroupedListingEditorViewProps } from "./features/grouped/components/GroupedListingEditorView";
 export { GroupedListingDetailView } from "./features/grouped/components/GroupedListingDetailView";
@@ -754,17 +811,17 @@ export type { ListingHideDefault } from "./_internal/shared/listing-types/_regis
 export type { SortOption } from "./features/products/constants/sieve";
 
 // Product / listing actions
-export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/index";
-export type { ActionId, ActionMeta, ActionVariant } from "./features/products/index";
+export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/constants/action-defs";
+export type { ActionId, ActionMeta, ActionVariant } from "./features/products/constants/action-defs";
 // Row / table actions (admin, seller, user dashboards)
-export { ROW_ACTION_ID, ROW_ACTION_META, ADMIN_ROW_ACTIONS, SELLER_ROW_ACTIONS, USER_ROW_ACTIONS, ADMIN_BULK_ACTIONS, SELLER_BULK_ACTIONS } from "./features/products/index";
-export type { RowActionId, RowActionMeta } from "./features/products/index";
+export { ROW_ACTION_ID, ROW_ACTION_META, ADMIN_ROW_ACTIONS, SELLER_ROW_ACTIONS, USER_ROW_ACTIONS, ADMIN_BULK_ACTIONS, SELLER_BULK_ACTIONS } from "./features/products/constants/action-defs";
+export type { RowActionId, RowActionMeta } from "./features/products/constants/action-defs";
 // Form shell actions
-export { FORM_ACTION_ID, FORM_ACTION_META, FORM_FOOTER_PRESET } from "./features/products/index";
-export type { FormActionId, FormActionMeta } from "./features/products/index";
+export { FORM_ACTION_ID, FORM_ACTION_META, FORM_FOOTER_PRESET } from "./features/products/constants/action-defs";
+export type { FormActionId, FormActionMeta } from "./features/products/constants/action-defs";
 // Dashboard quick actions
-export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
-export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
+export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/constants/action-defs";
+export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/constants/action-defs";
 // [CLIENT-ONLY] useAuthGate: pre-dispatch auth gate using ACTION_ID registry.
 export { useAuthGate } from "./react/hooks/useAuthGate";
 export type { UseAuthGateReturn } from "./react/hooks/useAuthGate";
@@ -807,16 +864,56 @@ export type {
 export { UserOffersPanel } from "./features/account/components/UserOffersPanel";
 export type { UserOffersPanelProps } from "./features/account/components/UserOffersPanel";
 export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSellerDashboard as useStoreDashboard, useSellerDashboard } from "./features/seller/index";
-export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/index";
-export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, PrintCenterView, SellerOffersView, SellerGroupedListingsView, StoreGroupedListingsView, SellerAnalyticsAlertsView, StoreAnalyticsAlertsView, BarcodeField, FulfillmentView, SellerListingTypeView, SELLER_LISTING_TYPE_SPECS } from "./features/seller/components/index";
-export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerReviewsViewProps, SellerPayoutRequestViewProps, SellerAnalyticsViewProps, SellerPayoutsViewProps, SellerCouponEditorViewProps, CouponEditorDraft, SellerBidsViewProps, SellerAddressesViewProps, SellerOffersViewProps, SellerGroupedListingsViewProps, SellerAnalyticsAlertsViewProps, BarcodeFieldProps, FulfillmentViewProps, SellerListingTypeViewProps, SellerListingTypeSpec, SellerListingTypeKey, SellerListingRow } from "./features/seller/components/index";
+export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/components/SellerDashboardView";
+export { SellerPayoutSettingsView } from "./features/seller/components/SellerPayoutSettingsView";
+export { SellerShippingView } from "./features/seller/components/SellerShippingView";
+export { SellerReviewsView } from "./features/seller/components/SellerReviewsView";
+export { SellerPayoutRequestView } from "./features/seller/components/SellerPayoutRequestView";
+export { SellerAnalyticsStats } from "./features/seller/components/analytics/SellerAnalyticsStats";
+export { SellerTopProducts } from "./features/seller/components/analytics/SellerTopProducts";
+export { SellerAnalyticsView } from "./features/seller/components/SellerAnalyticsView";
+export { SellerPayoutsView } from "./features/seller/components/SellerPayoutsView";
+export { SellerCouponEditorView } from "./features/seller/components/SellerCouponEditorView";
+export { SellerBidsView } from "./features/seller/components/SellerBidsView";
+export { SellerAddressesView } from "./features/seller/components/SellerAddressesView";
+export { PrintCenterView } from "./features/seller/components/PrintCenterView";
+export { SellerOffersView } from "./features/seller/components/SellerOffersView";
+export { SellerGroupedListingsView, SellerGroupedListingsView as StoreGroupedListingsView } from "./features/seller/components/SellerGroupedListingsView";
+export { SellerAnalyticsAlertsView, SellerAnalyticsAlertsView as StoreAnalyticsAlertsView } from "./features/seller/components/SellerAnalyticsAlertsView";
+export { BarcodeField } from "./features/seller/components/BarcodeField";
+export { FulfillmentView } from "./features/seller/components/FulfillmentView";
+export { SellerListingTypeView, SELLER_LISTING_TYPE_SPECS } from "./features/seller/components/SellerListingTypeView";
+export type { SellerPayoutSettingsViewProps } from "./features/seller/components/SellerPayoutSettingsView";
+export type { SellerShippingViewProps } from "./features/seller/components/SellerShippingView";
+export type { SellerReviewsViewProps } from "./features/seller/components/SellerReviewsView";
+export type { SellerPayoutRequestViewProps } from "./features/seller/components/SellerPayoutRequestView";
+export type { SellerAnalyticsViewProps } from "./features/seller/components/SellerAnalyticsView";
+export type { SellerPayoutsViewProps } from "./features/seller/components/SellerPayoutsView";
+export type { SellerCouponEditorViewProps, CouponEditorDraft } from "./features/seller/components/SellerCouponEditorView";
+export type { SellerBidsViewProps } from "./features/seller/components/SellerBidsView";
+export type { SellerAddressesViewProps } from "./features/seller/components/SellerAddressesView";
+export type { SellerOffersViewProps } from "./features/seller/components/SellerOffersView";
+export type { SellerGroupedListingsViewProps } from "./features/seller/components/SellerGroupedListingsView";
+export type { SellerAnalyticsAlertsViewProps } from "./features/seller/components/SellerAnalyticsAlertsView";
+export type { BarcodeFieldProps } from "./features/seller/components/BarcodeField";
+export type { FulfillmentViewProps } from "./features/seller/components/FulfillmentView";
+export type { SellerListingTypeViewProps, SellerListingTypeSpec, SellerListingTypeKey, SellerListingRow } from "./features/seller/components/SellerListingTypeView";
 /* The draft → route conversion, so both coupon callsites share one rule. */
 export { couponDraftToPayload } from "./features/seller/schemas/coupon-form";
 export type { SellerCouponPayload } from "./features/seller/schemas/coupon-form";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
-export { UserAccountHubView, UserOrdersView, UserBidsView, OrderDetailView, UserReturnsView, useNotifications } from "./features/account/index";
-export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, OrderDetailViewProps, OrderDetailViewLabels, UserReturnsViewProps } from "./features/account/index";
-export { useOrders, useOrder, OrdersList } from "./features/orders/index";
+export { UserAccountHubView } from "./features/account/components/UserAccountHubView";
+export { UserOrdersView } from "./features/account/components/UserOrdersView";
+export { UserBidsView } from "./features/account/components/UserBidsView";
+export { OrderDetailView } from "./features/account/components/OrderDetailView";
+export { UserReturnsView } from "./features/account/components/UserReturnsView";
+export { useNotifications } from "./features/account/hooks/useNotifications";
+export type { UserAccountHubViewProps, UserAccountHubViewLabels } from "./features/account/components/UserAccountHubView";
+export type { UserOrdersViewProps } from "./features/account/components/UserOrdersView";
+export type { OrderDetailViewProps, OrderDetailViewLabels } from "./features/account/components/OrderDetailView";
+export type { UserReturnsViewProps } from "./features/account/components/UserReturnsView";
+export { useOrders, useOrder } from "./features/orders/hooks/useOrders";
+export { OrdersList } from "./features/orders/components/OrdersList";
 export { OrderStatusTimeline } from "./features/orders/components/OrderStatusTimeline";
 export type { OrderStatusTimelineProps } from "./features/orders/components/OrderStatusTimeline";
 export { OrderProvenanceCard } from "./features/orders/components/OrderProvenanceCard";
@@ -886,11 +983,11 @@ export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate
 export { BlogPostView } from "./features/blog/components/BlogPostView";
 export type { BlogPostViewProps } from "./features/blog/components/BlogPostView";
 export { BlogCard, BlogCategoryTabs, BlogListView } from "./features/blog/components/BlogListView";
-export { EventDetailView } from "./features/events/components/index";
-export type { EventDetailViewProps } from "./features/events/components/index";
+export { EventDetailView } from "./features/events/components/EventDetailView";
+export type { EventDetailViewProps } from "./features/events/components/EventDetailView";
 export type { EventDocument } from "./features/events/schemas/firestore";
-export { PromotionsViewProductSection, PromotionsHero, PromotionsView } from "./features/promotions/components/index";
-export type { PromotionsViewProductSectionProps } from "./features/promotions/components/index";
+export { PromotionsViewProductSection, PromotionsHero, PromotionsView } from "./features/promotions/components/PromotionsView";
+export type { PromotionsViewProductSectionProps } from "./features/promotions/components/PromotionsView";
 export { RichText } from "./ui/rich-text/RichText";
 export { RichTextRenderer } from "./ui/rich-text/RichTextRenderer";
 export type { RichTextRendererProps } from "./ui/rich-text/RichTextRenderer";
@@ -1042,7 +1139,8 @@ export {
 } from "./features/auth/role-predicates";
 
 // Layout feature — client islands (unifies admin/store/user dashboard layouts).
-export { DashboardLayoutClient, RoleGuard } from "./_internal/client/features/layout/index";
+export { DashboardLayoutClient } from "./_internal/client/features/layout/DashboardLayoutClient";
+export { RoleGuard } from "./_internal/client/features/layout/RoleGuard";
 export type {
   DashboardLayoutClientProps,
   RoleGuardProps,
@@ -1272,8 +1370,8 @@ export type {
   AnalyticsCardDocument,
   ListingTemplateDocument,
 } from "./features/store-extensions/index";
-export { CommandPalette, useCommandPaletteHotkey } from "./features/shell/index";
-export type { CommandPaletteGroup } from "./features/shell/index";
+export { CommandPalette, useCommandPaletteHotkey } from "./features/shell/CommandPalette";
+export type { CommandPaletteGroup } from "./features/shell/CommandPalette";
 export {
   AdminBlogEditorView,
   AdminBundleEditorView,
@@ -1300,7 +1398,11 @@ export {
   AdminSublistingCategoryEditorView,
   AdminSupportTicketDetailView,
 } from "./features/admin/index";
-export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAuditLogViewProps, AdminMoneyCasesViewProps, AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/index";
+export type { AdminStoreEditorViewProps } from "./features/admin/components/AdminStoreEditorView";
+export type { AdminPayoutMarkPaidModalProps } from "./features/admin/components/AdminPayoutMarkPaidModal";
+export type { AdminAuditLogViewProps } from "./features/admin/components/AdminAuditLogView";
+export type { AdminMoneyCasesViewProps } from "./features/admin/components/AdminMoneyCasesView";
+export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/components/ViewAuditLogEntryModal";
 /*
  * The order editor's props, so the consumer's full-page variant
  * (`/admin/orders/[id]/view`) can declare the SAME `balance` shape the drawer
@@ -1310,11 +1412,12 @@ export type { AdminStoreEditorViewProps, AdminPayoutMarkPaidModalProps, AdminAud
 export type { AdminOrderEditorViewProps } from "./features/admin/components/AdminOrderEditorView";
 // NavItemData — the whole nav record AdminNavEditorView takes (it has no
 // id-based loader), needed by the /admin/navigation page clients.
-export type { NavItemData } from "./features/admin/index";
-export { PageLoader } from "./ui/index";
+export type { NavItemData } from "./features/admin/components/AdminNavEditorView";
+export { PageLoader } from "./ui/components/PageLoader";
 export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
-export { SpinWheelView, EventRaffleEntryForm } from "./features/events/index";
-export { Card, CardBody } from "./ui/index";
+export { SpinWheelView } from "./features/events/components/SpinWheelView";
+export { EventRaffleEntryForm } from "./features/events/components/EventRaffleEntryForm";
+export { Card, CardBody } from "./ui/components/Card";
 export {
   SellerCouponsView,
   SellerCreateProductView,
@@ -1326,18 +1429,19 @@ export type {
   SellerCreateProductViewProps,
   SellerEditProductViewProps,
 } from "./features/seller/index";
-export { BecomeSellerView } from "./features/account/index";
-export type { BidDocument } from "./features/auctions/index";
+export { BecomeSellerView } from "./features/account/components/BecomeSellerView";
+export type { BidDocument } from "./features/auctions/schemas/firestore";
 export type { ClaimedCouponDocument } from "./features/promotions/schemas";
-export { groupOrderItemsByLine } from "./features/orders/index";
-export { shortOrderRef } from "./features/orders/index";
-export type { LineOrderGroup, OutOfStockPolicy } from "./features/orders/index";
-export { MediaUploadField } from "./features/media/index";
+export { groupOrderItemsByLine } from "./features/orders/utils/bundle-grouping";
+export { shortOrderRef } from "./features/orders/utils/order-ref";
+export type { LineOrderGroup } from "./features/orders/utils/bundle-grouping";
+export type { OutOfStockPolicy } from "./features/orders/schemas/firestore";
+export { MediaUploadField } from "./features/media/upload/MediaUploadField";
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
-export { useProduct } from "./features/products/index";
-export type { ProductDocument } from "./features/products/index";
+export { useProduct } from "./features/products/hooks/useProducts";
+export type { ProductDocument } from "./features/products/schemas/firestore";
 export { BUNDLE_COPY } from "./_internal/shared/features/categories/bundle-copy";
-export { useSiteSettings } from "./core/index";
+export { useSiteSettings } from "./core/hooks/useSiteSettings";
 export {
   checkEmiEligibility,
   computeEmiSchedule,
@@ -1377,15 +1481,17 @@ export type {
   GiftWrapFeeRates,
   ShipmentProtectionFeeRates,
 } from "./_internal/shared/fees/calculator";
-export { FAQPageContent } from "./features/faq/index";
-export type { FAQCategory, FAQCategoryItem, FAQSortOption } from "./features/faq/index";
+export { FAQPageContent } from "./features/faq/components/FAQPageContent";
+export type { FAQCategory } from "./features/faq/types/index";
+export type { FAQCategoryItem } from "./features/faq/components/FAQCategorySidebar";
+export type { FAQSortOption } from "./features/faq/components/FAQSortDropdown";
 export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
 export { CategoryTemplatePicker, variantForCondition } from "./features/categories/components/CategoryTemplatePicker";
 export type { CategoryTemplatePickerProps, CategoryTemplateApply } from "./features/categories/components/CategoryTemplatePicker";
 export { PriceGuidanceHint } from "./features/categories/components/PriceGuidanceHint";
 export type { PriceGuidanceHintProps } from "./features/categories/components/PriceGuidanceHint";
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
-export { API_ENDPOINTS } from "./constants/index";
+export { API_ENDPOINTS } from "./constants/api-endpoints";
 
 // [CLIENT-SAFE] Pure, zero-import constant files — dashboard filter-tab
 // sets and Firestore field-name maps. No server dependency of any kind.

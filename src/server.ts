@@ -1,6 +1,6 @@
 // Server-only public exports
 // isAuthError - Pure util — detects auth errors from caught exceptions (usable in server actions).
-export { isAuthError } from "./utils/auth-error";
+export { isAuthError } from "./errors/normalize";
 
 // [SERVER-ONLY] safeRead — wraps optional reads whose failure must not break a page.
 // D2 Fix 4 — cross-resource search. Exported from `server.ts` because it takes
@@ -204,7 +204,7 @@ export {
   reconcileDisputes,
   DISPUTE_EVENT_PREFIX,
 } from "./_internal/server/features/payment-cases";
-export type { DisputeWebhookEntity } from "./_internal/server/features/payment-cases";
+export type { DisputeWebhookEntity } from "./_internal/server/features/payment-cases/disputes";
 
 /*
  * [SERVER-ONLY] obligations — deadlines with money consequences.
@@ -255,7 +255,7 @@ export {
   getMyProtectionClaimsAction,
   canClaimProtection,
 } from "./_internal/server/features/protection-claims";
-export type { FileProtectionClaimInput } from "./_internal/server/features/protection-claims";
+export type { FileProtectionClaimInput } from "./_internal/server/features/protection-claims/actions";
 
 // [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
 // Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
@@ -496,122 +496,122 @@ export type { AdminAuditAction, AdminAuditLogDocument } from "./features/audit-l
 // usersSeedData - Model for users seed data.
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ApiErrors - Shared export for api errors.
-export { ApiErrors } from "./next/index";
+export { ApiErrors } from "./next/api/api-response";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // DEFAULT_ROUTE_MAP - Constant used across modules.
-export { DEFAULT_ROUTE_MAP } from "./next/index";
+export { DEFAULT_ROUTE_MAP } from "./next/routing/route-map";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ErrorView - Component for error view.
-export { ErrorView } from "./next/index";
+export { ErrorView } from "./next/components/ErrorView";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // GlobalError - Model for global error.
-export { GlobalError } from "./next/index";
+export { GlobalError } from "./next/components/GlobalError";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // NotFoundView - Component for not found view.
-export { NotFoundView } from "./next/index";
+export { NotFoundView } from "./next/components/NotFoundView";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // UnauthorizedView - Component for unauthorized view.
-export { UnauthorizedView } from "./next/index";
+export { UnauthorizedView } from "./next/components/UnauthorizedView";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildBaseContext - Helper for build base context.
-export { buildBaseContext } from "./next/index";
+export { buildBaseContext } from "./next/middleware/chain";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createApiErrorHandler - Helper for create api error handler.
-export { createApiErrorHandler } from "./next/index";
+export { createApiErrorHandler } from "./next/api/errorHandler";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createApiHandler - Helper for create api handler.
-export { createApiHandler } from "./next/index";
+export { createRouteHandler as createApiHandler } from "./next/api/routeHandler";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createApiHandlerFactory - Helper for create api handler factory.
-export { createApiHandlerFactory } from "./next/index";
+export { createApiHandlerFactory } from "./next/api/apiHandler";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createApiMiddleware - Helper for create api middleware.
-export { createApiMiddleware } from "./next/index";
+export { createApiMiddleware } from "./next/middleware/chain";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createRouteHandler - Helper for create route handler.
-export { createRouteHandler } from "./next/index";
+export { createRouteHandler } from "./next/api/routeHandler";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createRouteMap - Helper for create route map.
-export { createRouteMap } from "./next/index";
+export { createRouteMap } from "./next/routing/route-map";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // errorResponse - Model for error response.
-export { errorResponse } from "./next/index";
+export { errorResponse } from "./next/api/api-response";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBooleanParam - Helper for get boolean param.
-export { getBooleanParam } from "./next/index";
+export { getBooleanParam } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getNumberParam - Helper for get number param.
-export { getNumberParam } from "./next/index";
+export { getNumberParam } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getOptionalSessionCookie - Helper for get optional session cookie.
-export { getOptionalSessionCookie } from "./next/index";
+export { getOptionalSessionCookie } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getRequiredSessionCookie - Helper for get required session cookie.
-export { getRequiredSessionCookie } from "./next/index";
+export { getRequiredSessionCookie } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSearchParams - Helper for get search params.
-export { getSearchParams } from "./next/index";
+export { getSearchParams } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStringParam - Helper for get string param.
-export { getStringParam } from "./next/index";
+export { getStringParam } from "./next/request-helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // invalidateCache - Shared export for invalidate cache.
-export { invalidateCache } from "./next/index";
+export { invalidateCache } from "./next/cache-middleware";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // piiScrubberMiddleware - Shared export for pii scrubber middleware.
-export { piiScrubberMiddleware } from "./next/index";
+export { piiScrubberMiddleware } from "./next/middleware/pii-scrubber";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // runChain - Helper for run chain.
-export { runChain } from "./next/index";
+export { runChain } from "./next/middleware/chain";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // successResponse - Model for success response.
-export { successResponse } from "./next/index";
+export { successResponse } from "./next/api/api-response";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // withCache - Shared export for with cache.
-export { withCache } from "./next/index";
+export { withCache } from "./next/cache-middleware";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createMiddlewareAuthChain - Helper for create middleware auth chain.
-export { createMiddlewareAuthChain } from "./providers/auth-firebase/index";
+export { createMiddlewareAuthChain } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSessionCookie - Helper for create session cookie.
 export { createSessionCookie } from "./providers/auth-firebase/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSessionCookieFromToken - Helper for create session cookie from token.
-export { createSessionCookieFromToken } from "./providers/auth-firebase/index";
+export { createSessionCookieFromToken } from "./providers/auth-firebase/session";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // firebaseAuthProvider - Component for firebase auth provider.
-export { firebaseAuthProvider } from "./providers/auth-firebase/index";
+export { firebaseAuthProvider } from "./providers/auth-firebase/provider";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // firebaseSessionProvider - Component for firebase session provider.
-export { firebaseSessionProvider } from "./providers/auth-firebase/index";
+export { firebaseSessionProvider } from "./providers/auth-firebase/session";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getUserFromRequest - Helper for get user from request.
-export { getUserFromRequest } from "./providers/auth-firebase/index";
+export { getUserFromRequest } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // requireAuthFromRequest - Model for require auth from request.
-export { requireAuthFromRequest } from "./providers/auth-firebase/index";
+export { requireAuthFromRequest } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // requireAuthUser - Shared export for require auth user.
-export { requireAuthUser } from "./providers/auth-firebase/index";
+export { requireAuthUser } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // requireRoleFromRequest - Model for require role from request.
-export { requireRoleFromRequest } from "./providers/auth-firebase/index";
+export { requireRoleFromRequest } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // requireRoleUser - Shared export for require role user.
-export { requireRoleUser } from "./providers/auth-firebase/index";
+export { requireRoleUser } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // revokeUserTokens - Shared export for revoke user tokens.
-export { revokeUserTokens } from "./providers/auth-firebase/index";
+export { revokeUserTokens } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyIdToken - Shared export for verify id token.
-export { verifyIdToken } from "./providers/auth-firebase/index";
+export { verifyIdToken } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifySessionCookie - Shared export for verify session cookie.
-export { verifySessionCookie } from "./providers/auth-firebase/index";
+export { verifySessionCookie } from "./providers/auth-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // applySieveToFirestore - Helper for apply sieve to firestore.
-export { applySieveToFirestore } from "./providers/db-firebase/index";
+export { applySieveToFirestore } from "./providers/db-firebase/sieve";
 // [SERVER-ONLY]-Server-only — Firebase Admin SDK providers (firestore, auth, storage, realtime db).
 export {
   getAdminDb,
@@ -621,16 +621,16 @@ export {
 } from "./providers/db-firebase/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildFirebaseClientConfig - Helper for build firebase client config.
-export { buildFirebaseClientConfig } from "./providers/db-firebase/index";
+export { buildFirebaseClientConfig } from "./providers/db-firebase/client-config";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // normalizeFirebaseConfigValue - Helper for normalize firebase config value.
-export { normalizeFirebaseConfigValue } from "./providers/db-firebase/index";
+export { normalizeFirebaseConfigValue } from "./providers/db-firebase/client-config";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // prepareForFirestore - Shared export for prepare for firestore.
-export { prepareForFirestore } from "./providers/db-firebase/index";
+export { prepareForFirestore } from "./providers/db-firebase/helpers";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createResendProvider - Helper for create resend provider.
-export { createResendProvider } from "./providers/email-resend/index";
+export { createResendProvider } from "./providers/email-resend/provider";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // PhonePeProvider - Component for phonepe provider.
 export { PhonePeProvider } from "./providers/payment-phonepe/index";
@@ -657,228 +657,228 @@ export { ManualPaymentProvider } from "./providers/payment-manual/index";
 export { ManualShippingProvider } from "./providers/shipping-manual/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createAddressForUser - Helper for create address for user.
-export { createAddressForUser } from "./features/account/server";
+export { createAddressForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteAddressForUser - Helper for delete address for user.
-export { deleteAddressForUser } from "./features/account/server";
+export { deleteAddressForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getAddressByIdForUser - Helper for get address by id for user.
-export { getAddressByIdForUser } from "./features/account/server";
+export { getAddressByIdForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAddressesForUser - Helper for list addresses for user.
-export { listAddressesForUser } from "./features/account/server";
+export { listAddressesForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // setDefaultAddressForUser - Helper for set default address for user.
-export { setDefaultAddressForUser } from "./features/account/server";
+export { setDefaultAddressForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateAddressForUser - Helper for update address for user.
-export { updateAddressForUser } from "./features/account/server";
+export { updateAddressForUser } from "./features/account/actions/address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminBidsGET - Shared export for admin bids get.
-export { adminBidsGET } from "./features/admin/server";
+export { GET as adminBidsGET } from "./features/admin/api/bids/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminCouponsGET - Shared export for admin coupons get.
-export { adminCouponsGET } from "./features/admin/server";
+export { GET as adminCouponsGET } from "./features/admin/api/coupons/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminCreateCoupon - Shared export for admin create coupon.
-export { adminCreateCoupon } from "./features/admin/server";
+export { adminCreateCoupon } from "./features/admin/actions/admin-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminCreateProduct - Shared export for admin create product.
-export { adminCreateProduct } from "./features/admin/server";
+export { adminCreateProduct } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminDeleteCoupon - Shared export for admin delete coupon.
-export { adminDeleteCoupon } from "./features/admin/server";
+export { adminDeleteCoupon } from "./features/admin/actions/admin-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminDeleteProduct - Shared export for admin delete product.
-export { adminDeleteProduct } from "./features/admin/server";
+export { adminDeleteProduct } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminDeleteUser - Shared export for admin delete user.
-export { adminDeleteUser } from "./features/admin/server";
+export { adminDeleteUser } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminProductsGET - Shared export for admin products get.
-export { adminProductsGET } from "./features/admin/server";
+export { GET as adminProductsGET } from "./features/admin/api/products/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminReviewsGET - Shared export for admin reviews get.
-export { adminReviewsGET } from "./features/admin/server";
+export { GET as adminReviewsGET } from "./features/admin/api/reviews/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateCoupon - Shared export for admin update coupon.
-export { adminUpdateCoupon } from "./features/admin/server";
+export { adminUpdateCoupon } from "./features/admin/actions/admin-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateOrder - Shared export for admin update order.
-export { adminUpdateOrder } from "./features/admin/server";
+export { adminUpdateOrder } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdatePayout - Shared export for admin update payout.
-export { adminUpdatePayout } from "./features/admin/server";
+export { adminUpdatePayout } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateProduct - Shared export for admin update product.
-export { adminUpdateProduct } from "./features/admin/server";
+export { adminUpdateProduct } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateStoreStatus - Model for admin update store status.
-export { adminUpdateStoreStatus } from "./features/admin/server";
+export { adminUpdateStoreStatus } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateUser - Shared export for admin update user.
-export { adminUpdateUser } from "./features/admin/server";
+export { adminUpdateUser } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteNotification - Helper for delete notification.
-export { deleteNotification } from "./features/admin/server";
+export { deleteNotification } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getAdminAnalytics - Helper for get admin analytics.
-export { getAdminAnalytics } from "./features/admin/server";
+export { getAdminAnalytics } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getAdminDashboardStats - Helper for get admin dashboard stats.
-export { getAdminDashboardStats } from "./features/admin/server";
+export { getAdminDashboardStats } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSiteSettings - Helper for get site settings.
-export { getSiteSettings } from "./features/admin/server";
+export { getSiteSettings } from "./features/admin/actions/site-settings-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getUnreadNotificationCount - Helper for get unread notification count.
-export { getUnreadNotificationCount } from "./features/admin/server";
+export { getUnreadNotificationCount } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminBids - Helper for list admin bids.
-export { listAdminBids } from "./features/admin/server";
+export { listAdminBids } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminBlog - Helper for list admin blog.
-export { listAdminBlog } from "./features/admin/server";
+export { listAdminBlog } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminCoupons - Helper for list admin coupons.
-export { listAdminCoupons } from "./features/admin/server";
+export { listAdminCoupons } from "./features/admin/actions/admin-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminOrders - Helper for list admin orders.
-export { listAdminOrders } from "./features/admin/server";
+export { listAdminOrders } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminPayouts - Helper for list admin payouts.
-export { listAdminPayouts } from "./features/admin/server";
+export { listAdminPayouts } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminProducts - Helper for list admin products.
-export { listAdminProducts } from "./features/admin/server";
+export { listAdminProducts } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminSessions - Helper for list admin sessions.
-export { listAdminSessions } from "./features/admin/server";
+export { listAdminSessions } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminStores - Helper for list admin stores.
-export { listAdminStores } from "./features/admin/server";
+export { listAdminStores } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminUsers - Helper for list admin users.
-export { listAdminUsers } from "./features/admin/server";
+export { listAdminUsers } from "./features/admin/actions/admin-read-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listNotifications - Helper for list notifications.
-export { listNotifications } from "./features/admin/server";
+export { listNotifications } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markAllNotificationsRead - Shared export for mark all notifications read.
-export { markAllNotificationsRead } from "./features/admin/server";
+export { markAllNotificationsRead } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markNotificationRead - Shared export for mark notification read.
-export { markNotificationRead } from "./features/admin/server";
+export { markNotificationRead } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // revokeSession - Shared export for revoke session.
-export { revokeSession } from "./features/admin/server";
+export { revokeSession } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // revokeUserSessions - Shared export for revoke user sessions.
-export { revokeUserSessions } from "./features/admin/server";
+export { revokeUserSessions } from "./features/admin/actions/admin-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateSiteSettings - Helper for update site settings.
-export { updateSiteSettings } from "./features/admin/server";
+export { updateSiteSettings } from "./features/admin/actions/site-settings-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // GET - Constant used across modules.
-export { GET } from "./features/auctions/server";
+export { GET } from "./features/auctions/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bidsGET - Shared export for bids get.
-export { bidsGET } from "./features/auctions/server";
+export { GET as bidsGET } from "./features/auctions/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBidById - Helper for get bid by id.
-export { getBidById } from "./features/auctions/server";
+export { getBidById } from "./features/auctions/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBidsByProduct - Helper for list bids by product.
-export { listBidsByProduct } from "./features/auctions/server";
+export { listBidsByProduct } from "./features/auctions/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // placeBid - Shared export for place bid.
-export { placeBid } from "./features/auctions/server";
+export { placeBid } from "./features/auctions/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
 export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.
-export { authMeGET } from "./features/auth/server";
+export { authMeGET } from "./features/auth/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createPasswordResetToken - Helper for create password reset token.
-export { createPasswordResetToken } from "./features/auth/server";
+export { createPasswordResetToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createVerificationToken - Helper for create verification token.
-export { createVerificationToken } from "./features/auth/server";
+export { createVerificationToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteToken - Helper for delete token.
-export { deleteToken } from "./features/auth/server";
+export { deleteToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // generateToken - Helper for generate token.
-export { generateToken } from "./features/auth/server";
+export { generateToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPublicUserProfile - Helper for get public user profile.
-export { getPublicUserProfile } from "./features/auth/server";
+export { getPublicUserProfile } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getProfileStoreProducts - Helper for get store products for public profile view.
-export { getProfileStoreProducts } from "./features/auth/server";
+export { getProfileStoreProducts } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerReviews - Helper for get seller reviews.
-export { getSellerReviews } from "./features/auth/server";
+export { getSellerReviews } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getUserProfile - Helper for get user profile.
-export { getUserProfile } from "./features/auth/server";
+export { getUserProfile } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getUserSessions - Helper for get user sessions.
-export { getUserSessions } from "./features/auth/server";
+export { getUserSessions } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // markPasswordResetTokenAsUsed - Shared export for mark password reset token as used.
-export { markPasswordResetTokenAsUsed } from "./features/auth/server";
+export { markPasswordResetTokenAsUsed } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateUserProfile - Helper for update user profile.
-export { updateUserProfile } from "./features/auth/server";
+export { updateUserProfile } from "./features/auth/actions/profile-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyEmailToken - Shared export for verify email token.
-export { verifyEmailToken } from "./features/auth/server";
+export { verifyEmailToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyPasswordResetToken - Shared export for verify password reset token.
-export { verifyPasswordResetToken } from "./features/auth/server";
+export { verifyPasswordResetToken } from "./features/auth/token-store";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // blogGET - Shared export for blog get.
-export { blogGET } from "./features/blog/server";
+export { GET as blogGET } from "./features/blog/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // blogSlugGET - Shared export for blog slug get.
-export { blogSlugGET } from "./features/blog/server";
+export { GET as blogSlugGET } from "./features/blog/api/[slug]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createBlogPost - Helper for create blog post.
-export { createBlogPost } from "./features/blog/server";
+export { createBlogPost } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createBlogPostSchema - Helper for create blog post schema.
-export { createBlogPostSchema } from "./features/blog/server";
+export { createBlogPostSchema } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteBlogPost - Helper for delete blog post.
-export { deleteBlogPost } from "./features/blog/server";
+export { deleteBlogPost } from "./features/blog/actions/blog-actions";
 // SB-UNI-C — getBrandBySlug deleted with features/brands/. Use
 // categoriesRepository.findBySlugAndType(slug, "brand") instead.
 // getBlogPostById - Helper for get blog post by id.
-export { getBlogPostById } from "./features/blog/server";
+export { getBlogPostById } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBlogPostBySlug - Helper for get blog post by slug.
-export { getBlogPostBySlug } from "./features/blog/server";
+export { getBlogPostBySlug } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedBlogPosts - Helper for get featured blog posts.
-export { getFeaturedBlogPosts } from "./features/blog/server";
+export { getFeaturedBlogPosts } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestBlogPosts - Helper for get latest blog posts.
-export { getLatestBlogPosts } from "./features/blog/server";
+export { getLatestBlogPosts } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBlogPosts - Helper for list blog posts.
-export { listBlogPosts } from "./features/blog/server";
+export { listBlogPosts } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateBlogPost - Helper for update blog post.
-export { updateBlogPost } from "./features/blog/server";
+export { updateBlogPost } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateBlogPostSchema - Helper for update blog post schema.
-export { updateBlogPostSchema } from "./features/blog/server";
+export { updateBlogPostSchema } from "./features/blog/actions/blog-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
 // assertCanAddNewItems - the lane gate every add-to-cart entry point must run.
@@ -892,73 +892,73 @@ export {
 } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
-export { clearCart } from "./features/cart/server";
+export { clearCart } from "./features/cart/actions/cart-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getCart - Helper for get cart.
-export { getCart } from "./features/cart/server";
+export { getCart } from "./features/cart/actions/cart-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // mergeGuestCart - Helper for merge guest cart.
-export { mergeGuestCart } from "./features/cart/server";
+export { mergeGuestCart } from "./features/cart/actions/cart-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // removeCartItem - Helper for remove cart item.
-export { removeCartItem } from "./features/cart/server";
+export { removeCartItem } from "./features/cart/actions/cart-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateCartItem - Helper for update cart item.
-export { updateCartItem } from "./features/cart/server";
+export { updateCartItem } from "./features/cart/actions/cart-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // POST - Constant used across modules.
-export { POST } from "./features/categories/server";
+export { POST } from "./features/categories/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoriesGET - Shared export for categories get.
-export { categoriesGET } from "./features/categories/server";
+export { GET as categoriesGET } from "./features/categories/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoryItemDELETE - Shared export for category item delete.
-export { categoryItemDELETE } from "./features/categories/server";
+export { categoryItemDELETE } from "./features/categories/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoryItemGET - Shared export for category item get.
-export { categoryItemGET } from "./features/categories/server";
+export { categoryItemGET } from "./features/categories/api/[id]/route";
 // categoryDescriptionTemplateGET - the seller form's inherited-template read.
-export { categoryDescriptionTemplateGET } from "./features/categories/server";
+export { GET as categoryDescriptionTemplateGET } from "./features/categories/api/[id]/description-template/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // categoryItemPATCH - Shared export for category item patch.
-export { categoryItemPATCH } from "./features/categories/server";
+export { categoryItemPATCH } from "./features/categories/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createCategory - Helper for create category.
-export { createCategory } from "./features/categories/server";
+export { createCategory } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteCategory - Helper for delete category.
-export { deleteCategory } from "./features/categories/server";
+export { deleteCategory } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // fetchCategoryTree - Shared export for fetch category tree.
-export { fetchCategoryTree } from "./features/categories/server";
+export { fetchCategoryTree } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getCategoryById - Helper for get category by id.
-export { getCategoryById } from "./features/categories/server";
+export { getCategoryById } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getCategoryBySlug - Helper for get category by slug.
-export { getCategoryBySlug } from "./features/categories/server";
+export { getCategoryBySlug } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getCategoryChildren - Helper for get category children.
-export { getCategoryChildren } from "./features/categories/server";
+export { getCategoryChildren } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBrandCategories - Helper for list brand categories.
-export { listBrandCategories } from "./features/categories/server";
+export { listBrandCategories } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listCategories - Helper for list categories.
-export { listCategories } from "./features/categories/server";
+export { listCategories } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listTopLevelCategories - Helper for list top level categories.
-export { listTopLevelCategories } from "./features/categories/server";
+export { listTopLevelCategories } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateCategory - Helper for update category.
-export { updateCategory } from "./features/categories/server";
+export { updateCategory } from "./features/categories/actions/category-actions";
 // [SERVER-ONLY] Tier PP — high-value checkout OTP gate.
 export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
   isCheckoutValueOtpVerified,
 } from "./features/checkout/server";
-export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/server";
+export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/repository/failed-checkout.repository";
 /*
  * Shipping reconciliation. Public on the SERVER entry only: it writes a points
  * ledger entry and an order, so it must never be reachable from a client
@@ -1008,7 +1008,7 @@ export type {
  */
 export { adjustUserPoints } from "./_internal/server/features/points/adjust";
 export { pointsRepository, PointsRepository } from "./features/points/repository/points.repository";
-export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
+export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/repository/failed-checkout.repository";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use
 // these instead of authoring raw <table>/<tr>/<td> in email templates.
@@ -1047,11 +1047,11 @@ export type {
  */
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendEmail - Shared export for send email. Takes a REQUIRED guard context.
-export { sendEmail } from "./features/contact/server";
+export { sendEmail } from "./features/contact/email";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendOrderConfirmationEmail - Shared export for send order confirmation email.
-export { sendOrderConfirmationEmail } from "./features/contact/server";
-export type { OrderConfirmationEmailParams, SendEmailGuard } from "./features/contact/server";
+export { sendOrderConfirmationEmail } from "./features/contact/email";
+export type { OrderConfirmationEmailParams, SendEmailGuard } from "./features/contact/email";
 /*
  * `guardSend` is deliberately NOT exported here.
  *
@@ -1090,60 +1090,60 @@ export {
   getLikeTrendCached,
 } from "./_internal/server/features/events/likes";
 export { toggleEventLikeAction, getEventLikersAction } from "./_internal/server/features/events/like-actions";
-export { adminGetEventById } from "./features/events/server";
+export { adminGetEventById } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventEntries - Shared export for admin get event entries.
-export { adminGetEventEntries } from "./features/events/server";
+export { adminGetEventEntries } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventStats - Shared export for admin get event stats.
-export { adminGetEventStats } from "./features/events/server";
+export { adminGetEventStats } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminListEvents - Shared export for admin list events.
-export { adminListEvents } from "./features/events/server";
+export { adminListEvents } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateEventEntry - Model for admin update event entry.
-export { adminUpdateEventEntry } from "./features/events/server";
+export { adminUpdateEventEntry } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // changeEventStatus - Model for change event status.
-export { changeEventStatus } from "./features/events/server";
+export { changeEventStatus } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createEvent - Helper for create event.
-export { createEvent } from "./features/events/server";
+export { createEvent } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteEvent - Helper for delete event.
-export { deleteEvent } from "./features/events/server";
+export { deleteEvent } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // enterEvent - Model for enter event.
-export { enterEvent } from "./features/events/server";
+export { enterEvent } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventIdGET - Shared export for event id get.
-export { eventIdGET } from "./features/events/server";
+export { GET as eventIdGET } from "./features/events/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventLeaderboard - Helper for get event leaderboard.
-export { getEventLeaderboard } from "./features/events/server";
+export { getEventLeaderboard } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventPollResults - Helper for get event poll results (per-option vote tally).
-export { getEventPollResults } from "./features/events/server";
-export type { PollResultEntry, SpinResultEntry } from "./features/events/index";
+export { getEventPollResults } from "./features/events/actions/event-actions";
+export type { PollResultEntry, SpinResultEntry } from "./features/events/types/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventSpinResults - Last N winning spins for a spin_wheel event, most recent first.
-export { getEventSpinResults } from "./features/events/server";
+export { getEventSpinResults } from "./features/events/actions/event-actions";
 // getUserSpinResultsForEvent - The CALLER'S OWN spins for an event, unmasked. Companion to the masked public feed above.
-export { getUserSpinResultsForEvent } from "./features/events/server";
+export { getUserSpinResultsForEvent } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPublicEventById - Helper for get public event by id.
-export { getPublicEventById } from "./features/events/server";
+export { getPublicEventById } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPublicEvents - Helper for list public events.
-export { listPublicEvents } from "./features/events/server";
+export { listPublicEvents } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getRelatedEvents - Helper for get related events (tag overlap).
-export { getRelatedEvents } from "./features/events/server";
+export { getRelatedEvents } from "./features/events/actions/event-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateEvent - Helper for update event.
-export { updateEvent } from "./features/events/server";
+export { updateEvent } from "./features/events/actions/event-actions";
 // [SERVER-ONLY] SB9-H — manual trigger + spin actions
 export {
   triggerEventRaffleAction,
@@ -1238,47 +1238,47 @@ export {
 } from "./_internal/server/features/payouts/actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createFaq - Helper for create faq.
-export { createFaq } from "./features/faq/server";
+export { createFaq } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteFaq - Helper for delete faq.
-export { deleteFaq } from "./features/faq/server";
+export { deleteFaq } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqCreateSchema - Model for faq create schema.
-export { faqCreateSchema } from "./features/faq/server";
+export { faqCreateSchema } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqUpdateSchema - Model for faq update schema.
-export { faqUpdateSchema } from "./features/faq/server";
+export { faqUpdateSchema } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFaqById - Helper for get faq by id.
-export { getFaqById } from "./features/faq/server";
+export { getFaqById } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listFaqs - Helper for list faqs.
-export { listFaqs } from "./features/faq/server";
+export { listFaqs } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPublicFaqs - Helper for list public faqs.
-export { listPublicFaqs } from "./features/faq/server";
+export { listPublicFaqs } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateFaq - Helper for update faq.
-export { updateFaq } from "./features/faq/server";
+export { updateFaq } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // voteFaq - Shared export for vote faq.
-export { voteFaq } from "./features/faq/server";
+export { voteFaq } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createChecklistItem - Admin creates a tester checklist catalog item.
-export { createChecklistItem } from "./features/tester/server";
+export { createChecklistItem } from "./features/tester/actions/checklist-item-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateChecklistItem - Admin updates a tester checklist catalog item.
-export { updateChecklistItem } from "./features/tester/server";
+export { updateChecklistItem } from "./features/tester/actions/checklist-item-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteChecklistItem - Admin deletes a tester checklist catalog item.
-export { deleteChecklistItem } from "./features/tester/server";
+export { deleteChecklistItem } from "./features/tester/actions/checklist-item-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // checklistItemCreateSchema - Zod schema for creating a tester checklist item.
-export { checklistItemCreateSchema } from "./features/tester/server";
+export { checklistItemCreateSchema } from "./features/tester/actions/checklist-item-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // checklistItemUpdateSchema - Zod schema for updating a tester checklist item.
-export { checklistItemUpdateSchema } from "./features/tester/server";
+export { checklistItemUpdateSchema } from "./features/tester/actions/checklist-item-actions";
 // [SERVER-ONLY]-Server-only — filters isTestData:true tester-sandbox documents out of public
 // listing responses unless the viewer is a tester or admin. Use in every public store/product/
 // category/blog/event list-and-detail route.
@@ -1290,397 +1290,397 @@ export {
 export type { ViewerLike, TestDataFlagged } from "./_internal/server/features/tester/visibility";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselGET - Shared export for carousel get.
-export { carouselGET } from "./features/homepage/server";
+export { carouselGET } from "./features/homepage/api/carousel/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselItemDELETE - Shared export for carousel item delete.
-export { carouselItemDELETE } from "./features/homepage/server";
+export { carouselItemDELETE } from "./features/homepage/api/carousel/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselItemGET - Shared export for carousel item get.
-export { carouselItemGET } from "./features/homepage/server";
+export { carouselItemGET } from "./features/homepage/api/carousel/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselItemPATCH - Shared export for carousel item patch.
-export { carouselItemPATCH } from "./features/homepage/server";
+export { carouselItemPATCH } from "./features/homepage/api/carousel/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselPOST - Shared export for carousel post.
-export { carouselPOST } from "./features/homepage/server";
+export { carouselPOST } from "./features/homepage/api/carousel/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createCarouselSlide - Helper for create carousel slide.
-export { createCarouselSlide } from "./features/homepage/server";
+export { createCarouselSlide } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createHomepageSection - Helper for create homepage section.
-export { createHomepageSection } from "./features/homepage/server";
+export { createHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSectionSchema - Helper for create section schema.
-export { createSectionSchema } from "./features/homepage/server";
+export { createSectionSchema } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteCarouselSlide - Helper for delete carousel slide.
-export { deleteCarouselSlide } from "./features/homepage/server";
+export { deleteCarouselSlide } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteHomepageSection - Helper for delete homepage section.
-export { deleteHomepageSection } from "./features/homepage/server";
+export { deleteHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getCarouselSlideById - Helper for get carousel slide by id.
-export { getCarouselSlideById } from "./features/homepage/server";
+export { getCarouselSlideById } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageSectionById - Helper for get homepage section by id.
-export { getHomepageSectionById } from "./features/homepage/server";
+export { getHomepageSectionById } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listActiveCarouselSlides - Helper for list active carousel slides.
-export { listActiveCarouselSlides } from "./features/homepage/server";
+export { listActiveCarouselSlides } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAllCarouselSlides - Helper for list all carousel slides.
-export { listAllCarouselSlides } from "./features/homepage/server";
+export { listAllCarouselSlides } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listEnabledHomepageSections - Helper for list enabled homepage sections.
-export { listEnabledHomepageSections } from "./features/homepage/server";
+export { listEnabledHomepageSections } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listHomepageSections - Helper for list homepage sections.
-export { listHomepageSections } from "./features/homepage/server";
+export { listHomepageSections } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reorderCarouselSlides - Shared export for reorder carousel slides.
-export { reorderCarouselSlides } from "./features/homepage/server";
+export { reorderCarouselSlides } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reorderHomepageSections - Shared export for reorder homepage sections.
-export { reorderHomepageSections } from "./features/homepage/server";
+export { reorderHomepageSections } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateCarouselSlide - Helper for update carousel slide.
-export { updateCarouselSlide } from "./features/homepage/server";
+export { updateCarouselSlide } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateHomepageSection - Helper for update homepage section.
-export { updateHomepageSection } from "./features/homepage/server";
+export { updateHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateSectionSchema - Helper for update section schema.
-export { updateSectionSchema } from "./features/homepage/server";
+export { updateSectionSchema } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaArray - Shared export for finalize staged media array.
-export { finalizeStagedMediaArray } from "./features/media/server";
+export { finalizeStagedMediaArray } from "./features/media/finalize";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaField - Shared export for finalize staged media field.
-export { finalizeStagedMediaField } from "./features/media/server";
+export { finalizeStagedMediaField } from "./features/media/finalize";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaObject - Shared export for finalize staged media object.
-export { finalizeStagedMediaObject } from "./features/media/server";
+export { finalizeStagedMediaObject } from "./features/media/finalize";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaObjectArray - Shared export for finalize staged media object array.
-export { finalizeStagedMediaObjectArray } from "./features/media/server";
+export { finalizeStagedMediaObjectArray } from "./features/media/finalize";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // finalizeStagedMediaUrl - Shared export for finalize staged media url.
-export { finalizeStagedMediaUrl } from "./features/media/server";
+export { finalizeStagedMediaUrl } from "./features/media/finalize";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // cancelOrderForUser - Shared export for cancel order for user.
-export { cancelOrderForUser } from "./features/orders/server";
+export { cancelOrderForUser } from "./features/orders/actions/order-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // cancelOrderItemsForUser - Cancels a subset of line items on an order and continues with the rest.
-export { cancelOrderItemsForUser } from "./features/orders/server";
+export { cancelOrderItemsForUser } from "./features/orders/actions/order-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getOrderByIdForUser - Helper for get order by id for user.
-export { getOrderByIdForUser } from "./features/orders/server";
+export { getOrderByIdForUser } from "./features/orders/actions/order-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getOrderTrackingHandler - Helper for get order tracking handler.
-export { getOrderTrackingHandler } from "./features/orders/server";
+export { GET as getOrderTrackingHandler } from "./features/orders/api/track/[trackingId]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getTrackingInfo - Helper for get tracking info.
-export { getTrackingInfo } from "./features/orders/server";
+export { getTrackingInfo } from "./features/orders/actions/order-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // issuePartialRefund - Shared export for issue partial refund.
-export { issuePartialRefund } from "./features/orders/server";
+export { issuePartialRefund } from "./features/orders/actions/refund-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listOrdersForUser - Helper for list orders for user.
-export { listOrdersForUser } from "./features/orders/server";
+export { listOrdersForUser } from "./features/orders/actions/order-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // previewCancellationRefund - Shared export for preview cancellation refund.
-export { previewCancellationRefund } from "./features/orders/server";
+export { previewCancellationRefund } from "./features/orders/actions/refund-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // preOrdersGET - Shared export for pre orders get.
-export { preOrdersGET } from "./features/pre-orders/server";
+export { GET as preOrdersGET } from "./features/pre-orders/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // preOrdersPOST - Shared export for pre orders post.
-export { preOrdersPOST } from "./features/pre-orders/server";
+export { POST as preOrdersPOST } from "./features/pre-orders/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedAuctions - Helper for get featured auctions.
-export { getFeaturedAuctions } from "./features/products/server";
+export { getFeaturedAuctions } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedPreOrders - Helper for get featured pre orders.
-export { getFeaturedPreOrders } from "./features/products/server";
+export { getFeaturedPreOrders } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedProducts - Helper for get featured products.
-export { getFeaturedProducts } from "./features/products/server";
+export { getFeaturedProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestAuctions - Helper for get latest auctions.
-export { getLatestAuctions } from "./features/products/server";
+export { getLatestAuctions } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestPreOrders - Helper for get latest pre orders.
-export { getLatestPreOrders } from "./features/products/server";
+export { getLatestPreOrders } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestProducts - Helper for get latest products.
-export { getLatestProducts } from "./features/products/server";
+export { getLatestProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getProductById - Helper for get product by id.
-export { getProductById } from "./features/products/server";
+export { getProductById } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getRelatedProducts - Helper for get related products.
-export { getRelatedProducts } from "./features/products/server";
+export { getRelatedProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreStorefrontProducts - Helper for get store storefront products.
-export { getStoreStorefrontProducts } from "./features/products/server";
+export { getStoreStorefrontProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAuctions - Helper for list auctions.
-export { listAuctions } from "./features/products/server";
+export { listAuctions } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPreOrders - Helper for list pre orders.
-export { listPreOrders } from "./features/products/server";
+export { listPreOrders } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listProducts - Helper for list products.
-export { listProducts } from "./features/products/server";
+export { listProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productItemDELETE - Shared export for product item delete.
-export { productItemDELETE } from "./features/products/server";
+export { DELETE as productItemDELETE } from "./features/products/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productItemGET - Shared export for product item get.
-export { productItemGET } from "./features/products/server";
+export { GET as productItemGET } from "./features/products/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productItemPATCH - Shared export for product item patch.
-export { productItemPATCH } from "./features/products/server";
+export { PATCH as productItemPATCH } from "./features/products/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPromotions - Helper for get promotions.
-export { getPromotions } from "./features/promotions/server";
+export { getPromotions } from "./features/promotions/actions/promotions-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // promotionsGET - Shared export for promotions get.
-export { promotionsGET } from "./features/promotions/server";
+export { GET as promotionsGET } from "./features/promotions/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerCreateCoupon - Shared export for seller create coupon.
-export { sellerCreateCoupon } from "./features/promotions/server";
+export { sellerCreateCoupon } from "./features/promotions/actions/seller-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerDeleteCoupon - Shared export for seller delete coupon.
-export { sellerDeleteCoupon } from "./features/promotions/server";
+export { sellerDeleteCoupon } from "./features/promotions/actions/seller-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerUpdateCoupon - Shared export for seller update coupon.
-export { sellerUpdateCoupon } from "./features/promotions/server";
+export { sellerUpdateCoupon } from "./features/promotions/actions/seller-coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // validateCoupon - Helper for validate coupon.
-export { validateCoupon } from "./features/promotions/server";
+export { validateCoupon } from "./features/promotions/actions/coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // validateCouponForCart - Helper for validate coupon for cart.
-export { validateCouponForCart } from "./features/promotions/server";
+export { validateCouponForCart } from "./features/promotions/actions/coupon-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminDeleteReview - Shared export for admin delete review.
-export { adminDeleteReview } from "./features/reviews/server";
+export { adminDeleteReview } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminUpdateReview - Shared export for admin update review.
-export { adminUpdateReview } from "./features/reviews/server";
+export { adminUpdateReview } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createReview - Helper for create review.
-export { createReview } from "./features/reviews/server";
+export { createReview } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteReview - Helper for delete review.
-export { deleteReview } from "./features/reviews/server";
+export { deleteReview } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageReviews - Helper for get homepage reviews.
-export { getHomepageReviews } from "./features/reviews/server";
+export { getHomepageReviews } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getReviewById - Helper for get review by id.
-export { getReviewById } from "./features/reviews/server";
+export { getReviewById } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listAdminReviews - Helper for list admin reviews.
-export { listAdminReviews } from "./features/reviews/server";
+export { listAdminReviews } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listReviewsByProduct - Helper for list reviews by product.
-export { listReviewsByProduct } from "./features/reviews/server";
+export { listReviewsByProduct } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listReviewsBySeller - Helper for list reviews by seller.
-export { listReviewsBySeller } from "./features/reviews/server";
+export { listReviewsBySeller } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewItemDELETE - Shared export for review item delete.
-export { reviewItemDELETE } from "./features/reviews/server";
+export { reviewItemDELETE } from "./features/reviews/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewItemGET - Shared export for review item get.
-export { reviewItemGET } from "./features/reviews/server";
+export { reviewItemGET } from "./features/reviews/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewItemPATCH - Shared export for review item patch.
-export { reviewItemPATCH } from "./features/reviews/server";
+export { reviewItemPATCH } from "./features/reviews/api/[id]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateReview - Helper for update review.
-export { updateReview } from "./features/reviews/server";
+export { updateReview } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // voteReviewHelpful - Shared export for vote review helpful.
-export { voteReviewHelpful } from "./features/reviews/server";
+export { voteReviewHelpful } from "./features/reviews/actions/review-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // acceptCounterOffer - Shared export for accept counter offer.
-export { acceptCounterOffer } from "./features/seller/server";
+export { acceptCounterOffer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // becomeSeller - Shared export for become seller.
-export { becomeSeller } from "./features/seller/server";
+export { becomeSeller } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bulkSellerOrder - Shared export for bulk seller order.
-export { bulkSellerOrder } from "./features/seller/server";
+export { bulkSellerOrder } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // checkoutOffer - Shared export for checkout offer.
-export { checkoutOffer } from "./features/seller/server";
+export { checkoutOffer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // counterOfferByBuyer - Shared export for counter offer by buyer.
-export { counterOfferByBuyer } from "./features/seller/server";
+export { counterOfferByBuyer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSellerProduct - Helper for create seller product.
-export { createSellerProduct } from "./features/seller/server";
+export { createSellerProduct } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createStore - Helper for create store.
-export { createStore } from "./features/seller/server";
+export { createStore } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // customShipOrder - Shared export for custom ship order.
-export { customShipOrder } from "./features/seller/server";
+export { customShipOrder } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerAnalytics - Helper for get seller analytics.
-export { getSellerAnalytics } from "./features/seller/server";
+export { getSellerAnalytics } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerPayoutSettings - Helper for get seller payout settings.
-export { getSellerPayoutSettings } from "./features/seller/server";
+export { getSellerPayoutSettings } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerShipping - Helper for get seller shipping.
-export { getSellerShipping } from "./features/seller/server";
+export { getSellerShipping } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerStore - Helper for get seller store.
-export { getSellerStore } from "./features/seller/server";
+export { getSellerStore } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBuyerOffers - Helper for list buyer offers.
-export { listBuyerOffers } from "./features/seller/server";
+export { listBuyerOffers } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listSellerCoupons - Helper for list seller coupons.
-export { listSellerCoupons } from "./features/seller/server";
+export { listSellerCoupons } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listSellerMyProducts - Helper for list seller my products.
-export { listSellerMyProducts } from "./features/seller/server";
+export { listSellerMyProducts } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listSellerOffers - Helper for list seller offers.
-export { listSellerOffers } from "./features/seller/server";
+export { listSellerOffers } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listSellerOrders - Helper for list seller orders.
-export { listSellerOrders } from "./features/seller/server";
+export { listSellerOrders } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listSellerPayouts - Helper for list seller payouts.
-export { listSellerPayouts } from "./features/seller/server";
+export { listSellerPayouts } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOffer - Shared export for make offer.
-export { makeOffer } from "./features/seller/server";
+export { makeOffer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // requestPayout - Shared export for request payout.
-export { requestPayout } from "./features/seller/server";
+export { requestPayout } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // respondToOffer - Shared export for respond to offer.
-export { respondToOffer } from "./features/seller/server";
+export { respondToOffer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerCouponsGET - Shared export for seller coupons get.
-export { sellerCouponsGET } from "./features/seller/server";
+export { GET as sellerCouponsGET } from "./features/seller/api/coupons/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerDeleteProduct - Shared export for seller delete product.
-export { sellerDeleteProduct } from "./features/seller/server";
+export { sellerDeleteProduct } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerProductsGET - Shared export for seller products get.
-export { sellerProductsGET } from "./features/seller/server";
+export { GET as sellerProductsGET } from "./features/seller/api/products/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerStoreGET - Shared export for seller store get.
-export { sellerStoreGET } from "./features/seller/server";
+export { GET as sellerStoreGET } from "./features/seller/api/store/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sellerUpdateProduct - Shared export for seller update product.
-export { sellerUpdateProduct } from "./features/seller/server";
+export { sellerUpdateProduct } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updatePayoutSettings - Helper for update payout settings.
-export { updatePayoutSettings } from "./features/seller/server";
+export { updatePayoutSettings } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateStore - Helper for update store.
-export { updateStore } from "./features/seller/server";
+export { updateStore } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // withdrawOffer - Shared export for withdraw offer.
-export { withdrawOffer } from "./features/seller/server";
+export { withdrawOffer } from "./features/seller/actions/offer-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createStoreAddressForSeller - Helper for create store address for seller.
-export { createStoreAddressForSeller } from "./features/stores/server";
+export { createStoreAddressForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteStoreAddressForSeller - Helper for delete store address for seller.
-export { deleteStoreAddressForSeller } from "./features/stores/server";
+export { deleteStoreAddressForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreAuctions - Helper for get store auctions.
-export { getStoreAuctions } from "./features/stores/server";
+export { getStoreAuctions } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreBySlug - Helper for get store by slug.
-export { getStoreBySlug } from "./features/stores/server";
+export { getStoreBySlug } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreProducts - Helper for get store products.
-export { getStoreProducts } from "./features/stores/server";
+export { getStoreProducts } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreReviews - Helper for get store reviews.
-export { getStoreReviews } from "./features/stores/server";
+export { getStoreReviews } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listStoreAddressesForSeller - Helper for list store addresses for seller.
-export { listStoreAddressesForSeller } from "./features/stores/server";
+export { listStoreAddressesForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listStores - Helper for list stores.
-export { listStores } from "./features/stores/server";
+export { listStores } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeAuctionsGET - Shared export for store auctions get.
-export { storeAuctionsGET } from "./features/stores/server";
+export { GET as storeAuctionsGET } from "./features/stores/api/[storeSlug]/auctions/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeProductsGET - Shared export for store products get.
-export { storeProductsGET } from "./features/stores/server";
+export { GET as storeProductsGET } from "./features/stores/api/[storeSlug]/products/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeReviewsGET - Shared export for store reviews get.
-export { storeReviewsGET } from "./features/stores/server";
+export { GET as storeReviewsGET } from "./features/stores/api/[storeSlug]/reviews/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeSlugGET - Shared export for store slug get.
-export { storeSlugGET } from "./features/stores/server";
+export { GET as storeSlugGET } from "./features/stores/api/[storeSlug]/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateStoreAddressForSeller - Helper for update store address for seller.
-export { updateStoreAddressForSeller } from "./features/stores/server";
+export { updateStoreAddressForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildCheckoutMessageURL - Helper for build checkout message url.
-export { buildCheckoutMessageURL } from "./features/whatsapp-bot/server";
+export { buildCheckoutMessageURL } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildStatusMessage - Helper for build status message.
-export { buildStatusMessage } from "./features/whatsapp-bot/server";
+export { buildStatusMessage } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildStatusNotificationURL - Helper for build status notification url.
-export { buildStatusNotificationURL } from "./features/whatsapp-bot/server";
+export { buildStatusNotificationURL } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // isAdminNumber - Shared export for is admin number.
-export { isAdminNumber } from "./features/whatsapp-bot/server";
+export { isAdminNumber } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // parseIncomingWebhookPayload - Helper for parse incoming webhook payload.
-export { parseIncomingWebhookPayload } from "./features/whatsapp-bot/server";
+export { parseIncomingWebhookPayload } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendWhatsAppMessage - Shared export for send whats app message.
-export { sendWhatsAppMessage } from "./features/whatsapp-bot/server";
+export { sendWhatsAppMessage } from "./features/whatsapp-bot/helpers/whatsapp";
 // [SERVER-ONLY]-Server-only — Meta Cloud API helpers (WA3).
-export { sendWhatsAppBusinessMessage, syncProductsToCatalog, buildPurchaseAnnouncementMessage, buildGroupShareLink } from "./features/whatsapp-bot/server";
-export type { WaBusinessSendInput, CatalogSyncProduct, CatalogSyncInput, CatalogSyncResult, PurchaseAnnouncementInput } from "./features/whatsapp-bot/server";
+export { sendWhatsAppBusinessMessage, syncProductsToCatalog, buildPurchaseAnnouncementMessage, buildGroupShareLink } from "./features/whatsapp-bot/helpers/whatsapp";
+export type { WaBusinessSendInput, CatalogSyncProduct, CatalogSyncInput, CatalogSyncResult, PurchaseAnnouncementInput } from "./features/whatsapp-bot/types/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addToWishlist - Helper for add to wishlist.
-export { addToWishlist } from "./features/wishlist/server";
+export { addToWishlist } from "./features/wishlist/actions/wishlist-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getWishlistForUser - Helper for get wishlist for user.
-export { getWishlistForUser } from "./features/wishlist/server";
+export { getWishlistForUser } from "./features/wishlist/actions/wishlist-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // removeFromWishlist - Helper for remove from wishlist.
-export { removeFromWishlist } from "./features/wishlist/server";
+export { removeFromWishlist } from "./features/wishlist/actions/wishlist-actions";
 
 // -- Repositories ------------------------------------------------------------
 // siteSettingsRepository - Shared export for site settings repository.
-export { siteSettingsRepository } from "./repositories/index";
+export { siteSettingsRepository } from "./features/admin/repository/site-settings.repository";
 // storeRepository - Shared export for store repository.
-export { storeRepository } from "./repositories/index";
+export { storeRepository } from "./features/stores/repository/store.repository";
 // orderRepository - Shared export for order repository (needed by consumer Firebase Functions, e.g. invoice PDF generation).
-export { orderRepository } from "./repositories/index";
+export { orderRepository } from "./features/orders/repository/orders.repository";
 // taxCodesRepository (B3) — resolved by deriveTaxonomy on every product write
 // that names a taxonomy field, so it is a server-only read on a hot path.
-export { taxCodesRepository } from "./repositories/index";
-export type { OrderDocument } from "./features/orders/index";
-export type { OrderDocumentItem } from "./features/orders/index";
+export { taxCodesRepository } from "./features/tax-codes/repository/tax-codes.repository";
+export type { OrderDocument } from "./features/orders/schemas/firestore";
+export type { OrderDocumentItem } from "./features/orders/schemas/firestore";
 // SB-UNI-V — bundlesRepository deleted; use categoriesRepository with categoryType:"bundle".
 
 // -- Monitoring --------------------------------------------------------------
 // serverLogger - Structured server-side logger.
-export { serverLogger } from "./monitoring/index";
+export { serverLogger } from "./monitoring/server-logger";
 
 // -- Error handling utilities ------------------------------------------------
 // withRetry - Exponential-backoff retry for idempotent async operations.
@@ -1690,28 +1690,28 @@ export { safeFireAndForget } from "./utils/safe-fire-forget";
 
 // -- Security / Rate limiting ------------------------------------------------
 // applyRateLimit - Apply rate limiting middleware.
-export { applyRateLimit } from "./security/index";
+export { applyRateLimit } from "./security/rate-limit";
 // rateLimitByIdentifier - Rate limit by a string identifier.
-export { rateLimitByIdentifier } from "./security/index";
+export { rateLimitByIdentifier } from "./security/rate-limit";
 // RateLimitPresets - Preset configurations for common rate-limit scenarios.
-export { RateLimitPresets } from "./security/index";
+export { RateLimitPresets } from "./security/rate-limit";
 // getClientIP - Extract the caller's IP from x-forwarded-for/x-real-ip.
-export { getClientIP } from "./security/index";
+export { getClientIP } from "./security/rate-limit";
 // hashGuestIdentity - Deterministic, non-reversible hash of a guest caller's IP scoped to an entity (never persists the raw IP).
-export { hashGuestIdentity } from "./security/index";
+export { hashGuestIdentity } from "./security/rate-limit";
 // maskPublicEventEntry - Redact PII from event entries before public exposure.
-export { maskPublicEventEntry } from "./security/index";
+export { maskPublicEventEntry } from "./security/pii-mask";
 // PII encryption/masking (server-only -- crypto module via node:module, must never leak into a client bundle; see appkit Export Rules in CLAUDE.md)
-export { encryptValue } from "./security/index";
-export { decryptValue } from "./security/index";
-export { hmacBlindIndex } from "./security/index";
-export { encryptPiiFields } from "./security/index";
-export { decryptPiiFields } from "./security/index";
-export { encryptPii } from "./security/index";
-export { decryptPii } from "./security/index";
-export { isPiiEncrypted } from "./security/index";
-export { piiBlindIndex } from "./security/index";
-export { piiIndicesFor } from "./security/index";
+export { encryptValue } from "./security/pii-encrypt";
+export { decryptValue } from "./security/pii-encrypt";
+export { hmacBlindIndex } from "./security/pii-encrypt";
+export { encryptPiiFields } from "./security/pii-encrypt";
+export { decryptPiiFields } from "./security/pii-encrypt";
+export { encryptPii } from "./security/pii-encrypt";
+export { decryptPii } from "./security/pii-encrypt";
+export { isPiiEncrypted } from "./security/pii-mask";
+export { piiBlindIndex } from "./security/pii-encrypt";
+export { piiIndicesFor } from "./security/pii-encrypt";
 export { reserveUserSlug, userSlugBase, USER_SLUGS_COLLECTION } from "./features/auth/actions/user-slug";
 export { resolveProfileUser } from "./features/auth/actions/profile-actions";
 export {
@@ -1719,18 +1719,18 @@ export {
   getProfileStats,
 } from "./features/auth/actions/profile-actions";
 export type { BuyerActivityStats } from "./features/auth/actions/profile-actions";
-export { getPiiConfigError } from "./security/index";
-export { encryptPayoutDetails } from "./security/index";
-export { decryptPayoutDetails } from "./security/index";
-export { encryptShippingConfig } from "./security/index";
-export { decryptShippingConfig } from "./security/index";
-export { maskName } from "./security/index";
-export { maskEmail } from "./security/index";
-export { maskPublicReview } from "./security/index";
-export { maskPublicBid } from "./security/index";
-export { maskOfferForSeller } from "./security/index";
-export { ENC_PREFIX } from "./security/index";
-export { HMAC_PREFIX } from "./security/index";
+export { getPiiConfigError } from "./security/pii-encrypt";
+export { encryptPayoutDetails } from "./security/pii-encrypt";
+export { decryptPayoutDetails } from "./security/pii-encrypt";
+export { encryptShippingConfig } from "./security/pii-encrypt";
+export { decryptShippingConfig } from "./security/pii-encrypt";
+export { maskName } from "./security/pii-mask";
+export { maskEmail } from "./security/pii-mask";
+export { maskPublicReview } from "./security/pii-mask";
+export { maskPublicBid } from "./security/pii-mask";
+export { maskOfferForSeller } from "./security/pii-mask";
+export { ENC_PREFIX } from "./security/pii-mask";
+export { HMAC_PREFIX } from "./security/pii-mask";
 
 // -- Instrumentation ---------------------------------------------------------
 // createInstrumentation - Factory for Next.js instrumentation hooks.
@@ -1738,27 +1738,27 @@ export { createInstrumentation } from "./instrumentation/index";
 
 // -- SEO ---------------------------------------------------------------------
 // SEO_CONFIG - Shared SEO defaults for server-rendered metadata.
-export { SEO_CONFIG } from "./seo/index";
+export { SEO_CONFIG } from "./seo/metadata";
 // createSeoConfig - Merge consumer SEO overrides with appkit defaults.
-export { createSeoConfig } from "./seo/index";
+export { createSeoConfig } from "./seo/metadata";
 // generateMetadata - Build page metadata in server contexts.
-export { generateMetadata } from "./seo/index";
+export { generateMetadata } from "./seo/metadata";
 // generateProfileMetadata - Build profile metadata in server contexts.
-export { generateProfileMetadata } from "./seo/index";
+export { generateProfileMetadata } from "./seo/metadata";
 // generateProductMetadata - Build product metadata in server contexts.
-export { generateProductMetadata } from "./seo/index";
+export { generateProductMetadata } from "./seo/metadata";
 // generateCategoryMetadata - Build category metadata in server contexts.
-export { generateCategoryMetadata } from "./seo/index";
+export { generateCategoryMetadata } from "./seo/metadata";
 // generateBlogMetadata - Build blog metadata in server contexts.
-export { generateBlogMetadata } from "./seo/index";
+export { generateBlogMetadata } from "./seo/metadata";
 // generateAuctionMetadata - Build auction metadata in server contexts.
-export { generateAuctionMetadata } from "./seo/index";
+export { generateAuctionMetadata } from "./seo/metadata";
 // generateSearchMetadata - Build search metadata in server contexts.
-export { generateSearchMetadata } from "./seo/index";
+export { generateSearchMetadata } from "./seo/metadata";
 // organizationJsonLd - Build organization structured data in server contexts.
-export { organizationJsonLd } from "./seo/index";
+export { organizationJsonLd } from "./seo/json-ld";
 // searchBoxJsonLd - Build search box structured data in server contexts.
-export { searchBoxJsonLd } from "./seo/index";
+export { searchBoxJsonLd } from "./seo/json-ld";
 export type {
 	SeoConfig,
 	ProductSeoInput,
@@ -1840,7 +1840,7 @@ export {
   type BundleMetadataOptions,
   type BundleOgData,
 } from "./_internal/server/features/bundles/index";
-export { getGroupsForProduct, getGroupsWithItemsForProduct, getGroupsForCategory, getGroupsForBrand } from "./_internal/server/features/grouped/index";
+export { getGroupsForProduct, getGroupsWithItemsForProduct, getGroupsForCategory, getGroupsForBrand } from "./_internal/server/features/grouped/data";
 // Public /groups/{slug} page — data, metadata and OG.
 export {
   getGroupedListingForDetail,
@@ -1856,9 +1856,9 @@ export {
   toPublicGroupMembers,
   type PublicGroupMember,
 } from "./_internal/server/features/products/group-members";
-export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
-export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
-export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";
+export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/data";
+export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/data";
+export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/data";
 export { getDefaultStoreTabPath } from "./_internal/server/features/stores/tabs";
 
 // Public-store allow-list projection — the ONLY sanctioned way a StoreDocument
@@ -1872,20 +1872,21 @@ export {
   type ToStoreListItemOptions,
   type StoreProjectionSource,
 } from "./_internal/server/features/stores/adapters";
-export { getBrandForDetail } from "./_internal/server/features/brands/index";
+export { getBrandForDetail } from "./_internal/server/features/brands/data";
 export {
   getFranchiseForDetail,
   listActiveFranchises,
   renderFranchiseOg,
 } from "./_internal/server/features/franchises/index";
-export { getBlogPostForDetail } from "./_internal/server/features/blog/index";
-export { getEventForDetail } from "./_internal/server/features/events/index";
+export { getBlogPostForDetail } from "./_internal/server/features/blog/data";
+export { getEventForDetail } from "./_internal/server/features/events/data";
 // Attached promotional coupons — shared by the event detail page and the blog
 // post page, which is why it lives in its own feature rather than inside
 // either one.
-export { getAttachedCoupons, toAttachedCoupon } from "./_internal/server/features/promotions/index";
-export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";
-export { getCategoryForDetail, listRootCategories, listFeaturedCategories, listMenuCategories, getCategoryTree, listSitemapCategories } from "./_internal/server/features/categories/index";
+export { getAttachedCoupons } from "./_internal/server/features/promotions/data";
+export { toAttachedCoupon } from "./_internal/server/features/promotions/adapters";
+export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/data";
+export { getCategoryForDetail, listRootCategories, listFeaturedCategories, listMenuCategories, getCategoryTree, listSitemapCategories } from "./_internal/server/features/categories/data";
 
 // OG image renderers — high-level (renderXOg) + low-level primitive (renderXOgImage)
 export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptions } from "./_internal/server/features/products/og";
@@ -2009,8 +2010,14 @@ export type { UserSoftBan } from "./features/auth/schemas/firestore";
 export type { BannedAction } from "./features/auth/permissions/constants";
 
 // -- SEO builders (sitemap / robots / manifest / og-image) --
-export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE, resolveOgImageUrl } from "./_internal/server/features/seo";
-export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions } from "./_internal/server/features/seo";
+export { buildSitemap } from "./_internal/server/features/seo/sitemap";
+export { buildRobots } from "./_internal/server/features/seo/robots";
+export { buildManifest } from "./_internal/server/features/seo/manifest";
+export { buildDefaultOgImage, DEFAULT_OG_SIZE, resolveOgImageUrl } from "./_internal/server/features/seo/og";
+export type { SitemapOptions } from "./_internal/server/features/seo/sitemap";
+export type { RobotsOptions } from "./_internal/server/features/seo/robots";
+export type { ManifestOptions } from "./_internal/server/features/seo/manifest";
+export type { DefaultOgOptions } from "./_internal/server/features/seo/og";
 
 // -- generateStaticParams slug enumerators --
 // Prerendering a detail route is what puts its <title> in <head> instead of
@@ -2027,8 +2034,8 @@ export {
 // -- Taxonomy hub link indexes --
 // The hub pages filter client-side, so they rendered zero outbound entity
 // links in server HTML; these feed <TaxonomyLinkIndex>.
-export { brandLinks, franchiseLinks, categoryRootLinks } from "./_internal/server/features/seo";
-export type { TaxonomyLink } from "./_internal/server/features/seo";
+export { brandLinks, franchiseLinks, categoryRootLinks } from "./_internal/server/features/seo/taxonomy-links";
+export type { TaxonomyLink } from "./_internal/server/features/seo/taxonomy-links";
 
 
 // -- Action gate + nav route helpers (server-side) --
@@ -2494,7 +2501,7 @@ export {
   fileGrievanceAction,
   recordGrievanceFirstResponseAction,
 } from "./_internal/server/features/grievance";
-export type { FileGrievanceInput } from "./_internal/server/features/grievance";
+export type { FileGrievanceInput } from "./_internal/server/features/grievance/actions";
 export { GRIEVANCE_PERIODS } from "./features/support/schemas/firestore";
 
 /*
