@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server.js";
-import type { JsonValue } from "@mohasinac/appkit";
+// Defining module, not the barrel (Root Cause #18). A package cannot import
+// its own entry, and `errors` is otherwise self-contained — zod and
+// next/server only. That is what makes it appkit's cleanest extraction
+// candidate: 21 files, 459 dependents, 0.90 commits/file over 90 days.
+import type { JsonValue } from "../schemas/types";
 import { AppError } from "./base-error";
 import { mapToHttpError } from "./error-mapping";
 import { buildErrorEnvelope, toApiIssues } from "./error-envelope";
