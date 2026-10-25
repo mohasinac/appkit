@@ -151,7 +151,22 @@ export function buildSlideFromEvent(
     id: `slide-${event.id}`,
     title: event.title,
     order: cfg.order ?? 99,
-    active: cfg.active === true,
+    /*
+     * 🛑 `isPublishedToCarousel`, NOT `cfg.active` — and this line is the whole
+     * point of the `showOnCarousel` flag.
+     *
+     * It read `cfg.active === true`, which meant the new top-level flag was
+     * written to Firestore, round-tripped through the Zod schema and the admin
+     * form, and READ BY NOTHING. Setting it did exactly nothing; clearing it
+     * did exactly nothing. The helper that reads it sat directly above this
+     * function, defined and never called.
+     *
+     * Caught by eslint's no-unused-vars on the helper — which is the reason
+     * that rule is an `error` here and not a warning. A computed-then-discarded
+     * value gives no other signal, and three user-facing defects in this
+     * codebase have surfaced the same way.
+     */
+    active: isPublishedToCarousel(event),
     background: bg,
     settings: { autoplayDelayMs: DEFAULT_AUTOPLAY_MS, height: "medium" as const },
     createdBy: opts.createdBy,

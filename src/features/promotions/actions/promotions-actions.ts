@@ -29,8 +29,11 @@ export async function getPromotions(): Promise<PromotionsResult> {
     couponsRepository.getActiveCoupons(),
   ]);
 
-  const now = new Date();
-
+  /*
+   * `const now` lived here to feed the hand-inlined coupon validity filter
+   * below. That filter is now `isCouponDisplayable`, which takes its own clock,
+   * so the binding had no remaining reader.
+   */
   const promotedProducts = promotedRaw
     .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 12);
