@@ -42,6 +42,7 @@ const SECTION_TYPE_PRESENCE: Record<CanonicalSectionType, true> = {
   newsletter: true,
   stores: true,
   events: true,
+  coupons: true,
   "social-feed": true,
   carousel: true,
   "custom-cards": true,

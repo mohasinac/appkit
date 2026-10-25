@@ -31,6 +31,8 @@ import { FeaturedAuctionsSection } from "../components/FeaturedAuctionsSection";
 import { FeaturedPreOrdersSection } from "../components/FeaturedPreOrdersSection";
 import { FeaturedStoresSection } from "../components/FeaturedStoresSection";
 import { EventsSection } from "../components/EventsSection";
+import { HomepageCouponsSection } from "../components/HomepageCouponsSection";
+import type { AttachedCoupon } from "../../promotions/constants/attached-coupons";
 import { CTABannerSection } from "../components/CTABannerSection";
 import { HomepageCustomerReviewsSection } from "../components/HomepageCustomerReviewsSection";
 import { SecurityHighlightsSection } from "../components/SecurityHighlightsSection";
@@ -66,6 +68,7 @@ import type {
   PreOrdersSectionConfig,
   StoresSectionConfig,
   EventsSectionConfig,
+  CouponsSectionConfig,
   ReviewsSectionConfig,
   CategoriesSectionConfig,
   TrustIndicatorsSectionConfig,
@@ -106,6 +109,13 @@ export interface SectionData {
   bundles?: CategoryDocument[];
   blog?: BlogPost[];
   events?: EventItem[];
+  /*
+   * Live discount codes for the `coupons` rail, already validity-filtered by
+   * `getHomepageCoupons`. Absent and empty mean the same thing here — the
+   * section renders nothing either way — which is why this is not a required
+   * member even though the rail is seeded on by default.
+   */
+  coupons?: AttachedCoupon[];
 }
 
 export interface MarketplaceHomepageViewAdSlots {
@@ -430,6 +440,22 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}
+        />
+      );
+    },
+  },
+
+  coupons: {
+    surfaces: ["homepage"],
+    render: ({ config, sectionData }) => {
+      const cfg = config as CouponsSectionConfig;
+      return (
+        <HomepageCouponsSection
+          coupons={sectionData.coupons ?? []}
+          title={cleanTitle(cfg?.title) || "Offers & coupons"}
+          description={cfg?.subtitle}
+          viewMoreLabel={cfg?.viewMoreLabel}
+          limit={cfg?.maxCoupons}
         />
       );
     },

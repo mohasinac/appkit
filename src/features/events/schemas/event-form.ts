@@ -88,6 +88,23 @@ export const eventDraftSchema = z.object({
   rafflePrizeCouponIds: annotate(attachedCouponIdsSchema, {
     section: "raffle", sectionLabel: "Raffle & Spin Wheel", order: 5, row: "full", kind: "list",
   }),
+  /*
+   * Whether this event is published to the homepage hero rail.
+   *
+   * 🛑 SEPARATE FROM THE SLIDE'S CONTENT (`carouselConfig`), which is the
+   * whole reason the field exists — see `EventDocument.showOnCarousel`. The
+   * publish decision is a one-click toggle an editor can reverse without
+   * touching artwork; the artwork is a nested discriminated union they should
+   * not have to open in order to pull a promotion off the front page.
+   *
+   * `.optional()` so absent keeps meaning "not on the rail", and so every
+   * event saved before this field existed round-trips unchanged — a required
+   * boolean here would make the admin editor refuse to save any of them.
+   */
+  showOnCarousel: annotate(z.boolean().optional(), {
+    section: "settings", order: 6, row: "pair", kind: "toggle",
+    help: "Show this event as a slide on the homepage carousel. Needs carousel artwork to be configured.",
+  }),
 }).passthrough().superRefine((v, ctx) => {
   if (v.type === "offer") {
     if (!v.couponId.trim()) {

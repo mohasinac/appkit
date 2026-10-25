@@ -503,11 +503,33 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ---- 11–13. Engage -------------------------------------------------------
+  /*
+   * 🛑 DISABLED 2026-10-25, AT THE OWNER'S INSTRUCTION — and `enabled: false`
+   * rather than deletion is the only edit that actually reaches production:
+   * `appkit-seed load` writes with `set(…, { merge: true })` and therefore
+   * CANNOT remove a document. Deleting this literal would leave the live
+   * section exactly as it is, still enabled, still rendering.
+   *
+   * WHY IT WENT: the rail advertised five promotions that do not exist. Only
+   * the Diwali offer is a real event; the other four — a Beyblade X launch
+   * week, a Burst clearance weekend, a spin wheel and a signed-Dranzer raffle
+   * — are fabricated seed fixtures that a previous session authored and then
+   * promoted to the homepage. A visitor could click "View details →" on any of
+   * them and read a full, confident description of something nobody is running.
+   *
+   * `section-coupons` below takes its slot. A coupon is a code the till either
+   * honours or refuses, so it is the one kind of promotion that cannot be
+   * invented — which is the whole reason for the swap.
+   *
+   * The `events` SectionType, its renderer and `EventsSection` are all
+   * untouched and still work; re-enabling this is one flag once there are real
+   * events to show.
+   */
   {
     id: "section-upcoming-events",
     type: "events",
     order: 13,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Events & Offers",
       subtitle: "Sales, giveaways and community events running now.",
@@ -519,6 +541,34 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(7),
+  },
+
+  /*
+   * The events rail's replacement — live discount codes, linking to
+   * `/promotions`.
+   *
+   * Takes `order: 13` so the page's running order is unchanged: one rail left
+   * that slot and one arrived, rather than everything below shifting up.
+   *
+   * 🛑 It renders NOTHING when no coupon is currently valid, rather than an
+   * empty state — see `HomepageCouponsSection`. So enabling it on an install
+   * with no live codes costs a Firestore read and shows no section, which is
+   * the correct failure for a rail whose whole subject is "what is on offer
+   * right now".
+   */
+  {
+    id: "section-coupons",
+    type: "coupons",
+    order: 13,
+    enabled: true,
+    config: {
+      title: "Offers & coupons",
+      subtitle: "Live discount codes — copy one and apply it at checkout.",
+      maxCoupons: 6,
+      viewMoreLabel: "View all offers →",
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(0),
   },
 
   {

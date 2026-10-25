@@ -254,6 +254,13 @@ const _raweventsSeedData: EventDocument[] = [
      * On a phone they flow in this source order, one per row, which is why
      * the two strongest offers are zones 1 and 2 rather than buried at 5–6.
      */
+    /*
+     * The PUBLISH decision, separate from the slide's content below — see
+     * `EventDocument.showOnCarousel`. Set here so the rail renders exactly as
+     * it did before the flag existed; `carouselConfig.active` stays only as
+     * the read-only fallback for documents already in Firestore.
+     */
+    showOnCarousel: true,
     carouselConfig: {
       placement: "cards",
       order: 2,
@@ -390,6 +397,7 @@ const _raweventsSeedData: EventDocument[] = [
      * rather than tiles: launch week is a single message with a single
      * destination, which is what an overlay is for.
      */
+    showOnCarousel: true,
     carouselConfig: {
       placement: "overlay",
       order: 3,

@@ -622,6 +622,28 @@ export interface EventsSectionConfig {
   loop?: boolean;
 }
 
+/**
+ * The homepage coupon rail — live discount codes, with a link to `/promotions`.
+ *
+ * 🛑 THIS REPLACED THE `events` SECTION ON THE HOMEPAGE (2026-10-25, owner's
+ * instruction). The events rail advertised five promotions that did not exist:
+ * only the Diwali offer was real, and the other four were fabricated fixtures
+ * that a previous session had seeded and then promoted to the front page. A
+ * coupon is the opposite kind of claim — it is a code the till either honours
+ * or refuses, so it cannot be invented.
+ *
+ * `events` remains a valid `SectionType` and the renderer still handles it;
+ * it is the homepage SEED that no longer enables one.
+ */
+export interface CouponsSectionConfig {
+  title: string;
+  subtitle?: string;
+  /** How many codes to show before the "view all" link takes over. */
+  maxCoupons: number;
+  /** Label for the link into `/promotions`. */
+  viewMoreLabel?: string;
+}
+
 export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart" | "youtube";
 export type SocialPostType = "all" | "images" | "videos" | "reels";
 export type SocialFeedLayout = "grid" | "masonry" | "carousel";
@@ -938,6 +960,7 @@ export type SectionType =
   | "newsletter"
   | "stores"
   | "events"
+  | "coupons"
   | "social-feed"
   | "custom-cards"
   | "google-reviews"
@@ -968,6 +991,7 @@ export type SectionConfig =
   | NewsletterSectionConfig
   | StoresSectionConfig
   | EventsSectionConfig
+  | CouponsSectionConfig
   | SocialFeedSectionConfig
   | CustomCardsSectionConfig
   | GoogleReviewsSectionConfig
@@ -1063,6 +1087,8 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   newsletter: 9,
   stores: 10,
   events: 11,
+  // Takes the events rail's place in the running order — see CouponsSectionConfig.
+  coupons: 11,
   "social-feed": 12,
   "custom-cards": 13,
   "google-reviews": 14,

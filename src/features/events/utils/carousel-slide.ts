@@ -114,11 +114,34 @@ export interface BuildSlideOptions {
  *         so a seventh card would vanish with nothing to indicate it had been
  *         authored at all.
  */
+/**
+ * Is this event published to the hero rail?
+ *
+ * 🛑 `showOnCarousel` is the owner; `carouselConfig.active` is a READ-ONLY
+ * legacy fallback for documents written before the flag existed. The `??` is
+ * load-bearing and is not the same as `||`: a deliberate `showOnCarousel:
+ * false` on an event whose old `carouselConfig.active` is still `true` must
+ * mean OFF, and `||` would quietly resolve it back to on — turning an explicit
+ * unpublish into a no-op.
+ *
+ * See the deprecation note on `EventCarouselBase.active` for when the fallback
+ * can be deleted.
+ */
+function isPublishedToCarousel(event: EventDocument): boolean {
+  return (event.showOnCarousel ?? event.carouselConfig?.active) === true;
+}
+
 export function buildSlideFromEvent(
   event: EventDocument,
   opts: BuildSlideOptions,
 ): Partial<CarouselSlideDocument> | null {
   const cfg = event.carouselConfig;
+  /*
+   * Both halves are required: the flag says "publish it", the config says
+   * "publish WHAT". Without a config there is no authored artwork, and a slide
+   * synthesised from the event's bare title is a grey rectangle on the first
+   * screen of the site.
+   */
   if (!cfg) return null;
 
   const dim = cfg.dimOpacity ?? DEFAULT_DIM;

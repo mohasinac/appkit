@@ -271,10 +271,34 @@ export function HorizontalScroller<T = unknown>({
        * which is what every other grid in the app already does. A full rail is
        * unaffected — `min` is a no-op once itemCount >= perView.
        */
-      const count = Math.min(resolvePerView(perView, w), Math.max(itemCount, 1));
+      const full = resolvePerView(perView, w);
+      const count = Math.min(full, Math.max(itemCount, 1));
       if (count > 0) {
         setColCount(count);
-        setItemWidth((w - (count - 1) * gap) / count);
+
+        /*
+         * 🛑 CLAMPED AT BOTH ENDS, because each end was a real reported defect
+         * and fixing only one produced the other.
+         *
+         * Dividing by `full` unconditionally pinned a one-item rail to 25% of
+         * the row with three empty columns and no nav to explain them — the
+         * bug the `Math.min` above fixes.
+         *
+         * Dividing by `count` alone then overshot the other way: with one item
+         * the card took the ENTIRE row, so the homepage's lone pre-order
+         * rendered as a full-bleed billboard several times the size of every
+         * other card on the page. A product card is designed around a column,
+         * not a banner; at full width its image dominates the viewport and the
+         * rail stops reading as a rail.
+         *
+         * So a short rail spreads out, but never past the width it would have
+         * at two across — the widest a card in this system still reads as a
+         * card. `Math.min(full, 2)` keeps that honest on a phone, where `full`
+         * is already 1 and a single full-width card is correct.
+         */
+        const widthAtCount = (w - (count - 1) * gap) / count;
+        const maxItemWidth = (w - gap) / Math.min(full, 2);
+        setItemWidth(Math.min(widthAtCount, maxItemWidth));
       }
       updateExtents();
     });

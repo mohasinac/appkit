@@ -35,6 +35,38 @@ export const getCouponByCode = cache(
  * coupon is refused at checkout with a message that can explain why; that is
  * the correct place for it.
  */
+/**
+ * Every live coupon, for the homepage `coupons` rail.
+ *
+ * 🛑 SAME VALIDITY PREDICATE AS `/promotions`, deliberately. The homepage rail
+ * and the promotions page it links to are the same claim made twice; a code
+ * visible on one and absent from the other reads as a broken link, and a code
+ * the homepage shows but the till refuses is worse than showing none. One
+ * `isCouponValid` call is what keeps them from drifting — this codebase has
+ * paid for two hand-written copies of a money predicate before (Root Cause
+ * #75).
+ *
+ * `limit` is applied LAST, after filtering, so an expired code can never
+ * occupy one of the rail's slots and silently push a live one off the end.
+ */
+export const getHomepageCoupons = cache(
+  async (limit: number): Promise<AttachedCoupon[]> => {
+    /*
+     * `safeRead`, for the reason given on `getAttachedCoupons` below: the
+     * homepage is prerendered and an unguarded throw during the prerender
+     * ATTEMPT is fatal to the production build. A failed read costs the page
+     * its coupon rail and records a DEGRADED_READ — it does not cost the
+     * homepage.
+     */
+    const docs = await safeRead(() => couponsRepository.getActiveCoupons(), {
+      route: "/",
+      key: "promotions.getActiveCoupons",
+      fallback: [],
+    });
+    return docs.filter(isCouponValid).map(toAttachedCoupon).slice(0, limit);
+  },
+);
+
 export const getAttachedCoupons = cache(
   async (couponIds: readonly string[] | undefined): Promise<AttachedCoupon[]> => {
     if (!couponIds || couponIds.length === 0) return [];

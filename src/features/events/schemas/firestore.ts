@@ -23,7 +23,25 @@ export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
 interface EventCarouselBase {
   /** Slide order in the hero rail. Lower is earlier. */
   order?: number;
-  /** Whether the generated slide is live. Absent means false — opt in. */
+  /**
+   * @deprecated Use the top-level `EventDocument.showOnCarousel` instead.
+   *
+   * 🛑 READ-ONLY LEGACY FALLBACK — DO NOT SET THIS ON NEW EVENTS.
+   * This was the publish decision until `showOnCarousel` took that job, and it
+   * is still read by `buildSlideFromEvent` for one reason only: every event
+   * document already in Firestore carries it and carries no `showOnCarousel`.
+   * A strict gate on the new flag would therefore pull every existing slide off
+   * the live homepage the moment this shipped, with nothing in any log saying
+   * why.
+   *
+   * The fallback is deliberately ONE-DIRECTIONAL: `showOnCarousel` wins
+   * wherever it is present, and nothing ever writes back to this field. That
+   * is what keeps it a migration shim rather than a second owner — a mirror
+   * field that both sides write is Root Cause #42, and this one has no writer.
+   *
+   * REMOVE IT once every stored event carries `showOnCarousel`, which is true
+   * after one `appkit-seed load` plus one `push-editorial-content.mjs` run.
+   */
   active?: boolean;
   /**
    * Background image slug for the slide. Defaults to the event's own
@@ -170,6 +188,37 @@ export interface EventDocument extends BaseDocument {
    * long as everyone remembers to do it.
    */
   carouselConfig?: EventCarouselConfig;
+
+  /**
+   * Whether this event is published to the homepage hero rail.
+   *
+   * 🛑 SEPARATE FROM `carouselConfig`, AND THAT SEPARATION IS THE POINT.
+   * `carouselConfig` is the slide's CONTENT — its artwork, headline, zones and
+   * copy. This is the DECISION TO PUBLISH it. Before this field the two were
+   * the same boolean (`carouselConfig.active`), which made three ordinary
+   * things impossible:
+   *
+   *  1. Authoring a slide ahead of time without it going live. An editor had
+   *     to either publish immediately or leave the event with no slide at all.
+   *  2. Pulling an event off the rail without touching its artwork. Flipping a
+   *     nested field inside a discriminated union is a content edit, and it
+   *     reads as one in the audit log.
+   *  3. Seeing, from the events LIST, which events are on the rail — a nested
+   *     boolean inside an optional union is not something a list column or a
+   *     Sieve filter can reach.
+   *
+   * Absent means NOT on the rail — opt in, never opt out. Every event that
+   * predates this field therefore stays off it until someone says otherwise,
+   * which is the safe direction for a field that controls what the homepage
+   * shows.
+   *
+   * 🛑 BOTH are required for a slide to exist: this flag says "publish it" and
+   * `carouselConfig` says "publish WHAT". `buildSlideFromEvent` returns `null`
+   * unless it has both, rather than inventing a slide out of the event's bare
+   * title — a slide with no authored artwork is a grey rectangle on the first
+   * screen of the site.
+   */
+  showOnCarousel?: boolean;
 
   saleConfig?: SaleConfig;
   offerConfig?: OfferConfig;

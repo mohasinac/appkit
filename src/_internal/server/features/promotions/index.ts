@@ -1,4 +1,4 @@
-export { getCouponByCode, getAttachedCoupons } from "./data";
+export { getCouponByCode, getAttachedCoupons, getHomepageCoupons } from "./data";
 export { toAttachedCoupon } from "./adapters";
 export { validateCoupon, computeDiscount } from "./service";
 export { applyCouponAction, createCouponAction, updateCouponAction, deactivateCouponAction } from "./actions";

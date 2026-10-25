@@ -23,7 +23,9 @@ import { homepageSectionsRepository } from "../repository/homepage-sections.repo
 import {
   isListingTypeEnabled,
   isCategoryTypeEnabled,
+  isBrowsePageEnabled,
 } from "../../../_internal/shared/listing-types/feature-flags";
+import type { BrowsePageKey } from "../../../_internal/shared/listing-types/feature-flags";
 import type { ListingType } from "../../products/types/index";
 import type { CategoryType } from "../../categories/types/index";
 import type { SectionType } from "../schemas/firestore";
@@ -51,6 +53,35 @@ const HOMEPAGE_SECTION_LISTING_TYPE: Partial<Record<SectionType, ListingType>> =
 const HOMEPAGE_SECTION_CATEGORY_TYPE: Partial<Record<SectionType, CategoryType>> = {
   "featured-bundles": "bundle",
 };
+
+/**
+ * The THIRD axis — a section whose whole job is to funnel visitors into a
+ * public browse page that an admin has closed.
+ *
+ * 🛑 THIS GAP WAS VISIBLE ON THE LIVE HOMEPAGE. `/categories`, `/brands`,
+ * `/franchise` and `/stores` were all closed via `listings.browsePages`, and
+ * the homepage went on rendering "Shop by Category" with an "All categories →"
+ * button and a "Featured Stores" rail with "View all stores →" — every one of
+ * them a link into a section that is deliberately shut. A rail that advertises
+ * a closed door is worse than an absent rail: the visitor spends a click to
+ * find out.
+ *
+ * The two maps above gate on what the marketplace SELLS and what a taxonomy
+ * ROW may be. Neither can express "the front door is shut", which is why
+ * closing every browse page changed nothing here — see the `browsePages`
+ * docstring in the admin schema for why that is a separate axis rather than a
+ * rename of either.
+ *
+ * `brands` is included even though no section of that type is seeded today:
+ * the type exists in the `SectionType` union, so an admin can add one, and a
+ * gate that covers three of four reachable cases is the drift this codebase
+ * keeps paying for (Root Cause #61).
+ */
+const HOMEPAGE_SECTION_BROWSE_PAGE: Partial<Record<SectionType, BrowsePageKey>> = {
+  categories: "categories",
+  brands: "brands",
+  stores: "stores",
+};
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
 import { listFeaturedBundles } from "../../../_internal/server/features/bundles/data";
@@ -58,6 +89,7 @@ import { listStores } from "../../stores/actions/store-query-actions";
 import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { getFeaturedBlogPosts } from "../../blog/actions/blog-actions";
 import { listPublicEvents } from "../../events/actions/event-actions";
+import { getHomepageCoupons } from "../../../_internal/server/features/promotions/data";
 import type {
   HomepageSectionDocument,
   StatsSectionConfig,
@@ -154,6 +186,8 @@ export async function MarketplaceHomepageView({
     if (gatedListing && !isListingTypeEnabled(gatedListing, siteSettings)) return false;
     const gatedCategory = HOMEPAGE_SECTION_CATEGORY_TYPE[type];
     if (gatedCategory && !isCategoryTypeEnabled(gatedCategory, siteSettings)) return false;
+    const gatedBrowse = HOMEPAGE_SECTION_BROWSE_PAGE[type];
+    if (gatedBrowse && !isBrowsePageEnabled(gatedBrowse, siteSettings)) return false;
     return true;
   });
 
@@ -206,6 +240,7 @@ export async function MarketplaceHomepageView({
     storesResult,
     blogResult,
     eventsResult,
+    couponsResult,
   ] = await Promise.all([
     // No `.catch(() => null)` on these three: they go through
     // `listPublicProducts`, which already logs a failed query loudly and
@@ -249,6 +284,13 @@ export async function MarketplaceHomepageView({
           () => listPublicEvents({ filters: sieveFilter("status", SIEVE_OP.EQ, "active"), pageSize: 6 }),
           { route: "/", key: "homepage.events", fallback: null })
       : null,
+    /*
+     * `getHomepageCoupons` does its own `safeRead` internally — it is the one
+     * fetch here that owns its failure, because it has a meaningful fallback
+     * of its own (an empty rail, which the section then hides entirely).
+     * Wrapping it again would record the same degraded read twice.
+     */
+    activeTypes.has("coupons") ? getHomepageCoupons(12) : null,
   ]);
 
   // ProductDocument / BlogDocument / EventDocument have Date fields and extra Firestore-only
@@ -284,6 +326,14 @@ export async function MarketplaceHomepageView({
     events: eventsResult?.items?.length
       ? (eventsResult.items as unknown as EventItem[])
       : undefined,
+    /*
+     * Projected by `toAttachedCoupon`, not cast — same reason as `stores`
+     * above. This becomes a Client Component's prop, and a raw
+     * `CouponDocument` carries `usage.*` redemption telemetry and
+     * `analytics.totalRevenue` straight into the homepage's public HTML
+     * (Root Cause #70). The projection is done inside `getHomepageCoupons`.
+     */
+    coupons: couponsResult?.length ? couponsResult : undefined,
   };
 
   /*
