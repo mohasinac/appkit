@@ -36,7 +36,14 @@ if (process.env.SKIP_HOOKS === "1") {
 }
 
 const consumerRoot = path.resolve(import.meta.dirname, "..", "..");
-const runner = path.join(consumerRoot, "scripts", "run-audits.mjs");
+/*
+ * 🛑 fast-gate, NOT `run-audits.mjs --all`. Same 242 audits, but fast-gate runs
+ * them through a worker pool at `cpus-2` — ~110s against ~7 minutes sequential.
+ * A publish gate that costs seven minutes is one people start bypassing, which
+ * defeats the point of adding it. fast-gate also prints its own denominator, so
+ * a filtered subset can never be mistaken for the whole suite.
+ */
+const runner = path.join(consumerRoot, "scripts", "fast-gate.mjs");
 
 if (!existsSync(runner)) {
   console.log(
@@ -50,7 +57,7 @@ if (!existsSync(runner)) {
 
 console.log("[prepublish-gate] running the consumer's audit suite before publish …");
 try {
-  execFileSync(process.execPath, [runner, "--all"], {
+  execFileSync(process.execPath, [runner], {
     cwd: consumerRoot,
     stdio: "inherit",
   });
