@@ -663,6 +663,22 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
      */
     sms: { enabled: false, minPriority: "high" },
   },
+  /*
+   * The WhatsApp catalogue feed — `/whatsapp/{storeSlug}/feed.csv`.
+   *
+   * 🛑 SEEDED FALSE, i.e. OFF for every store, which is the opposite of the
+   * field's own default. The readers are `!== false` so that an absent field,
+   * an unseeded document and a failed settings read all leave feeds WORKING
+   * (Meta empties a connected catalogue the moment a scheduled fetch returns a
+   * file with no rows). An explicit `false` here is the deliberate write that
+   * polarity reserves the "off" state for — a platform-wide retraction while
+   * the per-store controls ship, not a default.
+   *
+   * Flipping this to `true` turns feeds back on for every store that has not
+   * switched its own off; `StoreDocument.whatsappFeedEnabled` is the per-store
+   * half and a seller owns it from /store/whatsapp.
+   */
+  whatsappFeed: { enabled: false },
   actionConfig: {},
   navConfig: {},
   disabledRoutes: [],

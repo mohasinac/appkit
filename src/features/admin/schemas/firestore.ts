@@ -885,6 +885,39 @@ export interface SiteSettingsDocument extends BaseDocument {
   search?: {
     indexEnabled?: boolean;
   };
+  /**
+   * The WhatsApp catalogue feed — `/whatsapp/{storeSlug}/feed.csv`, read on a
+   * schedule by each seller's own Meta Commerce Manager.
+   *
+   * ## 🛑 A group of its own, for the same reason `search` is
+   *
+   * It is NOT in `notificationChannels.whatsapp`, which governs the platform's
+   * outbound order-update templates — a different channel with a different cost
+   * (per-template spend vs. a public CSV), owned by the platform rather than
+   * pointed at by each seller. Nor is it in `payment` or any other group that
+   * `AdminSiteSettingsView.buildFullPayload` rewrites WHOLE from form state: a
+   * fifth key in such a group is silently erased the next time an admin saves
+   * anything on that page (Root Cause #76), and a kill switch that a routine
+   * save turns back on fails in the direction of the thing it exists to stop.
+   *
+   * ## 🛑 Default ON — reader tests `!== false`
+   *
+   * An absent field, an unseeded document and a failed settings read must all
+   * mean "feeds work". Meta EMPTIES a connected catalogue the first time a
+   * scheduled fetch returns a file with no rows, so a `=== true` reader would
+   * wipe every seller's WhatsApp catalogue on the first Firestore blip — the
+   * same fail-open argument `allPurchasableTypes()` in the feed route is
+   * written around. The only state that disables it is somebody deliberately
+   * writing `false`.
+   *
+   * Switching it off empties EVERY store's feed on its next fetch, which is a
+   * platform-wide retraction and the reason it has no admin-UI toggle today —
+   * like `search.indexEnabled`, it is a deliberate Firestore-level switch. The
+   * per-store equivalent a seller owns is `StoreDocument.whatsappFeedEnabled`.
+   */
+  whatsappFeed?: {
+    enabled?: boolean;
+  };
   emailSettings: {
     fromName: string;
     fromEmail: string;

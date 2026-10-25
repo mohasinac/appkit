@@ -502,6 +502,32 @@ export interface StoreDocument extends BaseDocument {
    */
 
   /**
+   * Does this store publish a WhatsApp catalogue feed?
+   *
+   * 🛑 **ABSENT MEANS ENABLED**, and the polarity is load-bearing rather than a
+   * convenience. Every store that predates this field is already feeding a live
+   * Commerce Manager data source; a `=== true` reader would turn all of them off
+   * at once, and Meta EMPTIES a connected catalogue the first time a scheduled
+   * fetch returns a file with no rows. So the only state that disables a feed is
+   * somebody deliberately writing `false` — the same `!== false` kill-switch
+   * polarity as `siteSettings.search.indexEnabled`, and for the same reason.
+   *
+   * 🛑 Disabling is DESTRUCTIVE on Meta's side and that is the point. The feed
+   * route answers a disabled store with **200 and a header row only**, which is
+   * what makes the seller's next scheduled fetch clear their WhatsApp catalogue.
+   * Its 404 branch (unpublished / suspended / missing store) exists to avoid
+   * exactly that outcome for a TEMPORARY state. The distinction is intent: a
+   * suspension is not a decision to unpublish a catalogue, and a seller flipping
+   * this switch is.
+   *
+   * 🛑 PRIVATE in the public store projection. It describes a seller's own
+   * distribution plumbing, not the goods — and publishing it would advertise
+   * which stores are reachable on WhatsApp, which `whatsappNotifySubscribed`
+   * is private for too.
+   */
+  whatsappFeedEnabled?: boolean;
+
+  /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
    *
    * The question this answers for a seller is "why is my store suspended and
@@ -598,6 +624,8 @@ export const STORE_FIELDS = {
   TIER_LOCKED_BY_ADMIN: "tierLockedByAdmin",
   SUSPENSION_REASON: "suspensionReason",
   CAPABILITIES: "capabilities",
+  /** Per-store WhatsApp catalogue feed kill switch. Absent means ENABLED. */
+  WHATSAPP_FEED_ENABLED: "whatsappFeedEnabled",
 
   STATUS_VALUES: {
     PENDING: "pending",

@@ -130,6 +130,20 @@ export const PRIVATE_STORE_FIELDS = [
    */
   "whatsappNotifySubscribed",
   /*
+   * 🛑 `whatsappFeedEnabled` — a seller's own DISTRIBUTION PLUMBING.
+   *
+   * Whether this store currently publishes `/whatsapp/{slug}/feed.csv` with
+   * rows in it. Absent means enabled, so the field is only ever present when a
+   * seller (or an admin) has switched the feed off.
+   *
+   * No public reader, which is this file's bar on its own. Beyond that, a buyer
+   * learns nothing from it — it says nothing about the goods, the price or the
+   * dispatch record — while publishing it would advertise which stores are
+   * reachable on WhatsApp at all, which is the same disclosure
+   * `whatsappNotifySubscribed` directly above is private to avoid.
+   */
+  "whatsappFeedEnabled",
+  /*
    * 🛑 `trustedSeller` — OUR RISK POSTURE, not a badge.
    *
    * It means we pay this store before the parcel is delivered, so the platform

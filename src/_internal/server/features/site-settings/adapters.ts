@@ -154,6 +154,18 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   // checkbox, which disables itself when email is off — is behind the admin
   // API, which returns the full document.
   "messaging",
+  /*
+   * The WhatsApp catalogue feed kill switch. Read ONLY by
+   * `/whatsapp/{storeSlug}/feed.csv`, which is a server route doing its own
+   * settings read — the same shape as `auctionConfig` above.
+   *
+   * 🛑 Deliberately NOT public, unlike its sibling `search`. That one is public
+   * because its reader is a GUEST's search box, so a server-only flag could not
+   * reach the visitor it governs. This flag's only reader is Meta's crawler
+   * fetching a CSV; no browser consults it, and publishing "catalogue feeds are
+   * currently off platform-wide" is operational detail with no client to serve.
+   */
+  "whatsappFeed",
 ] as const;
 
 export interface ToPublicSiteSettingsOptions {
