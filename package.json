@@ -23,6 +23,18 @@
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
     },
+    "./client/*": {
+      "types": "./dist/client/*.d.ts",
+      "import": "./dist/client/*.js"
+    },
+    "./hand-mode": {
+      "types": "./dist/hand-mode/index.d.ts",
+      "import": "./dist/hand-mode/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
     "./next": {
       "types": "./dist/next/index.d.ts",
       "import": "./dist/next/index.js"
@@ -281,6 +293,26 @@
     "./views/tour-provider": {
       "types": "./dist/_internal/client/features/tour/TourProvider.d.ts",
       "import": "./dist/_internal/client/features/tour/TourProvider.js"
+    },
+    "./shipping/quote": {
+      "types": "./dist/_internal/shared/shipping/quote.d.ts",
+      "import": "./dist/_internal/shared/shipping/quote.js"
+    },
+    "./fees/calculator": {
+      "types": "./dist/_internal/shared/fees/calculator.d.ts",
+      "import": "./dist/_internal/shared/fees/calculator.js"
+    },
+    "./emi/choice": {
+      "types": "./dist/_internal/shared/features/emi/choice.d.ts",
+      "import": "./dist/_internal/shared/features/emi/choice.js"
+    },
+    "./layout/nav-portal": {
+      "types": "./dist/_internal/shared/features/layout/types.d.ts",
+      "import": "./dist/_internal/shared/features/layout/types.js"
+    },
+    "./views/digital-content-pool": {
+      "types": "./dist/_internal/client/features/digital-code/DigitalContentPoolManager.d.ts",
+      "import": "./dist/_internal/client/features/digital-code/DigitalContentPoolManager.js"
     }
   },
   "files": [

@@ -66,6 +66,17 @@ const KEYS = {
   "./views/lottery-admin-slot":  "_internal/client/features/lottery/LotteryAdminSlotView",
   "./views/lottery-pull-form":   "_internal/client/features/lottery/LotteryPullForm",
   "./views/tour-provider":       "_internal/client/features/tour/TourProvider",
+
+  /* The last five, added 2026-10-26, which take the consumer's blocked-file
+   * count to ZERO — the only number that matters, because the module closure is
+   * a UNION and a barrel costs its whole graph to anyone who still imports it at
+   * all. 450 sites resolve, 4 did not, and these are what those 4 needed. */
+  "./shipping/quote":            "_internal/shared/shipping/quote",
+  "./fees/calculator":           "_internal/shared/fees/calculator",
+  "./emi/choice":                "_internal/shared/features/emi/choice",
+  "./layout/nav-portal":         "_internal/shared/features/layout/types",
+  "./views/digital-content-pool":
+    "_internal/client/features/digital-code/DigitalContentPoolManager",
 };
 
 const pkg = JSON.parse(readFileSync(PKG, "utf8"));
