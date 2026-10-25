@@ -1,6 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Icon, Row, Scrim, Section, Span, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { Row } from "../../../ui/components/Layout";
+import { Scrim } from "../../../ui/components/Scrim";
+import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SECTION_TITLE, SECTION_COPY } from "../constants/section-copy";

@@ -1,18 +1,12 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import {
-  Div,
-  Heading,
-  HorizontalScroller,
-  PlainCard,
-  PLAIN_CLASS,
-  PosterCard,
-  PosterGrid,
-  POSTER_CLASS,
-  Section,
-  Anchor,
-} from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
+import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
+import { PlainCard, PLAIN_CLASS, PosterCard, PosterGrid, POSTER_CLASS } from "../../../ui/components/PosterCard";
+import { Section } from "../../../ui/components/Semantic";
+import { Anchor } from "../../../ui/components/Anchor";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 /* Not re-exported from `ui/index` — import from the defining module (Root Cause #18). */
 import { Iframe } from "../../../ui/components/Iframe";

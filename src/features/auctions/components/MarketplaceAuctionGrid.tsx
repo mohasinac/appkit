@@ -1,8 +1,10 @@
 "use client";
 import type { ReactNode } from "react";
 import { Gavel } from "lucide-react";
-import type { WishlistToggleActions } from "../../wishlist";
-import { Div, Grid, Row, Stack, Text } from "../../../ui";
+import type { WishlistToggleActions } from "../../wishlist/hooks/useWishlistToggle";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import {
   MarketplaceAuctionCard,
   type MarketplaceAuctionCardData,

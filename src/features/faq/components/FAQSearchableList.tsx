@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
-import { Div, Input } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
 import { FAQAccordion } from "./FAQAccordion";
 import type { FAQ } from "../types";
 

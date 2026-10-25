@@ -5,10 +5,8 @@ import type { JsonValue } from "@mohasinac/appkit";
  * is written. Only published products count.
  */
 
-import {
-  categoriesRepository,
-  storeRepository,
-} from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { isListingRowAvailable } from "../../../shared/listing-types/_registry";

@@ -1,7 +1,12 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { Badge, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { CART_LANE } from "../../../_internal/shared/checkout/lanes";
 import { Pagination } from "../../../ui/components/Pagination";

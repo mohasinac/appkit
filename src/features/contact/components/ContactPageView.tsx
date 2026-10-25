@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { Anchor, Container, Div, Heading, Main, PendingValue, Section, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Container, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { PendingValue } from "../../../ui/components/PendingValue";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ContactForm } from "./ContactForm";
 import { ContactInfoSidebar } from "./ContactInfoSidebar";

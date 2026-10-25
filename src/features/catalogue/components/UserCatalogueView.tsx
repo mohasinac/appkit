@@ -3,7 +3,13 @@
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { Badge, Button, Div, Grid, Heading, Row, SideDrawer, Skeleton, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Skeleton } from "../../../ui/components/Skeleton";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";

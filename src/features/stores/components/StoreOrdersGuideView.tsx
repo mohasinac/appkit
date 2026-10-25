@@ -1,6 +1,12 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Accordion, Alert, Code, Div, Heading, Li, Ol, Row, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
+import { Accordion } from "../../../ui/components/Accordion";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Ol, Section, Table, Tbody, Td, Th, Thead, Tr, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 

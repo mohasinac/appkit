@@ -24,19 +24,16 @@
  */
 
 import React from "react";
-import {
-  Button,
-  DataTable,
-  Input,
-  Row,
-  Stack,
-  Text,
-  type DataTableColumn,
-} from "../../../../ui";
+import { Button } from "../../../../ui/components/Button";
+import { DataTable } from "../../../../ui/DataTable";
+import type { DataTableColumn } from "../../../../ui/DataTable";
+import { Input } from "../../../../ui/components/Input";
+import { Row, Stack } from "../../../../ui/components/Layout";
+import { Text } from "../../../../ui/components/Typography";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../../ui/forms/FormShell";
 import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
-import { StackedViewShell } from "../../../../ui";
+import { StackedViewShell } from "../../../../ui/components/StackedViewShell";
 import { buildSectionsFromSchema, visibleValues } from "../../../../features/shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
 import { lotteryConfigWriteSchema } from "../../../../features/lottery/schemas/config-write";

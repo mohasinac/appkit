@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
+import { productRepository } from "../repository/products.repository";
 import { priceIndexRepository } from "../../categories/repository/price-index.repository";
 import { MarketPriceAnchor } from "./MarketPriceAnchor";
 
@@ -36,26 +36,15 @@ import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
-import {
-  Button,
-  Container,
-  Div,
-  Heading,
-  Main,
-  
-  PriceDisplay,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  Ul,
-  Ol,
-  Li,
-  SpecTable,
-  Icon,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Main, Section, Ul, Ol, Li } from "../../../ui/components/Semantic";
+import { PriceDisplay } from "../../../ui/components/PriceDisplay";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { SpecTable } from "../../../ui/components/SpecTable";
+import { Icon } from "../../../ui/components/Icon";
 import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ReviewsListingPanel } from "../../reviews/components/ReviewsListingPanel";

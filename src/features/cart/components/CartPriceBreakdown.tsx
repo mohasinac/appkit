@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { Details, Div, Row, Stack, Summary, Text } from "../../../ui";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { FeeDerivation, FeeDerivations } from "../../../_internal/shared/fees/explain";
 

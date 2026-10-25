@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 import { CouponCodeCopyRow } from "../../promotions/components/CouponCodeCopyRow";

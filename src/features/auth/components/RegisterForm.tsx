@@ -2,7 +2,11 @@
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import { z } from "zod";
-import { Alert, Div, Heading, Row, SiteMark, Stack, Text } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { SiteMark } from "../../../ui/components/SiteMark";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";

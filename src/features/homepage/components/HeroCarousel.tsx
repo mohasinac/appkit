@@ -1,7 +1,12 @@
 "use client"
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useMediaQuery } from "../../../react";
-import { Button, Div, Heading, Row, Scrim, Section, Span, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Scrim } from "../../../ui/components/Scrim";
+import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";

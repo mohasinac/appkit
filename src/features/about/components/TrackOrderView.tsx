@@ -9,8 +9,11 @@ import {
   THEMED_TEXT_PRIMARY,
   THEMED_TEXT_SECONDARY,
 } from "../../../_internal/shared/styles/themed";
-import { Caption, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Caption, Heading, Text } from "../../../ui/components/Typography";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
 
 

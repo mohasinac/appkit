@@ -1,5 +1,6 @@
 import type { PreOrderStatus } from "../types";
-import { Div, Span } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Span } from "../../../ui/components/Typography";
 
 const CLS_NEW_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-white";
 

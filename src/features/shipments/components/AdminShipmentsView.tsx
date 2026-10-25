@@ -3,8 +3,11 @@
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
-import { FilterChipGroup, ListingLayout, TextLink } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { TextLink } from "../../../ui/components/TextLink";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 // 🛑 From the DEFINING module, not `@mohasinac/appkit/client` — this file is a
 // client component, but `ROUTES` is a runtime value and the `/client` entry is
 // where Root Cause #76's React #441 comes from when a server component touches

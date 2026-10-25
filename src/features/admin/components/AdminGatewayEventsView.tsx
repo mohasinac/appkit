@@ -59,19 +59,15 @@ import {
   type JsonArray,
   type JsonValue,
 } from "@mohasinac/appkit/client";
-import {
-  FilterChipGroup,
-  ListingLayout,
-  Modal,
-  RecordDetailModal,
-  Row,
-  RowActionMenu,
-  Span,
-  Stack,
-  Text,
-  Button,
-} from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { Modal } from "../../../ui/components/Modal";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Button } from "../../../ui/components/Button";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   ADMIN_GATEWAY_EVENT_KIND_TABS,

@@ -1,7 +1,11 @@
 "use client";
-import { Button, Div, Row, Span, StatusBadge } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
+import { StatusBadge } from "../../../ui/components/StatusBadge";
 import type { Category } from "../types";
-import { MediaImage } from "../../media";
+import { MediaImage } from "../../media/MediaImage";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 
 const __O = {

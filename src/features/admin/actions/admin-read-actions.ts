@@ -19,9 +19,9 @@ import type {
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
-import type { OrderDocument } from "../../orders";
-import type { PayoutDocument } from "../../payments";
-import type { UserDocument } from "../../auth";
+import type { OrderDocument } from "../../orders/schemas/firestore";
+import type { PayoutDocument } from "../../payments/schemas/firestore";
+import type { UserDocument } from "../../auth/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { ProductStatusValues } from "../../products/schemas";
 import type { BlogPostDocument } from "../../blog/schemas/firestore";

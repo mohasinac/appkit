@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
-import { Button, Div, Input, Row, Select, Stack, Text } from "../../../ui";
-import type { SelectOption } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { Text } from "../../../ui/components/Typography";
+import type { SelectOption } from "../../../ui/components/Select";
 import type { CustomField, CustomFieldType } from "../schemas/firestore";
 import { MAX_CUSTOM_FIELDS } from "../schemas/firestore";
 

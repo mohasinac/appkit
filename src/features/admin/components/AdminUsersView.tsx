@@ -18,7 +18,8 @@ import {
   Text as AppText,
   useToast,
 } from "../../../ui";
-import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";

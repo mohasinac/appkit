@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Button, Div, Row, Span, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";

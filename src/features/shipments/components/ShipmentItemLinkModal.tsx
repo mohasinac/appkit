@@ -2,7 +2,13 @@
 
 import React from "react";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { Button, FieldInput, Modal, Row, Stack, TagInput, Text, Toggle } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TagInput } from "../../../ui/components/TagInput";
+import { Text } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";

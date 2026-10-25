@@ -1,5 +1,8 @@
 import { Fragment, type ReactNode } from "react";
-import { Row, Span, TextLink, Icon } from "../../../ui";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Icon } from "../../../ui/components/Icon";
 
 interface ProductFeatureBadgeLabels {
   featured: string;

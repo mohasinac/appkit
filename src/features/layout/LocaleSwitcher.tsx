@@ -1,4 +1,4 @@
-import { Select } from "../../ui";
+import { Select } from "../../ui/components/Select";
 
 export interface LocaleSwitcherOption {
   value: string;

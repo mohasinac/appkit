@@ -36,7 +36,11 @@
  * component that fetched would fire one request per opened drawer per portal.
  */
 
-import { Badge, Card, DescriptionField, Heading, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Card } from "../../../ui/components/Card";
+import { DescriptionField } from "../../../ui/components/DescriptionField";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { formatDate } from "../../../utils/date.formatter";
 import type { OrderSourceContext } from "../schemas/firestore";

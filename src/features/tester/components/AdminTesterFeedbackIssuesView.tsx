@@ -2,7 +2,13 @@
 
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Card, Details, Div, Row, Stack, Summary, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";

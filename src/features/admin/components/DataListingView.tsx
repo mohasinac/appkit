@@ -24,10 +24,22 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
-import { BulkActionBar, Button, Div, Heading, Icon, IconButton, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, Stack, StickyToolbar, Text, TextLink } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { BulkActionBar } from "../../../ui/components/BulkActionBar";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { IconButton } from "../../../ui/components/IconButton";
+import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
+import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { StickyToolbar } from "../../../ui/components/StickyToolbar";
+import { TextLink } from "../../../ui/components/TextLink";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { useBottomActions } from "../../layout";
+import { useBottomActions } from "../../layout/hooks/useBottomActions";
 import { useAdminListing } from "../hooks/useAdminListing";
 import type { AdminListingConfig } from "../hooks/useAdminListing";
 import type { AdminTableColumn } from "../types";

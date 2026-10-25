@@ -1,4 +1,5 @@
-import { sessionRepository, tokenRepository } from "../../../../repositories";
+import { sessionRepository } from "../../../../features/auth/repository/session.repository";
+import { tokenRepository } from "../../../../features/auth/repository/token.repository";
 import { gatewayEventsRepository } from "../../../../features/gateway-events/repository/gateway-events.repository";
 import { pointsRepository } from "../../../../features/points/repository/points.repository";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";

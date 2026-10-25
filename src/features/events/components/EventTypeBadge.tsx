@@ -12,7 +12,7 @@
  */
 
 import React from "react";
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import { eventTypeMeta } from "../constants/event-type-meta";
 
 export interface EventTypeBadgeProps {

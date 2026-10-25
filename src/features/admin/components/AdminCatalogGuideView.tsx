@@ -1,6 +1,10 @@
 import React from "react";
 import { Package, FolderTree, Tag, Star, AlertTriangle } from "lucide-react";
-import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 
 const CLS_CODE = "text-[length:var(--appkit-text-xs)] bg-amber-100 dark:bg-amber-900/30 px-[var(--appkit-space-1)] rounded";

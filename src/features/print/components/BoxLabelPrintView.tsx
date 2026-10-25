@@ -18,15 +18,11 @@
  */
 
 import { useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Div,
-  Heading,
-  Row,
-  Stack,
-  Text,
-} from "../../../ui/index";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import {
   BoxContentsSheet,

@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem } from "../types";

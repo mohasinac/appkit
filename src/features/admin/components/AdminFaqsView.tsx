@@ -3,8 +3,11 @@
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useMemo } from "react";
-import { FilterChipGroup, Heading, ListingLayout, Span, Text } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {

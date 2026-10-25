@@ -5,7 +5,7 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { REVIEW_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";

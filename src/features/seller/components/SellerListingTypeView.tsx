@@ -37,9 +37,12 @@
  */
 
 import React, { useCallback, useState } from "react";
-import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Span, Text } from "../../../ui/components/Typography";
 import { apiClient } from "../../../http";
-import type { BulkActionItem } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

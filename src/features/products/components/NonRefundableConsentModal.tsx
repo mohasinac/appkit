@@ -14,7 +14,12 @@
  */
 
 import React, { useEffect, useId, useState } from "react";
-import { Button, Checkbox, Li, Modal, Stack, Text, Ul } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Li, Ul } from "../../../ui/components/Semantic";
+import { Modal } from "../../../ui/components/Modal";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 // SB-UNI-E 2026-05-13 — "bundle" dropped (bundle UI deleted in SB-UNI-V; bundles
 // are now a category discriminator). Prize draws remain the only consumer.
 export type NonRefundableListingType = "prize-draw";

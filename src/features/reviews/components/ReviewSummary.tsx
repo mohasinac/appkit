@@ -1,6 +1,8 @@
 import React from "react";
-import { Div, Row, Span, Stack, Text } from "../../../ui";
-import { StarRating } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { StarRating } from "../../../ui/components/StarRating";
 import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
 
 const CLS_STAR = "text-warning";

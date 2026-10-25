@@ -17,7 +17,12 @@
 
 import { Row } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { Button, Div, Grid, PricesOnly, Scrim, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid } from "../../../ui/components/Layout";
+import { PricesOnly } from "../../../ui/components/GatedPrice";
+import { Scrim } from "../../../ui/components/Scrim";
+import { Text } from "../../../ui/components/Typography";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";

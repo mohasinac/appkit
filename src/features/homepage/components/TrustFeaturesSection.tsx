@@ -1,6 +1,10 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { Div, Grid, Heading, Icon, Row, Section, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { Section } from "../../../ui/components/Semantic";
 import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Types -------------------------------------------------------------------
 

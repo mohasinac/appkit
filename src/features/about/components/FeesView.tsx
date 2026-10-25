@@ -2,7 +2,10 @@ import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { ProseHero } from "./ProseHero";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
-import { Caption, Div, Heading, Row, Section, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { Caption, Heading, Text } from "../../../ui/components/Typography";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;

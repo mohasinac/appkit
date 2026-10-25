@@ -1,6 +1,14 @@
 import Link from "next/link";
 import React from "react";
-import { Avatar, BlockHeader, Div, Icon, IconButton, Row, Section, SiteLogo, SiteMark, Span } from "../../ui";
+import { Avatar } from "../../ui/components/Avatar";
+import { BlockHeader, Section } from "../../ui/components/Semantic";
+import { Div } from "../../ui/components/Div";
+import { Icon } from "../../ui/components/Icon";
+import { IconButton } from "../../ui/components/IconButton";
+import { Row } from "../../ui/components/Layout";
+import { SiteLogo } from "../../ui/components/SiteLogo";
+import { SiteMark } from "../../ui/components/SiteMark";
+import { Span } from "../../ui/components/Typography";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {

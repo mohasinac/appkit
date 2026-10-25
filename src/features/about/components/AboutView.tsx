@@ -1,5 +1,13 @@
 import React from "react";
-import { Anchor, Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Avatar } from "../../../ui/components/Avatar";
+import { Badge } from "../../../ui/components/Badge";
+import { Card } from "../../../ui/components/Card";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
 

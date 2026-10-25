@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { Anchor, Button, Details, Div, FieldTextarea, Li, Ol, Row, Stack, Summary, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Button } from "../../../ui/components/Button";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Div } from "../../../ui/components/Div";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
+import { Li, Ol } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { MediaUploadField } from "../../media/upload/MediaUploadField";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

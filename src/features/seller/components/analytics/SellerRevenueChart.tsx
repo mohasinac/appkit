@@ -2,7 +2,8 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Div, Heading, Text } from "../../../../ui";
+import { Div } from "../../../../ui/components/Div";
+import { Heading, Text } from "../../../../ui/components/Typography";
 import type { SellerAnalyticsMonthEntry } from "../../types";
 
 // recharts exports generic components (<DataPointType>) that don't satisfy

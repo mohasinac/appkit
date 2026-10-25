@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, GatedPrice, LoginRequiredModal, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";

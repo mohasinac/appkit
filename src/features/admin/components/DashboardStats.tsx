@@ -3,7 +3,9 @@
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Div, Grid, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";

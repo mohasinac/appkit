@@ -5,7 +5,12 @@
  * Mirrors ViewReviewModal's shape (appkit/src/features/reviews/components/ReviewModal.tsx).
  */
 
-import { Badge, Code, Div, Modal, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Code } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import type { JsonValue } from "../../../schemas/types";
 
 export interface AuditLogEntryDetail {

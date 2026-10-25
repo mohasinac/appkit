@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import { Stack, Row, Text, Span, Div } from "../../../../ui";
+import { Stack, Row } from "../../../../ui/components/Layout";
+import { Text, Span } from "../../../../ui/components/Typography";
+import { Div } from "../../../../ui/components/Div";
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
 
 interface LotterySlotGridProps {

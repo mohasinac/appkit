@@ -3,24 +3,15 @@
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import {
-  Alert,
-  Button,
-  Div,
-  FieldInput,
-  Grid,
-  Heading,
-  Stack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Text,
-  TextLink,
-  FormErrorSummary,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Table, Thead, Tbody, Tr, Th, Td } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";

@@ -1,7 +1,10 @@
 "use client"
 import React, { useEffect, useMemo } from "react";
 import { isAccountDisabled } from "../role-predicates";
-import { Button, Div, Heading, Row, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
 import type { UserRole } from "../types";
 
 /**

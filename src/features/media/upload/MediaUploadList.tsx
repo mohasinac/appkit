@@ -1,6 +1,12 @@
 "use client"
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Alert, Anchor, Button, Div, Label, Row, Spinner, Stack, Text } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Label, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Spinner } from "../../../ui/components/Spinner";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";

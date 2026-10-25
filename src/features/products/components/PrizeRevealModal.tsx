@@ -10,7 +10,12 @@
  * a pure display: "pending" (no result yet) or "won" (order.prizeWon is set).
  */
 
-import { Anchor, Div, Heading, Modal, PricesOnly, Span, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { PricesOnly } from "../../../ui/components/GatedPrice";
+import { Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../media/MediaImage";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";

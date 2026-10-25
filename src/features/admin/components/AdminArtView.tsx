@@ -11,8 +11,8 @@
  */
 
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { buildListingTypeListingConfig } from "../../products/config/listing-type-listing-config";
 import { DataListingView } from "./DataListingView";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";

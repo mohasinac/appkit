@@ -10,8 +10,9 @@ import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Card, CardBody, ConfirmDeleteModal, Div, PaginatedSelect, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast, Show, StickyToolbar } from "../../../ui";
 import { useFormShellState, applyZodIssues, FormErrorSummary, FormShellContext } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
-import type { StackedViewShellProps } from "../../../ui";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { PRODUCT_MAX_IMAGES } from "../../../_internal/shared/media/limits";
 
 // Admin form-input validation — deliberately a small local schema, not the

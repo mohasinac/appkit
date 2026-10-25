@@ -26,7 +26,7 @@
  * `findTrustedStoreIds` left in place so saturation is visible.
  */
 
-import { storeRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { ORDER_FIELDS, REVIEW_FIELDS } from "../../../../constants/field-names";
 import type { StoreDocument } from "../../../../features/stores/schemas/firestore";
 import { recordAdminAction } from "../../features/audit-log/actions";

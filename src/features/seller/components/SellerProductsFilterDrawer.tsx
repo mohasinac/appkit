@@ -6,7 +6,10 @@
 // inner fields.
 
 import React from "react";
-import { Div, FilterChipGroup, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { FieldInput, FieldSelect } from "../../../ui/forms";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 import { BrandInlineSelect } from "./BrandInlineSelect";

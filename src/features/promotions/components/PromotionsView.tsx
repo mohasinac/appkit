@@ -1,5 +1,8 @@
 import React from "react";
-import { Div, Heading, Section, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
 
 export interface PromotionProductItem {
   id: string;

@@ -1,5 +1,8 @@
 import React from "react";
-import { Button, Div, Heading, Row, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
 import { THEMED_TEXT_SUCCESS } from "../../../_internal/shared/styles/themed";
 
 const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-success-surface flex items-center justify-center mx-auto mb-6";

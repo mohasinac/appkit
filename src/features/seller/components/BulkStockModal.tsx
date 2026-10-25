@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { Modal } from "../../../ui/components/Modal";
 import { Button } from "../../../ui/components/Button";
-import { Row, Stack, Text } from "../../../ui";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

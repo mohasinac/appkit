@@ -1,4 +1,6 @@
-import { Div, Heading, Row, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
 export function OAuthLoadingView() {
   return (
     <Row className="min-h-[60vh]" padding="x-md" align="center" justify="center">

@@ -25,7 +25,7 @@
  */
 
 import React, { useMemo } from "react";
-import { Tabs, TabsList, TabsTrigger } from "../../../ui";
+import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { AVAILABILITY_VALUES } from "../../../constants/field-names";

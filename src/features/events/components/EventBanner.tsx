@@ -2,7 +2,9 @@
 import { normalizeError } from "../../../errors/normalize";
 import React, { useEffect, useMemo, useState } from "react";
 import { useEvents } from "../hooks/useEvents";
-import { Button, Section, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { EventItem } from "../types";
 

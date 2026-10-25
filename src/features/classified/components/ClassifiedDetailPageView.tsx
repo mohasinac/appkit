@@ -11,21 +11,13 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
-import {
-  Container,
-  Div,
-  GatedPrice,
-  Heading,
-  Main,
-  Nav,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  SpecTable,
-} from "../../../ui";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Main, Nav, Section } from "../../../ui/components/Semantic";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { SpecTable } from "../../../ui/components/SpecTable";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";

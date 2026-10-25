@@ -1,4 +1,6 @@
-import { Container, Heading, Li, Section, Span, Stack, Ul } from "../../../ui";
+import { Container, Stack } from "../../../ui/components/Layout";
+import { Heading, Span } from "../../../ui/components/Typography";
+import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { FAQAccordion } from "../../faq/components/FAQAccordion";
 import type { FAQ } from "../../faq/types";
 

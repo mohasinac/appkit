@@ -1,6 +1,10 @@
 import React from "react";
 import { ROUTES } from "../../../constants";
-import { Container, Div, Heading, Main, Section, Text, TextLink } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -15,7 +19,7 @@ import {
 } from "../../../_internal/server/features/products/list-public";
 import { parseSelectedListingTypes } from "../utils/listing-type";
 import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
 
 type SearchParams = Record<string, string | string[]>;

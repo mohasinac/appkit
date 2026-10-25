@@ -2,7 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Div, PricesOnly, Row, Span, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { PricesOnly } from "../../../ui/components/GatedPrice";
+import { Row } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Button } from "../../../ui/components/Button";
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker } from "./GroupMemberPicker";
 import { resolveGroupMemberImage } from "../utils/group-member-image";

@@ -2,7 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { BaseListingCard, Div, Heading, RichText, Row, Scrim, Span, Stack } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Scrim } from "../../../ui/components/Scrim";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";

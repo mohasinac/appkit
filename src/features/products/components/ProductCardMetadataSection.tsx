@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import type { ProductCardMetadata } from "../schemas/firestore";
 
 export interface ProductCardMetadataSectionProps {

@@ -8,7 +8,7 @@
  */
 
 import { cache } from "react";
-import { itemRequestsRepository } from "../../../../repositories";
+import { itemRequestsRepository } from "../../../../features/store-extensions/repository/store-extensions.repositories";
 import type { ItemRequestDocument } from "../../../../features/store-extensions/schemas/firestore";
 
 export interface ItemRequestDataOptions {

@@ -1,4 +1,8 @@
-import { Button, Div, GatedPrice, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";

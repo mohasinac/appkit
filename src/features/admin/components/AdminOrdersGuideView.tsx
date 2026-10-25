@@ -1,6 +1,9 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 

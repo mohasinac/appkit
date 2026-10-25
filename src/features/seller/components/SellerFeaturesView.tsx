@@ -4,18 +4,14 @@ import { normalizeError } from "../../../errors/normalize";
 import React from "react";
 import { Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Div,
-  Heading,
-  Row,
-  SideDrawer,
-  Stack,
-  Text,
-  Toggle,
-  useToast,
-  Skeleton,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
+import { Skeleton } from "../../../ui/components/Skeleton";
 import { apiClient } from "../../../http";
 import { ERROR_MESSAGES } from "../../../errors/messages";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";

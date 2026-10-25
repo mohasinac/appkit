@@ -13,7 +13,7 @@
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import type { JsonValue } from "@mohasinac/appkit";
-import { categoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { brandInputSchema, brandUpdateSchema, type BrandInput, type BrandUpdate } from "../../../shared/features/brands/schema";
 import { assertBrandExists, assertBrandSlugUnique } from "./service";

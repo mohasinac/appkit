@@ -1,5 +1,11 @@
 import React from "react";
-import { Alert, Badge, Div, Grid, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { AttentionCounts } from "../../../_internal/server/features/dashboard/attention";
 import type { DashboardHubSection } from "../../../_internal/shared/features/dashboard/hub-sections";
 

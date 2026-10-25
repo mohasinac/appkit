@@ -2,7 +2,7 @@
 
 import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
-import type { BulkActionItem } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";

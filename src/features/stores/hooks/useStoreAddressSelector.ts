@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { AddressFormData } from "../../account";
+import type { AddressFormData } from "../../account/hooks/useAddresses";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface SavedAddress {

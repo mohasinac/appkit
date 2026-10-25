@@ -1,5 +1,10 @@
 "use client"
-import { Button, Div, Label, Row, Select, SideDrawer } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Label } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
 
 import { useState, useCallback, useEffect } from "react";
 import { z } from "zod";

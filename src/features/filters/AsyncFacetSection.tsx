@@ -1,6 +1,11 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Checkbox, Div, Input, Row, Span, Stack, Text } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Checkbox } from "../../ui/components/Checkbox";
+import { Div } from "../../ui/components/Div";
+import { Input } from "../../ui/components/Input";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
 
 import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";

@@ -22,19 +22,13 @@
  * not discharging the obligation.
  */
 import React from "react";
-import {
-  Section,
-  Container,
-  Stack,
-  Row,
-  Div,
-  Heading,
-  Text,
-  Span,
-  TextLink,
-  Anchor,
-  Badge,
-} from "../../../ui";
+import { Section } from "../../../ui/components/Semantic";
+import { Container, Stack, Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text, Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Badge } from "../../../ui/components/Badge";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { ROUTES } from "../../../next/routing/route-map";
 import { PART_SLOT_LABEL, type PartSlot } from "../../parts/schemas/firestore";

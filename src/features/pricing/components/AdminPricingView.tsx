@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Badge, Button, Heading, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { Modal } from "../../../ui/components/Modal";
 import { useToast } from "../../../ui/components/Toast";
 import { Form } from "../../../ui/components/Form";

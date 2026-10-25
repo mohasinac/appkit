@@ -1,6 +1,10 @@
 import React from "react";
 import { Settings } from "lucide-react";
-import { Alert, Code, Div, Heading, Li, Row, Section, Stack, Text, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 
 const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";

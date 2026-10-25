@@ -33,7 +33,7 @@
 
 import { normalizeError } from "../../../../errors/normalize";
 import { mapToHttpError } from "../../../../errors/error-mapping";
-import { jobsRepository } from "../../../../repositories";
+import { jobsRepository } from "../../../../features/jobs/repository/jobs.repository";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { getAdminRealtimeDb } from "../../../../providers/db-firebase";
 import { RTDB_PATHS } from "../../../../providers/db-firebase/rtdb-paths";

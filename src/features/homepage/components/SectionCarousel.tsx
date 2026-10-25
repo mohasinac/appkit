@@ -3,7 +3,13 @@
 import React from "react";
 import { THEMED_BG_SECONDARY, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
-import { Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
+import type { PerViewConfig } from "../../../ui/components/HorizontalScroller";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 import { useHandMode } from "../../../_internal/client/hand-mode";

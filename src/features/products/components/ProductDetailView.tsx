@@ -1,6 +1,6 @@
 import React from "react";
-import { DetailViewShell } from "../../../ui";
-import type { DetailViewShellProps } from "../../../ui";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
+import type { DetailViewShellProps } from "../../../ui/components/DetailViewShell";
 
 export interface ProductDetailViewProps extends Omit<
   DetailViewShellProps,

@@ -1,4 +1,4 @@
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 
 import { isAuctionListing } from "../../../../features/products/utils/listing-type";
 import {

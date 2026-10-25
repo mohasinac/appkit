@@ -1,4 +1,8 @@
-import { Accordion, Badge, Button, Row, Stack, Text } from "../../../ui";
+import { Accordion } from "../../../ui/components/Accordion";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 
 export interface LinkedAccountsSectionProps {
   googleLinked?: boolean;

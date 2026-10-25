@@ -22,19 +22,13 @@
  * models really use the part. 681 of 753 parts carry one.
  */
 import React from "react";
-import {
-  Section,
-  Container,
-  Stack,
-  Row,
-  Div,
-  Heading,
-  Text,
-  Span,
-  TextLink,
-  Badge,
-  Anchor,
-} from "../../../ui";
+import { Section } from "../../../ui/components/Semantic";
+import { Container, Stack, Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text, Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Badge } from "../../../ui/components/Badge";
+import { Anchor } from "../../../ui/components/Anchor";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { ROUTES } from "../../../next/routing/route-map";

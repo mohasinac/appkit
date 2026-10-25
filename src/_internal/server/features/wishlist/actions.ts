@@ -14,11 +14,11 @@ import { normalizeError } from "../../../../errors/normalize";
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
-import {
-  wishlistRepository,
-  WishlistFullError,
-  type WishlistItem,
-} from "../../../../repositories";
+import { wishlistRepository, WishlistFullError } from "../../../../features/wishlist/repository/user-wishlist.repository";
+// 🛑 ALIASED re-export: `repositories/index.ts:164` exports this as
+// `type UserWishlistItem as WishlistItem`. The defining module names it
+// UserWishlistItem, so the local name has to be restored here.
+import type { UserWishlistItem as WishlistItem } from "../../../../features/wishlist/repository/user-wishlist.repository";
 import { WISHLIST_MAX } from "../../../shared/features/wishlist/config";
 import { WishlistCapError } from "../../../shared/features/wishlist/errors";
 

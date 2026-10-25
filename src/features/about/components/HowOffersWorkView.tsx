@@ -1,9 +1,13 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { ProseHero } from "./ProseHero";
-import { Div, FlowDiagram, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
-import type { FlowStep } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { FlowDiagram } from "../../../ui/components/FlowDiagram";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
+import type { FlowStep } from "../../../ui/components/FlowDiagram";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",

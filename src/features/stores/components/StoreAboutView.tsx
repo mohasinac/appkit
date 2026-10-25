@@ -1,6 +1,10 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
-import { Anchor, Div, Heading, RichText, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Stack } from "../../../ui/components/Layout";
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
 const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-[var(--appkit-space-4)]";
 const CLS_WARN_TITLE = "text-warning font-medium";

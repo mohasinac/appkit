@@ -1,4 +1,4 @@
-import { Stack } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
 import type { ProductItem } from "../types";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 

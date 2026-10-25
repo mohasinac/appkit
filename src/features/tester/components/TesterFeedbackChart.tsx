@@ -2,7 +2,9 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Card, Heading, Row, Stack, Text } from "../../../ui";
+import { Card } from "../../../ui/components/Card";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 
 // recharts exports generic components (<DataPointType>) that don't satisfy
 // next/dynamic's ComponentType<P> constraint — cast each to ComponentType<any>.

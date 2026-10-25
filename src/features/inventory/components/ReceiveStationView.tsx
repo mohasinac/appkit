@@ -23,25 +23,15 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  CardBody,
-  Div,
-  Heading,
-  Row,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  TextLink,
-  Th,
-  Thead,
-  Tr,
-} from "../../../ui/index";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Card, CardBody } from "../../../ui/components/Card";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { FieldInput } from "../../../ui/forms";
 import { Form } from "../../../ui/components/Form";

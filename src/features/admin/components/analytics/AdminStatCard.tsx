@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Heading, Row, Text } from "../../../../ui";
+import { Div } from "../../../../ui/components/Div";
+import { Heading, Text } from "../../../../ui/components/Typography";
+import { Row } from "../../../../ui/components/Layout";
 import { DynamicBgDiv } from "../../../../ui/components/DynamicBgDiv";
 const BRAND_FROM = "var(--appkit-color-primary-700)";
 const BRAND_MID  = "var(--appkit-color-cobalt)";

@@ -4,9 +4,12 @@ import { ProseHero } from "./ProseHero";
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { Div, Heading, Text, Section, Stack } from "../../../ui";
-import { TextLink } from "../../../ui";
-import { siteSettingsRepository } from "../../../repositories";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { SiteSettingsDocument } from "../../admin/schemas/firestore";
 
 

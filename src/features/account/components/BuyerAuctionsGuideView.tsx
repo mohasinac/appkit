@@ -1,6 +1,10 @@
 import React from "react";
 import { Gavel, TrendingUp, Trophy, AlertTriangle, Package, XCircle, ShieldCheck } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 

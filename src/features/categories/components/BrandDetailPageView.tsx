@@ -7,7 +7,11 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Anchor, Container, Div, Dl, Dt, Dd, Heading, Main, Nav, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Container, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Dl, Dt, Dd, Main, Nav, Section } from "../../../ui/components/Semantic";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
@@ -30,7 +34,7 @@ import {
 } from "../../../_internal/server/features/products/listing-tab-counts";
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";

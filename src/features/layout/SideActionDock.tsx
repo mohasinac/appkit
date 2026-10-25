@@ -56,7 +56,13 @@ import { useClickOutside } from "../../react";
 import { useHandMode } from "../../_internal/client/hand-mode";
 import { useCtaReveal } from "./useCtaReveal";
 import { useIsDesktop } from "./useIsDesktop";
-import { ActionRow, Div, ICON_SIZE, IconButton, Row, Span, Stack, Text, Button } from "../../ui";
+import { ActionRow } from "../../ui/components/ActionRow";
+import { Div } from "../../ui/components/Div";
+import { ICON_SIZE } from "../../ui/icons/icon-registry";
+import { IconButton } from "../../ui/components/IconButton";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
+import { Button } from "../../ui/components/Button";
 
 const PANEL_SURFACE =
   "bg-[color-mix(in_srgb,var(--appkit-color-bg)_94%,transparent)] backdrop-blur-md border border-[var(--appkit-color-border)]";

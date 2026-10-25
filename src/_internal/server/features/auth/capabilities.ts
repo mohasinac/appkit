@@ -5,7 +5,7 @@
  * Call this server-side only — never trust client-provided capability arrays.
  */
 
-import { storeRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import {
   DEFAULT_STORE_CAPABILITIES,

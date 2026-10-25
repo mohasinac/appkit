@@ -7,8 +7,8 @@
 import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import {

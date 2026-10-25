@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { OverflowRow, TabBarButton, TabBarShell, TextLink } from "../../../ui";
+import { OverflowRow } from "../../../ui/components/OverflowRow";
+import { TabBarButton, TabBarShell } from "../../../ui/components/TabBarShell";
+import { TextLink } from "../../../ui/components/TextLink";
 
 export interface StoreTab {
   value: string;

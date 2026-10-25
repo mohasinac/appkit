@@ -3,10 +3,16 @@ import { serverLogger } from "../../../monitoring/server-logger";
 import { ProseHero } from "./ProseHero";
 // `Section` dropped — `ProseHero` owns the banner now and this view had no
 // other use for it.
-import { Anchor, Avatar, Badge, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Avatar } from "../../../ui/components/Avatar";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { AboutTeamMember, AboutMilestone } from "../schemas/firestore";
 
 export interface DeveloperViewProps {

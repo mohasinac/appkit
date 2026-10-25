@@ -1,13 +1,9 @@
-import {
-  Button,
-  Div,
-  Heading,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Text,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";

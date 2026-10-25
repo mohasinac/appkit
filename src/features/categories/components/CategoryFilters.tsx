@@ -5,7 +5,7 @@ import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 
 export type CategoryFilterVariant = "admin" | "seller" | "public";
 

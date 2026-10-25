@@ -3,7 +3,11 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { BlockFooter, Button, Div, Heading, Li, Nav, Row, Span, Stack, Text, Ul } from "../../ui";
+import { BlockFooter, Li, Nav, Ul } from "../../ui/components/Semantic";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Heading, Span, Text } from "../../ui/components/Typography";
+import { Row, Stack } from "../../ui/components/Layout";
 export interface FooterLinkGroup {
   heading: string;
   links: { label: string; href: string }[];

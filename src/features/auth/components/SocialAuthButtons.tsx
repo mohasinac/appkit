@@ -1,4 +1,7 @@
-import { Button, Div, Row, Span } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
 interface SocialAuthButtonsProps {
   onGoogle: () => void;
   disabled?: boolean;

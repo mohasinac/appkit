@@ -3,8 +3,11 @@
 import { type JsonArray, SIEVE_OP, sieveFilter } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { FilterChipGroup, ListingLayout, RecordDetailModal } from "../../../ui";
-import type { ListingLayoutProps, RecordDetailItem } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
+import type { RecordDetailItem } from "../../../ui/components/RecordDetailModal";
 import type { JsonValue } from "../../../schemas/types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

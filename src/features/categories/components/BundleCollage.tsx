@@ -12,7 +12,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
-import { Button, Div, GatedPrice, Grid, Row, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Grid, Row } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";

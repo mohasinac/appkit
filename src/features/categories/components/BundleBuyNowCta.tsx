@@ -16,9 +16,12 @@
  */
 
 import React, { useState, useCallback } from "react";
-import { Button, LoginRequiredModal, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";

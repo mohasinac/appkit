@@ -28,7 +28,7 @@ import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 
 /** Mirrors `AddressBanStatus`. Absent means "in good standing". */
 const BAN_STATUS_OPTIONS = [

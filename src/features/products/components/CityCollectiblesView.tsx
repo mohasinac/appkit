@@ -3,17 +3,12 @@ import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { THEMED_BG_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { safeRead } from "../../../errors/safe-read";
-import {
-  Alert,
-  Div,
-  Grid,
-  Heading,
-  Row,
-  Section,
-  Stack,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { MEETUP_CITIES, type MeetupCity } from "../constants/meetup-cities";

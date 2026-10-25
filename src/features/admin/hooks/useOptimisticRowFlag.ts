@@ -48,7 +48,7 @@
 
 import React from "react";
 import { useQueryClient, type QueryKey } from "@tanstack/react-query";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 

@@ -23,8 +23,10 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
-import { ConfirmDeleteModal, Div, StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FormErrorSummary } from "../../../ui/forms";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";

@@ -1,6 +1,9 @@
 import type { UserAddress } from "../types";
 import type { JsonValue } from "@mohasinac/appkit";
-import { Button, Div, Grid, Span, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 
 export interface AddressCardAddress {
   id: string;

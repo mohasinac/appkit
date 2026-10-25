@@ -20,7 +20,9 @@
  */
 
 import React from "react";
-import { Button, Row, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Row } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { TABLE_KEYS } from "../../../constants/table-keys";

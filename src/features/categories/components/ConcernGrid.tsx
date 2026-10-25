@@ -1,4 +1,4 @@
-import { Grid } from "../../../ui";
+import { Grid } from "../../../ui/components/Layout";
 import type { CategoryItem } from "../types";
 import { ConcernCard } from "./ConcernCard";
 

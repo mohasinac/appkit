@@ -33,7 +33,7 @@
 
 import { safeRead } from "../../../../errors/safe-read";
 import { serverLogger } from "../../../../monitoring/server-logger";
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { groupedListingsRepository } from "../../../../features/grouped/repository/grouped-listings.repository";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import {

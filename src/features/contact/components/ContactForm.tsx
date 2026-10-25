@@ -2,7 +2,10 @@
 import { normalizeError } from "../../../errors/normalize";
 import React, { useCallback, useMemo, useState } from "react";
 import { z } from "zod";
-import { Button, Div, Heading, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import {
   useFormShellState,
   FormShellContext,
@@ -10,7 +13,8 @@ import {
   FieldInput,
   FieldTextarea,
 } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),

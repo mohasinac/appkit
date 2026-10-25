@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Row, Span, Text } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
 import { Textarea as UiTextarea } from "../../ui/components/Textarea";
 import {
   INPUT_BASE,

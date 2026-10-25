@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Nav, Ul } from "../../ui";
+import { Nav, Ul } from "../../ui/components/Semantic";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 
 export interface BottomNavLayoutProps {

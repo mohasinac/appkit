@@ -25,8 +25,10 @@
  */
 
 import React from "react";
-import { Heading, ListingLayout, Stack, Text } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { Stack } from "../../../ui/components/Layout";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { BEY_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";

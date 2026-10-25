@@ -1,23 +1,12 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
-import {
-  Alert,
-  Caption,
-  Div,
-  Heading,
-  Row,
-  Section,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  TextLink,
-  Th,
-  Thead,
-  Tr,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Caption, Heading, Text } from "../../../ui/components/Typography";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",

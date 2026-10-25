@@ -2,7 +2,10 @@
 
 import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
-import { Checkbox, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import type { StatusTone } from "../../../ui/columns/column-renderers";
 import { STATUS_TONE_CLASSES, renderStatusBadge } from "../../../ui/columns/cell-renderers";
 import { MediaImage } from "../../media/MediaImage";

@@ -26,9 +26,12 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Badge, RecordDetailModal, Span, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { apiClient } from "../../../http";
-import type { StackedViewShellProps } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { DataListingView } from "../../admin/components/DataListingView";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";

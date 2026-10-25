@@ -25,7 +25,11 @@
  */
 import React from "react";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Section, Container, Stack, Row, Div, Heading, Text, Span, TextLink } from "../../../ui";
+import { Section } from "../../../ui/components/Semantic";
+import { Container, Stack, Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text, Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { SearchEverythingResult } from "../../../_internal/server/features/search/search-everything";
 
 export interface SearchResultsPageViewProps {

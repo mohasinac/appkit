@@ -1,6 +1,6 @@
 "use client";
 
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";

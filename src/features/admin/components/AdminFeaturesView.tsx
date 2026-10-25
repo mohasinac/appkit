@@ -4,8 +4,10 @@ import { sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { FilterChipGroup, ListingLayout } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import {

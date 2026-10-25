@@ -25,7 +25,7 @@ import { finalizeStagedMediaArray } from "../../../../features/media/finalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { productRepository } from "../../../../features/products/repository/products.repository";
 import { normalizeListingType } from "../../../../features/products/utils/listing-type";
-import { siteSettingsRepository } from "../../../../repositories";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 
 const MESSAGE_MAX_LENGTH = 2000;
 

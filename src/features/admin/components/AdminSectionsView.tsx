@@ -25,7 +25,8 @@ import {
  * control produces. The coercion is real and happens at parse time.
  */
 type SectionModalDraft = Omit<HomepageSectionFormInput, "order"> & { order: string };
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants";

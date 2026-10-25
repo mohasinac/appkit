@@ -1,5 +1,8 @@
 import type React from "react";
-import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { shortOrderRef } from "../utils/order-ref";
 import { MediaImage } from "../../media/MediaImage";
 import type { Order, OrderStatus } from "../types";

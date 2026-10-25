@@ -1,4 +1,6 @@
-import { Container, Main, Heading, Section, Text } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { Heading, Text } from "../../../ui/components/Typography";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";

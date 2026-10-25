@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
-import { Code, Row } from "../../../ui";
+import { Code } from "../../../ui/components/Semantic";
+import { Row } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
 
 export interface CouponCodeCopyRowProps {

@@ -24,7 +24,10 @@
 
 import type { ReactNode } from "react";
 import type { FieldChange } from "../../../_internal/shared/history/index";
-import { Badge, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 
 /** The client-facing entry shape — dates already serialised to ISO. */
 export interface TimelineEntry {

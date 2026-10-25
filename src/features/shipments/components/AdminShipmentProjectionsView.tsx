@@ -1,7 +1,16 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Select } from "../../../ui/components/Select";
+import { Skeleton } from "../../../ui/components/Skeleton";
+import { Stack } from "../../../ui/components/Layout";
+import { Table, Thead, Tbody, Tr, Th, Td } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";

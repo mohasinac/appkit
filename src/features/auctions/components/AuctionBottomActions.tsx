@@ -7,7 +7,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";
 import { useCountdown, type CountdownRemaining } from "../../../react";
 import { useIsAuctionEnded } from "../hooks/useIsAuctionEnded";
-import { Modal } from "../../../ui";
+import { Modal } from "../../../ui/components/Modal";
 import { isBuyNowAvailable } from "../../../_internal/shared/features/auctions/config";
 import {
   PlaceBidFormClient,

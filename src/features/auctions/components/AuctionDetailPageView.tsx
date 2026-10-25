@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
+import { productRepository } from "../../products/repository/products.repository";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 import { safeRead } from "../../../errors/safe-read";
 
@@ -24,27 +24,16 @@ import {
   resolveMinBidIncrement,
   type BidIncrementTier,
 } from "../../../_internal/shared/features/auctions/config";
-import {
-  Button,
-  Container,
-  CountdownDisplay,
-  Div,
-  GatedPrice,
-  PricesOnly,
-  Heading,
-  Input,
-  Main,
-  Nav,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  Ul,
-  Li,
-  SpecTable,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { CountdownDisplay } from "../../../ui/components/CountdownDisplay";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Main, Nav, Section, Ul, Li } from "../../../ui/components/Semantic";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { SpecTable } from "../../../ui/components/SpecTable";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";

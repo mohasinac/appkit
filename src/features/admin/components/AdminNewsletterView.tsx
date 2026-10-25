@@ -7,10 +7,15 @@ import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast,
-  RecordDetailModal,
-} from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { useToast } from "../../../ui/components/toast-context";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";

@@ -3,10 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { BaseListingCard, Button, Div, GatedPrice, Grid, PriceDisplay, PricesOnly, Row, Span, Stack, Text } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { PriceDisplay } from "../../../ui/components/PriceDisplay";
+import { Span, Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 
-import type { ViewMode } from "../../../ui";
+import type { ViewMode } from "../../../ui/components/ViewToggle";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";

@@ -3,8 +3,10 @@
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
-import { FilterChipGroup, ListingLayout } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_EVENT_STATUS_TABS, ALL_TAB } from "../../admin/constants/filter-tabs";
 import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";

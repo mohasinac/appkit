@@ -1,12 +1,16 @@
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
 import { ProseHero } from "./ProseHero";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
-import type { FlowStep } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
+import { FlowDiagram } from "../../../ui/components/FlowDiagram";
+import type { FlowStep } from "../../../ui/components/FlowDiagram";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const CLS_FOOTER_LINK = "text-sky-600 dark:text-sky-400 hover:underline";
 

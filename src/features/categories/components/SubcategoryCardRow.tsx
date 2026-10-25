@@ -42,7 +42,10 @@
  */
 
 import React, { useMemo, useState } from "react";
-import { Div, HorizontalScroller, Row, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { FieldInput } from "../../../ui/forms";
 import { MediaImage } from "../../media/MediaImage";
 import { TextLink } from "../../../ui/components/TextLink";

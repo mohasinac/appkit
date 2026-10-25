@@ -1,7 +1,14 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Div, Modal, Row, Stack, Text, Textarea } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { Textarea } from "../../../ui/components/Textarea";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";
 const __P = {

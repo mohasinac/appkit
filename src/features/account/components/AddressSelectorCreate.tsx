@@ -1,5 +1,6 @@
 "use client";
-import { Div, Label } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Label } from "../../../ui/components/Typography";
 import { AddressInlineSelect } from "./AddressInlineSelect";
 
 export interface AddressSelectorCreateLabels {

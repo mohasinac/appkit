@@ -2,7 +2,14 @@
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import React, { useCallback, useRef, useState } from "react";
-import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul, useToast } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Ul } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Spinner } from "../../../ui/components/Spinner";
+import { TextLink } from "../../../ui/components/TextLink";
+import { useToast } from "../../../ui/components/toast-context";
 import { useClickOutside, useMessage } from "../../../react";
 import { formatRelativeTime } from "../../../utils";
 

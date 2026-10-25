@@ -1,7 +1,9 @@
 
 import React from "react";
 
-import { Container, Heading, Main, Section } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
 import type { SearchParamsRecord } from "../../../utils/search-params";

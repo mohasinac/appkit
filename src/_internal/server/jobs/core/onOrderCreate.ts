@@ -1,6 +1,8 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { ORDER_PII_FIELDS, revealPii } from "../../../../security";
-import { adminNotificationsRepository, storeRepository, userRepository } from "../../../../repositories";
+import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 import { decryptPii } from "../../../../security/index";
 import {
   sendWhatsAppBusinessMessage,

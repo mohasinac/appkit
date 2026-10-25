@@ -1,5 +1,8 @@
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Anchor, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",

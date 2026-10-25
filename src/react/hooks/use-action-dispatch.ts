@@ -5,7 +5,8 @@ import type { JsonValue } from "@mohasinac/appkit/client";
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useToast, type ToastVariant } from "../../ui";
+import { useToast } from "../../ui/components/toast-context";
+import type { ToastVariant } from "../../ui/components/toast-context";
 import { usePanelStore } from "../../stores/panel-store";
 
 export type DispatchAction =

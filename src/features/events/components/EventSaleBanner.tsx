@@ -1,6 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Section, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 

@@ -18,7 +18,9 @@
  */
 
 import * as React from "react";
-import { Aside, BlockFooter, BlockHeader, Div, Main, Stack } from "../../../ui";
+import { Aside, BlockFooter, BlockHeader, Main } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Stack } from "../../../ui/components/Layout";
 export interface AppShellRenderContext {
   /** Current path (consumer-supplied; this scaffold is path-agnostic). */
   path?: string;

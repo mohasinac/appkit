@@ -9,7 +9,10 @@
  */
 
 import React, { useState } from "react";
-import { Button, Div, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { ShippingProviderConfig } from "../../stores/schemas/firestore";

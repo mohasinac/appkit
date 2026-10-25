@@ -5,7 +5,10 @@ import type { ZodTypeAny } from "zod";
 import { Button } from "../../ui/components/Button";
 import { CollapsibleSection } from "../../ui/components/CollapsibleSection";
 import { Badge } from "../../ui/components/Badge";
-import { Div, Nav, Row, Span, Stack } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Nav } from "../../ui/components/Semantic";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 import { FormShellContext, type FormShellStep } from "../../ui/forms/FormShell";
 import {
   LabelPlacementContext,

@@ -1,4 +1,7 @@
-import { Div, Row, Select, Span } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Row } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { Span } from "../../../ui/components/Typography";
 export type FAQSortOption = "helpful" | "newest" | "alphabetical";
 
 interface FAQSortDropdownProps {

@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
-import { Div, Heading, Stack } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { AdSlot } from "../../homepage/components/AdSlot";
 
 export interface CheckoutViewProps {

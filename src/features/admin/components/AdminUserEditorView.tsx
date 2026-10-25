@@ -4,7 +4,18 @@ import { Code, useApiMutation } from "@mohasinac/appkit/client";
 
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, ConfirmDeleteModal, Div, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, useToast } from "../../../ui";
+import { Avatar } from "../../../ui/components/Avatar";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { Textarea } from "../../../ui/components/Textarea";
+import { useToast } from "../../../ui/components/toast-context";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {

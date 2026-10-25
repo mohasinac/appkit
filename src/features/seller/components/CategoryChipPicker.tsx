@@ -22,7 +22,9 @@
  */
 
 import React from "react";
-import { IconButton, Row, Span, Stack, Text } from "../../../ui";
+import { IconButton } from "../../../ui/components/IconButton";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 
 export interface CategoryChipPickerProps {

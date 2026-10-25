@@ -1,17 +1,12 @@
 import React from "react";
 import Link from "next/link";
-import {
-  Div,
-  Heading,
-  Pagination,
-  RichText,
-  Row,
-  Skeleton,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
-import { StarRating } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Pagination } from "../../../ui/components/Pagination";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Skeleton } from "../../../ui/components/Skeleton";
+import { StarRating } from "../../../ui/components/StarRating";
 import { MediaImage } from "../../media/MediaImage";
 import type { Review } from "../types";
 

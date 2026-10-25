@@ -2,7 +2,13 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useEvents } from "../hooks/useEvents";
-import { Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
+import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Text } from "../../../ui/components/Typography";
+import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import { EventCard } from "./EventCard";
 import { EventFilters, EVENT_PUBLIC_SORT_OPTIONS } from "./EventFilters";
 import type { UrlTable } from "../../filters/FilterPanel";

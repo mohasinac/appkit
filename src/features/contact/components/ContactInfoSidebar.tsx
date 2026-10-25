@@ -1,5 +1,8 @@
 import React from "react";
-import { Anchor, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
 } as const;

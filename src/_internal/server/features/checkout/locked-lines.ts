@@ -24,7 +24,7 @@
 
 import { offerRepository } from "../../../../features/seller/repository/offer.repository";
 import { cartRepository } from "../../../../features/cart/repository/cart.repository";
-import { bidRepository } from "../../../../repositories";
+import { bidRepository } from "../../../../features/auctions/repository/bid.repository";
 import { OfferStatusValues } from "../../../../features/seller/schemas";
 import { BID_COLLECTION } from "../../../../features/auctions/schemas/firestore";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";

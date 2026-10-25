@@ -11,7 +11,7 @@
  * rather than a raw signed URL).
  */
 
-import { newsletterRepository } from "../../../../repositories";
+import { newsletterRepository } from "../../../../core/newsletter.repository";
 import { sortBy } from "../../../../constants/sort";
 import { COMMON_FIELDS } from "../../../../constants/field-names";
 import type { JobContext } from "../runtime/types";

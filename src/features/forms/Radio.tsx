@@ -1,5 +1,7 @@
 import React from "react";
-import { Checkbox, Div, Span, Text } from "../../ui";
+import { Checkbox } from "../../ui/components/Checkbox";
+import { Div } from "../../ui/components/Div";
+import { Span, Text } from "../../ui/components/Typography";
 import { LABEL_BASE, ERROR_BASE } from "./utils";
 import { joinClasses } from "../../utils/classnames";
 

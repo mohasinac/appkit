@@ -3,7 +3,10 @@ import { normalizeError } from "../../../../errors/normalize";
 import { toUserMessage } from "../../../../errors/error-display-map";
 
 import React, { useState } from "react";
-import { Button, Div, Row, Span, Stack, Text } from "../../../../ui";
+import { Button } from "../../../../ui/components/Button";
+import { Div } from "../../../../ui/components/Div";
+import { Row, Stack } from "../../../../ui/components/Layout";
+import { Span, Text } from "../../../../ui/components/Typography";
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
 } as const;

@@ -34,7 +34,7 @@
  * @tag sideEffects:firestore-read
  */
 
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { filterTestDataForViewer, type ViewerLike } from "../tester/visibility";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";

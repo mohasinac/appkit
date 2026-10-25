@@ -11,7 +11,7 @@ import {
   siteSettingsRepository,
 } from "../../../../repositories";
 import { BATCH_LIMIT } from "../handlers/messages";
-import { getDefaultCurrency } from "../../../../core";
+import { getDefaultCurrency } from "../../../../core/baseline-resolver";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import { payoutCutoff } from "../../../shared/fees/payout-hold";
 import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping/protections";

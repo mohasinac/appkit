@@ -15,7 +15,7 @@
 
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { safeRead } from "../../../../errors/safe-read";
-import { categoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import { assertCanAddNewItems } from "../../../../features/cart/actions/cart-actions";
 import { productRepository } from "../../../../features/products/repository/products.repository";

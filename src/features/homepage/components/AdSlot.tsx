@@ -5,7 +5,9 @@ import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
-import { Anchor, Div, Span, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Span, Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 
 // ---------------------------------------------------------------------------

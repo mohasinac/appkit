@@ -3,7 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Div, GatedPrice, Grid, Heading, Skeleton, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Grid } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Skeleton } from "../../../ui/components/Skeleton";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";

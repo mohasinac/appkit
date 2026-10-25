@@ -23,19 +23,15 @@ import {
   type ThemeMode,
   type ThemeRecord,
 } from "../../../tokens/themes";
-import {
-  Alert,
-  Button,
-  Div,
-  Grid,
-  Input,
-  Row,
-  Section,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Input } from "../../../ui/components/Input";
+import { Section } from "../../../ui/components/Semantic";
+import { Select } from "../../../ui/components/Select";
+import { Text } from "../../../ui/components/Typography";
+import { Textarea } from "../../../ui/components/Textarea";
 
 /** Wire-shape of the theme block stored on siteSettings. */
 export interface ThemeManagerValue {

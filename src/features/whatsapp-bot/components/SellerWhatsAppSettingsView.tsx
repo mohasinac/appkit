@@ -39,19 +39,14 @@
  */
 
 import React, { useState } from "react";
-import {
-  Alert,
-  Badge,
-  Div,
-  Heading,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { formatCurrency } from "../../../utils/number.formatter";
 

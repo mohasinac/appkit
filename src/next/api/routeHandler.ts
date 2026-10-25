@@ -36,7 +36,7 @@ import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { describeCauseChain } from "../../errors/describe-cause";
 import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
-import { userRepository } from "../../repositories";
+import { userRepository } from "../../features/auth/repository/user.repository";
 import { SCHEMAS } from "../../schemas/registry";
 
 import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";

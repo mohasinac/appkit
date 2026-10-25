@@ -4,17 +4,16 @@ import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import {
-  ConfirmDeleteModal,
-  Div,
-  Input,
-  Stack,
-  StackedViewShell,
-  useToast,
-} from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Stack } from "../../../ui/components/Layout";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 
 /**
  * Describes the fields this form actually edits.
@@ -47,7 +46,7 @@ const EMPTY_VALUES: SublistingCategoryFormValues = {
   coverImage: "",
 };
 import { ImageUpload } from "../../media/upload/ImageUpload";
-import { useMediaUpload } from "../../media";
+import { useMediaUpload } from "../../media/hooks/useMedia";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 

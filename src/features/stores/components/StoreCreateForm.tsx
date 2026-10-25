@@ -29,7 +29,9 @@
  */
 
 import React from "react";
-import { Div, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { FormShellContext, FormErrorSummary, useFormShellState } from "../../../ui/forms";
 import { SectionForm, buildSectionsFromSchema, useSectionFormNav } from "../../shell";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";

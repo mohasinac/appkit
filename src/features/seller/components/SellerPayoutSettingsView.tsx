@@ -2,9 +2,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Span, Stack, Text, Toggle } from "../../../ui";
-import { StackedViewShell } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
-import { SectionDef, SectionForm, useSectionFormNav, annotate } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
+import { annotate } from "../../shell/field-ui-meta";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";

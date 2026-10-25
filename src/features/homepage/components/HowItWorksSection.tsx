@@ -1,8 +1,14 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
-import { Anchor, Button, Div, Grid, Heading, Icon, Row, Section, Span, Text } from "../../../ui";
-import type { IconKey } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { Section } from "../../../ui/components/Semantic";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Constants ---------------------------------------------------------------
 
 const CLS_VISIBLE = "opacity-100 translate-y-0";

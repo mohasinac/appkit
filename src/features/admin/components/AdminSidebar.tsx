@@ -3,7 +3,13 @@ import type { SidebarNavItem } from "../../../_internal/shared/features/layout/t
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Button, Div, IconButton, Input, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { IconButton } from "../../../ui/components/IconButton";
+import { Input } from "../../../ui/components/Input";
+import { Li, Nav, Ul } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";

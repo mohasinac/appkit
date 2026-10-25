@@ -45,18 +45,14 @@
  * build that consumed the wrong parts.
  */
 import React from "react";
-import {
-  SideDrawer,
-  Stack,
-  Row,
-  Div,
-  Heading,
-  Text,
-  Button,
-  Badge,
-  FieldInput,
-  FieldSelect,
-} from "../../../ui";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Stack, Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Button } from "../../../ui/components/Button";
+import { Badge } from "../../../ui/components/Badge";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import { SectionForm, type SectionDef } from "../../shell/SectionForm";
 import { PART_SLOT_LABEL, type ModelCompositionDocument } from "../schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";

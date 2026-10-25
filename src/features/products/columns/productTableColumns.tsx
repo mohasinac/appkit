@@ -1,6 +1,10 @@
 import React from "react";
 import type { DataTableColumn } from "../../../ui/DataTable";
-import { Button, Div, GatedPrice, Row, Span } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 import { statusLabel } from "../../../ui/columns/cell-renderers";
 import { formatCurrency as defaultFormatCurrency } from "../../../utils/number.formatter";

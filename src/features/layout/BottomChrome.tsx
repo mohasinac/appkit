@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Div } from "../../ui";
+import { Div } from "../../ui/components/Div";
 import { BOTTOM_CHROME_SLOT_ID } from "../../ui/components/bottom-chrome-slot";
 import { useIsDesktop } from "./useIsDesktop";
 

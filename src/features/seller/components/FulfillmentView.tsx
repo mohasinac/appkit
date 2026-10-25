@@ -17,7 +17,8 @@ import type { OrderPlain } from "../../orders/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { BarcodeField } from "./BarcodeField";
 import { normalizeError } from "../../../errors/normalize";
-import { useToast, TextLink } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 
 export interface FulfillmentViewProps {

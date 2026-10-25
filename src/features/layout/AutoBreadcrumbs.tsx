@@ -4,7 +4,9 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LISTING_TYPE_REGISTRY } from "../../_internal/shared/listing-types/_registry";
-import { Div, Li, Nav, Ol, Span } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Li, Nav, Ol } from "../../ui/components/Semantic";
+import { Span } from "../../ui/components/Typography";
 
 /** Map of path segments → human-readable labels. */
 const DEFAULT_PATH_LABELS: Record<string, string> = {

@@ -1,7 +1,8 @@
 import React from "react";
 import NextLink from "next/link";
 
-import { Li, Span } from "../../ui";
+import { Li } from "../../ui/components/Semantic";
+import { Span } from "../../ui/components/Typography";
 
 export interface BottomNavItemProps {
   href: string;

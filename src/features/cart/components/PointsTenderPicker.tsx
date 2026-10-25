@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import { Div, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { IconBox } from "../../../ui/components/IconBox";
 import { Icon } from "../../../ui/components/Icon";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";

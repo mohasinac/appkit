@@ -2,7 +2,9 @@
 
 import React from "react";
 import { Gift, MessageCircle, ShieldAlert, ShieldCheck, ShieldOff } from "lucide-react";
-import { Div, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { IconBox } from "../../../ui/components/IconBox";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";

@@ -1,4 +1,5 @@
-import { storeRepository, userRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 import { isSellerUser } from "../../../../features/auth/role-predicates";
 
 /**

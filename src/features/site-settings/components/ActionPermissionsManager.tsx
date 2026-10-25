@@ -1,10 +1,15 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition, useMemo } from "react";
-import { Code, Div, Input, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
+import { Code, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
 import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 
 const __O = {
   hidden: "overflow-hidden",

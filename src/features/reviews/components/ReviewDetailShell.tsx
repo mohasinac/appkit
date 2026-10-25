@@ -20,7 +20,14 @@ const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center 
 const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-[length:var(--appkit-text-xl)]";
 const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30";
 import Link from "next/link";
-import { Button, Div, Grid, Heading, IconButton, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { IconButton } from "../../../ui/components/IconButton";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Section } from "../../../ui/components/Semantic";
+import { StarRating } from "../../../ui/components/StarRating";
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { maskName } from "../../../security";

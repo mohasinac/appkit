@@ -9,7 +9,7 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { RecordDetailModal } from "../../../ui";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import type { JsonValue } from "../../../schemas/types";
 
 interface AdminStoreAddressesResponse {

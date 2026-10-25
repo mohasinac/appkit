@@ -5,15 +5,14 @@ import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  ConfirmDeleteModal,
-  FilterChipGroup,
-  ListingLayout,
-  RecordDetailModal,
-  RowActionMenu,
-  useToast,
-} from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { useToast } from "../../../ui/components/toast-context";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BID_STATUS_TABS } from "../constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -29,7 +28,7 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
-import { TextLink } from "../../../ui";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
 
 interface AdminBidsResponse {

@@ -6,15 +6,12 @@ import type { JsonValue, JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import {
-  Badge,
-  ConfirmDeleteModal,
-  Div,
-  RowActionMenu,
-  Span,
-  Text,
-  useToast,
-} from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Span, Text } from "../../../ui/components/Typography";
+import { useToast } from "../../../ui/components/toast-context";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../../constants/index";

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { Aside, Div, Section, type SectionBackgroundConfig } from "../../ui";
+import { Aside, Section } from "../../ui/components/Semantic";
+import type { SectionBackgroundConfig } from "../../ui/components/Semantic";
+import { Div } from "../../ui/components/Div";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
 const __O = {

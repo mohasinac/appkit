@@ -34,7 +34,10 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Div, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { apiClient } from "../../../http";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

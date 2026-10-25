@@ -1,6 +1,8 @@
 import React from "react";
-import { storeRepository } from "../../../repositories";
-import { Container, Heading, Main, Section } from "../../../ui";
+import { storeRepository } from "../repository/store.repository";
+import { Container } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { StoresIndexListing } from "./StoresIndexListing";
 import { safeRead } from "../../../errors/safe-read";

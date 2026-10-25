@@ -35,7 +35,11 @@
 
 import React from "react";
 
-import { Div, Input, Stack, Text, TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { useSiteSearch } from "../../search/hooks/useSiteSearch";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { TABLE_KEYS } from "../../../constants/table-keys";

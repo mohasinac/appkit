@@ -1,7 +1,9 @@
 "use client";
 import { useId } from "react";
 import { Div, FormGroup } from "../../../ui";
-import { Label, Checkbox, RichTextEditor, Text } from "../../../ui";
+import { Label, Text } from "../../../ui/components/Typography";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { RichTextEditor } from "../../../ui/components/RichTextEditor";
 import { FieldLabel } from "../../../ui/forms";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";

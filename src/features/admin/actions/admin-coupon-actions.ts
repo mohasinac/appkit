@@ -16,11 +16,7 @@ import type {
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
-import type {
-  CouponCreateInput,
-  CouponDocument,
-  CouponUpdateInput,
-} from "../../promotions";
+import type { CouponCreateInput, CouponDocument, CouponUpdateInput } from "../../promotions/schemas/firestore";
 
 export async function adminCreateCoupon(
   adminId: string,

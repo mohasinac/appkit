@@ -5,7 +5,14 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { BulkActionBar, Div, Grid, ListingFilterDrawer, ListingToolbar, Pagination, Text, StickyToolbar } from "../../../ui";
+import { BulkActionBar } from "../../../ui/components/BulkActionBar";
+import { Div } from "../../../ui/components/Div";
+import { Grid } from "../../../ui/components/Layout";
+import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
+import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Text } from "../../../ui/components/Typography";
+import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROUTES } from "../../../next/routing/route-map";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
@@ -16,7 +23,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { STORE_FIELDS } from "../../../constants/field-names";
 import { ACTION_ID } from "../../products/constants/action-defs";
-import { useBottomActions } from "../../layout";
+import { useBottomActions } from "../../layout/hooks/useBottomActions";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",

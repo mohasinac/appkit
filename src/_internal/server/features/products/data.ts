@@ -4,7 +4,7 @@ import { cache } from "react";
 // without dragging this file's firebase-admin chain into the client bundle.
 import { toProductItem } from "../../../shared/features/products/to-product-item";
 export { toProductItem };
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { reviewRepository } from "../../../../repositories";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { normalizeError } from "../../../../errors/normalize";

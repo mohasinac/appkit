@@ -1,4 +1,7 @@
-import { Div, Heading, Stack, StarRating, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
+import { StarRating } from "../../../ui/components/StarRating";
 
 /**
  * Promoted to a registered `SectionType` ("testimonials") 2026-10-19 — see

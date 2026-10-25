@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
-import { Button, Row, Span } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Row } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 import { joinClasses } from "../../utils/classnames";
 
 

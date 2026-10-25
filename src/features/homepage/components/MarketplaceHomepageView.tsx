@@ -1,13 +1,14 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { Div, Main } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Main } from "../../../ui/components/Semantic";
 // Deep import, not the `ui` barrel and not `@mohasinac/appkit/client`: this is a
 // Server Component, so a runtime value from the client entry would arrive as a
 // client-reference proxy (Root Cause #76). Rendering it as JSX is the supported
 // boundary; importing it from its defining module is Root Cause #18.
 import { TopBannerPortal } from "../../../ui/components/TopBannerPortal";
-import { carouselRepository } from "../../../repositories";
+import { carouselRepository } from "../repository/carousel.repository";
 // Both are React.cache wrappers around a single repository call, shared with
 // other readers in the same request tree (the locale layout for settings,
 // page.tsx's FAQ JSON-LD for the FAQs). Importing the repositories directly

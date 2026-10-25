@@ -1,16 +1,13 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Anchor,
-  Button,
-  GatedPrice,
-  QuantityStepper,
-  Row,
-  Stack,
-  Text,
-  LoginRequiredModal,
-} from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Button } from "../../../ui/components/Button";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { QuantityStepper } from "../../../ui/components/QuantityStepper";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
 import { useToast } from "../../../ui/components/Toast";
 import { normalizeError } from "../../../errors/normalize";

@@ -12,7 +12,7 @@
  * .wasm files, naming none of the responsible files. Root Cause #18.
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { reservePreOrderSchema } from "../../../shared/features/pre-orders/schema";
 import { assertPreOrderAvailable, computeDeposit } from "./service";

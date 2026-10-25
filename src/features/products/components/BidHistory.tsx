@@ -1,6 +1,9 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
-import { Div, GatedPrice, Heading, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {

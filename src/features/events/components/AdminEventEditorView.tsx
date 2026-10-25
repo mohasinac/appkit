@@ -7,27 +7,20 @@ import React, { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Div,
-  Grid,
-  Heading,
-  Input,
-  Label,
-  RichTextEditor,
-  Row,
-  Select,
-  Span,
-  Stack,
-  StackedViewShell,
-  TagInput,
-  Text,
-  Textarea,
-  Toggle,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Label, Span, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { RichTextEditor } from "../../../ui/components/RichTextEditor";
+import { Select } from "../../../ui/components/Select";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { TagInput } from "../../../ui/components/TagInput";
+import { Textarea } from "../../../ui/components/Textarea";
+import { Toggle } from "../../../ui/components/Toggle";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
-import type { StackedViewShellProps } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { apiClient } from "../../../http";
 import type { ApiClientError } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -45,7 +38,8 @@ import type {
 import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
 import { rafflePrizeCouponIdsOf } from "../schemas/firestore";
 import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
-import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 import { eventDraftSchema } from "../schemas/event-form";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";

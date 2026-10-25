@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { PricesOnly, Stack, Text } from "../../../ui";
+import { PricesOnly } from "../../../ui/components/GatedPrice";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { apiClient } from "../../../http";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";

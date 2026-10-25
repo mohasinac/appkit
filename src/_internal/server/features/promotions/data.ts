@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { couponsRepository } from "../../../../repositories";
+import { couponsRepository } from "../../../../features/promotions/repository/coupons.repository";
 import { isCouponDisplayable } from "../../../../features/promotions/schemas";
 import type { AttachedCoupon } from "../../../../features/promotions/constants/attached-coupons";
 import { toAttachedCoupon } from "./adapters";

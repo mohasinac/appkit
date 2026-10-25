@@ -5,8 +5,20 @@ import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasin
 import React, { useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { RichTextEditor } from "../../../ui/components/RichTextEditor";
+import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { TagInput } from "../../../ui/components/TagInput";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -16,7 +28,8 @@ import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
 import { blogDraftSchema } from "../../blog/schemas/blog-form";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
-import { SectionDef, SectionForm, useSectionFormNav } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",

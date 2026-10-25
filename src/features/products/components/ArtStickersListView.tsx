@@ -1,5 +1,7 @@
 import React from "react";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";

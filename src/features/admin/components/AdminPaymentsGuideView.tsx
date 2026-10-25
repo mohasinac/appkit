@@ -1,6 +1,9 @@
 import React from "react";
 import { CreditCard, KeyRound, Webhook, Settings, Power, Rocket, Code2 } from "lucide-react";
-import { Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 
 export function AdminPaymentsGuideView() {

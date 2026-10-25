@@ -1,4 +1,4 @@
-import { couponsRepository } from "../../../../repositories";
+import { couponsRepository } from "../../../../features/promotions/repository/coupons.repository";
 import { roundRupees } from "../../../../utils/number.formatter";
 import {
   CouponNotFoundError,

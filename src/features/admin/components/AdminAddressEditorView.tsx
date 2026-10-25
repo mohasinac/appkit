@@ -22,13 +22,11 @@
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ConfirmDeleteModal,
-  Stack,
-  StackedViewShell,
-  useToast,
-} from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Stack } from "../../../ui/components/Layout";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";

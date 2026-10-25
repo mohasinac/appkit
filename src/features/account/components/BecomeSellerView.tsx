@@ -1,5 +1,6 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
 
 export interface BecomeSellerViewLabels {
   title?: string;

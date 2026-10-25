@@ -8,7 +8,11 @@
  */
 
 import React, { useCallback, useState } from "react";
-import { AvatarGroup, Button, Modal, Row, Stack, Text, Span, Avatar } from "../../../ui";
+import { AvatarGroup, Avatar } from "../../../ui/components/Avatar";
+import { Button } from "../../../ui/components/Button";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text, Span } from "../../../ui/components/Typography";
 import type { PublicLiker } from "../schemas/likes";
 import { LIKERS_PAGE_SIZE } from "../schemas/likes";
 import { normalizeError } from "../../../errors/normalize";

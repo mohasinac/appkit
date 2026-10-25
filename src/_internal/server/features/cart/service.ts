@@ -1,4 +1,4 @@
-import { cartRepository } from "../../../../repositories";
+import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import { CART_MAX_ITEMS } from "../../../shared/features/cart/config";
 import { CartFullError, CartQuantityError } from "../../../shared/features/cart/errors";
 import type { z } from "zod";

@@ -22,7 +22,9 @@
  * a build failure — one line to reverse if the call is wrong.
  */
 
-import { Alert, Row, Stack, Text } from "../../../ui/index";
+import { Alert } from "../../../ui/components/Alert";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { FieldSelect } from "../../../ui/forms";
 import {
   LABEL_PROFILES,

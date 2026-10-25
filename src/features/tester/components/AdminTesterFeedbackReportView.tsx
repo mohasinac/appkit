@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Stack, Text } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { TesterFeedbackChart } from "./TesterFeedbackChart";

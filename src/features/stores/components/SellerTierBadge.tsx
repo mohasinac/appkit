@@ -29,7 +29,8 @@
  */
 
 import React from "react";
-import { Badge, Row } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Row } from "../../../ui/components/Layout";
 import { Icon } from "../../../ui/components/Icon";
 import { SELLER_TIER } from "../../../_internal/shared/features/seller-standing/config";
 import type { SellerTier } from "../../../_internal/shared/features/seller-standing/config";

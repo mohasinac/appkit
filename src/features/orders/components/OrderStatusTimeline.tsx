@@ -19,7 +19,10 @@
  * No live courier API: `trackingUrl` is the passthrough link a seller entered.
  */
 
-import { Anchor, Badge, Row, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Badge } from "../../../ui/components/Badge";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import {
   StatusTimeline,
   stepsFromEntries,

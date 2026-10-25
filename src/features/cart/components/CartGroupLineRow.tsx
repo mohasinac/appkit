@@ -18,7 +18,11 @@
  */
 
 import React, { useState } from "react";
-import { Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { MediaImage } from "../../media/MediaImage";
 import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";

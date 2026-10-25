@@ -1,6 +1,10 @@
 import React from "react";
 import { Users, Shield } from "lucide-react";
-import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 export function AdminTeamGuideView() {
   const PERMISSION_GROUPS = [
     { name: "content_manager", desc: "Blog, FAQs, Events, Carousel, Sections, Ads, Newsletter read + write." },

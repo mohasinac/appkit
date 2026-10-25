@@ -1,7 +1,8 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { IconButton, Icon } from "../../../ui";
+import { IconButton } from "../../../ui/components/IconButton";
+import { Icon } from "../../../ui/components/Icon";
 import { ICON_BUTTON_ICON_SIZE } from "../../../ui/components/IconButton";
 
 /** The heart renders a <button>, so handlers get the real element type. */

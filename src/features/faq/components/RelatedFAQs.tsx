@@ -1,4 +1,7 @@
-import { Card, Heading, Row, Stack, Text, TextLink } from "../../../ui";
+import { Card } from "../../../ui/components/Card";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {

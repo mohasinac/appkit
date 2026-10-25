@@ -39,7 +39,10 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { EmptyState, Stack, Text, useToast } from "../../../ui";
+import { EmptyState } from "../../../ui/components/EmptyState";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { useToast } from "../../../ui/components/toast-context";
 import {
   FieldSelect,
   FormShellContext,
@@ -47,7 +50,7 @@ import {
   applyZodIssues,
   useFormShellState,
 } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { buildSectionsFromSchema } from "../../shell/build-sections";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";

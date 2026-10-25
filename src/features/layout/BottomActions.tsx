@@ -58,7 +58,11 @@ import type { BottomAction } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { useCtaReveal } from "./useCtaReveal";
 import { useIsDesktop } from "./useIsDesktop";
-import { ActionRow, Div, Row, Span, Text, Button } from "../../ui";
+import { ActionRow } from "../../ui/components/ActionRow";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
+import { Button } from "../../ui/components/Button";
 
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =

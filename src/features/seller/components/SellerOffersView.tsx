@@ -3,11 +3,14 @@
 import { sieveFilter, SIEVE_OP, type JsonArray, type JsonObject } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
-import { FilterChipGroup, ListingLayout, RowActionMenu, RecordDetailModal } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import { OfferPhaseTimeline } from "./OfferPhaseTimeline";
 import { counterOfferFormSchema } from "../schemas/offer-forms";
-import type { ListingLayoutProps } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_OFFER_STATUS_TABS, offerStatusLabel } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

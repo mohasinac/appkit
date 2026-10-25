@@ -16,7 +16,13 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
-import { Badge, Button, Checkbox, Div, Input, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import {
   BUNDLE_MAX_ITEMS,
   BUNDLE_MIN_ITEMS,

@@ -1,8 +1,11 @@
 import React, { cache } from "react";
 import type { ReactNode } from "react";
-import { storeRepository, siteSettingsRepository } from "../../../repositories";
+import { storeRepository } from "../repository/store.repository";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
-import { Container, Main, Section, Text } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { Text } from "../../../ui/components/Typography";
 import { getSellerTrustStatus } from "../../scams/actions/scam-actions";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";

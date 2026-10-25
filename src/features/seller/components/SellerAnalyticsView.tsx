@@ -1,7 +1,10 @@
 "use client"
 import React from "react";
-import { StackedViewShell, DateInput, Label, Row, Text } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { DateInput } from "../../../ui/components/DateInput";
+import { Label, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 
 export interface SellerAnalyticsViewProps extends Omit<
   StackedViewShellProps,

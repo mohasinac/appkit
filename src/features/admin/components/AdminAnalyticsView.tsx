@@ -2,8 +2,10 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Grid, Heading, Stack } from "../../../ui";
-import { Alert } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
+import { Alert } from "../../../ui/components/Alert";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AdminAnalyticsData, AnalyticsTopProduct } from "../types";

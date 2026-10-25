@@ -11,7 +11,7 @@
  */
 
 import { orderRepository } from "../../../../repositories";
-import { analyticsRollupRepository } from "../../../../repositories";
+import { analyticsRollupRepository } from "../../../../features/admin/repository/analytics-rollup.repository";
 import type { JobContext } from "../runtime/types";
 
 export async function runRevenueRollup(ctx: JobContext): Promise<void> {

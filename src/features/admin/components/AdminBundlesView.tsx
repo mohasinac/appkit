@@ -4,8 +4,14 @@ import { normalizeError } from "../../../errors/normalize";
 import { SIEVE_OP, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { Badge, Button, FilterChipGroup, Stack, Text, TextLink, useToast } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { useToast } from "../../../ui/components/toast-context";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,

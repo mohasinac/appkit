@@ -1,6 +1,11 @@
 "use client"
 import React, { useState } from "react";
-import { Button, Div, RichText, Row, Span, Tabs, TabsList, TabsTrigger, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 import type { FAQ, FAQCategory } from "../types";
 /* Phase 9 — `publishedCopyKey`'s first reader. See the 🛑 at the render site. */
 import {

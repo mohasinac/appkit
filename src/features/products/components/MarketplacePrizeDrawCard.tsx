@@ -9,7 +9,13 @@ import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
-import { BaseListingCard, Button, Div, GatedPrice, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { CardStoreLine } from "./CardStoreLine";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";

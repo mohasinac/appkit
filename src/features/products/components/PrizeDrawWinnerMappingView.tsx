@@ -10,7 +10,14 @@
  * DataListingView.
  */
 
-import { Badge, Container, DataTable, Div, Heading, Row, Section, Stack, Text, TextLink, type DataTableColumn } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { DataTable } from "../../../ui/DataTable";
+import type { DataTableColumn } from "../../../ui/DataTable";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 

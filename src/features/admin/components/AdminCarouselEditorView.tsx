@@ -4,18 +4,25 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Alert, Button, ConfirmDeleteModal, Div, Heading, Input, Row, Select, Slider, Stack, StackedViewShell, Text, Toggle } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { Slider } from "../../../ui/components/Slider";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { Toggle } from "../../../ui/components/Toggle";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FieldInput, FormErrorSummary } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import {
-  SectionForm,
-  useSectionFormNav,
-  type SectionDef,
-} from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import type { JsonValue, JsonObject } from "../../../schemas/types";
 

@@ -36,7 +36,7 @@ import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { buildSectionsFromSchema } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
-import { useMediaUpload } from "../../media";
+import { useMediaUpload } from "../../media/hooks/useMedia";
 import { MediaUploadList } from "../../media/upload/MediaUploadList";
 import type { MediaField } from "../../media/types";
 import type { CatalogueItemDocument } from "../schemas/firestore";

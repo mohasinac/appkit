@@ -3,7 +3,11 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 
 import { useAddresses } from "../hooks/useAddresses";
-import { Div, Grid, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
+import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { Text } from "../../../ui/components/Typography";
 
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";

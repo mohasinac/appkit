@@ -11,7 +11,12 @@ const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-
 const CLS_STOCK_OK = "bg-success-solid text-success-on-solid";
 // audit-content-alignment-ok: button label text, not page content — buttons are universally center-labeled
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-[var(--appkit-space-1-5)] text-center text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
-import { BaseListingCard, Div, GatedPrice, PricesOnly, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";

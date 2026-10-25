@@ -28,7 +28,7 @@
 
 import React, { useMemo } from "react";
 import { motion, useReducedMotion, type Easing } from "motion/react";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 
 export interface SpinWheelSegment {
   id: string;

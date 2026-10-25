@@ -35,7 +35,7 @@
  */
 
 import React from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/components/Tabs";
 import { useTabParam } from "../../react/hooks/useTabParam";
 
 export interface PageTabDef {

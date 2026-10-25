@@ -1,7 +1,12 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Section, Table, Tbody, Td, Th, Thead, Tr, Ul } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";

@@ -3,7 +3,10 @@
 import React, { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, TrendingUp } from "lucide-react";
-import { Container, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { Badge } from "../../../ui/components/Badge";
 import { Button } from "../../../ui/components/Button";
 import { Form } from "../../../ui/components/Form";

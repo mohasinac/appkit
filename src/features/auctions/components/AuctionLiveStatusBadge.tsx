@@ -1,6 +1,6 @@
 "use client";
 
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import { useIsAuctionEnded } from "../hooks/useIsAuctionEnded";
 
 export interface AuctionLiveStatusBadgeProps {

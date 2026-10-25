@@ -65,17 +65,14 @@ import {
   type JsonArray,
   type JsonValue,
 } from "@mohasinac/appkit/client";
-import {
-  Button,
-  FilterChipGroup,
-  ListingLayout,
-  RecordDetailModal,
-  Row,
-  RowActionMenu,
-  Stack,
-  Text,
-} from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Text } from "../../../ui/components/Typography";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 import { ReviewDecisionModal } from "../../store-extensions/components/ReviewDecisionModal";
 import {

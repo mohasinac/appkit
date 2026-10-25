@@ -1,7 +1,10 @@
 "use client";
 
 import { useId } from "react";
-import { Badge, Div, Grid, Heading, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { AttachedCoupon } from "../constants/attached-coupons";
 import { CouponCodeCopyRow } from "./CouponCodeCopyRow";

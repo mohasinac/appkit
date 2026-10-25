@@ -2,7 +2,9 @@
 
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { PaginatedSelect, type PaginatedSelectOption } from "../../../ui/components/PaginatedSelect";
 import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
 import type { FormValues } from "../../../schemas/types";

@@ -1,7 +1,14 @@
 "use client"
 import React, { useState, useMemo } from "react";
 import { THEMED_BG_PRIMARY, THEMED_BG_TERTIARY, THEMED_BORDER, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY, FLEX_BETWEEN } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Heading, RichText, Section, Span, Stack, Tabs, TabsList, TabsTrigger, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Section } from "../../../ui/components/Semantic";
+import { Stack } from "../../../ui/components/Layout";
+import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ChevronDown } from "lucide-react";
 import { FAQ_CATEGORY_LABELS } from "../constants/faq-category-labels";
 

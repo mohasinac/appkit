@@ -2,7 +2,13 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Div, Grid, Heading, OverflowRow, type OverflowRowItem, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Article } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { OverflowRow } from "../../../ui/components/OverflowRow";
+import type { OverflowRowItem } from "../../../ui/components/OverflowRow";
+import { Pagination } from "../../../ui/components/Pagination";
 import { MediaImage } from "../../media/MediaImage";
 import { blogCategoryBadge } from "../constants/category-badge";
 

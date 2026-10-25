@@ -32,7 +32,7 @@ import {
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 // `adminNotificationsRepository` lives behind the repositories barrel — the
 // same import the two existing staff-signal call sites use.
-import { adminNotificationsRepository } from "../../../../repositories";
+import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring/server-logger";

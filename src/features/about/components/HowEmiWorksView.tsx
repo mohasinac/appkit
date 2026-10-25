@@ -2,9 +2,14 @@ import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { ProseHero } from "./ProseHero";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
-import { Alert, Caption, Div, FlowDiagram, Heading, Row, Section, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
-import type { FlowStep } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Caption, Heading, Text } from "../../../ui/components/Typography";
+import { Div } from "../../../ui/components/Div";
+import { FlowDiagram } from "../../../ui/components/FlowDiagram";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import type { FlowStep } from "../../../ui/components/FlowDiagram";
+import { TextLink } from "../../../ui/components/TextLink";
 import { CalendarClock, Wallet, TrendingUp, ShieldCheck } from "lucide-react";
 
 const __P = {

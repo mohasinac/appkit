@@ -1,5 +1,8 @@
 import React from "react";
-import { Div, Heading, Section, Text, TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { Mail } from "lucide-react";
 
 const __O = {

@@ -4,7 +4,9 @@ import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
-import { Div, Heading, Stack } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import type { MediaField } from "../../media/types";
 import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";
 

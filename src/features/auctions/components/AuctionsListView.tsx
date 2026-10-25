@@ -1,4 +1,6 @@
-import { Container, Heading, Main, Section } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import {

@@ -6,7 +6,10 @@
  */
 
 import React from "react";
-import { Badge, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { OrderDocument, OrderRefundEvent } from "../schemas";

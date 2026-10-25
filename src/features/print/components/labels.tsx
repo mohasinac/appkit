@@ -38,7 +38,9 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import JsBarcode from "jsbarcode";
-import { Div, Row, Stack, Text } from "../../../ui/index";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { normalizeError } from "../../../errors/normalize";
 import {
   MM_PER_INCH,

@@ -56,7 +56,8 @@ import { COD_MAX_ORDER_VALUE_FALLBACK } from "../../../../features/admin/schemas
 import { CHECKOUT_ERROR_CODES } from "../../../../errors/error-codes";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
-import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
+import { splitCartIntoOrderGroups } from "../../../../features/orders/utils/order-splitter";
+import type { OrderType } from "../../../../features/orders/utils/order-splitter";
 import {
   DEFAULT_STORE_SHIPPING_POLICY,
   quoteShipping,
@@ -135,7 +136,7 @@ import {
   OutOfStockPolicyValues,
 } from "../../../../features/orders/schemas/index";
 import type { OutOfStockPolicy } from "../../../../features/orders/schemas/index";
-import { getDefaultCurrency } from "../../../../core/index";
+import { getDefaultCurrency } from "../../../../core/baseline-resolver";
 import { getProviders } from "../../../../contracts";
 import type { PhonePeCheckoutIntent } from "../../../../providers/payment-phonepe/index";
 /*

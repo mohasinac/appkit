@@ -24,7 +24,11 @@
  * because there is nothing to leak.
  */
 import React from "react";
-import { Stack, Row, Div, Heading, Text, Span, TextLink, Badge } from "../../../ui";
+import { Stack, Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text, Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Badge } from "../../../ui/components/Badge";
 import {
   PART_SLOT_LABEL,
   type ModelCompositionDocument,

@@ -1,7 +1,12 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
-import { Div, Grid, Heading, Icon, Row, Section, Span, Text, TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { IconKey } from "../../../ui/icons/icon-registry";
 // --- Types -------------------------------------------------------------------
 

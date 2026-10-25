@@ -1,7 +1,12 @@
 "use client";
 
 import type { CartItem } from "../types";
-import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Aside } from "../../../ui/components/Semantic";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { GatedPrice } from "../../../ui/components/GatedPrice";

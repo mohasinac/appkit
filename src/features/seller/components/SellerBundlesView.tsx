@@ -2,8 +2,14 @@
 
 import { SIEVE_OP, sieveFilter, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
-import { Badge, Button, FilterChipGroup, Stack, Text, TextLink, Toggle } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Toggle } from "../../../ui/components/Toggle";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { SELLER_BULK_ACTIONS } from "../../products/constants/action-defs";

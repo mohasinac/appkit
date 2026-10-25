@@ -1,6 +1,11 @@
 "use client";
 import React, { useId } from "react";
-import { Button, Div, Heading, Input, Row, Span, Stack, Text, Textarea } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Textarea } from "../../../ui/components/Textarea";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";

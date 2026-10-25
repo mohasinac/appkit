@@ -8,7 +8,8 @@ import {
   GROUPED_LISTINGS_COLLECTION,
   type GroupedListingDocument,
 } from "../../../../features/grouped/schemas/firestore";
-import { productRepository, groupedListingsRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
+import { groupedListingsRepository } from "../../../../features/grouped/repository/grouped-listings.repository";
 import { PRODUCT_FIELDS, CATEGORY_FIELDS } from "../../../../constants/field-names";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import {

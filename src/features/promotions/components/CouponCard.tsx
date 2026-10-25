@@ -3,7 +3,14 @@ import { normalizeError } from "../../../errors/normalize";
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
-import { Badge, BaseListingCard, Button, ConfirmDeleteModal, Div, IconButton, Row, Span, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { IconButton } from "../../../ui/components/IconButton";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";

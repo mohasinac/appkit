@@ -1,7 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Stack, Text, TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Spinner } from "../../../ui/components/Spinner";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

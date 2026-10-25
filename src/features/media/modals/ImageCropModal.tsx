@@ -8,7 +8,12 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Row, Span, Stack, Text } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { MediaSlider } from "../components/MediaSlider";
 
 export interface ImageCropData {

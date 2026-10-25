@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
-import { StackedViewShell } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import {
   Alert,
   Div,

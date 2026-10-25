@@ -9,18 +9,14 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Badge,
-  Button,
-  Card,
-  FieldSelect,
-  Heading,
-  Input,
-  Row,
-  Stack,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { FieldSelect } from "../../../ui/forms/FieldSelect";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";

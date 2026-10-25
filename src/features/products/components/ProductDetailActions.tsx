@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Stack, LoginRequiredModal, Icon } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Stack } from "../../../ui/components/Layout";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Icon } from "../../../ui/components/Icon";
 import { useToast } from "../../../ui/components/Toast";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
 import { apiClient } from "../../../http";

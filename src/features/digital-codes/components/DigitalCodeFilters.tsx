@@ -5,7 +5,7 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 
 type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 

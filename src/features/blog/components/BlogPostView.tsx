@@ -1,7 +1,11 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Grid, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Scrim } from "../../../ui/components/Scrim";
 import { Iframe } from "../../../ui/components/Iframe";
 import { MediaImage } from "../../media/MediaImage";
 import { blogCategoryBadge } from "../constants/category-badge";

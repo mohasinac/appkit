@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Heading, Stack } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 export interface CheckoutAddressStepLabels {
   title?: string;
 }

@@ -4,8 +4,15 @@ import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
 import { Pencil, ListChecks } from "lucide-react";
-import { Badge, Button, FilterChipGroup, ListingLayout, Row, Span, Text, TextLink } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { Row } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { ADMIN_PRODUCT_STATUS_TABS } from "../constants/filter-tabs";

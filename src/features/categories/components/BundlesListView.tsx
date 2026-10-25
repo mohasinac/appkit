@@ -1,6 +1,8 @@
 import React from "react";
-import { categoriesRepository } from "../../../repositories";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { categoriesRepository } from "../repository/categories.repository";
+import { Container } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";

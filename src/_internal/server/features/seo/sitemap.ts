@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
-import { EVENTS_COLLECTION, EVENT_FIELDS } from "../../../../features/events";
+import { EVENTS_COLLECTION, EVENT_FIELDS } from "../../../../features/events/schemas/firestore";
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog/schemas/firestore";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories/schemas/firestore";
 // Imported from the DEFINING module, not the feature barrel (Root Cause #18).
@@ -16,7 +16,7 @@ import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
 import { safeRead } from "../../../../errors/safe-read";
-import { siteSettingsRepository } from "../../../../repositories";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import {
   ALL_BROWSE_PAGES,
   browsePageForPath,

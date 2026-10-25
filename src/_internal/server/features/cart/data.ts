@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { cartRepository } from "../../../../repositories";
+import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 
 export const getCartForUser = cache(
   async (userId: string) => {

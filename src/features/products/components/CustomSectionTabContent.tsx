@@ -1,6 +1,9 @@
 
 import React from "react";
-import { RichText, SpecTable, Stack, Text } from "../../../ui";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { SpecTable } from "../../../ui/components/SpecTable";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomSection } from "../schemas/firestore";
 

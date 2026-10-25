@@ -2,7 +2,11 @@
 import { IMAGE_ACCEPT_ATTR } from "../../../shared/media/limits";
 import React, { useCallback, useEffect, useState } from "react";
 import { normalizeError } from "../../../../errors/normalize";
-import { Alert, Button, Div, Row, Span, Stack, Text } from "../../../../ui";
+import { Alert } from "../../../../ui/components/Alert";
+import { Button } from "../../../../ui/components/Button";
+import { Div } from "../../../../ui/components/Div";
+import { Row, Stack } from "../../../../ui/components/Layout";
+import { Span, Text } from "../../../../ui/components/Typography";
 import { FilePickerButton } from "../../../../ui/components/FilePickerButton";
 import { FieldTextarea } from "../../../../ui/forms/FieldTextarea";
 

@@ -1,15 +1,8 @@
 import Link from "next/link";
-import {
-  Container,
-  Div,
-  Grid,
-  Heading,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Container, Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import type {

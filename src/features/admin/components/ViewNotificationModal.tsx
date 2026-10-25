@@ -7,7 +7,12 @@
  * notification's full body/payload/link, only Resend/Delete row actions.
  */
 
-import { Anchor, Badge, Div, Modal, Row, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Badge } from "../../../ui/components/Badge";
+import { Div } from "../../../ui/components/Div";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 
 export interface NotificationEntryDetail {

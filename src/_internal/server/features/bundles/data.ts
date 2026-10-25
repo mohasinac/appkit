@@ -7,8 +7,8 @@
  */
 
 import { cache } from "react";
-import { categoriesRepository } from "../../../../repositories";
-import { productRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { safeRead } from "../../../../errors/safe-read";
 import type { CategoryDocument } from "../../../../features/categories/schemas";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";

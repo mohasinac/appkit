@@ -3,25 +3,17 @@
 import React from "react";
 import { z } from "zod";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  Heading,
-  Modal,
-  Pagination,
-  Skeleton,
-  Stack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Text,
-  Textarea,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Skeleton } from "../../../ui/components/Skeleton";
+import { Stack } from "../../../ui/components/Layout";
+import { Table, Thead, Tbody, Tr, Th, Td } from "../../../ui/components/Semantic";
+import { Textarea } from "../../../ui/components/Textarea";
 import { apiClient } from "../../../http";
 import {
   createShipmentItemSchema,

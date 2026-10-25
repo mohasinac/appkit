@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { Stack, Text, Heading, Badge, Section, Container, DataTable, type DataTableColumn } from "../../../../ui";
+import { Stack, Container } from "../../../../ui/components/Layout";
+import { Text, Heading } from "../../../../ui/components/Typography";
+import { Badge } from "../../../../ui/components/Badge";
+import { Section } from "../../../../ui/components/Semantic";
+import { DataTable } from "../../../../ui/DataTable";
+import type { DataTableColumn } from "../../../../ui/DataTable";
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
 
 interface AdminLotterySlot extends ClientLotterySlot {

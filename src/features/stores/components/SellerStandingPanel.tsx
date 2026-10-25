@@ -14,7 +14,9 @@
  */
 
 import React from "react";
-import { Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { Icon } from "../../../ui/components/Icon";
 import { Progress } from "../../../ui/components/Progress";
 import {

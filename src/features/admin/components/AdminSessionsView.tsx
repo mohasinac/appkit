@@ -6,10 +6,13 @@ import { sortBy } from "@mohasinac/appkit/client";
 import type { JsonValue, JsonObject } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast,
-  RecordDetailModal,
-} from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { useToast } from "../../../ui/components/toast-context";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {

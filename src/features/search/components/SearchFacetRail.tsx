@@ -32,7 +32,10 @@
 
 import React from "react";
 
-import { Button, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import type { FacetCount } from "../../../_internal/shared/search/to-groups";
 
 /**

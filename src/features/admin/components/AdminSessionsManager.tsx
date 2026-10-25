@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
 export interface AdminSessionsManagerProps {
   renderHeader?: () => React.ReactNode;
   renderStats: () => React.ReactNode;

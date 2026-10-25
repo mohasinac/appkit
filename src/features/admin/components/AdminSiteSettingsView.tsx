@@ -5,8 +5,8 @@ import type { FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, BackgroundRenderer, Button, Div, FormActions, Grid, Input, PaginatedSelect, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
-import type { SelectOption } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import type { SelectOption } from "../../../ui/components/Select";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 /*
  * One definition of the floor, shared with the Zod schema that enforces it
@@ -16,7 +16,7 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
  */
 import { PAYOUT_HOLD_FLOOR_DAYS } from "../../../_internal/shared/fees/payout-hold";
 import { MediaUploadField } from "../../media/upload/MediaUploadField";
-import { useMediaUpload } from "../../media";
+import { useMediaUpload } from "../../media/hooks/useMedia";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -50,7 +50,7 @@ import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } fr
 import { COD_MAX_ORDER_VALUE_FALLBACK } from "../schemas/firestore";
 import { siteSettingsFormSchema } from "../schemas/site-settings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
-import { SectionForm } from "../../shell";
+import { SectionForm } from "../../shell/SectionForm";
 import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
 
 const __O = {

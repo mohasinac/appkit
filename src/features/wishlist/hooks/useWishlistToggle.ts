@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useState } from "react";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 

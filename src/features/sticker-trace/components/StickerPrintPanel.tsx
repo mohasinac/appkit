@@ -31,17 +31,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Heading,
-  Row,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui/index";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import { toUserMessage } from "../../../errors/error-display-map";
 

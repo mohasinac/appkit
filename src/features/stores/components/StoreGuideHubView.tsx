@@ -1,6 +1,11 @@
 import React from "react";
 import { Package, ShoppingBag, Wallet, Settings, Shield, Headphones, CheckCircle2, Circle, BookOpen } from "lucide-react";
-import { Div, Grid, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Progress } from "../../../ui/components/Progress";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { StoreDocument } from "../schemas";
 import type { SellerStandingSnapshot } from "../types";
 import { SellerStandingPanel } from "./SellerStandingPanel";

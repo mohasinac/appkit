@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { Play } from "lucide-react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
-import { Button, Div, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 
 const __O = {

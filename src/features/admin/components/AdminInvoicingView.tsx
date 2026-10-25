@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Card, Disclaimer, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { Icon } from "../../../ui/components/Icon";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

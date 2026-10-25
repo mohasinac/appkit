@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { EmptyState, Tabs, TabsList, TabsTrigger } from "../../../ui";
+import { EmptyState } from "../../../ui/components/EmptyState";
+import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 import { AvailabilityScopeHint } from "../../products/components/AvailabilityScopeHint";
 import type { ListingType } from "../../products/types/index";
 import { CategoryProductsListing } from "./CategoryProductsListing";

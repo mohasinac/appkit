@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronUp, X } from "lucide-react";
-import { Div, IconButton } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { IconButton } from "../../ui/components/IconButton";
 import { useHandMode } from "../../_internal/client/hand-mode";
 
 export interface BackToTopProps {

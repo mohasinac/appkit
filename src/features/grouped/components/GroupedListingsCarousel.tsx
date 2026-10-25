@@ -10,7 +10,7 @@ import { toProductItem } from "../../../_internal/shared/features/products/to-pr
 import type { ProductItem } from "../../products/types";
 import type { GroupedListingWithItems } from "../../../_internal/server/features/grouped/data";
 import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";
-import { Stack } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 

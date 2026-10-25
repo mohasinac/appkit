@@ -1,7 +1,9 @@
 import React from "react";
 import { eventRepository } from "../../../repositories";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { Container, Main, Section, PageHeroHeading } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { PageHeroHeading } from "../../../ui/components/PageHeroHeading";
 import { EventsIndexListing } from "./EventsIndexListing";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";

@@ -13,11 +13,8 @@
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
-import {
-  historyRepository,
-  type UserHistoryItem,
-  type HistoryProductType,
-} from "../../../../repositories";
+import { historyRepository } from "../../../../features/history/repository/user-history.repository";
+import type { UserHistoryItem, HistoryProductType } from "../../../../features/history/repository/user-history.repository";
 
 export async function trackProductViewAction(
   productId: string,

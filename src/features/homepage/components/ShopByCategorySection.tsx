@@ -3,17 +3,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
-import {
-  Button,
-  Div,
-  Heading,
-  HorizontalScroller,
-  POSTER_CLASS,
-  Row,
-  Section,
-  Span,
-  Text,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
+import { POSTER_CLASS } from "../../../ui/components/PosterCard";
+import { Row } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopCategories } from "../hooks/useTopCategories";

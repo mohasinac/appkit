@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Stack, Text } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { SublistingInlineSelect } from "../../seller/components/SublistingInlineSelect";
 
 interface Props {

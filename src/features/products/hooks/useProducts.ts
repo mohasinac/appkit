@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { isAdminUser, isTesterUser } from "../../auth/role-predicates";
 import type {

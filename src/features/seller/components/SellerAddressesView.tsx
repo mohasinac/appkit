@@ -2,7 +2,16 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, IconButton, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text, StickyToolbar } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { IconButton } from "../../../ui/components/IconButton";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Table, Thead, Tbody, Tr, Th, Td } from "../../../ui/components/Semantic";
+import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -10,7 +19,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
 import { normalizeError } from "../../../errors/normalize";
-import { TextLink } from "../../../ui";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
 import { toUserMessage } from "../../../errors/error-display-map";
 const __O = {

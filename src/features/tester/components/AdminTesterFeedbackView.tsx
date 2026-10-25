@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import { Button, Heading, Row, Stack, Tabs, TabsContent, TabsList, TabsTrigger, useToast } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Heading } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
+import { useToast } from "../../../ui/components/toast-context";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

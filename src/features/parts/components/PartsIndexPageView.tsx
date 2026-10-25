@@ -17,19 +17,12 @@
  * which clears the largest real bucket (87 attack rings, measured).
  */
 import React from "react";
-import {
-  Section,
-  Container,
-  Stack,
-  Row,
-  Div,
-  Grid,
-  Heading,
-  Text,
-  Span,
-  TextLink,
-  Badge,
-} from "../../../ui";
+import { Section } from "../../../ui/components/Semantic";
+import { Container, Stack, Row, Grid } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text, Span } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Badge } from "../../../ui/components/Badge";
 import {
   ALL_PART_SLOTS,
   PART_SLOT_LABEL,

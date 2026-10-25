@@ -9,7 +9,7 @@
  *  - all other roles get empty permissions (no admin access)
  */
 
-import { userRepository } from "../../../../repositories";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 import type { Permission } from "../../../../features/auth/permissions/constants";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { isEffectiveAdminUser } from "../../../../features/auth/role-predicates";

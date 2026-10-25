@@ -30,7 +30,12 @@ import {
  * — and was the last thing blocking
  * `serverExternalPackages: ["@mohasinac/appkit"]`.
  */
-import { Button, Div, Modal, Row, Stack, Text, useToast } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Modal } from "../../../ui/components/Modal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 export interface ImageEditorProps {
   isOpen: boolean;

@@ -12,19 +12,12 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
-import {
-  Container,
-  Disclaimer,
-  Div,
-  Heading,
-  Main,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { RichText } from "../../../ui/rich-text/RichText";
 import { PreOrderDetailView } from "./PreOrderDetailView";
 import { PrizeDrawBottomActions } from "./PrizeDrawBottomActions";
 import { ProductTabsShell } from "./ProductTabsShell";

@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Heading, Section, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 
 /**

@@ -3,7 +3,13 @@
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Checkbox, Details, Div, SideDrawer, Span, Stack, Summary, useToast } from "../../../ui";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Div } from "../../../ui/components/Div";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Span } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
+import { useToast } from "../../../ui/components/toast-context";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {

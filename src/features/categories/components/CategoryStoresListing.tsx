@@ -2,7 +2,8 @@
 import React from "react";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Grid, Stack, Text } from "../../../ui";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import type { StoreListItem } from "../../stores/types";
 
 export interface CategoryStoresListingProps {

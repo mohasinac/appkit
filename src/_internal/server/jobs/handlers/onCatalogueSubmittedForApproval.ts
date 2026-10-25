@@ -7,7 +7,7 @@
  */
 import type { FirestoreTriggerHandler } from "../runtime/types";
 import type { JsonValue } from "@mohasinac/appkit";
-import { adminNotificationsRepository } from "../../../../repositories";
+import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
 
 type Doc = Record<string, JsonValue>;
 

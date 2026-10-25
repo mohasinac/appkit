@@ -1,17 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Badge,
-  Section,
-  Container,
-  Div,
-  Anchor,
-} from "../../../../ui";
+import { Stack, Row, Container } from "../../../../ui/components/Layout";
+import { Text, Heading } from "../../../../ui/components/Typography";
+import { Badge } from "../../../../ui/components/Badge";
+import { Section } from "../../../../ui/components/Semantic";
+import { Div } from "../../../../ui/components/Div";
+import { Anchor } from "../../../../ui/components/Anchor";
 import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";

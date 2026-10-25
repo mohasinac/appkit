@@ -13,7 +13,7 @@
  */
 
 import Link from "next/link";
-import { Row, Stack } from "../../../ui";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { ROUTES } from "../../../next/routing/route-map";
 import { AttachedCouponsSection } from "../../promotions/components/AttachedCouponsSection";
 import type { AttachedCoupon } from "../../promotions/constants/attached-coupons";

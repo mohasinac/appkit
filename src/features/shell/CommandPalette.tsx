@@ -1,7 +1,13 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Div, Input, Kbd, Modal, Row, Span, Stack, Text } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Input } from "../../ui/components/Input";
+import { Kbd } from "../../ui/components/Kbd";
+import { Modal } from "../../ui/components/Modal";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
 
 export interface CommandPaletteGroup {
   title: string;

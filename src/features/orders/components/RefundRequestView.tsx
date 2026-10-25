@@ -31,7 +31,8 @@ import {
   FormErrorSummary,
   FieldTextarea,
 } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 import { z } from "zod";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import {

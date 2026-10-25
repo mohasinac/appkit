@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
 import { Skeleton } from "../../../ui/components/Skeleton";
 
 export interface EventParticipateViewProps {

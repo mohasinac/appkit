@@ -3,8 +3,11 @@
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React from "react";
-import { FilterChipGroup, ListingLayout, Text } from "../../../ui";
-import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { Text } from "../../../ui/components/Typography";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -15,7 +18,7 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminBrandEditorView } from "./AdminBrandEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import type { AdminTableColumn } from "../types";
 
 interface AdminBrandsResponse {

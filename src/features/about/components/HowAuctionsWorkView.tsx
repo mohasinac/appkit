@@ -1,9 +1,13 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { ProseHero } from "./ProseHero";
-import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
-import type { FlowStep } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { FlowDiagram } from "../../../ui/components/FlowDiagram";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import type { FlowStep } from "../../../ui/components/FlowDiagram";
+import { TextLink } from "../../../ui/components/TextLink";
 import { Gavel, Clock, Trophy, CreditCard } from "lucide-react";
 
 const __P = {

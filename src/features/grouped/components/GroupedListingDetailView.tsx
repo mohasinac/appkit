@@ -14,15 +14,10 @@
  */
 
 import React from "react";
-import {
-  Container,
-  Div,
-  Heading,
-  Section,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Container, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import { GroupMemberPicker, type GroupPickerMember } from "../../products/components/GroupMemberPicker";
 import type { GroupedListingDocument } from "../schemas/firestore";

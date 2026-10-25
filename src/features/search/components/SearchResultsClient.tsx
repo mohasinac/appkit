@@ -37,7 +37,7 @@
 
 import React from "react";
 
-import { Text } from "../../../ui";
+import { Text } from "../../../ui/components/Typography";
 import { useSiteSearch } from "../hooks/useSiteSearch";
 import { mergeSearchTiers, useScopedSearch } from "../hooks/useScopedSearch";
 import { SearchFacetRail } from "./SearchFacetRail";

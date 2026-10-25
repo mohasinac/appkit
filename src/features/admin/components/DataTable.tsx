@@ -3,7 +3,13 @@
 import React from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Button } from "../../../ui/components/Button";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
 import { renderStatusBadge, renderThumbnail } from "../../../ui/columns/cell-renderers";
 import { resolveColumnPriority } from "../../../ui/columns/build-columns";
 import { COLUMN_PRIORITY_CLASS } from "../../../contracts/extend";

@@ -1,4 +1,9 @@
-import { Article, ClaimCouponButton, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Article } from "../../../ui/components/Semantic";
+import { ClaimCouponButton } from "../../../ui/components/ClaimCouponButton";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",

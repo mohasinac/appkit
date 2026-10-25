@@ -15,7 +15,7 @@
 
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring";
-import { jobsRepository } from "../../../repositories";
+import { jobsRepository } from "../repository/jobs.repository";
 import { JOB_MAX_ATTEMPTS, JobStatusValues } from "../schemas/firestore";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";

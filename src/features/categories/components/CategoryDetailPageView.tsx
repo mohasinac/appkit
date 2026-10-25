@@ -8,7 +8,12 @@ import {
   productRepository,
   storeRepository,
 } from "../../../repositories";
-import { Container, Div, Heading, ImageMosaic, Main, MOSAIC_MIN, Section, Span, SplitTile, Stack, Text } from "../../../ui";
+import { Container, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { SplitTile } from "../../../ui/components/SplitTile";
 import { TextLink } from "../../../ui/components/TextLink";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { MediaImage } from "../../media/MediaImage";
@@ -33,7 +38,7 @@ import {
 } from "../../../_internal/server/features/products/listing-tab-counts";
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
 import {
   breadcrumbJsonLd,

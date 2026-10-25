@@ -1,5 +1,8 @@
 import React from "react";
-import { Div, Grid, Pagination, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Pagination } from "../../../ui/components/Pagination";
+import { Text } from "../../../ui/components/Typography";
 import type { LayoutSlots } from "../../../contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";

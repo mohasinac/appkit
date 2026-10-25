@@ -1,5 +1,5 @@
 import React from "react";
-import { categoriesRepository } from "../../../repositories";
+import { categoriesRepository } from "../../categories/repository/categories.repository";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { CategoryBundlesListing } from "../../categories/components/CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";

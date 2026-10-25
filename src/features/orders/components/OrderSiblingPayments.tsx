@@ -11,7 +11,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { ROUTES } from "../../../next/routing/route-map";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import { formatCurrency } from "../../../utils/number.formatter";

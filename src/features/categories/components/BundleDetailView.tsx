@@ -10,22 +10,12 @@
  */
 
 import React from "react";
-import {
-  Badge,
-  Container,
-  Div,
-  GatedPrice,
-  PricesOnly,
-  Heading,
-  Li,
-  Main,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  Ul,
-} from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Main, Section, Ul } from "../../../ui/components/Semantic";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas/firestore";

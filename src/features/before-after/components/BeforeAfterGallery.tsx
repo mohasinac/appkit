@@ -1,6 +1,8 @@
 import type { BeforeAfterItem } from "../types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
-import { Div, Grid, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 interface BeforeAfterGalleryProps {
   items: BeforeAfterItem[];
   className?: string;

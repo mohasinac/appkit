@@ -2,7 +2,8 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Div, Heading } from "../../../../ui";
+import { Div } from "../../../../ui/components/Div";
+import { Heading } from "../../../../ui/components/Typography";
 import type { AnalyticsMonthEntry } from "../../types";
 
 const __P = {

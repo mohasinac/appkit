@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
 import { resolveMediaUrl } from "../../../utils/media-url";
 
 const __P = {

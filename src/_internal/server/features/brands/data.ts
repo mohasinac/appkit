@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { categoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import type { CategoryDocument } from "../../../../features/categories/schemas/firestore";
 
 /**

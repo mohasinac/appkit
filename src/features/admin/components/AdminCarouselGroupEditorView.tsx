@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Row, StackedViewShell, useToast } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { FieldInput, FieldSelect, FormErrorSummary } from "../../../ui/forms";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import { apiClient } from "../../../http";

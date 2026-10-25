@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
-import { Div, Heading, Row, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useWishlist } from "../hooks/useWishlist";
 import type { WishlistItem, WishlistResponse } from "../types";

@@ -2,7 +2,11 @@
 import { sortBy } from "@mohasinac/appkit/client";
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { Div, Heading, Input, Select, SlottedListingView } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Select } from "../../../ui/components/Select";
+import { SlottedListingView } from "../../../ui/components/SlottedListingView";
 import type { StoreProductItem } from "../types";
 
 export interface StoreProductsViewProps {

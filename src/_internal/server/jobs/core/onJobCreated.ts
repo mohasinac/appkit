@@ -12,7 +12,7 @@
  * entry points, or the two drift the first time either learns something.
  */
 
-import { jobsRepository } from "../../../../repositories";
+import { jobsRepository } from "../../../../features/jobs/repository/jobs.repository";
 import type { JobDocument } from "../../../../features/jobs/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import { runJobOnce } from "./runJobOnce";

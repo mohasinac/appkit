@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { notificationRepository } from "../../../../repositories";
+import { notificationRepository } from "../../../../features/admin/repository/notification.repository";
 import { conversationsRepository } from "../../../../features/messages/repository/conversations.repository";
 import {
   CONVERSATION_ACTIVE_DAYS,

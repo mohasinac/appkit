@@ -1,16 +1,12 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  Heading,
-  Row,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { useToast } from "../../../ui/components/Toast";
 import { normalizeError } from "../../../errors/normalize";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

@@ -2,7 +2,16 @@
 
 import React from "react";
 import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Icon, ImageMosaic, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { ImageMosaic } from "../../../ui/components/ImageMosaic";
+import { Section } from "../../../ui/components/Semantic";
+import { SiteLogo } from "../../../ui/components/SiteLogo";
+import { SiteMark } from "../../../ui/components/SiteMark";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { IconKey } from "../../../ui/icons/icon-registry";
 
 // --- Props -------------------------------------------------------------------

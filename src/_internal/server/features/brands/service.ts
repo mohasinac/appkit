@@ -1,4 +1,4 @@
-import { categoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import { BrandNotFoundError, BrandSlugConflictError } from "../../../shared/features/brands/errors";
 import type { CategoryDocument } from "../../../../features/categories/schemas/firestore";
 

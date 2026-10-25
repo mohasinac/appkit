@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { safeRead } from "../../../../errors/safe-read";
 import { loadProductFeaturesForStore } from "../../../../features/products/repository/loadProductFeatures";
 import type { ListingType } from "../../../../features/products/types";

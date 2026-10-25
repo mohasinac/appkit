@@ -3,15 +3,12 @@
 import React, { useState, useTransition } from "react";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
-import {
-  Button,
-  Div,
-  LoginRequiredModal,
-  Modal,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Modal } from "../../../ui/components/Modal";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";

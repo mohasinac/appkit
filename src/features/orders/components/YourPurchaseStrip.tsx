@@ -39,7 +39,11 @@ import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
-import { Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { Icon } from "../../../ui/components/Icon";
 import { formatDate } from "../../../utils";
 

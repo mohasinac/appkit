@@ -1,7 +1,9 @@
 "use client"
 import { Row } from "@mohasinac/appkit/ui";
 import { useState } from "react";
-import { Button, Div, Span, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Span, Text } from "../../../ui/components/Typography";
 import { normalizeError } from "../../../errors/normalize";
 
 const __P = {

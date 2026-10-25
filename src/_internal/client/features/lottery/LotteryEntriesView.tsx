@@ -1,18 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Badge,
-  Button,
-  Section,
-  Container,
-  DataTable,
-  type DataTableColumn,
-} from "../../../../ui";
+import { Stack, Row, Container } from "../../../../ui/components/Layout";
+import { Text, Heading } from "../../../../ui/components/Typography";
+import { Badge } from "../../../../ui/components/Badge";
+import { Button } from "../../../../ui/components/Button";
+import { Section } from "../../../../ui/components/Semantic";
+import { DataTable } from "../../../../ui/DataTable";
+import type { DataTableColumn } from "../../../../ui/DataTable";
 import { Dialog } from "../../../../ui/components/Dialog";
 import { FieldTextarea } from "../../../../ui/forms/FieldTextarea";
 

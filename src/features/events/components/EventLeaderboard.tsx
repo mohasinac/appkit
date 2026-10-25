@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Row, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import type { LeaderboardEntry, PollResultEntry } from "../types";
 
 export interface EventLeaderboardProps {

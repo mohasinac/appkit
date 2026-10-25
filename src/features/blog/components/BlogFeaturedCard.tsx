@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { Article, BaseListingCard, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { Article } from "../../../ui/components/Semantic";
+import { BaseListingCard } from "../../../ui/components/BaseListingCard";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 
 import type { BlogPost, BlogPostCategory } from "../types";

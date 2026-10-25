@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "@mohasinac/appkit";
-import { productRepository } from "../../../repositories";
+import { productRepository } from "../../products/repository/products.repository";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -20,25 +20,14 @@ import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
-import {
-  Button,
-  Container,
-  Div,
-  GatedPrice,
-  PricesOnly,
-  Heading,
-  Main,
-  Nav,
-  RichText,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-  Ul,
-  Li,
-  SpecTable,
-} from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Main, Nav, Section, Ul, Li } from "../../../ui/components/Semantic";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { SpecTable } from "../../../ui/components/SpecTable";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { PreOrderBottomActions } from "./PreOrderBottomActions";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";

@@ -62,7 +62,7 @@ import { wrapAction, type ActionResult } from "../../../shared/types/action-resu
  * store, the order and the amount — instead of silently absorbed.
  */
 
-import { payoutRepository } from "../../../../repositories";
+import { payoutRepository } from "../../../../features/payments/repository/payout.repository";
 import { serverErrorsRepository } from "../../../../features/server-errors/repository/server-errors.repository";
 import { ValidationError } from "../../../../errors";
 import { roundRupees } from "../../../../utils/number.formatter";

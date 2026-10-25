@@ -1,7 +1,7 @@
 "use server";
 
 import { cache } from "react";
-import { storeRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import type { StoreDocument } from "../../../../features/stores/schemas/firestore";
 import {
   STORES_PRODUCTS_PAGE_SIZE,

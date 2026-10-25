@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { Button, Div, Row, Span, Stack } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Row, Stack } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;

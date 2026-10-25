@@ -1,19 +1,13 @@
 "use client";
 
 import React from "react";
-import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Badge,
-  Card,
-  Section,
-  Container,
-  Anchor,
-  Div,
-  Grid,
-} from "../../../../ui";
+import { Stack, Row, Container, Grid } from "../../../../ui/components/Layout";
+import { Text, Heading } from "../../../../ui/components/Typography";
+import { Badge } from "../../../../ui/components/Badge";
+import { Card } from "../../../../ui/components/Card";
+import { Section } from "../../../../ui/components/Semantic";
+import { Anchor } from "../../../../ui/components/Anchor";
+import { Div } from "../../../../ui/components/Div";
 import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";

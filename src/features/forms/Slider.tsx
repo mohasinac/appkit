@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
-import { Div, Row, Span, Text } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
 import { Slider as UiSlider } from "../../ui/components/Slider";
 import { ERROR_BASE } from "./utils";
 import { joinClasses } from "../../utils/classnames";

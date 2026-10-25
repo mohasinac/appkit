@@ -1,5 +1,7 @@
 import type { CategoryItem } from "../types";
-import { Button, Div, Heading, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../media/MediaImage";
 
 interface ConcernCardProps {

@@ -1,6 +1,8 @@
 import React from "react";
 import { blogRepository } from "../../../repositories";
-import { Container, Main, Section, PageHeroHeading } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Main, Section } from "../../../ui/components/Semantic";
+import { PageHeroHeading } from "../../../ui/components/PageHeroHeading";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
 import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";

@@ -35,7 +35,7 @@
 import { ValidationError } from "../../../../errors/validation-error";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
-import { productRepository } from "../../../../repositories";
+import { productRepository } from "../../../../features/products/repository/products.repository";
 import { mediaAssetsRepository } from "../../../../features/media/repository/media-assets.repository";
 import { stickerSheetsRepository } from "../../../../features/sticker-trace/repository/sticker-sheets.repository";
 import type {

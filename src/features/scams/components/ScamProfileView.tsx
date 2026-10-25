@@ -19,27 +19,17 @@ import {
   MessageSquare,
   Link2,
 } from "lucide-react";
-import {
-  Alert,
-  Anchor,
-  Badge,
-  Breadcrumb,
-  Card,
-  CardBody,
-  CardHeader,
-  Container,
-  Disclaimer,
-  Div,
-  EmptyState,
-  Grid,
-  Heading,
-  Main,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Badge } from "../../../ui/components/Badge";
+import { Breadcrumb } from "../../../ui/components/Breadcrumb";
+import { Card, CardBody, CardHeader } from "../../../ui/components/Card";
+import { Container, Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
+import { Div } from "../../../ui/components/Div";
+import { EmptyState } from "../../../ui/components/EmptyState";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../media/MediaImage";
 import type {
   ScammerDocument,

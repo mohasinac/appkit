@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";

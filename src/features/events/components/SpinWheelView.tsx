@@ -2,7 +2,13 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Row, Span, Stack, Text, useToast } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { ClaimCouponButton } from "../../../ui/components/ClaimCouponButton";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { useToast } from "../../../ui/components/toast-context";
 import { isAuthError } from "../../../utils/auth-error";
 // `DisplaySpinPrize`, not `SpinPrize` — see that type's note. A view typed
 // against the stored shape makes `weight` (the odds) and `couponId` REQUIRED of

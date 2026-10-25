@@ -1,5 +1,5 @@
 import React from "react";
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import type { PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
 

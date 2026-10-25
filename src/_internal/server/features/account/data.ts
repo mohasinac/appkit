@@ -4,7 +4,8 @@
  */
 
 import { cache } from "react";
-import { userRepository, addressesRepository } from "../../../../repositories";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
+import { addressesRepository } from "../../../../features/addresses/repository/addresses.repository";
 
 export interface AccountDataOptions {
   /** Reserved for future overrides. */

@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import { Badge, Button, Row, Stack, Text } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import { useToast } from "../../../ui/components/Toast";
 import { FieldInput } from "../../../ui/forms/FieldInput";

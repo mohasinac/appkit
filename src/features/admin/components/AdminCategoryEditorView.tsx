@@ -7,15 +7,16 @@ import { z } from "zod";
 import { Card, CardBody, ConfirmDeleteModal, Div, Input, PaginatedSelect, Select, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
 import { usedPlaceholders } from "../../../_internal/shared/templating/placeholders";
 import type { CategoryProductDefaults, CategoryPriceGuidance } from "../../categories/schemas/category-content";
-import type { StackedViewShellProps } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
-import { useMediaUpload } from "../../media";
+import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { Repeater } from "../../../ui/components/Repeater";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
-import { SectionForm, useSectionFormNav, type SectionDef } from "../../shell";
+import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import type { SectionDef } from "../../shell/SectionForm";
 
 /*
  * ── Content & Templates (C2c) ────────────────────────────────────────────────

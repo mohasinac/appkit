@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
-import { Button, Row, Select } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Row } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";

@@ -2,9 +2,9 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
-import { Alert } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
+import { Alert } from "../../../ui/components/Alert";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { DashboardStats } from "../types";

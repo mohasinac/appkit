@@ -1,18 +1,15 @@
 "use client";
 import { IMAGE_ACCEPT_ATTR } from "../../../_internal/shared/media/limits";
 import React from "react";
-import {
-  Div,
-  Input,
-  Label,
-  RichTextEditor,
-  Select,
-  Stack,
-  TagInput,
-  Text,
-  Textarea,
-} from "../../../ui";
-import { Checkbox } from "../../forms/index";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Label, Text } from "../../../ui/components/Typography";
+import { RichTextEditor } from "../../../ui/components/RichTextEditor";
+import { Select } from "../../../ui/components/Select";
+import { Stack } from "../../../ui/components/Layout";
+import { TagInput } from "../../../ui/components/TagInput";
+import { Textarea } from "../../../ui/components/Textarea";
+import { Checkbox } from "../../forms/Checkbox";
 import { MediaUploadField, MediaUploadList } from "../../media/index";
 import {
   coerceMediaFieldArray,

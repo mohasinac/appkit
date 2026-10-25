@@ -1,7 +1,11 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { THEMED_BG_PRIMARY } from "../../../_internal/shared/styles/themed";
-import { Div, Grid, Heading, Section, Text, TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",

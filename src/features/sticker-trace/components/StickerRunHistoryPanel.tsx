@@ -29,16 +29,11 @@
  */
 
 import { useCallback, useMemo } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Heading,
-  Row,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui/index";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { TIER_HELP } from "../constants/help-content";
 
 /** One attempt. Mirrors the route's projection — booleans, never paths. */

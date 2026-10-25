@@ -2,8 +2,8 @@
 
 import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,

@@ -1,4 +1,4 @@
-import { Span } from "../../../ui";
+import { Span } from "../../../ui/components/Typography";
 import type { EventStatus } from "../types";
 
 const STATUS_MAP: Record<EventStatus, { label: string; color: string }> = {

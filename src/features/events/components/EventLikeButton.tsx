@@ -8,7 +8,10 @@
  */
 
 import React, { useCallback, useState, useTransition } from "react";
-import { Button, Row, Span, Icon } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
 import { PressScale } from "../../../ui/components/Motion";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";

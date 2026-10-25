@@ -3,7 +3,13 @@
 // main component stays under the 150-line code-quality threshold.
 
 import React from "react";
-import { Badge, Button, Checkbox, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

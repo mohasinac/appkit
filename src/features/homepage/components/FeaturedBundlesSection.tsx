@@ -20,7 +20,9 @@ import Link from "next/link";
  * card's worth of dependencies on a file that no longer draws a card — and
  * `MarketplaceBundleCard` owns every one of those concerns now.
  */
-import { Grid, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import { MarketplaceBundleCard } from "../../products/components/MarketplaceBundleCard";

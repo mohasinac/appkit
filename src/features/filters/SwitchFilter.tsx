@@ -1,6 +1,10 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
+import { Button } from "../../ui/components/Button";
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Span, Text } from "../../ui/components/Typography";
+import { Toggle } from "../../ui/components/Toggle";
 import { joinClasses } from "../../utils/classnames";
 
 

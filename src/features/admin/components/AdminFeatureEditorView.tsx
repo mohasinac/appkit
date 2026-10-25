@@ -4,8 +4,13 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Checkbox, ConfirmDeleteModal, Div, Label, StackedViewShell, Text, useToast } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Label, Text } from "../../../ui/components/Typography";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 

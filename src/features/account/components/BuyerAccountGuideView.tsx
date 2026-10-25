@@ -1,6 +1,11 @@
 import React from "react";
 import { UserCheck, Bell, Heart, Star, Lock, AlertTriangle, Flag } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, TextLink, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 

@@ -1,7 +1,8 @@
 "use client"
 import { Row } from "@mohasinac/appkit/client";
 import { useState } from "react";
-import { Div, Span, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Span, Text } from "../../../ui/components/Typography";
 import type { CategoryItem } from "../types";
 
 // --- CategoryTreeNode ----------------------------------------------------------

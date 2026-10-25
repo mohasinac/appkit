@@ -26,7 +26,7 @@
  */
 
 import * as React from "react";
-import { Stack } from "../../../ui";
+import { Stack } from "../../../ui/components/Layout";
 import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";

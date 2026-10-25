@@ -1,9 +1,19 @@
 "use client";
 
 import React from "react";
-import { Alert, Button, ConfirmDeleteModal, Div, Grid, Input, Row, Select, Stack, StackedViewShell, Text, TextLink, useToast } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Input } from "../../../ui/components/Input";
+import { Select } from "../../../ui/components/Select";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
-import type { StackedViewShellProps } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {

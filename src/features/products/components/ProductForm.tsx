@@ -37,7 +37,7 @@ import {
   MediaUploadList,
   type MediaField,
 } from "../../media";
-import { useMediaUpload } from "../../media";
+import { useMediaUpload } from "../../media/hooks/useMedia";
 import { resolveDate } from "../../../utils/date.formatter";
 // Read-only here: the inputs that WROTE this field are gone — see the Physical
 // Inventory block for why three free-text boxes could not be made consistent.

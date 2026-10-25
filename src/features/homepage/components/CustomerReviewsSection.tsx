@@ -2,14 +2,11 @@ import React from "react";
 import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
-import {
-  Div,
-  Heading,
-  HorizontalScroller,
-  Section,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 
 const __P = {
   p8: "p-[var(--appkit-space-8)]",

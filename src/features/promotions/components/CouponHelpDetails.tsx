@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { Details, Summary, Stack, Text, Ul, Li, Span } from "../../../ui";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Stack } from "../../../ui/components/Layout";
+import { Text, Span } from "../../../ui/components/Typography";
+import { Ul, Li } from "../../../ui/components/Semantic";
 import { COUPON_HELP } from "../constants/coupon-help";
 
 export interface CouponHelpDetailsProps {

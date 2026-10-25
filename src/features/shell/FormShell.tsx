@@ -5,7 +5,11 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
-import { ActionRow, Div, Heading, OverflowRow, Row, Span, Stack, Text } from "../../ui";
+import { ActionRow } from "../../ui/components/ActionRow";
+import { Div } from "../../ui/components/Div";
+import { Heading, Span, Text } from "../../ui/components/Typography";
+import { OverflowRow } from "../../ui/components/OverflowRow";
+import { Row, Stack } from "../../ui/components/Layout";
 
 /**
  * Carries the `schema` prop passed to `<FormShell>` down to any nested

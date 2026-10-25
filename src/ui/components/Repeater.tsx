@@ -32,7 +32,10 @@
  */
 
 import React from "react";
-import { Button, Div, Stack, Text } from "../index";
+import { Button } from "./Button";
+import { Div } from "./Div";
+import { Stack } from "./Layout";
+import { Text } from "./Typography";
 
 export interface RepeaterProps<T> {
   rows: T[];

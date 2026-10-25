@@ -1,4 +1,8 @@
-import { Card, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
+import { Card } from "../../../ui/components/Card";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 const __P = {
   p8: "p-[var(--appkit-space-8)]",
 } as const;

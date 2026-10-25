@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { Row, Span } from "../../ui";
+import { Row } from "../../ui/components/Layout";
+import { Span } from "../../ui/components/Typography";
 
 export interface NavItemProps {
   href: string;

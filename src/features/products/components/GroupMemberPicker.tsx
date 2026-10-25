@@ -19,24 +19,14 @@
  */
 
 import React, { useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Div,
-  GatedPrice,
-  PricesOnly,
-  Row,
-  Span,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  TextLink,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";

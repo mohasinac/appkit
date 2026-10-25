@@ -4,8 +4,12 @@ import { normalizeError } from "../../../errors/normalize";
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Row } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
-import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
+import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
+import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   ADMIN_PRODUCT_STATUS_TABS,
@@ -18,7 +22,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
-import { FilterChipGroup } from "../../../ui";
+import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

@@ -7,7 +7,7 @@ import type {
 } from "../../../ui/components/PaginatedSelect";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { Text } from "../../../ui";
+import { Text } from "../../../ui/components/Typography";
 import type { FormValues } from "@mohasinac/appkit/client";
 
 interface GroupItem {

@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
-import { StackedViewShell, Div, Grid, Text } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { Div } from "../../../ui/components/Div";
+import { Grid } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 
 export interface SellerDashboardViewProps extends Omit<
   StackedViewShellProps,

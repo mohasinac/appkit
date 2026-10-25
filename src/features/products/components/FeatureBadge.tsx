@@ -13,7 +13,8 @@ import {
   Trophy,
   Truck,
 } from "lucide-react";
-import { Row, Span } from "../../../ui";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
 import {
   isFeatureIconPath,
   type ProductFeatureDocument,

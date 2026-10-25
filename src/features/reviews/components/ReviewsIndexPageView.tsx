@@ -1,7 +1,9 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React from "react";
 import { reviewRepository } from "../../../repositories";
-import { Container, Heading, Main, Section } from "../../../ui";
+import { Container } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
+import { Main, Section } from "../../../ui/components/Semantic";
 import type { ReviewListResponse } from "../types";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ReviewsIndexListing } from "./ReviewsIndexListing";

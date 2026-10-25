@@ -1,4 +1,4 @@
-import { couponsRepository } from "../../../../repositories";
+import { couponsRepository } from "../../../../features/promotions/repository/coupons.repository";
 import type { JobContext } from "../runtime/types";
 
 export async function runCouponExpiry(ctx: JobContext): Promise<void> {

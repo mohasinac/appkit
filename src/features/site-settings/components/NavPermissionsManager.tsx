@@ -1,8 +1,12 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition } from "react";
-import { Code, Div, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
-import { useToast } from "../../../ui";
+import { Code, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
 
 const __O = {
   hidden: "overflow-hidden",

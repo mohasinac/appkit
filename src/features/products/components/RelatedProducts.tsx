@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Grid, Heading, Stack } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Heading } from "../../../ui/components/Typography";
 export interface RelatedProductsProps {
   isLoading?: boolean;
   isEmpty?: boolean;

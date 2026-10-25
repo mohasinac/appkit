@@ -1,6 +1,10 @@
 import React from "react";
 import { FileText, Calendar, BookOpen, Layout, Grid, Megaphone, Mail } from "lucide-react";
-import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 
 export function AdminContentGuideView() {

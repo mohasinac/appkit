@@ -1,5 +1,7 @@
 import React from "react";
-import { Div, Heading, Row, Span, Text } from "../../../../ui";
+import { Div } from "../../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../../ui/components/Typography";
+import { Row } from "../../../../ui/components/Layout";
 import type { SellerAnalyticsTopProduct } from "../../types";
 
 export interface SellerTopProductsLabels {

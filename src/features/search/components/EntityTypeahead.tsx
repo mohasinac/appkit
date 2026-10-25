@@ -43,7 +43,11 @@
 
 import React from "react";
 
-import { Button, Div, Input, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { useSiteSearch } from "../hooks/useSiteSearch";
 
 /** Stable identity — a `useMemo` dependency inside the hook. */

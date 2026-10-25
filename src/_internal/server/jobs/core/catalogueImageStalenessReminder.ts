@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
-import { catalogueRepository } from "../../../../repositories";
+import { catalogueRepository } from "../../../../features/catalogue/repository/catalogue.repository";
 import { CATALOGUE_IMAGE_FRESHNESS_DAYS } from "../../../../features/catalogue/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 

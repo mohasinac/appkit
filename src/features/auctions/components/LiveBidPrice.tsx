@@ -1,6 +1,8 @@
 "use client";
 
-import { GatedPrice, Row, Span } from "../../../ui";
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useLiveAuctionBid } from "../hooks/useLiveAuctionBid";
 

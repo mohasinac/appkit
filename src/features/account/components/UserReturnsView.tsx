@@ -2,7 +2,9 @@
 
 import { sortBy } from "../../../constants/sort";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
-import { Div, Grid, Stack, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "../../admin/components/DataListingView";

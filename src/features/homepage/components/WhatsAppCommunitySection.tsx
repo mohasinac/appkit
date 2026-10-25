@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { Button, Card, Div, Grid, Heading, Icon, RichText, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Section } from "../../../ui/components/Semantic";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { WhatsAppGlyph } from "./WhatsAppGlyph";
 

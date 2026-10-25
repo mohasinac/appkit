@@ -1,8 +1,13 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Heading, Modal, RichText, Row, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { RichText } from "../../../ui/rich-text/RichText";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../media/MediaImage";
-import { StarRating } from "../../../ui";
+import { StarRating } from "../../../ui/components/StarRating";
 import type { Review } from "../types";
 import { maskName } from "../../../security";
 import { THEMED_TEXT_SUCCESS } from "../../../_internal/shared/styles/themed";

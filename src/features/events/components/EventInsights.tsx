@@ -18,7 +18,9 @@
 import React from "react";
 import { Chart } from "../../../ui/components/Chart";
 import type { ChartSpec } from "../../../ui/components/chart-spec";
-import { Grid, Heading, Progress, Row, Stack, Text } from "../../../ui";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Progress } from "../../../ui/components/Progress";
 import { CountdownDisplay } from "../../../ui/components/CountdownDisplay";
 import type { SaleProgress } from "../utils/event-charts";
 

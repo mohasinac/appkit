@@ -3,8 +3,15 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Checkbox, Div, EmptyState, Span, Stack, StackedViewShell, Text, useToast } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Checkbox } from "../../../ui/components/Checkbox";
+import { Div } from "../../../ui/components/Div";
+import { EmptyState } from "../../../ui/components/EmptyState";
+import { Span, Text } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { adminAdFormSchema } from "../schemas/admin-ops-forms";

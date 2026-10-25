@@ -7,7 +7,7 @@
  * Mount once globally, inside ToastProvider.
  */
 import { useEffect } from "react";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import {
   WISHLIST_CAP_EVENT,
   type WishlistCapEventDetail,

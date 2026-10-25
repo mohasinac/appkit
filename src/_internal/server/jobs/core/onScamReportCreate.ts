@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { adminNotificationsRepository, userRepository } from "../../../../repositories";
+import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { SCAM_TYPE_LABELS } from "../../../../features/scams/constants/scam-types";
 import type { JobContext } from "../runtime/types";

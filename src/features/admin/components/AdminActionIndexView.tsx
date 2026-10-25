@@ -28,8 +28,14 @@
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
-import { Alert, Badge, Row, Span, Stack, Text, TextLink, Toggle, useToast } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Badge } from "../../../ui/components/Badge";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
+import { Toggle } from "../../../ui/components/Toggle";
+import { useToast } from "../../../ui/components/toast-context";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import type { FormValues } from "../../../schemas/types";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

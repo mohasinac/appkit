@@ -1,6 +1,11 @@
 import { normalizeError } from "../../../errors/normalize";
 import { safeRead } from "../../../errors/safe-read";
-import { Anchor, Div, GRID_MAP, Heading, HandModeRow, Section, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { GRID_MAP, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { HandModeRow } from "../../../ui/components/HandModeRow";
+import { Section } from "../../../ui/components/Semantic";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,

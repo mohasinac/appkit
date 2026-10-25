@@ -15,7 +15,12 @@
  */
 
 import React, { useCallback } from "react";
-import { Div, Input, Row, Select, Stack, TagInput, Text } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { TagInput } from "../../../ui/components/TagInput";
+import { Text } from "../../../ui/components/Typography";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import { BrandInlineSelect } from "../../seller/components/BrandInlineSelect";
 import { BUNDLE_MAX_ITEMS } from "../../../_internal/shared/features/categories/bundle-config";

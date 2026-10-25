@@ -1,6 +1,11 @@
 import React from "react";
 import { Users, Package, Store, ShoppingBag, FileText, Settings, Shield, BarChart2, AlertTriangle, BookOpen, CreditCard } from "lucide-react";
-import { Alert, Div, Grid, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-[var(--appkit-space-6)]";

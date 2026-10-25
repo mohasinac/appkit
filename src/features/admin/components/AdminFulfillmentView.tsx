@@ -16,7 +16,8 @@ import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoi
  */
 import type { OrderPlain } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
-import { useToast, TextLink } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 
 export interface AdminFulfillmentViewProps {

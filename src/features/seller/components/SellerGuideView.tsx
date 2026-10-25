@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { StackedViewShell } from "../../../ui/components/StackedViewShell";
+import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 
 export interface SellerGuideViewProps extends Omit<
   StackedViewShellProps,

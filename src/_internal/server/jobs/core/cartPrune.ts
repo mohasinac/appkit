@@ -1,4 +1,4 @@
-import { cartRepository } from "../../../../repositories";
+import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import type { JobContext } from "../runtime/types";
 import { CART_TTL_DAYS } from "../handlers/messages";
 import { batchDelete } from "../handlers/_helpers";

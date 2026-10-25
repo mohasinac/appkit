@@ -2,7 +2,14 @@
 
 import React from "react";
 
-import { Alert, Div, EmptyState, Heading, Input, Row, SlottedListingView, Text, TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { EmptyState } from "../../../ui/components/EmptyState";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Input } from "../../../ui/components/Input";
+import { Row } from "../../../ui/components/Layout";
+import { SlottedListingView } from "../../../ui/components/SlottedListingView";
+import { TextLink } from "../../../ui/components/TextLink";
 import { sortBy } from "../../../constants/sort";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";

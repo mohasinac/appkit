@@ -5,7 +5,7 @@ import {
   userRepository,
   siteSettingsRepository,
 } from "../../../../repositories";
-import { getDefaultCurrency } from "../../../../core/index";
+import { getDefaultCurrency } from "../../../../core/baseline-resolver";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import { payoutCutoff } from "../../../shared/fees/payout-hold";
 import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../shared/features/shipping/protections";

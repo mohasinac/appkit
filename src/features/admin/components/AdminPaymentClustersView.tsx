@@ -3,7 +3,13 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, Button, Div, Heading, Row, Span, Stack, Text, TextLink, useToast } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
+import { useToast } from "../../../ui/components/toast-context";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";

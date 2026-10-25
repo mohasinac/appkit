@@ -2,8 +2,12 @@ import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { ProseHero } from "./ProseHero";
 import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
-import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import {
   BookOpen,
   MessageCircle,

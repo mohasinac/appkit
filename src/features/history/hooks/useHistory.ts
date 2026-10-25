@@ -10,7 +10,7 @@
  * per page session even across remounts.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useToast } from "../../../ui";
+import { useToast } from "../../../ui/components/toast-context";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 import {

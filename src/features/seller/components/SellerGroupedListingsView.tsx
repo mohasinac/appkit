@@ -2,8 +2,11 @@
 
 import { Row, sortBy, type JsonArray } from "@mohasinac/appkit/client";
 import React from "react";
-import { Badge, Button, Span, Toggle } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { Badge } from "../../../ui/components/Badge";
+import { Button } from "../../../ui/components/Button";
+import { Span } from "../../../ui/components/Typography";
+import { Toggle } from "../../../ui/components/Toggle";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";

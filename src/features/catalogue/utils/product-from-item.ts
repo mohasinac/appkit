@@ -1,4 +1,4 @@
-import { productRepository } from "../../../repositories";
+import { productRepository } from "../../products/repository/products.repository";
 import type { CatalogueItemDocument } from "../schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 

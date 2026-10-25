@@ -1,6 +1,6 @@
 import React from "react";
-import { SlottedListingView } from "../../../ui";
-import type { SlottedListingViewProps } from "../../../ui";
+import { SlottedListingView } from "../../../ui/components/SlottedListingView";
+import type { SlottedListingViewProps } from "../../../ui/components/SlottedListingView";
 import type { StoreAuctionItem } from "../types";
 
 export interface StoreAuctionsViewProps extends Omit<

@@ -9,8 +9,14 @@ import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, Label, SideDrawer, Stack, Text, Textarea, useToast } from "../../../ui";
-import { MediaImage } from "../../media";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Label, Text } from "../../../ui/components/Typography";
+import { SideDrawer } from "../../../ui/components/SideDrawer";
+import { Stack } from "../../../ui/components/Layout";
+import { Textarea } from "../../../ui/components/Textarea";
+import { useToast } from "../../../ui/components/toast-context";
+import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

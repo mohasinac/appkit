@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
-import { Anchor, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Anchor } from "../../../ui/components/Anchor";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { Badge } from "../../../ui/components/Badge";
 import { MediaImage } from "../../media/MediaImage";
 import type { ProductGrading } from "../schemas/firestore";

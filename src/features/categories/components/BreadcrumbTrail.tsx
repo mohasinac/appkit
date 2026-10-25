@@ -1,7 +1,9 @@
 import React from "react";
-import { Breadcrumb } from "../../../ui";
-import type { BreadcrumbItem } from "../../../ui";
-import { Details, Summary, Div, Row, Stack } from "../../../ui";
+import { Breadcrumb } from "../../../ui/components/Breadcrumb";
+import type { BreadcrumbItem } from "../../../ui/components/Breadcrumb";
+import { Details, Summary } from "../../../ui/components/Details";
+import { Div } from "../../../ui/components/Div";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { Span } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";

@@ -48,7 +48,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { z } from "zod";
 import { normalizeError } from "../../../errors/normalize";
-import { Alert, Card, Stack, Text } from "../../../ui/index";
+import { Alert } from "../../../ui/components/Alert";
+import { Card } from "../../../ui/components/Card";
+import { Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";

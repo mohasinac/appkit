@@ -8,7 +8,8 @@ import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div, PricesOnly } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { PricesOnly } from "../../../ui/components/GatedPrice";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import {

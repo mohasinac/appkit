@@ -3,9 +3,15 @@
 import { useApiMutation, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Row, Select, Stack, Text, useToast,
-  RecordDetailModal,
-} from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui/components/Div";
+import { Input } from "../../../ui/components/Input";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Select } from "../../../ui/components/Select";
+import { Text } from "../../../ui/components/Typography";
+import { useToast } from "../../../ui/components/toast-context";
+import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -15,7 +21,7 @@ import type { AdminTableColumn } from "../../admin/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { EventEntryItem, EventEntryListResponse } from "../types";
 import { buildEventEntryDetailFields } from "./event-entry-detail-fields";
-import { TextLink } from "../../../ui";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
 
 const CLS_RESPONSE_TEXT = "whitespace-pre-wrap break-words";

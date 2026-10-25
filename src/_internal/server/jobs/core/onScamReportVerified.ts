@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
-import { userRepository } from "../../../../repositories";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 

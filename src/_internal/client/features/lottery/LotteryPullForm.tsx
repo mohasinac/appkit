@@ -24,7 +24,9 @@ import { lotteryPullSchema } from "../../../../features/admin/schemas/admin-user
 import { buildSectionsFromSchema } from "../../../../features/shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
 import { apiClient } from "../../../../http";
-import { FieldInput, Heading, Row, Span, Stack, Text } from "../../../../ui";
+import { FieldInput } from "../../../../ui/forms/FieldInput";
+import { Heading, Span, Text } from "../../../../ui/components/Typography";
+import { Row, Stack } from "../../../../ui/components/Layout";
 import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../../ui/forms/FormShell";

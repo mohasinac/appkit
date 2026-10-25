@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { ORDER_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";

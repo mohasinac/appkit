@@ -1,7 +1,7 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../../providers/db-firebase";
 import { RTDB_PATHS } from "../../../../providers/db-firebase/rtdb-paths";
-import { jobsRepository } from "../../../../repositories";
+import { jobsRepository } from "../../../../features/jobs/repository/jobs.repository";
 import { batchDelete } from "../handlers/_helpers";
 import type { JobContext } from "../runtime/types";
 

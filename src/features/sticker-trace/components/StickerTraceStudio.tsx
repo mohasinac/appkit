@@ -22,17 +22,11 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Card,
-  FilePickerButton,
-  Grid,
-  Heading,
-  Row,
-  Section,
-  Span,
-  Stack,
-  Text,
-} from "../../../ui/index";
+import { Card } from "../../../ui/components/Card";
+import { FilePickerButton } from "../../../ui/components/FilePickerButton";
+import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Section } from "../../../ui/components/Semantic";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import { paramsForTier } from "../../../_internal/shared/features/sticker-trace/config";

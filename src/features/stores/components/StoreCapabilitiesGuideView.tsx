@@ -1,6 +1,11 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
+import { Alert } from "../../../ui/components/Alert";
+import { Code, Li, Section, Table, Tbody, Td, Th, Thead, Tr, Ul } from "../../../ui/components/Semantic";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SellerStandingPanel } from "./SellerStandingPanel";
 

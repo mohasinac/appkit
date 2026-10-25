@@ -1,7 +1,9 @@
 "use client"
 import React, { useRef, useState } from "react";
 import type { BeforeAfterItem } from "../types";
-import { Div, Span, Stack } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Span } from "../../../ui/components/Typography";
+import { Stack } from "../../../ui/components/Layout";
 interface BeforeAfterSliderProps {
   item: BeforeAfterItem;
   className?: string;

@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Gift, MessageCircle, ShieldAlert, ShieldCheck, Tag } from "lucide-react";
-import { Row, Span, Stack, Text } from "../../../ui";
+import { Row, Stack } from "../../../ui/components/Layout";
+import { Span, Text } from "../../../ui/components/Typography";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 /**

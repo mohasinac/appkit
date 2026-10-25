@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Div } from "../../ui";
+import { Div } from "../../ui/components/Div";
 import { FilterFacetSection } from "./FilterFacetSection";
 import type { FacetOption } from "./FilterFacetSection";
 import { RangeFilter } from "./RangeFilter";

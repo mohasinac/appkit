@@ -12,7 +12,7 @@
  * .wasm files, naming none of the responsible files. Root Cause #18.
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
-import { cartRepository } from "../../../../repositories";
+import { cartRepository } from "../../../../features/cart/repository/cart.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { addToCartSchema, removeFromCartSchema, mergeGuestCartSchema } from "../../../shared/features/cart/schema";
 import { upsertCartItem, mergeGuestItems } from "./service";

@@ -52,7 +52,8 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
 import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
-import { Row, useToast } from "../../../ui";
+import { Row } from "../../../ui/components/Layout";
+import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 

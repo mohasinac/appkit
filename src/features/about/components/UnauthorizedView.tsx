@@ -1,7 +1,10 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
-import { TextLink } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
+import { Section } from "../../../ui/components/Semantic";
+import { TextLink } from "../../../ui/components/TextLink";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
 
 export interface UnauthorizedViewProps {

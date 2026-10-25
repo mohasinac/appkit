@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { TrendingUp, ShoppingBag, Package, CheckCircle } from "lucide-react";
-import { Div } from "../../../../ui";
+import { Div } from "../../../../ui/components/Div";
 import { AdminStatCard } from "../../../admin/components/analytics/AdminStatCard";
 import type { SellerAnalyticsSummary } from "../../types";
 

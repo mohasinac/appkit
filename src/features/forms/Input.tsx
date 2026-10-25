@@ -1,5 +1,6 @@
 import React from "react";
-import { Div, Span, Text } from "../../ui";
+import { Div } from "../../ui/components/Div";
+import { Span, Text } from "../../ui/components/Typography";
 import { Input as UiInput } from "../../ui/components/Input";
 import {
   INPUT_BASE,

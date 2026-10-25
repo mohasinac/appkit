@@ -1,7 +1,7 @@
 "use server";
 
 import { cache } from "react";
-import { categoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import { safeRead } from "../../../../errors/safe-read";
 import type { CategoryDocument, CategoryTreeNode } from "../../../../features/categories/schemas/firestore";
 import { CATEGORIES_FEATURED_LIMIT, CATEGORIES_MENU_LIMIT, CATEGORIES_SITEMAP_LIMIT } from "../../../shared/features/categories/config";

@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Div } from "../../../ui";
+import { Div } from "../../../ui/components/Div";
 
 export interface AdminTopBarProps {
   renderLeft?: () => React.ReactNode;

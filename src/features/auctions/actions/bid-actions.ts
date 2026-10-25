@@ -17,7 +17,7 @@ import { isSoftBanned } from "../../auth/server/checkSoftBan";
 import type { UserDocument } from "../../auth/schemas/firestore";
 import { unitOfWork } from "../../../core/unit-of-work";
 import { storeRepository } from "../../stores/repository/store.repository";
-import { siteSettingsRepository } from "../../../repositories";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
 import {
