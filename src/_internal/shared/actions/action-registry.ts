@@ -2044,6 +2044,35 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
+    "invalidate-cache": {
+      // `retry` — the icon registry has no `refresh`/`reload`/`sync` key, and
+      // inventing one means a new glyph in a catalogued set. `retry` is the
+      // registered "do this again" mark and reads correctly for a re-render.
+      iconKey: "retry",
+      id: "admin.invalidate-cache",
+      label: "Invalidate all cached pages",
+      ariaLabel: "Mark every cached public page stale",
+      description:
+        "Mark every cached public page stale so the next visitor gets a freshly rendered one. Use after a bulk data change the Firestore triggers could not see — a seed load, a direct Firestore edit, or a catalogue purge.",
+      kind: "secondary",
+      permissions: ["admin"],
+      /*
+       * 🛑 A confirmation on a NON-destructive action, because the cost is
+       * real and invisible at the click.
+       *
+       * This marks entries stale; it renders nothing and destroys nothing. But
+       * every marked entry regenerates on its next request, and this project
+       * was SUSPENDED (HTTP 402) for exceeding 200K ISR writes with 3.1M —
+       * writes outnumbering reads 3:1. Rule #6's whole cache posture exists to
+       * keep that from recurring, so a button that re-renders the public site
+       * on demand must not be reachable by a stray click.
+       */
+      confirmation: {
+        title: "Invalidate every cached page?",
+        body: "Every public page is marked stale and re-renders on its next visit. Nothing is deleted and no data changes, but the re-render costs function invocations against the plan quota — so use it after a bulk change, not as a routine refresh.",
+        confirmLabel: "Invalidate all",
+      },
+    },
     "update-pricing": {
       iconKey: "save",
       id: "admin.update-pricing",

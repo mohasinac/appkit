@@ -34,6 +34,7 @@
 
 /** What the caller knows about the written document, when it knows anything. */
 import { ROUTES } from "../../../next/routing/route-map";
+import { LISTING_TYPE_REGISTRY } from "../listing-types/_registry";
 
 export interface RevalidateHints {
   /** `standard` | `auction` | `pre-order` | … — picks the right detail route. */
@@ -44,57 +45,83 @@ export interface RevalidateHints {
   storeId?: string;
 }
 
-/** Detail route per listing type. Mirrors `ListingTypePlugin.detailRoute`. */
-const PRODUCT_DETAIL_BY_TYPE: Readonly<Record<string, (id: string) => string>> = {
-  standard: (id) => `/products/${id}`,
-  art: (id) => `/products/${id}`,
-  stickers: (id) => `/products/${id}`,
-  auction: (id) => `/auctions/${id}`,
-  "pre-order": (id) => `/pre-orders/${id}`,
-  "prize-draw": (id) => `/prize-draws/${id}`,
-  classified: (id) => `/classified/${id}`,
-  "digital-code": (id) => `/digital-codes/${id}`,
-  live: (id) => `/live/${id}`,
-};
+/*
+ * 🛑 DERIVED from `LISTING_TYPE_REGISTRY`, never hand-written.
+ *
+ * This file carried its own nine-entry `PRODUCT_DETAIL_BY_TYPE` literal and its
+ * own `listingTypeFromId` prefix ladder, and both had already drifted by the
+ * time the union reached ten — exactly the tenth-enumeration failure Root Cause
+ * #61 is about. Measured 2026-10-26, while invalidating after a catalogue purge
+ * that deleted 7 `spares` and 2 `stickers`:
+ *
+ *   - **`spares` was absent from both.** A `spare-…` id fell through to the
+ *     "unknown type" branch, which marks every OTHER type's detail route and
+ *     therefore never marks `/products/spare-…` — the one page that existed.
+ *   - **`/art`, `/stickers` and `/spares` were never marked at all.** The browse
+ *     path was derived by stripping the last segment off the detail route, and
+ *     all three types detail at `/products/{slug}`, so the strip yielded
+ *     `/products` and the `!== ROUTES.PUBLIC.PRODUCTS` test discarded it. Their
+ *     dedicated browse pages are in `MAIN_NAV_ITEMS` and went stale on a clock.
+ *
+ * `browseRoute` and `slugPrefix` are required plugin fields, so a type cannot
+ * join the union without answering both — which is the property the literal
+ * could never have.
+ */
+const PLUGINS = Object.values(LISTING_TYPE_REGISTRY);
 
 /**
  * Infer the listing type from the id prefix when no hint was supplied.
  *
- * The slug prefix system (CLAUDE.md § Slug Prefix System) makes this reliable
- * for seeded and generated ids — `auction-…`, `preorder-…`, `prizedraw-…` — and
- * it is only a fallback: the Firestore trigger reads the document and passes
- * `listingType` explicitly.
+ * Calls the shipped `slugPrefix` on each plugin rather than re-deriving the
+ * prefix map — the same decision `audit-seed-listing-type`'s R3 makes, and the
+ * reason that audit caught five `stickers-` ids against a registered
+ * `sticker-` prefix. Returns `undefined` rather than `detectListingTypeFromSlug`'s
+ * `"standard"` default: here, "no prefix matched" must widen to every detail
+ * route, not silently narrow to one.
  */
 function listingTypeFromId(id: string): string | undefined {
-  if (id.startsWith("auction-")) return "auction";
-  if (id.startsWith("preorder-")) return "pre-order";
-  if (id.startsWith("prizedraw-")) return "prize-draw";
-  if (id.startsWith("classified-")) return "classified";
-  if (id.startsWith("digitalcode-")) return "digital-code";
-  if (id.startsWith("live-")) return "live";
-  if (id.startsWith("art-")) return "art";
-  if (id.startsWith("sticker-")) return "stickers";
-  if (id.startsWith("product-")) return "standard";
+  for (const p of PLUGINS) {
+    if (p.slugPrefix && id.startsWith(p.slugPrefix)) return p.listingType;
+  }
   return undefined;
 }
 
 function productTargets(id: string | undefined, hints?: RevalidateHints): string[] {
   const out: string[] = [ROUTES.HOME, ROUTES.PUBLIC.PRODUCTS];
-  if (!id) return out;
+
+  if (!id) {
+    /*
+     * Bulk / unknown write — a seed load, a purge, or the admin "invalidate
+     * everything" button. `/products` alone is not "every listing page": five
+     * types are deliberately OUT of the general catalogue
+     * (`inGeneralCatalogue: false`) and are reachable only at their own browse
+     * route, so a bulk invalidation that marks `/products` leaves `/auctions`,
+     * `/pre-orders`, `/prize-draws`, `/art`, `/stickers` and `/spares` serving
+     * rows that no longer exist.
+     */
+    for (const p of PLUGINS) if (p.browseRoute) out.push(String(p.browseRoute));
+    return Array.from(new Set(out));
+  }
 
   const type = hints?.listingType ?? listingTypeFromId(id);
-  if (type && PRODUCT_DETAIL_BY_TYPE[type]) {
-    out.push(PRODUCT_DETAIL_BY_TYPE[type](id));
-    // The type's own browse page, when it has one distinct from /products.
-    const browse = PRODUCT_DETAIL_BY_TYPE[type](id).replace(/\/[^/]+$/, "");
-    if (browse && browse !== ROUTES.PUBLIC.PRODUCTS) out.push(browse);
+  const plugin = type ? LISTING_TYPE_REGISTRY[type as keyof typeof LISTING_TYPE_REGISTRY] : undefined;
+  if (plugin) {
+    out.push(String(plugin.detailRoute(id)));
+    // The type's own browse page. Read off the plugin, NOT derived by stripping
+    // the detail route's last segment: art/stickers/spares all detail at
+    // `/products/{slug}`, so stripping yields `/products` and loses `/art`,
+    // `/stickers` and `/spares` entirely.
+    if (plugin.browseRoute) out.push(String(plugin.browseRoute));
   } else {
     /*
-     * Unknown type: revalidate EVERY detail route for this id rather than
-     * guessing one. At most nine entries marked stale, none of which renders
-     * until requested — strictly cheaper than leaving the real one live.
+     * Unknown type: revalidate EVERY detail and browse route for this id rather
+     * than guessing one. A couple of dozen entries marked stale, none of which
+     * renders until requested — strictly cheaper than leaving the real one live.
      */
-    for (const build of Object.values(PRODUCT_DETAIL_BY_TYPE)) out.push(build(id));
+    for (const p of PLUGINS) {
+      out.push(String(p.detailRoute(id)));
+      if (p.browseRoute) out.push(String(p.browseRoute));
+    }
   }
 
   // A product's price/stock/status is rendered on every taxonomy page that

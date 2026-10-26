@@ -5,5 +5,6 @@ export type { ServerErrorDetailViewProps } from "./views/ServerErrorDetailView";
 export { MaintenanceDashboardView } from "./views/MaintenanceDashboardView";
 export type { MaintenanceDashboardViewProps } from "./views/MaintenanceDashboardView";
 export { AnalysisRunnerView } from "./views/AnalysisRunnerView";
+export { CacheInvalidationPanel } from "./views/CacheInvalidationPanel";
 export { CloudLogsListView } from "./views/CloudLogsListView";
 export type { CloudLogsListViewProps } from "./views/CloudLogsListView";

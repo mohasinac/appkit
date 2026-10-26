@@ -339,6 +339,17 @@ export const ADMIN_ENDPOINTS = {
   CHECKOUT_BYPASS: "/api/admin/checkout-bypass",
   MAINTENANCE_ANALYSIS: "/api/admin/maintenance/analysis",
   MAINTENANCE_CLOUD_LOGS: "/api/admin/maintenance/cloud-logs",
+  /*
+   * Admin-session-gated cache invalidation.
+   *
+   * 🛑 Deliberately NOT `/api/cache/revalidate`, which authenticates on an
+   * `x-api-key` matching `CACHE_REVALIDATION_SECRET`. That secret belongs to
+   * the Firestore triggers and the seed CLI; shipping it to a browser so a
+   * button could call that endpoint would put a server secret in client code.
+   * This one carries no secret and is gated on the admin session like every
+   * other `/api/admin/*` route.
+   */
+  CACHE_REVALIDATE: "/api/admin/cache/revalidate",
   MEDIA_LIST: "/api/admin/media",
 } as const;
 
