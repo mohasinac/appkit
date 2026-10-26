@@ -124,4 +124,26 @@ export interface PublicSiteSettings {
     listingTypes?: Record<string, number>;
     surfaces?: Record<string, number>;
   };
+  /**
+   * Browse routes that must answer 404 — derived from `listings.listingTypes`
+   * and `surfaceCounts` by `hiddenSurfaceRoutes`, not a stored field.
+   *
+   * 🛑 THIS EXISTS BECAUSE A PAGE-LEVEL `notFound()` CANNOT SET THE STATUS.
+   * Every one of these pages already calls `guardListingSurface`, and measured
+   * against production on 2026-10-27 all seven rendered the "404 — Page not
+   * found" body with HTTP **200**: the layout shell has already streamed by the
+   * time the guard throws, so the status is no longer mutable. `/reviews` was
+   * the one real 404 on the site, and only because it was in `disabledRoutes`
+   * and therefore caught at the edge.
+   *
+   * So the edge is the only place that can answer correctly, and `src/proxy.ts`
+   * consumes this exactly as it consumes `disabledRoutes` — same rewrite, same
+   * cached fetch, no extra request. The page guards stay as defence in depth
+   * (they are what hides the content if this payload never arrives).
+   *
+   * 🛑 Always emitted, defaulted to `[]`, for the reason spelled out on
+   * `disabledRoutes`: the proxy fails OPEN, so "nothing hidden" and "the field
+   * never arrived" are otherwise indistinguishable on the wire.
+   */
+  hiddenSurfacePaths: string[];
 }

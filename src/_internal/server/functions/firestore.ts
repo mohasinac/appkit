@@ -16,6 +16,7 @@ import {
   onReviewWriteHandler,
   onScamReportCreateHandler,
   onScamReportUpdateHandler,
+  onSiteSettingsWriteHandler,
   onStoreWriteHandler,
   onSupportTicketCreateHandler,
   onSupportTicketUpdateHandler,
@@ -94,6 +95,30 @@ export const onCategoryWrite = defineFunction({
   description: "Side-effects on category writes (path materialization, slug indexes).",
   trigger: { kind: "documentWritten", pathPattern: "categories/{categoryId}" },
   handler: onCategoryWriteHandler,
+  options: { region: REGION },
+});
+
+/**
+ * 🛑 The ONE trigger that invalidates the whole page cache.
+ *
+ * `documentWritten` and not `documentUpdated`: a settings document that is
+ * CREATED on first access (`getSingleton` writes defaults when it is missing)
+ * changes the site exactly as much as an edit does.
+ *
+ * `siteSettings` is a singleton, so the `{settingsId}` wildcard matches one
+ * document in practice — it is a wildcard because a trigger path must be, and
+ * the handler reads the id from it rather than hardcoding `"global"`.
+ *
+ * See the handler for why this carries no field-level diff while
+ * `onProductWrite` must, and for the measurement that prompted it: a listing
+ * type switched off in Firestore while its browse page kept serving a cached
+ * 200 because nothing marked it stale.
+ */
+export const onSiteSettingsWrite = defineFunction({
+  name: "onSiteSettingsWrite",
+  description: "Invalidate the whole page cache when site settings change.",
+  trigger: { kind: "documentWritten", pathPattern: "siteSettings/{settingsId}" },
+  handler: onSiteSettingsWriteHandler,
   options: { region: REGION },
 });
 
@@ -209,6 +234,7 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   prizeDrawSoldOutReveal,
   onReviewWrite,
   onCategoryWrite,
+  onSiteSettingsWrite,
   onStoreWrite,
   onSupportTicketCreate,
   onSupportTicketUpdate,

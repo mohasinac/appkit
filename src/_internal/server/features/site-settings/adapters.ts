@@ -32,6 +32,7 @@
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
 import type { PublicSiteSettings } from "../../../shared/features/site-settings/types";
+import { hiddenSurfaceRoutes } from "../../../shared/listing-types/hidden-surfaces";
 
 /**
  * Document fields with a proven `useSiteSettings()` reader. Every entry below
@@ -262,6 +263,15 @@ export function toPublicSiteSettings(
      * would take the entire catalogue off the navbar.
      */
     surfaceCounts: opts?.surfaceCounts,
+    /*
+     * Derived from the two fields above it — the admin flags on `doc` and the
+     * measured counts in `opts`. Computed here rather than in the proxy because
+     * the proxy runs on the EDGE: `hiddenSurfaceRoutes` reaches the listing-type
+     * registry, and pulling that into the middleware bundle to re-derive an
+     * answer the server already holds would be the wrong trade. The edge gets a
+     * list of strings to match, exactly like `disabledRoutes`.
+     */
+    hiddenSurfacePaths: hiddenSurfaceRoutes(doc, opts?.surfaceCounts),
     // D9 — undefined reads as OFF, never a default-true `??`.
     chat: { enabled: doc.chat?.enabled === true },
     /*

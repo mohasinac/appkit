@@ -2,7 +2,8 @@
  * WHY: So the "Liked by" rail and the engagement chart have something real to
  *      render on a fresh database. An empty rail renders null by design, so
  *      without these the feature is invisible and untestable.
- * WHAT: Likes across the six season events from the seeded buyer personas.
+ * WHAT: 9 likes on the one surviving season event, from the seeded buyer
+ *       personas. Was 23 across six events until the 2026-10-27 prune.
  *
  * ## 🛑 IDS ARE DETERMINISTIC AND MUST STAY THAT WAY
  *
@@ -36,8 +37,11 @@ import { eventLikeId } from "../features/events/schemas/likes";
 /*
  * Spread across the last twelve days so the engagement chart has a SHAPE
  * rather than a single spike. `LIKE_TREND_MIN_POINTS` is 5 and the window is
- * 14 days, so the festive hub (9 likes) renders a chart and the quieter
- * events deliberately do not — which is the behaviour worth being able to see.
+ * 14 days, so the festive hub (9 likes) renders a chart.
+ *
+ * 🛑 The contrast this sentence used to draw — "and the quieter events
+ * deliberately do not" — is gone with the five pruned events. There is no
+ * below-threshold fixture any more; see the note in `LIKES`.
  */
 const DAY = 24 * 60 * 60 * 1000;
 const daysAgo = (n: number) => new Date(Date.now() - n * DAY);
@@ -55,31 +59,21 @@ const LIKES: [string, string, number][] = [
   ["event-festive-cashback-10", "user-arjun-gunpla", 1],
   ["event-festive-cashback-10", "user-megumi-figures", 0],
 
-  // Launch week — enough to clear the chart threshold.
-  ["event-beyblade-x-launch-sale", "user-tyson-blader", 8],
-  ["event-beyblade-x-launch-sale", "user-meera-bey", 6],
-  ["event-beyblade-x-launch-sale", "user-ash-trainer", 5],
-  ["event-beyblade-x-launch-sale", "user-rohit-collector", 2],
-  ["event-beyblade-x-launch-sale", "user-ananya-collector", 1],
-
   /*
-   * The remaining four sit BELOW `LIKE_TREND_MIN_POINTS` on purpose. A rail
-   * with three faces and no chart is the common real state, and it is the one
-   * most likely to be got wrong — the chart must render nothing rather than a
-   * flat line that looks like a measurement.
+   * 🛑 THE OTHER 14 LIKES WERE DELETED 2026-10-27, with the five events they
+   * pointed at (see `events-seed-data.ts`). A like whose `eventId` resolves to
+   * nothing is the dangling FK of Root Cause #26, and the "Liked by" rail
+   * would render faces for an event no visitor can open.
+   *
+   * 🛑 CONSEQUENCE: the BELOW-THRESHOLD case is now unfixtured. Those four
+   * events sat under `LIKE_TREND_MIN_POINTS` (5) on purpose, because a rail
+   * with three faces and NO chart is the common real state and the one most
+   * likely to be got wrong — the chart must render nothing rather than a flat
+   * line that looks like a measurement. Only the 9-like hub remains, so today
+   * this corpus exercises the chart-renders branch and not the chart-withheld
+   * branch. Restoring it needs an event to hang the likes on; three orphan
+   * rows would not be a fixture.
    */
-  ["event-spin-the-launcher", "user-meera-bey", 5],
-  ["event-spin-the-launcher", "user-vikram-wheels", 3],
-  ["event-spin-the-launcher", "user-ash-trainer", 1],
-
-  ["event-signed-dranzer-raffle", "user-sneha-vintage", 4],
-  ["event-signed-dranzer-raffle", "user-tyson-blader", 2],
-  ["event-signed-dranzer-raffle", "user-priya-cards", 0],
-
-  ["event-restock-vote-2027", "user-arjun-gunpla", 3],
-  ["event-restock-vote-2027", "user-ananya-collector", 1],
-
-  ["event-burst-clearance-weekend", "user-rohit-collector", 2],
 ];
 
 export const eventLikesSeedData: EventLikeDocument[] = LIKES.map(

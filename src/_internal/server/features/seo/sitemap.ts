@@ -19,12 +19,10 @@ import { safeRead } from "../../../../errors/safe-read";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import {
   ALL_BROWSE_PAGES,
-  ALL_LISTING_TYPES,
   browsePageForPath,
   isBrowsePageEnabled,
-  isListingSurfaceVisible,
 } from "../../../shared/listing-types/feature-flags";
-import { pluginFor } from "../../../shared/listing-types/_registry";
+import { hiddenSurfaceRoutes } from "../../../shared/listing-types/hidden-surfaces";
 import { getSurfaceCounts } from "../products/surface-counts";
 
 // Product field strings — matches consumer field-names.ts
@@ -831,21 +829,14 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
    * the sitemap rather than being withdrawn by a job that has not run.
    */
   const counts = await getSurfaceCounts();
-  const hiddenSurfacePaths = new Set(
-    ALL_LISTING_TYPES.filter((t) => !isListingSurfaceVisible(t, settings, counts))
-      .map((t) => String(pluginFor(t).browseRoute ?? ""))
-      .filter(Boolean),
-  );
   /*
-   * A route shared by several types survives while ANY of them is visible —
-   * `/art` spans art and stickers. Without this, hiding stickers alone would
-   * delist a page art still fills.
+   * 🛑 ONE definition, shared with the edge gate. These two loops used to live
+   * here and are now `hiddenSurfaceRoutes` — because `toPublicSiteSettings`
+   * needs the same answer to tell `src/proxy.ts` which browse routes to 404,
+   * and a sitemap that advertises a URL the edge 404s is a crawl error on a
+   * page we asked Google to fetch.
    */
-  for (const t of ALL_LISTING_TYPES) {
-    if (isListingSurfaceVisible(t, settings, counts)) {
-      hiddenSurfacePaths.delete(String(pluginFor(t).browseRoute ?? ""));
-    }
-  }
+  const hiddenSurfacePaths = new Set(hiddenSurfaceRoutes(settings, counts));
 
   const keep = (entry: MetadataRoute.Sitemap[number]) => {
     const path = entry.url.startsWith("http")

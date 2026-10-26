@@ -46,6 +46,7 @@ export { weeklyPayoutEligibilityHandler } from "./weeklyPayoutEligibility";
 export { onCategoryWriteHandler } from "./onCategoryWrite";
 export { onProductWriteHandler } from "./onProductWrite";
 export { onStoreWriteHandler } from "./onStoreWrite";
+export { onSiteSettingsWriteHandler } from "./onSiteSettingsWrite";
 export { adminAnalyticsHandler, type AdminAnalyticsResult } from "./adminAnalytics";
 export {
   countersReconcileNowHandler,
