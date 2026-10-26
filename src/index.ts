@@ -7037,8 +7037,15 @@ export {
   enabledBrowsePages,
   ALL_BROWSE_PAGES,
   isBrowsePageKey,
+  // Auto-hide gates — same barrel choice as the browse-section ones above.
+  isListingSurfaceVisible,
+  isCountedSurfaceVisible,
+  visibleListingTypes,
 } from "./_internal/shared/listing-types/feature-flags";
-export type { BrowsePageKey } from "./_internal/shared/listing-types/feature-flags";
+export type {
+  BrowsePageKey,
+  SurfaceCountSnapshot,
+} from "./_internal/shared/listing-types/feature-flags";
 // Basic/advanced listing-type split — which types a store may create.
 // Pure (no firebase-admin in its import chain), so it is safe in index.ts.
 export {

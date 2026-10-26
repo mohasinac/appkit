@@ -839,6 +839,12 @@ export type {
   BrowsePageFlags,
   BrowsePageFlagsShape,
 } from "./react/hooks/useBrowsePageFlags";
+// [CLIENT-ONLY] useListingSurfaceVisibility: the admin flag MINUS the surfaces
+// measured as empty. For BROWSING links only — authoring surfaces (the seller
+// type dropdown) must keep using useListingTypeFlags, or the first listing of
+// an emptied type becomes impossible to create.
+export { useListingSurfaceVisibility } from "./react/hooks/useListingSurfaceVisibility";
+export type { ListingSurfaceVisibility } from "./react/hooks/useListingSurfaceVisibility";
 // Action dispatch hook + panel store
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
@@ -1069,8 +1075,17 @@ export {
   enabledBrowsePages,
   ALL_BROWSE_PAGES,
   isBrowsePageKey,
+  // Auto-hide: a surface measured as having nothing in it. Client-safe and
+  // needed here for the same reason as the browse-section gates above — the
+  // nav, sidebar, mobile sheet and footer all filter on them.
+  isListingSurfaceVisible,
+  isCountedSurfaceVisible,
+  visibleListingTypes,
 } from "./_internal/shared/listing-types/feature-flags";
-export type { BrowsePageKey } from "./_internal/shared/listing-types/feature-flags";
+export type {
+  BrowsePageKey,
+  SurfaceCountSnapshot,
+} from "./_internal/shared/listing-types/feature-flags";
 // Basic/advanced listing-type split. Client-safe: the nav filter and any
 // seller-facing picker need the same rule the server enforces, and deriving it
 // twice is how the ten hand-written copies of the union happened.

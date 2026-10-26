@@ -107,4 +107,21 @@ export interface PublicSiteSettings {
   disabledRoutes: string[];
   /** Derived, not a stored field — the resolved marker → wordmark → text chain. */
   effectiveWatermark?: MediaVideoWatermark;
+  /**
+   * Which public browse surfaces currently have something in them. Derived
+   * from the `surfaceCounts/global` document, not a `siteSettings` field —
+   * carried here because this payload is already the channel the navbar,
+   * footer and sidebar read their visibility rules from, so adding a second
+   * client fetch for one more rule would be a request per page load.
+   *
+   * 🛑 OMITTED ENTIRELY when the counts document has not been written yet,
+   * and every reader must treat that as "show everything". A present-but-empty
+   * object would be indistinguishable from "measured, and all zero" — which is
+   * the shape that hides the whole catalogue. `isListingSurfaceVisible`
+   * encodes the rule; do not re-derive it at a call site.
+   */
+  surfaceCounts?: {
+    listingTypes?: Record<string, number>;
+    surfaces?: Record<string, number>;
+  };
 }

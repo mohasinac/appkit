@@ -10,7 +10,10 @@ import { storeRepository } from "../../../../features/stores/repository/store.re
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { isListingRowAvailable } from "../../../shared/listing-types/_registry";
+import { isListingType } from "../../../shared/listing-types/feature-flags";
 import { notifyRevalidate, productCacheFieldsChanged } from "./revalidateNotify";
+import { runSurfaceCountsRollup } from "./surfaceCountsRollup";
+import type { ListingType } from "../../../../features/products/types/index";
 import type { JobContext } from "../runtime/types";
 
 export type ProductDoc = Record<string, JsonValue>;
@@ -366,5 +369,46 @@ export async function handleProductWrite(
       err,
       { productId },
     );
+  }
+
+  /*
+   * Refresh the site-wide "is this surface empty" counters.
+   *
+   * 🛑 Gated on `wasCounted !== isCounted`, reusing the availability-boundary
+   * signals computed just above rather than deriving a second opinion. Those
+   * two booleans already mean "did this row enter or leave the set a public
+   * browse page would show", which is exactly and only when a surface can
+   * cross zero. A stock decrement from 9 to 8 recomputes nothing.
+   *
+   * 🛑 Scoped to the AFFECTED types, never all ten. A product can change
+   * `listingType`, which empties the old surface and fills the new one, so
+   * both are probed — and `only` makes `runSurfaceCountsRollup` merge rather
+   * than replace, so the eight types this write cannot have touched keep
+   * their measured values instead of being dropped to unknown.
+   *
+   * Non-fatal, same contract as the counters above: the nightly rollup is the
+   * healer, and an unwritten counter degrades to "unknown", which every
+   * reader shows rather than hides.
+   */
+  if (wasCounted !== isCounted) {
+    const touched = Array.from(
+      new Set(
+        [before?.listingType, after?.listingType].filter(
+          (t): t is ListingType => typeof t === "string" && isListingType(t),
+        ),
+      ),
+    );
+    if (touched.length > 0) {
+      try {
+        await runSurfaceCountsRollup(ctx, touched);
+      } catch (err) {
+        void normalizeError(err);
+        ctx.logger.error(
+          "Surface-count refresh failed (non-fatal — the nightly rollup will heal it)",
+          err,
+          { productId, touched },
+        );
+      }
+    }
   }
 }

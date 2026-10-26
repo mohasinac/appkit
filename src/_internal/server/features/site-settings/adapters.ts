@@ -175,6 +175,22 @@ export interface ToPublicSiteSettingsOptions {
    * (`src/lib/watermark/resolve-effective-watermark.ts`), not in appkit.
    */
   effectiveWatermark?: MediaVideoWatermark;
+  /**
+   * The `surfaceCounts/global` document, when one exists.
+   *
+   * Injected rather than read here for the same reason as the watermark: this
+   * adapter is a pure projection over a document it is handed, and giving it
+   * a Firestore read of its own would make every caller pay for it.
+   *
+   * 🛑 Pass `undefined` when the document is missing OR the read failed. Those
+   * two must not be distinguished here and must never become `{}`: an absent
+   * key means "unknown, show it", and an empty object measured as all-zero
+   * would hide every browse surface on the site.
+   */
+  surfaceCounts?: {
+    listingTypes?: Record<string, number>;
+    surfaces?: Record<string, number>;
+  };
 }
 
 export function toPublicSiteSettings(
@@ -235,6 +251,17 @@ export function toPublicSiteSettings(
     // and leave the next person wondering whether the projection ran at all.
     disabledRoutes: doc.disabledRoutes ?? [],
     effectiveWatermark: opts?.effectiveWatermark,
+    /*
+     * 🛑 Passed through as-is, INCLUDING `undefined` — the exact opposite of
+     * the `disabledRoutes` line three above, and the contrast is deliberate.
+     *
+     * There, defaulting to `[]` is right because the proxy fails open and an
+     * absent list and an empty list already mean the same thing. Here they
+     * mean OPPOSITE things: absent is "never measured, show everything",
+     * `{}` is "measured, and every surface is empty". Defaulting this one
+     * would take the entire catalogue off the navbar.
+     */
+    surfaceCounts: opts?.surfaceCounts,
     // D9 — undefined reads as OFF, never a default-true `??`.
     chat: { enabled: doc.chat?.enabled === true },
     /*

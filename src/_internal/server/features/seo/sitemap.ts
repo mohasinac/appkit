@@ -19,9 +19,13 @@ import { safeRead } from "../../../../errors/safe-read";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import {
   ALL_BROWSE_PAGES,
+  ALL_LISTING_TYPES,
   browsePageForPath,
   isBrowsePageEnabled,
+  isListingSurfaceVisible,
 } from "../../../shared/listing-types/feature-flags";
+import { pluginFor } from "../../../shared/listing-types/_registry";
+import { getSurfaceCounts } from "../products/surface-counts";
 
 // Product field strings — matches consumer field-names.ts
 const PRODUCT_STATUS = "status";
@@ -809,11 +813,46 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
   const closed = new Set(
     ALL_BROWSE_PAGES.filter((p) => !isBrowsePageEnabled(p, settings)),
   );
+
+  /*
+   * The same treatment for a listing-type surface that is switched off or
+   * measured as holding nothing — `/auctions`, `/art`, `/spares`, …
+   *
+   * 🛑 BROWSE ROUTES ONLY, matched on the exact path. Detail URLs are NOT
+   * dropped here and that is deliberate: art, stickers, spares and standard
+   * all detail at `/products/{slug}`, so a path test cannot tell them apart,
+   * and a prefix rule would silently delist the entire standard catalogue the
+   * day `spares` emptied. An empty type contributes no detail URLs anyway —
+   * its fetcher returns none — so the exact-path rule loses nothing real.
+   *
+   * 🛑 Fails OPEN twice: `settings` is already `safeRead`-wrapped above, and
+   * `getSurfaceCounts` returns `undefined` on any failure, which
+   * `isListingSurfaceVisible` reads as visible. An unmeasured surface stays in
+   * the sitemap rather than being withdrawn by a job that has not run.
+   */
+  const counts = await getSurfaceCounts();
+  const hiddenSurfacePaths = new Set(
+    ALL_LISTING_TYPES.filter((t) => !isListingSurfaceVisible(t, settings, counts))
+      .map((t) => String(pluginFor(t).browseRoute ?? ""))
+      .filter(Boolean),
+  );
+  /*
+   * A route shared by several types survives while ANY of them is visible —
+   * `/art` spans art and stickers. Without this, hiding stickers alone would
+   * delist a page art still fills.
+   */
+  for (const t of ALL_LISTING_TYPES) {
+    if (isListingSurfaceVisible(t, settings, counts)) {
+      hiddenSurfacePaths.delete(String(pluginFor(t).browseRoute ?? ""));
+    }
+  }
+
   const keep = (entry: MetadataRoute.Sitemap[number]) => {
-    if (closed.size === 0) return true;
     const path = entry.url.startsWith("http")
       ? new URL(entry.url).pathname
       : entry.url;
+    if (hiddenSurfacePaths.has(path.replace(/\/+$/, "") || "/")) return false;
+    if (closed.size === 0) return true;
     const page = browsePageForPath(path);
     return page === null || !closed.has(page);
   };

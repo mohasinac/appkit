@@ -2889,3 +2889,17 @@ export type {
  */
 export { getDashboardHubData } from "./_internal/server/features/dashboard/data";
 export type { DashboardHubData } from "./_internal/server/features/dashboard/data";
+
+// Auto-hide: the measured "does this browse surface hold anything" document.
+// Server-only (firebase-admin via getAdminDb); the PREDICATE that reads it is
+// client-safe and lives in client.ts/index.ts beside the other visibility gates.
+export { getSurfaceCounts } from "./_internal/server/features/products/surface-counts";
+export type { PublicSurfaceCounts } from "./_internal/server/features/products/surface-counts";
+/*
+ * 🛑 `runSurfaceCountsRollup` / `computeSurfaceCounts` are deliberately NOT
+ * exported. They live under `_internal/server/jobs/core/` and their only
+ * caller is `countersReconcileHandler`, which imports them directly — so a
+ * barrel entry would leak an `_internal/` symbol for no consumer, which
+ * `audit-appkit-reexports` correctly blocks. Add one only if a consumer
+ * genuinely needs to trigger a rollup from outside appkit.
+ */

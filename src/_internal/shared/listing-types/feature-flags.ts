@@ -208,6 +208,83 @@ export function enabledListingTypes(
   return ALL_LISTING_TYPES.filter((t) => isListingTypeEnabled(t, settings));
 }
 
+// ---------------------------------------------------------------------------
+// Auto-hide: a surface with nothing in it
+// ---------------------------------------------------------------------------
+
+/**
+ * The measured counts, as the public site-settings payload carries them.
+ *
+ * Structurally typed rather than importing `SurfaceCountsDocument` so this
+ * module stays a pure constants file with no feature import — the same reason
+ * it imports only `ROUTES`.
+ */
+export interface SurfaceCountSnapshot {
+  listingTypes?: Partial<Record<ListingType, number>>;
+  surfaces?: Partial<Record<string, number>>;
+}
+
+/**
+ * Should this listing type's public surface be shown at all?
+ *
+ * 🛑 THE PRECEDENCE, and why it is not just `count > 0`:
+ *
+ * | admin flag | measured count | result | because |
+ * |---|---|---|---|
+ * | `false`    | anything   | **hidden** | "we do not sell live animals" is a standing catalogue decision, not a statement about today's stock. An admin who closed a type must not see it reopen because someone listed one. |
+ * | `true`     | `0`        | **hidden** | auto-hide: the thing this function exists for. |
+ * | `true`     | `> 0`      | shown | |
+ * | `true`     | **absent** | **shown** | 🛑 unknown is NOT zero. A fresh install, a failed job, or a type added since the last recompute must render exactly as it does today, never as hidden. Root Cause #72. |
+ *
+ * The flag therefore stays the authority and the count only ever SUBTRACTS
+ * from what the flag already permits. Two mechanisms, one direction — which is
+ * what stops them becoming two switches that disagree.
+ */
+export function isListingSurfaceVisible(
+  type: ListingType,
+  settings: FeatureFlagSnapshot | null | undefined,
+  counts: SurfaceCountSnapshot | null | undefined,
+): boolean {
+  if (!isListingTypeEnabled(type, settings)) return false;
+  const n = counts?.listingTypes?.[type];
+  // `undefined` -> true. Written as an explicit test rather than `(n ?? 1) > 0`
+  // so the unknown case is readable, and so nobody "simplifies" it into a
+  // falsy check that folds 0 and undefined together — which is the bug.
+  if (n === undefined) return true;
+  return n > 0;
+}
+
+/**
+ * The same question for a surface with no listing-type flag behind it
+ * (`/reviews` today).
+ *
+ * No admin-flag half: these have no switch to consult, so emptiness is the
+ * only input. Absent still means shown.
+ */
+export function isCountedSurfaceVisible(
+  surface: string,
+  counts: SurfaceCountSnapshot | null | undefined,
+): boolean {
+  const n = counts?.surfaces?.[surface];
+  if (n === undefined) return true;
+  return n > 0;
+}
+
+/**
+ * Visible listing types — the flag list, minus the ones measured empty.
+ *
+ * This is what nav, footer and the sitemap filter on. `enabledListingTypes`
+ * above is deliberately left alone: it answers "what does this marketplace
+ * sell", which `/api/products`' post-filter and the seller forms still need
+ * even for a type with zero rows today.
+ */
+export function visibleListingTypes(
+  settings: FeatureFlagSnapshot | null | undefined,
+  counts: SurfaceCountSnapshot | null | undefined,
+): ListingType[] {
+  return ALL_LISTING_TYPES.filter((t) => isListingSurfaceVisible(t, settings, counts));
+}
+
 export function enabledCategoryTypes(
   settings: FeatureFlagSnapshot | null | undefined,
 ): CategoryType[] {
