@@ -73,6 +73,17 @@ import {
   type ClosedSurfaceContext,
 } from "../../../_internal/shared/listing-types/route-gating";
 import type { HomepageSectionDocument, SectionType } from "../schemas/firestore";
+/*
+ * 🛑 NOT `Record<string, unknown>`, which `audit-unknown-leakage` blocks
+ * strict-zero: a bag of unknowns type-checks against anything, so it would
+ * accept a `CarouselSlide` or a `ProductItem` here as readily as a config and
+ * the walker would silently do nothing useful. A section config genuinely IS
+ * arbitrary JSON with optional fields — that is what this alias is for.
+ */
+import type {
+  JsonObjectWithUndefined,
+  JsonValueWithUndefined,
+} from "../../../schemas/types";
 
 /**
  * Section types whose entire substance is a set of linked tiles, and which are
@@ -114,14 +125,12 @@ const SCALAR_CTA_KEYS: ReadonlyArray<readonly [link: string, label: string]> = [
 /** Keys whose value is an array of `{ href | link | ctaUrl }` objects. */
 const LINK_ARRAY_KEYS = ["buttons", "banners", "cards", "collections", "links", "items"] as const;
 
-type Dict = Record<string, unknown>;
-
-function isDict(v: unknown): v is Dict {
+function isDict(v: JsonValueWithUndefined): v is JsonObjectWithUndefined {
   return typeof v === "object" && v !== null && !Array.isArray(v);
 }
 
 /** Every destination spelling an authored object may carry. */
-function destinationOf(node: Dict): string | undefined {
+function destinationOf(node: JsonObjectWithUndefined): string | undefined {
   for (const key of ["href", "link", "url", "ctaUrl", "ctaLink"]) {
     const v = node[key];
     if (typeof v === "string" && v.length > 0) return v;
@@ -140,13 +149,13 @@ function destinationOf(node: Dict): string | undefined {
  * any (the same trap `isCardDisabled` documents in `slide-gating`).
  */
 function prune(
-  node: unknown,
+  node: JsonValueWithUndefined,
   ctx: ClosedSurfaceContext,
-): { value: unknown; hadLinks: number; keptLinks: number } {
+): { value: JsonValueWithUndefined; hadLinks: number; keptLinks: number } {
   if (Array.isArray(node)) {
     let hadLinks = 0;
     let keptLinks = 0;
-    const out: unknown[] = [];
+    const out: JsonValueWithUndefined[] = [];
     for (const item of node) {
       const r = prune(item, ctx);
       hadLinks += r.hadLinks;
@@ -160,7 +169,7 @@ function prune(
 
   if (!isDict(node)) return { value: node, hadLinks: 0, keptLinks: 0 };
 
-  const out: Dict = { ...node };
+  const out: JsonObjectWithUndefined = { ...node };
   let hadLinks = 0;
   let keptLinks = 0;
 
@@ -212,7 +221,10 @@ export function gateHomepageSection<T extends HomepageSectionDocument>(
   section: T,
   ctx: ClosedSurfaceContext,
 ): T | null {
-  const { value, hadLinks, keptLinks } = prune(section.config, ctx);
+  const { value, hadLinks, keptLinks } = prune(
+    section.config as JsonValueWithUndefined,
+    ctx,
+  );
 
   // Rule 3: a section whose whole substance is links, left with none.
   if (
