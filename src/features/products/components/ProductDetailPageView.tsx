@@ -67,6 +67,10 @@ import { getGroupsWithItemsForProduct } from "../../../_internal/server/features
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
+import {
+  closedSurfaceContext,
+  isClosedHref,
+} from "../../../_internal/shared/listing-types/route-gating";
 import { MessageSellerButton } from "../../messages/components/MessageSellerButton";
 import { normalizeListingType } from "../utils/listing-type";
 import {
@@ -544,6 +548,36 @@ export async function ProductDetailPageView({
 
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
 
+  /*
+   * 🛑 SELLER IDENTITY IS MARKETPLACE CHROME, and it is wrong on a
+   * single-vendor storefront.
+   *
+   * "Sold by LetItRip Official", a "Visit Store →" button and a "Message
+   * seller" control only mean something when there is more than one seller to
+   * choose between. With `listings.browsePages.stores` closed there is one
+   * vendor, the store page 404s, and the block is a link into a shut door
+   * sitting beside the Buy button.
+   *
+   * Keyed on whether the STORE PAGE is reachable rather than on a new flag of
+   * its own: that is the same question, already answered, and a second switch
+   * is how two controls come to disagree (Root Cause #42). `storeHref` is
+   * `/stores/{slug}`, so `isClosedHref` resolves it through exactly the rule
+   * the nav, footer, sitemap and edge gate all use.
+   *
+   * `counts` is `undefined` on purpose — a browse-page closure is a flag, not
+   * a measurement, so there is nothing for the rollup to contribute here.
+   *
+   * 🛑 Hides the identity, NOT the data. `storeId` still reaches the cart, the
+   * order splitter and the payout path untouched; only the buyer-facing
+   * attribution is withdrawn. Nothing about how an order is routed changes.
+   */
+  const sellerIdentityVisible = !isClosedHref(
+    storeHref,
+    closedSurfaceContext(siteSettings, undefined),
+  );
+  const sellerName = sellerIdentityVisible ? safeSeller : null;
+  const sellerHref = sellerIdentityVisible ? storeHref : null;
+
   return (
     <Main>
       <HistoryTracker
@@ -824,8 +858,10 @@ export async function ProductDetailPageView({
                 />
               )}
 
-              {/* Store card — W1-34 adds optional seller rating + review count */}
-              {safeSeller && (
+              {/* Store card — W1-34 adds optional seller rating + review count.
+                  Gated on `sellerName`, which is null once the store directory
+                  is closed: see the `sellerIdentityVisible` note above. */}
+              {sellerName && (
                 <Div className={`${__P.p3}`} border="subtle" rounded="xl" surface="muted">
                   <Row justify="between" align="center">
                     <Div>
@@ -833,7 +869,7 @@ export async function ProductDetailPageView({
                         Sold by
                       </Text>
                       <Text size="sm" weight="semibold" color="primary">
-                        {safeSeller}
+                        {sellerName}
                       </Text>
                       {typeof p.storeRating === "number" && p.storeRating > 0 && (
                         <Row gap="xs" align="center" className="mt-0.5">
@@ -848,10 +884,12 @@ export async function ProductDetailPageView({
                       )}
                     </Div>
                     <Row gap="xs" align="center" className="shrink-0">
-                      {storeId && <MessageSellerButton storeId={storeId} productId={product.id} />}
-                      {storeHref && (
+                      {sellerName && storeId && (
+                        <MessageSellerButton storeId={storeId} productId={product.id} />
+                      )}
+                      {sellerHref && (
                         <Link
-                          href={storeHref}
+                          href={sellerHref}
                           className="rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                         >
                           Visit Store →
@@ -1275,7 +1313,7 @@ export async function ProductDetailPageView({
                 relatedByStore={relatedByStore}
                 categoryLabel={categoryNames[0] || categoryName || category || undefined}
                 brandLabel={brand || undefined}
-                storeLabel={storeName || undefined}
+                storeLabel={sellerName ? storeName || undefined : undefined}
               />
             </Stack>
           )}

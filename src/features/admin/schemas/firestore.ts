@@ -995,6 +995,29 @@ export interface SiteSettingsDocument extends BaseDocument {
      * Add a new section THERE, not here.
      */
     browsePages?: Partial<Record<string, boolean>>;
+    /**
+     * Public paths withdrawn wholesale — closed including every descendant.
+     *
+     * 🛑 THE FOURTH AXIS, and it exists because the other three cannot express
+     * "this FEATURE is off". `listingTypes` closes a type's browse page,
+     * `browsePages` closes a taxonomy directory, `categoryTypes` closes
+     * bundles — and none of them reaches `/seller-guide`, `/fees`,
+     * `/how-payouts-work`, `/item-requests` or `/scams`.
+     *
+     * 🛑 NOT the same as `disabledRoutes`, and the difference is the whole
+     * point. That array is DERIVED: `updateNavConfigDomain` rebuilds it from
+     * `navConfig ∩ ALL_PUBLIC_NAV_ITEMS` on every nav toggle, so a path that
+     * is not a nav item CANNOT survive there — append one by hand and the next
+     * admin toggle silently re-opens it (Root Cause #42). Most of what a
+     * single-vendor storefront needs to withdraw is footer-only, so it has no
+     * nav item to hang off and this is the only durable home for it.
+     *
+     * Prefix-matched on a `/`-delimited boundary by `closedSurfacePrefixes`,
+     * so `/scams` takes `/scams/report` and `/scams/faqs` with it. Nothing is
+     * deleted: every route, page and `ROUTES.PUBLIC.*` constant still exists,
+     * and removing an entry re-opens it.
+     */
+    closedPaths?: string[];
   };
   /**
    * Admin-authored HTML overrides for the public policy pages. When a key holds
@@ -1309,9 +1332,14 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     whatsappNotifyFeeEnabled: false,
     whatsappNotifyFee: 10,
     whatsappNotifyMonthlyFee: 199,
-    giftWrapFeeEnabled: true,
+    /* Opt-in buyer UPSELLS, off since 2026-10-27 — gift wrap and shipment
+     * protection are marketplace merchandising, not "the basic of the basic
+     * for an ecommerce". Disabling an opt-in extra removes an OPTION, so no
+     * total can go up. `platformFeePercent` is deliberately NOT touched: that
+     * changes what every buyer pays and is a pricing decision. */
+    giftWrapFeeEnabled: false,
     giftWrapFee: 49,
-    shipmentProtectionFeeEnabled: true,
+    shipmentProtectionFeeEnabled: false,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
     saleProtectionFeeEnabled: true,
@@ -1426,6 +1454,41 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       franchise: false,
       stores: false,
     },
+    /*
+     * Marketplace FEATURES withdrawn — the fourth axis, 2026-10-27.
+     *
+     * Owner: reduce a multi-seller marketplace to a plain single-vendor shop.
+     * These are the surfaces whose whole premise is the marketplace — seller
+     * onboarding, the commission schedule, the payout timetable, the scam
+     * registry, the reference tools. `closedPaths` is prefix-matched, so
+     * `/scams` takes `/scams/report` and `/scams/faqs` with it.
+     *
+     * 🛑 NOT in this list, on purpose: `/help`, `/faqs`, `/track`, `/gst`,
+     * `/credits`. They are merely no longer advertised. Closing means 404, and
+     * 404ing a support page someone has bookmarked is a regression with no
+     * upside — unlinking it from the footer is enough.
+     *
+     * 🛑 `/user/become-seller` cannot go here either: `src/proxy.ts` exempts
+     * the whole `/user` subtree from the route gate because it owns its own
+     * RBAC. Seller recruitment is withdrawn by dropping its LINKS instead —
+     * the footer allow-list and the account sidebar's Selling group.
+     */
+    closedPaths: [
+      "/developer",
+      "/fees",
+      "/help/seller-badges",
+      "/how-auctions-work",
+      "/how-emi-works",
+      "/how-offers-work",
+      "/how-payouts-work",
+      "/item-requests",
+      "/lottery",
+      "/parts",
+      "/promotions",
+      "/report",
+      "/scams",
+      "/seller-guide",
+    ],
   },
   shipping: {
     estimatedDays: 5,

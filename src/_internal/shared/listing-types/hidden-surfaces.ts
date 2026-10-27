@@ -58,6 +58,7 @@ interface SettingsSnapshot {
     listingTypes?: Partial<Record<string, boolean>>;
     browsePages?: Partial<Record<BrowsePageKey, boolean>>;
     categoryTypes?: Partial<Record<string, boolean>>;
+    closedPaths?: string[];
   };
   disabledRoutes?: string[];
 }
@@ -163,6 +164,19 @@ export function closedSurfacePrefixes(
    */
   if (!isCategoryTypeEnabled("bundle", settings)) {
     closed.add(String(ROUTES.PUBLIC.BUNDLES));
+  }
+
+  /*
+   * Admin-set feature withdrawals — `/seller-guide`, `/fees`, `/scams`, …
+   *
+   * 🛑 A SEPARATE FIELD from `disabledRoutes` below, not a duplicate of it.
+   * That array is DERIVED from `navConfig` and fully recomputed on every nav
+   * toggle, so a non-nav path appended there is wiped by the next admin save.
+   * Anything footer-only — which is most of a marketplace's explainer
+   * surfaces — has no nav item and can only live here.
+   */
+  for (const path of settings?.listings?.closedPaths ?? []) {
+    if (typeof path === "string" && path.startsWith("/")) closed.add(path);
   }
 
   for (const route of settings?.disabledRoutes ?? []) {

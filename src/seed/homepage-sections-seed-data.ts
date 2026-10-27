@@ -213,8 +213,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         {
           id: "trust-authenticity",
           icon: "shield-check",
-          title: "Authenticity checked",
-          description: "Every seller is verified before their first listing goes live.",
+          title: "Authenticity stated upfront",
+          description: "Every listing says original, reproduction or unverified — never left to guesswork.",
         },
         {
           // Was "Escrow-backed payments". The escrow claim was withdrawn from
@@ -226,13 +226,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
           id: "trust-escrow",
           icon: "lock",
           title: "Secure payments",
-          description: "Your money reaches the seller after the item is delivered and accepted.",
+          description: "Card, UPI and netbanking through Razorpay. We never see or store your card details.",
         },
         {
           id: "trust-returns",
           icon: "rotate-ccw",
           title: "Straightforward returns",
-          description: "Report a problem within the return window and we step in.",
+          description: "Report a problem within the return window and we sort it out.",
         },
         {
           id: "trust-support",
@@ -684,11 +684,21 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   // Same document as the old "Beyblade banner", re-purposed. The id keeps its
   // stale name on purpose: renaming it would create a fresh document and orphan
   // whatever an admin has already edited on this one.
+  /*
+   * 🛑 OFF since 2026-10-27 — the marketplace-to-storefront pass.
+   *
+   * seller RECRUITMENT — "Have collectibles to sell? / Open a store in
+   * minutes", with its primary CTA into `/seller-guide`, which is now closed.
+   * A shop with one vendor does not advertise for more.
+   *
+   * Disabled rather than deleted: the copy and media are intact for the day
+   * any of this comes back.
+   */
   {
     id: "section-beyblade-banner",
     type: "banner",
     order: 17,
-    enabled: true,
+    enabled: false,
     config: {
       height: "md",
       /* Real imagery instead of a `seedPhoto()` grey tile — see the MEDIA block
@@ -736,11 +746,21 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   // Stats moved DOWN from 3rd. Numbers are corroboration for a visitor who is
   // already interested; they answer no question a first-time visitor is asking
   // at the top of the page.
+  /*
+   * 🛑 OFF since 2026-10-27 — the marketplace-to-storefront pass.
+   *
+   * marketplace vanity metrics. The live "Listings" figure reads **0**, and
+   * "Parts catalogued: 2,490" / "Brands: 28" both point at catalogues that
+   * are now closed — three numbers that are either wrong or unreachable.
+   *
+   * Disabled rather than deleted: the copy and media are intact for the day
+   * any of this comes back.
+   */
   {
     id: "section-platform-stats",
     type: "stats",
     order: 19,
-    enabled: true,
+    enabled: false,
     config: {
       /*
        * 🛑 VERIFIABLE FACTS, not volume claims.
@@ -788,30 +808,30 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 20,
     enabled: true,
     config: {
-      title: "Security You Can Trust",
+      title: "Buying here, safely",
       pillLabel: "Built for trust",
       learnMoreLabel: "Learn about our security →",
       learnMoreLink: String(ROUTES.PUBLIC.SECURITY),
       items: [
         {
           key: "escrow",
-          title: "Escrow on every order",
-          description: "Funds reach the seller only after the item is delivered and accepted.",
+          title: "Payments you know",
+          description: "Razorpay handles card, UPI and netbanking. Card details never reach our servers.",
         },
         {
           key: "verified-sellers",
-          title: "Verified sellers only",
-          description: "Identity and payout details are checked before a store can publish.",
+          title: "Authenticity labelled",
+          description: "Original, reproduction or unverified — stated on every listing, with the box codes to check it.",
         },
         {
           key: "scam-registry",
-          title: "Public scam registry",
-          description: "Reported bad actors are recorded so buyers can check before they pay.",
+          title: "A real returns window",
+          description: "If an item arrives wrong or damaged, tell us inside the window and we make it right.",
         },
         {
           key: "encrypted-data",
           title: "Encrypted personal data",
-          description: "Addresses, phone numbers and payout details are encrypted at rest.",
+          description: "Addresses and phone numbers are encrypted at rest.",
         },
       ],
     },
@@ -819,11 +839,20 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(11),
   },
 
+  /*
+   * 🛑 OFF since 2026-10-27 — the marketplace-to-storefront pass.
+   *
+   * a community channel rather than a storefront surface, and its benefits
+   * list promises event codes and limited drops that no longer exist.
+   *
+   * Disabled rather than deleted: the copy and media are intact for the day
+   * any of this comes back.
+   */
   {
     id: "section-whatsapp-community",
     type: "whatsapp-community",
     order: 21,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Join the community",
       description: "Deal alerts, auction reminders, and early access to drops.",
@@ -1216,7 +1245,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       title: "How buying here works",
-      subtitle: "Three steps, and the second one is the part other marketplaces skip.",
+      subtitle: "Three steps, and the second one is the part most shops skip.",
       pillLabel: "New here?",
       ctaLabel: "Browse the catalogue →",
       ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
@@ -1225,7 +1254,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
           number: 1,
           iconKey: "search",
           title: "Find the piece",
-          desc: "Filter by generation, part family, condition and price across every seller on the marketplace.",
+          desc: "Filter by generation, part family, condition and price across the whole catalogue.",
         },
         {
           number: 2,
@@ -1235,9 +1264,9 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         },
         {
           number: 3,
-          iconKey: "lock",
-          title: "Buy with the seller verified",
-          desc: "Identity and payout details are checked before a store can publish, and your address and phone number are encrypted at rest.",
+          iconKey: "package",
+          title: "Order and track it",
+          desc: "Pay by card, UPI or netbanking, then follow the shipment from dispatch to your door.",
         },
       ],
     },

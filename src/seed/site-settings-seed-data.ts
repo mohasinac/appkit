@@ -492,9 +492,14 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     whatsappNotifyFee: 10,
     /* Monthly, seller-paid. The per-order buyer addon above is disabled by default. */
     whatsappNotifyMonthlyFee: 199,
-    giftWrapFeeEnabled: true,
+    /* Opt-in buyer UPSELLS, off since 2026-10-27 — gift wrap and shipment
+     * protection are marketplace merchandising, not "the basic of the basic
+     * for an ecommerce". Disabling an opt-in extra removes an OPTION, so no
+     * total can go up. `platformFeePercent` is deliberately NOT touched: that
+     * changes what every buyer pays and is a pricing decision. */
+    giftWrapFeeEnabled: false,
     giftWrapFee: 49,
-    shipmentProtectionFeeEnabled: true,
+    shipmentProtectionFeeEnabled: false,
     shipmentProtectionFeePercent: 2,
     shipmentProtectionFeeMin: 30,
     saleProtectionFeeEnabled: true,
@@ -601,6 +606,41 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       franchise: false,
       stores: false,
     },
+    /*
+     * Marketplace FEATURES withdrawn — the fourth axis, 2026-10-27.
+     *
+     * Owner: reduce a multi-seller marketplace to a plain single-vendor shop.
+     * These are the surfaces whose whole premise is the marketplace — seller
+     * onboarding, the commission schedule, the payout timetable, the scam
+     * registry, the reference tools. `closedPaths` is prefix-matched, so
+     * `/scams` takes `/scams/report` and `/scams/faqs` with it.
+     *
+     * 🛑 NOT in this list, on purpose: `/help`, `/faqs`, `/track`, `/gst`,
+     * `/credits`. They are merely no longer advertised. Closing means 404, and
+     * 404ing a support page someone has bookmarked is a regression with no
+     * upside — unlinking it from the footer is enough.
+     *
+     * 🛑 `/user/become-seller` cannot go here either: `src/proxy.ts` exempts
+     * the whole `/user` subtree from the route gate because it owns its own
+     * RBAC. Seller recruitment is withdrawn by dropping its LINKS instead —
+     * the footer allow-list and the account sidebar's Selling group.
+     */
+    closedPaths: [
+      "/developer",
+      "/fees",
+      "/help/seller-badges",
+      "/how-auctions-work",
+      "/how-emi-works",
+      "/how-offers-work",
+      "/how-payouts-work",
+      "/item-requests",
+      "/lottery",
+      "/parts",
+      "/promotions",
+      "/report",
+      "/scams",
+      "/seller-guide",
+    ],
   },
   credentials: {
     phonepeClientId: "PGTESTPAYUAT_PLACEHOLDER",
