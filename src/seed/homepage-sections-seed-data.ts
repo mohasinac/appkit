@@ -158,8 +158,22 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       pillLabel: "Buy, sell & collect",
       ctaText: "Start Shopping",
       ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
-      secondaryCtaText: "Explore Categories",
-      secondaryCtaLink: String(ROUTES.PUBLIC.CATEGORIES),
+      /*
+       * 🛑 NOT "Explore Categories" → `/categories`. Same rule as the auctions
+       * note above, one surface over: `listings.browsePages.categories` has
+       * been `false` since 2026-10-24, so that CTA sent the visitor from the
+       * first screen of the site straight into a closed section — and it was
+       * one of 34 links to `/categories` the live homepage was still shipping
+       * when this was measured on 2026-10-27.
+       *
+       * Pre-orders is the honest second destination for a site that sells
+       * standard listings and pre-orders and nothing else. `gateHomepageSection`
+       * would now strip the old pair at render time (link AND label together,
+       * so no button survives pointing nowhere) — but relying on the runtime
+       * filter to hide a seeded fixture leaves dead content that reads as live.
+       */
+      secondaryCtaText: "Shop Pre-Orders",
+      secondaryCtaLink: String(ROUTES.PUBLIC.PRE_ORDERS),
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(2),
@@ -364,11 +378,22 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * the section as on — two surfaces contradicting each other. Both were
    * flipped together; see `site-settings-seed-data.ts`.
    */
+  /*
+   * 🛑 AND OFF AGAIN 2026-10-27, with `listings.categoryTypes.bundle: false`.
+   * The two-lock arrangement described above is the reason this flag moves at
+   * all: the setting is what hides the rail, and leaving this `true` makes the
+   * admin homepage builder show an enabled section the live page never renders.
+   *
+   * A bundle is neither a standard listing nor a pre-order, and those are the
+   * only two types the site now sells. `/bundles` and `/bundles/{slug}` close
+   * with it — that flag now reaches `closedSurfacePrefixes`, where before it
+   * hid this rail while the route went on serving.
+   */
   {
     id: "section-featured-bundles",
     type: "featured-bundles",
     order: 9,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Curated Bundles",
       subtitle: "Multiple items, one discounted price.",
@@ -406,11 +431,26 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * which does not exist in live Firestore; widening these rails means
    * seeding that store, not loosening the words.
    */
+  /*
+   * 🛑 OFF since 2026-10-27 — all three of its tiles now point at closed
+   * surfaces: `/art` (art + stickers both `false`), `/spares` (`false`) and
+   * `/bundles` (`categoryTypes.bundle: false`).
+   *
+   * Worth recording how this one read BEFORE the flags were set, because it is
+   * the defect that motivated the render-time filter: `art` and `spares` were
+   * flagged `true` with a measured count of ZERO, so `isListingSurfaceVisible`
+   * auto-hid both and the edge already answered a real 404 on each — while
+   * this section went on shipping three live links to them. The flag said
+   * enabled, the count said empty, and only the count was true.
+   *
+   * Disabled rather than gutted: the tiles, copy and `/media/` covers are all
+   * correct for the day any of those types comes back.
+   */
   {
     id: "section-shop-extras",
     type: "custom-cards",
     order: 10,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Stickers, spares and bundles",
       subtitle:
@@ -996,7 +1036,21 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     id: "section-systems-matrix",
     type: "custom-cards",
     order: 5,
-    enabled: true,
+    /*
+     * 🛑 OFF since 2026-10-27 — every destination this section offers is a
+     * surface the site has closed. All 35 buttons across its four cards point into `/categories`, closed since 2026-10-24.
+     *
+     * Disabled rather than gutted, deliberately: the content is correct and
+     * costs nothing parked, and re-opening the surface is one flag. Deleting
+     * 35 authored links to save a boolean is the trade nobody wants.
+     *
+     * `gateHomepageSection` would drop this at render time anyway (a
+     * link-bearing section left with no open link is removed), so leaving it
+     * `true` is not a VISIBLE defect — it is a fixture that can never render,
+     * which reads as live content to the next person and is what
+     * `audit-closed-surface-links` fails on.
+     */
+    enabled: false,
     config: {
       title: "Every system, every part family",
       layout: "grid",
@@ -1098,7 +1152,21 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     id: "section-top-collections",
     type: "collection-cards",
     order: 25,
-    enabled: true,
+    /*
+     * 🛑 OFF since 2026-10-27 — every destination this section offers is a
+     * surface the site has closed. Its one CTA points at `/categories`, closed since 2026-10-24. (It was already `enabled: false` in the LIVE document; the seed disagreed.)
+     *
+     * Disabled rather than gutted, deliberately: the content is correct and
+     * costs nothing parked, and re-opening the surface is one flag. Deleting
+     * 1 authored links to save a boolean is the trade nobody wants.
+     *
+     * `gateHomepageSection` would drop this at render time anyway (a
+     * link-bearing section left with no open link is removed), so leaving it
+     * `true` is not a VISIBLE defect — it is a fixture that can never render,
+     * which reads as live content to the next person and is what
+     * `audit-closed-surface-links` fails on.
+     */
+    enabled: false,
     config: {
       title: "Explore the Marketplace",
       subtitle: "Three ways into the catalogue that never go empty.",
@@ -1198,7 +1266,21 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     id: "section-generation-promos",
     type: "promo-grid",
     order: 27,
-    enabled: true,
+    /*
+     * 🛑 OFF since 2026-10-27 — every destination this section offers is a
+     * surface the site has closed. All four generation banners point into `/categories`, closed since 2026-10-24.
+     *
+     * Disabled rather than gutted, deliberately: the content is correct and
+     * costs nothing parked, and re-opening the surface is one flag. Deleting
+     * 4 authored links to save a boolean is the trade nobody wants.
+     *
+     * `gateHomepageSection` would drop this at render time anyway (a
+     * link-bearing section left with no open link is removed), so leaving it
+     * `true` is not a VISIBLE defect — it is a fixture that can never render,
+     * which reads as live content to the next person and is what
+     * `audit-closed-surface-links` fails on.
+     */
+    enabled: false,
     config: {
       eyebrow: "FOUR GENERATIONS",
       heading: "Pick your era",

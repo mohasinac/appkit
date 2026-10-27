@@ -1372,13 +1372,22 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
    * all-true map, and changing this file does NOT rewrite it — flip those in the
    * admin UI, or re-seed.
    */
+  /*
+   * TWO types, as of 2026-10-27 — buy-it-now and reserve, nothing else.
+   *
+   * 🛑 MUST STAY IDENTICAL to `siteSettingsSeedData.listings`, which says the
+   * same thing about this block. They had already drifted: `bundle` was
+   * `false` here and `true` in the seed, so a freshly seeded site shipped the
+   * featured-bundles rail and a never-configured one did not — the exact
+   * disagreement both comments exist to forbid. Change them together.
+   */
   listings: {
     listingTypes: {
       standard: true,
-      spares: true,
       "pre-order": true,
-      art: true,
-      stickers: true,
+      spares: false,
+      art: false,
+      stickers: false,
       auction: false,
       "prize-draw": false,
       classified: false,
@@ -1386,9 +1395,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       live: false,
     },
     // `bundle: false` is the admin-side switch for bundles, which are a
-    // CATEGORY type rather than a listing type — it is what hides the
-    // homepage's featured-bundles rail and the bundle tabs on category and
-    // brand pages. Same reasoning as the five listing types above.
+    // CATEGORY type rather than a listing type — it hides the homepage's
+    // featured-bundles rail and the bundle tabs on category and brand pages,
+    // and since 2026-10-27 it is also what closes `/bundles` and
+    // `/bundles/{slug}` at the edge via `closedSurfacePrefixes`. Same
+    // reasoning as the eight listing types above.
     categoryTypes: {
       category: true,
       sublisting: true,

@@ -531,12 +531,26 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     // admin/schemas/firestore.ts — a seed that disagrees with the default
     // means a freshly seeded site and a never-configured site offer different
     // catalogues. See that block for why every member is now spelled out.
+    /*
+     * TWO types, as of 2026-10-27 — the site sells buy-it-now and reserve,
+     * and nothing else. Owner's instruction: "disable everything on the site,
+     * keep to bare pre orders and standards".
+     *
+     * 🛑 `art`, `stickers` and `spares` were `true` here while all three were
+     * measured at ZERO available listings, so `isListingSurfaceVisible`
+     * auto-hid them and `/art` and `/spares` already answered a real 404 at
+     * the edge — while the seeded homepage went on linking to both three times
+     * each. Setting the flag is what makes the intent legible instead of
+     * leaving it as an accident of the stock count, and it is what lets
+     * `audit-closed-surface-links` see them (that audit reads the flags; it
+     * cannot read a live measurement).
+     */
     listingTypes: {
       standard: true,
-      spares: true,
       "pre-order": true,
-      art: true,
-      stickers: true,
+      spares: false,
+      art: false,
+      stickers: false,
       auction: false,
       "prize-draw": false,
       classified: false,
@@ -550,11 +564,16 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       /*
        * 🛑 Paired with `section-featured-bundles.enabled` in
        * `homepage-sections-seed-data.ts` — flipping one without the other
-       * makes the admin homepage builder and the live page disagree. Turned
-       * back on 2026-10-21 now that five bundles exist with real member
-       * mosaics, including the 10%-off prize-bey trio.
+       * makes the admin homepage builder and the live page disagree.
+       *
+       * OFF since 2026-10-27, with the rest of the catalogue: a bundle is
+       * neither a standard listing nor a pre-order. It is also now the flag
+       * that CLOSES `/bundles` and `/bundles/{slug}` at the edge — see
+       * `closedSurfacePrefixes`, which it reaches because bundles are a
+       * category type and so hit neither the listing-type nor the browse-page
+       * loop. Before that it hid the homepage rail while the route served.
        */
-      bundle: true,
+      bundle: false,
     },
     /*
      * Every browse section CLOSED, as of 2026-10-24 — `/categories`,

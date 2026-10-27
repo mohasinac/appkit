@@ -61,6 +61,9 @@ import { MAX_ACTIVE_SLIDES } from "../features/homepage/schemas";
 import { buildSlidesFromEvents } from "../features/events/utils/carousel-slide";
 import { eventsSeedData } from "./events-seed-data";
 import { ROUTES } from "../next/routing/route-map";
+import { TABLE_KEYS } from "../constants/table-keys";
+import { sortBy } from "../constants/sort";
+import { PRODUCT_FIELDS } from "../constants/field-names";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -187,33 +190,52 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       },
       {
         /*
-         * 🛑 THIS WAS THE AUCTIONS CARD ("Bid / Live auctions / Place a bid
-         * before the timer runs out" → `/auctions`), and it was still on the
-         * first screen of the site weeks after `listings.listingTypes.auction`
-         * went `false`. The section-level gate in `MarketplaceHomepageView` is
-         * keyed on `SectionType` and a carousel is type `carousel` whatever it
-         * contains, so nothing could see it. `gateCarouselSlides` now can — but
-         * a filter that leaves a hole in a `repeat(3, 1fr)` row is a fallback,
-         * not a fix, so the slot gets real content instead.
+         * 🛑 THIS SLOT HAS NOW BEEN REPOINTED TWICE, AND THE PATTERN IS THE
+         * LESSON: on a site that keeps withdrawing surfaces, the safe
+         * destination for a hero card is one that cannot close.
          *
-         * 🛑 NOT `/spares` and NOT `/art`, which were the obvious swaps: both
-         * types are ENABLED, both have a working browse page, and both held
-         * ZERO published products when this was written (measured against
-         * production, 2026-10-20). Replacing a dead-end card with a different
-         * dead-end card is not a fix. `/categories` is populated — six roots,
-         * 28 brands, 8 franchises — and browsing the tree is genuinely the
-         * third way to shop here.
+         * It was the AUCTIONS card ("Bid / Live auctions / Place a bid before
+         * the timer runs out" → `/auctions`), still on the first screen weeks
+         * after `listings.listingTypes.auction` went `false` — the
+         * section-level gate is keyed on `SectionType` and a carousel is type
+         * `carousel` whatever it contains, so nothing could see it.
+         *
+         * It was then repointed to `/categories`, which was the right call at
+         * the time and was closed four days later (`browsePages.categories:
+         * false`, 2026-10-24). The card outlived that too: measured against
+         * production 2026-10-27, this was one of 34 live `/categories` links
+         * on the homepage.
+         *
+         * 🛑 STILL NOT `/spares` and NOT `/art` — the same swaps rejected last
+         * time, for a reason that has only got stronger. Both held ZERO
+         * published listings then, both are now flagged `false` outright, and
+         * both already answer a real 404. Replacing a dead-end card with a
+         * different dead-end card is not a fix.
+         *
+         * So: `/products`, deep-linked to the newest-first sort. It is the one
+         * surface that cannot close while the site is open — and if the sort
+         * token is ever renamed, an unrecognised `?sort=` is IGNORED rather
+         * than erroring, so the card degrades to the plain catalogue instead
+         * of breaking. `gateCarouselSlides` reads the path with the query
+         * stripped, so the deep link is gated as `/products`.
          */
         id: "card-hero-browse",
         zone: 2,
         mobileZone: 2,
         background: { type: "image", url: MEDIA.cardBundles, dimOverlay: { enabled: true, opacity: 0.5 } },
         content: {
-          eyebrow: "Explore",
-          title: "Shop by category",
-          description: "Walk the tree from generation down to a single part.",
+          eyebrow: "Just in",
+          title: "New arrivals",
+          description: "The latest tops and parts listed, newest first.",
         },
-        buttons: [{ id: "card-hero-browse-cta", text: "Browse categories", href: String(ROUTES.PUBLIC.CATEGORIES), variant: "primary" }],
+        buttons: [
+          {
+            id: "card-hero-browse-cta",
+            text: "See what's new",
+            href: `${String(ROUTES.PUBLIC.PRODUCTS)}?${TABLE_KEYS.SORT}=${sortBy(PRODUCT_FIELDS.CREATED_AT)}`,
+            variant: "primary",
+          },
+        ],
         hover: { effect: "scale" },
       },
       {
