@@ -4,6 +4,10 @@
  */
 
 import type { AboutContentDocument } from "../../about/schemas/firestore";
+/* Pure constants module with no firebase-admin in its import chain, so this
+ * stays safe in the client bundle (appkit Export Rules). Same reasoning as
+ * the ROUTES import in `_internal/shared/listing-types/feature-flags.ts`. */
+import { ROUTES } from "../../../next/routing/route-map";
 import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../../../_internal/shared/features/auctions/config";
 import type { RateChange } from "../../../_internal/shared/features/pricing/rate-registry";
 
@@ -1474,20 +1478,20 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
      * the footer allow-list and the account sidebar's Selling group.
      */
     closedPaths: [
-      "/developer",
-      "/fees",
-      "/help/seller-badges",
-      "/how-auctions-work",
-      "/how-emi-works",
-      "/how-offers-work",
-      "/how-payouts-work",
-      "/item-requests",
-      "/lottery",
-      "/parts",
-      "/promotions",
-      "/report",
-      "/scams",
-      "/seller-guide",
+      String(ROUTES.PUBLIC.DEVELOPER),
+      String(ROUTES.PUBLIC.FEES),
+      String(ROUTES.PUBLIC.HELP_SELLER_BADGES),
+      String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK),
+      String(ROUTES.PUBLIC.HOW_EMI_WORKS),
+      String(ROUTES.PUBLIC.HOW_OFFERS_WORK),
+      String(ROUTES.PUBLIC.HOW_PAYOUTS_WORK),
+      String(ROUTES.PUBLIC.ITEM_REQUESTS),
+      String(ROUTES.PUBLIC.LOTTERIES),
+      String(ROUTES.PUBLIC.PARTS),
+      String(ROUTES.PUBLIC.PROMOTIONS),
+      String(ROUTES.PUBLIC.REPORT_ENTITY),
+      String(ROUTES.PUBLIC.SCAMS),
+      String(ROUTES.PUBLIC.SELLER_GUIDE),
     ],
   },
   shipping: {
