@@ -32,7 +32,10 @@
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
 import type { PublicSiteSettings } from "../../../shared/features/site-settings/types";
-import { hiddenSurfaceRoutes } from "../../../shared/listing-types/hidden-surfaces";
+import {
+  closedSurfacePrefixes,
+  hiddenSurfaceRoutes,
+} from "../../../shared/listing-types/hidden-surfaces";
 
 /**
  * Document fields with a proven `useSiteSettings()` reader. Every entry below
@@ -272,6 +275,23 @@ export function toPublicSiteSettings(
      * list of strings to match, exactly like `disabledRoutes`.
      */
     hiddenSurfacePaths: hiddenSurfaceRoutes(doc, opts?.surfaceCounts),
+    /*
+     * The PREFIX half of the same answer — closed browse pages, plus the
+     * `disabledRoutes` the line above already carries.
+     *
+     * 🛑 A SEPARATE FIELD rather than more entries in `hiddenSurfacePaths`,
+     * because the proxy applies the two with different match rules and merging
+     * them would force one rule on both. Exact-only is load-bearing for the
+     * listing-type list (`art`/`spares`/`standard` share `/products/{slug}`);
+     * prefix is load-bearing here, because closing `/categories` while serving
+     * all 4,698 `/categories/{slug}` pages is what production was doing.
+     *
+     * Overlaps `disabledRoutes` on purpose. The proxy unions both into one
+     * prefix set, so a duplicate is free — and deriving the whole prefix list
+     * in ONE place is what stops the sitemap and the edge disagreeing, which
+     * is the only reason `hiddenSurfaceRoutes` was extracted.
+     */
+    hiddenSurfacePrefixes: closedSurfacePrefixes(doc),
     // D9 — undefined reads as OFF, never a default-true `??`.
     chat: { enabled: doc.chat?.enabled === true },
     /*

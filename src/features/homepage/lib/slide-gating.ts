@@ -1,6 +1,12 @@
 /**
- * Carousel gating — strip slides and cards that advertise a disabled listing
- * type.
+ * Carousel gating — strip slides and cards that advertise a CLOSED surface.
+ *
+ * 🛑 "closed surface", not "disabled listing type". This read the listing-type
+ * flags alone until 2026-10-27, and the two axes it could not see were the two
+ * doing visible damage: a type auto-hidden for being empty (`/art`, `/spares`
+ * — both answering a real 404 while the homepage linked to them), and a closed
+ * browse section (`/categories`, linked 34 times from the live homepage).
+ * `isClosedHref` owns all three axes now; see its docstring.
  *
  * ## The gap this closes
  *
@@ -34,15 +40,11 @@
  * admin authors later, where the gap is a visible prompt to go and fix it.
  */
 
-import { isDisabledListingHref } from "../../../_internal/shared/listing-types/route-gating";
+import {
+  isClosedHref,
+  type ClosedSurfaceContext,
+} from "../../../_internal/shared/listing-types/route-gating";
 import type { CarouselSlide } from "../types/index";
-import type { ListingType } from "../../products/types/index";
-
-interface ListingFlagSnapshot {
-  listings?: {
-    listingTypes?: Partial<Record<ListingType, boolean>>;
-  };
-}
 
 /**
  * Every destination a card offers. A card with no buttons is still clickable
@@ -63,11 +65,11 @@ function cardHrefs(card: CarouselSlide["cards"][number]): string[] {
  */
 function isCardDisabled(
   card: CarouselSlide["cards"][number],
-  settings: ListingFlagSnapshot | null | undefined,
+  ctx: ClosedSurfaceContext,
 ): boolean {
   const hrefs = cardHrefs(card);
   if (hrefs.length === 0) return false;
-  return hrefs.every((href) => isDisabledListingHref(href, settings));
+  return hrefs.every((href) => isClosedHref(href, ctx));
 }
 
 /**
@@ -78,32 +80,29 @@ function isCardDisabled(
  * slide carries `overlay.button.link` AND `link.url`, while a slide can
  * legitimately have only one.
  */
-function isSlideDisabled(
-  slide: CarouselSlide,
-  settings: ListingFlagSnapshot | null | undefined,
-): boolean {
-  if (isDisabledListingHref(slide.overlay?.button?.link, settings)) return true;
-  if (isDisabledListingHref(slide.link?.url, settings)) return true;
+function isSlideDisabled(slide: CarouselSlide, ctx: ClosedSurfaceContext): boolean {
+  if (isClosedHref(slide.overlay?.button?.link, ctx)) return true;
+  if (isClosedHref(slide.link?.url, ctx)) return true;
   return false;
 }
 
 /**
- * Filter a slide list for the current listing-type flags.
+ * Filter a slide list against the surfaces this site currently has open.
  *
  * Returns a new array; input is not mutated. Fails OPEN — with no settings
- * document every `isListingTypeEnabled` call returns `true` and nothing is
- * removed, which is the right failure for a read that errored (Root Cause
- * #72: an unknown must never be read as "zero").
+ * document `isClosedHref` classifies nothing and nothing is removed, which is
+ * the right failure for a read that errored (Root Cause #72: an unknown must
+ * never be read as "zero").
  */
 export function gateCarouselSlides<T extends CarouselSlide>(
   slides: readonly T[],
-  settings: ListingFlagSnapshot | null | undefined,
+  ctx: ClosedSurfaceContext,
 ): T[] {
   const kept: T[] = [];
   for (const slide of slides) {
-    if (isSlideDisabled(slide, settings)) continue;
+    if (isSlideDisabled(slide, ctx)) continue;
 
-    const cards = (slide.cards ?? []).filter((card) => !isCardDisabled(card, settings));
+    const cards = (slide.cards ?? []).filter((card) => !isCardDisabled(card, ctx));
     const hadCards = (slide.cards ?? []).length > 0;
 
     // A cards-slide that lost ALL its cards renders as a bare background with

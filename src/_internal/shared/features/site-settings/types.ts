@@ -146,4 +146,28 @@ export interface PublicSiteSettings {
    * never arrived" are otherwise indistinguishable on the wire.
    */
   hiddenSurfacePaths: string[];
+  /**
+   * Closed routes that take their DESCENDANTS with them — closed browse pages
+   * (`/categories`, `/brands`, `/franchise`, `/stores`, `/sellers`) plus
+   * `disabledRoutes`. Derived by `closedSurfacePrefixes`, not stored.
+   *
+   * 🛑 SEPARATE FROM `hiddenSurfacePaths` because the two carry different
+   * MATCH RULES, and each rule is load-bearing in opposite directions. Exact
+   * matching is required above (`art`/`stickers`/`spares`/`standard` all detail
+   * at `/products/{slug}`, so a prefix rule would 404 the whole standard
+   * catalogue the day `spares` emptied). Prefix matching is required here: all
+   * four browse pages had been closed since 2026-10-24 and production still
+   * served `/categories/category-beyblade-x` and `/stores/store-beyblade-arena`
+   * as real, indexable 200s. A closed section whose 4,698 detail pages stay
+   * open is not closed.
+   *
+   * Overlaps `disabledRoutes` deliberately — the proxy unions both into one
+   * prefix set, and deriving the full list once is what stops the sitemap and
+   * the edge disagreeing about which URLs exist.
+   *
+   * 🛑 Always emitted, defaulted to `[]`, for the same reason as the two lists
+   * above it: the proxy fails OPEN, so "nothing closed" and "the field never
+   * arrived" are otherwise indistinguishable on the wire.
+   */
+  hiddenSurfacePrefixes: string[];
 }

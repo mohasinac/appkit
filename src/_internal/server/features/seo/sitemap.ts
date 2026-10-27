@@ -22,7 +22,11 @@ import {
   browsePageForPath,
   isBrowsePageEnabled,
 } from "../../../shared/listing-types/feature-flags";
-import { hiddenSurfaceRoutes } from "../../../shared/listing-types/hidden-surfaces";
+import {
+  closedSurfacePrefixes,
+  hiddenSurfaceRoutes,
+  isUnderClosedPrefix,
+} from "../../../shared/listing-types/hidden-surfaces";
 import { getSurfaceCounts } from "../products/surface-counts";
 
 // Product field strings — matches consumer field-names.ts
@@ -837,12 +841,30 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
    * page we asked Google to fetch.
    */
   const hiddenSurfacePaths = new Set(hiddenSurfaceRoutes(settings, counts));
+  /*
+   * 🛑 `disabledRoutes` WAS NEVER APPLIED HERE, and it showed. Measured against
+   * the production sitemap on 2026-10-27, with `disabledRoutes: ["/blog",
+   * "/reviews"]` live and both paths already 404ing at the edge, the sitemap
+   * advertised **17 `/blog` URLs and one `/reviews` URL**.
+   *
+   * That is 18 crawl errors on pages we explicitly asked Google to fetch — the
+   * precise failure the `closed` filter below exists to prevent, on the one
+   * axis it did not cover. The browse-page half was handled because
+   * `browsePageForPath` is prefix-aware; the hand-disabled half had no reader.
+   *
+   * `closedSurfacePrefixes` is the SAME function `toPublicSiteSettings` feeds
+   * to `src/proxy.ts`, so the list of URLs this withholds and the list the edge
+   * 404s are now derived once and cannot drift (the whole reason
+   * `hiddenSurfaceRoutes` was extracted in the first place).
+   */
+  const closedPrefixes = closedSurfacePrefixes(settings);
 
   const keep = (entry: MetadataRoute.Sitemap[number]) => {
     const path = entry.url.startsWith("http")
       ? new URL(entry.url).pathname
       : entry.url;
     if (hiddenSurfacePaths.has(path.replace(/\/+$/, "") || "/")) return false;
+    if (isUnderClosedPrefix(path, closedPrefixes)) return false;
     if (closed.size === 0) return true;
     const page = browsePageForPath(path);
     return page === null || !closed.has(page);

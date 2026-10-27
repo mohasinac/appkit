@@ -118,6 +118,21 @@ const BROWSE_PAGE_PREFIXES: ReadonlyArray<readonly [string, BrowsePageKey]> = [
 ];
 
 /**
+ * The path prefixes a given section owns — the inverse of `browsePageForPath`.
+ *
+ * 🛑 Exported so `closedSurfacePrefixes` can build the edge-gate list from the
+ * SAME table `browsePageForPath` matches against. It is one key to five paths
+ * (`stores` owns both `/stores` and `/sellers`), so a caller that re-derived
+ * "the path for a key" from `ROUTES` would get four entries and leave
+ * `/sellers` served — the exact half-closed door the `BrowsePageKey` docstring
+ * above exists to forbid. Root Cause #61: every hand-written second copy of an
+ * enumeration in this codebase has drifted at least once.
+ */
+export function browsePagePrefixes(page: BrowsePageKey): string[] {
+  return BROWSE_PAGE_PREFIXES.filter(([, key]) => key === page).map(([prefix]) => prefix);
+}
+
+/**
  * Which browse section a link points into, or `null` for a link that is not in
  * one. Used to drop nav, sidebar, mobile-sheet and footer entries for a closed
  * section.

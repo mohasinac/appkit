@@ -19,6 +19,9 @@ import { safeRead } from "../../../errors/safe-read";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { gateCarouselSlides } from "../lib/slide-gating";
+import { gateHomepageSections } from "../lib/section-gating";
+import { closedSurfaceContext } from "../../../_internal/shared/listing-types/route-gating";
+import { getSurfaceCounts } from "../../../_internal/server/features/products/surface-counts";
 import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import {
@@ -159,7 +162,7 @@ export async function MarketplaceHomepageView({
     siteSettings?.announcementBar?.message?.trim() || SECTION_COPY.announcementFallback;
   const showAnnouncement = siteSettings?.announcementBar?.enabled ?? true;
 
-  const [allSections, rawFaqItems] = await Promise.all([
+  const [allSections, rawFaqItems, surfaceCounts] = await Promise.all([
     safeRead(() => homepageSectionsRepository.getEnabledSections(), {
       route: "/", key: "homepage.enabledSections", fallback: [] as HomepageSectionDocument[],
     }),
@@ -167,7 +170,28 @@ export async function MarketplaceHomepageView({
     safeRead(() => getHomepageFaqsCached(), {
       route: "/", key: "homepage.faqs", fallback: [],
     }),
+    /*
+     * 🛑 The homepage did NOT read these until 2026-10-27, and that was the
+     * whole reason it kept advertising `/art` and `/spares` after both began
+     * answering a real 404: the flag for each was still `true` and only the
+     * measured count said empty. Every other surface on the site — nav,
+     * footer, sitemap, the edge gate — already ANDed the two.
+     *
+     * `getSurfaceCounts` swallows its own failures and returns `undefined`,
+     * which `isListingSurfaceVisible` reads as VISIBLE. So an unmeasured or
+     * unreadable count leaves the homepage as authored rather than stripping
+     * it (Root Cause #72) — which is also why it needs no `safeRead` wrapper.
+     */
+    getSurfaceCounts(),
   ]);
+
+  /*
+   * One context for every link decision on this page — the carousel slides and
+   * the section configs both consult it, so they cannot disagree about which
+   * destinations are open. Built once because the prefix list is derived work
+   * and the callers are loops over dozens of links.
+   */
+  const closedSurfaces = closedSurfaceContext(siteSettings, surfaceCounts);
 
   // A homepage section must not advertise a listing type the site does not
   // offer. This gate previously read `featureFlags.{auctions,preOrders,events,
@@ -181,7 +205,7 @@ export async function MarketplaceHomepageView({
   // no product control for "we don't run events", and there never was one that
   // anything but this line read. Those are switched off per-document instead
   // (`enabled: false`), which is the only lever they have.
-  const enabledSections = allSections.filter((section) => {
+  const typeGatedSections = allSections.filter((section) => {
     const type = section.type as SectionType;
     const gatedListing = HOMEPAGE_SECTION_LISTING_TYPE[type];
     if (gatedListing && !isListingTypeEnabled(gatedListing, siteSettings)) return false;
@@ -191,6 +215,23 @@ export async function MarketplaceHomepageView({
     if (gatedBrowse && !isBrowsePageEnabled(gatedBrowse, siteSettings)) return false;
     return true;
   });
+
+  /*
+   * The FOURTH gate, and the only one that can see authored content.
+   *
+   * 🛑 All three maps above are keyed on `SectionType`, so none of them can
+   * say anything about a `custom-cards` / `promo-grid` / `banner` / `welcome`
+   * section — one generic type whose only tie to a surface is where its
+   * buttons point. Measured on the live homepage 2026-10-27, that blind spot
+   * was shipping **34 links to the closed `/categories` section** and **3 each
+   * to `/art` and `/spares`, both of which already answered a real 404**, from
+   * four sections the gates above had no opinion about.
+   *
+   * Runs AFTER the type gates, not instead of them: a section the type gate
+   * already dropped must not be walked at all, and the type gates remain the
+   * right answer for a section that IS a surface.
+   */
+  const enabledSections = gateHomepageSections(typeGatedSections, closedSurfaces);
 
   // Collect live metric requests from all enabled stats sections
   const liveStatRequests: import("../lib/live-stats").LiveStatRequest[] = [];
@@ -351,7 +392,7 @@ export async function MarketplaceHomepageView({
    * type, so a keyword scan would miss the worse of the two offenders while
    * eating innocent ones. See `slide-gating.ts`.
    */
-  const carouselSlides = gateCarouselSlides(toCarouselSlides(slides), siteSettings);
+  const carouselSlides = gateCarouselSlides(toCarouselSlides(slides), closedSurfaces);
 
   return (
     <Main>
