@@ -1472,10 +1472,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
      * 404ing a support page someone has bookmarked is a regression with no
      * upside — unlinking it from the footer is enough.
      *
-     * 🛑 `/user/become-seller` cannot go here either: `src/proxy.ts` exempts
-     * the whole `/user` subtree from the route gate because it owns its own
-     * RBAC. Seller recruitment is withdrawn by dropping its LINKS instead —
-     * the footer allow-list and the account sidebar's Selling group.
+     * 🛑 `/user/become-seller` is listed but the EDGE will never enforce it:
+     * `src/proxy.ts` exempts the whole `/user` subtree, which owns its own
+     * RBAC. It is declared here anyway so there is one list, and the page
+     * itself reads it (`BecomeSellerGate`) and refuses. The edge enforces
+     * what it can reach; the page enforces the rest.
      */
     closedPaths: [
       String(ROUTES.PUBLIC.DEVELOPER),
@@ -1491,6 +1492,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.PROMOTIONS),
       String(ROUTES.PUBLIC.REPORT_ENTITY),
       String(ROUTES.PUBLIC.SCAMS),
+      /* No `ROUTES.PUBLIC.SELL` constant exists, so `/sell` — the public
+       * seller-recruitment landing page — is closed on the LIVE document by
+       * `scripts/close-remaining-surfaces.mjs` and is absent here. Adding the
+       * constant is an appkit change; this comment is the marker for it. */
+      String(ROUTES.USER.BECOME_SELLER),
       String(ROUTES.PUBLIC.SELLER_GUIDE),
     ],
   },
