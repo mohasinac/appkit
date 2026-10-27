@@ -20,7 +20,7 @@ import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
 import { gateCarouselSlides } from "../lib/slide-gating";
 import { gateHomepageSections } from "../lib/section-gating";
-import { closedSurfaceContext } from "../../../_internal/shared/listing-types/route-gating";
+import { closedSurfaceContext, isClosedHref } from "../../../_internal/shared/listing-types/route-gating";
 import { getSurfaceCounts } from "../../../_internal/server/features/products/surface-counts";
 import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
@@ -192,6 +192,30 @@ export async function MarketplaceHomepageView({
    * and the callers are loops over dozens of links.
    */
   const closedSurfaces = closedSurfaceContext(siteSettings, surfaceCounts);
+
+  /*
+   * 🛑 THE ANNOUNCEMENT BAR IS AUTHORED CONTENT TOO, and it is the FIRST thing
+   * on the page — so it was the worst remaining place to advertise a closed
+   * surface. Found by screenshotting the built page rather than by reading the
+   * HTML: the live bar read "… — See Events for codes" and linked `/events`,
+   * which `disabledRoutes` now closes.
+   *
+   * It survived the grep that caught everything else because the bar is
+   * CLIENT-rendered through a portal, so `/events` never appears as an `href`
+   * in the server HTML — it arrives as a prop in the RSC payload. The tell was
+   * in the browser console, not the markup: a `next/link` prefetch of
+   * `/events?_rsc=…` answering **404**.
+   *
+   * Dropping only the LINK is deliberate, and the message is left alone: the
+   * copy is the admin's, this code cannot rewrite English, and a bar that
+   * still reads "See Events for codes" with nothing to click is a smaller
+   * wrong than silently editing someone's promotional copy. The honest fix for
+   * the wording is the admin changing it — which `close-remaining-surfaces.mjs`
+   * now does for the live document.
+   */
+  const announcementLink = isClosedHref(siteSettings?.announcementBar?.link, closedSurfaces)
+    ? undefined
+    : siteSettings?.announcementBar?.link;
 
   // A homepage section must not advertise a listing type the site does not
   // offer. This gate previously read `featureFlags.{auctions,preOrders,events,
@@ -407,7 +431,7 @@ export async function MarketplaceHomepageView({
           <TopBannerPortal>
             <AnnouncementBar
               message={announcementMessage}
-              link={siteSettings?.announcementBar?.link}
+              link={announcementLink}
               onDismiss={onBannerDismiss}
             />
           </TopBannerPortal>
