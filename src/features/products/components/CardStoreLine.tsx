@@ -20,6 +20,7 @@
 import React from "react";
 import { Text } from "../../../ui/components/Typography";
 import { safeDisplayName } from "../../../security/pii-redact";
+import { useBrowsePageFlags } from "../../../react/hooks/useBrowsePageFlags";
 
 export interface CardStoreLineProps {
   storeName?: string;
@@ -59,6 +60,28 @@ function humanizeStoreSlug(slug: string): string {
 }
 
 export function CardStoreLine({ storeName, storeId, className }: CardStoreLineProps) {
+  /*
+   * 🛑 A SELLER BYLINE IS MARKETPLACE CHROME — silent on a single-vendor shop.
+   *
+   * "by LetItRip Official" repeated under every card tells a buyer nothing
+   * when there is only one seller: it is the same six words on every tile,
+   * costing a line of vertical space on all six card variants and implying a
+   * choice that does not exist.
+   *
+   * Keyed on whether the STORE DIRECTORY is open, the same question the
+   * product page's "Sold by" block asks, so the two cannot disagree. This
+   * hook is the client-side reader of that flag (a card is `"use client"`, so
+   * it cannot take the server's settings read).
+   *
+   * 🛑 Fails OPEN while settings load — `useBrowsePageFlags` defaults every
+   * section to open, so a cold paint shows the byline and then removes it
+   * rather than flashing it in. That is the right direction for a marketplace
+   * that still has one; the alternative hides a real seller on every cold
+   * load. Root Cause #72.
+   */
+  const browsePages = useBrowsePageFlags();
+  if (!browsePages.isEnabled("stores")) return null;
+
   if (!storeId && !storeName) return null;
 
   // `safeDisplayName` also guards the encrypted-value case: a PII-ciphertext

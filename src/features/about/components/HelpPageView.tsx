@@ -20,6 +20,13 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import {
+  closedSurfaceContext,
+  isClosedHref,
+} from "../../../_internal/shared/listing-types/route-gating";
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { safeRead } from "../../../errors/safe-read";
+
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
   p8: "p-[var(--appkit-space-8)]",
@@ -35,6 +42,22 @@ export async function HelpPageView({
   const flex = { row: FLEX_ROW };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("helpPage");
+
+  /*
+   * 🛑 THE HELP INDEX IS A HARDCODED LINK LIST, which is the same blind spot
+   * the homepage had: nothing here knows that `/help/seller-badges` and
+   * `/seller-guide` are now closed, so two of its seven tiles pointed at a
+   * 404 — on the page a confused buyer goes to when something has already
+   * gone wrong.
+   *
+   * Filtered through the one closed-surface rule rather than by deleting the
+   * entries: a withdrawn surface is a flag, so the tile returns on its own if
+   * the flag is flipped back.
+   */
+  const settings = await safeRead(() => getSiteSettingsGlobal(), {
+    route: "/help", key: "help.siteSettings", fallback: null,
+  });
+  const closedSurfaces = closedSurfaceContext(settings, undefined);
 
   const TOPICS = [
     {
@@ -101,7 +124,7 @@ export async function HelpPageView({
           byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
       <ProseHero title={t("title")} subtitle={t("subtitle")} />
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderTopicsGrid(t, flex, TOPICS)}
+        {renderTopicsGrid(t, flex, TOPICS.filter((x) => !isClosedHref(x.href, closedSurfaces)))}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t)}
         {renderContactCtaSection(t)}
