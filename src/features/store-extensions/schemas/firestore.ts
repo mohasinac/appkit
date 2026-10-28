@@ -1,6 +1,7 @@
 import type { AlertMetric } from "../constants/alert-metrics";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { Encrypted, Plaintext } from "../../../security/encrypted";
 /**
  * S-STORE Extensions — Firestore Document Types
  *
@@ -34,15 +35,39 @@ export interface PayoutMethodDocument extends BaseDocument {
   isDefault: boolean;
   isActive: boolean;
   // UPI
-  upiVpa?: string;
+  upiVpa?: Encrypted<string>;
   // Bank
-  accountNumber?: string;
-  ifscCode?: string;
+  accountNumber?: Encrypted<string>;
+  ifscCode?: Encrypted<string>;
   accountHolderName?: string;
   bankName?: string;
   // Card / other
   details?: Record<string, string>;
 }
+
+/** `Plaintext<T>` is the one definition of this shape; see `security/encrypted.ts`. */
+export type PayoutMethodPlain = Plaintext<PayoutMethodDocument>;
+
+/**
+ * The three fields BaseRepository's write hooks encrypt at rest.
+ *
+ * 🛑 Exported rather than inlined in the repository, because `revealPii` /
+ * `maskPii` need the same list and two copies of a field list is Root Cause
+ * #75 — one money predicate hand-written in six places, two of which had
+ * silently dropped a field.
+ *
+ * `accountHolderName` is deliberately ABSENT: it is a person's name on the
+ * seller's own payout method, it is not matched by the audit's PII shape
+ * regex, and it was never encrypted. Adding it here would brand a field the
+ * write hooks have never encrypted, so `decryptValue` would pass the
+ * plaintext straight through and the brand would be a lie — exactly the
+ * half-change CLAUDE.md warns about.
+ */
+export const PAYOUT_METHOD_PII_FIELDS = [
+  "upiVpa",
+  "accountNumber",
+  "ifscCode",
+] as const;
 
 export const PAYOUT_METHODS_COLLECTION = "payoutMethods" as const;
 export const PAYOUT_METHOD_INDEXED_FIELDS = [

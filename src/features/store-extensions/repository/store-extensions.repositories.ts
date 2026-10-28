@@ -10,19 +10,26 @@
  * per-method override is needed (which is the point of the hooks — Pattern #9
  * described overrides that never existed).
  *
+ * 🛑 Reads are CIPHERTEXT-BY-DEFAULT since 2026-10-28. Those three fields are
+ * `Encrypted<string>` and `mapDoc` does not decrypt; use
+ * `maskedPayoutMethod(s)` (the default) or `revealPayoutMethod(s)` (opt-in and
+ * named). The interim state — encrypted at rest but decrypted on every read —
+ * was invisible to `audit-pii-coverage` purely because this file is named
+ * `.repositories.ts` and its filter read `.repository.ts`.
+ *
  * The other ten hold no PII and use the BaseRepository public API only.
  */
 
 import { BaseRepository } from "../../../providers/db-firebase";
-import type { DocumentSnapshot } from "firebase-admin/firestore";
 import { arrayUnion, increment } from "../../../contracts/field-ops";
-import { decryptPiiFields } from "../../../security/pii-encrypt";
+import { revealPii } from "../../../security/pii-accessors";
 import {
   ANALYTICS_ALERTS_COLLECTION,
   ANALYTICS_CARDS_COLLECTION,
   ITEM_REQUESTS_COLLECTION,
   LISTING_TEMPLATES_COLLECTION,
   MODERATION_QUEUE_COLLECTION,
+  PAYOUT_METHOD_PII_FIELDS,
   PAYOUT_METHODS_COLLECTION,
   REPORTS_COLLECTION,
   SHIPPING_CONFIGS_COLLECTION,
@@ -36,6 +43,7 @@ import {
   type ListingTemplateDocument,
   type ModerationQueueDocument,
   type PayoutMethodDocument,
+  type PayoutMethodPlain,
   type ReportDocument,
   type ShippingConfigDocument,
   type StoreCategoryDocument,
@@ -51,17 +59,52 @@ export class PayoutMethodsRepository extends BaseRepository<PayoutMethodDocument
    * (`listByStore` filters on `storeId`), so no read path depended on their
    * plaintext.
    */
-  protected override piiFields = ["upiVpa", "accountNumber", "ifscCode"] as const;
+  protected override piiFields = PAYOUT_METHOD_PII_FIELDS;
 
   constructor() {
     super(PAYOUT_METHODS_COLLECTION);
   }
 
-  /** Decrypt on read so callers see the shape they wrote. */
-  protected override mapDoc<D = PayoutMethodDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<PayoutMethodDocument>(snap);
-    return decryptPiiFields(raw, [...this.piiFields]) as unknown as D;
+  /*
+   * 🛑 `mapDoc` no longer decrypts — reads return what Firestore holds.
+   *
+   * It used to override `mapDoc` and call `decryptPiiFields` on every read, so
+   * a plain `listByStore()` handed its caller a decrypted bank account number
+   * and IFSC code, and `GET /api/store/payout-methods` returned all three in
+   * full. That survived because `audit-pii-coverage` filtered
+   * `.endsWith(".repository.ts")` and this file is `.repositories.ts`, so the
+   * audit whose entire purpose is to find this reported `0 findings` — see the
+   * note on `isRepositoryModule` in that script.
+   */
+
+  /**
+   * Plaintext PII. **Opt-in and named** — the four `/api/store/payout-methods`
+   * response sites call it explicitly, which is the whole gain here: the
+   * decrypt is now four greppable call sites instead of implicit for every
+   * reader of this repository.
+   *
+   * 🛑 There is deliberately NO masked variant yet, and that is not an
+   * oversight. Masking payout methods properly means following
+   * `SellerPayoutSettingsView`'s convention — a separate `accountNumberMasked`
+   * key with the real field ABSENT, the form input starting empty, and "blank
+   * keeps existing" enforced server-side — because masking the real key
+   * in-place would be double-masked by
+   * `SellerPayoutMethodsView.getMaskedIdentifier` and, worse, saved over the
+   * real value by `.../[id]/edit`, which PATCHes its whole prefilled form
+   * back. When that change lands it is
+   * `maskPii(doc, PAYOUT_METHOD_PII_FIELDS)`, one import away; an unused
+   * accessor shipped ahead of it is the speculative surface `AK3-yagni-prune`
+   * exists to delete.
+   */
+  revealPayoutMethod(doc: PayoutMethodDocument): PayoutMethodPlain {
+    return revealPii<PayoutMethodPlain>(doc, PAYOUT_METHOD_PII_FIELDS);
   }
+
+  /** As `revealPayoutMethod`, for a list read. */
+  revealPayoutMethods(docs: readonly PayoutMethodDocument[]): PayoutMethodPlain[] {
+    return docs.map((d) => this.revealPayoutMethod(d));
+  }
+
   async listByStore(storeId: string): Promise<{ items: PayoutMethodDocument[] }> {
     const items = await this.findBy("storeId", storeId);
     return { items };
