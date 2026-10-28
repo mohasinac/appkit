@@ -21,6 +21,24 @@ export interface PaymentOrder {
   expiresAt?: string;
 }
 
+/**
+ * What the buyer was checking out, round-tripped through the gateway's own
+ * metadata so the confirmation path can rebuild the order.
+ *
+ * 🛑 This lived in `providers/payment-phonepe/index.ts` as
+ * `PhonePeCheckoutIntent`, and the name was the only gateway-shaped thing about
+ * it — every field is OURS. That naming forced generic checkout code to import
+ * a concrete provider for a type, which is the coupling Tier AK A4 exists to
+ * remove. PhonePe happens to carry it in `udf1..udf4`; another gateway would
+ * carry it some other way, and neither fact belongs in the type's name.
+ */
+export interface CheckoutIntentMetadata {
+  uid: string;
+  addressId?: string;
+  outOfStockPolicy?: string;
+  notes?: string;
+}
+
 export interface PaymentCapture {
   id: string;
   orderId: string;
@@ -160,6 +178,35 @@ export abstract class IPaymentProvider {
   ): Promise<PaymentOrder>;
   /** Returns true if the webhook signature is valid. */
   abstract verifyWebhook(payload: string, signature: string): boolean;
+
+  /**
+   * Verify the BUYER-PRESENT checkout callback — a different exchange from a
+   * webhook, which is why `verifyWebhook` cannot serve it.
+   *
+   * A webhook is server-to-server and signed over a raw body. This is the
+   * redirect/callback the buyer's own browser hands back after paying
+   * (Razorpay's `razorpay_order_id` + `razorpay_payment_id` +
+   * `razorpay_signature`). Until this existed, generic checkout code imported
+   * Razorpay's verifier directly — a concrete gateway named in the one place
+   * that must work for every gateway.
+   *
+   * 🛑 MUST FAIL CLOSED. A gateway with no such handshake returns `false`, not
+   * `true`: this call is what decides whether a payment is genuine, so the
+   * default for "I cannot verify this" is rejection. Returning `true` would
+   * accept a forged callback.
+   *
+   * 🛑 The SECRET stays the caller's to resolve, deliberately. The call site
+   * already reads it from settings and fails closed when absent; moving that
+   * inside would change which code holds the key and what happens when it is
+   * missing, which is a bigger change than the dispatch this method is for.
+   *
+   * @param payload the gateway's callback fields, shape-checked by the provider
+   * @param secret  the key secret, resolved by the caller
+   */
+  abstract verifyCheckoutSignature(
+    payload: Record<string, string>,
+    secret: string,
+  ): boolean;
   abstract capturePayment(orderId: string): Promise<PaymentCapture>;
   abstract refund(paymentId: string, amount?: number): Promise<Refund>;
   abstract getOrder(orderId: string): Promise<PaymentOrder>;

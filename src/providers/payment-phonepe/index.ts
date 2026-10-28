@@ -48,6 +48,7 @@ import {
 import type { JsonValue } from "@mohasinac/appkit";
 import { IPaymentProvider } from "../../contracts";
 import type {
+  CheckoutIntentMetadata,
   PaymentOrder,
   PaymentCapture,
   Refund,
@@ -66,12 +67,15 @@ import { normalizeError } from "../../errors/normalize";
  * the tab mid-payment. See `confirmAndPlacePhonePeOrderAction` in
  * `_internal/server/features/checkout/actions.ts`.
  */
-export interface PhonePeCheckoutIntent {
-  uid: string;
-  addressId?: string;
-  outOfStockPolicy?: string;
-  notes?: string;
-}
+/**
+ * @deprecated Use `CheckoutIntentMetadata` from `contracts/payment`.
+ *
+ * Kept as an alias so existing imports keep compiling. Every field is ours —
+ * the only PhonePe-specific thing was the name, and it forced generic checkout
+ * code to import this provider for a TYPE (A4). PhonePe carries it in
+ * `udf1..udf4`; that is a packing detail, not a definition.
+ */
+export type PhonePeCheckoutIntent = CheckoutIntentMetadata;
 
 function packMetaInfo(intent: PhonePeCheckoutIntent): MetaInfo {
   return MetaInfo.builder()
@@ -217,6 +221,22 @@ export class PhonePeProvider extends IPaymentProvider {
       void normalizeError(err);
       return false;
     }
+  }
+
+  /**
+   * PhonePe has no buyer-present SIGNED callback of this shape.
+   *
+   * Its redirect carries no signature — confirmation comes from the Order
+   * Status API or the webhook (`verifyWebhook` above, which does the real
+   * `validateCallback`). So there is nothing here to verify, and the honest
+   * answer is rejection.
+   *
+   * 🛑 `false`, never `true`. "No signature to check" and "the signature is
+   * good" must never collapse into the same return value on the call that
+   * decides whether a payment is genuine.
+   */
+  verifyCheckoutSignature(_payload: Record<string, string>, _secret: string): boolean {
+    return false;
   }
 
   /** Wraps the Order Status API. `orderId` here is our `merchantOrderId`. */

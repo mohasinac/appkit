@@ -63,7 +63,9 @@ import type {
 } from "../../contracts";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { paiseToRupees } from "../../core/money";
-import { verifyWebhookSignature } from "./signature";
+// `verifyPaymentSignature` is re-exported below, but a re-export does not bring
+// it into THIS module's scope — `verifyCheckoutSignature` calls it directly.
+import { verifyPaymentSignature, verifyWebhookSignature } from "./signature";
 
 export {
   verifyPaymentSignature,
@@ -196,6 +198,27 @@ export class RazorpayProvider extends IPaymentProvider {
   verifyWebhook(payload: string, signature: string): boolean {
     if (!this.webhookSecret) return false;
     return verifyWebhookSignature(payload, signature, this.webhookSecret);
+  }
+
+  /**
+   * The buyer-present callback from `checkout.js`.
+   *
+   * 🛑 Delegates to the SAME `verifyPaymentSignature` the checkout action
+   * called directly before A4b — identical HMAC, identical `hexEqual`
+   * comparison, identical `if (!keySecret) return false`. The dispatch moved
+   * behind the contract; the arithmetic did not move at all. That is what let
+   * this be proven equivalent rather than argued about.
+   *
+   * The three fields are checked before the cast: a callback missing any of
+   * them cannot be verified, and "cannot verify" is rejection.
+   */
+  verifyCheckoutSignature(payload: Record<string, string>, secret: string): boolean {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = payload;
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) return false;
+    return verifyPaymentSignature(
+      { razorpay_order_id, razorpay_payment_id, razorpay_signature },
+      secret,
+    );
   }
 
   /**

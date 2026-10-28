@@ -55,6 +55,20 @@ export class ManualPaymentProvider extends IPaymentProvider {
   }
 
   /**
+   * Manual payment has no gateway callback to verify, so there is nothing that
+   * could make this true.
+   *
+   * 🛑 `false`, never `true`. This is the check that decides whether a payment
+   * is genuine; a provider that cannot verify must REJECT, not wave through.
+   * Returning `true` here would mean a forged gateway callback is accepted on
+   * any install where the gateway flag is off — which is exactly the install
+   * where nobody is watching for one.
+   */
+  verifyCheckoutSignature(_payload: Record<string, string>, _secret: string): boolean {
+    return false;
+  }
+
+  /**
    * Manual payments are considered captured the moment the buyer's
    * reference/proof is recorded — there is no separate auth+capture step.
    */

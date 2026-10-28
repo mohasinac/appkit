@@ -139,13 +139,13 @@ import {
 import type { OutOfStockPolicy } from "../../../../features/orders/schemas/index";
 import { getDefaultCurrency } from "../../../../core/baseline-resolver";
 import { getProviders } from "../../../../contracts";
-import type { PhonePeCheckoutIntent } from "../../../../providers/payment-phonepe/index";
+// A4 — the checkout intent is OURS, not PhonePe's; it lives on the contract now.
+import type { CheckoutIntentMetadata } from "../../../../contracts/payment";
 /*
  * The SDK-free signature module, NOT the provider's `index.ts`. Importing the
  * index would pull a static `import Razorpay from "razorpay"` into this
  * action's import graph for one HMAC comparison — see that file's header.
  */
-import { verifyPaymentSignature as verifyRazorpayPaymentSignature } from "../../../../providers/payment-razorpay/signature";
 import { resolveKeys } from "../../../../core/integration-keys";
 import { paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
@@ -4081,9 +4081,44 @@ export async function verifyAndPlaceGatewayOrderAction(
    */
   if (input.razorpaySignature) {
     const { razorpayKeySecret } = await resolveKeys();
+    /*
+     * 🛑 A4b — through the CONTRACT, not a direct Razorpay import.
+     *
+     * This file used to `import { verifyPaymentSignature } from
+     * "providers/payment-razorpay/signature"`, which named one gateway in the
+     * one place that has to work for every gateway. `verifyCheckoutSignature`
+     * is on `IPaymentProvider` now; Razorpay's implementation calls the SAME
+     * function with the SAME HMAC, so no arithmetic moved.
+     *
+     * Everything that made this fail closed is unchanged: the branch still only
+     * runs when a signature is present, the secret is still resolved here, and
+     * `!!razorpayKeySecret` still short-circuits. A provider with no such
+     * handshake (manual, PhonePe) returns `false` — never `true`.
+     *
+     * Proven rather than argued: `.build-memory/checkout-sig-parity.mjs` ran
+     * both paths over 12 cases — valid, tampered order id, tampered payment id,
+     * wrong secret, empty secret, non-hex, short, and every missing-field
+     * permutation. The provider never accepts what the direct call rejected.
+     *
+     * One case differs, in the safe direction, and it fixes a latent crash:
+     * on a callback MISSING `razorpay_signature` the old call THREW
+     * (`hexEqual` reads `.length` of `undefined`), so a malformed callback
+     * escaped as an unhandled TypeError instead of taking the rejection path
+     * below. The provider checks its three fields first and returns false, so
+     * that request now gets logged as `signature_mismatch` like any other
+     * forgery.
+     */
+    /*
+     * 🛑 No `payment!`. `payment` is OPTIONAL on the registry, and a missing
+     * provider must reject rather than throw — the same fail-closed direction
+     * as the absent secret beside it. An assertion here would turn an
+     * unconfigured install into a 500 on the payment path.
+     */
+    const paymentProvider = getProviders().payment;
     const signatureValid =
       !!razorpayKeySecret &&
-      verifyRazorpayPaymentSignature(input.razorpaySignature, razorpayKeySecret);
+      !!paymentProvider &&
+      paymentProvider.verifyCheckoutSignature(input.razorpaySignature, razorpayKeySecret);
     if (!signatureValid) {
       serverLogger.warn(
         `Razorpay signature rejected: order=${input.razorpaySignature.razorpay_order_id} payment=${input.razorpaySignature.razorpay_payment_id}`,
@@ -4214,8 +4249,8 @@ export async function verifyAndPlaceGatewayOrderAction(
   // (no session) reconstructs them from the gateway's own passthrough channel
   // — PhonePe's `metaInfo`, Razorpay's `notes` — both packed at create-order
   // time and both surfaced as `PaymentOrder.metadata`. See
-  // `PhonePeCheckoutIntent`, which is the shape either one carries.
-  const intent = gatewayOrder.metadata as unknown as PhonePeCheckoutIntent | undefined;
+  // `CheckoutIntentMetadata`, which is the shape either one carries.
+  const intent = gatewayOrder.metadata as unknown as CheckoutIntentMetadata | undefined;
   const uid = input.userId ?? intent?.uid;
   if (!uid) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);

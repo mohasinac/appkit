@@ -36,6 +36,7 @@ export type { UploadOptions, StorageFile, IStorageProvider } from "./storage";
 
 // Payment
 export type {
+  CheckoutIntentMetadata,
   PaymentOrder,
   PaymentCapture,
   Refund,
