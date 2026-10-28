@@ -66,6 +66,7 @@ import { payoutRepository } from "../../../../features/payments/repository/payou
 import { serverErrorsRepository } from "../../../../features/server-errors/repository/server-errors.repository";
 import { ValidationError } from "../../../../errors";
 import { roundRupees } from "../../../../utils/number.formatter";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export type ApplyRefundDeductionInput = {
   storeId: string;
@@ -144,7 +145,7 @@ export async function applyRefundDeductionAction(
           route: "applyRefundDeductionAction",
           code,
           message:
-            `Clawback of ₹${deductedAmount} for order ${input.orderId} (store ${input.storeId}) could not be applied: ${unrecoverable}. ` +
+            `Clawback of ${formatMoney(deductedAmount)} for order ${input.orderId} (store ${input.storeId}) could not be applied: ${unrecoverable}. ` +
             `The seller retains this amount for returned goods; there is no automatic recovery until a seller ledger exists.`,
           requestId: input.refundId,
         });

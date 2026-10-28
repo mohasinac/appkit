@@ -1,4 +1,5 @@
 import { NotFoundError, ValidationError, ConflictError, ExpiredError } from "../../errors/index";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export class AuctionNotFoundError extends NotFoundError {
   constructor(id: string) {
@@ -16,7 +17,7 @@ export class AuctionEndedError extends ExpiredError {
 
 export class BidTooLowError extends ValidationError {
   constructor(minBid: number) {
-    super(`Bid must be at least ₹${minBid.toLocaleString("en-IN")}`, "amount");
+    super(`Bid must be at least ${formatMoney(minBid)}`, "amount");
     this.name = "BidTooLowError";
   }
 }

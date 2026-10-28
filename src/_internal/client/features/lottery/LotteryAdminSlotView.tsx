@@ -8,6 +8,7 @@ import { Section } from "../../../../ui/components/Semantic";
 import { DataTable } from "../../../../ui/DataTable";
 import type { DataTableColumn } from "../../../../ui/DataTable";
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 interface AdminLotterySlot extends ClientLotterySlot {
   price: number;
@@ -40,7 +41,7 @@ export function LotteryAdminSlotView({ slots }: LotteryAdminSlotViewProps) {
       key: "price",
       header: "Price (₹)",
       render: (s) => (
-        <Text size="sm" family="mono">₹{s.price.toLocaleString("en-IN")}</Text>
+        <Text size="sm" family="mono">{formatMoney(s.price)}</Text>
       ),
     },
     {

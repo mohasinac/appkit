@@ -34,9 +34,21 @@ import {
  */
 export function formatMoney(amount: number, locale?: string): string {
   const resolvedLocale = locale ?? getDefaultLocale();
+  /*
+   * 🛑 0 decimals if integral, otherwise exactly 2 — NOT `min: 0, max: 2`.
+   *
+   * That first draft was wrong and `published-values.ts` caught it: with a
+   * floor of 0, `1499.5` renders "₹1,499.5", a money figure with one decimal
+   * place. The rule money actually wants is "no trailing .00 on a whole
+   * amount, but always both places when there are paise" — which is exactly
+   * what the `formatRupees` this replaced encoded as
+   * `minimumFractionDigits: Number.isInteger(amount) ? 0 : 2`, and what its own
+   * docstring stated as `₹10`, `₹1,499.50`.
+   */
+  const fractionDigits = Number.isInteger(amount) ? 0 : 2;
   const grouped = new Intl.NumberFormat(resolvedLocale, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(amount);
   /*
    * Symbol then number, not `Intl`'s currency placement. These strings are

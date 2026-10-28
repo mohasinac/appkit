@@ -48,6 +48,7 @@ import {
 import { deadlinesFor } from "../../../shared/obligations/deadlines";
 import { paymentCasesRepository } from "../../../../features/payment-cases/repository/payment-cases.repository";
 import { orderGoodsValue } from "../../../shared/checkout/order-math";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface FileProtectionClaimInput {
   orderId: string;
@@ -136,7 +137,7 @@ export async function fileProtectionClaimAction(
     const claimedAmount = orderGoodsValue(order);
     if (kind === "sale" && claimedAmount > SALE_PROTECTION_MAX_VALUE) {
       throw new ValidationError(
-        `Sale protection covers orders up to ₹${SALE_PROTECTION_MAX_VALUE.toLocaleString("en-IN")}. This order is above that, so the claim needs a human — please contact support.`,
+        `Sale protection covers orders up to ${formatMoney(SALE_PROTECTION_MAX_VALUE)}. This order is above that, so the claim needs a human — please contact support.`,
       );
     }
 

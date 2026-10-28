@@ -79,6 +79,7 @@ import {
   paymentCaseResolveFormSchema,
   type PaymentCaseResolveFormValues,
 } from "../../payment-cases/schemas/resolve-form";
+import { formatMoney } from "../../../utils/number.formatter";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -132,7 +133,7 @@ const KIND_LABEL: Record<string, string> = {
 
 /** Rupees, for a row. Plain `toFixed` — these are already decimal rupees. */
 function money(value: JsonValue | undefined): string | null {
-  return typeof value === "number" ? `₹${value.toFixed(2)}` : null;
+  return typeof value === "number" ? formatMoney(value) : null;
 }
 
 export type AdminMoneyCasesViewProps = ListingLayoutProps;

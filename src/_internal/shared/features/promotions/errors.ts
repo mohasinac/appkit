@@ -1,4 +1,5 @@
 import { NotFoundError, ConflictError, ValidationError, ExpiredError } from "../../errors/index";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export class CouponNotFoundError extends NotFoundError {
   constructor(code: string) {
@@ -30,7 +31,7 @@ export class CouponPerUserLimitError extends ConflictError {
 
 export class CouponMinPurchaseError extends ValidationError {
   constructor(minAmount: number) {
-    super(`Minimum purchase of ₹${minAmount.toLocaleString("en-IN")} required for this coupon`, "total");
+    super(`Minimum purchase of ${formatMoney(minAmount)} required for this coupon`, "total");
     this.name = "CouponMinPurchaseError";
   }
 }

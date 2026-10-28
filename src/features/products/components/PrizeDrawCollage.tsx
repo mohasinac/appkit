@@ -28,6 +28,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
@@ -98,7 +99,7 @@ function toGalleryImages(
     // again one click away.
     sub:
       canSeePrices && it.estimatedValue != null
-        ? `est. ₹${it.estimatedValue.toLocaleString("en-IN")}`
+        ? `est. ${formatMoney(it.estimatedValue)}`
         : undefined,
   }));
 }
@@ -201,7 +202,7 @@ export function PrizeDrawCollage<T extends CollagePrizeItem = PrizeDrawItem>({
                   // price beside it already carries the sign-in gate.
                   <PricesOnly>
                     <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
-                      est. ₹{it.estimatedValue.toLocaleString("en-IN")}
+                      est. {formatMoney(it.estimatedValue)}
                     </Text>
                   </PricesOnly>
                 ) : null}

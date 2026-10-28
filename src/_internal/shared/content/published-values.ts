@@ -55,6 +55,7 @@ import {
   DISPUTE_TRANSIT_WINDOW_DAYS,
   DISPUTE_NOT_REACHED_GRACE_DAYS,
 } from "../features/orders/dispute-reasons";
+import { formatMoney } from "../../../utils/number.formatter";
 
 /**
  * The offer checkout deadline, in hours, derived from the constant the lapse
@@ -319,8 +320,5 @@ export function resolvePublishedCopy(
 /** `₹10`, `₹1,499.50` — no trailing `.00` on a whole rupee figure. */
 function formatRupees(amount: number): string {
   const whole = Number.isInteger(amount);
-  return `₹${amount.toLocaleString("en-IN", {
-    minimumFractionDigits: whole ? 0 : 2,
-    maximumFractionDigits: 2,
-  })}`;
+  return formatMoney(amount);
 }

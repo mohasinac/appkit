@@ -20,6 +20,7 @@ import type { ChartSpec } from "../../../ui/components/chart-spec";
 import { calculateDiscount } from "../../promotions/schemas/firestore";
 import type { CouponDocument } from "../../promotions/schemas/firestore";
 import type { AttachedCoupon } from "../../promotions/constants/attached-coupons";
+import { formatMoney } from "../../../utils/number.formatter";
 
 
 /** A poll needs at least one real vote before a bar chart means anything. */
@@ -143,7 +144,7 @@ export function buildCouponSavingsChart(coupons: AttachedCoupon[]): ChartSpec | 
   return {
     kind: "groupedBar",
     title: "What each code saves",
-    categories: BASKET_SIZES.map((b) => `₹${INR.format(b)}`),
+    categories: BASKET_SIZES.map((b) => formatMoney(b)),
     series,
     unit: "₹",
     caption: captionParts.join(" "),

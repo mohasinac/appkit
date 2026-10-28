@@ -4,6 +4,7 @@ import { userRepository } from "../../../../features/auth/repository/user.reposi
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { SCAM_TYPE_LABELS } from "../../../../features/scams/constants/scam-types";
 import type { JobContext } from "../runtime/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface HandleScamReportCreateInput {
   scammerId: string;
@@ -77,7 +78,7 @@ export async function handleScamReportCreate(
    */
   try {
     const scamTypeLabel = scamType ? (SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS] ?? scamType) : "Unknown";
-    const amountStr = amountLost ? ` ₹${amountLost.toLocaleString("en-IN")}` : "";
+    const amountStr = amountLost ? ` ${formatMoney(amountLost)}` : "";
     const platformStr = scamPlatform ? ` via ${scamPlatform}` : "";
 
     await adminNotificationsRepository.create({

@@ -1,3 +1,4 @@
+import { formatMoney } from "../../../../utils/number.formatter";
 /**
  * Cancel an order AND give the money back — one owner, three callers.
  *
@@ -253,7 +254,7 @@ async function openOwedCase(
        */
       subjectId: order.id,
       severity: "error",
-      title: `Refund of ₹${amount.toFixed(2)} owed on cancelled order ${order.id}`,
+      title: `Refund of ${formatMoney(amount)} owed on cancelled order ${order.id}`,
       detail: [
         ...detailLines,
         "",
@@ -262,7 +263,7 @@ async function openOwedCase(
         `Store: ${order.storeId ?? "—"}`,
         `Payment method: ${order.paymentMethod ?? "unknown"}`,
         `Gateway reference: ${order.paymentId ?? "—"}`,
-        `Amount owed: ₹${amount.toFixed(2)}`,
+        `Amount owed: ${formatMoney(amount)}`,
         "",
         "The order is cancelled and its stock is restored. `refundAmount` is recorded on the order with `refundStatus: \"pending\"`, so this case and the order agree about what is owed.",
       ].join("\n"),

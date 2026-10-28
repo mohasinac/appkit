@@ -66,6 +66,7 @@ import {
 import { reconcileObligations } from "../../../_internal/shared/obligations/deadlines";
 import { obligationsRepository } from "../../obligations/repository/obligations.repository";
 import { ORDER_FIELDS } from "../../../constants/field-names";
+import { formatMoney } from "../../../utils/number.formatter";
 
 /**
  * Who/why for a write that lands in `statusHistory`.
@@ -1055,7 +1056,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       if (committed + event.amount > opts.refundableBase + opts.epsilon) {
         const remaining = Math.max(0, opts.refundableBase - committed);
         throw new ValidationError(
-          `Refund of ₹${event.amount.toFixed(2)} exceeds the ₹${remaining.toFixed(2)} still refundable on this order.`,
+          `Refund of ${formatMoney(event.amount)} exceeds the ${formatMoney(remaining)} still refundable on this order.`,
         );
       }
 

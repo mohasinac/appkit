@@ -63,6 +63,7 @@ import {
   PRODUCT_COLLECTION,
   PRODUCT_CODES_SUBCOLLECTION,
 } from "../../../../features/products/schemas/firestore";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 type DigitalCodeItem = { productId: string; listingType?: string };
 
@@ -247,9 +248,9 @@ export async function processRefundAction(
       const capacity = refundCapacity(order, siteSettings?.commissions?.gstPercent);
       if (input.amount > capacity.remaining + MONEY_EPSILON) {
         throw new ValidationError(
-          `Refund of ₹${input.amount.toFixed(2)} exceeds the ₹${capacity.remaining.toFixed(2)} still refundable on this order` +
+          `Refund of ${formatMoney(input.amount)} exceeds the ${formatMoney(capacity.remaining)} still refundable on this order` +
             (capacity.withheld > 0
-              ? ` (₹${capacity.withheld.toFixed(2)} platform fee is non-refundable).`
+              ? ` (${formatMoney(capacity.withheld)} platform fee is non-refundable).`
               : "."),
         );
       }

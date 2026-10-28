@@ -79,6 +79,7 @@ import {
   quoteSharedPurchase,
   type SharedPurchaseRates,
 } from "../../../shared/features/shipping/shared-purchase";
+import { formatMoney } from "../../../../utils/number.formatter";
 import { resolveCouponCategorySlugs } from "../../../../features/promotions/actions/coupon-actions";
 import {
   assertCheckoutLane,
@@ -1391,7 +1392,7 @@ async function createOrderForGroup(
   const emiGate = groupEmiGate(emiGroupInput, emiSettings);
   if (emiOptIn && emiTenureMonths && !emiGate.applies) {
     throw new ValidationError(
-      `EMI is not available for this order (${emiGate.reason}). Minimum order value per seller is ₹${emiSettings.minOrderValue}.`,
+      `EMI is not available for this order (${emiGate.reason}). Minimum order value per seller is ${formatMoney(emiSettings.minOrderValue)}.`,
     );
   }
   const emiSchedule = groupEmiSchedule(emiGroupInput, emiSettings) ?? undefined;
@@ -4704,13 +4705,13 @@ export async function verifyAndPlaceGatewayOrderAction(
 
     if (amountDelta < -AMOUNT_TOLERANCE_RS) {
       serverLogger.warn(
-        `Payment amount mismatch for user ${uid}: paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
+        `Payment amount mismatch for user ${uid}: paid ${formatMoney(paidAmountRs)}, expected ≥ ${formatMoney(expectedPaymentAmountRs)}`,
       );
       failedCheckoutRepository
         .logPayment(
           uid,
           "amount_mismatch",
-          `Paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
+          `Paid ${formatMoney(paidAmountRs)}, expected ≥ ${formatMoney(expectedPaymentAmountRs)}`,
           {
             gatewayOrderId: gatewayOrder.gatewayOrderId,
             gatewayPaymentId: merchantOrderId,
@@ -4724,14 +4725,14 @@ export async function verifyAndPlaceGatewayOrderAction(
 
     if (amountDelta > AMOUNT_TOLERANCE_RS) {
       serverLogger.error(
-        `OVER-CAPTURE for user ${uid}: paid ₹${paidAmountRs}, expected ₹${expectedPaymentAmountRs} (surplus ₹${amountDelta.toFixed(2)}) — order will still be placed`,
+        `OVER-CAPTURE for user ${uid}: paid ${formatMoney(paidAmountRs)}, expected ${formatMoney(expectedPaymentAmountRs)} (surplus ${formatMoney(amountDelta)}) — order will still be placed`,
         { merchantOrderId, expectedCouponDiscount },
       );
       failedCheckoutRepository
         .logPayment(
           uid,
           "amount_mismatch",
-          `OVER-CAPTURE: paid ₹${paidAmountRs}, expected ₹${expectedPaymentAmountRs}, surplus ₹${amountDelta.toFixed(2)} — refund owed`,
+          `OVER-CAPTURE: paid ${formatMoney(paidAmountRs)}, expected ${formatMoney(expectedPaymentAmountRs)}, surplus ${formatMoney(amountDelta)} — refund owed`,
           {
             gatewayOrderId: gatewayOrder.gatewayOrderId,
             gatewayPaymentId: merchantOrderId,

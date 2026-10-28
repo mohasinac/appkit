@@ -64,6 +64,7 @@ import {
 } from "../../../../features/email/primitives";
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -187,7 +188,7 @@ export interface DailyStatusDigestSummary {
 }
 
 function currency(amount: number): string {
-  return `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+  return formatMoney(amount);
 }
 
 /** One "Label: value" line. Uses only email primitives — email clients need

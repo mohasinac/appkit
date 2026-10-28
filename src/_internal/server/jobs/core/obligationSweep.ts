@@ -38,6 +38,7 @@ import { processRefundAction } from "../../features/refunds/actions";
 import { resolveRefundCapacity } from "../../features/refunds/capacity";
 import { MONEY_EPSILON } from "../../../shared/checkout/refundable-base";
 import type { JobContext } from "../runtime/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface ObligationSweepResult {
   due: number;
@@ -332,14 +333,14 @@ async function performAction(
           kind: "manual_refund_due",
           subjectId: order.id,
           severity: "error",
-          title: `Uninspected return — automatic refund of ₹${capacity.remaining.toFixed(2)} FAILED on ${order.id}`,
+          title: `Uninspected return — automatic refund of ${formatMoney(capacity.remaining)} FAILED on ${order.id}`,
           detail: [
             "A received return was never inspected, so it auto-resolved in the buyer's favour — and the refund itself failed.",
             "",
             `Gateway error: ${result.error ?? "unknown"}`,
             "",
             `Order: ${order.id}`,
-            `Owed: ₹${capacity.remaining.toFixed(2)}`,
+            `Owed: ${formatMoney(capacity.remaining)}`,
             "",
             "Retrying from the admin order page is idempotent on this order.",
           ].join("\n"),
@@ -361,7 +362,7 @@ async function performAction(
         kind: "refund_mismatch",
         subjectId: `seller-charge:${order.id}`,
         severity: "warning",
-        title: `Decide whether the seller bears ₹${capacity.remaining.toFixed(2)} — uninspected return on ${order.id}`,
+        title: `Decide whether the seller bears ${formatMoney(capacity.remaining)} — uninspected return on ${order.id}`,
         detail: [
           "A returned parcel reached the seller and was never inspected, so the buyer has been refunded automatically — the cover is unconditional and the seller had the goods and the full window.",
           "",
@@ -369,7 +370,7 @@ async function performAction(
           "",
           `Order: ${order.id}`,
           `Store: ${order.storeId ?? "—"}`,
-          `Refunded to the buyer: ₹${capacity.remaining.toFixed(2)}`,
+          `Refunded to the buyer: ${formatMoney(capacity.remaining)}`,
           `Return received: ${order.returnReceivedAt?.toISOString() ?? "—"}`,
           `Buyer's stated reason: ${order.returnReasonCode ?? "—"}`,
           "",

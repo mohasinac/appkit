@@ -22,6 +22,7 @@ import {
   labelPageCss,
   type LabelProfileId,
 } from "../../../_internal/shared/features/print/label-profiles";
+import { formatMoney } from "../../../utils/number.formatter";
 
 interface PrintCenterStore {
   id: string;
@@ -114,7 +115,7 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
             </Stack>
             <Stack className="text-right">
               <Text size="xs">×{item.quantity}</Text>
-              <Text size="xs" color="muted">₹{item.price.toLocaleString("en-IN")}</Text>
+              <Text size="xs" color="muted">{formatMoney(item.price)}</Text>
             </Stack>
           </Row>
         ))}

@@ -32,6 +32,7 @@ import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../produc
 import { parseSelectedListingTypes } from "../../products/utils/listing-type";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { formatMoney } from "../../../utils/number.formatter";
 
 export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
@@ -333,7 +334,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           item.listingType === "auction"
             ? [
                 typeof item.reservePrice === "number"
-                  ? `Reserve ₹${item.reservePrice.toLocaleString("en-IN")}`
+                  ? `Reserve ${formatMoney(item.reservePrice)}`
                   : null,
                 `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
                 item.auctionEndDate
@@ -380,7 +381,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
             [
               toStringValue(item.storeName, "No store"),
               typeof item.price === "number"
-                ? `₹${item.price.toLocaleString("en-IN")}`
+                ? formatMoney(item.price)
                 : null,
               typeof item.stockQuantity === "number"
                 ? `${item.stockQuantity} in stock`

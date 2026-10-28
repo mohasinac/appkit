@@ -26,6 +26,7 @@ import {
   refundCapacity,
 } from "../../../_internal/shared/checkout/refundable-base";
 import { sendNotification } from "../../admin/actions/notification-actions";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const DEFAULT_GST_PERCENT = 18;
 
@@ -101,8 +102,8 @@ export async function issuePartialRefund(
     priority: "high",
     title: "Refund Initiated",
     message: deductFees
-      ? `Your refund of ₹${netRefund} (original ₹${grossRefund} minus ₹${feeDeducted} gateway fee) is being processed.`
-      : `Your full refund of ₹${grossRefund} is being processed.`,
+      ? `Your refund of ${formatMoney(netRefund)} (original ${formatMoney(grossRefund)} minus ${formatMoney(feeDeducted)} gateway fee) is being processed.`
+      : `Your full refund of ${formatMoney(grossRefund)} is being processed.`,
     relatedId: orderId,
     relatedType: "order",
     storeId: order.storeId,

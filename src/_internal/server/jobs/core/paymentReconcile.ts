@@ -55,6 +55,7 @@ import {
   MONEY_EPSILON,
 } from "../../../shared/checkout/refundable-base";
 import type { JobContext } from "../runtime/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 /** How far back R2 looks. Two days of overlap, so a run that fails is covered by the next. */
 const PAYMENT_WINDOW_HOURS = 48;
@@ -590,7 +591,7 @@ async function reconcileUnpaidCancellations(
         kind: "manual_refund_due",
         subjectId: doc.id,
         severity: "error",
-        title: `Cancelled order still owes ₹${shortfall.toFixed(2)} — ${doc.id}`,
+        title: `Cancelled order still owes ${formatMoney(shortfall)} — ${doc.id}`,
         detail: [
           "This order is cancelled and records a refund it has not paid.",
           "",
@@ -600,9 +601,9 @@ async function reconcileUnpaidCancellations(
           "cover.",
           "",
           `Order: ${doc.id}`,
-          `Recorded as owed: ₹${intended.toFixed(2)}`,
-          `Actually refunded: ₹${committed.toFixed(2)}`,
-          `Shortfall: ₹${shortfall.toFixed(2)}`,
+          `Recorded as owed: ${formatMoney(intended)}`,
+          `Actually refunded: ${formatMoney(committed)}`,
+          `Shortfall: ${formatMoney(shortfall)}`,
           data.paymentMethod ? `Payment method: ${data.paymentMethod}` : null,
           data.paymentId ? `Gateway reference: ${data.paymentId}` : null,
           data.userId ? `Buyer: ${data.userId}` : null,

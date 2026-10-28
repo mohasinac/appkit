@@ -62,6 +62,7 @@ import type { PayableOrderLike } from "../../../shared/checkout/order-math";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface AwardPurchasePointsResult {
   awarded: number;
@@ -182,13 +183,13 @@ export async function awardPurchasePoints(
      * moment even if the order is edited afterwards.
      */
     description:
-      `${POINTS_EARN_PERCENT}% back on ${order.id}: ₹${moneyPaidForGoods.toFixed(2)} of items` +
+      `${POINTS_EARN_PERCENT}% back on ${order.id}: ${formatMoney(moneyPaidForGoods)} of items` +
       // Named explicitly, because an unexplained gap between the order's item
       // value and the earn base is exactly the kind of figure a buyer writes
       // in to ask about — and the answer ("you paid part of it with points")
       // is a fact about their own order that they can check.
       ((order.pointsApplied ?? 0) > 0
-        ? ` (₹${goods.toFixed(2)} of items less ${order.pointsApplied} points).`
+        ? ` (${formatMoney(goods)} of items less ${order.pointsApplied} points).`
         : "."),
     expiresAt: pointsExpiryFrom(now),
   });

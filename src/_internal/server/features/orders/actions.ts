@@ -48,6 +48,7 @@ import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON, isManualPaymentMethod
 import { deadlinesFor } from "../../../shared/obligations/deadlines";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export async function createOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -198,7 +199,7 @@ function notifyAdminsOfPaymentProof(order: { id: string; userName: string; produ
       await adminNotificationsRepository.create({
         category: "payouts",
         title: "Payment proof awaiting review",
-        body: `${order.userName} uploaded proof for "${order.productTitle}" (₹${order.totalPrice.toLocaleString("en-IN")}). Review before the 2-hour auto-approve window closes.`,
+        body: `${order.userName} uploaded proof for "${order.productTitle}" (${formatMoney(order.totalPrice)}). Review before the 2-hour auto-approve window closes.`,
         severity: "warning",
         isRead: false,
         entityType: "order",

@@ -1,3 +1,4 @@
+import { formatMoney } from "../../../../utils/number.formatter";
 /**
  * REFUND_COPY — all user-visible strings for refund + order-sibling UI.
  *
@@ -88,10 +89,10 @@ export const REFUND_COPY = {
       why?: string;
     }): string => {
       if (outcome.moved === "gateway") {
-        return `Order cancelled. A refund of ₹${outcome.amount.toFixed(2)} has been sent back to your original payment method.`;
+        return `Order cancelled. A refund of ${formatMoney(outcome.amount)} has been sent back to your original payment method.`;
       }
       if (outcome.moved === "owed") {
-        return `Order cancelled. We owe you ₹${outcome.amount.toFixed(2)} — it needs to be sent manually, and our team has been notified.`;
+        return `Order cancelled. We owe you ${formatMoney(outcome.amount)} — it needs to be sent manually, and our team has been notified.`;
       }
       /*
        * `none` splits two very different situations and must not blur them: an

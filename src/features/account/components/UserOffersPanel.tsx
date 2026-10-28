@@ -17,6 +17,7 @@ import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { OfferDocument } from "../../seller/schemas";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const CLS_COUNTER_AMOUNT = "text-[length:var(--appkit-text-sm)] font-semibold text-info dark:text-info";
 
@@ -30,7 +31,7 @@ export interface UserOffersPanelProps {
 
 function formatRupees(amount: number | undefined): string {
   if (amount === undefined || amount === null) return "—";
-  return `₹${amount.toLocaleString("en-IN")}`;
+  return formatMoney(amount);
 }
 
 function relativeTime(date: Date | string | undefined): string {

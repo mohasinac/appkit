@@ -27,6 +27,7 @@ import {
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
+import { formatMoney } from "../../../utils/number.formatter";
 
 interface BundlesResponse {
   items?: JsonArray;
@@ -47,7 +48,7 @@ type BundleRow = {
 
 function formatPrice(value: unknown): string {
   if (typeof value !== "number" || value <= 0) return "—";
-  return `₹${value.toLocaleString("en-IN")}`;
+  return formatMoney(value);
 }
 
 const COLUMNS: AdminTableColumn<BundleRow>[] = [

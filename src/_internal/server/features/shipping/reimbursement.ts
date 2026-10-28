@@ -46,6 +46,7 @@ import {
 
 import { serverLogger } from "../../../../monitoring";
 import type { ReconcileShippingResult } from "./reconcile";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface SubmitShippingEvidenceInput {
   orderId: string;
@@ -240,8 +241,8 @@ export async function approveShippingReimbursement(
        * of the moment it describes.
        */
       description:
-        `Shipping saving on ${input.orderId}: you paid ₹${chargedToBuyer} for postage, ` +
-        `the approved cost was ₹${spent}.`,
+        `Shipping saving on ${input.orderId}: you paid ${formatMoney(chargedToBuyer)} for postage, ` +
+        `the approved cost was ${formatMoney(spent)}.`,
     });
   }
 

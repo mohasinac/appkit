@@ -49,6 +49,7 @@ import {
   sheetPositionMm,
   type LabelProfile,
 } from "../../../_internal/shared/features/print/label-profiles";
+import { formatMoney } from "../../../utils/number.formatter";
 
 /** CSS px per inch is 96 by definition — not a screen measurement. */
 const CSS_PX_PER_INCH = 96;
@@ -237,7 +238,7 @@ export function ProductLabel({
       <Row gap="xs" justify="center" wrap>
         {product.price != null && (
           <Text size="xs" color="muted">
-            ₹{product.price.toLocaleString("en-IN")}
+            {formatMoney(product.price)}
           </Text>
         )}
         {product.boxCode && (

@@ -78,6 +78,7 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
+import { formatMoney } from "../../../utils/number.formatter";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 
@@ -271,7 +272,7 @@ export function AdminGatewayEventsView({ children, ...props }: AdminGatewayEvent
                 { label: "Body SHA-256", value: toStringValue(detail.bodySha256, "") },
                 { label: "Gateway order", value: toStringValue(detail.gatewayOrderId, "") || "—" },
                 { label: "Gateway payment", value: toStringValue(detail.gatewayPaymentId, "") || "—" },
-                { label: "Amount", value: typeof detail.amount === "number" ? `₹${detail.amount.toFixed(2)}` : "—" },
+                { label: "Amount", value: typeof detail.amount === "number" ? formatMoney(detail.amount) : "—" },
                 { label: "Orders placed", value: Array.isArray(detail.orderIds) ? detail.orderIds.join(", ") : "—" },
                 { label: "Received", value: toStringValue(detail.receivedAt, "") },
                 { label: "Settled", value: toStringValue(detail.processedAt, "") || "— not settled" },

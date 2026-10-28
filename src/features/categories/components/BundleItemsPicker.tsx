@@ -30,6 +30,7 @@ import {
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { productImageUrls } from "../../products/schemas/firestore";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -110,7 +111,7 @@ function renderBundleSearchResults(props: {
                   <Text size="sm" weight="medium">{r.title}</Text>
                   <Row gap="sm">
                     <Text size="xs" color="muted">{r.id}</Text>
-                    {typeof r.price === "number" && <Text size="xs" color="muted">· ₹{r.price.toLocaleString("en-IN")}</Text>}
+                    {typeof r.price === "number" && <Text size="xs" color="muted">· {formatMoney(r.price)}</Text>}
                   </Row>
                 </Stack>
               </Row>

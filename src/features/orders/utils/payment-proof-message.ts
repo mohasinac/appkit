@@ -1,3 +1,4 @@
+import { formatMoney } from "../../../utils/number.formatter";
 export interface PaymentProofReviewMessageInput {
   orderId: string;
   buyerName: string;
@@ -22,6 +23,8 @@ export function buildPaymentProofReviewMessage(
   input: PaymentProofReviewMessageInput,
 ): string {
   const { orderId, buyerName, productTitle, totalAmount, reviewUrl } = input;
-  const amount = totalAmount.toLocaleString("en-IN");
-  return `💳 Payment proof submitted! ${buyerName} uploaded proof for "${productTitle}" (₹${amount}). Order #${orderId}. Please review within 2 hours or it auto-confirms: ${reviewUrl}`;
+  // `formatMoney` groups and places the symbol from the market profile; the
+  // intermediate `toLocaleString("en-IN")` this replaced hardcoded the locale.
+  const amount = formatMoney(totalAmount);
+  return `💳 Payment proof submitted! ${buyerName} uploaded proof for "${productTitle}" (${amount}). Order #${orderId}. Please review within 2 hours or it auto-confirms: ${reviewUrl}`;
 }

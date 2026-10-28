@@ -18,6 +18,7 @@ import type {
   CatalogSyncResult,
   PurchaseAnnouncementInput,
 } from "../types";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
 
@@ -300,8 +301,10 @@ export function buildPurchaseAnnouncementMessage(
     input;
   const extra =
     additionalItemCount > 0 ? ` + ${additionalItemCount} more item${additionalItemCount > 1 ? "s" : ""}` : "";
-  const amount = totalAmount.toLocaleString("en-IN");
-  return `🛍️ New order! ${buyerName} purchased ${firstItemName}${extra} for ₹${amount}. Order #${orderId}`;
+  // `formatMoney` groups and places the symbol from the market profile; the
+  // intermediate `toLocaleString("en-IN")` this replaced hardcoded the locale.
+  const amount = formatMoney(totalAmount);
+  return `🛍️ New order! ${buyerName} purchased ${firstItemName}${extra} for ${amount}. Order #${orderId}`;
 }
 
 /**

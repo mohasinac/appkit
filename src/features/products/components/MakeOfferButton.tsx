@@ -20,6 +20,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 import { normalizeError } from "../../../errors/normalize";
+import { formatMoney } from "../../../utils/number.formatter";
 
 export interface MakeOfferButtonProps {
   productId: string;
@@ -106,7 +107,7 @@ export function MakeOfferButton({
   const viewerOwnsListing =
     Boolean(listingStoreId) && session?.user?.storeId === listingStoreId;
 
-  const fmt = (n: number) => (currency ? formatCurrency(n, currency) : `₹${n.toLocaleString()}`);
+  const fmt = (n: number) => (currency ? formatCurrency(n, currency) : formatMoney(n));
 
   // The SAME bounds the server enforces — passed in, never recomputed, so the
   // input can neither seed nor accept an amount `makeOffer` would reject.

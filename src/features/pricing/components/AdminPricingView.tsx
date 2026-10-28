@@ -21,6 +21,7 @@ import {
   type RateTier,
   type RateUnit,
 } from "../../../_internal/shared/features/pricing/rate-registry";
+import { formatMoney } from "../../../utils/number.formatter";
 
 /**
  * Admin → Finance → Pricing.
@@ -104,7 +105,7 @@ function formatRate(value: number | null, unit: RateUnit): string {
     case "percent":
       return `${value}%`;
     case "rupees":
-      return `₹${value.toLocaleString("en-IN")}`;
+      return formatMoney(value);
     case "days":
       return value === 1 ? "1 day" : `${value} days`;
     case "minutes":

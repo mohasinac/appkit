@@ -37,6 +37,7 @@ import { AuthorizationError } from "../../../../errors/authorization-error";
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { serverLogger } from "../../../../monitoring/server-logger";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 
 /*
@@ -139,7 +140,7 @@ export async function openBalanceCollection(
     type: "order_confirmed",
     priority: "high",
     title: "Your pre-order balance is due",
-    message: `The balance of ₹${due.toFixed(2)} on order ${orderId} is now payable. Your item is ready to ship once it clears.`,
+    message: `The balance of ${formatMoney(due)} on order ${orderId} is now payable. Your item is ready to ship once it clears.`,
     relatedId: orderId,
     relatedType: "order",
   });

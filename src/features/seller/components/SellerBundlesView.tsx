@@ -27,6 +27,7 @@ import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
+import { formatMoney } from "../../../utils/number.formatter";
 
 interface BundlesResponse {
   items?: JsonArray;
@@ -47,7 +48,7 @@ type BundleRow = {
 
 function formatPrice(value: unknown): string {
   if (typeof value !== "number" || value <= 0) return "—";
-  return `₹${value.toLocaleString("en-IN")}`;
+  return formatMoney(value);
 }
 
 const COLUMNS: AdminTableColumn<BundleRow>[] = [

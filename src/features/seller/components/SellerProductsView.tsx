@@ -57,6 +57,7 @@ import type { ModelCompositionDocument } from "../../parts/schemas/firestore";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { productImageUrls } from "../../products/schemas/firestore";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const FILTER_KEYS = [
   "status",
@@ -703,7 +704,7 @@ export function SellerProductsView({
           kind === "auction"
             ? [
                 typeof item.reservePrice === "number"
-                  ? `Reserve ₹${item.reservePrice.toLocaleString("en-IN")}`
+                  ? `Reserve ${formatMoney(item.reservePrice)}`
                   : null,
                 `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
                 item.auctionEndDate
@@ -763,7 +764,7 @@ export function SellerProductsView({
           stockOverride ?? (typeof item.stockQuantity === "number" ? item.stockQuantity : null);
         const stockValue = stockOverride ?? availableRaw ?? stockRaw;
         const priceLabel =
-          kind !== "auction" && priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "";
+          kind !== "auction" && priceRaw ? formatMoney(priceRaw) : "";
         const stockLabel = stockRaw === null ? "" : `${stockRaw} in stock`;
         const secondaryBase = auctionSecondary || toStringValue(item.condition, "");
         return {
@@ -775,7 +776,7 @@ export function SellerProductsView({
           imageUrl: toStringValue(item.mainImage, undefined) || productImageUrls(item.images)[0],
           image: toStringValue(item.mainImage, undefined) || productImageUrls(item.images)[0],
           listingKind: kind,
-          price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
+          price: priceRaw ? formatMoney(priceRaw) : "—",
           stock: stockLabel || "—",
           stockValue,
           // Carried through ONLY when the document really has it — see the

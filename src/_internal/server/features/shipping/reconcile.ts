@@ -11,6 +11,7 @@ import {
   type ActualShipmentCost,
 } from "../../../shared/shipping/quote";
 import { serverLogger } from "../../../../monitoring";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 export interface ReconcileShippingResult {
   /** `null` when there was nothing to reconcile — see the reasons below. */
@@ -138,8 +139,8 @@ export async function reconcileOrderShipping(
        * the order is edited afterwards.
        */
       description:
-        `Shipping saving on ${orderId}: charged ₹${order.selectedShippingQuote.chargedRate} ` +
-        `for ${order.selectedShippingQuote.courierName}, shipped ₹${actual.actualRate} ` +
+        `Shipping saving on ${orderId}: charged ${formatMoney(order.selectedShippingQuote.chargedRate)} ` +
+        `for ${order.selectedShippingQuote.courierName}, shipped ${formatMoney(actual.actualRate)} ` +
         `via ${actual.courierName}.`,
     });
   }

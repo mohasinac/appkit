@@ -33,6 +33,7 @@ import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 import type { StatusChangeEntry } from "../../../_internal/shared/history/types";
+import { formatMoney } from "../../../utils/number.formatter";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -650,7 +651,7 @@ function OrderItemsPanel(props: {
                           {it.productTitle}
                         </Text>
                         <Text size="xs" color="muted">
-                          {it.productId} · ₹{it.unitPrice.toFixed(2)}/ea
+                          {it.productId} · {formatMoney(it.unitPrice)}/ea
                         </Text>
                       </Div>
                       <Input

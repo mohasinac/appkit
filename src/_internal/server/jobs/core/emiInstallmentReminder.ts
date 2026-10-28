@@ -3,6 +3,7 @@ import { sendNotification } from "../../../../features/admin/actions/notificatio
 import { orderRepository } from "../../../../repositories";
 import type { EmiInstallment } from "../../../../features/orders/schemas/firestore";
 import type { JobContext } from "../runtime/types";
+import { formatMoney } from "../../../../utils/number.formatter";
 
 const REMINDER_WINDOW_MS = 3 * 86_400_000;
 
@@ -56,7 +57,7 @@ export async function runEmiInstallmentReminder(ctx: JobContext): Promise<void> 
           title: isOverdue ? "EMI installment overdue" : "EMI installment due soon",
           message: isOverdue
             ? `Installment ${inst.index} for order ${id} is overdue. Pay now to avoid delaying your shipment.`
-            : `Installment ${inst.index} for order ${id} (₹${inst.amount.toFixed(2)}) is due on ${dueDate.toDateString()}.`,
+            : `Installment ${inst.index} for order ${id} (${formatMoney(inst.amount)}) is due on ${dueDate.toDateString()}.`,
           relatedId: id,
           relatedType: "order",
           actionUrl: `/user/orders/view/${id}`,
