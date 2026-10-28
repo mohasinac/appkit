@@ -280,6 +280,24 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     supplierGstin: doc.supplierGstin,
     supplierLegalName: doc.supplierLegalName,
     supplierAddress: doc.supplierAddress,
+    /*
+     * 🛑 Root Cause #57, in the one place it is most visible: this adapter
+     * mapped the CGST/SGST/IGST split above and dropped the field that
+     * EXPLAINS it.
+     *
+     * Place of supply is what decides whether a supply is intra-State
+     * (CGST+SGST) or inter-State (IGST). Without it the HTML invoice showed a
+     * split it could not justify — and the PDF, which reads the raw
+     * `OrderDocument` rather than going through here, printed the line
+     * correctly. So the two invoices for ONE order disagreed on a Rule 46(n)
+     * field, and the buyer-facing one was the deficient half.
+     *
+     * Nothing was wrong with the data: `createOrderForGroup` has always
+     * written it. It simply never crossed the client boundary, which is why
+     * the gap reads as "this order has no place of supply" rather than as a
+     * dropped field.
+     */
+    placeOfSupply: doc.placeOfSupply,
     codHandlingFee: doc.codHandlingFee,
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,

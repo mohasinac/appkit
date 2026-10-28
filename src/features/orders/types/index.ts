@@ -223,6 +223,20 @@ export interface Order {
   supplierGstin?: string;
   supplierLegalName?: string;
   supplierAddress?: string;
+  /**
+   * The State whose tax applies — Rule 46(n).
+   *
+   * 🛑 Declared here for the same reason as the EMI fields above, and it is
+   * the same Root Cause #57 shape: `orderDocumentToOrder` mapped the
+   * CGST/SGST/IGST split while dropping the field that DECIDES which of them
+   * is correct, so the HTML invoice could show an IGST line with nothing on
+   * the page justifying it. The PDF reads `OrderDocument` directly and always
+   * printed it, so the two invoices for one order disagreed.
+   *
+   * The State NAME is what the rule asks for; the numeric State code is a
+   * GSTR-1/e-invoice convention and is deliberately not stored here.
+   */
+  placeOfSupply?: string;
   total: number;
   currency: string;
   /**
