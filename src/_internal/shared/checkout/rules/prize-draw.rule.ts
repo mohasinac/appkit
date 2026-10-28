@@ -12,14 +12,32 @@ import { PRIZE_DRAW_MAX_REVEALS_PER_ORDER } from "./_limits";
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 
 /**
- * Deferred/unconfirmed-payment methods are not allowed for prize-draw
- * checkout — instant-mode winner assignment triggers on the order's payment
- * actually being confirmed, which cod/cash/emi don't guarantee happens (or
- * happens promptly). Only "upi_manual" (bank/UPI transfer, confirmed later by
- * seller/admin) and "online" (PhonePe, confirms near-instantly) are allowed;
- * "admin_bypass" stays usable for QA regardless.
+ * 🛑 THE GATEWAY IS PROHIBITED HERE — `online` joined this list 2026-10-28,
+ * and `cash` left it.
+ *
+ * A prize draw is a game of chance, which is on the prohibited-merchant lists
+ * Indian payment gateways inherit from the card networks — the same lists that
+ * carry lotteries and auctions. Routing entry payments through a standard
+ * e-commerce MID is a terms breach, and the penalty is the merchant account
+ * frozen with the settlement balance held, not a declined charge. One category
+ * can cost every other category its ability to take money.
+ *
+ * 🛑 This REPLACES the original reasoning rather than extending it, and the
+ * original is worth keeping in view because it is still true and no longer
+ * decisive: deferred methods were blocked because instant-mode winner
+ * assignment triggers on confirmed payment, which `cod`/`cash`/`emi` do not
+ * guarantee happens promptly. By that logic `online` was the SAFEST method
+ * available and `cash` the worst.
+ *
+ * The acquirer's rules invert it. `online` and `emi` both settle through the
+ * gateway and are out; `cash` is in, because the owner is the seller and
+ * confirms the payment themselves before the draw. The timing concern becomes
+ * an operational one — do not run the draw until payment is confirmed — which
+ * `upi_manual` already required and the reveal flow already handles.
+ *
+ * `admin_bypass` stays usable for QA regardless.
  */
-const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "cash", "emi"];
+const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "cod", "emi"];
 
 /**
  * The refusal, kept VERBATIM when this check moved out of `preflightChecks`
@@ -32,7 +50,7 @@ const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "cas
  * than abandon the entry.
  */
 const PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE =
-  "Prize-draw entries can only be paid by manual bank/UPI transfer or PhonePe — cash on delivery and EMI are not available for this listing type.";
+  "Prize-draw entries are paid by direct bank/UPI transfer or cash on pickup — card and online payment are not available for prize draws.";
 
 export const prizeDrawRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
