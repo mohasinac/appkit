@@ -14,7 +14,10 @@
  */
 
 import { Fragment } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+// 🛑 Lazy require, not a top-level `react-dom/server` import — this module is
+// reachable from a Server Component via appkit/server, and Next's static tracer
+// fails the build on it. See render-static-markup.ts.
+import { renderStaticMarkup } from "../../../../features/email/render-static-markup";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { getProviders } from "../../../../contracts/registry";
 import { checkCourierWalletAndAlert } from "../../features/shipping/courier-block";
@@ -467,7 +470,7 @@ function renderDigestHtml(
 ): string {
   const statusRows = Object.entries(summary.statusBreakdown).sort(([a], [b]) => a.localeCompare(b));
   const title = siteName ? `${siteName} — Daily Status` : "Daily Status";
-  return `<!DOCTYPE html>${renderToStaticMarkup(
+  return `<!DOCTYPE html>${renderStaticMarkup(
     <EmailDoc title={title}>
       <EmailContainer>
         <EmailHeader brandName={siteName} />

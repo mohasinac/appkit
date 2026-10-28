@@ -23,7 +23,10 @@
  */
 
 import { Fragment } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+// 🛑 Lazy require, not a top-level `react-dom/server` import — this module is
+// reachable from a Server Component via appkit/server, and Next's static tracer
+// fails the build on it. See render-static-markup.ts.
+import { renderStaticMarkup } from "../../../../features/email/render-static-markup";
 import {
   EmailContainer,
   EmailDoc,
@@ -332,7 +335,7 @@ async function emailStaff(input: {
  * our own constants and the provider/reason enums.
  */
 function renderStaffAlertEmail(title: string, body: string): string {
-  return `<!DOCTYPE html>${renderToStaticMarkup(
+  return `<!DOCTYPE html>${renderStaticMarkup(
     <EmailDoc title={title}>
       <EmailContainer>
         <EmailRow>

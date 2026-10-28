@@ -43,11 +43,10 @@ import type { NotificationType } from "../admin/schemas/firestore";
  *    is what `audit-email-raw-html` blocks.
  */
 
-// See constraint (1) above — this MUST stay a lazy require.
-function renderToStaticMarkup(el: React.ReactElement): string {
-  const m = require("react-dom/server") as typeof import("react-dom/server");
-  return m.renderToStaticMarkup(el);
-}
+// See constraint (1) above. The lazy require now lives in ONE place —
+// `render-static-markup.ts` — because two more call sites needed it and a third
+// identical copy would trip `audit-duplicate-helpers`.
+import { renderStaticMarkup as renderToStaticMarkup } from "./render-static-markup";
 
 export interface NotificationEmailContext {
   title: string;

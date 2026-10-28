@@ -1,18 +1,9 @@
 import "server-only";
-import type React from "react";
 
-// Lazy-load `renderToStaticMarkup` via `require()` to avoid Next.js's
-// Server-Component static-trace error. Even with the `server-only`
-// directive above, a top-level `import { renderToStaticMarkup } from
-// "react-dom/server"` is flagged by Next.js when any module in the
-// re-export chain is reachable from a Server Component (e.g. layout.tsx
-// → providers.config.ts → @mohasinac/appkit/server → ... → email.tsx).
-// `require()` is opaque to Next's static analyser so the chain stops here.
-function renderToStaticMarkup(el: React.ReactElement): string {
-   
-  const m = require("react-dom/server") as typeof import("react-dom/server");
-  return m.renderToStaticMarkup(el);
-}
+// The lazy `require("react-dom/server")` this file used to carry inline now
+// lives in ONE place — see render-static-markup.ts for why it cannot be a
+// top-level import, and why there is exactly one copy of it.
+import { renderStaticMarkup as renderToStaticMarkup } from "../email/render-static-markup";
 import { normalizeError } from "../../errors/normalize";
 import { guardSend, logSuppressedSend } from "../../_internal/server/notifications/send-guard";
 import { recordSendAttempt } from "../../_internal/server/notifications/send-recorder";
