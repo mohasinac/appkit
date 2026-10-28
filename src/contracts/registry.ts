@@ -3,6 +3,7 @@ import type { IEmailProvider } from "./email";
 import type { IStorageProvider } from "./storage";
 import type { IPaymentProvider } from "./payment";
 import type { IShippingProvider } from "./shipping";
+import type { ITaxProvider } from "./tax";
 import type { ISearchProvider } from "./search";
 import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra";
 import type { IStyleAdapter } from "./style";
@@ -24,6 +25,13 @@ export interface ProviderRegistry {
   db?: IDbProvider;
   payment?: IPaymentProvider;
   shipping?: IShippingProvider;
+  /**
+   * Jurisdiction tax engine. Optional, and defaults to India GST at the call
+   * site rather than here — an install that never registers one keeps today's
+   * behaviour exactly, which is what makes adopting the seam safe one caller at
+   * a time instead of in a single 42-file sweep.
+   */
+  tax?: ITaxProvider;
   search?: ISearchProvider;
   cache?: ICacheProvider;
   queue?: IQueueProvider;
