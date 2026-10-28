@@ -4,8 +4,48 @@
 
 import {
   getDefaultCurrency,
+  getDefaultCurrencySymbol,
   getDefaultLocale,
 } from "../core/baseline-resolver";
+
+/**
+ * Money for PROSE — notification bodies, error messages, log lines, chips.
+ *
+ * ## Why this exists beside `formatCurrency`
+ *
+ * 71 call sites interpolated a hardcoded symbol next to a bare number —
+ * `` `Minimum offer is ₹${bounds.min}` `` — which is wrong three ways at once:
+ * the symbol is baked in, the grouping is absent (`₹1000`, not `₹1,000`), and
+ * ~20 more files reached for `toLocaleString("en-IN")` with the locale
+ * hardcoded too. All three read from the market profile now, which the consumer
+ * already configures via `configureMarketDefaults()`.
+ *
+ * ## 🛑 Why not just use `formatCurrency`
+ *
+ * `Intl.NumberFormat` with `style: "currency"` forces the currency's standard
+ * fraction digits, so every whole amount becomes `₹1,000.00`. Rewriting 71
+ * strings to add `.00` to prices, offers and refunds that have no paise is a
+ * user-visible copy change dressed up as a refactor. This shows paise only when
+ * they exist: `₹1,000` and `₹1,000.50`.
+ *
+ * `formatCurrency` keeps its job — the ISO-correct, locale-placed rendering for
+ * tabular and formal surfaces (invoices, statements). Use that where the form
+ * matters and this where the sentence does.
+ */
+export function formatMoney(amount: number, locale?: string): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
+  const grouped = new Intl.NumberFormat(resolvedLocale, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(amount);
+  /*
+   * Symbol then number, not `Intl`'s currency placement. These strings are
+   * assembled into sentences that already read "₹500" in copy the team wrote,
+   * and a locale whose convention is "1 000,00 ₹" would reorder mid-sentence.
+   * A market that needs the symbol elsewhere overrides `currencySymbol`.
+   */
+  return `${getDefaultCurrencySymbol()}${grouped}`;
+}
 
 export function formatCurrency(
   amount: number,

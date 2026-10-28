@@ -6,6 +6,9 @@
  */
 
 import { serverLogger } from "../../../monitoring";
+// Money in prose reads from the configured market profile — symbol, grouping
+// and locale. These strings used `₹${n}`, which also rendered ungrouped.
+import { formatMoney } from "../../../utils/number.formatter";
 import { offerRepository } from "../repository/offer.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { categoriesRepository } from "../../categories/repository/categories.repository";
@@ -164,12 +167,12 @@ export async function makeOffer(
     // "minimum offer is ₹X" message where X happens to equal the price.
     if (offerAmount !== bounds.max)
       throw new ValidationError(
-        `This seller is not taking lower offers — send a request to buy at ₹${bounds.max}.`,
+        `This seller is not taking lower offers — send a request to buy at ${formatMoney(bounds.max)}.`,
       );
   } else {
     if (offerAmount < bounds.min)
       throw new ValidationError(
-        `Minimum offer is ₹${bounds.min} (${product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT}% of listing price).`,
+        `Minimum offer is ${formatMoney(bounds.min)} (${product.minOfferPercent ?? DEFAULT_MIN_OFFER_PERCENT}% of listing price).`,
       );
     if (offerAmount > bounds.max)
       throw new ValidationError(
@@ -177,7 +180,7 @@ export async function makeOffer(
         // listing whose only purchase path is an offer there is no cart button,
         // so that advice named a control the page does not have.
         offerIsOnlyPurchasePath(listingType)
-          ? `Your offer cannot exceed the asking price of ₹${product.price}.`
+          ? `Your offer cannot exceed the asking price of ${formatMoney(product.price)}.`
           : "Your offer must be below the listed price. Use Add to Cart instead.",
       );
   }
@@ -233,7 +236,7 @@ export async function makeOffer(
       type: "offer_received",
       priority: "normal",
       title: "New offer received",
-      message: `${buyerDisplayName === "Buyer" ? "A buyer" : buyerDisplayName} offered ₹${offerAmount} on "${product.title}"`,
+      message: `${buyerDisplayName === "Buyer" ? "A buyer" : buyerDisplayName} offered ${formatMoney(offerAmount)} on "${product.title}"`,
       relatedId: offer.id,
       relatedType: "offer",
     });
@@ -269,6 +272,12 @@ export async function respondToOffer(
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
 
   let updated: OfferDocument;
+  /**
+   * The buyer-facing sentence for a COUNTER, assembled in the branch that owns
+   * the amount. `""` is unreachable — the ternary below only selects it when
+   * `action === "counter"`, which is exactly the branch that assigns it.
+   */
+  let counterMessage = "";
 
   if (action === "accept") {
     /*
@@ -343,14 +352,30 @@ export async function respondToOffer(
         "Counter amount must differ from the buyer's offer. Accept it instead.",
       );
     updated = await offerRepository.counter(offerId, counterAmount, sellerNote);
+    /*
+     * 🛑 Built HERE, where the guards above have proven `counterAmount` is a
+     * number, rather than in the ternary below.
+     *
+     * That ternary used to read `₹${counterAmount}` against the
+     * possibly-undefined parameter — so a counter reaching it without an amount
+     * told the buyer the seller "countered with ₹undefined". `tsc` only
+     * surfaced it once the literal became `formatMoney(...)`, which is the
+     * argument for the conversion beyond consistency.
+     *
+     * Neither `!` nor `?? 0` is the fix: the first re-asserts what narrowing
+     * already knows and the second would quote a real-looking "₹0" to a buyer.
+     * Assigning the finished sentence in the branch that owns the value makes
+     * the absent case unrepresentable instead.
+     */
+    counterMessage = `${offer.storeName} countered with ${formatMoney(counterAmount)} on "${offer.productTitle}".`;
   }
 
   const notifMessage =
     action === "accept"
-      ? `Your offer of ₹${offer.offerAmount} on "${offer.productTitle}" was accepted! Complete checkout now.`
+      ? `Your offer of ${formatMoney(offer.offerAmount)} on "${offer.productTitle}" was accepted! Complete checkout now.`
       : action === "decline"
         ? `Your offer on "${offer.productTitle}" was declined.`
-        : `${offer.storeName} countered with ₹${counterAmount} on "${offer.productTitle}".`;
+        : counterMessage;
 
   await sendNotification({
     userId: offer.buyerUid,
@@ -387,6 +412,21 @@ export async function acceptCounterOffer(
     throw new AuthorizationError(ERR_NOT_AUTHORISED);
   if (offer.status !== OfferStatusValues.COUNTERED)
     throw new ValidationError("No counter to accept.");
+  /*
+   * 🛑 A COUNTERED offer with no amount is a data-integrity violation, not a
+   * case to paper over. The seller notification below quotes this figure, and
+   * it previously interpolated the optional field directly — so such a row
+   * would have told the seller the buyer "accepted your counter of ₹undefined",
+   * and accepting it would have locked a cart line at a price nobody set.
+   *
+   * Refusing is the only honest answer: `counterAmount` is what the buyer is
+   * agreeing to, so if it is missing there is nothing to agree to. Narrowing it
+   * here is a side effect of saying so, not the reason.
+   */
+  if (typeof offer.counterAmount !== "number")
+    throw new ValidationError(
+      "This counter has no amount recorded — ask the seller to send it again.",
+    );
   if (new Date() > offer.expiresAt)
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
 
@@ -401,7 +441,7 @@ export async function acceptCounterOffer(
     type: "offer_counter_accepted",
     priority: "high",
     title: "Counter offer accepted",
-    message: `Buyer accepted your counter of ₹${offer.counterAmount} on "${offer.productTitle}". They can now checkout.`,
+    message: `Buyer accepted your counter of ${formatMoney(offer.counterAmount)} on "${offer.productTitle}". They can now checkout.`,
     relatedId: offerId,
     relatedType: "offer",
   });
@@ -440,7 +480,7 @@ export async function counterOfferByBuyer(
   const maxAllowed = Math.ceil(sellerCounter * 1.2);
   if (counterAmount < minAllowed || counterAmount > maxAllowed)
     throw new ValidationError(
-      `${ERROR_MESSAGES.OFFER.COUNTER_RANGE} Allowed: ₹${minAllowed}–₹${maxAllowed}.`,
+      `${ERROR_MESSAGES.OFFER.COUNTER_RANGE} Allowed: ${formatMoney(minAllowed)}–${formatMoney(maxAllowed)}.`,
     );
 
   if (counterAmount >= offer.listedPrice)
@@ -543,7 +583,7 @@ export async function counterOfferByBuyer(
      * already in scope 41 lines up — `offerPlain` at :431, used for the
      * `createOffer` call at :439.
      */
-    message: `${offerPlain.buyerName} countered with ₹${counterAmount} on "${offer.productTitle}".`,
+    message: `${offerPlain.buyerName} countered with ${formatMoney(counterAmount)} on "${offer.productTitle}".`,
     relatedId: newOffer.id,
     relatedType: "offer",
   });
