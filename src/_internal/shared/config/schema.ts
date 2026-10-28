@@ -103,6 +103,21 @@ export interface AppkitBrandConfig {
    * {name}") and this one stands alone, so they are spelled differently.
    */
   heroCaption?: string;
+  /**
+   * TLD badge drawn in a pill after the SVG wordmark, e.g. `"in"`. Absent
+   * renders no badge.
+   *
+   * 🛑 Optional, and appkit renders nothing without it — a library must not
+   * assume its consumer has a TLD worth showing, let alone which one. The
+   * badge used to be a hardcoded `.in` inside `SiteLogo`, where no prop could
+   * reach it (A5).
+   *
+   * 🛑 NOT a source for the site's domain. `brand.name + "." + tld` happens to
+   * give `letitrip.in` here, which is what makes it a trap: any multi-word
+   * brand yields `my shop.com`. The host has one owner, `seo.siteUrl`
+   * (Root Cause #81), and `BRAND.DOMAIN` derives from that.
+   */
+  tld?: string;
   /** One-line brand description used in meta tags and footers */
   description?: string;
   /** Tagline shown in footer / about sections */
