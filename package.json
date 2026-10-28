@@ -67,7 +67,12 @@
       "types": "./dist/contracts/registry.d.ts",
       "import": "./dist/contracts/registry.js"
     },
-    "./core/baseline-resolver": {
+    "./cli": {
+   "types": "./dist/cli/index.d.ts",
+   "import": "./dist/cli/index.js",
+   "require": "./dist/cli/index.js"
+  },
+  "./core/baseline-resolver": {
       "types": "./dist/core/baseline-resolver.d.ts",
       "import": "./dist/core/baseline-resolver.js"
     },
