@@ -2,6 +2,7 @@
 
 import React from "react";
 import { storageManager } from "../../../core/StorageManager";
+import { STORAGE_KEYS } from "../../../constants/storage-keys";
 import { BreadcrumbTrail } from "./BreadcrumbTrail";
 import type { BreadcrumbCrumb } from "../utils/breadcrumb-chain";
 
@@ -47,8 +48,15 @@ import type { BreadcrumbCrumb } from "../utils/breadcrumb-chain";
  * @tag access:client-only
  */
 
-/** The `sessionStorage` key. Read here, written by `<LastCategoryBeacon>`. */
-export const LAST_CATEGORY_KEY = "letitrip:last-category";
+/**
+ * The `sessionStorage` key. Read here, written by `<LastCategoryBeacon>`.
+ *
+ * 🛑 A getter, not a `const` — the namespace is configured by the consumer's
+ * bootstrap, which runs after this module is evaluated, so a value captured at
+ * import time would freeze the default. Kept as a named export because
+ * `<LastCategoryBeacon>` writes through the same key.
+ */
+export const getLastCategoryKey = (): string => STORAGE_KEYS.lastCategory;
 
 export interface ContextualTrailProps {
   /**
@@ -79,7 +87,7 @@ export function ContextualTrail({ trails, alternates, className }: ContextualTra
      * component needs no catch at all and there is one implementation of
      * "storage might not exist" rather than a second, quieter copy.
      */
-    const last = storageManager.get<string>(LAST_CATEGORY_KEY, { type: "session" });
+    const last = storageManager.get<string>(getLastCategoryKey(), { type: "session" });
     if (!last) return;
     const match = trails.findIndex((t) => t.categoryId === last);
     // 🛑 Only swap to a trail this listing is REALLY filed under. A visitor who

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { storageManager } from "../../../core/StorageManager";
-import { LAST_CATEGORY_KEY } from "./ContextualTrail";
+import { getLastCategoryKey } from "./ContextualTrail";
 
 /**
  * Record which category page the visitor is on, for `<ContextualTrail>`.
@@ -28,7 +28,7 @@ export function LastCategoryBeacon({ categoryId }: { categoryId: string }) {
      * and no second copy of that logic. A `false` return means the visitor
      * keeps the default trail, which is a correct answer.
      */
-    storageManager.set(LAST_CATEGORY_KEY, categoryId, { type: "session" });
+    storageManager.set(getLastCategoryKey(), categoryId, { type: "session" });
   }, [categoryId]);
   return null;
 }

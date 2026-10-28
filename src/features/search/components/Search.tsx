@@ -10,6 +10,7 @@ const CLS_HOVER_ROW = "hover:bg-surface-hover";
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-[var(--appkit-color-text-muted)]";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
+import { STORAGE_KEYS } from "../../../constants/storage-keys";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Input } from "../../../ui/components/Input";
@@ -191,7 +192,9 @@ export function Search({
   suggestionTypeBadges,
   resourceTypes,
   defaultResourceType = "products",
-  storageKey = "letitrip_search_type",
+  // Default resolved at call time from the configured namespace, not a brand
+  // literal — a library default must not name one consumer.
+  storageKey = STORAGE_KEYS.searchType,
   searchIndexEnabled,
 }: SearchProps) {
   const isInlineMode = value !== undefined;

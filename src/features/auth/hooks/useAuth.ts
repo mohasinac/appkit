@@ -5,6 +5,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";
 import { getClientSessionAdapter } from "../../../contracts/client-session";
+/*
+ * 🛑 The auth-popup message type is a CROSS-PACKAGE contract: appkit listens
+ * here, the consumer's /auth/close page posts. Both must read this constant —
+ * namespacing one side only makes the popup post a message nobody hears, and
+ * OAuth login fails silently with no type error anywhere.
+ */
+import { MESSAGE_TYPES, STORAGE_KEYS } from "../../../constants/storage-keys";
 import { apiClient } from "../../../http";
 
 import type { AuthUser } from "../types";
@@ -176,7 +183,7 @@ export function useGoogleLogin(options?: {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
-      if (!event.data || event.data.type !== "letitrip_auth_close") return;
+      if (!event.data || event.data.type !== MESSAGE_TYPES.authClose) return;
       if (calledRef.current) return;
 
       calledRef.current = true;
@@ -242,7 +249,7 @@ export function useGoogleLogin(options?: {
       }>(AUTH_ENDPOINTS.EVENT_INIT, {});
 
       const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
-      localStorage.setItem("letitrip_oauth_redirect", url);
+      localStorage.setItem(STORAGE_KEYS.oauthRedirect, url);
 
       // Only subscribe to RTDB if it's available — skipping avoids an immediate
       // FAILED status (token sign-in error) that would block the postMessage fallback.
@@ -324,7 +331,7 @@ export function useLinkGoogleAccount(options?: {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
-      if (!event.data || event.data.type !== "letitrip_auth_close") return;
+      if (!event.data || event.data.type !== MESSAGE_TYPES.authClose) return;
       if (calledRef.current) return;
 
       calledRef.current = true;
@@ -385,7 +392,7 @@ export function useLinkGoogleAccount(options?: {
       }>(AUTH_ENDPOINTS.EVENT_INIT, { mode: "link" });
 
       const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
-      localStorage.setItem("letitrip_oauth_redirect", url);
+      localStorage.setItem(STORAGE_KEYS.oauthRedirect, url);
 
       if (rtdbEnabled !== false) {
         authEvent.subscribe(eventId, customToken);

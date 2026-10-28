@@ -6,7 +6,9 @@ import { useAuth } from "../../../react/contexts/SessionContext";
 import { Div } from "../../../ui/components/Div";
 
 import { IconButton, Row, Span, TextLink } from "@mohasinac/appkit/client";
-const STORAGE_KEY = "letitrip:announcement-dismissed";
+import { STORAGE_KEYS } from "../../../constants/storage-keys";
+// 🛑 Read at USE time — the namespace is set by the consumer's bootstrap, which
+// runs after this module is evaluated.
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function hashBannerMessage(msg: string): string {
@@ -19,7 +21,7 @@ export function hashBannerMessage(msg: string): string {
 
 function isLocallyDismissed(message: string): boolean {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEYS.announcementDismissed);
     if (!raw) return false;
     const { hash, at } = JSON.parse(raw);
     if (hash !== hashBannerMessage(message)) return false;
@@ -32,7 +34,7 @@ function isLocallyDismissed(message: string): boolean {
 
 function saveLocalDismissal(message: string): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ hash: hashBannerMessage(message), at: Date.now() }));
+    localStorage.setItem(STORAGE_KEYS.announcementDismissed, JSON.stringify({ hash: hashBannerMessage(message), at: Date.now() }));
   } catch (_err) { void normalizeError(_err); /* quota exceeded — ignore */ }
 }
 

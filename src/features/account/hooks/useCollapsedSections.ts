@@ -1,10 +1,12 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
+import { STORAGE_KEYS } from "../../../constants/storage-keys";
 import { useCurrentProfile, useUpdateCurrentProfile } from "./useProfile";
 
 const PERSIST_DEBOUNCE_MS = 600;
-const LOCAL_KEY = "letitrip:section-state";
+// 🛑 Read at USE time, not captured in a const — the namespace is set by the
+// consumer's bootstrap, which runs after this module is evaluated.
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -53,7 +55,7 @@ const LOCAL_KEY = "letitrip:section-state";
 function readLocalScopes(): Record<string, string[]> {
   if (typeof window === "undefined") return {};
   try {
-    const raw = window.localStorage.getItem(LOCAL_KEY);
+    const raw = window.localStorage.getItem(STORAGE_KEYS.sectionState);
     if (!raw) return {};
     const parsed = JSON.parse(raw) as Record<string, string[]>;
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
@@ -81,7 +83,7 @@ function writeLocalScope(scope: string, openIds: string[]): void {
   try {
     const all = readLocalScopes();
     all[scope] = openIds;
-    window.localStorage.setItem(LOCAL_KEY, JSON.stringify(all));
+    window.localStorage.setItem(STORAGE_KEYS.sectionState, JSON.stringify(all));
     // setItem throws on quota exhaustion and in private mode. Same reasoning as
     // readLocalScopes — the debounced profile PATCH is the durable write, so
     // losing the mirror costs one frame of default layout and nothing else.
