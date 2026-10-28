@@ -58,8 +58,6 @@
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
 import { MAX_ACTIVE_SLIDES } from "../features/homepage/schemas";
-import { buildSlidesFromEvents } from "../features/events/utils/carousel-slide";
-import { eventsSeedData } from "./events-seed-data";
 import { ROUTES } from "../next/routing/route-map";
 import { TABLE_KEYS } from "../constants/table-keys";
 import { sortBy } from "../constants/sort";
@@ -640,23 +638,33 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
  * ones above are counted here, together with them, because the rail renders
  * one combined list and five is the ceiling for the whole thing.
  */
-const _eventSlides = buildSlidesFromEvents(
-  eventsSeedData,
-  (event) => String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id)),
-  "user-admin-letitrip",
-);
-
-const _allSlides = [..._rawSlides, ..._eventSlides];
+/*
+ * 🛑 NO EVENT-DERIVED SLIDES. `buildSlidesFromEvents` was removed here on
+ * 2026-10-27 at the owner's instruction ("the event carousel is still trash,
+ * delete it entirely").
+ *
+ * It generated one slide per active event, which is how
+ * `slide-event-festive-cashback-10` — a six-card "Diwali to New Year: Four
+ * Offers, Three Months" slide, every card linking into `/events/…` — came to
+ * be ACTIVE on the homepage. `/events` is closed, so all six were dead links,
+ * and `gateCarouselSlides` could only have stripped the cards and left a bare
+ * background behind.
+ *
+ * The generator is the problem, not the one slide: deleting the document
+ * without this would regenerate it on the next seed. The helper itself still
+ * exists in `features/events/utils/carousel-slide` for a site that runs
+ * events; this seed simply does not call it.
+ */
+const _allSlides = _rawSlides;
 
 const _activeTotal = _allSlides.filter((s) => s.active).length;
 if (_activeTotal > MAX_ACTIVE_SLIDES) {
   throw new Error(
-    `carousel-slides-seed-data: ${_activeTotal} active slides across hand-written ` +
-      `(${_rawSlides.filter((s) => s.active).length}) and event-owned ` +
-      `(${_eventSlides.filter((s) => s.active).length}), but MAX_ACTIVE_SLIDES is ` +
-      `${MAX_ACTIVE_SLIDES}. HeroCarousel renders the first five; the rest would be ` +
-      `authored, stored and never seen. Deactivate one, or fold several promotions ` +
-      `into one \`placement: "cards"\` slide — that is what the six zones are for.`,
+    `carousel-slides-seed-data: ${_activeTotal} active slides, but ` +
+      `MAX_ACTIVE_SLIDES is ${MAX_ACTIVE_SLIDES}. HeroCarousel renders the first ` +
+      `five; the rest would be authored, stored and never seen. Deactivate one, ` +
+      `or fold several promotions into one \`placement: "cards"\` slide — that is ` +
+      `what the six zones are for.`,
   );
 }
 

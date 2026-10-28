@@ -42,6 +42,14 @@ export interface TabsProps {
 }
 
 export interface TabsListProps {
+  /**
+   * Never collapse into a dropdown; let the tabs wrap onto a second line.
+   *
+   * For CONTENT tabs inside a section, where a dropdown reads as a stray form
+   * control. Navigation tab bars should leave this `false` — see the note in
+   * `TabsList`.
+   */
+  wrap?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
@@ -97,7 +105,7 @@ export function Tabs({
   );
 }
 
-export function TabsList({ className = "", children }: TabsListProps) {
+export function TabsList({ className = "", children, wrap = false }: TabsListProps) {
   const { active, setActive } = useContext(TabsContext);
   const shellRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -123,7 +131,24 @@ export function TabsList({ className = "", children }: TabsListProps) {
   }));
 
   const signature = overflowItems.map((i) => `${i.id}:${i.label}:${i.count ?? ""}`).join("|");
-  const collapsed = useRowCollapse(shellRef, rowRef, signature);
+  const measured = useRowCollapse(shellRef, rowRef, signature);
+  /*
+   * 🛑 `wrap` OPTS OUT OF COLLAPSING ENTIRELY, and it exists because
+   * collapsing is only right for NAVIGATION.
+   *
+   * Owner, 2026-10-27: *"it makes sense for forms or navigations, but no
+   * sense for a homepage section's tabs to be coming down."* That is the
+   * correct distinction. A nav bar that collapses hides destinations behind
+   * one more tap, which is a fair trade on a phone. A content filter inside a
+   * section — the homepage FAQ's category tabs — collapses into a dropdown
+   * that looks like a form control sitting in the middle of a page, and the
+   * visitor cannot see at a glance what the section even contains.
+   *
+   * Wrapping is the right failure mode here: the tabs take a second line and
+   * stay visible. Default stays `false`, so every existing nav tab bar is
+   * untouched.
+   */
+  const collapsed = wrap ? false : measured;
 
   /*
    * Collapsed renders `OverflowRow` in its already-collapsed state rather than
@@ -152,7 +177,12 @@ export function TabsList({ className = "", children }: TabsListProps) {
 
   return (
     <div ref={shellRef}>
-      <TabBarShell className={className} ariaLabel="Tabs" activeKey={active} listRef={rowRef}>
+      <TabBarShell
+        className={[className, wrap ? "appkit-tabs-list--wrap" : ""].filter(Boolean).join(" ")}
+        ariaLabel="Tabs"
+        activeKey={active}
+        listRef={rowRef}
+      >
         {children}
       </TabBarShell>
     </div>

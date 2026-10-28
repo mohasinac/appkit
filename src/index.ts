@@ -2762,10 +2762,6 @@ export { validateImage } from "./providers/storage-firebase/client";
 // StorageHelpers - Type contract for storage helpers.
 export type { StorageHelpers } from "./providers/storage-firebase/client";
 
-// ./features/about/index
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AboutView - Component for about view.
-export { AboutView } from "./features/about/components/AboutView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // FAQPageView - Component for faqpage view.
 export { FAQPageView } from "./features/about/components/FAQPageView";
@@ -2826,9 +2822,6 @@ export type { AboutMilestone } from "./features/about/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AboutValueItem - Type contract for about value item.
 export type { AboutValueItem } from "./features/about/schemas/firestore";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AboutViewProps - Type contract for about view props.
-export type { AboutViewProps } from "./features/about/components/AboutView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AboutTeamMember - Type contract for about team member.
 export type { AboutTeamMember } from "./features/about/schemas/firestore";

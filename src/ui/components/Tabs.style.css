@@ -290,3 +290,23 @@
   border-color: transparent;
   color: var(--appkit-tabs-ink-active);
 }
+
+/*
+ * Wrapping tab bar — `<TabsList wrap>`.
+ *
+ * 🛑 For CONTENT tabs inside a page section, never for navigation. The
+ * default list scrolls horizontally and collapses into a dropdown once it
+ * overflows, which is right for a nav bar on a phone and wrong in the middle
+ * of a homepage section: there it renders as a stray form control, and the
+ * visitor cannot see what the section contains without opening it.
+ *
+ * Wrapping keeps every tab visible on a second line. `overflow: visible` is
+ * required alongside `flex-wrap` — the base rule's `overflow-x: auto` would
+ * otherwise still clip the wrapped rows and reintroduce a scrollbar.
+ */
+.appkit-tabs-list--wrap {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  overflow-y: visible;
+  scrollbar-width: auto;
+}

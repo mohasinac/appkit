@@ -1489,7 +1489,6 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.ITEM_REQUESTS),
       String(ROUTES.PUBLIC.LOTTERIES),
       String(ROUTES.PUBLIC.PARTS),
-      String(ROUTES.PUBLIC.PROMOTIONS),
       String(ROUTES.PUBLIC.REPORT_ENTITY),
       String(ROUTES.PUBLIC.SCAMS),
       /* No `ROUTES.PUBLIC.SELL` constant exists, so `/sell` — the public

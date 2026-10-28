@@ -59,8 +59,15 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   // a rendered field in that same fix — without a fixture nothing exercises it.
   announcementBar: {
     enabled: true,
-    message: "🎉 Up to 25% off select listings + free shipping on orders above ₹999 — See Events for codes",
-    link: ROUTES.PUBLIC.EVENTS,
+    /*
+     * 🛑 Was "Up to 25% off select listings … See Events for codes" linking
+     * `/events`. Two problems, both live on the first line of every page:
+     * `/events` is closed, and no coupon in the database ever supported a
+     * 25% claim. The free-shipping figure IS checked — it is
+     * `shipping.minOrderForFree`, 999.
+     */
+    message: "🎉 Free shipping on orders above ₹999 — shop the latest Beyblade X drops",
+    link: ROUTES.PUBLIC.PRODUCTS,
   },
   watermark: {
     type: "text",
@@ -77,75 +84,20 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     alt: "LetItRip Logo",
     format: "svg",
   },
-  aboutContent: {
-    title: "Every collection has a story. Let It Rip.",
-    subtitle:
-      "We built India's marketplace for people who chase the thrill of the find — action figures, trading cards, spinning tops, model kits, and everything in between.",
-    missionTitle: "Our Mission",
-    missionText:
-      "Collectibles are more than objects — they're the Saturday-morning cartoons we grew up on, the cards we traded at recess, the tops we battled on the playground. LetItRip exists to give India's collectors a place built specifically for that obsession: verified sellers, live auctions that actually feel alive, pre-orders for the drops you can't miss, and an escrow-backed checkout so a rare find never turns into a rare regret. We're not trying to be everything to everyone — we're trying to be the best place on the internet to buy, sell, and obsess over the things you collect.",
-    howItWorksTitle: "How It Works",
-    howItems: [
-      {
-        title: "Browse & Discover",
-        text: "Search thousands of listings across action figures, trading cards, spinning tops, model kits, and vintage rarities — filtered by category, brand, condition, and price so you find exactly what you're hunting for.",
-        icon: "🛒",
-        tone: "indigo",
-      },
-      {
-        title: "Sell With Confidence",
-        text: "Open a store in minutes, list with our SEO-friendly slugging and media tools, and get paid through escrow-protected orders — no chasing buyers, no guessing games.",
-        icon: "🏪",
-        tone: "teal",
-      },
-      {
-        title: "Bid, Win, Rip",
-        text: "Live auctions with real-time bidding, transparent history, and instant outbid alerts. When the gavel falls, checkout and shipping are already lined up.",
-        icon: "⚡",
-        tone: "amber",
-      },
-    ],
-    valuesTitle: "Our Values",
-    valueItems: [
-      {
-        title: "Trust First",
-        text: "Every seller is verified, every payment is escrow-protected, and every listing is held to the same authenticity bar we'd want as buyers ourselves.",
-        icon: "🛡️",
-      },
-      {
-        title: "Built By Collectors",
-        text: "We're not a generic marketplace with a collectibles tab bolted on — every feature, from grading fields to condition tags, exists because a real collector asked for it.",
-        icon: "🤝",
-      },
-      {
-        title: "Move Fast, Ship Fast",
-        text: "Rare drops don't wait, and neither do we — from pre-order alerts to 3-7 day delivery, we optimise for the moment you finally get to unbox it.",
-        icon: "🚀",
-      },
-    ],
-    milestonesTitle: "Our Journey",
-    milestones: [
-      { year: "2024", text: "LetItRip started as a weekend project — a single developer, a spinning-top collection outgrowing its shelf, and a conviction that India's collectors deserved a marketplace built just for them." },
-      { year: "2025", text: "Live auctions, seller storefronts, and escrow-backed checkout shipped — turning a side project into a real marketplace with verified sellers across action figures, trading cards, and model kits." },
-      { year: "2026", text: "Pre-orders, events, raffles, and a mobile-first redesign — built for the community that showed up, bid, sold, and kept coming back." },
-    ],
-    teamTitle: "Who's Behind LetItRip",
-    teamSubtitle: "One collector obsessed with the same thing you are — the hunt for the next piece of the collection.",
-    teamMembers: [
-      {
-        name: "Mohasin Chinnapattan",
-        role: "Founder & Developer",
-        bio: "Started LetItRip after one too many afternoons hunting for a specific 1st-edition card across a dozen disconnected forums and marketplaces. Built the entire platform — Next.js front end, Firebase backend, the auction engine, the whole thing — the same way most great collections start: one late night at a time. Still personally answers the support inbox.",
-        photoUrl: seedPhoto("letitrip-team-mohasin-chinnapattan-20260820", 400, 400),
-        isFounder: true,
-        isDeveloper: true,
-        githubUrl: "https://github.com/mohasinac",
-      },
-    ],
-    ctaTitle: "Ready to Let It Rip?",
-    ctaSell: "Start selling in minutes",
-    ctaShop: "Browse the marketplace",
-  },
+  /*
+   * 🛑 NO `aboutContent` — REMOVED 2026-10-27, and its absence is the point.
+   *
+   * `/about` resolves every label as `val(key, t(key))`: the stored value
+   * WINS and the i18n string is only a fallback. So this block SHADOWED
+   * `messages/en.json` `about.*`, and rewriting the translations for the
+   * single-vendor storefront changed nothing on the page — it still said
+   * "India's largest collectibles marketplace" and listed Pokemon TCG,
+   * Hot Wheels and PSA-graded cards. The live override was cleared; seeding
+   * it back would re-create exactly that shadowing.
+   *
+   * The i18n block is now the one reviewed copy. An admin can author an
+   * override again whenever they want; the seed should not ship one.
+   */
   background: {
     light: {
       type: "gradient",
@@ -637,7 +589,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.ITEM_REQUESTS),
       String(ROUTES.PUBLIC.LOTTERIES),
       String(ROUTES.PUBLIC.PARTS),
-      String(ROUTES.PUBLIC.PROMOTIONS),
       String(ROUTES.PUBLIC.REPORT_ENTITY),
       String(ROUTES.PUBLIC.SCAMS),
       /* No `ROUTES.PUBLIC.SELL` constant exists, so `/sell` — the public
@@ -745,8 +696,32 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
    */
   whatsappFeed: { enabled: false },
   actionConfig: {},
-  navConfig: {},
-  disabledRoutes: [],
+  /*
+   * 🛑 Both SPELLED OUT, 2026-10-27. They were `{}` and `[]`, and because
+   * `appkit-seed load` writes `set(merge: true)`, seeding them empty would
+   * RE-OPEN every hand-disabled route on a live site — /blog, /bundles,
+   * /events, /reviews and /tools all answer 404 only because of these two.
+   *
+   * `disabledRoutes` is DERIVED from `navConfig` by `updateNavConfigDomain`
+   * (it filters `ALL_PUBLIC_NAV_ITEMS` by the disabled ids), so the two must
+   * agree here exactly as they do live. Keys are `publicNavId(href)` —
+   * `nav-{slug}`, the portal-less spelling the Navigation Permissions panel
+   * writes.
+   */
+  navConfig: {
+    "nav-blog": { enabled: false },
+    "nav-reviews": { enabled: false },
+    "nav-events": { enabled: false },
+    "nav-bundles": { enabled: false },
+    "nav-tools": { enabled: false },
+  },
+  disabledRoutes: [
+    String(ROUTES.BLOG.LIST),
+    String(ROUTES.PUBLIC.BUNDLES),
+    String(ROUTES.PUBLIC.EVENTS),
+    String(ROUTES.PUBLIC.REVIEWS),
+    String(ROUTES.PUBLIC.TOOLS),
+  ],
   theme: {
     themes: [
       /* ── LIGHT THEMES ──────────────────────────────────────── */

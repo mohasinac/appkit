@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { Div } from "../components/Div";
 import { normalizeRichTextHtml } from "../../utils/string.formatter";
+import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 import { splitChartBlocks } from "./chart-blocks";
 import { ChartFromJson } from "../components/Chart";
 
@@ -247,6 +248,50 @@ export interface RichTextProps {
  * <RichText html={desc} copyableCode />
  * ```
  */
+/**
+ * Unwrap every `<a>` whose destination the site has closed, keeping its text.
+ *
+ * 🛑 THIS IS WHERE THE LAST DEAD LINKS WERE, and why six page-level sweeps
+ * kept reporting "clean". Stored rich text is authored content that no page
+ * template owns: a crawl of the live site on 2026-10-27 found `/scams`,
+ * `/tools/authenticity` and `/blog` linked from the HOMEPAGE, and every one
+ * of them was inside an FAQ ANSWER. Grepping a page for marketplace words
+ * cannot see an href, and gating a section cannot see inside its prose.
+ *
+ * `RichText` is the single renderer for every stored HTML field on the site —
+ * FAQ answers, legal pages, blog bodies, product descriptions — so one filter
+ * here covers all of them.
+ *
+ * 🛑 UNWRAPPED, NOT DELETED. The sentence still reads: "the scam registry is
+ * the place to report it" keeps its words and loses its link. Removing the
+ * whole anchor would leave a gap mid-sentence, and removing the paragraph
+ * would silently delete an admin's copy.
+ *
+ * Prefix-matched on a `/`-delimited boundary, the same rule as every other
+ * gate — `/store` must not match `/stores`.
+ */
+function unwrapClosedLinks(html: string, closed: readonly string[]): string {
+  if (closed.length === 0 || typeof document === "undefined") return html;
+  const container = document.createElement("div");
+  container.innerHTML = html;
+  let changed = false;
+  for (const a of Array.from(container.querySelectorAll("a[href]"))) {
+    const raw = a.getAttribute("href") ?? "";
+    if (!raw.startsWith("/")) continue;
+    const path = raw.split(/[?#]/)[0]!.replace(/\/+$/, "") || "/";
+    // `/en/blog` -> `/blog`: an admin pasting out of the address bar stores
+    // the locale-prefixed form, which a raw comparison would miss.
+    const bare = path.replace(/^\/[a-z]{2}(?=\/)/, "");
+    const hit = closed.some(
+      (p) => bare === p || bare.startsWith(`${p}/`) || path === p || path.startsWith(`${p}/`),
+    );
+    if (!hit) continue;
+    a.replaceWith(...Array.from(a.childNodes));
+    changed = true;
+  }
+  return changed ? container.innerHTML : html;
+}
+
 export function RichText({
   html,
   className = "",
@@ -255,8 +300,18 @@ export function RichText({
   highlightCode,
   charts = true,
 }: RichTextProps) {
+  /*
+   * Fails OPEN: no settings yet, or a failed fetch, leaves every link intact.
+   * A transient error must not strip working links out of an admin's copy.
+   */
+  const { data: settings } = useSiteSettings<{ hiddenSurfacePrefixes?: string[] }>();
+  const closedPrefixes = settings?.hiddenSurfacePrefixes ?? [];
+
   const safe = useMemo(() => {
-    const sanitized = sanitiseHtml(normalizeRichTextHtml(html));
+    const sanitized = unwrapClosedLinks(
+      sanitiseHtml(normalizeRichTextHtml(html)),
+      closedPrefixes,
+    );
 
     if (!highlightCode || typeof document === "undefined") return sanitized;
 

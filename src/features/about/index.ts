@@ -1,11 +1,21 @@
-export { AboutView } from "./components/AboutView";
-export type {
-  AboutViewProps,
-  AboutHowItem,
-  AboutValueItem,
-  AboutMilestone,
-  AboutTeamMember,
-} from "./components/AboutView";
+/*
+ * 🛑 `AboutView` was DELETED 2026-10-27, not merely unexported.
+ *
+ * Its only consumer was `/about`, which was rewritten to carry the registered
+ * business identity instead of a mission statement, a "For Collectors / For
+ * Sellers / For Bidders" grid, six value cards and an "Open Your Store" CTA —
+ * content written for a multi-seller marketplace selling Pokémon TCG and
+ * PSA-graded cards.
+ *
+ * `audit-orphan-view-component` caught it the moment the page stopped
+ * rendering it, and its reasoning is the right one: "a complete view nothing
+ * renders is an abandoned migration — it reads as finished because the export
+ * is right there." Keeping it exported-but-unreachable is exactly the state
+ * that audit exists to refuse.
+ *
+ * `AboutContentDocument` stays: `SiteSettingsDocument.aboutContent` still
+ * declares the field, and the admin editor still writes it.
+ */
 export type { AboutContentDocument } from "./schemas/firestore";
 
 export { TrackOrderView } from "./components/TrackOrderView";

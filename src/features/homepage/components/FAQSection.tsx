@@ -145,7 +145,7 @@ const flex = { between: FLEX_BETWEEN };
         {/* Category Tabs — collapses to a colored dropdown past 5 items on mobile */}
         {showTabs && (
           <Tabs value={activeTab} onChange={setActiveTab} className="mb-8">
-            <TabsList>
+            <TabsList wrap>
               <TabsTrigger value="all">All</TabsTrigger>
               {derivedTabs.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>

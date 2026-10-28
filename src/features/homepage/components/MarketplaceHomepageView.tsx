@@ -22,6 +22,7 @@ import { gateCarouselSlides } from "../lib/slide-gating";
 import { gateHomepageSections } from "../lib/section-gating";
 import { closedSurfaceContext, isClosedHref } from "../../../_internal/shared/listing-types/route-gating";
 import { getSurfaceCounts } from "../../../_internal/server/features/products/surface-counts";
+import { ROUTES } from "../../../next/routing/route-map";
 import { SECTION_COPY } from "../constants/section-copy";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import {
@@ -85,6 +86,37 @@ const HOMEPAGE_SECTION_BROWSE_PAGE: Partial<Record<SectionType, BrowsePageKey>> 
   categories: "categories",
   brands: "brands",
   stores: "stores",
+};
+
+/**
+ * The FOURTH axis — a section that funnels into a route closed by
+ * `closedPaths` or `disabledRoutes`, neither of which the three maps above
+ * can see.
+ *
+ * 🛑 THIS ONE EXISTS BECAUSE A SEED LOAD RE-ENABLED A SECTION. The blog rail
+ * was switched off per-document, `appkit-seed load` writes `set(merge: true)`
+ * over `enabled`, and the seed still said `true` — so the rail came back and
+ * the homepage shipped FIVE dead links (`/blog` plus four post URLs) into a
+ * section closed via `disabledRoutes`.
+ *
+ * A per-document `enabled: false` is a value a reseed can overwrite. A gate
+ * keyed on whether the destination is OPEN cannot be: the section stays dark
+ * for exactly as long as the route is shut, however the flag got flipped.
+ * That is the difference between fixing this instance and fixing the class.
+ */
+/*
+ * 🛑 `coupons` is NOT here. Its "View all offers" button points at
+ * `/promotions`, which is a real offers page with a live coupon behind it —
+ * so the fix was to REOPEN that route, not to hide a working rail. Closing a
+ * page and then hiding everything that links to it is the wrong direction
+ * when the page is one a shop wants.
+ */
+const HOMEPAGE_SECTION_ROUTE: Partial<Record<SectionType, string>> = {
+  "blog-articles": String(ROUTES.BLOG.LIST),
+  events: String(ROUTES.PUBLIC.EVENTS),
+  "event-raffles": String(ROUTES.PUBLIC.EVENTS),
+  reviews: String(ROUTES.PUBLIC.REVIEWS),
+  "featured-bundles": String(ROUTES.PUBLIC.BUNDLES),
 };
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
@@ -237,6 +269,8 @@ export async function MarketplaceHomepageView({
     if (gatedCategory && !isCategoryTypeEnabled(gatedCategory, siteSettings)) return false;
     const gatedBrowse = HOMEPAGE_SECTION_BROWSE_PAGE[type];
     if (gatedBrowse && !isBrowsePageEnabled(gatedBrowse, siteSettings)) return false;
+    const gatedRoute = HOMEPAGE_SECTION_ROUTE[type];
+    if (gatedRoute && isClosedHref(gatedRoute, closedSurfaces)) return false;
     return true;
   });
 
