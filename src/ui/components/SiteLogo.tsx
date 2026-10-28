@@ -1,10 +1,21 @@
 "use client";
 /**
- * LetItRip site logo — SVG wordmark "LetItRip" + small ".in" superscript.
+ * Site logo — an SVG wordmark with an optional TLD badge.
+ *
+ * 🛑 The glyphs are the CONSUMER's. This header used to read "SVG wordmark
+ * LetItRip + small .in superscript", and that was an accurate description: the
+ * text was baked into the SVG where no prop could reach it, so every install of
+ * appkit rendered one Indian marketplace's name in its own header. Both are
+ * props now (`wordmark`, `tld`), threaded from `appkit.config.js` through
+ * `AppLayoutShell` -> `TitleBarLayout`.
  *
  * Single source of truth for the site brand mark. The wordmark gradient
  * follows the active theme via `var(--appkit-gradient-logo)`, so a custom
  * admin theme automatically restyles the logo without forking the SVG.
+ *
+ * 🛑 The 214-unit viewBox was drawn around an eight-glyph wordmark. A much
+ * longer name will overflow it — pass `src` and use a real logo image rather
+ * than expecting the SVG to re-letter itself.
  *
  * Sizes are responsive presets — the variant catalogue forbids consumer-side
  * className overrides on primitive components.
@@ -30,8 +41,26 @@ export interface SiteLogoProps {
    * dark-primary surfaces in light mode etc.
    */
   tone?: SiteLogoTone;
-  /** Accessible title; defaults to "LetItRip.in". */
+  /** Accessible title. Defaults to `wordmark` + `tld`, so one prop usually suffices. */
   title?: string;
+  /**
+   * The wordmark GLYPHS. Defaults to `title`.
+   *
+   * 🛑 Separate from `title` because they are different things and conflating
+   * them is what hid the brand here. `title` is the accessible name; this is
+   * the text actually drawn in the SVG — and until A5 that text was the literal
+   * `LetItRip`, unreachable by any prop. A consumer could rename the accessible
+   * title and still render someone else's brand.
+   */
+  wordmark?: string;
+  /**
+   * Optional TLD badge drawn in a pill after the wordmark, e.g. `"in"`.
+   *
+   * Omitted by default: a library must not assume its consumer has a TLD worth
+   * showing, let alone which one. `TitleBarLayout` threads `brandTld` through
+   * for the installs that want it.
+   */
+  tld?: string;
   /**
    * Optional admin-uploaded image URL. When present, renders an `<MediaImage>`
    * instead of the SVG wordmark (so the watermark proxy applies). Falls back
@@ -72,9 +101,21 @@ function resolveFill(tone: SiteLogoTone, gradientId: string): string {
 export function SiteLogo({
   size = "md",
   tone = "brand",
-  title = "LetItRip.in",
+  /*
+   * 🛑 No brand default. This read `title = "LetItRip.in"`, which put one
+   * consumer's name in a library primitive — and the SVG below ignored it
+   * anyway, drawing the literal `LetItRip` that no prop could reach.
+   *
+   * `"Site"` is deliberately bland: an unconfigured install should look
+   * obviously unconfigured rather than silently wear someone else's brand.
+   */
+  title,
+  wordmark,
+  tld,
   src,
 }: SiteLogoProps) {
+  const text = wordmark ?? title ?? "Site";
+  const accessibleTitle = title ?? (tld ? `${text}.${tld}` : text);
   const uid = useId();
   const gradientId = `${GRADIENT_ID_PREFIX}-${uid.replace(/:/g, "")}`;
   const heightCls = SIZE_HEIGHTS[size];
@@ -83,7 +124,7 @@ export function SiteLogo({
     return (
       <MediaImage
         src={src}
-        alt={title}
+        alt={accessibleTitle}
         size="thumbnail"
         objectFit="contain"
         // backed by the catalogued `size` enum; no consumer-provided overrides.
@@ -100,12 +141,12 @@ export function SiteLogo({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 214 56"
       role="img"
-      aria-label={title}
+      aria-label={accessibleTitle}
       data-testid="site-logo"
       // backed by the catalogued `size` enum; no consumer-provided overrides.
       className={`block w-auto ${heightCls}`}
     >
-      <title>{title}</title>
+      <title>{accessibleTitle}</title>
       {isGradient && (
         <defs>
           {/* Per-stop CSS variables (--appkit-logo-stop-*) are defined in
@@ -137,21 +178,34 @@ export function SiteLogo({
         letterSpacing="-1.5"
         fill={fill}
       >
-        LetItRip
+        {text}
       </text>
-      {/* .in TLD badge — pill background reads as a designed element. */}
-      <rect x="169" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
-      <text
-        x="174"
-        y="21"
-        fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-        fontWeight="700"
-        fontSize="15"
-        letterSpacing="0.2"
-        fill={fill}
-      >
-        .in
-      </text>
+      {/*
+        TLD badge — a pill, so it reads as a designed element rather than
+        punctuation.
+
+        🛑 Rendered only when a `tld` is supplied. Its geometry is pinned to the
+        214-unit viewBox, which was drawn around the eight glyphs of one
+        particular wordmark — so a consumer with a much longer or shorter name
+        should pass `src` and use a real logo image rather than expect this SVG
+        to re-letter itself. Stating that is better than silently overlapping.
+      */}
+      {tld && (
+        <>
+          <rect x="169" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
+          <text
+            x="174"
+            y="21"
+            fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+            fontWeight="700"
+            fontSize="15"
+            letterSpacing="0.2"
+            fill={fill}
+          >
+            .{tld}
+          </text>
+        </>
+      )}
     </svg>
   );
 }

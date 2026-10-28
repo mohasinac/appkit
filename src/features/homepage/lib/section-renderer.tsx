@@ -142,6 +142,14 @@ export interface HomepageBrand {
   /** Short mark shown in the hero panel, e.g. "LT". */
   shortName?: string;
   /**
+   * TLD badge drawn after the hero wordmark, e.g. `"in"`.
+   *
+   * Consumer-supplied for the same reason as `caption` below: a library must
+   * not assume its consumer's domain. It was a hardcoded `.in` inside
+   * `SiteLogo` until A5.
+   */
+  tld?: string;
+  /**
    * Caption under the hero brand panel's logo, e.g. "Let It Rip India".
    *
    * Separate from `name` because that one is a sentence ingredient ("Why
@@ -289,6 +297,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           secondaryCtaHref={cfg?.secondaryCtaLink || ROUTES.PUBLIC.PRODUCTS}
           trustChips={[...WELCOME_TRUST_CHIPS]}
           brandLogoText={brand?.shortName}
+          brandTld={brand?.tld}
         />
       );
     },

@@ -26,6 +26,13 @@ export interface TitleBarLayoutProps {
   searchOpen: boolean;
   brandName: string;
   brandShortName?: string;
+  /**
+   * TLD badge for the SVG wordmark, e.g. `"in"`. Omitted renders no badge.
+   *
+   * A5 — the badge used to be a hardcoded `.in` inside `SiteLogo`, so every
+   * consumer of appkit got one marketplace's TLD drawn into its header.
+   */
+  brandTld?: string;
   /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
   siteLogoUrl?: string;
   logoHref: string;
@@ -130,6 +137,7 @@ export function TitleBarLayout({
   onSearchToggle,
   searchOpen,
   brandName,
+  brandTld,
   brandShortName,
   siteLogoUrl,
   logoHref,
@@ -379,7 +387,7 @@ export function TitleBarLayout({
               aria-label={brandName}
               className="flex items-center gap-[var(--appkit-space-2)] transition-opacity hover:opacity-80"
             >
-              <SiteLogo title={brandName} size="md" />
+              <SiteLogo title={brandName} wordmark={brandName} tld={brandTld} size="md" />
             </Link>
           </Row>
 

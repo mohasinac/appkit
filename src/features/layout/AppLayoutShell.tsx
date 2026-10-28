@@ -102,6 +102,8 @@ export interface AppLayoutShellProps {
   hiddenNavItems?: string[];
   user?: BottomNavbarUser | null;
   brandName: string;
+  /** TLD badge for the wordmark, forwarded to TitleBarLayout (A5). */
+  brandTld?: string;
   brandShortName?: string;
   /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
   siteLogoUrl?: string;
@@ -927,6 +929,7 @@ export function AppLayoutShell({
   hiddenNavItems,
   user,
   brandName,
+  brandTld,
   brandShortName,
   siteLogoUrl,
   logoHref,
@@ -1090,6 +1093,7 @@ export function AppLayoutShell({
             onSearchToggle={() => setSearchOpen((prev) => !prev)}
             searchOpen={searchOpen}
             brandName={brandName}
+            brandTld={brandTld}
             brandShortName={brandShortName}
             siteLogoUrl={siteLogoUrl}
             logoHref={logoHref}
